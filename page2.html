@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Graphique interactif</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    #canvasContainer {
+      display: inline-block;
+      position: relative;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+    }
+    #equation {
+      margin-top: 10px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Graphique interactif</h1>
+  <div id="canvasContainer">
+    <canvas id="graphCanvas" width="500" height="500"></canvas>
+  </div>
+  <div id="equation"></div>
+
+  <script>
+    const canvas = document.getElementById('graphCanvas');
+    const ctx = canvas.getContext('2d');
+    const eqDiv = document.getElementById('equation');
+
+    const width = canvas.width;
+    const height = canvas.height;
+    // On place l'origine au centre du canvas
+    const origin = { x: width / 2, y: height / 2 };
+
+    // Paramètres du point déplaçable
+    let point = { x: origin.x + 100, y: origin.y - 100 };
+    const pointRadius = 8;
+    let dragging = false;
+
+    // Conversion des coordonnées canvas en coordonnées cartésiennes (origine au centre)
+    function canvasToCartesian(x, y) {
+      return { x: x - origin.x, y: origin.y - y };
+    }
+
+    // Conversion des coordonnées cartésiennes en coordonnées canvas
+    function cartesianToCanvas(x, y) {
+      return { x: x + origin.x, y: origin.y - y };
+    }
+
+    // Dessiner le repère, le point et la droite
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Dessiner les axes
+      ctx.beginPath();
+      ctx.strokeStyle = "#000";
+      // Axe horizontal
+      ctx.moveTo(0, origin.y);
+      ctx.lineTo(width, origin.y);
+      // Axe vertical
+      ctx.moveTo(origin.x, 0);
+      ctx.lineTo(origin.x, height);
+      ctx.stroke();
+
+      // Dessiner la droite reliant l'origine au point vert
+      ctx.beginPath();
+      ctx.strokeStyle = "red";
+      ctx.moveTo(origin.x, origin.y);
+      ctx.lineTo(point.x, point.y);
+      ctx.stroke();
+
+      // Dessiner le point vert
+      ctx.beginPath();
+      ctx.fillStyle = "green";
+      ctx.arc(point.x, point.y, pointRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Mettre à jour l'équation de la droite
+      updateEquation();
+    }
+
+    // Calculer et afficher l'équation de la droite
+    function updateEquation() {
+      // Conversion du point en coordonnées cartésiennes
+      const cart = canvasToCartesian(point.x, point.y);
+      let eqText = "";
+      if (Math.abs(cart.x) < 1e-6) {
+        eqText = "x = 0 (droite verticale)";
+      } else {
+        const m = cart.y / cart.x;
+        // Arrondir la pente à deux décimales
+        const mRounded = Math.round(m * 100) / 100;
+        eqText = "y = " + mRounded + "x";
+      }
+      eqDiv.textContent = eqText;
+    }
+
+    // Vérifier si le curseur est sur le point
+    function isOverPoint(x, y) {
+      const dx = x - point.x;
+      const dy = y - point.y;
+      return Math.sqrt(dx * dx + dy * dy) <= pointRadius;
+    }
+
+    // Gestion des événements de la souris
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      if (isOverPoint(mouseX, mouseY)) {
+        dragging = true;
+      }
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (dragging) {
+        const rect = canvas.getBoundingClientRect();
+        point.x = e.clientX - rect.left;
+        point.y = e.clientY - rect.top;
+        draw();
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      dragging = false;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      dragging = false;
+    });
+
+    // Initialiser le dessin
+    draw();
+  </script>
+</body>
+</html>
