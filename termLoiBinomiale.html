@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours Terminale Spécialité Maths - Loi Binomiale</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa; /* Gris très clair */
+        }
+        h1, h2, h3 {
+            color: #007bff; /* Bleu primaire */
+            border-bottom: 2px solid #cce5ff; /* Bleu clair */
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; border-bottom: 1px solid #ccc; }
+        .definition, .property, .theorem, .proof, .example, .method, .recap {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 6px solid;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .definition { border-color: #17a2b8; } /* Cyan */
+        .property { border-color: #ffc107; } /* Jaune */
+        .theorem { border-color: #28a745; } /* Vert */
+        .proof { border-color: #6c757d; background-color: #e9ecef; } /* Gris */
+        .example { border-color: #fd7e14; } /* Orange */
+        .method { border-color: #6610f2; background-color: #f0e6ff; } /* Violet clair */
+        .recap { border-color: #007bff; background-color: #e7f3ff; } /* Bleu clair */
+        code {
+            background-color: #e8e8e8;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+   svg {
+            display: block;
+            overflow: visible; /* Pour voir les axes */
+            height: auto;
+        }
+        .axis path, .axis line { fill: none; stroke: #333; stroke-width: 1.5; shape-rendering: crispEdges; }
+        .axis text { font-size: 12px; fill: #333; font-family: sans-serif; }
+        .bar { fill: #007bff; }
+        .bar:hover { fill: #0056b3; }
+        .label { font-size: 11px; text-anchor: middle; }
+    </style>
+<link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+        >
+  <!-- KaTeX JS -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+          ></script>
+  <!-- Auto-render extension -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          ></script>
+  <!-- Initialize auto-render after the page loads -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        // Delimiters for inline and display math
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false},
+          {left: "\\(", right: "\\)", display: false},
+          {left: "\\[", right: "\\]", display: true}
+        ]
+      });
+    });
+  </script>
+</head>
+<body>
+
+<h1>Loi Binomiale</h1>
+
+<p>La loi binomiale est l'une des lois de probabilité discrètes les plus importantes. Elle modélise le nombre de succès obtenus lors de la répétition indépendante d'un certain nombre d'expériences aléatoires identiques n'ayant que deux issues possibles (succès ou échec).</p>
+
+<h2>1. Épreuve et Schéma de Bernoulli</h2>
+
+<div class="definition">
+    <h3>Définition : Épreuve de Bernoulli</h3>
+    <p>Une <strong>épreuve de Bernoulli</strong> est une expérience aléatoire qui n'admet que deux issues possibles :</p>
+    <ul>
+        <li>L'une appelée "Succès" (noté $S$), de probabilité $p$.</li>
+        <li>L'autre appelée "Échec" (noté $E$ ou $\bar{S}$), de probabilité $1-p$.</li>
+    </ul>
+    <p>Le nombre réel $p \in [0, 1]$ est appelé le <strong>paramètre</strong> de l'épreuve de Bernoulli.</p>
+</div>
+
+<div class="example">
+    <h3>Exemples d'épreuves de Bernoulli</h3>
+    <ul>
+        <li>Lancer une pièce de monnaie : Succès = "obtenir Pile" ($p=0.5$ si la pièce est équilibrée).</li>
+        <li>Lancer un dé à 6 faces : Succès = "obtenir un 6" ($p=1/6$). Échec = "ne pas obtenir un 6" ($1-p=5/6$).</li>
+        <li>Prélever une pièce dans un lot et vérifier si elle est défectueuse : Succès = "la pièce est défectueuse" ($p$ = proportion de pièces défectueuses dans le lot).</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <h3>Définition : Schéma de Bernoulli</h3>
+    <p>Un <strong>schéma de Bernoulli</strong> est la répétition de $n$ ($n \in \mathbb{N}^*$) épreuves de Bernoulli <strong>identiques</strong> et <strong>indépendantes</strong>, où la probabilité de succès $p$ est la même à chaque épreuve.</p>
+    <p>Les paramètres d'un schéma de Bernoulli sont :</p>
+    <ul>
+        <li>$n$ : le nombre de répétitions (d'épreuves).</li>
+        <li>$p$ : la probabilité de succès à chaque épreuve.</li>
+    </ul>
+</div>
+
+<div class="example">
+    <h3>Exemples de schémas de Bernoulli</h3>
+    <ul>
+        <li>On lance 10 fois de suite une pièce équilibrée. C'est un schéma de Bernoulli de paramètres $n=10$ et $p=0.5$.</li>
+        <li>On prélève successivement 5 pièces avec remise dans un lot contenant 10% de pièces défectueuses. C'est un schéma de Bernoulli de paramètres $n=5$ et $p=0.1$. (La remise assure l'indépendance et la constance de $p$).</li>
+        <li>Si le prélèvement se fait sans remise dans un lot de très grande taille par rapport à la taille de l'échantillon prélevé, on peut assimiler la situation à un schéma de Bernoulli.</li>
+    </ul>
+</div>
+
+<h2>2. Variable Aléatoire Binomiale</h2>
+
+<div class="definition">
+    <h3>Définition : Loi Binomiale</h3>
+    <p>On considère un schéma de Bernoulli de paramètres $n$ et $p$.</p>
+    <p>Soit $X$ la variable aléatoire qui compte le <strong>nombre total de succès</strong> obtenus au cours des $n$ épreuves.</p>
+    <p>On dit que $X$ suit la <strong>loi binomiale</strong> de paramètres $n$ et $p$. On note :</p>
+    $$X \sim \mathcal{B}(n, p)$$
+    <p>L'ensemble des valeurs possibles pour $X$ est $\{0, 1, 2, \dots, n\}$.</p>
+</div>
+
+<div class="theorem">
+    <h3>Théorème : Probabilité Binomiale</h3>
+    <p>Si $X$ suit la loi binomiale $\mathcal{B}(n, p)$, alors pour tout entier $k$ tel que $0 \le k \le n$, la probabilité d'obtenir exactement $k$ succès est donnée par :</p>
+    $$P(X=k) = \binom{n}{k} p^k (1-p)^{n-k}$$
+    <p>où $\binom{n}{k} = \frac{n!}{k!(n-k)!}$ est le coefficient binomial (nombre de combinaisons de $k$ éléments parmi $n$).</p>
+</div>
+
+<div class="proof">
+    <h3>Preuve (Idée Combinatoire)</h3>
+    <p>Considérons un résultat possible des $n$ épreuves, par exemple la séquence $S S E S \dots E$ (où S=Succès, E=Échec).</p>
+    <p>Si cette séquence contient exactement $k$ succès et donc $n-k$ échecs, sa probabilité est, par indépendance des épreuves :</p>
+    $$ \underbrace{p \times p \times (1-p) \times p \times \dots \times (1-p)}_{n \text{ termes}} = p^k (1-p)^{n-k} $$
+    <p>Cette probabilité est la même pour <strong>toute</strong> séquence contenant exactement $k$ succès et $n-k$ échecs.</p>
+    <p>Combien y a-t-il de telles séquences ? C'est le nombre de façons de choisir les positions des $k$ succès parmi les $n$ places disponibles, c'est-à-dire $\binom{n}{k}$.</p>
+    <p>L'événement $(X=k)$ est la réunion de tous ces résultats possibles (ces séquences). Comme ces séquences sont des événements élémentaires disjoints, la probabilité $P(X=k)$ est la somme de leurs probabilités.</p>
+    $$ P(X=k) = \underbrace{p^k (1-p)^{n-k} + \dots + p^k (1-p)^{n-k}}_{\binom{n}{k} \text{ termes}} $$
+    $$ P(X=k) = \binom{n}{k} p^k (1-p)^{n-k} $$
+</div>
+
+<div class="example">
+    <h3>Exemple de Calcul de Probabilité</h3>
+    <p>On lance 5 fois un dé équilibré. On considère comme succès "obtenir un 6". Quelle est la probabilité d'obtenir exactement deux fois le chiffre 6 ?</p>
+    <p>Il s'agit d'un schéma de Bernoulli avec $n=5$ répétitions. L'épreuve est "lancer le dé", le succès est "obtenir 6". La probabilité de succès est $p = 1/6$. La probabilité d'échec est $1-p = 5/6$.</p>
+    <p>Soit $X$ le nombre de fois où l'on obtient 6. $X$ suit la loi binomiale $\mathcal{B}(5, 1/6)$.</p>
+    <p>On cherche $P(X=2)$. On applique la formule avec $n=5$, $k=2$, $p=1/6$ :</p>
+    $$ P(X=2) = \binom{5}{2} \left(\frac{1}{6}\right)^2 \left(\frac{5}{6}\right)^{5-2} $$
+    <p>Calculons le coefficient binomial : $\binom{5}{2} = \frac{5!}{2!(5-2)!} = \frac{5!}{2!3!} = \frac{5 \times 4 \times 3!}{2 \times 1 \times 3!} = \frac{20}{2} = 10$.</p>
+    $$ P(X=2) = 10 \times \left(\frac{1}{36}\right) \times \left(\frac{5}{6}\right)^3 = 10 \times \frac{1}{36} \times \frac{125}{216} $$
+    $$ P(X=2) = \frac{1250}{7776} \approx 0.16075 $$
+    <p>Il y a environ 16.1% de chances d'obtenir exactement deux 6 en lançant 5 fois un dé.</p>
+</div>
+
+<h2>3. Espérance, Variance et Écart-type</h2>
+
+<div class="property">
+    <h3>Propriétés de la Loi Binomiale</h3>
+    <p>Si $X \sim \mathcal{B}(n, p)$, alors :</p>
+    <ul>
+        <li><strong>Espérance (Valeur moyenne) :</strong> $E(X) = np$</li>
+        <li><strong>Variance :</strong> $V(X) = np(1-p)$</li>
+        <li><strong>Écart-type :</strong> $\sigma(X) = \sqrt{V(X)} = \sqrt{np(1-p)}$</li>
+    </ul>
+    <p>L'espérance $np$ représente le nombre moyen de succès que l'on peut espérer obtenir si l'on répète un grand nombre de fois le schéma de Bernoulli complet (les $n$ épreuves).</p>
+    <p>La variance (et l'écart-type) mesure la dispersion des valeurs de $X$ autour de l'espérance.</p>
+</div>
+
+<div class="proof">
+    <h3>Preuve (Admises ou via indicateurs)</h3>
+    <p>La preuve rigoureuse de ces formules dépasse souvent le cadre du programme de Terminale (celle de l'espérance peut être faite par récurrence ou en utilisant les variables indicatrices, celle de la variance est plus complexe).</p>
+    <p><strong>Intuition pour $E(X)=np$:</strong> Si la probabilité de succès à une épreuve est $p$, alors sur $n$ épreuves indépendantes, on s'attend "en moyenne" à obtenir $n \times p$ succès.</p>
+</div>
+
+<div class="example">
+    <h3>Exemple (Espérance et Variance)</h3>
+    <p>Reprenons l'exemple du lancer de 5 dés ($n=5, p=1/6$). $X \sim \mathcal{B}(5, 1/6)$.</p>
+    <p>Espérance : $E(X) = np = 5 \times \frac{1}{6} = \frac{5}{6}$.</p>
+    <p>En moyenne, sur 5 lancers, on s'attend à obtenir $5/6$ fois le chiffre 6 (environ 0.83 fois).</p>
+    <p>Variance : $V(X) = np(1-p) = 5 \times \frac{1}{6} \times \frac{5}{6} = \frac{25}{36}$.</p>
+    <p>Écart-type : $\sigma(X) = \sqrt{\frac{25}{36}} = \frac{5}{6}$.</p>
+</div>
+
+<h2>4. Représentation et Utilisation de la Calculatrice</h2>
+
+<p>La loi de probabilité d'une variable binomiale peut être représentée par un tableau de valeurs $(k, P(X=k))$ ou par un diagramme en bâtons (histogramme).</p>
+
+<div class="example">
+    <h3>Diagramme en bâtons pour $\mathcal{B}(5, 0.4)$</h3>
+    <p>Soit $X \sim \mathcal{B}(5, 0.4)$. Calculons quelques probabilités :</p>
+    <ul>
+        <li>$P(X=0) = \binom{5}{0} (0.4)^0 (0.6)^5 = 1 \times 1 \times 0.07776 = 0.07776$</li>
+        <li>$P(X=1) = \binom{5}{1} (0.4)^1 (0.6)^4 = 5 \times 0.4 \times 0.1296 = 0.2592$</li>
+        <li>$P(X=2) = \binom{5}{2} (0.4)^2 (0.6)^3 = 10 \times 0.16 \times 0.216 = 0.3456$</li>
+        <li>$P(X=3) = \binom{5}{3} (0.4)^3 (0.6)^2 = 10 \times 0.064 \times 0.36 = 0.2304$</li>
+        <li>$P(X=4) = \binom{5}{4} (0.4)^4 (0.6)^1 = 5 \times 0.0256 \times 0.6 = 0.0768$</li>
+        <li>$P(X=5) = \binom{5}{5} (0.4)^5 (0.6)^0 = 1 \times 0.01024 \times 1 = 0.01024$</li>
+    </ul>
+    <p>(Vérification : la somme des probabilités est bien 1).</p>
+
+    <svg width="500" height="350" viewBox="-50 -50 550 400">
+        <!-- Axes -->
+        <g class="axis">
+            <line x1="0" y1="300" x2="450" y2="300" marker-end="url(#arrowhead)"/>
+            <text x="460" y="305" class="label">k (Nombre de succès)</text>
+            <line x1="0" y1="300" x2="0" y2="0" marker-end="url(#arrowhead)"/>
+            <text x="-10" y="-5" class="label">P(X=k)</text>
+            <text x="-15" y="305" class="label">0</text>
+        </g>
+        <!-- Graduations et Barres -->
+         <g transform="translate(0, 300) scale(1, -1)"> <!-- Inversion axe Y pour dessin facile -->
+             <!-- Y Ticks -->
+             <line x1="-5" y1="50" x2="5" y2="50"/><text transform="scale(1,-1)" x="-20" y="-45" class="label">0.1</text>
+             <line x1="-5" y1="100" x2="5" y2="100"/><text transform="scale(1,-1)" x="-20" y="-95" class="label">0.2</text>
+             <line x1="-5" y1="150" x2="5" y2="150"/><text transform="scale(1,-1)" x="-20" y="-145" class="label">0.3</text>
+             <line x1="-5" y1="200" x2="5" y2="200"/><text transform="scale(1,-1)" x="-20" y="-195" class="label">0.4</text>
+
+             <!-- X Ticks and Bars (scaled by factor, e.g., 500 for probabilities) -->
+             <g transform="translate(50, 0)"> <!-- Décalage pour commencer k=0 -->
+                 <line x1="0" y1="-5" x2="0" y2="5" /><text transform="scale(1,-1)" x="0" y="15" class="label">0</text>
+                 <rect class="bar" x="-10" y="0" width="20" height="38.88" /> <!-- P(X=0)*500 approx -->
+
+                 <line x1="70" y1="-5" x2="70" y2="5" /><text transform="scale(1,-1)" x="70" y="15" class="label">1</text>
+                 <rect class="bar" x="60" y="0" width="20" height="129.6" /> <!-- P(X=1)*500 -->
+
+                 <line x1="140" y1="-5" x2="140" y2="5" /><text transform="scale(1,-1)" x="140" y="15" class="label">2</text>
+                 <rect class="bar" x="130" y="0" width="20" height="172.8" /> <!-- P(X=2)*500 -->
+
+                 <line x1="210" y1="-5" x2="210" y2="5" /><text transform="scale(1,-1)" x="210" y="15" class="label">3</text>
+                 <rect class="bar" x="200" y="0" width="20" height="115.2" /> <!-- P(X=3)*500 -->
+
+                 <line x1="280" y1="-5" x2="280" y2="5" /><text transform="scale(1,-1)" x="280" y="15" class="label">4</text>
+                 <rect class="bar" x="270" y="0" width="20" height="38.4" /> <!-- P(X=4)*500 -->
+
+                 <line x1="350" y1="-5" x2="350" y2="5" /><text transform="scale(1,-1)" x="350" y="15" class="label">5</text>
+                 <rect class="bar" x="340" y="0" width="20" height="5.12" /> <!-- P(X=5)*500 -->
+             </g>
+         </g>
+    </svg>
+</div>
+
+<div class="method">
+    <h3>Utilisation de la Calculatrice</h3>
+    <p>Pour calculer les probabilités binomiales, en particulier pour des valeurs de $n$ plus grandes, l'utilisation de la calculatrice est indispensable.</p>
+    <p>Les fonctions courantes sont (les noms peuvent varier légèrement) :</p>
+    <ul>
+        <li>Pour calculer $P(X=k)$ :
+            <ul>
+                <li>Casio : `BinomialPD(k, n, p)` (ou `Bpd`)</li>
+                <li>TI : `binompdf(n, p, k)` ou `binomFdp(n, p, k)`</li>
+            </ul>
+        </li>
+        <li>Pour calculer $P(X \le k)$ (probabilité cumulée) :
+            <ul>
+                <li>Casio : `BinomialCD(k, n, p)` (ou `Bcd`)</li>
+                <li>TI : `binomcdf(n, p, k)` ou `binomFrép(n, p, k)`</li>
+            </ul>
+        </li>
+    </ul>
+    <p><strong>Calculs de probabilités d'intervalles :</strong></p>
+    <ul>
+        <li>$P(X < k) = P(X \le k-1)$</li>
+        <li>$P(X > k) = 1 - P(X \le k)$</li>
+        <li>$P(X \ge k) = 1 - P(X \le k-1)$</li>
+        <li>$P(a \le X \le b) = P(X \le b) - P(X \le a-1)$ (pour $a, b$ entiers, $a \ge 1$)</li>
+         <li>$P(a < X < b) = P(X \le b-1) - P(X \le a)$</li>
+    </ul>
+</div>
+
+<div class="example">
+    <h3>Exemple avec Calculatrice</h3>
+    <p>Une machine produit des pièces dont 5% sont défectueuses. On prélève au hasard un lot de 80 pièces (on suppose que cela peut être assimilé à un tirage avec remise).</p>
+    <p>Soit $X$ le nombre de pièces défectueuses dans le lot. $X \sim \mathcal{B}(n=80, p=0.05)$.</p>
+    <ol>
+        <li>Probabilité d'avoir exactement 3 pièces défectueuses :
+            $P(X=3)$ = `binompdf(80, 0.05, 3)` $\approx 0.197$.
+        </li>
+        <li>Probabilité d'avoir au plus 5 pièces défectueuses :
+            $P(X \le 5)$ = `binomcdf(80, 0.05, 5)` $\approx 0.789$.
+        </li>
+        <li>Probabilité d'avoir au moins 2 pièces défectueuses :
+            $P(X \ge 2) = 1 - P(X \le 1)$.
+            Calculer $P(X \le 1)$ = `binomcdf(80, 0.05, 1)` $\approx 0.083$.
+            Donc, $P(X \ge 2) \approx 1 - 0.083 = 0.917$.
+        </li>
+        <li>Probabilité d'avoir entre 4 et 6 pièces défectueuses (inclus) :
+            $P(4 \le X \le 6) = P(X \le 6) - P(X \le 3)$.
+            $P(X \le 6)$ = `binomcdf(80, 0.05, 6)` $\approx 0.911$.
+            $P(X \le 3)$ = `binomcdf(80, 0.05, 3)` $\approx 0.430$.
+            Donc, $P(4 \le X \le 6) \approx 0.911 - 0.430 = 0.481$.
+        </li>
+         <li>Calculer l'espérance et l'écart-type :
+            $E(X) = np = 80 \times 0.05 = 4$. On s'attend en moyenne à 4 pièces défectueuses par lot de 80.
+            $\sigma(X) = \sqrt{np(1-p)} = \sqrt{80 \times 0.05 \times 0.95} = \sqrt{3.8} \approx 1.95$.
+        </li>
+    </ol>
+</div>
+
+<div class="recap">
+    <h2>Récapitulatif - Loi Binomiale $\mathcal{B}(n, p)$</h2>
+    <ul>
+        <li><strong>Contexte :</strong> Répétition de $n$ épreuves de Bernoulli identiques et indépendantes.</li>
+        <li><strong>Variable $X$ :</strong> Nombre de succès en $n$ épreuves.</li>
+        <li><strong>Paramètres :</strong> $n$ (nombre d'épreuves) et $p$ (probabilité de succès à une épreuve).</li>
+        <li><strong>Valeurs possibles de $X$ :</strong> $\{0, 1, \dots, n\}$.</li>
+        <li><strong>Formule de probabilité :</strong> $P(X=k) = \binom{n}{k} p^k (1-p)^{n-k}$.</li>
+        <li><strong>Espérance :</strong> $E(X) = np$.</li>
+        <li><strong>Variance :</strong> $V(X) = np(1-p)$.</li>
+        <li><strong>Calculs :</strong> Utilisation de la calculatrice (`binompdf`, `binomcdf` ou équivalents).</li>
+    </ul>
+</div>
+
+<h2>Conclusion</h2>
+<p>La loi binomiale est un modèle probabiliste puissant pour analyser des situations impliquant la répétition d'expériences à deux issues. Comprendre ses conditions d'application, savoir calculer les probabilités (avec la formule ou la calculatrice), et interpréter l'espérance sont des compétences essentielles en probabilités.</p>
+
+</body>
+</html>
