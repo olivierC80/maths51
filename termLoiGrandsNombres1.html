@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours Terminale Spécialité Maths - Loi des Grands Nombres</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa; /* Gris très clair */
+        }
+        h1, h2, h3 {
+            color: #198754; /* Vert */
+            border-bottom: 2px solid #a3cfbb; /* Vert clair */
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; border-bottom: 1px solid #ccc; }
+        .definition, .property, .theorem, .proof, .example, .method, .warning, .interpretation {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 6px solid;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .definition { border-color: #17a2b8; } /* Cyan */
+        .property { border-color: #ffc107; } /* Jaune */
+        .theorem { border-color: #28a745; } /* Vert */
+        .proof { border-color: #6c757d; background-color: #e9ecef; } /* Gris */
+        .example { border-color: #fd7e14; } /* Orange */
+        .method { border-color: #007bff; background-color: #e7f3ff; } /* Bleu clair */
+        .warning { border-color: #dc3545; background-color: #f8d7da; } /* Rouge clair */
+        .interpretation { border-color: #6f42c1; background-color: #f5eafb; } /* Violet clair */
+        code {
+            background-color: #e8e8e8;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        /* Pas de SVG spécifique pour ce chapitre */
+    </style>
+<link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+        >
+  <!-- KaTeX JS -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+          ></script>
+  <!-- Auto-render extension -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          ></script>
+  <!-- Initialize auto-render after the page loads -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        // Delimiters for inline and display math
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false},
+          {left: "\\(", right: "\\)", display: false},
+          {left: "\\[", right: "\\]", display: true}
+        ]
+      });
+    });
+  </script>
+</head>
+<body>
+
+<h1>Loi des Grands Nombres</h1>
+
+<p>Intuitivement, nous sentons qu'en répétant un grand nombre de fois une expérience aléatoire (comme lancer une pièce), la fréquence observée d'un événement (obtenir "Pile") devrait se rapprocher de sa probabilité théorique (1/2). La loi des grands nombres formalise cette intuition fondamentale, qui fait le lien entre les probabilités théoriques et les statistiques observées.</p>
+
+<h2>1. Fluctuation d'échantillonnage et Fréquence</h2>
+
+<div class="definition">
+    <h3>Définition : Fréquence observée</h3>
+    <p>On considère une expérience aléatoire dont une issue particulière est appelée "Succès", de probabilité théorique $p$.</p>
+    <p>On répète $n$ fois cette expérience de manière indépendante (schéma de Bernoulli).</p>
+    <p>Soit $S_n$ le nombre de succès observés au cours de ces $n$ répétitions ($S_n$ suit une loi binomiale $\mathcal{B}(n,p)$).</p>
+    <p>La <strong>fréquence observée</strong> (ou fréquence empirique) du succès dans cet échantillon de taille $n$ est :</p>
+    $$f_n = \frac{S_n}{n}$$
+</div>
+
+<div class="interpretation">
+    <h3>Interprétation : Fluctuation d'échantillonnage</h3>
+    <p>Si on réalise plusieurs fois une série de $n$ répétitions, la fréquence observée $f_n$ n'est généralement pas exactement égale à $p$. Elle varie d'une série à l'autre : c'est ce qu'on appelle la <strong>fluctuation d'échantillonnage</strong>.</p>
+    <p>Cependant, l'intuition suggère que plus la taille de l'échantillon $n$ est grande, plus la fréquence observée $f_n$ a de chances d'être proche de la probabilité théorique $p$.</p>
+</div>
+
+<div class="example">
+    <h3>Exemple : Lancers de pièce</h3>
+    <p>On lance une pièce équilibrée ($p=0.5$).</p>
+    <ul>
+        <li>Sur $n=10$ lancers, on pourrait obtenir 6 Piles ($f_{10}=0.6$) ou 4 Piles ($f_{10}=0.4$). La fréquence fluctue.</li>
+        <li>Sur $n=1000$ lancers, il est beaucoup plus probable d'obtenir une fréquence $f_{1000}$ très proche de 0.5 (par exemple, entre 0.47 et 0.53) qu'une fréquence très éloignée comme 0.6 ou 0.4.</li>
+    </ul>
+</div>
+
+<h2>2. Loi Faible des Grands Nombres</h2>
+
+<p>Il existe plusieurs versions de la loi des grands nombres. Celle abordée (souvent implicitement) au lycée est la loi *faible*, qui s'appuie sur l'inégalité de Bienaymé-Tchebychev.</p>
+
+<div class="theorem">
+    <h3>Inégalité de Bienaymé-Tchebychev (Rappel/Admission)</h3>
+    <p>Soit $X$ une variable aléatoire admettant une espérance $E(X)$ et une variance $V(X)$.</p>
+    <p>Pour tout réel $\epsilon > 0$ :</p>
+    $$ P(|X - E(X)| \ge \epsilon) \le \frac{V(X)}{\epsilon^2} $$
+    <p>Cette inégalité majore la probabilité que la variable aléatoire $X$ s'écarte de son espérance $E(X)$ d'une quantité supérieure ou égale à $\epsilon$.</p>
+</div>
+
+<div class="theorem">
+    <h3>Loi Faible des Grands Nombres (Version Fréquence)</h3>
+    <p>Soit $(S_n)$ une suite de variables aléatoires où $S_n$ suit la loi binomiale $\mathcal{B}(n, p)$. Soit $f_n = S_n/n$ la fréquence des succès.</p>
+    <p>Pour tout réel $\epsilon > 0$, la probabilité que l'écart entre la fréquence observée $f_n$ et la probabilité théorique $p$ soit supérieur ou égal à $\epsilon$ tend vers 0 lorsque $n$ tend vers l'infini :</p>
+    $$ \lim_{n \to +\infty} P(|f_n - p| \ge \epsilon) = 0 $$
+    <p>On dit que la suite des fréquences $(f_n)$ <strong>converge en probabilité</strong> vers $p$.</p>
+</div>
+
+<div class="interpretation">
+    <h3>Interprétation de la Loi Faible</h3>
+    <p>Cela signifie que pour un $\epsilon > 0$ aussi petit que l'on veut (par exemple $\epsilon = 0.01$), on peut rendre la probabilité d'observer une fréquence $f_n$ en dehors de l'intervalle $]p-\epsilon, p+\epsilon[$ aussi petite que l'on veut, à condition de prendre $n$ (le nombre de répétitions) suffisamment grand.</p>
+    <p>Autrement dit, il devient de plus en plus certain (au sens probabiliste) que la fréquence observée soit très proche de la probabilité théorique lorsque le nombre d'essais augmente.</p>
+</div>
+
+<div class="proof">
+    <h3>Justification (via Bienaymé-Tchebychev)</h3>
+    <p>Considérons la variable aléatoire $f_n = S_n / n$, où $S_n \sim \mathcal{B}(n, p)$.</p>
+    <p>On sait que :</p>
+    <ul>
+        <li>L'espérance de $S_n$ est $E(S_n) = np$.</li>
+        <li>La variance de $S_n$ est $V(S_n) = np(1-p)$.</li>
+    </ul>
+    <p>Calculons l'espérance et la variance de la fréquence $f_n$ :</p>
+    <ul>
+        <li>$E(f_n) = E(S_n / n) = \frac{1}{n} E(S_n) = \frac{1}{n} (np) = p$. L'espérance de la fréquence est la probabilité théorique.</li>
+        <li>$V(f_n) = V(S_n / n) = \frac{1}{n^2} V(S_n) = \frac{1}{n^2} (np(1-p)) = \frac{p(1-p)}{n}$.</li>
+    </ul>
+    <p>Appliquons l'inégalité de Bienaymé-Tchebychev à la variable $X = f_n$ :</p>
+    $$ P(|f_n - E(f_n)| \ge \epsilon) \le \frac{V(f_n)}{\epsilon^2} $$
+    $$ P(|f_n - p| \ge \epsilon) \le \frac{p(1-p)/n}{\epsilon^2} $$
+    $$ P(|f_n - p| \ge \epsilon) \le \frac{p(1-p)}{n\epsilon^2} $$
+    <p>Lorsque $n \to +\infty$, le terme $\frac{p(1-p)}{n\epsilon^2}$ tend vers 0 (puisque $p(1-p)$ et $\epsilon^2$ sont des constantes fixées, et $n$ est au dénominateur).</p>
+    <p>Comme la probabilité est toujours positive ou nulle, par le théorème des gendarmes, on conclut que :</p>
+    $$ \lim_{n \to +\infty} P(|f_n - p| \ge \epsilon) = 0 $$
+</div>
+
+<h2>3. Loi des Grands Nombres et Moyenne Empirique</h2>
+
+<p>La loi des grands nombres ne s'applique pas seulement aux fréquences (qui sont des moyennes de variables de Bernoulli valant 0 ou 1), mais plus généralement à la moyenne d'une suite de variables aléatoires indépendantes et de même loi.</p>
+
+<div class="definition">
+    <h3>Moyenne Empirique (ou d'échantillon)</h3>
+    <p>Soient $X_1, X_2, \dots, X_n$ des variables aléatoires <strong>indépendantes</strong> et de <strong>même loi</strong> (i.i.d. - indépendantes et identiquement distribuées), admettant une espérance $E(X)$ et une variance $V(X)$.</p>
+    <p>La <strong>moyenne empirique</strong> (ou moyenne d'échantillon) de ces $n$ variables est :</p>
+    $$ \bar{X}_n = \frac{X_1 + X_2 + \dots + X_n}{n} = \frac{1}{n} \sum_{i=1}^n X_i $$
+</div>
+
+<div class="theorem">
+    <h3>Loi Faible des Grands Nombres (Version Moyenne)</h3>
+    <p>Soit $(\bar{X}_n)$ la suite des moyennes empiriques d'une suite $(X_i)$ de variables aléatoires i.i.d., d'espérance $E(X)$ et de variance $V(X)$.</p>
+    <p>Pour tout réel $\epsilon > 0$ :</p>
+    $$ \lim_{n \to +\infty} P(|\bar{X}_n - E(X)| \ge \epsilon) = 0 $$
+    <p>La suite des moyennes empiriques $(\bar{X}_n)$ <strong>converge en probabilité</strong> vers l'espérance théorique $E(X)$.</p>
+</div>
+
+<div class="proof">
+    <h3>Justification (via Bienaymé-Tchebychev pour la moyenne)</h3>
+    <p>Calculons l'espérance et la variance de la moyenne empirique $\bar{X}_n$.</p>
+    <p>Par linéarité de l'espérance :</p>
+    $$ E(\bar{X}_n) = E\left(\frac{1}{n} \sum_{i=1}^n X_i\right) = \frac{1}{n} \sum_{i=1}^n E(X_i) $$
+    <p>Comme toutes les $X_i$ ont la même espérance $E(X)$ :</p>
+    $$ E(\bar{X}_n) = \frac{1}{n} \sum_{i=1}^n E(X) = \frac{1}{n} (n \times E(X)) = E(X) $$
+    <p>Pour la variance, on utilise l'indépendance des $X_i$ et le fait que $V(aX) = a^2 V(X)$ :</p>
+    $$ V(\bar{X}_n) = V\left(\frac{1}{n} \sum_{i=1}^n X_i\right) = \frac{1}{n^2} V\left(\sum_{i=1}^n X_i\right) $$
+    <p>Comme les $X_i$ sont indépendantes, la variance de la somme est la somme des variances :</p>
+    $$ V(\bar{X}_n) = \frac{1}{n^2} \sum_{i=1}^n V(X_i) $$
+    <p>Comme toutes les $X_i$ ont la même variance $V(X)$ :</p>
+    $$ V(\bar{X}_n) = \frac{1}{n^2} \sum_{i=1}^n V(X) = \frac{1}{n^2} (n \times V(X)) = \frac{V(X)}{n} $$
+    <p>Appliquons l'inégalité de Bienaymé-Tchebychev à la variable $\bar{X}_n$ :</p>
+    $$ P(|\bar{X}_n - E(\bar{X}_n)| \ge \epsilon) \le \frac{V(\bar{X}_n)}{\epsilon^2} $$
+    $$ P(|\bar{X}_n - E(X)| \ge \epsilon) \le \frac{V(X)/n}{\epsilon^2} = \frac{V(X)}{n\epsilon^2} $$
+    <p>Lorsque $n \to +\infty$, le terme $\frac{V(X)}{n\epsilon^2}$ tend vers 0. Par le théorème des gendarmes, on conclut :</p>
+    $$ \lim_{n \to +\infty} P(|\bar{X}_n - E(X)| \ge \epsilon) = 0 $$
+</div>
+
+<div class="example">
+    <h3>Exemple : Moyenne de lancers de dé</h3>
+    <p>On lance un dé équilibré à 6 faces un grand nombre de fois ($n$ fois).</p>
+    <p>Soit $X_i$ le résultat du $i$-ème lancer. Les $X_i$ sont i.i.d.</p>
+    <p>L'espérance d'un lancer est $E(X) = \sum_{k=1}^6 k \times P(X=k) = (1+2+3+4+5+6) \times \frac{1}{6} = \frac{21}{6} = 3.5$.</p>
+    <p>La loi des grands nombres affirme que la moyenne des résultats obtenus $\bar{X}_n = (X_1 + \dots + X_n)/n$ va se rapprocher de 3.5 lorsque $n$ devient très grand.</p>
+</div>
+
+<h2>4. Interprétations et Limites</h2>
+
+<div class="warning">
+    <h3>La "Loi des Moyennes" ou l'Erreur du Joueur</h3>
+    <p>La loi des grands nombres ne dit PAS que si l'on a obtenu une série atypique (par exemple, 10 "Pile" d'affilée), les résultats suivants vont "compenser" pour rétablir la moyenne. Les lancers (ou épreuves) sont indépendants ! La pièce n'a pas de mémoire.</p>
+    <p>La convergence se fait par "dilution" des écarts initiaux dans un très grand nombre d'essais, et non par compensation active.</p>
+    <p>Par exemple, après 10 Piles, la probabilité d'avoir Pile au 11ème lancer reste 1/2 (si la pièce est équilibrée).</p>
+</div>
+
+<div class="interpretation">
+    <h3>Convergence Probabiliste, pas Certaine</h3>
+    <p>La loi faible des grands nombres garantit une convergence <strong>en probabilité</strong>. Cela signifie que la probabilité d'un écart important diminue, mais elle n'est jamais strictement nulle pour un $n$ fini.</p>
+    <p>Il existe une version plus forte (la loi forte des grands nombres) qui assure une convergence "presque sûre", mais sa compréhension est plus avancée.</p>
+    <p>Pour $n$ fini, même grand, il est toujours *possible* (bien que très improbable) d'observer une fréquence ou une moyenne très éloignée de la valeur théorique.</p>
+</div>
+
+<div class="interpretation">
+    <h3>Applications</h3>
+    <ul>
+        <li><strong>Statistiques :</strong> La loi des grands nombres justifie l'utilisation de la moyenne d'un échantillon pour estimer l'espérance (la moyenne "vraie") d'une population. Elle fonde aussi l'estimation d'une proportion $p$ par une fréquence observée $f_n$.</li>
+        <li><strong>Simulations (Méthode de Monte-Carlo) :</strong> On peut estimer des quantités complexes (probabilités,
+        </li>
+    </ul>
+</div>
+</body>
+</html>
