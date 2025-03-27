@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours Terminale Spécialité Maths - Combinatoire et Dénombrement</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #fdfdfd;
+        }
+        h1, h2, h3 {
+            color: #2c3e50; /* Bleu nuit */
+            border-bottom: 2px solid #8e44ad; /* Violet */
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; border-bottom: 1px solid #ccc; }
+        .definition, .property, .theorem, .proof, .example, .principle {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 6px solid;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .definition { border-color: #3498db; } /* Bleu clair */
+        .property { border-color: #f1c40f; } /* Jaune */
+        .theorem { border-color: #2ecc71; } /* Vert émeraude */
+        .proof { border-color: #95a5a6; background-color: #ecf0f1; } /* Gris clair */
+        .example { border-color: #e67e22; } /* Orange carotte */
+        .principle { border-color: #8e44ad; background-color: #f5eafb; } /* Violet clair */
+        code {
+            background-color: #e8e8e8;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            border: 1px solid #ccc;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <!-- Pour le rendu LaTeX avec MathJax -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+        >
+  <!-- KaTeX JS -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+          ></script>
+  <!-- Auto-render extension -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          ></script>
+  <!-- Initialize auto-render after the page loads -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        // Delimiters for inline and display math
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false},
+          {left: "\\(", right: "\\)", display: false},
+          {left: "\\[", right: "\\]", display: true}
+        ]
+      });
+    });
+  </script>
+</head>
+<body>
+
+<h1>Combinatoire et Dénombrement</h1>
+
+<p>La combinatoire est la branche des mathématiques qui étudie les collections (finies) d'objets, notamment les manières de les choisir, de les organiser ou de les compter. Le dénombrement consiste à déterminer le nombre d'éléments (le cardinal) d'ensembles finis construits selon certains critères.</p>
+<p>Ces outils sont fondamentaux en probabilités, mais aussi en informatique, en théorie des graphes, etc.</p>
+
+<h2>1. Principes Fondamentaux du Dénombrement</h2>
+
+<div class="principle">
+    <h3>Principe Additif (ou de la Somme)</h3>
+    <p>Si une opération globale peut être réalisée en effectuant <strong>soit</strong> une opération A (ayant $n_A$ issues possibles), <strong>soit</strong> une opération B (ayant $n_B$ issues possibles), où les issues de A et B sont <strong>disjointes</strong> (aucune issue commune), alors le nombre total d'issues pour l'opération globale est :</p>
+    $$N = n_A + n_B$$
+    <p>Plus généralement, si $E_1, E_2, \dots, E_k$ sont des ensembles finis <strong>deux à deux disjoints</strong>, alors :</p>
+    $$|E_1 \cup E_2 \cup \dots \cup E_k| = |E_1| + |E_2| + \dots + |E_k|$$
+</div>
+
+<div class="example">
+    <h3>Exemple (Principe Additif)</h3>
+    <p>Dans une classe, il y a 15 filles et 18 garçons. Combien y a-t-il d'élèves au total ?</p>
+    <p>L'ensemble des élèves est la réunion disjointe de l'ensemble des filles et de l'ensemble des garçons.</p>
+    <p>Nombre total d'élèves = (Nombre de filles) + (Nombre de garçons) = $15 + 18 = 33$.</p>
+    <p>Pour choisir un délégué, on peut choisir soit une fille (15 possibilités), soit un garçon (18 possibilités). Le nombre total de choix est $15 + 18 = 33$.</p>
+</div>
+
+<div class="principle">
+    <h3>Principe Multiplicatif (ou du Produit)</h3>
+    <p>Si une procédure globale comporte $k$ étapes successives, et que :</p>
+    <ul>
+        <li>la première étape a $n_1$ issues possibles,</li>
+        <li>la deuxième étape a $n_2$ issues possibles (quel que soit le résultat de la première étape),</li>
+        <li>...</li>
+        <li>la $k$-ième étape a $n_k$ issues possibles (quels que soient les résultats des étapes précédentes),</li>
+    </ul>
+    <p>alors le nombre total d'issues pour la procédure globale est :</p>
+    $$N = n_1 \times n_2 \times \dots \times n_k$$
+    <p>Cela correspond au cardinal du produit cartésien : $|E_1 \times E_2 \times \dots \times E_k| = |E_1| \times |E_2| \times \dots \times |E_k|$.</p>
+</div>
+
+<div class="example">
+    <h3>Exemple (Principe Multiplicatif)</h3>
+    <p>Un restaurant propose un menu avec : 3 choix d'entrées, 4 choix de plats principaux, 2 choix de desserts.</p>
+    <p>Combien de menus différents peut-on composer ?</p>
+    <p>La composition d'un menu se fait en 3 étapes successives :</p>
+    <ol>
+        <li>Choix de l'entrée : $n_1 = 3$ possibilités.</li>
+        <li>Choix du plat : $n_2 = 4$ possibilités.</li>
+        <li>Choix du dessert : $n_3 = 2$ possibilités.</li>
+    </ol>
+    <p>Le nombre total de menus différents est $N = n_1 \times n_2 \times n_3 = 3 \times 4 \times 2 = 24$.</p>
+</div>
+
+<h2>2. Arrangements et Permutations (L'ordre compte)</h2>
+
+<p>Dans cette section, on s'intéresse aux dispositions ordonnées d'éléments.</p>
+
+<h3>2.1 k-listes (ou p-uplets) - Arrangements avec répétition</h3>
+
+<div class="definition">
+    <h3>Définition : k-liste</h3>
+    <p>Soit $E$ un ensemble fini de cardinal $n$ ($|E|=n$).</p>
+    <p>Une <strong>k-liste</strong> (ou k-uplet, ou p-liste si $k=p$) d'éléments de $E$ est une suite ordonnée de $k$ éléments de $E$, où les répétitions sont autorisées.</p>
+    <p>Le nombre de k-listes d'éléments de $E$ est le nombre de façons de choisir successivement $k$ éléments de $E$ avec remise.</p>
+</div>
+
+<div class="property">
+    <h3>Nombre de k-listes</h3>
+    <p>Soit $E$ un ensemble de cardinal $n$. Le nombre de k-listes d'éléments de $E$ est :</p>
+    $$N = n^k$$
+</div>
+
+<div class="proof">
+    <h3>Preuve (par principe multiplicatif)</h3>
+    <p>Pour construire une k-liste $(x_1, x_2, \dots, x_k)$, on effectue $k$ choix successifs :</p>
+    <ul>
+        <li>Choix de $x_1$ : $n$ possibilités (n'importe quel élément de $E$).</li>
+        <li>Choix de $x_2$ : $n$ possibilités (on peut répéter le choix de $x_1$).</li>
+        <li>...</li>
+        <li>Choix de $x_k$ : $n$ possibilités.</li>
+    </ul>
+    <p>D'après le principe multiplicatif, le nombre total de k-listes est $N = \underbrace{n \times n \times \dots \times n}_{k \text{ fois}} = n^k$.</p>
+</div>
+
+<div class="example">
+    <h3>Exemple (k-listes)</h3>
+    <p>Combien de codes à 4 chiffres peut-on former avec les chiffres $\{0, 1, 2, \dots, 9\}$ ?</p>
+    <p>L'ensemble des chiffres est $E = \{0, 1, \dots, 9\}$, donc $|E|=n=10$.</p>
+    <p>Un code à 4 chiffres est une 4-liste d'éléments de $E$. L'ordre compte (1234 est différent de 4321) et les répétitions sont possibles (1111 est un code valide).</p>
+    <p>Le nombre de codes possibles est $N = n^k = 10^4 = 10000$. (Les codes vont de 0000 à 9999).</p>
+    <p>Combien de mots de 3 lettres peut-on former avec les lettres A, B, C ?</p>
+    <p>$E=\{A, B, C\}$, $n=3$. On cherche le nombre de 3-listes.</p>
+    <p>$N = 3^3 = 27$. (AAA, AAB, AAC, ABA, ..., CCC).</p>
+</div>
+
+<h3>2.2 Permutations - Arrangements sans répétition de tous les éléments</h3>
+
+<div class="definition">
+    <h3>Définition : Permutation</h3>
+    <p>Soit $E$ un ensemble fini de cardinal $n$.</p>
+    <p>Une <strong>permutation</strong> des éléments de $E$ est une k-liste d'éléments de $E$ avec $k=n$, où tous les éléments sont <strong>distincts</strong> (pas de répétition). C'est une façon d'ordonner tous les éléments de $E$.</p>
+</div>
+
+<div class="property">
+    <h3>Nombre de Permutations (Factorielle)</h3>
+    <p>Le nombre de permutations d'un ensemble $E$ de cardinal $n$ est noté $n!$ (lire "factorielle n") et est donné par :</p>
+    $$n! = n \times (n-1) \times (n-2) \times \dots \times 2 \times 1$$
+    <p>Par convention, $0! = 1$.</p>
+</div>
+
+<div class="proof">
+    <h3>Preuve (par principe multiplicatif)</h3>
+    <p>Pour construire une permutation $(x_1, x_2, \dots, x_n)$ des $n$ éléments de $E$, on effectue $n$ choix successifs sans remise :</p>
+    <ul>
+        <li>Choix de $x_1$ : $n$ possibilités.</li>
+        <li>Choix de $x_2$ (différent de $x_1$) : $n-1$ possibilités.</li>
+        <li>Choix de $x_3$ (différent de $x_1$ et $x_2$) : $n-2$ possibilités.</li>
+        <li>...</li>
+        <li>Choix de $x_n$ (le seul élément restant) : $1$ possibilité.</li>
+    </ul>
+    <p>D'après le principe multiplicatif, le nombre total de permutations est $N = n \times (n-1) \times (n-2) \times \dots \times 2 \times 1 = n!$.</p>
+</div>
+
+<div class="example">
+    <h3>Exemple (Permutations)</h3>
+    <p>De combien de façons peut-on classer 5 coureurs à l'arrivée d'une course (sans ex-aequo) ?</p>
+    <p>Il s'agit d'ordonner les 5 coureurs, c'est donc une permutation de l'ensemble des 5 coureurs.</p>
+    <p>Le nombre de classements possibles est $5! = 5 \times 4 \times 3 \times 2 \times 1 = 120$.</p>
+    <p>Combien d'anagrammes peut-on former avec le mot "MATHS" (toutes les lettres sont distinctes) ?</p>
+    <p>Il s'agit de permuter les 5 lettres du mot.</p>
+    <p>Le nombre d'anagrammes est $5! = 120$.</p>
+</div>
+
+<h3>2.3 Arrangements sans répétition (k-permutations)</h3>
+
+<div class="definition">
+    <h3>Définition : Arrangement sans répétition</h3>
+    <p>Soit $E$ un ensemble fini de cardinal $n$, et soit $k$ un entier tel que $0 \le k \le n$.</p>
+    <p>Un <strong>arrangement sans répétition</strong> de $k$ éléments de $E$ (ou k-permutation) est une k-liste d'éléments de $E$ où tous les éléments choisis sont <strong>distincts</strong>.</p>
+    <p>C'est une façon de choisir $k$ éléments parmi $n$ en tenant compte de l'ordre et sans répétition.</p>
+</div>
+
+<div class="property">
+    <h3>Nombre d'Arrangements sans répétition</h3>
+    <p>Le nombre d'arrangements sans répétition de $k$ éléments parmi $n$ est noté $A_n^k$ (ou parfois $P(n,k)$) et est donné par :</p>
+    $$A_n^k = n \times (n-1) \times \dots \times (n-k+1)$$
+    <p>On peut aussi l'écrire avec les factorielles :</p>
+    $$A_n^k = \frac{n!}{(n-k)!}$$
+    <p>Note : Si $k=n$, $A_n^n = \frac{n!}{(n-n)!} = \frac{n!}{0!} = \frac{n!}{1} = n!$, on retrouve le nombre de permutations.</p>
+</div>
+
+<div class="proof">
+    <h3>Preuve (par principe multiplicatif)</h3>
+    <p>Pour construire un arrangement sans répétition $(x_1, x_2, \dots, x_k)$ de $k$ éléments parmi $n$, on effectue $k$ choix successifs sans remise :</p>
+    <ul>
+        <li>Choix de $x_1$ : $n$ possibilités.</li>
+        <li>Choix de $x_2$ (différent de $x_1$) : $n-1$ possibilités.</li>
+        <li>...</li>
+        <li>Choix de $x_k$ (différent des $k-1$ précédents) : $n-(k-1) = n-k+1$ possibilités.</li>
+    </ul>
+    <p>D'après le principe multiplicatif, le nombre total d'arrangements est $N = n \times (n-1) \times \dots \times (n-k+1)$.</p>
+    <p>Pour obtenir la forme factorielle :</p>
+    $$A_n^k = n \times (n-1) \times \dots \times (n-k+1)$$
+    $$A_n^k = \frac{n \times (n-1) \times \dots \times (n-k+1) \times (n-k) \times \dots \times 1}{(n-k) \times \dots \times 1}$$
+    $$A_n^k = \frac{n!}{(n-k)!}$$
+</div>
+
+<div class="example">
+    <h3>Exemple (Arrangements)</h3>
+    <p>Dans une course avec 10 chevaux, combien y a-t-il de tiercés possibles dans l'ordre ?</p>
+    <p>Il s'agit de choisir 3 chevaux parmi 10, en tenant compte de l'ordre d'arrivée, et sans répétition (un cheval ne peut pas être à plusieurs places).</p>
+    <p>C'est un arrangement sans répétition de $k=3$ éléments parmi $n=10$.</p>
+    <p>Le nombre de tiercés dans l'ordre est $A_{10}^3 = 10 \times 9 \times 8 = 720$.</p>
+    <p>Calcul avec la formule factorielle : $A_{10}^3 = \frac{10!}{(10-3)!} = \frac{10!}{7!} = \frac{10 \times 9 \times 8 \times 7!}{7!} = 10 \times 9 \times 8 = 720$.</p>
+</div>
+
+<h2>3. Combinaisons (L'ordre ne compte pas)</h2>
+
+<p>On s'intéresse ici au choix d'un sous-ensemble d'éléments, où l'ordre dans lequel on choisit les éléments n'a pas d'importance.</p>
+
+<div class="definition">
+    <h3>Définition : Combinaison</h3>
+    <p>Soit $E$ un ensemble fini de cardinal $n$, et soit $k$ un entier tel que $0 \le k \le n$.</p>
+    <p>Une <strong>combinaison</strong> de $k$ éléments de $E$ est un <strong>sous-ensemble</strong> de $E$ ayant $k$ éléments.</p>
+    <p>L'ordre des éléments dans le sous-ensemble n'importe pas. Les répétitions ne sont pas possibles (car c'est un sous-ensemble).</p>
+</div>
+
+<div class="property">
+    <h3>Nombre de Combinaisons (Coefficient Binomial)</h3>
+    <p>Le nombre de combinaisons de $k$ éléments parmi $n$ est noté $\binom{n}{k}$ (lire "k parmi n" ou "combinaison de k parmi n") ou parfois $C_n^k$.</p>
+    <p>Il est donné par la formule :</p>
+    $$\binom{n}{k} = \frac{A_n^k}{k!} = \frac{n!}{k!(n-k)!}$$
+    <p>Ces nombres sont aussi appelés <strong>coefficients binomiaux</strong>.</p>
+</div>
+
+<div class="proof">
+    <h3>Preuve (Lien entre Arrangements et Combinaisons)</h3>
+    <p>Considérons la construction d'un arrangement sans répétition $A_n^k$ de $k$ éléments parmi $n$. On peut la décomposer en deux étapes :</p>
+    <ol>
+        <li><strong>Étape 1 : Choisir le sous-ensemble</strong> de $k$ éléments qui composeront l'arrangement. Le nombre de façons de faire cela est $\binom{n}{k}$ (c'est ce qu'on cherche !).</li>
+        <li><strong>Étape 2 : Ordonner (permuter)</strong> les $k$ éléments choisis. Il y a $k!$ façons d'ordonner ces $k$ éléments.</li>
+    </ol>
+    <p>D'après le principe multiplicatif, le nombre total d'arrangements $A_n^k$ est le produit du nombre de façons de réaliser chaque étape :</p>
+    $$A_n^k = \binom{n}{k} \times k!$$
+    <p>En isolant $\binom{n}{k}$ (puisque $k! \neq 0$ pour $k \ge 0$), on obtient :</p>
+    $$\binom{n}{k} = \frac{A_n^k}{k!}$$
+    <p>En utilisant la formule factorielle de $A_n^k$ :</p>
+    $$\binom{n}{k} = \frac{n! / (n-k)!}{k!} = \frac{n!}{k!(n-k)!}$$
+</div>
+
+<div class="example">
+    <h3>Exemple (Combinaisons)</h3>
+    <p>Au Loto, on tire 5 boules parmi 49 (sans remise, l'ordre de tirage ne compte pas pour déterminer une grille gagnante).</p>
+    <p>Combien de tirages possibles y a-t-il ?</p>
+    <p>Il s'agit de choisir un sous-ensemble de $k=5$ boules parmi $n=49$. C'est une combinaison.</p>
+    <p>Le nombre de tirages possibles est :</p>
+    $$\binom{49}{5} = \frac{49!}{5!(49-5)!} = \frac{49!}{5!44!} = \frac{49 \times 48 \times 47 \times 46 \times 45}{5 \times 4 \times 3 \times 2 \times 1}$$
+    <p>Simplifions : $48 / (4 \times 3 \times 2 \times 1) = 48 / 24 = 2$. $45 / 5 = 9$.</p>
+    $$\binom{49}{5} = 49 \times 2 \times 47 \times 46 \times 9 = 1\ 906\ 884$$
+    <p>Il y a presque 2 millions de combinaisons possibles.</p>
+    <p>Dans une classe de 30 élèves, on veut choisir un comité de 3 délégués (sans rôle distinct). Combien de comités possibles ?</p>
+    <p>L'ordre ne compte pas, c'est une combinaison de $k=3$ parmi $n=30$.</p>
+    $$\binom{30}{3} = \frac{30!}{3!(30-3)!} = \frac{30!}{3!27!} = \frac{30 \times 29 \times 28}{3 \times 2 \times 1} = 10 \times 29 \times 14 = 4060$$
+    <p>Il y a 4060 comités possibles.</p>
+</div>
+
+<h2>4. Propriétés des Coefficients Binomiaux et Triangle de Pascal</h2>
+
+<div class="property">
+    <h3>Propriétés Élémentaires</h3>
+    <p>Pour tout entier $n \ge 0$ :</p>
+    <ul>
+        <li>$\binom{n}{0} = 1$ (Il y a une seule façon de choisir 0 élément : l'ensemble vide).</li>
+        <li>$\binom{n}{n} = 1$ (Il y a une seule façon de choisir $n$ éléments parmi $n$ : l'ensemble entier).</li>
+        <li>$\binom{n}{1} = n$ (Il y a $n$ façons de choisir 1 élément parmi $n$).</li>
+    </ul>
+</div>
+<div class="proof">
+    <h3>Preuves (avec la formule)</h3>
+    <ul>
+        <li>$\binom{n}{0} = \frac{n!}{0!(n-0)!} = \frac{n!}{1 \times n!} = 1$.</li>
+        <li>$\binom{n}{n} = \frac{n!}{n!(n-n)!} = \frac{n!}{n!0!} = \frac{n!}{n! \times 1} = 1$.</li>
+        <li>$\binom{n}{1} = \frac{n!}{1!(n-1)!} = \frac{n \times (n-1)!}{1 \times (n-1)!} = n$.</li>
+    </ul>
+</div>
+
+
+<div class="property">
+    <h3>Propriété de Symétrie</h3>
+    <p>Pour tous entiers $n, k$ tels que $0 \le k \le n$ :</p>
+    $$\binom{n}{k} = \binom{n}{n-k}$$
+</div>
+
+<div class="proof">
+    <h3>Preuves (Symétrie)</h3>
+    <p><strong>Preuve algébrique :</strong></p>
+    $$\binom{n}{n-k} = \frac{n!}{(n-k)!(n-(n-k))!} = \frac{n!}{(n-k)!k!} = \binom{n}{k}$$
+    <p><strong>Preuve combinatoire (plus intuitive) :</strong></p>
+    <p>Choisir un sous-ensemble de $k$ éléments parmi $n$ revient exactement au même que de choisir le sous-ensemble des $n-k$ éléments qu'on <strong>ne prend pas</strong>.</p>
+    <p>Il y a donc autant de façons de choisir $k$ éléments que de choisir $n-k$ éléments.</p>
+</div>
+
+<div class="theorem">
+    <h3>Formule de Pascal</h3>
+    <p>Pour tous entiers $n, k$ tels que $1 \le k \le n-1$ :</p>
+    $$\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}$$
+    <p>Cette formule permet de calculer les coefficients binomiaux de proche en proche.</p>
+</div>
+
+<div class="proof">
+    <h3>Preuves (Formule de Pascal)</h3>
+    <p><strong>Preuve algébrique :</strong></p>
+    $$\binom{n-1}{k-1} + \binom{n-1}{k} = \frac{(n-1)!}{(k-1)!((n-1)-(k-1))!} + \frac{(n-1)!}{k!((n-1)-k)!}$$
+    $$= \frac{(n-1)!}{(k-1)!(n-k)!} + \frac{(n-1)!}{k!(n-k-1)!}$$
+    <p>Mettons au même dénominateur $k!(n-k)!$ :</p>
+    $$= \frac{k \times (n-1)!}{k!(n-k)!} + \frac{(n-k) \times (n-1)!}{k!(n-k)!}$$
+    $$= \frac{(k + (n-k)) \times (n-1)!}{k!(n-k)!} = \frac{n \times (n-1)!}{k!(n-k)!}$$
+    $$= \frac{n!}{k!(n-k)!} = \binom{n}{k}$$
+    <p><strong>Preuve combinatoire :</strong></p>
+    <p>On veut choisir un comité de $k$ personnes parmi $n$. Isolons une personne particulière, appelons-la A.</p>
+    <p>Il y a deux types de comités possibles (cas disjoints, on utilise le principe additif) :</p>
+    <ul>
+        <li><strong>Cas 1 :</strong> Le comité contient A. Il faut alors choisir les $k-1$ autres membres parmi les $n-1$ personnes restantes (hors A). Il y a $\binom{n-1}{k-1}$ façons de le faire.</li>
+        <li><strong>Cas 2 :</strong> Le comité ne contient pas A. Il faut alors choisir les $k$ membres parmi les $n-1$ personnes restantes (hors A). Il y a $\binom{n-1}{k}$ façons de le faire.</li>
+    </ul>
+    <p>Le nombre total de comités est la somme des possibilités dans ces deux cas disjoints : $\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}$.</p>
+</div>
+
+<div class="definition">
+    <h3>Triangle de Pascal</h3>
+    <p>Le Triangle de Pascal est une présentation des coefficients binomiaux $\binom{n}{k}$ dans un tableau triangulaire. Chaque coefficient est la somme des deux coefficients situés juste au-dessus de lui (application directe de la formule de Pascal).</p>
+    <table>
+        <tr><th>n\k</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>...</th></tr>
+        <tr><th>0</th><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th>1</th><td>1</td><td>1</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th>2</th><td>1</td><td>2</td><td>1</td><td></td><td></td><td></td><td></td></tr>
+        <tr><th>3</th><td>1</td><td>3</td><td>3</td><td>1</td><td></td><td></td><td></td></tr>
+        <tr><th>4</th><td>1</td><td>4</td><td>6</td><td>4</td><td>1</td><td></td><td></td></tr>
+        <tr><th>5</th><td>1</td><td>5</td><td>10</td><td>10</td><td>5</td><td>1</td><td></td></tr>
+        <tr><th>...</th><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+    </table>
+    <p>Exemple de lecture : à la ligne $n=4$, colonne $k=2$, on trouve $\binom{4}{2}=6$. On vérifie que $6 = 3+3 = \binom{3}{1} + \binom{3}{2}$ (les deux nombres au-dessus).</p>
+</div>
+
+<h2>5. Formule du Binôme de Newton</h2>
+
+<p>Les coefficients binomiaux apparaissent naturellement dans le développement de $(a+b)^n$.</p>
+
+<div class="theorem">
+    <h3>Formule du Binôme de Newton</h3>
+    <p>Pour tous nombres réels (ou complexes) $a$ et $b$, et tout entier naturel $n \ge 0$ :</p>
+    $$(a+b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k$$
+    <p>Développé :</p>
+    $$(a+b)^n = \binom{n}{0} a^n b^0 + \binom{n}{1} a^{n-1} b^1 + \binom{n}{2} a^{n-2} b^2 + \dots + \binom{n}{n-1} a^1 b^{n-1} + \binom{n}{n} a^0 b^n$$
+    $$(a+b)^n = a^n + n a^{n-1} b + \frac{n(n-1)}{2} a^{n-2} b^2 + \dots + n a b^{n-1} + b^n$$
+</div>
+
+<div class="proof">
+    <h3>Idée de la Preuve (Combinatoire)</h3>
+    <p>Considérons le développement de $(a+b)^n = (a+b)(a+b)\dots(a+b)$ ($n$ facteurs).</p>
+    <p>Pour obtenir un terme de la forme $a^{n-k} b^k$ dans le développement final, on doit choisir le terme $b$ dans $k$ des $n$ facteurs $(a+b)$ et choisir le terme $a$ dans les $n-k$ facteurs restants.</p>
+    <p>Le nombre de façons de choisir les $k$ facteurs où l'on prend $b$ est précisément $\binom{n}{k}$.</p>
+    <p>Donc, le coefficient du terme $a^{n-k} b^k$ dans le développement est $\binom{n}{k}$.</p>
+    <p>En sommant sur toutes les valeurs possibles de $k$ (de 0 à $n$), on obtient la formule.</p>
+    <p>(Une preuve plus formelle peut se faire par récurrence sur $n$ en utilisant la formule de Pascal).</p>
+</div>
+
+<div class="example">
+    <h3>Exemple (Binôme de Newton)</h3>
+    <p>Développer $(x+2)^4$.</p>
+    <p>Ici, $a=x$, $b=2$, $n=4$. On utilise la ligne $n=4$ du triangle de Pascal pour les coefficients : 1, 4, 6, 4, 1.</p>
+    $$(x+2)^4 = \binom{4}{0} x^4 2^0 + \binom{4}{1} x^3 2^1 + \binom{4}{2} x^2 2^2 + \binom{4}{3} x^1 2^3 + \binom{4}{4} x^0 2^4$$
+    $$(x+2)^4 = 1 \cdot x^4 \cdot 1 + 4 \cdot x^3 \cdot 2 + 6 \cdot x^2 \cdot 4 + 4 \cdot x \cdot 8 + 1 \cdot 1 \cdot 16$$
+    $$(x+2)^4 = x^4 + 8x^3 + 24x^2 + 32x + 16$$
+</div>
+
+<h2>Conclusion</h2>
+
+<p>Le dénombrement repose sur les principes additif et multiplicatif. Selon que l'ordre compte ou non, et que les répétitions sont permises ou non, on utilise différents outils :</p>
+<ul>
+    <li><strong>k-listes (ordre, répétitions) :</strong> $n^k$</li>
+    <li><strong>Arrangements sans répétition (ordre, pas de répétitions) :</strong> $A_n^k = \frac{n!}{(n-k)!}$</li>
+    <li><strong>Permutations (ordre, pas de répétitions, tous les éléments) :</strong> $n!$</li>
+    <li><strong>Combinaisons (pas d'ordre, pas de répétitions) :</strong> $\binom{n}{k} = \frac{n!}{k!(n-k)!}$</li>
+</ul>
+<p>Les coefficients binomiaux $\binom{n}{k}$ possèdent de nombreuses propriétés (symétrie, formule de Pascal) visualisées par le Triangle de Pascal et sont les coefficients apparaissant dans la formule du binôme de Newton.</p>
+
+</body>
+</html>
