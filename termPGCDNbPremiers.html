@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions - PGCD et Nombres Premiers</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa; /* Gris clair */
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0056b3; /* Bleu foncé */
+            border-bottom: 2px solid #0aa371; /* Vert-bleu */
+            padding-bottom: 5px;
+            margin-top: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .qa-item {
+            margin: 25px 0;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .question {
+            font-weight: bold;
+            color: #0aa371; /* Vert-bleu */
+            cursor: pointer;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+            margin-bottom: 10px;
+        }
+        .question:hover {
+            color: #077450; /* Vert-bleu foncé */
+        }
+        .answer {
+            display: none; /* Caché par défaut */
+            padding: 10px;
+            background-color: #e7f6f1; /* Vert-bleu très clair */
+            border-left: 4px solid #0aa371; /* Vert-bleu */
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        }
+        .instructions {
+            text-align: center;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 30px;
+        }
+    </style>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+        >
+  <!-- KaTeX JS -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+          ></script>
+  <!-- Auto-render extension -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          ></script>
+  <!-- Initialize auto-render after the page loads -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        // Delimiters for inline and display math
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false},
+          {left: "\\(", right: "\\)", display: false},
+          {left: "\\[", right: "\\]", display: true}
+        ]
+      });
+    });
+  </script>
+</head>
+<body>
+<div class="container">
+
+    <h1>Questions : PGCD et Nombres Premiers</h1>
+
+    <p class="instructions">Cliquez sur une question pour voir apparaître la réponse.</p>
+
+    <div class="qa-item">
+        <div class="question">
+            1. Qu'est-ce qu'un nombre premier ? Donner les premiers nombres premiers.
+        </div>
+        <div class="answer">
+            <p>Un nombre entier naturel $p$ est dit <strong>premier</strong> s'il possède exactement deux diviseurs positifs distincts : 1 et lui-même ($p$).</p>
+            <p>Par convention, 1 n'est pas un nombre premier.</p>
+            <p>Les premiers nombres premiers sont : 2, 3, 5, 7, 11, 13, 17, 19, 23, ...</p>
+            <p>Note : 2 est le seul nombre premier pair.</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            2. Existe-t-il une infinité de nombres premiers ?
+        </div>
+        <div class="answer">
+            <p>Oui, il existe une infinité de nombres premiers. C'est un théorème démontré par Euclide dans l'Antiquité.</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            3. Qu'est-ce que le PGCD (Plus Grand Commun Diviseur) de deux entiers naturels $a$ et $b$ non tous nuls ?
+        </div>
+        <div class="answer">
+            <p>Le PGCD de $a$ et $b$ (noté $\text{pgcd}(a, b)$ ou parfois $(a, b)$) est le plus grand entier naturel qui divise à la fois $a$ et $b$.</p>
+            <p>Exemple : Les diviseurs positifs de 12 sont {1, 2, 3, 4, 6, 12}. Les diviseurs positifs de 18 sont {1, 2, 3, 6, 9, 18}. Les diviseurs communs sont {1, 2, 3, 6}. Le plus grand est 6. Donc $\text{pgcd}(12, 18) = 6$.</p>
+            <p>Note : $\text{pgcd}(a, 0) = a$ pour $a > 0$. Le PGCD est souvent défini pour des entiers relatifs, $\text{pgcd}(a, b) = \text{pgcd}(|a|, |b|)$.</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            4. Décrire l'algorithme d'Euclide pour calculer le PGCD de deux entiers $a$ et $b$ (avec $a > b > 0$).
+        </div>
+        <div class="answer">
+            <p>L'algorithme d'Euclide repose sur le fait que $\text{pgcd}(a, b) = \text{pgcd}(b, r)$, où $r$ est le reste de la division euclidienne de $a$ par $b$.</p>
+            <p>L'algorithme consiste à effectuer des divisions euclidiennes successives :</p>
+            <ol>
+                <li>On divise $a$ par $b$ : $a = bq_1 + r_1$, avec $0 \le r_1 < b$.</li>
+                <li>Si $r_1 = 0$, alors $\text{pgcd}(a, b) = b$. L'algorithme s'arrête.</li>
+                <li>Si $r_1 \neq 0$, on divise $b$ par $r_1$ : $b = r_1q_2 + r_2$, avec $0 \le r_2 < r_1$.</li>
+                <li>Si $r_2 = 0$, alors $\text{pgcd}(a, b) = r_1$. L'algorithme s'arrête.</li>
+                <li>Sinon, on continue en divisant $r_1$ par $r_2$, etc.</li>
+            </ol>
+            <p>La suite des restes $r_1, r_2, r_3, \dots$ est une suite d'entiers naturels strictement décroissante, donc elle finit par atteindre 0.</p>
+            <p>Le PGCD de $a$ et $b$ est le <strong>dernier reste non nul</strong> obtenu dans ces divisions successives.</p>
+        </div>
+    </div>
+
+     <div class="qa-item">
+        <div class="question">
+            5. Calculer $\text{pgcd}(132, 48)$ en utilisant l'algorithme d'Euclide.
+        </div>
+        <div class="answer">
+            <ol>
+                <li>$132 = 48 \times 2 + 36$ (reste $r_1 = 36$)</li>
+                <li>$48 = 36 \times 1 + 12$ (reste $r_2 = 12$)</li>
+                <li>$36 = 12 \times 3 + 0$ (reste $r_3 = 0$)</li>
+            </ol>
+            <p>Le dernier reste non nul est 12.</p>
+            <p>Donc, $\text{pgcd}(132, 48) = 12$.</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            6. Quand dit-on que deux entiers $a$ et $b$ sont premiers entre eux (ou copremiers) ? Donner un exemple.
+        </div>
+        <div class="answer">
+            <p>Deux entiers $a$ et $b$ sont dits <strong>premiers entre eux</strong> (ou <strong>copremiers</strong>) si leur seul diviseur commun positif est 1.</p>
+            <p>Cela équivaut à dire que leur PGCD est égal à 1 :</p>
+            $$ a \text{ et } b \text{ premiers entre eux} \iff \text{pgcd}(a, b) = 1 $$
+            <p>Exemple : $\text{pgcd}(14, 15) = 1$, donc 14 et 15 sont premiers entre eux (pourtant ni 14 ni 15 n'est un nombre premier).</p>
+            <p>Exemple : $\text{pgcd}(8, 9) = 1$, donc 8 et 9 sont premiers entre eux.</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            7. Énoncer le théorème de Bézout.
+        </div>
+        <div class="answer">
+            <p>Soient $a$ et $b$ deux entiers relatifs non tous nuls. Il existe des entiers relatifs $u$ et $v$ tels que :</p>
+            $$ au + bv = \text{pgcd}(a, b) $$
+            <p>Ce théorème garantit l'existence d'une combinaison linéaire de $a$ et $b$ égale à leur PGCD.</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            8. Énoncer le corollaire du théorème de Bézout (parfois appelé théorème de Bézout également) caractérisant les nombres premiers entre eux.
+        </div>
+        <div class="answer">
+            <p>Deux entiers relatifs $a$ et $b$ (non tous nuls) sont premiers entre eux si et seulement s'il existe deux entiers relatifs $u$ et $v$ tels que :</p>
+            $$ au + bv = 1 $$
+            <p>Ce corollaire est très utile pour démontrer que deux nombres sont premiers entre eux (il suffit de trouver une combinaison linéaire égale à 1).</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            9. Énoncer le théorème de Gauss.
+        </div>
+        <div class="answer">
+            <p>Soient $a, b, c$ trois entiers relatifs non nuls.</p>
+            <p>Si $a$ divise le produit $bc$ et si $a$ est premier avec $b$ ($\text{pgcd}(a, b) = 1$), alors $a$ divise $c$.</p>
+            $$ \left. \begin{array}{l} a \mid bc \\ \text{pgcd}(a, b) = 1 \end{array} \right\} \implies a \mid c $$
+            <p>Ce théorème est fondamental en arithmétique, notamment pour la résolution d'équations et l'étude des diviseurs.</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            10. Énoncer le théorème fondamental de l'arithmétique (décomposition en produit de facteurs premiers).
+        </div>
+        <div class="answer">
+            <p>Tout entier naturel $n \ge 2$ se décompose de manière <strong>unique</strong> (à l'ordre des facteurs près) en un produit de nombres premiers.</p>
+            <p>C'est-à-dire, pour tout $n \ge 2$, il existe des nombres premiers $p_1, p_2, \dots, p_k$ (distincts ou non) et des entiers naturels $\alpha_1, \alpha_2, \dots, \alpha_k$ (non nuls) tels que :</p>
+            $$ n = p_1^{\alpha_1} p_2^{\alpha_2} \dots p_k^{\alpha_k} $$
+            <p>et cette décomposition est unique à l'ordre près des facteurs $p_i^{\alpha_i}$.</p>
+            <p>Exemple : $180 = 18 \times 10 = (2 \times 3^2) \times (2 \times 5) = 2^2 \times 3^2 \times 5^1$.</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            11. Comment calculer le PGCD de deux nombres $a$ et $b$ à partir de leur décomposition en produit de facteurs premiers ?
+        </div>
+        <div class="answer">
+            <p>Pour calculer $\text{pgcd}(a, b)$ :</p>
+            <ol>
+                <li>On décompose $a$ et $b$ en produit de facteurs premiers.</li>
+                <li>Le PGCD est obtenu en faisant le produit des facteurs premiers <strong>communs</strong> aux deux décompositions, chacun étant affecté du <strong>plus petit</strong> exposant avec lequel il apparaît dans l'une ou l'autre des décompositions.</li>
+            </ol>
+            <p>Exemple : $a = 180 = 2^2 \times 3^2 \times 5^1$ et $b = 126 = 2^1 \times 3^2 \times 7^1$.</p>
+            <p>Les facteurs premiers communs sont 2 et 3.</p>
+            <ul>
+                <li>Le plus petit exposant pour 2 est 1 (dans $b$).</li>
+                <li>Le plus petit exposant pour 3 est 2 (identique dans $a$ et $b$).</li>
+            </ul>
+            <p>Donc, $\text{pgcd}(180, 126) = 2^1 \times 3^2 = 2 \times 9 = 18$.</p>
+        </div>
+    </div>
+
+    <div class="qa-item">
+        <div class="question">
+            12. Qu'est-ce que le PPCM (Plus Petit Commun Multiple) et comment le calculer à l'aide de la décomposition en facteurs premiers ? Quel est le lien avec le PGCD ?
+        </div>
+        <div class="answer">
+            <p>Le PPCM de deux entiers naturels non nuls $a$ et $b$, noté $\text{ppcm}(a, b)$, est le plus petit entier naturel strictement positif qui est multiple à la fois de $a$ et de $b$.</p>
+            <p>Pour calculer $\text{ppcm}(a, b)$ à partir des décompositions en facteurs premiers :</p>
+            <ol>
+                <li>On décompose $a$ et $b$ en produit de facteurs premiers.</li>
+                <li>Le PPCM est obtenu en faisant le produit de <strong>tous</strong> les facteurs premiers qui apparaissent dans l'une <strong>ou</strong> l'autre des décompositions, chacun étant affecté du <strong>plus grand</strong> exposant avec lequel il apparaît.</li>
+            </ol>
+            <p>Exemple : $a = 180 = 2^2 \times 3^2 \times 5^1$ et $b = 126 = 2^1 \times 3^2 \times 7^1$.</p>
+            <p>Les facteurs premiers apparaissant sont 2, 3, 5 et 7.</p>
+             <ul>
+                <li>Le plus grand exposant pour 2 est 2 (dans $a$).</li>
+                <li>Le plus grand exposant pour 3 est 2 (identique).</li>
+                 <li>Le plus grand exposant pour 5 est 1 (dans $a$).</li>
+                 <li>Le plus grand exposant pour 7 est 1 (dans $b$).</li>
+            </ul>
+             <p>Donc, $\text{ppcm}(180, 126) = 2^2 \times 3^2 \times 5^1 \times 7^1 = 4 \times 9 \times 5 \times 7 = 1260$.</p>
+             <p><strong>Lien avec le PGCD :</strong> Pour tous entiers naturels non nuls $a$ et $b$ :</p>
+             $$ a \times b = \text{pgcd}(a, b) \times \text{ppcm}(a, b) $$
+             <p>Vérification : $180 \times 126 = 22680$ et $18 \times 1260 = 22680$.</p>
+        </div>
+    </div>
+
+     <div class="qa-item">
+        <div class="question">
+            13. Comment tester si un nombre entier $n \ge 2$ est premier (méthode de base) ?
+        </div>
+        <div class="answer">
+            <p>Pour tester si $n$ est premier, on peut utiliser la méthode de la <strong>division par essais</strong> (trial division) :</p>
+            <ol>
+                <li>On teste si $n$ est divisible par 2. Si oui, il n'est premier que si $n=2$.</li>
+                <li>Si non, on teste si $n$ est divisible par les nombres premiers impairs successifs : 3, 5, 7, 11, ...</li>
+                <li>On s'arrête lorsque le nombre premier $p$ testé dépasse $\sqrt{n}$.</li>
+            </ol>
+            <p><strong>Règle :</strong> Si $n$ n'est divisible par aucun nombre premier $p$ tel que $p \le \sqrt{n}$, alors $n$ est premier.</p>
+            <p><strong>Justification :</strong> Si $n$ n'est pas premier, il peut s'écrire $n = a \times b$ avec $1 < a \le b < n$. Alors $a^2 \le ab = n$, donc $a \le \sqrt{n}$. L'un des diviseurs ($a$) est nécessairement inférieur ou égal à $\sqrt{n}$. De plus, $a$ est lui-même divisible par un nombre premier $p$ (éventuellement $a=p$), et ce nombre premier $p$ est aussi inférieur ou égal à $a$, donc $p \le \sqrt{n}$. Si $n$ n'a aucun diviseur premier inférieur ou égal à sa racine carrée, il ne peut pas être composé.</p>
+            <p><strong>Exemple :</strong> Tester si 97 est premier.</p>
+            <p>$\sqrt{97} \approx 9.8$. Les nombres premiers à tester sont 2, 3, 5, 7.</p>
+            <ul>
+                <li>97 n'est pas divisible par 2 (impair).</li>
+                <li>$9+7=16$, non divisible par 3.</li>
+                <li>Ne se termine pas par 0 ou 5, non divisible par 5.</li>
+                <li>$97 = 7 \times 13 + 6$. Non divisible par 7.</li>
+            </ul>
+            <p>Comme 97 n'est divisible par aucun premier inférieur ou égal à $\sqrt{97}$, 97 est un nombre premier.</p>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    // Sélectionne tous les éléments de question
+    const questions = document.querySelectorAll('.question');
+
+    // Ajoute un écouteur d'événement 'click' à chaque question
+    questions.forEach(question => {
+        question.addEventListener('click', () => {
+            // Trouve l'élément réponse correspondant (l'élément frère suivant)
+            const answer = question.nextElementSibling;
+
+            // Bascule l'affichage de la réponse
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+            } else {
+                answer.style.display = 'block';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
