@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours de Maths - Limites de Fonctions</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #0056b3; /* Bleu foncé */
+            border-bottom: 2px solid #007bff; /* Bleu clair */
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .definition, .theorem, .property, .example, .proof {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 5px solid #007bff;
+            background-color: #e7f3ff; /* Bleu très clair */
+            border-radius: 5px;
+        }
+        .definition h3, .theorem h3, .property h3, .example h3, .proof h3 {
+            margin-top: 0;
+            border: none;
+            color: #0056b3;
+        }
+        code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        }
+        /* Style pour les formules MathJax en display mode */
+        mjx-container[jax="CHTML"][display="true"] {
+            display: block;
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin: 1em 0;
+            padding: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+      svg {
+            display: block;
+            overflow: visible; /* Pour voir les axes */
+            height: auto;
+        }
+    </style>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+        >
+  <!-- KaTeX JS -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+          ></script>
+  <!-- Auto-render extension -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          ></script>
+  <!-- Initialize auto-render after the page loads -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        // Delimiters for inline and display math
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false},
+          {left: "\\(", right: "\\)", display: false},
+          {left: "\\[", right: "\\]", display: true}
+        ]
+      });
+    });
+  </script>
+</head>
+<body>
+<div class="container">
+
+    <h1>Limites de Fonctions</h1>
+
+    <h2>I. Introduction et Notion Intuitive</h2>
+
+    <p>
+        La notion de limite d'une fonction $f$ en un point $a$ (ou en l'infini) cherche à décrire le comportement des valeurs $f(x)$ lorsque $x$ s'approche de $a$ (ou devient très grand/petit). On ne s'intéresse pas nécessairement à la valeur de $f$ en $a$, mais à ce vers quoi $f(x)$ tend quand $x$ est *proche* de $a$.
+    </p>
+    <p>
+        Par exemple, que se passe-t-il pour la fonction $f(x) = \frac{\sin(x)}{x}$ lorsque $x$ s'approche de 0 ? La fonction n'est pas définie en $x=0$, mais en prenant des valeurs de $x$ très proches de 0 (comme 0.01, -0.001, etc.), on observe que $f(x)$ s'approche de 1. On dira que la limite de $f(x)$ quand $x$ tend vers 0 est 1.
+    </p>
+
+    <h2>II. Limite Finie en un Point Fini</h2>
+
+    <div class="definition">
+        <h3>Définition (Limite finie en $a \in \mathbb{R}$)</h3>
+        <p>
+            Soit $f$ une fonction définie sur un intervalle $I$ contenant $a$, ou sur $I \setminus \{a\}$. Soit $L$ un nombre réel. On dit que $f(x)$ tend vers $L$ quand $x$ tend vers $a$, ou que la limite de $f$ en $a$ est $L$, si les valeurs $f(x)$ peuvent être rendues aussi proches que l'on veut de $L$ dès que $x$ est suffisamment proche de $a$ (mais différent de $a$).
+        </p>
+        <p>On note :</p>
+        $$ \lim_{x \to a} f(x) = L $$
+        <p>Ou parfois $f(x) \xrightarrow[x \to a]{} L$.</p>
+    </div>
+
+    <div class="definition">
+        <h3>Définition (Limite à gauche et à droite)</h3>
+        <ul>
+            <li><strong>Limite à droite en $a$ :</strong> On considère $x$ s'approchant de $a$ par valeurs supérieures ($x > a$). On note :
+                $$ \lim_{x \to a^+} f(x) = L_d $$
+            </li>
+            <li><strong>Limite à gauche en $a$ :</strong> On considère $x$ s'approchant de $a$ par valeurs inférieures ($x < a$). On note :
+                $$ \lim_{x \to a^-} f(x) = L_g $$
+            </li>
+        </ul>
+    </div>
+
+    <div class="theorem">
+        <h3>Théorème (Existence de la limite)</h3>
+        <p>
+            La limite de $f$ en $a$ existe et est égale à $L$ si et seulement si la limite à gauche et la limite à droite en $a$ existent et sont toutes deux égales à $L$.
+        </p>
+        $$ \lim_{x \to a} f(x) = L \iff \left( \lim_{x \to a^+} f(x) = L \quad \text{et} \quad \lim_{x \to a^-} f(x) = L \right) $$
+    </div>
+
+    <div class="example">
+        <h3>Exemple</h3>
+        <p>Soit $f(x) = \begin{cases} x+1 & \text{si } x < 1 \\ 3-x & \text{si } x \ge 1 \end{cases}$.</p>
+        <p>Limite à gauche en 1 : $\lim_{x \to 1^-} f(x) = \lim_{x \to 1^-} (x+1) = 1+1 = 2$.</p>
+        <p>Limite à droite en 1 : $\lim_{x \to 1^+} f(x) = \lim_{x \to 1^+} (3-x) = 3-1 = 2$.</p>
+        <p>Comme les limites à gauche et à droite sont égales à 2, on a $\lim_{x \to 1} f(x) = 2$.</p>
+    </div>
+
+    <h2>III. Limite Infinie en un Point Fini</h2>
+
+    <div class="definition">
+        <h3>Définition (Limite infinie en $a \in \mathbb{R}$)</h3>
+        <p>
+            On dit que $f(x)$ tend vers $+\infty$ quand $x$ tend vers $a$ si les valeurs $f(x)$ peuvent être rendues aussi grandes que l'on veut dès que $x$ est suffisamment proche de $a$ (mais différent de $a$). On note :
+        </p>
+        $$ \lim_{x \to a} f(x) = +\infty $$
+        <p>
+            De même, on définit $\lim_{x \to a} f(x) = -\infty$. On peut aussi définir ces limites à gauche ($x \to a^-$) et à droite ($x \to a^+$).
+        </p>
+    </div>
+
+    <div class="example">
+        <h3>Exemple : Fonction Inverse</h3>
+        <p>Soit $f(x) = \frac{1}{x}$.</p>
+        <ul>
+            <li>Quand $x$ s'approche de 0 par valeurs positives ($x \to 0^+$), $x$ est petit et positif, donc $1/x$ est grand et positif.
+                $$ \lim_{x \to 0^+} \frac{1}{x} = +\infty $$
+            </li>
+            <li>Quand $x$ s'approche de 0 par valeurs négatives ($x \to 0^-$), $x$ est petit (en valeur absolue) et négatif, donc $1/x$ est grand (en valeur absolue) et négatif.
+                $$ \lim_{x \to 0^-} \frac{1}{x} = -\infty $$
+            </li>
+        </ul>
+        <p>Comme les limites à gauche et à droite sont différentes, $\lim_{x \to 0} \frac{1}{x}$ n'existe pas (au sens d'une limite unique, finie ou infinie).</p>
+    </div>
+
+    <div class="property">
+        <h3>Interprétation Graphique : Asymptote Verticale</h3>
+        <p>
+            Si $\lim_{x \to a^+} f(x) = \pm \infty$ ou $\lim_{x \to a^-} f(x) = \pm \infty$, alors la droite d'équation $x = a$ est une <strong>asymptote verticale</strong> à la courbe représentative de $f$.
+        </p>
+    </div>
+
+    <!-- SVG Graph for 1/x -->
+    <svg viewBox="-5 -5 10 10" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+        <title>Graphe de f(x) = 1/x</title>
+        <!-- Axes -->
+        <line x1="-5" y1="0" x2="5" y2="0" stroke="black" stroke-width="0.05"/> <!-- Axe X -->
+        <line x1="0" y1="-5" x2="0" y2="5" stroke="black" stroke-width="0.05"/> <!-- Axe Y -->
+        <!-- Graduations -->
+        <line x1="1" y1="-0.1" x2="1" y2="0.1" stroke="black" stroke-width="0.05"/>
+        <text x="1" y="0.4" font-size="0.3" text-anchor="middle">1</text>
+        <line x1="-1" y1="-0.1" x2="-1" y2="0.1" stroke="black" stroke-width="0.05"/>
+        <text x="-1" y="0.4" font-size="0.3" text-anchor="middle">-1</text>
+        <line x1="-0.1" y1="1" x2="0.1" y2="1" stroke="black" stroke-width="0.05"/>
+        <text x="-0.3" y="1.1" font-size="0.3" text-anchor="end">1</text>
+        <line x1="-0.1" y1="-1" x2="0.1" y2="-1" stroke="black" stroke-width="0.05"/>
+        <text x="-0.3" y="-0.9" font-size="0.3" text-anchor="end">-1</text>
+        <!-- Asymptotes (pointillés) -->
+        <line x1="0" y1="-5" x2="0" y2="5" stroke="blue" stroke-width="0.04" stroke-dasharray="0.2 0.1"/> <!-- x=0 -->
+        <line x1="-5" y1="0" x2="5" y2="0" stroke="blue" stroke-width="0.04" stroke-dasharray="0.2 0.1"/> <!-- y=0 -->
+        <!-- Courbe y=1/x -->
+        <path d="M 0.2,5 C 0.5,2 1,1 2,0.5 L 5,0.2" stroke="red" stroke-width="0.06" fill="none"/>
+        <path d="M -0.2,-5 C -0.5,-2 -1,-1 -2,-0.5 L -5,-0.2" stroke="red" stroke-width="0.06" fill="none"/>
+        <!-- Labels Asymptotes -->
+        <text x="0.2" y="-4.5" font-size="0.3" fill="blue">x=0</text>
+        <text x="4" y="-0.2" font-size="0.3" fill="blue">y=0</text>
+    </svg>
+
+
+    <h2>IV. Limite Finie en l'Infini</h2>
+
+    <div class="definition">
+        <h3>Définition (Limite finie en $\pm \infty$)</h3>
+        <p>
+            Soit $f$ une fonction définie sur un intervalle de la forme $[c, +\infty[$. Soit $L$ un réel. On dit que $f(x)$ tend vers $L$ quand $x$ tend vers $+\infty$ si les valeurs $f(x)$ peuvent être rendues aussi proches que l'on veut de $L$ dès que $x$ est suffisamment grand. On note :
+        </p>
+        $$ \lim_{x \to +\infty} f(x) = L $$
+        <p>
+            De même, on définit la limite en $-\infty$ pour une fonction définie sur $]-\infty, c]$.
+        </p>
+        $$ \lim_{x \to -\infty} f(x) = L $$
+    </div>
+
+     <div class="example">
+        <h3>Exemple : Fonction Inverse</h3>
+        <p>Soit $f(x) = \frac{1}{x}$.</p>
+        <ul>
+            <li>Quand $x$ devient très grand et positif ($x \to +\infty$), $1/x$ devient très proche de 0 (et positif).
+                $$ \lim_{x \to +\infty} \frac{1}{x} = 0 $$
+            </li>
+            <li>Quand $x$ devient très grand en valeur absolue mais négatif ($x \to -\infty$), $1/x$ devient très proche de 0 (et négatif).
+                $$ \lim_{x \to -\infty} \frac{1}{x} = 0 $$
+            </li>
+        </ul>
+    </div>
+
+    <div class="property">
+        <h3>Interprétation Graphique : Asymptote Horizontale</h3>
+        <p>
+            Si $\lim_{x \to +\infty} f(x) = L$ ou $\lim_{x \to -\infty} f(x) = L$, alors la droite d'équation $y = L$ est une <strong>asymptote horizontale</strong> à la courbe représentative de $f$ (en $+\infty$ ou en $-\infty$ respectivement).
+        </p>
+        <p>Dans l'exemple $f(x) = 1/x$, la droite $y=0$ (l'axe des abscisses) est asymptote horizontale en $+\infty$ et en $-\infty$.</p>
+    </div>
+
+    <h2>V. Limite Infinie en l'Infini</h2>
+
+    <div class="definition">
+        <h3>Définition (Limite infinie en $\pm \infty$)</h3>
+        <p>
+            Soit $f$ une fonction définie sur un intervalle de la forme $[c, +\infty[$. On dit que $f(x)$ tend vers $+\infty$ quand $x$ tend vers $+\infty$ si les valeurs $f(x)$ peuvent être rendues aussi grandes que l'on veut dès que $x$ est suffisamment grand. On note :
+        </p>
+        $$ \lim_{x \to +\infty} f(x) = +\infty $$
+        <p>
+            On définit de manière analogue les limites $\lim_{x \to +\infty} f(x) = -\infty$, $\lim_{x \to -\infty} f(x) = +\infty$ et $\lim_{x \to -\infty} f(x) = -\infty$.
+        </p>
+    </div>
+
+    <div class="example">
+        <h3>Exemple : Fonctions usuelles</h3>
+        $$ \lim_{x \to +\infty} x^2 = +\infty \quad ; \quad \lim_{x \to -\infty} x^3 = -\infty \quad ; \quad \lim_{x \to +\infty} \sqrt{x} = +\infty \quad ; \quad \lim_{x \to +\infty} e^x = +\infty \quad ; \quad \lim_{x \to -\infty} e^x = 0 $$
+    </div>
+
+    <h2>VI. Opérations sur les Limites</h2>
+
+    <p>
+        Soient $f$ et $g$ deux fonctions, et $\alpha$ un réel, $+\infty$ ou $-\infty$. On suppose connaître $\lim_{x \to \alpha} f(x) = L_1$ et $\lim_{x \to \alpha} g(x) = L_2$. Les $L_1, L_2$ peuvent être des réels ou $\pm \infty$.
+    </p>
+
+    <div class="property">
+        <h3>Propriétés (Somme, Produit, Quotient)</h3>
+        <p>Les tableaux suivants résument les règles de calcul, en notant "FI" pour "Forme Indéterminée" (cas où on ne peut pas conclure directement).</p>
+
+        <h4>Limite de la somme $f+g$</h4>
+        <table border="1" cellpadding="5" style="border-collapse: collapse; text-align: center;">
+            <tr><th>$\lim f$</th><th>$\lim g$</th><th>$\lim (f+g)$</th></tr>
+            <tr><td>$L_1 \in \mathbb{R}$</td><td>$L_2 \in \mathbb{R}$</td><td>$L_1+L_2$</td></tr>
+            <tr><td>$L_1 \in \mathbb{R}$</td><td>$+\infty$</td><td>$+\infty$</td></tr>
+            <tr><td>$L_1 \in \mathbb{R}$</td><td>$-\infty$</td><td>$-\infty$</td></tr>
+            <tr><td>$+\infty$</td><td>$+\infty$</td><td>$+\infty$</td></tr>
+            <tr><td>$-\infty$</td><td>$-\infty$</td><td>$-\infty$</td></tr>
+            <tr><td>$+\infty$</td><td>$-\infty$</td><td><strong style="color: red;">FI</strong> ($+\infty - \infty$)</td></tr>
+        </table>
+
+        <h4>Limite du produit $f \times g$</h4>
+        <table border="1" cellpadding="5" style="border-collapse: collapse; text-align: center;">
+            <tr><th>$\lim f$</th><th>$\lim g$</th><th>$\lim (f \times g)$</th></tr>
+            <tr><td>$L_1 \in \mathbb{R}$</td><td>$L_2 \in \mathbb{R}$</td><td>$L_1 \times L_2$</td></tr>
+            <tr><td>$L_1 > 0$</td><td>$+\infty$</td><td>$+\infty$</td></tr>
+            <tr><td>$L_1 < 0$</td><td>$+\infty$</td><td>$-\infty$</td></tr>
+            <tr><td>$L_1 > 0$</td><td>$-\infty$</td><td>$-\infty$</td></tr>
+            <tr><td>$L_1 < 0$</td><td>$-\infty$</td><td>$+\infty$</td></tr>
+            <tr><td>$+\infty$</td><td>$+\infty$</td><td>$+\infty$</td></tr>
+            <tr><td>$-\infty$</td><td>$-\infty$</td><td>$+\infty$</td></tr>
+            <tr><td>$+\infty$</td><td>$-\infty$</td><td>$-\infty$</td></tr>
+            <tr><td>$0$</td><td>$\pm\infty$</td><td><strong style="color: red;">FI</strong> ($0 \times \infty$)</td></tr>
+        </table>
+
+        <h4>Limite du quotient $f/g$</h4>
+        <table border="1" cellpadding="5" style="border-collapse: collapse; text-align: center;">
+             <tr><th>$\lim f$</th><th>$\lim g$</th><th>$\lim (f/g)$</th></tr>
+             <tr><td>$L_1 \in \mathbb{R}$</td><td>$L_2 \in \mathbb{R}^*$</td><td>$L_1 / L_2$</td></tr>
+             <tr><td>$L_1 \in \mathbb{R}$</td><td>$\pm\infty$</td><td>$0$</td></tr>
+             <tr><td>$\pm\infty$</td><td>$L_2 \in \mathbb{R}^*$</td><td>$\pm\infty$ (règle des signes)</td></tr>
+             <tr><td>$L_1 \in \mathbb{R}^*$</td><td>$0$</td><td>$\pm\infty$ (étudier signe de $g(x)$)</td></tr>
+             <tr><td>$0$</td><td>$0$</td><td><strong style="color: red;">FI</strong> ($0/0$)</td></tr>
+             <tr><td>$\pm\infty$</td><td>$\pm\infty$</td><td><strong style="color: red;">FI</strong> ($\infty/\infty$)</td></tr>
+        </table>
+    </div>
+
+    <h2>VII. Formes Indéterminées (FI)</h2>
+    <p>
+        Les quatre formes indéterminées principales sont :
+    </p>
+    <ul>
+        <li>$+\infty - \infty$</li>
+        <li>$0 \times \infty$</li>
+        <li>$\frac{0}{0}$</li>
+        <li>$\frac{\infty}{\infty}$</li>
+    </ul>
+    <p>
+        Face à une forme indéterminée, il faut transformer l'expression pour "lever l'indétermination". Les techniques courantes incluent :
+    </p>
+    <ul>
+        <li>Factoriser par le terme dominant (pour les polynômes et fonctions rationnelles en $\pm \infty$).</li>
+        <li>Multiplier par l'expression conjuguée (pour les expressions avec racines carrées).</li>
+        <li>Utiliser les limites usuelles (par exemple $\lim_{x \to 0} \frac{\sin x}{x} = 1$, $\lim_{x \to 0} \frac{e^x-1}{x} = 1$).</li>
+        <li>Appliquer les théorèmes de comparaison ou d'encadrement.</li>
+    </ul>
+
+    <div class="example">
+        <h3>Exemple : Lever une FI $\infty/\infty$</h3>
+        <p>Calculer $\lim_{x \to +\infty} \frac{3x^2 - 5x + 1}{2x^2 + x - 7}$.</p>
+        <p>On a une FI $\infty/\infty$. On factorise par le terme de plus haut degré au numérateur et au dénominateur :</p>
+        $$ \frac{3x^2 - 5x + 1}{2x^2 + x - 7} = \frac{x^2(3 - \frac{5}{x} + \frac{1}{x^2})}{x^2(2 + \frac{1}{x} - \frac{7}{x^2})} = \frac{3 - \frac{5}{x} + \frac{1}{x^2}}{2 + \frac{1}{x} - \frac{7}{x^2}} $$
+        <p>Or, $\lim_{x \to +\infty} \frac{k}{x} = 0$ et $\lim_{x \to +\infty} \frac{k}{x^2} = 0$. Donc :</p>
+        $$ \lim_{x \to +\infty} \frac{3x^2 - 5x + 1}{2x^2 + x - 7} = \frac{3 - 0 + 0}{2 + 0 - 0} = \frac{3}{2} $$
+    </div>
+
+    <div class="property">
+        <h3>Propriété (Limite d'un polynôme ou d'une fonction rationnelle en $\pm \infty$)</h3>
+        <ul>
+            <li>La limite d'une fonction polynôme en $+\infty$ ou $-\infty$ est égale à la limite de son terme de plus haut degré.</li>
+            <li>La limite d'une fonction rationnelle (quotient de deux polynômes) en $+\infty$ ou $-\infty$ est égale à la limite du quotient de ses termes de plus haut degré.</li>
+        </ul>
+    </div>
+
+    <div class="proof">
+        <h3>Preuve (pour fonction rationnelle)</h3>
+        <p>Soit $f(x) = \frac{P(x)}{Q(x)} = \frac{a_n x^n + ... + a_0}{b_m x^m + ... + b_0}$ avec $a_n \neq 0$ et $b_m \neq 0$.</p>
+        <p>Pour $x \to \pm \infty$ :</p>
+        $$ f(x) = \frac{a_n x^n (1 + \frac{a_{n-1}}{a_n x} + ... + \frac{a_0}{a_n x^n})}{b_m x^m (1 + \frac{b_{m-1}}{b_m x} + ... + \frac{b_0}{b_m x^m})} = \frac{a_n x^n}{b_m x^m} \times \frac{1 + \dots}{1 + \dots} $$
+        <p>Quand $x \to \pm \infty$, les termes $\frac{c}{x^k}$ tendent vers 0. Le second facteur tend donc vers $\frac{1}{1} = 1$.</p>
+        $$ \lim_{x \to \pm \infty} f(x) = \lim_{x \to \pm \infty} \frac{a_n x^n}{b_m x^m} $$
+        <p>Ce qui démontre la propriété.</p>
+    </div>
+
+    <div class="example">
+        <h3>Exemple : Lever une FI $+\infty - \infty$</h3>
+        <p>Calculer $\lim_{x \to +\infty} (\sqrt{x^2+x} - x)$.</p>
+        <p>On a une FI $+\infty - \infty$. On utilise l'expression conjuguée :</p>
+        \begin{align*} \sqrt{x^2+x} - x &= \frac{(\sqrt{x^2+x} - x)(\sqrt{x^2+x} + x)}{\sqrt{x^2+x} + x} \\ &= \frac{(x^2+x) - x^2}{\sqrt{x^2+x} + x} \\ &= \frac{x}{\sqrt{x^2(1+\frac{1}{x})} + x} \\ &= \frac{x}{|x|\sqrt{1+\frac{1}{x}} + x} \end{align*}
+        <p>Comme $x \to +\infty$, $x > 0$ donc $|x| = x$.</p>
+        $$ \frac{x}{x\sqrt{1+\frac{1}{x}} + x} = \frac{x}{x(\sqrt{1+\frac{1}{x}} + 1)} = \frac{1}{\sqrt{1+\frac{1}{x}} + 1} $$
+        <p>Or $\lim_{x \to +\infty} \frac{1}{x} = 0$. Donc :</p>
+        $$ \lim_{x \to +\infty} (\sqrt{x^2+x} - x) = \frac{1}{\sqrt{1+0} + 1} = \frac{1}{1+1} = \frac{1}{2} $$
+    </div>
+
+    <h2>VIII. Théorèmes de Comparaison et d'Encadrement</h2>
+
+    <div class="theorem">
+        <h3>Théorème d'Encadrement (dit "des Gendarmes")</h3>
+        <p>
+            Soient $f, g, h$ trois fonctions définies sur un intervalle $I$ (sauf peut-être en $\alpha$). Si pour tout $x \in I$, $g(x) \le f(x) \le h(x)$, et si $\lim_{x \to \alpha} g(x) = \lim_{x \to \alpha} h(x) = L$ (où $L$ est un réel), alors :
+        </p>
+        $$ \lim_{x \to \alpha} f(x) = L $$
+        <p>Ce théorème est valable pour $\alpha$ fini ou infini.</p>
+    </div>
+
+    <div class="example">
+        <h3>Exemple : Théorème des Gendarmes</h3>
+        <p>Calculer $\lim_{x \to +\infty} \frac{\cos(x)}{x}$.</p>
+        <p>Pour tout $x > 0$, on sait que $-1 \le \cos(x) \le 1$.</p>
+        <p>En divisant par $x$ (qui est positif), on obtient :</p>
+        $$ -\frac{1}{x} \le \frac{\cos(x)}{x} \le \frac{1}{x} $$
+        <p>Or, $\lim_{x \to +\infty} (-\frac{1}{x}) = 0$ et $\lim_{x \to +\infty} \frac{1}{x} = 0$.</p>
+        <p>D'après le théorème des gendarmes, on conclut :</p>
+        $$ \lim_{x \to +\infty} \frac{\cos(x)}{x} = 0 $$
+    </div>
+
+    <div class="theorem">
+        <h3>Théorèmes de Comparaison</h3>
+        <p>Soient $f$ et $g$ deux fonctions définies sur un intervalle $I$ (sauf peut-être en $\alpha$).</p>
+        <ul>
+            <li>Si $f(x) \le g(x)$ pour tout $x \in I$, et si $\lim_{x \to \alpha} f(x) = +\infty$, alors $\lim_{x \to \alpha} g(x) = +\infty$.</li>
+            <li>Si $f(x) \le g(x)$ pour tout $x \in I$, et si $\lim_{x \to \alpha} g(x) = -\infty$, alors $\lim_{x \to \alpha} f(x) = -\infty$.</li>
+        </ul>
+         <p>Ces théorèmes sont valables pour $\alpha$ fini ou infini.</p>
+    </div>
+
+     <div class="example">
+        <h3>Exemple : Théorème de Comparaison</h3>
+        <p>Calculer $\lim_{x \to +\infty} (x + \sin(x))$.</p>
+        <p>On sait que $\sin(x) \ge -1$ pour tout $x$.</p>
+        <p>Donc, $x + \sin(x) \ge x - 1$.</p>
+        <p>Or, $\lim_{x \to +\infty} (x-1) = +\infty$.</p>
+        <p>D'après le théorème de comparaison, on conclut :</p>
+        $$ \lim_{x \to +\infty} (x + \sin(x)) = +\infty $$
+    </div>
+
+    <h2>IX. Limites et Composition de Fonctions</h2>
+
+    <div class="theorem">
+        <h3>Théorème (Limite d'une fonction composée)</h3>
+        <p>
+            Soient $f$ et $g$ deux fonctions. Soient $\alpha, \beta, \gamma$ des réels ou $\pm \infty$.
+        </p>
+        <p>
+            Si $\lim_{x \to \alpha} f(x) = \beta$ et $\lim_{y \to \beta} g(y) = \gamma$, alors :
+        </p>
+        $$ \lim_{x \to \alpha} (g \circ f)(x) = \lim_{x \to \alpha} g(f(x)) = \gamma $$
+    </div>
+
+    <div class="example">
+        <h3>Exemple : Fonction composée</h3>
+        <p>Calculer $\lim_{x \to +\infty} e^{-1/x}$.</p>
+        <p>Posons $f(x) = -1/x$ et $g(y) = e^y$.</p>
+        <p>On a $\lim_{x \to +\infty} f(x) = \lim_{x \to +\infty} (-1/x) = 0$. Appelons cette limite $\beta = 0$.</p>
+        <p>Ensuite, on calcule la limite de $g(y)$ quand $y$ tend vers $\beta = 0$ :</p>
+        <p>$\lim_{y \to 0} g(y) = \lim_{y \to 0} e^y = e^0 = 1$.</p>
+        <p>D'après le théorème de composition, on conclut :</p>
+        $$ \lim_{x \to +\infty} e^{-1/x} = 1 $$
+    </div>
+
+    <h2>X. Asymptote Oblique</h2>
+    <div class="definition">
+        <h3>Définition (Asymptote Oblique)</h3>
+        <p>
+            La droite d'équation $y = ax + b$ (avec $a \neq 0$) est une <strong>asymptote oblique</strong> à la courbe de $f$ en $+\infty$ si :
+        </p>
+        $$ \lim_{x \to +\infty} [f(x) - (ax+b)] = 0 $$
+        <p>Définition similaire en $-\infty$.</p>
+    </div>
+
+    <div class="property">
+        <h3>Comment trouver une asymptote oblique ?</h3>
+        <p>Si la courbe de $f$ admet une asymptote oblique $y=ax+b$ en $+\infty$ :</p>
+        <ol>
+            <li>Calculer $a = \lim_{x \to +\infty} \frac{f(x)}{x}$. Si cette limite est un réel $a \neq 0$, passer à l'étape 2. Sinon, il n'y a pas d'asymptote oblique.</li>
+            <li>Calculer $b = \lim_{x \to +\infty} [f(x) - ax]$. Si cette limite est un réel $b$, alors la droite $y=ax+b$ est l'asymptote oblique. Sinon, il n'y en a pas.</li>
+        </ol>
+        <p>Procédure analogue en $-\infty$.</p>
+    </div>
+
+    <div class="example">
+        <h3>Exemple : Recherche d'asymptote oblique</h3>
+        <p>Soit $f(x) = \frac{2x^2 + 3x - 1}{x+1}$. Cherchons une asymptote oblique en $+\infty$.</p>
+        <ol>
+            <li>Calculons $a$:
+                $$ a = \lim_{x \to +\infty} \frac{f(x)}{x} = \lim_{x \to +\infty} \frac{2x^2 + 3x - 1}{x(x+1)} = \lim_{x \to +\infty} \frac{2x^2 + 3x - 1}{x^2+x} $$
+                C'est la limite d'une fonction rationnelle en $+\infty$. On prend le rapport des termes de plus haut degré :
+                $$ a = \lim_{x \to +\infty} \frac{2x^2}{x^2} = 2 $$
+                Comme $a=2 \neq 0$, on continue.
+            </li>
+            <li>Calculons $b$:
+                \begin{align*} b &= \lim_{x \to +\infty} [f(x) - ax] = \lim_{x \to +\infty} \left[ \frac{2x^2 + 3x - 1}{x+1} - 2x \right] \\ &= \lim_{x \to +\infty} \left[ \frac{2x^2 + 3x - 1 - 2x(x+1)}{x+1} \right] \\ &= \lim_{x \to +\infty} \left[ \frac{2x^2 + 3x - 1 - 2x^2 - 2x}{x+1} \right] \\ &= \lim_{x \to +\infty} \frac{x - 1}{x+1} \end{align*}
+                C'est encore la limite d'une fonction rationnelle.
+                $$ b = \lim_{x \to +\infty} \frac{x}{x} = 1 $$
+            </li>
+        </ol>
+        <p>La droite d'équation $y = 2x + 1$ est asymptote oblique à la courbe de $f$ en $+\infty$. (On trouverait la même en $-\infty$).</p>
+    </div>
+
+</div>
+</body>
+</html>
