@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cours : Familles Sommables (Math Sup)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"  crossorigin="anonymous"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .definition, .theorem, .proposition, .corollary, .remark, .example {
+            margin: 15px 0; padding: 10px; border-left: 5px solid;
+        }
+        .definition { border-color: #17a2b8; background-color: #e1f5fe; }
+        .theorem { border-color: #dc3545; background-color: #ffebee; }
+        .proposition { border-color: #28a745; background-color: #e8f5e9; }
+        .corollary { border-color: #ffc107; background-color: #fffde7; }
+        .remark { border-color: #6c757d; background-color: #f8f9fa; }
+        .example { border-color: #fd7e14; background-color: #fff3e0; }
+        .proof { margin: 10px 0 10px 20px; padding: 10px; border: 1px dashed #ccc; background-color: #f9f9f9; }
+        .proof-title { font-weight: bold; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Pour les formules longues */
+    </style>
+</head>
+<body>
+
+<h1>Familles Sommables</h1>
+
+<h2>Introduction</h2>
+<p>
+    La notion de série numérique permet de sommer une infinité dénombrable de termes indexés par $\mathbb{N}$. La notion de <strong>famille sommable</strong> généralise ce concept à des familles de nombres indexées par des ensembles d'indices quelconques (finis, dénombrables ou même non dénombrables). Cette généralisation est particulièrement utile pour manipuler des sommes multiples ou pour justifier des interversions de sommations, notamment via le théorème de Fubini. La théorie est d'abord construite pour les familles de réels positifs, puis étendue aux familles de nombres complexes par sommabilité absolue.
+</p>
+<p>Dans ce chapitre, $I$ et $J$ désignent des ensembles d'indices quelconques. Le corps de base est $K = \mathbb{R}$ ou $\mathbb{C}$.</p>
+
+<h2>1. Familles Sommables de Réels Positifs</h2>
+
+<div class="definition">
+    <strong>Définition (Famille sommable de réels positifs).</strong>
+    Soit $(u_i)_{i \in I}$ une famille de nombres réels <strong>positifs</strong> ($u_i \ge 0$ pour tout $i \in I$).
+    On dit que la famille $(u_i)_{i \in I}$ est <strong>sommable</strong> si l'ensemble $\mathcal{S}_F$ des sommes finies extraites de la famille est majoré :
+    $$ \mathcal{S}_F = \left\{ \sum_{i \in F} u_i \mid F \subset I, F \text{ finie} \right\} \subset \mathbb{R}_+ $$
+    est une partie majorée de $\mathbb{R}$.
+    <br>Si la famille est sommable, on appelle <strong>somme</strong> de la famille $(u_i)_{i \in I}$ la borne supérieure de cet ensemble $\mathcal{S}_F$. On la note :
+    $$ \sum_{i \in I} u_i = \sup_{F \subset I, F \text{ finie}} \left( \sum_{i \in F} u_i \right) \in \mathbb{R}_+ $$
+    Si la famille n'est pas sommable (i.e., l'ensemble $\mathcal{S}_F$ n'est pas majoré), on convient que sa somme vaut $+\infty$, et on écrit $\sum_{i \in I} u_i = +\infty$.
+</div>
+<div class="remark">
+    Puisque $u_i \ge 0$, l'ensemble $\mathcal{S}_F$ contient 0 (somme sur $F=\emptyset$) et est stable par addition finie. Ainsi, $\mathcal{S}_F$ est soit majoré (famille sommable), soit $\sup \mathcal{S}_F = +\infty$ (famille non sommable).
+</div>
+
+<div class="proposition">
+    <strong>Lien avec les séries (cas $I=\mathbb{N}$).</strong>
+    Soit $(u_n)_{n \in \mathbb{N}}$ une suite de réels positifs.
+    La famille $(u_n)_{n \in \mathbb{N}}$ est sommable si et seulement si la série $\sum_{n \ge 0} u_n$ converge.
+    Dans ce cas, la somme de la famille coïncide avec la somme de la série :
+    $$ \sum_{n \in \mathbb{N}} u_n = \sum_{n=0}^{+\infty} u_n $$
+</div>
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Soit $S_N = \sum_{n=0}^N u_n$ la somme partielle de la série.
+    Toute somme finie $\sum_{n \in F} u_n$ est majorée par une somme partielle : si $N = \max(F)$ (ou $\max(F\cup\{0\})$), alors $\sum_{n \in F} u_n \le \sum_{n=0}^N u_n = S_N$.
+    Réciproquement, toute somme partielle $S_N$ est une somme finie ($\sum_{n \in F} u_n$ avec $F=\{0, \dots, N\}$).
+    Donc, l'ensemble $\mathcal{S}_F$ des sommes finies est majoré si et seulement si la suite $(S_N)$ des sommes partielles est majorée.
+    Comme $(u_n)$ est à termes positifs, $(S_N)$ est croissante. Elle converge si et seulement si elle est majorée.
+    Donc, la famille $(u_n)$ est sommable ssi la série $\sum u_n$ converge.
+    Dans ce cas, $\sum_{n \in \mathbb{N}} u_n = \sup \mathcal{S}_F = \sup \{S_N \mid N \in \mathbb{N}\}$. Puisque $(S_N)$ est croissante et convergente, son supremum est sa limite : $\sup \{S_N\} = \lim_{N \to \infty} S_N = \sum_{n=0}^\infty u_n$. $\square$
+</div>
+
+<div class="theorem">
+    <strong>Théorème de sommation par paquets (ou Fubini-Tonelli pour familles positives).</strong>
+    Soit $(u_i)_{i \in I}$ une famille de réels <strong>positifs</strong>. Soit $(I_n)_{n \in N}$ (où $N$ est un ensemble d'indices fini ou dénombrable, souvent $\mathbb{N}$) une <strong>partition</strong> de $I$ (i.e., $I_n \cap I_m = \emptyset$ si $n \neq m$ et $I = \bigcup_{n \in N} I_n$).
+    Alors la famille $(u_i)_{i \in I}$ est sommable si et seulement si les deux conditions suivantes sont remplies :
+    <ol>
+        <li>Pour tout $n \in N$, la sous-famille $(u_i)_{i \in I_n}$ est sommable (de somme finie $S_n = \sum_{i \in I_n} u_i$).</li>
+        <li>La famille (ou série, si $N=\mathbb{N}$) des sommes $(S_n)_{n \in N}$ est sommable (ou convergente, si $N=\mathbb{N}$).</li>
+    </ol>
+    Dans ce cas (de sommabilité), on a égalité des sommes :
+    $$ \sum_{i \in I} u_i = \sum_{n \in N} S_n = \sum_{n \in N} \left( \sum_{i \in I_n} u_i \right) $$
+    (On peut intervertir les sommations pour les familles à termes positifs).
+</div>
+<div class="remark">
+    Ce théorème est très puissant. Il justifie le regroupement de termes ou le changement d'ordre de sommation pour les familles positives, sans se soucier de la convergence a priori. Si l'une des sommes (globale ou itérée) est infinie, l'autre l'est aussi. Cas particulier fréquent : $I = \mathbb{N} \times \mathbb{N}$, on peut sommer par lignes puis colonnes, ou par colonnes puis lignes, ou par diagonales...
+</div>
+
+<h2>2. Familles Sommables de Nombres Complexes</h2>
+
+<div class="definition">
+    <strong>Définition (Famille sommable complexe).</strong>
+    Une famille de nombres complexes $(u_i)_{i \in I}$ est dite <strong>sommable</strong> si la famille des modules $(|u_i|)_{i \in I}$ (qui est une famille de réels positifs) est sommable.
+    <br>On note $\ell^1(I)$ l'ensemble des familles sommables indexées par $I$.
+</div>
+<div class="remark">
+    La sommabilité d'une famille complexe est donc définie par la sommabilité (au sens des réels positifs) de ses modules. C'est une notion de <strong>convergence absolue</strong>.
+</div>
+
+<div class="proposition">
+    <strong>Caractérisation pour les réels et les complexes.</strong>
+    Soit $(u_i)_{i \in I}$ une famille de nombres complexes.
+    <ol>
+        <li>Si les $u_i$ sont <strong>réels</strong>. On pose $u_i^+ = \max(u_i, 0)$ (partie positive) et $u_i^- = \max(-u_i, 0)$ (partie négative). On a $u_i = u_i^+ - u_i^-$ et $|u_i| = u_i^+ + u_i^-$.
+            Alors la famille $(u_i)_{i \in I}$ est sommable si et seulement si les deux familles positives $(u_i^+)_{i \in I}$ et $(u_i^-)_{i \in I}$ sont sommables.</li>
+        <li>La famille complexe $(u_i)_{i \in I}$ est sommable si et seulement si les deux familles réelles $(\text{Re}(u_i))_{i \in I}$ et $(\text{Im}(u_i))_{i \in I}$ sont sommables.</li>
+    </ol>
+</div>
+<div class="proof">
+    <span class="proof-title">Preuve (idées) :</span>
+    1. Si $(u_i)$ est sommable, alors $\sum |u_i|$ est finie. Comme $0 \le u_i^+ \le |u_i|$ et $0 \le u_i^- \le |u_i|$, les familles $(u_i^+)$ et $(u_i^-)$ sont sommables par comparaison. Réciproquement, si $(u_i^+)$ et $(u_i^-)$ sont sommables, $\sum |u_i| = \sum (u_i^+ + u_i^-) = \sum u_i^+ + \sum u_i^-$ (sommation par paquets) est finie, donc $(u_i)$ est sommable.
+    2. Utiliser $|\text{Re}(u_i)| \le |u_i|$ et $|\text{Im}(u_i)| \le |u_i|$ pour montrer $(\implies)$. Pour $(\impliedby)$, utiliser $|u_i| \le |\text{Re}(u_i)| + |\text{Im}(u_i)|$ et le fait que si $(\text{Re}(u_i))$ et $(\text{Im}(u_i))$ sont sommables (réels), alors $(|\text{Re}(u_i)|)$ et $(|\text{Im}(u_i)|)$ le sont aussi, donc $(\sum |u_i| \le \sum |\text{Re}(u_i)| + \sum |\text{Im}(u_i)|)$ est finie. $\square$
+</div>
+
+<div class="definition">
+    <strong>Somme d'une famille sommable.</strong>
+    Si $(u_i)_{i \in I}$ est une famille sommable de nombres complexes (ou réels).
+    <ul>
+        <li>Si les $u_i$ sont réels, on définit la somme par :
+            $$ \sum_{i \in I} u_i = \sum_{i \in I} u_i^+ - \sum_{i \in I} u_i^- $$
+            (La différence a bien un sens car les deux sommes sont finies).</li>
+        <li>Si les $u_i$ sont complexes, on définit la somme par :
+            $$ \sum_{i \in I} u_i = \left( \sum_{i \in I} \text{Re}(u_i) \right) + i \left( \sum_{i \in I} \text{Im}(u_i) \right) $$
+            (Les deux sommes des parties réelles et imaginaires existent car $(\text{Re}(u_i))$ et $(\text{Im}(u_i))$ sont sommables).</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Approximation de la somme par des sommes finies.</strong>
+    Si $(u_i)_{i \in I}$ est sommable de somme $S = \sum_{i \in I} u_i$, alors pour tout $\epsilon > 0$, il existe une partie finie $F_0 \subset I$ telle que pour toute partie finie $F$ contenant $F_0$ ($F_0 \subset F \subset I$), on a :
+    $$ \left| S - \sum_{i \in F} u_i \right| \le \epsilon $$
+    On a aussi $\sum_{i \in I \setminus F_0} |u_i| \le \epsilon$.
+</div>
+
+<div class="proposition">
+    <strong>Critère de comparaison pour la sommabilité.</strong>
+    Soit $(u_i)_{i \in I}$ une famille de complexes et $(v_i)_{i \in I}$ une famille <strong>sommable</strong> de réels <strong>positifs</strong>.
+    Si $|u_i| \le v_i$ pour tout $i \in I$, alors la famille $(u_i)_{i \in I}$ est sommable.
+    <br>(Ceci découle directement de la définition et de la comparaison des familles positives $\sum |u_i| \le \sum v_i$).
+</div>
+
+<div class="proposition">
+    <strong>Lien Sommabilité vs Convergence Absolue (cas $I=\mathbb{N}$).</strong>
+    Soit $(u_n)_{n \in \mathbb{N}}$ une suite de nombres complexes.
+    La famille $(u_n)_{n \in \mathbb{N}}$ est sommable si et seulement si la série $\sum_{n \ge 0} u_n$ est <strong>absolument convergente</strong>.
+    Dans ce cas, la somme de la famille coïncide avec la somme de la série :
+    $$ \sum_{n \in \mathbb{N}} u_n = \sum_{n=0}^{+\infty} u_n $$
+</div>
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Par définition, la famille $(u_n)$ est sommable ssi la famille $(|u_n|)$ est sommable.
+    Comme $|u_n| \ge 0$, la famille $(|u_n|)$ est sommable ssi la série $\sum |u_n|$ converge (d'après le lien famille/série pour les termes positifs).
+    Donc, la famille $(u_n)$ est sommable ssi la série $\sum u_n$ est absolument convergente.
+    L'égalité des sommes se montre en utilisant les définitions via parties réelles/imaginaires et le cas des réels. $\square$
+</div>
+
+<div class="proposition">
+    <strong>Commutativité de la somme (Sommabilité $\implies$ Commutativité).</strong>
+    Soit $(u_i)_{i \in I}$ une famille de complexes. Soit $\sigma: I \to I$ une bijection (une permutation des indices).
+    La famille $(u_i)_{i \in I}$ est sommable si et seulement si la famille $(u_{\sigma(i)})_{i \in I}$ est sommable. Dans ce cas, leurs sommes sont égales :
+    $$ \sum_{i \in I} u_i = \sum_{i \in I} u_{\sigma(i)} $$
+    (L'ordre de sommation n'importe pas pour les familles sommables).
+</div>
+<div class="remark">
+    Ceci contraste fortement avec les séries semi-convergentes, où changer l'ordre des termes peut changer la somme, voire la nature de la série (Théorème de réarrangement de Riemann). La sommabilité est une notion plus forte liée à la convergence absolue.
+</div>
+
+<h2>3. Propriétés des Familles Sommables</h2>
+
+<div class="theorem">
+    <strong>Théorème de sommation par paquets (ou Fubini pour familles sommables).</strong>
+    Soit $(u_i)_{i \in I}$ une famille de complexes <strong>sommable</strong>. Soit $(I_n)_{n \in N}$ une partition de $I$.
+    Alors :
+    <ol>
+        <li>Pour tout $n \in N$, la sous-famille $(u_i)_{i \in I_n}$ est sommable. Notons $S_n = \sum_{i \in I_n} u_i$.</li>
+        <li>La famille des sommes $(S_n)_{n \in N}$ est sommable (ou la série $\sum S_n$ est absolument convergente si $N=\mathbb{N}$).</li>
+        <li>On a égalité des sommes :
+            $$ \sum_{i \in I} u_i = \sum_{n \in N} S_n = \sum_{n \in N} \left( \sum_{i \in I_n} u_i \right) $$
+        </li>
+    </ol>
+</div>
+<div class="remark">
+    Ce théorème est la version pour les familles sommables complexes du théorème vu pour les familles positives. Il garantit qu'on peut regrouper les termes ou changer l'ordre de sommation itérée, à condition que la famille globale soit sommable (ce qu'on vérifie souvent en montrant la sommabilité de la famille des modules).
+</div>
+
+<div class="proposition">
+    <strong>Propriétés algébriques et d'ordre.</strong>
+    Soient $(u_i)_{i \in I}$ et $(v_i)_{i \in I}$ deux familles sommables de $K$.
+    <ul>
+        <li><strong>Linéarité :</strong> Pour tout $\lambda, \mu \in K$, la famille $(\lambda u_i + \mu v_i)_{i \in I}$ est sommable et :
+            $$ \sum_{i \in I} (\lambda u_i + \mu v_i) = \lambda \sum_{i \in I} u_i + \mu \sum_{i \in I} v_i $$
+            L'ensemble $\ell^1(I)$ des familles sommables est un $K$-espace vectoriel, et l'application somme $\sum_{i \in I}: \ell^1(I) \to K$ est linéaire.</li>
+        <li><strong>Positivité (si $K=\mathbb{R}$):</strong> Si $u_i \ge 0$ pour tout $i$, alors $\sum_{i \in I} u_i \ge 0$. De plus, $\sum_{i \in I} u_i = 0 \iff \forall i \in I, u_i = 0$.</li>
+        <li><strong>Croissance (si $K=\mathbb{R}$):</strong> Si $u_i \le v_i$ pour tout $i$, alors $\sum_{i \in I} u_i \le \sum_{i \in I} v_i$.</li>
+        <li><strong>Inégalité triangulaire :</strong>
+            $$ \left| \sum_{i \in I} u_i \right| \le \sum_{i \in I} |u_i| $$
+            (La somme des modules est finie car $(u_i)$ est sommable).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Fubini (Produit de familles sommables).</strong>
+    Soient $(u_i)_{i \in I}$ et $(v_j)_{j \in J}$ deux familles sommables (complexes ou réelles).
+    Alors la famille produit $(u_i v_j)_{(i,j) \in I \times J}$ est sommable, et on a :
+    $$ \sum_{(i,j) \in I \times J} u_i v_j = \left( \sum_{i \in I} u_i \right) \times \left( \sum_{j \in J} v_j \right) $$
+    De plus, on peut calculer la somme double par paquets (sommes itérées) :
+    $$ \sum_{(i,j) \in I \times J} u_i v_j = \sum_{i \in I} \left( \sum_{j \in J} u_i v_j \right) = \sum_{j \in J} \left( \sum_{i \in I} u_i v_j \right) $$
+    $$ = \sum_{i \in I} u_i \left( \sum_{j \in J} v_j \right) = \sum_{j \in J} v_j \left( \sum_{i \in I} u_i \right) $$
+</div>
+<div class="proof">
+    <span class="proof-title">Idée de la preuve (pour réels positifs) :</span>
+    Montrer d'abord que $(u_i v_j)$ est sommable. L'ensemble des sommes finies $\sum_{(i,j) \in F_{I \times J}} u_i v_j$ est majoré. Une telle somme est incluse dans un produit de sommes finies $(\sum_{i \in F_I} u_i)(\sum_{j \in F_J} v_j)$, qui est lui-même majoré par $(\sum_{i \in I} u_i)(\sum_{j \in J} v_j)$. Donc la famille produit est sommable.
+    L'égalité des sommes découle des propriétés de la borne supérieure ou du théorème de sommation par paquets. $\square$
+</div>
+
+<h2>4. Application aux Séries Numériques</h2>
+
+<div class="proposition">
+    <strong>Permutation des termes d'une série absolument convergente.</strong>
+    Soit $\sum u_n$ une série <strong>absolument convergente</strong>. Soit $\sigma: \mathbb{N} \to \mathbb{N}$ une bijection (permutation de $\mathbb{N}$).
+    Alors la série $\sum u_{\sigma(n)}$ est aussi absolument convergente, et sa somme est la même :
+    $$ \sum_{n=0}^{+\infty} u_n = \sum_{n=0}^{+\infty} u_{\sigma(n)} $$
+</div>
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Si $\sum u_n$ est AC, alors la famille $(u_n)_{n \in \mathbb{N}}$ est sommable. Par la propriété de commutativité des familles sommables, la famille $(u_{\sigma(n)})_{n \in \mathbb{N}}$ est aussi sommable et a la même somme. Comme elle est sommable, la série $\sum u_{\sigma(n)}$ est absolument convergente et sa somme est égale à la somme de la famille, qui est égale à la somme de la famille $(u_n)$, elle-même égale à la somme de la série $\sum u_n$. $\square$
+</div>
+
+<div class="theorem">
+    <strong>Théorème d'interversion des sommes (Fubini pour séries doubles).</strong>
+    Soit $(u_{m,n})_{(m,n) \in \mathbb{N}^2}$ une famille double de nombres complexes. Les assertions suivantes sont équivalentes :
+    <ol>
+        <li>La famille $(u_{m,n})_{(m,n) \in \mathbb{N}^2}$ est sommable (i.e., $\sum_{(m,n) \in \mathbb{N}^2} |u_{m,n}| < \infty$).</li>
+        <li>Pour tout $n \in \mathbb{N}$, la série $\sum_{m=0}^\infty |u_{m,n}|$ converge, et la série des sommes $\sum_{n=0}^\infty \left( \sum_{m=0}^\infty |u_{m,n}| \right)$ converge.</li>
+        <li>Pour tout $m \in \mathbb{N}$, la série $\sum_{n=0}^\infty |u_{m,n}|$ converge, et la série des sommes $\sum_{m=0}^\infty \left( \sum_{n=0}^\infty |u_{m,n}| \right)$ converge.</li>
+    </ol>
+    Si l'une de ces conditions est vérifiée (ce qui garantit la sommabilité), alors pour tout $n$, $\sum_m u_{m,n}$ converge absolument (notons $C_n$ sa somme), pour tout $m$, $\sum_n u_{m,n}$ converge absolument (notons $L_m$ sa somme), les séries $\sum_n C_n$ et $\sum_m L_m$ convergent absolument, et on a égalité des sommes :
+    $$ \sum_{(m,n) \in \mathbb{N}^2} u_{m,n} = \sum_{n=0}^{+\infty} C_n = \sum_{n=0}^{+\infty} \left( \sum_{m=0}^{+\infty} u_{m,n} \right) = \sum_{m=0}^{+\infty} L_m = \sum_{m=0}^{+\infty} \left( \sum_{n=0}^{+\infty} u_{m,n} \right) $$
+    (On peut intervertir $\sum_n$ et $\sum_m$ si la famille double est sommable).
+</div>
+
+<div class="definition">
+    <strong>Produit de Cauchy de deux séries.</strong>
+    Soient $\sum a_n$ et $\sum b_n$ deux séries (complexes ou réelles). Le <strong>produit de Cauchy</strong> de ces deux séries est la série $\sum c_n$ dont le terme général $c_n$ est défini par :
+    $$ c_n = \sum_{k=0}^n a_k b_{n-k} = a_0 b_n + a_1 b_{n-1} + \dots + a_n b_0 $$
+</div>
+
+<div class="theorem">
+    <strong>Théorème sur le Produit de Cauchy.</strong>
+    Si les séries $\sum a_n$ et $\sum b_n$ sont <strong>absolument convergentes</strong>, alors leur produit de Cauchy $\sum c_n$ est <strong>absolument convergent</strong>, et sa somme est le produit des sommes :
+    $$ \sum_{n=0}^{+\infty} c_n = \left( \sum_{n=0}^{+\infty} a_n \right) \times \left( \sum_{n=0}^{+\infty} b_n \right) $$
+</div>
+<div class="proof">
+    <span class="proof-title">Idée de la preuve :</span>
+    Considérer la famille double $(u_{k,p} = a_k b_p)_{(k,p) \in \mathbb{N}^2}$.
+    Comme $\sum |a_k|$ et $\sum |b_p|$ convergent, la famille $(|a_k|)_{k \in \mathbb{N}}$ et $(|b_p|)_{p \in \mathbb{N}}$ sont sommables. Par Fubini pour familles positives, la famille produit $(|a_k| |b_p| = |u_{k,p}|)$ est sommable.
+    Donc la famille $(u_{k,p})$ est sommable.
+    Sa somme est $(\sum a_k)(\sum b_p)$.
+    On peut la sommer par paquets. Sommons par "diagonales" $n = k+p$. Pour $n$ fixé, les couples $(k,p)$ tels que $k+p=n$ sont $(0,n), (1,n-1), \dots, (n,0)$.
+    Le paquet $I_n = \{ (k,p) \in \mathbb{N}^2 \mid k+p=n \}$. La somme sur ce paquet est $\sum_{k=0}^n u_{k, n-k} = \sum_{k=0}^n a_k b_{n-k} = c_n$.
+    Par le théorème de sommation par paquets, la série $\sum c_n$ converge absolument et $\sum_{n=0}^\infty c_n = \sum_{(k,p)} u_{k,p} = (\sum a_k)(\sum b_p)$. $\square$
+</div>
+
+<div class="example">
+    <strong>Exponentielle d'une somme : $\exp(z+z') = \exp(z)\exp(z')$.</strong>
+    On sait que $\exp(z) = \sum_{n=0}^\infty \frac{z^n}{n!}$ et $\exp(z') = \sum_{n=0}^\infty \frac{(z')^n}{n!}$. Ces séries sont absolument convergentes pour tous $z, z' \in \mathbb{C}$.
+    Leur produit de Cauchy est la série $\sum c_n$ avec :
+    $$ c_n = \sum_{k=0}^n a_k b_{n-k} = \sum_{k=0}^n \frac{z^k}{k!} \frac{(z')^{n-k}}{(n-k)!} $$
+    Multiplions et divisons par $n!$:
+    $$ c_n = \frac{1}{n!} \sum_{k=0}^n \frac{n!}{k!(n-k)!} z^k (z')^{n-k} = \frac{1}{n!} \sum_{k=0}^n \binom{n}{k} z^k (z')^{n-k} $$
+    Par la formule du binôme de Newton, la somme est $(z+z')^n$.
+    Donc $c_n = \frac{(z+z')^n}{n!}$.
+    Le théorème sur le produit de Cauchy nous dit que $\sum c_n$ converge absolument et que :
+    $$ \sum_{n=0}^\infty c_n = \left( \sum_{n=0}^\infty a_n \right) \left( \sum_{n=0}^\infty b_n \right) $$
+    $$ \sum_{n=0}^\infty \frac{(z+z')^n}{n!} = \left( \sum_{n=0}^\infty \frac{z^n}{n!} \right) \left( \sum_{n=0}^\infty \frac{(z')^n}{n!} \right) $$
+    $$ \exp(z+z') = \exp(z) \exp(z') $$
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
