@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cours : Systèmes Linéaires (Math Sup)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .definition, .theorem, .proposition, .corollary, .remark, .example, .method {
+            margin: 15px 0; padding: 10px; border-left: 5px solid;
+        }
+        .definition { border-color: #17a2b8; background-color: #e1f5fe; }
+        .theorem { border-color: #dc3545; background-color: #ffebee; }
+        .proposition { border-color: #28a745; background-color: #e8f5e9; }
+        .corollary { border-color: #ffc107; background-color: #fffde7; }
+        .remark { border-color: #6c757d; background-color: #f8f9fa; }
+        .example { border-color: #fd7e14; background-color: #fff3e0; }
+        .method { border-color: #6f42c1; background-color: #f3e5f5;} /* Style for methods */
+        .proof { margin: 10px 0 10px 20px; padding: 10px; border: 1px dashed #ccc; background-color: #f9f9f9; }
+        .proof-title { font-weight: bold; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Pour les formules longues */
+        .system { margin-left: 2em; } /* Style for systems */
+    </style>
+</head>
+<body>
+
+<h1>Systèmes Linéaires</h1>
+
+<h2>Introduction</h2>
+<p>
+    La résolution de systèmes d'équations linéaires est un problème central en algèbre linéaire et apparaît dans de très nombreux domaines des mathématiques et de leurs applications (physique, ingénierie, économie...). Ce chapitre présente la structure des solutions et la méthode systématique du pivot de Gauss pour résoudre ces systèmes.
+</p>
+<p>
+    Le corps de base $K$ sera $\mathbb{R}$ ou $\mathbb{C}$.
+</p>
+
+<h2>1. Généralités sur les systèmes linéaires</h2>
+
+<div class="definition">
+    <strong>Définition (Système linéaire).</strong>
+    Un <strong>système linéaire</strong> de $n$ équations à $p$ inconnues $x_1, \dots, x_p$ (à coefficients dans $K$) est un ensemble d'équations de la forme :
+    $$ (S) \quad \begin{cases}
+        a_{1,1}x_1 + a_{1,2}x_2 + \dots + a_{1,p}x_p = b_1 \quad &(L_1) \\
+        a_{2,1}x_1 + a_{2,2}x_2 + \dots + a_{2,p}x_p = b_2 \quad &(L_2) \\
+        \vdots \\
+        a_{n,1}x_1 + a_{n,2}x_2 + \dots + a_{n,p}x_p = b_n \quad &(L_n)
+    \end{cases}
+    $$
+    <ul>
+        <li>Les $a_{i,j} \in K$ ($1 \le i \le n, 1 \le j \le p$) sont les <strong>coefficients</strong> du système.</li>
+        <li>Les $b_i \in K$ ($1 \le i \le n$) sont les <strong>seconds membres</strong>.</li>
+        <li>Les $x_j \in K$ ($1 \le j \le p$) sont les <strong>inconnues</strong>.</li>
+        <li>Une <strong>solution</strong> du système $(S)$ est un $p$-uplet $(s_1, \dots, s_p) \in K^p$ tel que si l'on remplace $x_j$ par $s_j$ pour tout $j$, toutes les équations $L_1, \dots, L_n$ sont vérifiées simultanément.</li>
+        <li><strong>Résoudre</strong> le système $(S)$ signifie déterminer l'ensemble de toutes ses solutions, noté $\mathcal{S}$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Système homogène associé.</strong>
+    Le <strong>système homogène associé</strong> au système $(S)$ est le système obtenu en remplaçant tous les seconds membres $b_i$ par 0 :
+    $$ (S_H) \quad \begin{cases}
+        a_{1,1}x_1 + a_{1,2}x_2 + \dots + a_{1,p}x_p = 0 \\
+        a_{2,1}x_1 + a_{2,2}x_2 + \dots + a_{2,p}x_p = 0 \\
+        \vdots \\
+        a_{n,1}x_1 + a_{n,2}x_2 + \dots + a_{n,p}x_p = 0
+    \end{cases}
+    $$
+    On note $\mathcal{S}_H$ l'ensemble des solutions de $(S_H)$.
+</div>
+
+<div class="remark">
+    Le système homogène $(S_H)$ admet toujours au moins une solution : le $p$-uplet nul $(0, 0, \dots, 0)$, appelé <strong>solution triviale</strong>. L'ensemble $\mathcal{S}_H$ est un sous-espace vectoriel de $K^p$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Structure de l'ensemble des solutions).</strong>
+    Soit $(S)$ un système linéaire et $\mathcal{S}$ son ensemble de solutions. Soit $(S_H)$ le système homogène associé et $\mathcal{S}_H$ son ensemble de solutions.
+    <ol>
+        <li>Si $(S)$ n'admet aucune solution ($\mathcal{S} = \emptyset$), on dit que le système est <strong>incompatible</strong>.</li>
+        <li>Si $(S)$ admet au moins une solution (il est <strong>compatible</strong>), soit $x_P = (s_1, \dots, s_p)$ une solution particulière de $(S)$. Alors l'ensemble de toutes les solutions de $(S)$ est :
+            $$ \mathcal{S} = \{ x_P + x_H \mid x_H \in \mathcal{S}_H \} = x_P + \mathcal{S}_H $$
+            Autrement dit, toute solution de $(S)$ s'écrit de manière unique comme la somme d'une solution particulière de $(S)$ et d'une solution du système homogène $(S_H)$.
+        </li>
+    </ol>
+</div>
+
+<div class="proof">
+    <span class="proof-title">Idée de la preuve :</span>
+    <ul>
+        <li>Montrons que si $x_P \in \mathcal{S}$ et $x_H \in \mathcal{S}_H$, alors $x_P + x_H \in \mathcal{S}$.
+           Pour chaque équation $i$ ($1 \le i \le n$), on a $\sum_{j=1}^p a_{i,j} (s_j + (x_H)_j) = \sum_{j=1}^p a_{i,j} s_j + \sum_{j=1}^p a_{i,j} (x_H)_j$.
+           Comme $x_P$ est solution de $(S)$, $\sum a_{i,j} s_j = b_i$.
+           Comme $x_H$ est solution de $(S_H)$, $\sum a_{i,j} (x_H)_j = 0$.
+           Donc $\sum a_{i,j} (s_j + (x_H)_j) = b_i + 0 = b_i$. L'élément $x_P + x_H$ vérifie toutes les équations, il est donc dans $\mathcal{S}$. On a montré $x_P + \mathcal{S}_H \subset \mathcal{S}$.
+        </li>
+        <li>Montrons que si $x \in \mathcal{S}$, alors $x$ peut s'écrire sous la forme $x_P + x_H$ avec $x_H \in \mathcal{S}_H$.
+           Posons $x_H = x - x_P$. Vérifions que $x_H \in \mathcal{S}_H$.
+           Pour chaque équation $i$, $\sum_{j=1}^p a_{i,j} (x_H)_j = \sum_{j=1}^p a_{i,j} (x_j - s_j) = \sum_{j=1}^p a_{i,j} x_j - \sum_{j=1}^p a_{i,j} s_j$.
+           Comme $x \in \mathcal{S}$, $\sum a_{i,j} x_j = b_i$.
+           Comme $x_P \in \mathcal{S}$, $\sum a_{i,j} s_j = b_i$.
+           Donc $\sum a_{i,j} (x_H)_j = b_i - b_i = 0$. L'élément $x_H$ vérifie toutes les équations de $(S_H)$, donc $x_H \in \mathcal{S}_H$.
+           On a bien $x = x_P + x_H$ avec $x_H \in \mathcal{S}_H$. On a montré $\mathcal{S} \subset x_P + \mathcal{S}_H$.
+        </li>
+    </ul>
+    Par double inclusion, $\mathcal{S} = x_P + \mathcal{S}_H$. $\square$
+</div>
+
+<div class="remark">
+    Ce théorème ramène la résolution de $(S)$ à deux étapes :
+    <ol>
+        <li>Trouver l'ensemble $\mathcal{S}_H$ des solutions du système homogène associé (qui est un espace vectoriel).</li>
+        <li>Trouver une solution particulière $x_P$ de $(S)$ (si elle existe).</li>
+    </ol>
+    La méthode du pivot de Gauss permet de faire les deux simultanément.
+</div>
+
+<h2>2. L'algorithme du Pivot de Gauss</h2>
+
+<div class="remark">
+    <strong>Motivation.</strong>
+    Considérons le système $(S_1)$ :
+    $$ (S_1) \quad \begin{cases}
+        x - 2y - z = 2 \\
+        2x - 5y - 4z = 6 \\
+        -3x + y - 5z = 1
+    \end{cases} $$
+    Il n'est pas immédiat de trouver les solutions.
+    Considérons maintenant le système $(S_2)$ :
+    $$ (S_2) \quad \begin{cases}
+        x - 2y - z = 2 \\
+        \phantom{0x} -y - 2z = 2 \\
+        \phantom{0x + 0y} -13z = 13
+    \end{cases} $$
+    Ce système est dit <strong>triangulaire</strong> (ou plus généralement, <strong>échelonné</strong>). Il est beaucoup plus facile à résoudre.
+    La dernière équation donne $z = -1$.
+    En substituant dans la deuxième : $-y - 2(-1) = 2 \implies -y + 2 = 2 \implies y = 0$.
+    En substituant dans la première : $x - 2(0) - (-1) = 2 \implies x + 1 = 2 \implies x = 1$.
+    Le système $(S_2)$ admet une unique solution $(1, 0, -1)$.
+    L'objectif de l'algorithme du pivot de Gauss est de transformer un système $(S_1)$ en un système équivalent $(S_2)$ (c'est-à-dire ayant le même ensemble de solutions) qui soit échelonné.
+</div>
+
+<div class="definition">
+    <strong>Opérations élémentaires sur les lignes.</strong>
+    Les opérations suivantes, appliquées aux lignes (équations) $L_1, \dots, L_n$ d'un système linéaire, transforment le système en un système équivalent :
+    <ol>
+        <li><strong>Échange de deux lignes :</strong> $L_i \leftrightarrow L_j$.</li>
+        <li><strong>Multiplication d'une ligne par un scalaire non nul :</strong> $L_i \leftarrow \lambda L_i$, avec $\lambda \in K, \lambda \neq 0$.</li>
+        <li><strong>Ajout à une ligne d'un multiple d'une autre ligne :</strong> $L_i \leftarrow L_i + \lambda L_j$, avec $j \neq i$ et $\lambda \in K$.</li>
+    </ol>
+    On dit que ces opérations préservent l'ensemble des solutions.
+</div>
+
+<div class="method">
+    <strong>Méthode du pivot de Gauss.</strong>
+    L'algorithme vise à transformer le système initial en un système échelonné en utilisant uniquement les opérations élémentaires sur les lignes.
+    <ol>
+        <li><strong>Choix du premier pivot :</strong>
+           Chercher la première colonne (correspondant à une inconnue, disons $x_j$) qui contient au moins un coefficient non nul.
+           Choisir une ligne $L_i$ où le coefficient $a_{i,j}$ est non nul. Ce coefficient $a_{i,j}$ est le <strong>pivot</strong>.</li>
+        <li><strong>Placement du pivot :</strong>
+           Échanger la ligne $L_i$ avec la première ligne $L_1$ (opération $L_i \leftrightarrow L_1$). Le pivot $a_{1,j}$ est maintenant en position $(1, j)$.</li>
+        <li><strong>Élimination :</strong>
+           Pour chaque ligne $L_k$ en dessous de la première ($k=2, \dots, n$), éliminer l'inconnue $x_j$ en effectuant l'opération $L_k \leftarrow L_k - \frac{a_{k,j}}{a_{1,j}} L_1$. (Le coefficient devant $x_j$ dans la nouvelle ligne $L_k$ devient $a_{k,j} - \frac{a_{k,j}}{a_{1,j}} a_{1,j} = 0$).</li>
+        <li><strong>Itération :</strong>
+           Ignorer la première ligne et la colonne $j$ du pivot. Recommencer le processus (étapes 1 à 3) sur le sous-système formé par les lignes restantes et les colonnes restantes.</li>
+        <li><strong>Fin :</strong> L'algorithme s'arrête lorsqu'il n'y a plus de lignes ou plus de colonnes à traiter. Le système obtenu est alors <strong>échelonné</strong>.</li>
+    </ol>
+</div>
+
+<div class="definition">
+    <strong>Système échelonné.</strong>
+    Un système est dit <strong>échelonné</strong> s'il a la forme suivante :
+    $$ \begin{cases}
+        a'_{1,j_1}x_{j_1} + a'_{1,j_1+1}x_{j_1+1} + \dots\dots\dots + a'_{1,p}x_p &= b'_1 \\
+        \phantom{a'_{1,j_1}x_{j_1}} a'_{2,j_2}x_{j_2} + \dots\dots\dots + a'_{2,p}x_p &= b'_2 \\
+        \phantom{a'_{1,j_1}x_{j_1} + \dots} \ddots \\
+        \phantom{a'_{1,j_1}x_{j_1} + \dots\dots} a'_{r,j_r}x_{j_r} + \dots + a'_{r,p}x_p &= b'_r \\
+        \phantom{a'_{1,j_1}x_{j_1} + \dots\dots\dots\dots\dots\dots\dots +} 0 &= b'_{r+1} \\
+        \phantom{a'_{1,j_1}x_{j_1} + \dots\dots\dots\dots\dots\dots\dots +} \vdots \\
+        \phantom{a'_{1,j_1}x_{j_1} + \dots\dots\dots\dots\dots\dots\dots +} 0 &= b'_n
+    \end{cases}
+    $$
+    où :
+    <ul>
+        <li>Les coefficients $a'_{1,j_1}, a'_{2,j_2}, \dots, a'_{r,j_r}$ sont non nuls. Ce sont les <strong>pivots</strong> du système échelonné.</li>
+        <li>Les indices des colonnes des pivots sont strictement croissants : $1 \le j_1 < j_2 < \dots < j_r \le p$.</li>
+        <li>$r$ est le nombre de pivots (et le nombre d'équations non triviales), appelé le <strong>rang</strong> du système. On a $r \le \min(n, p)$.</li>
+        <li>Les lignes $r+1$ à $n$ (s'il y en a) sont de la forme $0 = b'_k$.</li>
+    </ul>
+</div>
+
+<div class="method">
+    <strong>Résolution d'un système échelonné.</strong>
+    Soit $(S')$ un système mis sous forme échelonnée.
+    <ol>
+        <li><strong>Compatibilité :</strong> Examiner les équations $L_{r+1}, \dots, L_n$ de la forme $0 = b'_k$.
+           <ul>
+               <li>Si l'une de ces équations est $0 = b'_k$ avec $b'_k \neq 0$, le système est <strong>incompatible</strong> ($\mathcal{S} = \emptyset$).</li>
+               <li>Si toutes ces équations sont $0 = 0$ (i.e., $b'_k = 0$ pour $k=r+1, \dots, n$), le système est <strong>compatible</strong>. On peut ignorer ces lignes et passer à l'étape suivante.</li>
+           </ul>
+        </li>
+        <li><strong>Identification des inconnues principales et libres :</strong>
+           <ul>
+               <li>Les inconnues $x_{j_1}, x_{j_2}, \dots, x_{j_r}$ qui correspondent aux colonnes des pivots sont appelées <strong>inconnues principales</strong> (ou variables de pivot). Il y en a $r$.</li>
+               <li>Les autres $p-r$ inconnues sont appelées <strong>inconnues secondaires</strong> ou <strong>variables libres</strong>. Elles joueront le rôle de paramètres dans la description des solutions.</li>
+           </ul>
+        </li>
+        <li><strong>Remontée (Back-substitution) :</strong>
+           En partant de la dernière équation non triviale ($L_r$) et en remontant jusqu'à la première ($L_1$), exprimer chaque inconnue principale $x_{j_i}$ en fonction des inconnues secondaires (paramètres) et des inconnues principales $x_{j_k}$ avec $k > i$ (qui ont déjà été exprimées aux étapes précédentes).
+        </li>
+        <li><strong>Description de l'ensemble des solutions :</strong>
+           L'ensemble $\mathcal{S}$ est décrit en donnant l'expression de chaque inconnue principale en fonction des $p-r$ variables libres, qui peuvent prendre n'importe quelle valeur dans $K$.
+           <ul>
+               <li>Si $r=p$ (pas de variables libres) et le système est compatible, il y a une <strong>unique solution</strong>.</li>
+               <li>Si $r < p$ (au moins une variable libre) et le système est compatible, il y a une <strong>infinité de solutions</strong> (paramétrées par les variables libres).</li>
+           </ul>
+        </li>
+    </ol>
+</div>
+
+<div class="example">
+    <strong>Exemple complet.</strong> Reprenons le système $(S_1)$ :
+    $$ \begin{cases}
+        x - 2y - z = 2 \quad &(L_1) \\
+        2x - 5y - 4z = 6 \quad &(L_2) \\
+        -3x + y - 5z = 1 \quad &(L_3)
+    \end{cases} $$
+    1. Le premier pivot est $a_{1,1}=1$ (colonne de $x$). Il est déjà en haut.
+    2. Élimination sous le pivot :
+       $L_2 \leftarrow L_2 - 2 L_1$: $(2x - 5y - 4z) - 2(x - 2y - z) = 6 - 2(2) \implies -y - 2z = 2$.
+       $L_3 \leftarrow L_3 + 3 L_1$: $(-3x + y - 5z) + 3(x - 2y - z) = 1 + 3(2) \implies -5y - 8z = 7$.
+       Le système devient :
+       $$ \begin{cases}
+           x - 2y - z = 2 \quad &(L_1) \\
+           \phantom{0x} -y - 2z = 2 \quad &(L'_2) \\
+           \phantom{0x} -5y - 8z = 7 \quad &(L'_3)
+       \end{cases} $$
+    3. On ignore $L_1$. Le sous-système est $(L'_2, L'_3)$. La première colonne non nulle est celle de $y$. Le pivot est $a'_{2,2}=-1$ en $(L'_2)$. Il est déjà bien placé.
+    4. Élimination sous ce nouveau pivot :
+       $L'_3 \leftarrow L'_3 - 5 L'_2$: $(-5y - 8z) - 5(-y - 2z) = 7 - 5(2) \implies 2z = -3$.
+       Le système devient :
+       $$ \begin{cases}
+           x - 2y - z = 2 \quad &(L_1) \\
+           \phantom{0x} -y - 2z = 2 \quad &(L'_2) \\
+           \phantom{0x + 0y} 2z = -3 \quad &(L''_3)
+       \end{cases} $$
+    C'est un système échelonné. Le rang $r=3$. Il y a $n=3$ équations et $p=3$ inconnues.
+    1. Compatibilité : Pas d'équation $0=b' \neq 0$. Le système est compatible.
+    2. Inconnues principales : $x, y, z$ (correspondant aux pivots 1, -1, 2). Pas d'inconnues libres ($p-r = 3-3 = 0$).
+    3. Remontée :
+       $L''_3 \implies 2z = -3 \implies z = -3/2$.
+       $L'_2 \implies -y - 2(-3/2) = 2 \implies -y + 3 = 2 \implies y = 1$.
+       $L_1 \implies x - 2(1) - (-3/2) = 2 \implies x - 2 + 3/2 = 2 \implies x - 1/2 = 2 \implies x = 5/2$.
+    4. Solution : Le système admet une unique solution $\mathcal{S} = \{ (5/2, 1, -3/2) \}$.
+</div>
+
+<div class="example">
+    <strong>Exemple avec paramètre(s).</strong>
+    $$ \begin{cases}
+        x + y + 2z = 1 \quad &(L_1) \\
+        2x + 3y + 3z = 3 \quad &(L_2) \\
+        x + 2y + z = 2 \quad &(L_3)
+    \end{cases} $$
+    Pivot $a_{1,1}=1$.
+    $L_2 \leftarrow L_2 - 2L_1$: $y - z = 1$.
+    $L_3 \leftarrow L_3 - L_1$: $y - z = 1$.
+    $$ \begin{cases}
+        x + y + 2z = 1 \quad &(L_1) \\
+        \phantom{0x} y - z = 1 \quad &(L'_2) \\
+        \phantom{0x} y - z = 1 \quad &(L'_3)
+    \end{cases} $$
+    Pivot $a'_{2,2}=1$.
+    $L'_3 \leftarrow L'_3 - L'_2$: $0 = 0$.
+    $$ \begin{cases}
+        x + y + 2z = 1 \quad &(L_1) \\
+        \phantom{0x} y - z = 1 \quad &(L'_2) \\
+        \phantom{0x + 0y +} 0 = 0 \quad &(L''_3)
+    \end{cases} $$
+    Système échelonné. Rang $r=2$. $n=3, p=3$.
+    1. Compatibilité : $0=0$ est vrai. Système compatible.
+    2. Inconnues principales : $x, y$ (colonnes 1 et 2). Inconnue libre : $z$ ($p-r = 3-2=1$).
+    3. Remontée :
+       $L'_2 \implies y = 1 + z$.
+       $L_1 \implies x = 1 - y - 2z = 1 - (1+z) - 2z = -3z$.
+    4. Solution : L'ensemble des solutions est
+       $$ \mathcal{S} = \{ (-3z, 1+z, z) \mid z \in K \} $$
+       C'est une droite affine dans $K^3$. On peut l'écrire sous forme $x_P + \mathcal{S}_H$.
+       Une solution particulière $x_P$ est obtenue en prenant $z=0$, soit $x_P = (0, 1, 0)$.
+       Le système homogène associé est
+       $$ \begin{cases} x + y + 2z = 0 \\ y - z = 0 \end{cases} $$
+       Il donne $y=z$ et $x = -y - 2z = -z - 2z = -3z$.
+       $\mathcal{S}_H = \{ (-3z, z, z) \mid z \in K \} = \text{Vect}( (-3, 1, 1) )$.
+       On a bien $\mathcal{S} = (0, 1, 0) + \text{Vect}( (-3, 1, 1) )$.
+</div>
+
+<div class="remark">
+    La méthode du pivot de Gauss est un algorithme systématique qui permet de déterminer si un système linéaire a des solutions, et de les décrire toutes si elles existent. C'est un outil fondamental en algèbre linéaire.
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
