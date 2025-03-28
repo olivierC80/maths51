@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cours : Espaces Vectoriels (Math Sup)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .definition, .theorem, .proposition, .corollary, .remark, .example {
+            margin: 15px 0; padding: 10px; border-left: 5px solid;
+        }
+        .definition { border-color: #17a2b8; background-color: #e1f5fe; }
+        .theorem { border-color: #dc3545; background-color: #ffebee; }
+        .proposition { border-color: #28a745; background-color: #e8f5e9; }
+        .corollary { border-color: #ffc107; background-color: #fffde7; }
+        .remark { border-color: #6c757d; background-color: #f8f9fa; }
+        .example { border-color: #fd7e14; background-color: #fff3e0; }
+        .proof { margin: 10px 0 10px 20px; padding: 10px; border: 1px dashed #ccc; background-color: #f9f9f9; }
+        .proof-title { font-weight: bold; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Pour les formules longues */
+    </style>
+</head>
+<body>
+
+<h1>Espaces Vectoriels</h1>
+
+<h2>Introduction</h2>
+<p>
+    La notion d'espace vectoriel est centrale en algèbre linéaire. Elle généralise la structure des vecteurs de la géométrie euclidienne (addition de vecteurs, multiplication par un scalaire) à des ensembles d'objets plus abstraits comme les polynômes, les matrices, les fonctions, les suites, etc. Cette structure commune permet de développer des outils et des théorèmes puissants applicables à une grande variété d'objets mathématiques.
+</p>
+<p>$K$ désigne le corps $\mathbb{R}$ ou $\mathbb{C}$.</p>
+
+<h2>1. Structure d'Espace Vectoriel</h2>
+
+<div class="definition">
+    <strong>Définition (Espace Vectoriel).</strong>
+    On appelle <strong>espace vectoriel sur $K$</strong> (ou $K$-espace vectoriel) un ensemble non vide $E$, muni de deux lois :
+    <ol>
+        <li>Une loi de composition interne (addition) $+ : E \times E \to E$, telle que $(E, +)$ soit un <strong>groupe abélien</strong> :
+            <ul>
+                <li>Associativité : $\forall x,y,z \in E, (x+y)+z = x+(y+z)$.</li>
+                <li>Élément neutre : $\exists 0_E \in E, \forall x \in E, x+0_E = 0_E+x = x$.</li>
+                <li>Inverse (opposé) : $\forall x \in E, \exists (-x) \in E, x+(-x) = (-x)+x = 0_E$.</li>
+                <li>Commutativité : $\forall x,y \in E, x+y = y+x$.</li>
+            </ul>
+        </li>
+        <li>Une loi de composition externe (multiplication par un scalaire) $\cdot : K \times E \to E$, vérifiant les axiomes suivants :
+            <ul>
+                <li>Distributivité / scalaires : $\forall (\alpha, \beta) \in K^2, \forall x \in E, (\alpha + \beta) \cdot x = (\alpha \cdot x) + (\beta \cdot x)$.</li>
+                <li>Distributivité / vecteurs : $\forall \alpha \in K, \forall (x, y) \in E^2, \alpha \cdot (x + y) = (\alpha \cdot x) + (\alpha \cdot y)$.</li>
+                <li>Associativité mixte : $\forall (\alpha, \beta) \in K^2, \forall x \in E, (\alpha \beta) \cdot x = \alpha \cdot (\beta \cdot x)$.</li>
+                <li>Neutralité du scalaire 1 : $\forall x \in E, 1 \cdot x = x$ (où $1$ est le neutre multiplicatif de $K$).</li>
+            </ul>
+        </li>
+    </ol>
+    Les éléments de $E$ sont appelés des <strong>vecteurs</strong> et les éléments de $K$ sont appelés des <strong>scalaires</strong>. On note souvent $\lambda x$ pour $\lambda \cdot x$. L'élément neutre $0_E$ est appelé le <strong>vecteur nul</strong>.
+</div>
+
+<div class="example">
+    <strong>Exemples fondamentaux :</strong>
+    <ul>
+        <li>$K^n = \{ (x_1, \dots, x_n) \mid x_i \in K \}$. Avec l'addition $(x_1, \dots) + (y_1, \dots) = (x_1+y_1, \dots)$ et la multiplication $\lambda(x_1, \dots) = (\lambda x_1, \dots)$, $K^n$ est un $K$-espace vectoriel. $K^1=K$ est un $K$-ev. $\mathbb{R}^2, \mathbb{R}^3$ sont les exemples géométriques usuels.</li>
+        <li>L'ensemble $K[X]$ des polynômes à coefficients dans $K$, muni de l'addition des polynômes et de la multiplication d'un polynôme par un scalaire, est un $K$-espace vectoriel.</li>
+        <li>L'ensemble $\mathcal{M}_{n,p}(K)$ des matrices à $n$ lignes et $p$ colonnes à coefficients dans $K$, muni de l'addition matricielle et de la multiplication par un scalaire, est un $K$-espace vectoriel.</li>
+        <li>Soit $A$ un ensemble quelconque. L'ensemble $\mathcal{F}(A, K)$ de toutes les fonctions de $A$ dans $K$, muni de l'addition $(f+g)(x) = f(x)+g(x)$ et de la multiplication $(\lambda f)(x) = \lambda f(x)$, est un $K$-espace vectoriel.
+            <br>Cas particuliers :
+            <ul>
+                <li>L'ensemble $K^{\mathbb{N}}$ des suites $(u_n)$ à valeurs dans $K$.</li>
+                <li>L'ensemble $\mathcal{F}(I, \mathbb{R})$ des fonctions réelles définies sur un intervalle $I$.</li>
+                <li>L'ensemble $C^k(I, \mathbb{R})$ des fonctions de classe $C^k$ sur $I$.</li>
+            </ul>
+        </li>
+        <li>L'ensemble $\{0_E\}$ (contenant uniquement le vecteur nul) est un $K$-espace vectoriel (l'espace vectoriel nul).</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Règles de calcul.</strong> Dans un $K$-espace vectoriel $E$:
+    <ul>
+        <li>$\forall x \in E, 0 \cdot x = 0_E$ (où $0$ est le scalaire nul).</li>
+        <li>$\forall \lambda \in K, \lambda \cdot 0_E = 0_E$.</li>
+        <li>$\forall \lambda \in K, \forall x \in E, (\lambda \cdot x = 0_E \implies (\lambda = 0 \text{ ou } x = 0_E))$.</li>
+        <li>$\forall x \in E, (-1) \cdot x = -x$.</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Espace vectoriel produit.</strong>
+    Soient $E_1, \dots, E_n$ des $K$-espaces vectoriels. L'ensemble produit $E = E_1 \times \dots \times E_n$, muni des lois définies "composante par composante" :
+    <ul>
+        <li>Addition : $(x_1, \dots, x_n) + (y_1, \dots, y_n) = (x_1+y_1, \dots, x_n+y_n)$.</li>
+        <li>Multiplication externe : $\lambda \cdot (x_1, \dots, x_n) = (\lambda x_1, \dots, \lambda x_n)$.</li>
+    </ul>
+    est un $K$-espace vectoriel, appelé <strong>espace vectoriel produit</strong>.
+</div>
+
+<h2>2. Familles de Vecteurs</h2>
+
+<p>Dans cette partie, $E$ désigne un $K$-espace vectoriel.</p>
+
+<div class="definition">
+    <strong>Combinaison linéaire.</strong>
+    <ul>
+        <li>Une <strong>combinaison linéaire</strong> d'une famille <strong>finie</strong> de vecteurs $(x_1, \dots, x_n)$ de $E$ est un vecteur $x \in E$ de la forme :
+            $$ x = \alpha_1 x_1 + \alpha_2 x_2 + \dots + \alpha_n x_n = \sum_{i=1}^n \alpha_i x_i $$
+            où les $\alpha_i$ sont des scalaires de $K$.</li>
+        <li>Une <strong>combinaison linéaire</strong> d'une famille <strong>quelconque</strong> de vecteurs $(x_i)_{i \in I}$ de $E$ est un vecteur $x \in E$ de la forme :
+            $$ x = \sum_{i \in I} \alpha_i x_i $$
+            où la famille de scalaires $(\alpha_i)_{i \in I}$ est à <strong>support fini</strong>, c'est-à-dire que tous les $\alpha_i$ sont nuls sauf un nombre fini d'entre eux (la somme est donc en réalité finie).</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Famille libre (ou linéairement indépendante).</strong>
+    <ul>
+        <li>Une famille <strong>finie</strong> $(x_1, \dots, x_n)$ de vecteurs de $E$ est dite <strong>libre</strong> si la seule combinaison linéaire de ces vecteurs qui soit égale au vecteur nul est celle dont tous les coefficients sont nuls :
+            $$ \forall (\alpha_1, \dots, \alpha_n) \in K^n, \quad \left( \sum_{i=1}^n \alpha_i x_i = 0_E \implies \alpha_1 = \alpha_2 = \dots = \alpha_n = 0 \right) $$
+        </li>
+        <li>Une famille <strong>quelconque</strong> $(x_i)_{i \in I}$ est dite <strong>libre</strong> si toute sous-famille finie extraite de $(x_i)_{i \in I}$ est libre.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Famille liée (ou linéairement dépendante).</strong>
+    Une famille de vecteurs qui n'est pas libre est dite <strong>liée</strong>.
+    <br>Une famille finie $(x_1, \dots, x_n)$ est liée s'il existe des scalaires $\alpha_1, \dots, \alpha_n$ <strong>non tous nuls</strong> tels que $\sum_{i=1}^n \alpha_i x_i = 0_E$.
+    <br>Une famille est liée si et seulement si au moins un de ses vecteurs est combinaison linéaire des autres.
+</div>
+
+<div class="remark">
+    Cas particuliers :
+    <ul>
+        <li>La famille vide $\emptyset$ est libre.</li>
+        <li>Une famille contenant le vecteur nul $0_E$ est toujours liée (si elle n'est pas vide).</li>
+        <li>Une famille $(x)$ réduite à un seul vecteur est libre si et seulement si $x \neq 0_E$.</li>
+        <li>Une famille $(x, y)$ est liée si et seulement si $x$ et $y$ sont colinéaires (i.e., $x = \lambda y$ ou $y = \mu x$).</li>
+    </ul>
+</div>
+
+<div class="example">
+    <ul>
+        <li>Dans $\mathbb{R}^2$, la famille $((1, 0), (0, 1))$ est libre. La famille $((1, 1), (2, 2))$ est liée.</li>
+        <li>Dans $K[X]$, la famille $(1, X, X^2, \dots, X^n)$ est libre.</li>
+        <li>Dans $K[X]$, si $(P_1, \dots, P_n)$ est une famille de polynômes non nuls tels que $\deg(P_1) < \deg(P_2) < \dots < \deg(P_n)$ (degrés échelonnés), alors la famille $(P_1, \dots, P_n)$ est libre.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Famille génératrice.</strong>
+    Une famille $(x_i)_{i \in I}$ de vecteurs de $E$ est dite <strong>génératrice</strong> de $E$ (ou engendre $E$) si tout vecteur de $E$ peut s'écrire comme combinaison linéaire d'éléments de la famille $(x_i)_{i \in I}$.
+    <br>Autrement dit : $\forall y \in E, \exists (\alpha_i)_{i \in I}$ (famille de scalaires à support fini), $y = \sum_{i \in I} \alpha_i x_i$.
+</div>
+
+<div class="definition">
+    <strong>Base.</strong>
+    Une famille $(x_i)_{i \in I}$ est une <strong>base</strong> de $E$ si elle est à la fois <strong>libre</strong> et <strong>génératrice</strong> de $E$.
+</div>
+
+<div class="proposition">
+    <strong>Propriétés des familles libres et génératrices.</strong>
+    Soient $L$ une famille libre et $G$ une famille génératrice de $E$.
+    <ol>
+        <li>Toute sous-famille d'une famille libre est libre.</li>
+        <li>Toute sur-famille d'une famille génératrice est génératrice.</li>
+        <li>(Cardinalité) Si $E$ admet une base finie (espace de dimension finie), alors $\text{Card}(L) \le \text{Card}(G)$.</li>
+        <li>Si $G$ est une famille génératrice et si $x \in G$ est combinaison linéaire des autres vecteurs de $G$, alors $G \setminus \{x\}$ est encore une famille génératrice.</li>
+        <li>Si $L$ est une famille libre et si $y \in E$ n'est pas combinaison linéaire des vecteurs de $L$, alors $L \cup \{y\}$ est encore une famille libre.</li>
+    </ol>
+</div>
+
+<h2>3. Sous-espaces vectoriels (sev)</h2>
+
+<p>Dans cette partie, $E$ désigne un $K$-espace vectoriel.</p>
+
+<div class="definition">
+    <strong>Sous-espace vectoriel.</strong>
+    Une partie $F$ de $E$ est un <strong>sous-espace vectoriel</strong> (sev) de $E$ si :
+    <ol>
+        <li>$F$ est non vide.</li>
+        <li>$F$ est stable par addition : $\forall x, y \in F, x+y \in F$.</li>
+        <li>$F$ est stable par multiplication externe : $\forall \lambda \in K, \forall x \in F, \lambda \cdot x \in F$.</li>
+    </ol>
+    Si $F$ est un sev de $E$, alors $F$ muni des lois induites est lui-même un $K$-espace vectoriel.
+</div>
+
+<div class="proposition">
+    <strong>Caractérisation des sous-espaces vectoriels.</strong>
+    Une partie $F$ de $E$ est un sev de $E$ si et seulement si :
+    <ol>
+        <li>$0_E \in F$ (ce qui assure $F \neq \emptyset$).</li>
+        <li>$F$ est stable par combinaison linéaire : $\forall (x, y) \in F^2, \forall (\lambda, \mu) \in K^2, \lambda x + \mu y \in F$.</li>
+    </ol>
+    (Condition équivalente souvent utilisée : $0_E \in F$, $\forall (x, y) \in F^2, x+y \in F$, et $\forall x \in F, \forall \lambda \in K, \lambda x \in F$).
+</div>
+
+<div class="example">
+    <strong>Exemples :</strong>
+    <ul>
+        <li>$\{0_E\}$ et $E$ sont toujours des sev de $E$.</li>
+        <li>Dans $\mathbb{R}^2$, les sev sont $\{0\}$, les droites vectorielles (passant par l'origine) et $\mathbb{R}^2$ lui-même.</li>
+        <li>Dans $\mathbb{R}^3$, les sev sont $\{0\}$, les droites vectorielles, les plans vectoriels (passant par l'origine) et $\mathbb{R}^3$ lui-même.</li>
+        <li>Pour $n \in \mathbb{N}$, $K_n[X]$ est un sev de $K[X]$.</li>
+        <li>$\mathcal{S}_n(K)$ (matrices symétriques) et $\mathcal{A}_n(K)$ (matrices antisymétriques) sont des sev de $\mathcal{M}_n(K)$.</li>
+        <li>L'ensemble des fonctions continues sur $I$, $C^0(I, K)$, est un sev de $\mathcal{F}(I, K)$. $C^k(I, K)$ est un sev de $C^0(I, K)$.</li>
+        <li>L'ensemble des suites convergentes est un sev de $K^{\mathbb{N}}$. L'ensemble des suites tendant vers 0 est un sev de l'espace des suites convergentes.</li>
+        <li>L'ensemble $\mathcal{S}_H$ des solutions d'un système linéaire <strong>homogène</strong> $AX=0$ à $p$ inconnues est un sev de $K^p$ (ou $\mathcal{M}_{p,1}(K)$).</li>
+        <li>L'ensemble des solutions d'une équation différentielle linéaire <strong>homogène</strong> est un sev de l'espace des fonctions approprié.</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Intersection de sous-espaces vectoriels.</strong>
+    Si $(F_i)_{i \in I}$ est une famille quelconque de sev de $E$, alors leur intersection $\bigcap_{i \in I} F_i$ est un sev de $E$.
+</div>
+<div class="remark">
+    Attention : La réunion de deux sev n'est généralement pas un sev (sauf si l'un est inclus dans l'autre).
+</div>
+
+<div class="definition">
+    <strong>Sous-espace vectoriel engendré (Vect).</strong>
+    Soit $X$ une partie (ou une famille de vecteurs) de $E$. Le <strong>sous-espace vectoriel engendré</strong> par $X$, noté $\text{Vect}(X)$, est le plus petit (au sens de l'inclusion) sous-espace vectoriel de $E$ qui contient $X$. C'est l'intersection de tous les sev de $E$ contenant $X$.
+</div>
+
+<div class="proposition">
+    <strong>Description de Vect(X).</strong>
+    <ul>
+        <li>Si $X = \emptyset$, $\text{Vect}(\emptyset) = \{0_E\}$.</li>
+        <li>Si $X \neq \emptyset$, $\text{Vect}(X)$ est l'ensemble de toutes les combinaisons linéaires finies d'éléments de $X$:
+            $$ \text{Vect}(X) = \left\{ \sum_{i=1}^n \alpha_i x_i \mid n \in \mathbb{N}^*, x_i \in X, \alpha_i \in K \right\} $$
+        </li>
+        <li>Si $X = \{x_1, \dots, x_n\}$ est une famille finie, $\text{Vect}(x_1, \dots, x_n) = \{ \sum_{i=1}^n \alpha_i x_i \mid \alpha_i \in K \}$.</li>
+        <li>Une famille $X$ est génératrice de $E$ si et seulement si $\text{Vect}(X) = E$.</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Propriétés de Vect.</strong>
+    <ul>
+        <li>$X \subset \text{Vect}(X)$.</li>
+        <li>Si $X \subset Y$, alors $\text{Vect}(X) \subset \text{Vect}(Y)$.</li>
+        <li>$X$ est un sev $\iff X = \text{Vect}(X)$.</li>
+        <li>Si $F$ est un sev, $F \supset X \implies F \supset \text{Vect}(X)$. (Équivaut à $\text{Vect}(X) \subset F \iff X \subset F$).</li>
+        <li>$\text{Vect}(\text{Vect}(X)) = \text{Vect}(X)$.</li>
+        <li>Opérations élémentaires sur une famille génératrice : L'espace engendré par $(u_1, \dots, u_n)$ est inchangé si :
+            <ul>
+                <li>On permute les vecteurs.</li>
+                <li>On multiplie un vecteur $u_i$ par $\lambda \in K^*$.</li>
+                <li>On ajoute à un vecteur $u_i$ une combinaison linéaire des autres vecteurs : $u_i \leftarrow u_i + \sum_{j \neq i} \lambda_j u_j$.</li>
+                <li>On retire le vecteur nul $0_E$ s'il est présent.</li>
+                <li>On retire un vecteur $u_k$ s'il est combinaison linéaire des autres : si $u_k \in \text{Vect}(u_1, \dots, u_{k-1}, u_{k+1}, \dots, u_n)$.</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<h2>4. Somme et Somme Directe de Sous-espaces Vectoriels</h2>
+
+<div class="definition">
+    <strong>Somme de deux sous-espaces vectoriels.</strong>
+    Soient $F$ et $G$ deux sev de $E$. La <strong>somme</strong> de $F$ et $G$ est l'ensemble :
+    $$ F+G = \{ x+y \mid x \in F, y \in G \} $$
+    C'est le plus petit sous-espace vectoriel de $E$ contenant $F \cup G$.
+</div>
+
+<div class="proposition">
+    Si $F = \text{Vect}(X)$ et $G = \text{Vect}(Y)$, alors $F+G = \text{Vect}(X \cup Y)$.
+</div>
+
+<div class="definition">
+    <strong>Somme directe.</strong>
+    Soient $F$ et $G$ deux sev de $E$. On dit que $F$ et $G$ sont en <strong>somme directe</strong> si tout vecteur $z$ de la somme $F+G$ s'écrit de manière <strong>unique</strong> comme $z = x+y$ avec $x \in F$ et $y \in G$.
+    On note alors la somme $F \oplus G$.
+</div>
+
+<div class="proposition">
+    <strong>Caractérisation de la somme directe.</strong>
+    Soient $F$ et $G$ deux sev de $E$. Les assertions suivantes sont équivalentes :
+    <ol>
+        <li>La somme $F+G$ est directe.</li>
+        <li>L'intersection de $F$ et $G$ est réduite au vecteur nul : $F \cap G = \{0_E\}$.</li>
+        <li>Pour tout $x \in F, y \in G$, $(x+y = 0_E \implies x=0_E \text{ et } y=0_E)$.</li>
+        <li>Si $\mathcal{B}_F$ est une base de $F$ et $\mathcal{B}_G$ est une base de $G$, alors $\mathcal{B}_F \cup \mathcal{B}_G$ est une base de $F+G$. (Vu en dimension finie).</li>
+    </ol>
+</div>
+
+<div class="definition">
+    <strong>Sous-espaces supplémentaires.</strong>
+    Deux sous-espaces vectoriels $F$ et $G$ de $E$ sont dits <strong>supplémentaires</strong> dans $E$ si :
+    $$ E = F \oplus G $$
+    Ceci signifie que les deux conditions suivantes sont remplies :
+    <ol>
+        <li>$F + G = E$ (Tout vecteur de $E$ est somme d'un vecteur de $F$ et d'un vecteur de $G$).</li>
+        <li>$F \cap G = \{0_E\}$ (La somme est directe).</li>
+    </ol>
+</div>
+
+<div class="proposition">
+    $F$ et $G$ sont supplémentaires dans $E$ si et seulement si tout vecteur $u \in E$ s'écrit de façon <strong>unique</strong> sous la forme $u = u_F + u_G$ avec $u_F \in F$ et $u_G \in G$.
+</div>
+
+<div class="example">
+    Dans $\mathcal{M}_n(K)$, les sous-espaces $\mathcal{S}_n(K)$ (symétriques) et $\mathcal{A}_n(K)$ (antisymétriques) sont supplémentaires : $\mathcal{M}_n(K) = \mathcal{S}_n(K) \oplus \mathcal{A}_n(K)$ (si car(K) $\neq 2$).
+    Dans $\mathcal{F}(\mathbb{R}, \mathbb{R})$, l'espace des fonctions paires et l'espace des fonctions impaires sont supplémentaires.
+</div>
+<div class="remark">
+    La notion de somme (directe) se généralise à plus de deux sous-espaces.
+</div>
+
+<h2>5. Sous-espaces Affines</h2>
+
+<div class="definition">
+    <strong>Translation.</strong>
+    Soit $a \in E$. L'application $t_a: E \to E$ définie par $t_a(x) = x+a$ est appelée la <strong>translation</strong> de vecteur $a$.
+    Si $F \subset E$, l'image de $F$ par $t_a$ est notée $a+F = \{ a+x \mid x \in F \}$.
+</div>
+
+<div class="definition">
+    <strong>Sous-espace affine.</strong>
+    Une partie $A$ de $E$ est un <strong>sous-espace affine</strong> de $E$ s'il existe un point $x_0 \in E$ et un sous-espace vectoriel $F$ de $E$ tels que $A = x_0 + F$.
+    Le sous-espace vectoriel $F$ est appelé la <strong>direction</strong> de $A$. Le point $x_0$ est un point quelconque de $A$.
+</div>
+
+<div class="proposition">
+    <strong>Unicité de la direction.</strong>
+    Si $A = x_0 + F = y_0 + G$ (avec $F, G$ sev), alors $F = G$.
+    La direction d'un sous-espace affine $A$ est donc unique. On la note $\vec{A}$.
+    $\vec{A} = \{ y-x \mid x, y \in A \}$.
+</div>
+
+<div class="proposition">
+    <strong>Inclusion de sous-espaces affines.</strong>
+    Soient $A = x + F$ et $B = y + G$ deux sous-espaces affines de $E$.
+    $$ A \subset B \iff (F \subset G \text{ et } x \in B) $$
+    (La condition $x \in B$ est équivalente à $x-y \in G$).
+</div>
+
+<div class="example">
+    <ul>
+        <li>Tout sous-espace vectoriel est un sous-espace affine (passant par $0_E$).</li>
+        <li>Dans $\mathbb{R}^2$ ou $\mathbb{R}^3$, les points, les droites et les plans sont des sous-espaces affines.</li>
+        <li>L'ensemble $\mathcal{S}$ des solutions d'un système linéaire <strong>compatible</strong> $AX = B$ est un sous-espace affine de $K^p$. Sa direction est l'espace $\mathcal{S}_H$ des solutions du système homogène associé $AY=0$. En effet, $\mathcal{S} = X_0 + \mathcal{S}_H$, où $X_0$ est une solution particulière.</li>
+    </ul>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
