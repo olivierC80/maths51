@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Équations différentielles linéaires</title>
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            tags: 'ams', // Automatic equation numbering
+            macros: {
+              K: '\\mathbb{K}', // Base field, R or C
+              R: '\\mathbb{R}',
+              C: '\\mathbb{C}',
+              N: '\\mathbb{N}',
+              Z: '\\mathbb{Z}',
+              MnK: '{\\mathcal{M}_n(\\K)}',
+              MnR: '{\\mathcal{M}_n(\\R)}',
+              GLnK: '{\\mathrm{GL}_n(\\K)}',
+              LE: '{\\mathcal{L}(E)}',
+              norm: ['{\\|\| #1 \\|}', 1], // Norm macro
+              abs: ['{| #1 |}', 1], // Absolute value
+              eps: '\\varepsilon',
+              phi: '\\varphi',
+              Id: '\\mathrm{Id}_E',
+              In: '\\mathrm{I}_n',
+              diag: '\\mathrm{diag}',
+              Tr: '\\mathrm{Tr}',
+              det: '\\det',
+              exp: '\\mathrm{exp}',
+              Ker: '\\mathrm{Ker}',
+              Im: '\\mathrm{Im}',
+              com: '\\mathrm{com}', // Comatrix
+              rg: '\\mathrm{rg}' // Rank
+            }
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+        </script>
+        <script type="text/javascript" id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+        </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa; /* Gris très clair */
+        }
+        h1, h2, h3 {
+            color: #303F9F; /* Indigo foncé */
+            border-bottom: 2px solid #303F9F;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; font-style: italic; border-bottom: none; color: #3F51B5;} /* Indigo */
+
+        .definition, .theorem, .proposition, .corollary, .example, .proof, .remark, .principle {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-left: 5px solid #5C6BC0; /* Indigo clair */
+            background-color: #E8EAF6; /* Indigo très très clair */
+            border-radius: 0 5px 5px 0;
+        }
+        .definition strong, .theorem strong, .proposition strong, .corollary strong, .remark strong, .principle strong {
+            color: #1A237E; /* Indigo encore plus foncé */
+            font-weight: bold;
+        }
+        .proof {
+            border-left-color: #4CAF50; /* Vert */
+            background-color: #E8F5E9; /* Vert très clair */
+        }
+        .proof strong {
+            color: #1B5E20; /* Vert foncé */
+            font-weight: bold;
+        }
+        .example {
+            border-left-color: #FFB300; /* Ambre */
+            background-color: #FFF8E1; /* Ambre très clair */
+        }
+         .example strong {
+            color: #FF6F00; /* Ambre foncé */
+            font-weight: bold;
+        }
+         .remark {
+            border-left-color: #78909C; /* Gris bleu */
+            background-color: #ECEFF1; /* Gris bleu clair */
+        }
+         .remark strong {
+            color: #37474F; /* Gris bleu foncé */
+            font-weight: bold;
+        }
+        .principle {
+             border-left-color: #00ACC1; /* Cyan */
+             background-color: #E0F7FA; /* Cyan clair */
+        }
+        .principle strong {
+             color: #006064; /* Cyan foncé */
+        }
+        code {
+            background-color: #C5CAE9; /* Indigo très pâle */
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        ul {
+            margin-left: 20px;
+            list-style-type: square;
+            padding-left: 20px;
+        }
+         ul ul {
+             list-style-type: circle;
+             margin-top: 5px;
+         }
+        li {
+            margin-bottom: 8px;
+        }
+        .MJX-TeXAtom-ORD { }
+        a { color: #0277BD; text-decoration: none; } /* Bleu lien */
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>Équations différentielles linéaires</h1>
+
+    <p>Dans la suite, $I$ désigne un intervalle de $\R$, $E$ un $\K$-espace vectoriel normé de dimension finie $n$ ($\K = \R$ ou $\C$).</p>
+
+    <h2>1. Généralités</h2>
+
+    <div class="definition">
+        <strong>Définition (Équation différentielle linéaire d'ordre 1)</strong><br>
+        On appelle <strong>équation différentielle linéaire du premier ordre</strong> une équation de la forme :
+        $$ (L) \quad x'(t) + a(t)(x(t)) = b(t) $$
+        où :
+        <ul>
+            <li>$a : I \to \LE$ est une fonction continue (application matricielle).</li>
+            <li>$b : I \to E$ est une fonction continue (second membre).</li>
+            <li>$x : I \to E$ est la fonction inconnue, supposée dérivable.</li>
+        </ul>
+        Résoudre $(L)$ sur $I$, c'est trouver toutes les fonctions $x \in C^1(I, E)$ qui vérifient l'équation pour tout $t \in I$. Une telle fonction est appelée une <strong>solution</strong> de $(L)$.
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Équation homogène associée)</strong><br>
+        L'<strong>équation différentielle homogène</strong> associée à $(L)$ est l'équation sans second membre :
+        $$ (H) \quad x'(t) + a(t)(x(t)) = 0_E $$
+    </div>
+
+    <div class="principle">
+        <strong>Principe de superposition des solutions</strong><br>
+        Si $x_1$ est solution de $x'(t) + a(t)(x(t)) = b_1(t)$ et $x_2$ est solution de $x'(t) + a(t)(x(t)) = b_2(t)$, alors pour tous scalaires $\lambda_1, \lambda_2 \in \K$, la fonction $\lambda_1 x_1 + \lambda_2 x_2$ est solution de :
+        $$ x'(t) + a(t)(x(t)) = \lambda_1 b_1(t) + \lambda_2 b_2(t) $$
+    </div>
+
+    <div class="remark">
+        <strong>Forme matricielle (Système différentiel) :</strong><br>
+        En choisissant une base $\mathcal{B}=(e_1, \dots, e_n)$ de $E$, on peut représenter l'endomorphisme $a(t)$ par sa matrice $A(t) = \Mat(a(t), \mathcal{B}) \in \MnK$, le vecteur $x(t)$ par son vecteur colonne de coordonnées $X(t) \in \K^n$, et le vecteur $b(t)$ par son vecteur colonne de coordonnées $B(t) \in \K^n$.
+        L'équation vectorielle $(L)$ devient alors un <strong>système différentiel linéaire d'ordre 1</strong> :
+        $$ X'(t) + A(t) X(t) = B(t) $$
+        où $X'(t)$ est le vecteur colonne des dérivées des coordonnées de $x(t)$. La continuité de $a$ et $b$ équivaut à la continuité des fonctions coefficients des matrices $A(t)$ et $B(t)$.
+    </div>
+
+    <h2>2. Résolution des problèmes de Cauchy</h2>
+
+    <div class="definition">
+        <strong>Définition (Problème de Cauchy)</strong><br>
+        Soit $(L) \quad x'(t) + a(t)(x(t)) = b(t)$ une équation différentielle linéaire. Soit $(t_0, x_0) \in I \times E$ une condition initiale.
+        Le <strong>problème de Cauchy</strong> associé consiste à trouver les solutions $x$ de $(L)$ qui vérifient $x(t_0) = x_0$.
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Mise sous forme intégrale du problème de Cauchy)</strong><br>
+        Soit $a: I \to \LE$ et $b: I \to E$ continues, $x: I \to E$ dérivable, et $(t_0, x_0) \in I \times E$.
+        Les deux assertions suivantes sont équivalentes :
+        <ol>
+            <li>$x$ est solution du problème de Cauchy
+               $$ \begin{cases} x'(t) + a(t)(x(t)) = b(t) \\ x(t_0) = x_0 \end{cases} $$</li>
+            <li>$x$ vérifie l'équation intégrale :
+               $$ \forall t \in I, \quad x(t) = x_0 + \int_{t_0}^t \big( b(u) - a(u)(x(u)) \big) du $$</li>
+        </ol>
+    </div>
+    <div class="proof">
+        <strong>Preuve :</strong><br>
+        (1 $\implies$ 2) Si $x$ est solution, $x'(u) = b(u) - a(u)(x(u))$ pour tout $u \in I$. En intégrant cette égalité (vectorielle) entre $t_0$ et $t$ :
+        $\int_{t_0}^t x'(u) du = \int_{t_0}^t (b(u) - a(u)(x(u))) du$.
+        Par le théorème fondamental, $\int_{t_0}^t x'(u) du = x(t) - x(t_0)$. Comme $x(t_0)=x_0$, on a $x(t) - x_0 = \int_{t_0}^t (b(u) - a(u)(x(u))) du$, ce qui donne la forme intégrale.
+        <br>(2 $\implies$ 1) Si $x$ vérifie l'équation intégrale. En $t=t_0$, $x(t_0) = x_0 + \int_{t_0}^{t_0} \dots = x_0$. La condition initiale est vérifiée.
+        L'intégrale $G(t) = \int_{t_0}^t (b(u) - a(u)(x(u))) du$ est une fonction de $t$. Comme $u \mapsto b(u) - a(u)(x(u))$ est continue (car $a, b, x$ continues), $G$ est dérivable et $G'(t) = b(t) - a(t)(x(t))$.
+        L'équation intégrale est $x(t) = x_0 + G(t)$. En dérivant, $x'(t) = G'(t) = b(t) - a(t)(x(t))$, soit $x'(t) + a(t)(x(t)) = b(t)$. $x$ est solution de l'équation différentielle. $\Box$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème de Cauchy Linéaire</strong><br>
+        Soit $a: I \to \LE$ et $b: I \to E$ deux fonctions continues. Pour toute condition initiale $(t_0, x_0) \in I \times E$, le problème de Cauchy
+        $$ \begin{cases} x'(t) + a(t)(x(t)) = b(t) \\ x(t_0) = x_0 \end{cases} $$
+        admet une <strong>unique solution</strong> $x$, et cette solution est définie sur l'intervalle $I$ <strong>tout entier</strong>.
+    </div>
+    <div class="remark">Ce théorème est fondamental. Il garantit l'existence et l'unicité d'une solution pour une condition initiale donnée.</div>
+
+
+    <div class="theorem">
+        <strong>Théorème (Structure de l'ensemble des solutions)</strong><br>
+        Soit $a: I \to \LE$ et $b: I \to E$ continues.
+        <ol>
+            <li>L'ensemble $\mathcal{S}_H$ des solutions de l'équation homogène $(H) \quad x'(t) + a(t)(x(t)) = 0_E$ est un sous-espace vectoriel de $C^1(I, E)$ de <strong>dimension $n = \dim(E)$</strong>.
+            <br>De plus, pour tout $t_0 \in I$, l'application $\Phi_{t_0} : \mathcal{S}_H \to E$ définie par $\Phi_{t_0}(x) = x(t_0)$ est un <strong>isomorphisme</strong> d'espaces vectoriels.</li>
+            <li>L'ensemble $\mathcal{S}_L$ des solutions de l'équation complète $(L) \quad x'(t) + a(t)(x(t)) = b(t)$ est un <strong>sous-espace affine</strong> de $C^1(I, E)$, dirigé par $\mathcal{S}_H$. Sa dimension est donc $n$.
+            <br>Autrement dit, si $x_p$ est une solution particulière de $(L)$, alors toute solution $x$ de $(L)$ s'écrit de manière unique $x = x_p + x_h$, où $x_h$ est une solution de l'équation homogène $(H)$.
+            $$ \mathcal{S}_L = x_p + \mathcal{S}_H = \{ x_p + x_h \mid x_h \in \mathcal{S}_H \} $$</li>
+        </ol>
+    </div>
+     <div class="proof">
+        <strong>Preuve (Idée pour 1) :</strong><br>
+        - $\mathcal{S}_H$ est un sev : Si $x_1, x_2 \in \mathcal{S}_H$, $(\lambda x_1+x_2)' + a(\lambda x_1+x_2) = \lambda x'_1+x'_2 + \lambda a(x_1) + a(x_2) = \lambda(x'_1+a(x_1)) + (x'_2+a(x_2)) = \lambda 0 + 0 = 0$. La fonction nulle est aussi solution.
+        - Isomorphisme $\Phi_{t_0}$:
+            - Linéarité : $\Phi_{t_0}(\lambda x_1 + x_2) = (\lambda x_1 + x_2)(t_0) = \lambda x_1(t_0) + x_2(t_0) = \lambda \Phi_{t_0}(x_1) + \Phi_{t_0}(x_2)$.
+            - Injectivité : Si $\Phi_{t_0}(x) = x(t_0) = 0_E$. Alors $x$ est la solution du problème de Cauchy homogène avec condition initiale $0_E$. Or la fonction nulle $t \mapsto 0_E$ est aussi solution de ce problème. Par unicité (Thm Cauchy Linéaire), $x$ doit être la fonction nulle. Donc $\Ker(\Phi_{t_0}) = \{0\}$. $\Phi_{t_0}$ est injective.
+            - Surjectivité : Pour tout $x_0 \in E$, le Thm de Cauchy Linéaire garantit l'existence d'une solution $x \in \mathcal{S}_H$ telle que $x(t_0) = x_0$. Donc $\Phi_{t_0}$ est surjective.
+        $\Phi_{t_0}$ est un isomorphisme. Comme $\dim(E)=n$, on a $\dim(\mathcal{S}_H) = n$. $\Box$
+    </div>
+
+    <div class="corollary">
+        <strong>Corollaire (Base de solutions et Wronskien implicite)</strong><br>
+        Soit $\mathcal{S}_H$ l'espace des solutions de l'équation homogène $(H)$. Soient $x_1, \dots, x_n$ des éléments de $\mathcal{S}_H$. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$(x_1, \dots, x_n)$ est une base de $\mathcal{S}_H$. (On parle de système fondamental de solutions).</li>
+            <li>Il existe $t_0 \in I$ tel que la famille de vecteurs $(x_1(t_0), \dots, x_n(t_0))$ est une base de $E$.</li>
+            <li>Pour tout $t \in I$, la famille de vecteurs $(x_1(t), \dots, x_n(t))$ est une base de $E$.</li>
+        </ol>
+        (La condition sur le déterminant Wronskien, $\det_{\mathcal{B}}(x_1(t), \dots, x_n(t)) \neq 0$, est équivalente aux points 2 et 3).
+    </div>
+
+    <h2>3. Exponentielle de matrice et d'endomorphisme</h2>
+
+    <div class="definition">
+        <strong>Définition (Exponentielle)</strong><br>
+        Soit $u \in \LE$ ou $A \in \MnK$. La série $\sum_{k=0}^\infty \frac{u^k}{k!}$ (resp. $\sum_{k=0}^\infty \frac{A^k}{k!}$) converge absolument dans $\LE$ (resp. $\MnK$) muni de n'importe quelle norme.
+        <br>La somme de cette série est appelée l'<strong>exponentielle</strong> de $u$ (resp. $A$) et est notée $\exp(u)$ ou $e^u$ (resp. $\exp(A)$ ou $e^A$).
+        $$ \exp(u) = \sum_{k=0}^\infty \frac{u^k}{k!} \in \LE $$
+        $$ \exp(A) = \sum_{k=0}^\infty \frac{A^k}{k!} \in \MnK $$
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Lien endomorphisme/matrice)</strong><br>
+        Si $\mathcal{B}$ est une base de $E$ et $A = \Mat(u, \mathcal{B})$, alors $\Mat(\exp(u), \mathcal{B}) = \exp(A)$.
+    </div>
+
+    <div class="example">
+        <strong>Exemple : Matrice diagonale</strong><br>
+        Si $A = \diag(\lambda_1, \dots, \lambda_n)$, alors $A^k = \diag(\lambda_1^k, \dots, \lambda_n^k)$.
+        $$ \exp(A) = \sum_{k=0}^\infty \frac{A^k}{k!} = \sum_{k=0}^\infty \diag\left(\frac{\lambda_1^k}{k!}, \dots, \frac{\lambda_n^k}{k!}\right) $$
+        Par convergence composante par composante :
+        $$ \exp(A) = \diag\left(\sum_{k=0}^\infty \frac{\lambda_1^k}{k!}, \dots, \sum_{k=0}^\infty \frac{\lambda_n^k}{k!}\right) = \diag(e^{\lambda_1}, \dots, e^{\lambda_n}) $$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Propriétés de l'exponentielle)</strong><br>
+        Soient $A, B \in \MnK$ (ou $u, v \in \LE$).
+        <ol>
+            <li>L'application $\exp : \MnK \to \MnK$ est continue (et même $C^\infty$).</li>
+            <li>Si $A$ et $B$ <strong>commutent</strong> ($AB=BA$), alors $\exp(A+B) = \exp(A) \exp(B)$.</li>
+            <li>$\exp(0) = I_n$ (ou $\exp(0_{\LE}) = \Id$).</li>
+            <li>Pour tout $A$, $\exp(A)$ est inversible et $(\exp(A))^{-1} = \exp(-A)$. L'application $\exp$ est à valeurs dans $\GLnK$.</li>
+            <li>L'application $\phi : \R \to \GLnK$ définie par $\phi(t) = \exp(tA)$ est dérivable sur $\R$ et :
+            $$ \phi'(t) = \frac{d}{dt} (\exp(tA)) = A \exp(tA) = \exp(tA) A $$</li>
+            <li>Si $B = P^{-1} A P$, alors $\exp(B) = P^{-1} \exp(A) P$.</li>
+        </ol>
+    </div>
+     <div class="warning">
+        Attention, si $A$ et $B$ ne commutent pas, en général $\exp(A+B) \neq \exp(A) \exp(B)$.
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Spectre de l'exponentielle)</strong><br>
+        Soit $A \in \MnK$. Si $\Sp_{\C}(A) = \{\lambda_1, \dots, \lambda_n\}$ est le spectre complexe de $A$ (valeurs propres comptées avec multiplicité), alors le spectre complexe de $\exp(A)$ est $\Sp_{\C}(\exp(A)) = \{e^{\lambda_1}, \dots, e^{\lambda_n}\}$.
+        <br>(Se montre en trigonalisant $A$ sur $\C$).
+        <br>En particulier, $\det(\exp(A)) = \prod_{i=1}^n e^{\lambda_i} = e^{\sum \lambda_i} = e^{\Tr(A)}$.
+    </div>
+
+    <h2>4. Systèmes différentiels homogènes à coefficients constants</h2>
+
+    <p>On s'intéresse à l'équation $x'(t) = a(x(t))$ où $a \in \LE$ est un endomorphisme <strong>constant</strong> (ne dépend pas de $t$). Matriciellement : $X'(t) = A X(t)$ avec $A \in \MnK$ constante.</p>
+
+    <div class="theorem">
+        <strong>Théorème (Solution via l'exponentielle)</strong><br>
+        Soit $a \in \LE$ (constant). Soit $(t_0, x_0) \in \R \times E$. L'unique solution du problème de Cauchy
+        $$ \begin{cases} x'(t) = a(x(t)) \\ x(t_0) = x_0 \end{cases} $$
+        est la fonction $x: \R \to E$ définie par :
+        $$ x(t) = \exp((t-t_0)a)(x_0) $$
+        (Matriciellement : $X(t) = \exp((t-t_0)A) X_0$).
+    </div>
+    <div class="proof">
+        <strong>Preuve :</strong><br>
+        Vérifions que $x(t) = \exp((t-t_0)a)(x_0)$ est solution.
+        - Condition initiale : $x(t_0) = \exp((t_0-t_0)a)(x_0) = \exp(0_{\LE})(x_0) = \Id(x_0) = x_0$.
+        - Équation différentielle : Posons $u(t) = (t-t_0)a$. $u'(t) = a$. $x(t) = \exp(u(t))(x_0)$.
+        On dérive $t \mapsto \exp(t a)$. Sa dérivée est $t \mapsto a \exp(t a)$.
+        Par composition (règle de la chaîne), la dérivée de $t \mapsto \exp((t-t_0)a)$ est $t \mapsto a \exp((t-t_0)a)$.
+        Donc $x'(t) = [a \exp((t-t_0)a)] (x_0) = a [\exp((t-t_0)a)(x_0)] = a(x(t))$.
+        L'équation est vérifiée. Par unicité (Cauchy linéaire), c'est la seule solution. $\Box$
+    </div>
+
+    <div class="corollary">
+        <strong>Corollaire (Cas diagonalisable)</strong><br>
+        Soit $a \in \LE$ diagonalisable. Soit $(v_1, \dots, v_n)$ une base de $E$ formée de vecteurs propres de $a$ associés respectivement aux valeurs propres $\lambda_1, \dots, \lambda_n$.
+        Alors les fonctions $\phi_i : \R \to E$ définies par $\phi_i(t) = e^{\lambda_i t} v_i$ forment une base de l'espace des solutions de l'équation homogène $x'(t) = a(x(t))$.
+        <br>La solution générale est $x(t) = \sum_{i=1}^n c_i e^{\lambda_i t} v_i$, où les $c_i \in \K$ sont des constantes.
+    </div>
+     <div class="proof">
+        <strong>Preuve :</strong><br>
+        Vérifions que $\phi_i(t)$ est solution : $\phi'_i(t) = \lambda_i e^{\lambda_i t} v_i$.
+        $a(\phi_i(t)) = a(e^{\lambda_i t} v_i) = e^{\lambda_i t} a(v_i) = e^{\lambda_i t} (\lambda_i v_i) = \lambda_i e^{\lambda_i t} v_i = \phi'_i(t)$.
+        La famille $(\phi_1, \dots, \phi_n)$ est une famille de $n = \dim(\mathcal{S}_H)$ solutions. Pour montrer que c'est une base, il suffit de vérifier la liberté en $t=0$.
+        $\phi_i(0) = e^0 v_i = v_i$. La famille $(\phi_1(0), \dots, \phi_n(0)) = (v_1, \dots, v_n)$ est une base de $E$ par hypothèse.
+        D'après le corollaire sur les bases de solutions, $(\phi_1, \dots, \phi_n)$ est une base de $\mathcal{S}_H$. $\Box$
+    </div>
+
+
+    <h2>5. Équations différentielles linéaires scalaires d'ordre $n$</h2>
+
+    <div class="definition">
+        <strong>Définition (Équation scalaire d'ordre $n$)</strong><br>
+        On appelle équation différentielle linéaire scalaire d'ordre $n$ définie sur $I$ toute équation de la forme :
+        $$ (L_n) \quad x^{(n)}(t) + a_{n-1}(t) x^{(n-1)}(t) + \dots + a_1(t) x'(t) + a_0(t) x(t) = b(t) $$
+        (souvent écrite $x^{(n)}(t) = \sum_{k=0}^{n-1} \tilde{a}_k(t) x^{(k)}(t) + \tilde{b}(t)$) où $a_0, \dots, a_{n-1}, b : I \to \K$ sont des fonctions continues et $x : I \to \K$ est la fonction inconnue supposée $n$ fois dérivable.
+    </div>
+
+    <div class="remark">
+        <strong>Traduction en système d'ordre 1 :</strong><br>
+        On peut transformer l'équation scalaire $(L_n)$ en un système différentiel linéaire d'ordre 1 en posant $X(t)$ le vecteur colonne des dérivées successives de $x(t)$ :
+        $$ X(t) = \begin{pmatrix} x(t) \\ x'(t) \\ \vdots \\ x^{(n-1)}(t) \end{pmatrix} \in \K^n $$
+        Alors $X'(t) = \begin{pmatrix} x'(t) \\ x''(t) \\ \vdots \\ x^{(n)}(t) \end{pmatrix}$. En utilisant l'équation $(L_n)$ pour exprimer $x^{(n)}(t)$, on obtient un système de la forme $X'(t) = A(t) X(t) + B(t)$ où :
+        $$ A(t) = \begin{pmatrix}
+           0 & 1 & 0 & \dots & 0 \\
+           0 & 0 & 1 & \dots & 0 \\
+           \vdots & \vdots & \ddots & \ddots & \vdots \\
+           0 & 0 & 0 & \dots & 1 \\
+           -a_0(t) & -a_1(t) & -a_2(t) & \dots & -a_{n-1}(t)
+           \end{pmatrix} \quad \text{(Matrice compagnon)} $$
+        $$ B(t) = \begin{pmatrix} 0 \\ 0 \\ \vdots \\ 0 \\ b(t) \end{pmatrix} $$
+        La fonction $x(t)$ est solution de $(L_n)$ si et seulement si le vecteur $X(t)$ est solution du système $X'(t) = A(t) X(t) + B(t)$ (avec la forme $x'+ax=b$, $A(t)$ serait l'opposé de la matrice compagnon ci-dessus).
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Problème de Cauchy scalaire d'ordre $n$)</strong><br>
+        Soit $(L_n)$ l'équation scalaire d'ordre $n$. Soit $t_0 \in I$ et $(c_0, c_1, \dots, c_{n-1}) \in \K^n$. Le problème de Cauchy associé consiste à trouver les solutions $x$ de $(L_n)$ vérifiant les $n$ conditions initiales :
+        $$ x(t_0)=c_0, \quad x'(t_0)=c_1, \quad \dots, \quad x^{(n-1)}(t_0)=c_{n-1} $$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Cauchy linéaire scalaire)</strong><br>
+        Si les fonctions $a_0, \dots, a_{n-1}, b$ sont continues sur $I$, alors pour tout $t_0 \in I$ et $(c_0, \dots, c_{n-1}) \in \K^n$, le problème de Cauchy associé à $(L_n)$ admet une <strong>unique solution</strong> définie sur $I$ tout entier.
+    </div>
+     <div class="proof">
+        <strong>Preuve (Idée) :</strong><br>
+        Se ramène au théorème de Cauchy linéaire pour le système d'ordre 1 $X'(t) = A(t) X(t) + B(t)$. La condition initiale pour $X(t)$ est $X(t_0) = (c_0, \dots, c_{n-1})^T$. Ce système admet une unique solution $X(t)$ définie sur $I$. La première composante $x(t)$ de $X(t)$ est l'unique solution du problème de Cauchy scalaire. $\Box$
+    </div>
+
+    <div class="corollary">
+        <strong>Corollaire (Structure des solutions scalaires)</strong><br>
+        Si $a_0, \dots, a_{n-1}, b$ sont continues sur $I$.
+        <ol>
+            <li>L'ensemble $\mathcal{S}_H^{(n)}$ des solutions de l'équation homogène (avec $b=0$) est un $\K$-espace vectoriel de dimension $n$.</li>
+            <li>Pour tout $t_0 \in I$, l'application Wronskien $\mathcal{W}_{t_0} : \mathcal{S}_H^{(n)} \to \K^n$ définie par
+               $$ \mathcal{W}_{t_0}(x) = (x(t_0), x'(t_0), \dots, x^{(n-1)}(t_0)) $$
+               est un isomorphisme d'espaces vectoriels.</li>
+            <li>L'ensemble $\mathcal{S}_L^{(n)}$ des solutions de l'équation complète (avec $b$) est un sous-espace affine de $C^n(I, \K)$ de dimension $n$, dirigé par $\mathcal{S}_H^{(n)}$.
+               $$ \mathcal{S}_L^{(n)} = x_p + \mathcal{S}_H^{(n)} $$
+               où $x_p$ est une solution particulière.</li>
+        </ol>
+    </div>
+
+    <h2>6. Cas particulier des équations différentielles scalaires d'ordre 2</h2>
+
+    <p>On considère l'équation $(L_2) \quad x''(t) + a(t) x'(t) + b(t) x(t) = c(t)$ où $a, b, c : I \to \K$ sont continues.</p>
+
+    <div class="definition">
+        <strong>Définition (Wronskien pour l'ordre 2)</strong><br>
+        Soient $f, g$ deux solutions de l'équation homogène $(H_2) \quad x'' + a(t) x' + b(t) x = 0$.
+        On appelle <strong>wronskien</strong> de $f$ et $g$ l'application $W = W(f, g) : I \to \K$ définie par :
+        $$ W(t) = \det \begin{pmatrix} f(t) & g(t) \\ f'(t) & g'(t) \end{pmatrix} = f(t) g'(t) - f'(t) g(t) $$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Caractérisation d'une base de solutions par le Wronskien)</strong><br>
+        Soient $f, g$ deux solutions de l'équation homogène $(H_2)$. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$(f, g)$ est une base de l'espace vectoriel $\mathcal{S}_H^{(2)}$ des solutions de $(H_2)$.</li>
+            <li>Pour tout $t \in I$, $W(t) \neq 0$.</li>
+            <li>Il existe $t_0 \in I$ tel que $W(t_0) \neq 0$.</li>
+        </ol>
+        (Ceci est une conséquence directe du corollaire sur l'isomorphisme $\mathcal{W}_{t_0}$ et le fait que $\dim \mathcal{S}_H^{(2)} = 2$).
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Méthode de Variation des Constantes - MVC)</strong><br>
+        Soit $(f, g)$ une base de solutions de l'équation homogène $(H_2)$. Une solution particulière $x_p(t)$ de l'équation complète $(L_2)$ peut être recherchée sous la forme $x_p(t) = \lambda(t) f(t) + \mu(t) g(t)$, où $\lambda, \mu : I \to \K$ sont des fonctions dérivables vérifiant le système :
+        $$ \begin{cases} \lambda'(t) f(t) + \mu'(t) g(t) = 0 \\ \lambda'(t) f'(t) + \mu'(t) g'(t) = c(t) \end{cases} $$
+        Ce système admet une unique solution $(\lambda'(t), \mu'(t))$ car son déterminant est le wronskien $W(t) \neq 0$. En résolvant (par Cramer par exemple) :
+        $$ \lambda'(t) = - \frac{g(t) c(t)}{W(t)}, \quad \mu'(t) = \frac{f(t) c(t)}{W(t)} $$
+        Il suffit alors de trouver des primitives $\lambda(t)$ et $\mu(t)$ (une suffit pour obtenir une solution particulière $x_p$).
+    </div>
+
+    <h3>Cas des équations à coefficients constants</h3>
+    <p>On suppose maintenant que $a(t)=a$ et $b(t)=b$ sont des constantes dans $\K$. L'équation homogène est $x'' + ax' + bx = 0$.</p>
+
+    <div class="definition">
+        <strong>Définition (Équation caractéristique)</strong><br>
+        L'équation caractéristique associée à $x'' + ax' + bx = 0$ est l'équation polynomiale du second degré en $r \in \C$ :
+        $$ r^2 + ar + b = 0 $$
+    </div>
+
+    <div class="proposition">
+        <strong>Résolution sur $\C$ :</strong><br>
+        Soit $r^2+ar+b=0$ l'équation caractéristique.
+        <ul>
+            <li>Si elle admet deux racines distinctes $r_1, r_2 \in \C$ (cas $\Delta = a^2-4b \neq 0$), alors la solution générale sur $\R$ (ou $\C$) de $x''+ax'+bx=0$ est :
+               $$ x(t) = c_1 e^{r_1 t} + c_2 e^{r_2 t}, \quad (c_1, c_2 \in \C) $$</li>
+            <li>Si elle admet une racine double $r \in \C$ (cas $\Delta = a^2-4b = 0$), alors la solution générale sur $\R$ (ou $\C$) est :
+               $$ x(t) = (c_1 + c_2 t) e^{r t}, \quad (c_1, c_2 \in \C) $$</li>
+        </ul>
+        L'ensemble des solutions est un $\C$-espace vectoriel de dimension 2.
+    </div>
+
+     <div class="proposition">
+        <strong>Résolution sur $\R$ (si $a, b \in \R$):</strong><br>
+        Soit $r^2+ar+b=0$ l'équation caractéristique ($\Delta = a^2-4b$).
+        <ul>
+            <li>Si $\Delta > 0$: Deux racines réelles distinctes $r_1, r_2$. La solution générale réelle est :
+               $$ x(t) = c_1 e^{r_1 t} + c_2 e^{r_2 t}, \quad (c_1, c_2 \in \R) $$</li>
+            <li>Si $\Delta = 0$: Une racine réelle double $r = -a/2$. La solution générale réelle est :
+               $$ x(t) = (c_1 + c_2 t) e^{r t}, \quad (c_1, c_2 \in \R) $$</li>
+            <li>Si $\Delta < 0$: Deux racines complexes conjuguées $r_{1,2} = \alpha \pm i \beta$ avec $\alpha = -a/2$ et $\beta = \sqrt{-\Delta}/2 > 0$. La solution générale réelle est :
+               $$ x(t) = e^{\alpha t} (c_1 \cos(\beta t) + c_2 \sin(\beta t)), \quad (c_1, c_2 \in \R) $$</li>
+        </ul>
+         L'ensemble des solutions réelles est un $\R$-espace vectoriel de dimension 2.
+    </div>
+
+
+</body>
+</html>
