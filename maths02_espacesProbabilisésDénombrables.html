@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cours : Espaces Probabilisés Dénombrables (Math Spé)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"  crossorigin="anonymous"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .definition, .theorem, .proposition, .corollary, .remark, .example {
+            margin: 15px 0; padding: 10px; border-left: 5px solid;
+        }
+        .definition { border-color: #17a2b8; background-color: #e1f5fe; }
+        .theorem { border-color: #dc3545; background-color: #ffebee; }
+        .proposition { border-color: #28a745; background-color: #e8f5e9; }
+        .corollary { border-color: #ffc107; background-color: #fffde7; }
+        .remark { border-color: #6c757d; background-color: #f8f9fa; }
+        .example { border-color: #fd7e14; background-color: #fff3e0; }
+        .proof { margin: 10px 0 10px 20px; padding: 10px; border: 1px dashed #ccc; background-color: #f9f9f9; }
+        .proof-title { font-weight: bold; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Pour les formules longues */
+    </style>
+</head>
+<body>
+
+<h1>Espaces Probabilisés Dénombrables</h1>
+
+<h2>Introduction</h2>
+<p>
+    On s'intéresse à la modélisation mathématique d'expériences dont le résultat est soumis au hasard (expériences aléatoires).
+    L'ensemble de tous les résultats possibles d'une expérience aléatoire est appelé l'univers, et est noté $\Omega$.
+    Dans ce cours, nous nous concentrerons principalement sur le cas où l'univers $\Omega$ est fini ou dénombrable (c'est-à-dire en bijection avec $\mathbb{N}$).
+</p>
+
+<h2>1. Langage des probabilités : Tribus et Événements</h2>
+
+<div class="definition">
+    <strong>Définition (Tribu ou $\sigma$-algèbre).</strong>
+    Soit $\Omega$ un ensemble (l'univers). Une tribu (ou $\sigma$-algèbre) sur $\Omega$ est une partie $\mathcal{T}$ de $\mathcal{P}(\Omega)$ (l'ensemble des parties de $\Omega$) vérifiant les trois propriétés suivantes :
+    <ol>
+        <li>$\Omega \in \mathcal{T}$ (l'univers est dans la tribu).</li>
+        <li>Stabilité par passage au complémentaire : Pour tout $A \in \mathcal{T}$, son complémentaire $\bar{A} = \Omega \setminus A$ est aussi dans $\mathcal{T}$.</li>
+        <li>Stabilité par union dénombrable : Si $(A_n)_{n \in \mathbb{N}}$ est une suite d'éléments de $\mathcal{T}$, alors leur réunion $\bigcup_{n=0}^{+\infty} A_n$ est aussi dans $\mathcal{T}$.</li>
+    </ol>
+</div>
+
+<div class="example">
+    <strong>Exemples de tribus :</strong>
+    <ul>
+        <li>La <strong>tribu triviale</strong> : $\mathcal{T} = \{\emptyset, \Omega\}$. C'est la plus petite tribu possible.</li>
+        <li>La <strong>tribu discrète</strong> : $\mathcal{T} = \mathcal{P}(\Omega)$, l'ensemble de toutes les parties de $\Omega$. C'est la plus grande tribu possible. Lorsque $\Omega$ est fini ou dénombrable, c'est la tribu que l'on considérera le plus souvent.</li>
+        <li>Si $A \subset \Omega$, $A \neq \emptyset, A \neq \Omega$, alors $\mathcal{T} = \{\emptyset, A, \bar{A}, \Omega\}$ est une tribu, appelée tribu engendrée par $A$.</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Propriétés des tribus).</strong>
+    Soit $\mathcal{T}$ une tribu sur $\Omega$. Alors :
+    <ol>
+        <li>$\emptyset \in \mathcal{T}$.</li>
+        <li>Toute réunion finie d'éléments de $\mathcal{T}$ est un élément de $\mathcal{T}$.</li>
+        <li>Toute intersection finie ou dénombrable d'éléments de $\mathcal{T}$ est un élément de $\mathcal{T}$.</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    <ol>
+        <li>Puisque $\Omega \in \mathcal{T}$ (axiome 1), son complémentaire $\bar{\Omega} = \emptyset$ est aussi dans $\mathcal{T}$ (axiome 2).</li>
+        <li>Soit $A_0, A_1, \dots, A_N$ des éléments de $\mathcal{T}$. On peut compléter la suite par $A_n = \emptyset$ pour $n > N$. Comme $\emptyset \in \mathcal{T}$, $(A_n)_{n \in \mathbb{N}}$ est une suite d'éléments de $\mathcal{T}$. Par l'axiome 3, $\bigcup_{n=0}^{+\infty} A_n = \bigcup_{n=0}^{N} A_n$ est dans $\mathcal{T}$.</li>
+        <li>Soit $(A_n)_{n \in \mathbb{N}}$ une suite d'éléments de $\mathcal{T}$. Par l'axiome 2, $\bar{A}_n \in \mathcal{T}$ pour tout $n$. Par l'axiome 3, $\bigcup_{n=0}^{+\infty} \bar{A}_n \in \mathcal{T}$. Par l'axiome 2 à nouveau, le complémentaire $\overline{\bigcup_{n=0}^{+\infty} \bar{A}_n}$ est dans $\mathcal{T}$. Or, d'après les lois de De Morgan, $\overline{\bigcup_{n=0}^{+\infty} \bar{A}_n} = \bigcap_{n=0}^{+\infty} \overline{(\bar{A}_n)} = \bigcap_{n=0}^{+\infty} A_n$. Donc toute intersection dénombrable d'éléments de $\mathcal{T}$ est dans $\mathcal{T}$. Le cas des intersections finies se traite comme pour les réunions finies. $\square$</li>
+    </ol>
+</div>
+
+<div class="definition">
+    <strong>Définition (Espace probabilisable, Événements).</strong>
+    <ul>
+        <li>Un couple $(\Omega, \mathcal{T})$ où $\Omega$ est un univers et $\mathcal{T}$ est une tribu sur $\Omega$ s'appelle un <strong>espace probabilisable</strong>.</li>
+        <li>Les éléments de la tribu $\mathcal{T}$ sont appelés les <strong>événements</strong>. Ce sont les parties de $\Omega$ auxquelles on pourra attribuer une probabilité.</li>
+        <li>$\Omega$ est appelé l'<strong>événement certain</strong>.</li>
+        <li>$\emptyset$ est appelé l'<strong>événement impossible</strong>.</li>
+        <li>Si $A$ et $B$ sont deux événements, $A \cup B$ est l'événement "A ou B se réalise", $A \cap B$ est l'événement "A et B se réalisent", $\bar{A}$ est l'événement "A ne se réalise pas".</li>
+        <li>Deux événements $A$ et $B$ sont dits <strong>incompatibles</strong> si $A \cap B = \emptyset$. Cela signifie qu'ils ne peuvent pas se réaliser simultanément.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Définition (Système complet d'événements).</strong>
+    Une famille $(A_i)_{i \in I}$ d'événements (où $I$ est un ensemble d'indices fini ou dénombrable) est appelée un <strong>système complet d'événements</strong> (SCE) si :
+    <ol>
+        <li>Les événements sont deux à deux incompatibles : $A_i \cap A_j = \emptyset$ pour tous $i \neq j$ dans $I$.</li>
+        <li>La réunion des événements est l'univers : $\bigcup_{i \in I} A_i = \Omega$.</li>
+    </ol>
+    Intuitivement, un SCE forme une partition de l'univers $\Omega$. Lors de l'expérience, exactement un des événements du système se réalise.
+</div>
+
+<div class="example">
+    <strong>Exemples de SCE :</strong>
+    <ul>
+        <li>Pour tout événement $A$, la famille $(A, \bar{A})$ est un SCE.</li>
+        <li>Si on lance un dé, $\Omega = \{1, 2, 3, 4, 5, 6\}$. Les événements élémentaires $A_i = \{i\}$ pour $i=1, \dots, 6$ forment un SCE.</li>
+        <li>L'événement $A$= "obtenir un résultat pair" = $\{2, 4, 6\}$ et $B$= "obtenir un résultat impair" = $\{1, 3, 5\}$. $(A, B)$ est un SCE.</li>
+    </ul>
+</div>
+
+<h2>2. Probabilités</h2>
+
+<div class="definition">
+    <strong>Définition (Probabilité).</strong>
+    Soit $(\Omega, \mathcal{T})$ un espace probabilisable. Une <strong>probabilité</strong> sur $(\Omega, \mathcal{T})$ est une application $P: \mathcal{T} \to [0, 1]$ vérifiant les deux axiomes suivants :
+    <ol>
+        <li>$P(\Omega) = 1$.</li>
+        <li><strong>$\sigma$-additivité</strong> (ou additivité dénombrable) : Pour toute suite $(A_n)_{n \in \mathbb{N}}$ d'événements de $\mathcal{T}$ qui sont deux à deux incompatibles ($A_n \cap A_m = \emptyset$ si $n \neq m$), on a :
+            $$ P\left( \bigcup_{n=0}^{+\infty} A_n \right) = \sum_{n=0}^{+\infty} P(A_n) $$
+            (La série au membre de droite doit converger).
+        </li>
+    </ol>
+    Le triplet $(\Omega, \mathcal{T}, P)$ s'appelle alors un <strong>espace probabilisé</strong>. Pour un événement $A \in \mathcal{T}$, $P(A)$ est la probabilité de $A$.
+</div>
+
+<div class="remark">
+    <strong>Additivité finie :</strong> Si $A_1, \dots, A_N$ sont des événements deux à deux incompatibles, alors $P(\bigcup_{n=1}^N A_n) = \sum_{n=1}^N P(A_n)$. Ceci découle de la $\sigma$-additivité en complétant la suite par des $\emptyset$ (dont on montrera que la probabilité est nulle).
+</div>
+
+<div class="example">
+    <strong>Exemple (Cas fini équiprobable) :</strong> Si $\Omega = \{\omega_1, \dots, \omega_N\}$ est fini et $\mathcal{T} = \mathcal{P}(\Omega)$, on peut définir la probabilité uniforme en posant $p_i = P(\{\omega_i\}) = \frac{1}{N}$ pour tout $i$. Alors pour tout événement $A \subset \Omega$,
+    $$ P(A) = \sum_{\omega_i \in A} P(\{\omega_i\}) = \sum_{\omega_i \in A} \frac{1}{N} = \frac{\text{Card}(A)}{N} = \frac{\text{nombre de cas favorables}}{\text{nombre de cas possibles}} $$
+    C'est le modèle de l'équiprobabilité.
+</div>
+
+<div class="example">
+    <strong>Exemple (Cas fini général) :</strong> Si $\Omega = \{\omega_1, \dots, \omega_N\}$ est fini et $\mathcal{T} = \mathcal{P}(\Omega)$, on peut définir une probabilité $P$ en choisissant des nombres réels $p_1, \dots, p_N$ tels que $p_i \ge 0$ pour tout $i$ et $\sum_{i=1}^N p_i = 1$. On pose alors $P(\{\omega_i\}) = p_i$. Pour un événement $A \subset \Omega$, on définit :
+    $$ P(A) = \sum_{i : \omega_i \in A} p_i $$
+    On vérifie que $P$ est bien une probabilité sur $(\Omega, \mathcal{P}(\Omega))$.
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Propriétés élémentaires des probabilités).</strong>
+    Soit $(\Omega, \mathcal{T}, P)$ un espace probabilisé. Pour tous événements $A, B \in \mathcal{T}$ :
+    <ol>
+        <li>$P(\emptyset) = 0$.</li>
+        <li>$P(\bar{A}) = 1 - P(A)$.</li>
+        <li>Si $A \subset B$, alors $P(A) \le P(B)$ (croissance de la probabilité).</li>
+        <li>$P(A \cup B) = P(A) + P(B) - P(A \cap B)$ (formule de Poincaré pour $n=2$).</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    <ol>
+        <li>Prenons la suite $A_n = \emptyset$ pour tout $n$. Ces événements sont deux à deux incompatibles. Leur réunion est $\emptyset$. Par $\sigma$-additivité : $P(\emptyset) = P(\bigcup_{n=0}^\infty A_n) = \sum_{n=0}^\infty P(A_n) = \sum_{n=0}^\infty P(\emptyset)$. Si $P(\emptyset) > 0$, la série diverge vers $+\infty$, mais $P(\emptyset)$ doit être dans $[0, 1]$. Donc nécessairement $P(\emptyset)=0$.</li>
+        <li>Les événements $A$ et $\bar{A}$ sont incompatibles et leur réunion est $\Omega$. Par additivité (finie) : $P(A \cup \bar{A}) = P(A) + P(\bar{A})$. Comme $A \cup \bar{A} = \Omega$, on a $P(\Omega) = P(A) + P(\bar{A})$. Puisque $P(\Omega)=1$, on obtient $1 = P(A) + P(\bar{A})$, d'où $P(\bar{A}) = 1 - P(A)$.</li>
+        <li>Si $A \subset B$, on peut écrire $B$ comme la réunion de deux événements incompatibles : $B = A \cup (B \setminus A)$ (où $B \setminus A = B \cap \bar{A} \in \mathcal{T}$). Par additivité : $P(B) = P(A) + P(B \setminus A)$. Comme $P(B \setminus A) \ge 0$ (car $P$ est à valeurs dans $[0, 1]$), on a $P(B) \ge P(A)$.</li>
+        <li>On peut écrire $A \cup B$ comme la réunion de trois événements deux à deux incompatibles : $A \cup B = (A \setminus B) \cup (B \setminus A) \cup (A \cap B)$.
+           $P(A \cup B) = P(A \setminus B) + P(B \setminus A) + P(A \cap B)$.
+           D'autre part, $A = (A \setminus B) \cup (A \cap B)$ (réunion disjointe), donc $P(A) = P(A \setminus B) + P(A \cap B)$.
+           Et $B = (B \setminus A) \cup (A \cap B)$ (réunion disjointe), donc $P(B) = P(B \setminus A) + P(A \cap B)$.
+           En sommant ces deux dernières égalités : $P(A) + P(B) = P(A \setminus B) + P(B \setminus A) + 2 P(A \cap B)$.
+           En comparant avec la première, on trouve $P(A) + P(B) = P(A \cup B) + P(A \cap B)$. $\square$</li>
+    </ol>
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Continuité croissante).</strong>
+    Si $(A_n)_{n \in \mathbb{N}}$ est une suite d'événements croissante pour l'inclusion (i.e., $A_n \subset A_{n+1}$ pour tout $n \in \mathbb{N}$), alors la limite $\lim_{n \to +\infty} P(A_n)$ existe et
+    $$ \lim_{n \to +\infty} P(A_n) = P\left( \bigcup_{n=0}^{+\infty} A_n \right) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Posons $A = \bigcup_{n=0}^{+\infty} A_n$. $A$ est un événement car $\mathcal{T}$ est stable par union dénombrable.
+    Construisons une suite d'événements $(B_n)_{n \in \mathbb{N}}$ deux à deux incompatibles telle que $\bigcup_{n=0}^N B_n = A_N$ et $\bigcup_{n=0}^\infty B_n = A$.
+    Posons $B_0 = A_0$ et pour $n \ge 1$, $B_n = A_n \setminus A_{n-1} = A_n \cap \overline{A_{n-1}}$.
+    Comme $A_{n-1} \subset A_n$, $B_n$ est bien un événement.
+    Montrons qu'ils sont deux à deux incompatibles. Soit $m > n \ge 0$. On a $A_n \subset A_{m-1}$.
+    $B_n = A_n \setminus A_{n-1} \subset A_n \subset A_{m-1}$.
+    $B_m = A_m \setminus A_{m-1} = A_m \cap \overline{A_{m-1}}$.
+    Donc $B_n \cap B_m \subset A_{m-1} \cap \overline{A_{m-1}} = \emptyset$.
+    Montrons que $\bigcup_{n=0}^N B_n = A_N$. On a $B_0 \cup B_1 \cup \dots \cup B_N = A_0 \cup (A_1 \setminus A_0) \cup \dots \cup (A_N \setminus A_{N-1})$. Comme $A_k \setminus A_{k-1} \subset A_k$ et $A_k \supset A_{k-1}$, cette union est $A_N$. (On peut le faire par récurrence : $\bigcup_{n=0}^{N-1} B_n = A_{N-1}$. Alors $\bigcup_{n=0}^N B_n = A_{N-1} \cup (A_N \setminus A_{N-1}) = A_N$).
+    Montrons que $\bigcup_{n=0}^\infty B_n = A = \bigcup_{k=0}^\infty A_k$. L'inclusion $\subset$ est claire car $B_n \subset A_n \subset A$. Pour l'inclusion $\supset$, soit $x \in A$. Alors $x$ appartient à au moins un $A_k$. Soit $n_0 = \min\{ k \in \mathbb{N} \mid x \in A_k \}$. Si $n_0=0$, $x \in A_0 = B_0$. Si $n_0 > 0$, alors $x \in A_{n_0}$ mais $x \notin A_{n_0-1}$, donc $x \in A_{n_0} \setminus A_{n_0-1} = B_{n_0}$. Dans tous les cas, $x \in \bigcup_{n=0}^\infty B_n$.
+    Maintenant, utilisons la $\sigma$-additivité pour la suite $(B_n)$ :
+    $P(A) = P(\bigcup_{n=0}^\infty B_n) = \sum_{n=0}^\infty P(B_n)$.
+    La somme d'une série à termes positifs est la limite de ses sommes partielles :
+    $\sum_{n=0}^\infty P(B_n) = \lim_{N \to \infty} \sum_{n=0}^N P(B_n)$.
+    Par additivité finie (car les $B_n$ sont incompatibles) : $\sum_{n=0}^N P(B_n) = P(\bigcup_{n=0}^N B_n) = P(A_N)$.
+    Donc $P(A) = \lim_{N \to \infty} P(A_N)$. $\square$
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Continuité décroissante).</strong>
+    Si $(A_n)_{n \in \mathbb{N}}$ est une suite d'événements décroissante pour l'inclusion (i.e., $A_n \supset A_{n+1}$ pour tout $n \in \mathbb{N}$), alors la limite $\lim_{n \to +\infty} P(A_n)$ existe et
+    $$ \lim_{n \to +\infty} P(A_n) = P\left( \bigcap_{n=0}^{+\infty} A_n \right) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Considérons la suite $(\bar{A}_n)_{n \in \mathbb{N}}$. Puisque $A_n \supset A_{n+1}$, on a $\bar{A}_n \subset \bar{A}_{n+1}$. C'est une suite croissante d'événements.
+    D'après la continuité croissante :
+    $\lim_{n \to \infty} P(\bar{A}_n) = P(\bigcup_{n=0}^\infty \bar{A}_n)$.
+    On sait que $P(\bar{A}_n) = 1 - P(A_n)$.
+    Par les lois de De Morgan, $\bigcup_{n=0}^\infty \bar{A}_n = \overline{\bigcap_{n=0}^\infty A_n}$.
+    Donc $P(\bigcup_{n=0}^\infty \bar{A}_n) = P(\overline{\bigcap_{n=0}^\infty A_n}) = 1 - P(\bigcap_{n=0}^\infty A_n)$.
+    L'égalité de la continuité croissante devient :
+    $\lim_{n \to \infty} (1 - P(A_n)) = 1 - P(\bigcap_{n=0}^\infty A_n)$.
+    $1 - \lim_{n \to \infty} P(A_n) = 1 - P(\bigcap_{n=0}^\infty A_n)$.
+    D'où $\lim_{n \to \infty} P(A_n) = P(\bigcap_{n=0}^\infty A_n)$. $\square$
+</div>
+
+<div class="corollary">
+    <strong>Corollaire.</strong> Si $(A_n)_{n \in \mathbb{N}}$ est une suite quelconque d'événements, alors
+    $$ P\left( \bigcup_{n=0}^{+\infty} A_n \right) = \lim_{N \to +\infty} P\left( \bigcup_{n=0}^{N} A_n \right) $$
+    et
+    $$ P\left( \bigcap_{n=0}^{+\infty} A_n \right) = \lim_{N \to +\infty} P\left( \bigcap_{n=0}^{N} A_n \right) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Pour l'union : Posons $B_N = \bigcup_{n=0}^N A_n$. La suite $(B_N)_{N \in \mathbb{N}}$ est croissante pour l'inclusion. Sa réunion est $\bigcup_{N=0}^\infty B_N = \bigcup_{N=0}^\infty \bigcup_{n=0}^N A_n = \bigcup_{n=0}^\infty A_n$. Le résultat découle de la continuité croissante appliquée à $(B_N)$.
+    Pour l'intersection : Posons $C_N = \bigcap_{n=0}^N A_n$. La suite $(C_N)_{N \in \mathbb{N}}$ est décroissante pour l'inclusion. Son intersection est $\bigcap_{N=0}^\infty C_N = \bigcap_{N=0}^\infty \bigcap_{n=0}^N A_n = \bigcap_{n=0}^\infty A_n$. Le résultat découle de la continuité décroissante appliquée à $(C_N)$. $\square$
+</div>
+
+
+<div class="example">
+    <strong>Exemple (Jeu de pile ou face infini).</strong>
+    On lance une pièce équilibrée une infinité de fois. $\Omega = \{P, F\}^{\mathbb{N}^*}$ (suites infinies de P ou F). On peut munir cet espace d'une tribu et d'une probabilité (construction plus complexe, non détaillée ici).
+    Soit $F_n$ l'événement "obtenir Face au $n$-ième lancer". On admet que $P(F_n) = 1/2$ et que les lancers sont indépendants (voir section suivante).
+    Soit $A$ l'événement "n'obtenir que des Faces". On a $A = \bigcap_{n=1}^\infty F_n$.
+    Soit $E_N = \bigcap_{n=1}^N F_n$ l'événement "obtenir Face aux $N$ premiers lancers". Par indépendance (admise pour l'instant), $P(E_N) = \prod_{n=1}^N P(F_n) = (1/2)^N = 2^{-N}$.
+    La suite $(E_N)_{N \ge 1}$ est décroissante pour l'inclusion, et son intersection est $A$.
+    Par continuité décroissante :
+    $$ P(A) = P\left( \bigcap_{N=1}^\infty E_N \right) = \lim_{N \to \infty} P(E_N) = \lim_{N \to \infty} 2^{-N} = 0 $$
+    L'événement "n'obtenir que des Faces" est donc négligeable.
+</div>
+
+<div class="proposition">
+    <strong>Proposition ($\sigma$-sous-additivité).</strong>
+    Si $(A_n)_{n \in I}$ est une famille finie ou dénombrable d'événements (pas nécessairement incompatibles), alors :
+    $$ P\left( \bigcup_{n \in I} A_n \right) \le \sum_{n \in I} P(A_n) $$
+    En particulier, si $\sum_{n=0}^\infty P(A_n)$ converge, la majoration est utile.
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve (cas dénombrable) :</span>
+    On utilise la même astuce que pour la continuité croissante. Posons $B_0 = A_0$ et $B_n = A_n \setminus (\bigcup_{k=0}^{n-1} A_k)$ pour $n \ge 1$.
+    Les $B_n$ sont des événements deux à deux incompatibles.
+    De plus, $\bigcup_{n=0}^\infty B_n = \bigcup_{n=0}^\infty A_n$.
+    Par construction, $B_n \subset A_n$ pour tout $n$. Par croissance de $P$, $P(B_n) \le P(A_n)$.
+    Par $\sigma$-additivité pour les $B_n$ :
+    $$ P\left( \bigcup_{n=0}^\infty A_n \right) = P\left( \bigcup_{n=0}^\infty B_n \right) = \sum_{n=0}^\infty P(B_n) \le \sum_{n=0}^\infty P(A_n) $$
+    $\square$
+</div>
+
+<div class="definition">
+    <strong>Définition (Événements négligeables et presque sûrs).</strong>
+    <ul>
+        <li>Un événement $A \in \mathcal{T}$ est dit <strong>négligeable</strong> si $P(A) = 0$.</li>
+        <li>Un événement $A \in \mathcal{T}$ est dit <strong>presque sûr</strong> (p.s.) si $P(A) = 1$.</li>
+    </ul>
+    Remarque : Un événement $A$ est presque sûr si et seulement si son complémentaire $\bar{A}$ est négligeable.
+</div>
+
+<div class="proposition">
+    <strong>Proposition.</strong>
+    <ol>
+        <li>Toute réunion finie ou dénombrable d'événements négligeables est un événement négligeable.</li>
+        <li>Toute intersection finie ou dénombrable d'événements presque sûrs est un événement presque sûr.</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    <ol>
+        <li>Soit $(A_n)_{n \in I}$ une famille au plus dénombrable d'événements négligeables ($P(A_n)=0$ pour tout $n$). Par $\sigma$-sous-additivité :
+            $0 \le P(\bigcup_{n \in I} A_n) \le \sum_{n \in I} P(A_n) = \sum_{n \in I} 0 = 0$. Donc $P(\bigcup_{n \in I} A_n) = 0$.</li>
+        <li>Soit $(A_n)_{n \in I}$ une famille au plus dénombrable d'événements presque sûrs ($P(A_n)=1$ pour tout $n$). Alors $\bar{A}_n$ est négligeable pour tout $n$.
+            D'après le point 1, $\bigcup_{n \in I} \bar{A}_n$ est négligeable.
+            Or, $\bigcup_{n \in I} \bar{A}_n = \overline{\bigcap_{n \in I} A_n}$ (De Morgan).
+            Donc $P(\overline{\bigcap_{n \in I} A_n}) = 0$.
+            Par passage au complémentaire, $P(\bigcap_{n \in I} A_n) = 1 - 0 = 1$. $\square$</li>
+    </ol>
+</div>
+
+<div class="definition">
+    <strong>Définition (Système quasi-complet d'événements).</strong>
+    Une famille $(A_i)_{i \in I}$ (où $I$ est fini ou dénombrable) d'événements deux à deux incompatibles est appelée un <strong>système quasi-complet d'événements</strong> si leur réunion est un événement presque sûr :
+    $$ P\left( \bigcup_{i \in I} A_i \right) = 1 $$
+    Remarque : Un système complet d'événements est toujours quasi-complet, car $P(\Omega)=1$.
+</div>
+
+
+<h2>3. Espaces probabilisés discrets</h2>
+
+<p>Dans de nombreuses situations, notamment lorsque l'univers $\Omega$ est fini ou dénombrable, il est naturel de travailler avec la tribu discrète $\mathcal{T} = \mathcal{P}(\Omega)$. Dans ce cas, la probabilité $P$ est entièrement déterminée par les probabilités des événements élémentaires $\{\omega\}$ pour $\omega \in \Omega$.</p>
+
+<div class="definition">
+    <strong>Définition (Distribution de probabilités discrète).</strong>
+    Soit $\Omega$ un ensemble (quelconque pour l'instant). Une <strong>distribution de probabilités discrète</strong> sur $\Omega$ est une famille de nombres réels $(p_\omega)_{\omega \in \Omega}$ indexée par les éléments de $\Omega$ telle que :
+    <ol>
+        <li>$p_\omega \ge 0$ pour tout $\omega \in \Omega$.</li>
+        <li>L'ensemble $S = \{\omega \in \Omega \mid p_\omega > 0\}$, appelé le <strong>support</strong> de la distribution, est au plus dénombrable (fini ou dénombrable).</li>
+        <li>La famille $(p_\omega)_{\omega \in \Omega}$ est sommable et sa somme vaut 1 : $\sum_{\omega \in \Omega} p_\omega = 1$. (Si $\Omega$ est non dénombrable, cela implique que $p_\omega=0$ sauf pour un nombre au plus dénombrable d'indices, et la somme est la somme sur le support $S$).</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Caractérisation des probabilités sur $(\Omega, \mathcal{P}(\Omega))$).</strong>
+    Soit $\Omega$ un ensemble au plus dénombrable (fini ou dénombrable).
+    <ol>
+        <li>Si $(p_\omega)_{\omega \in \Omega}$ est une distribution de probabilités discrète sur $\Omega$, alors il existe une unique probabilité $P$ sur l'espace probabilisable $(\Omega, \mathcal{P}(\Omega))$ telle que $P(\{\omega\}) = p_\omega$ pour tout $\omega \in \Omega$. Cette probabilité est définie pour tout événement $A \subset \Omega$ par :
+            $$ P(A) = \sum_{\omega \in A} p_\omega $$
+            (La somme est bien définie car $A \subset \Omega$ est au plus dénombrable).</li>
+        <li>Réciproquement, si $P$ est une probabilité sur $(\Omega, \mathcal{P}(\Omega))$, alors la famille $(p_\omega)_{\omega \in \Omega}$ définie par $p_\omega = P(\{\omega\})$ est une distribution de probabilités discrète sur $\Omega$.</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    <ol>
+        <li>Existence et Unicité : Soit $(p_\omega)_{\omega \in \Omega}$ une distribution. Définissons $P(A) = \sum_{\omega \in A} p_\omega$ pour $A \subset \Omega$.
+           Puisque $p_\omega \ge 0$, on a $P(A) \ge 0$.
+           $P(\Omega) = \sum_{\omega \in \Omega} p_\omega = 1$ par définition de la distribution.
+           $\sigma$-additivité : Soit $(A_n)_{n \in \mathbb{N}}$ une suite d'événements deux à deux incompatibles. Posons $A = \bigcup_{n=0}^\infty A_n$.
+           $P(A) = \sum_{\omega \in A} p_\omega$. Comme les $A_n$ sont disjoints, $A$ est la réunion disjointe des $A_n$. L'ensemble $A$ est au plus dénombrable. La famille $(p_\omega)_{\omega \in A}$ est sommable.
+           Par associativité des sommes de familles sommables à termes positifs :
+           $P(A) = \sum_{\omega \in A} p_\omega = \sum_{n=0}^\infty \left( \sum_{\omega \in A_n} p_\omega \right) = \sum_{n=0}^\infty P(A_n)$.
+           Donc $P$ est bien une probabilité.
+           L'unicité vient du fait que tout $A \subset \Omega$ est la réunion (au plus dénombrable) des singletons $\{\omega\}$ pour $\omega \in A$. Si $P'$ est une autre probabilité telle que $P'(\{\omega\}) = p_\omega$, alors par $\sigma$-additivité, $P'(A) = \sum_{\omega \in A} P'(\{\omega\}) = \sum_{\omega \in A} p_\omega = P(A)$.
+           Enfin, $P(A) \le P(\Omega) = 1$, donc $P$ est à valeurs dans $[0, 1]$.
+        </li>
+        <li>Réciproque : Soit $P$ une probabilité sur $(\Omega, \mathcal{P}(\Omega))$. Posons $p_\omega = P(\{\omega\})$.
+           Clairement $p_\omega = P(\{\omega\}) \in [0, 1]$, donc $p_\omega \ge 0$.
+           Les événements $\{\omega\}$ pour $\omega \in \Omega$ forment une partition de $\Omega$. Comme $\Omega$ est au plus dénombrable, on peut écrire $\Omega = \bigcup_{\omega \in \Omega} \{\omega\}$ (union disjointe dénombrable).
+           Par $\sigma$-additivité de $P$ :
+           $P(\Omega) = P(\bigcup_{\omega \in \Omega} \{\omega\}) = \sum_{\omega \in \Omega} P(\{\omega\}) = \sum_{\omega \in \Omega} p_\omega$.
+           Comme $P(\Omega) = 1$, on a $\sum_{\omega \in \Omega} p_\omega = 1$. La famille $(p_\omega)_{\omega \in \Omega}$ est donc sommable de somme 1.
+           De plus, la somme d'une famille de réels positifs est finie si et seulement si son support (les indices où $p_\omega > 0$) est au plus dénombrable. Comme la somme vaut 1, le support $S = \{\omega \mid p_\omega > 0\}$ est nécessairement au plus dénombrable (ce qui est déjà vrai puisque $\Omega$ l'est).
+           Donc $(p_\omega)_{\omega \in \Omega}$ est bien une distribution de probabilités discrète. $\square$
+        </li>
+    </ol>
+</div>
+
+<div class="definition">
+    <strong>Définition (Espace probabilisé discret).</strong>
+    Un espace probabilisé $(\Omega, \mathcal{T}, P)$ est dit <strong>discret</strong> si $\Omega$ est au plus dénombrable et si $\mathcal{T} = \mathcal{P}(\Omega)$.
+    D'après le théorème précédent, un tel espace est entièrement caractérisé par la donnée de la distribution de probabilités discrète $(P(\{\omega\}))_{\omega \in \Omega}$.
+</div>
+
+<h2>4. Probabilités conditionnelles et indépendance</h2>
+
+<div class="definition">
+    <strong>Définition (Indépendance de deux événements).</strong>
+    Deux événements $A, B \in \mathcal{T}$ sont dits <strong>indépendants</strong> si
+    $$ P(A \cap B) = P(A) P(B) $$
+</div>
+
+<div class="definition">
+    <strong>Définition (Indépendance mutuelle d'une famille d'événements).</strong>
+    Soit $(A_i)_{i \in I}$ une famille (finie ou infinie) d'événements. On dit que ces événements sont <strong>mutuellement indépendants</strong> si, pour toute partie finie non vide $J \subset I$, on a :
+    $$ P\left( \bigcap_{j \in J} A_j \right) = \prod_{j \in J} P(A_j) $$
+</div>
+
+<div class="remark">
+    <strong>Indépendance deux à deux vs. Indépendance mutuelle.</strong>
+    L'indépendance mutuelle est une condition beaucoup plus forte que l'indépendance deux à deux (qui correspond au cas où $J$ est de cardinal 2). Des événements peuvent être indépendants deux à deux sans être mutuellement indépendants.
+</div>
+
+<div class="example">
+    <strong>Exemple (Deux dés).</strong>
+    On lance deux dés équilibrés à 6 faces. $\Omega = \{ (i, j) \mid 1 \le i, j \le 6 \}$, $\text{Card}(\Omega)=36$. On utilise la probabilité uniforme $P(A) = \text{Card}(A)/36$.
+    Considérons les événements :
+    <ul>
+        <li>$A$: "le résultat du premier dé est pair" = $\{ (i, j) \mid i \in \{2, 4, 6\} \}$. $\text{Card}(A)=3 \times 6 = 18$. $P(A)=18/36 = 1/2$.</li>
+        <li>$B$: "le résultat du deuxième dé est pair" = $\{ (i, j) \mid j \in \{2, 4, 6\} \}$. $\text{Card}(B)=6 \times 3 = 18$. $P(B)=18/36 = 1/2$.</li>
+        <li>$C$: "la somme des résultats est paire" = $\{ (i, j) \mid i+j \text{ est pair} \}$. Cela arrive si $i, j$ sont tous deux pairs ou tous deux impairs. Il y a $3 \times 3 = 9$ couples (pair, pair) et $3 \times 3 = 9$ couples (impair, impair). $\text{Card}(C)=9+9=18$. $P(C)=18/36 = 1/2$.</li>
+    </ul>
+    Calculons les intersections :
+    <ul>
+        <li>$A \cap B$: "les deux dés sont pairs". $\text{Card}(A \cap B)=3 \times 3 = 9$. $P(A \cap B)=9/36 = 1/4$. On a $P(A)P(B) = (1/2)(1/2) = 1/4$. Donc $A$ et $B$ sont indépendants.</li>
+        <li>$A \cap C$: "le premier dé est pair et la somme est paire". Si le premier est pair, la somme est paire ssi le deuxième est pair. Donc $A \cap C = A \cap B$. $P(A \cap C)=1/4$. On a $P(A)P(C) = (1/2)(1/2) = 1/4$. Donc $A$ et $C$ sont indépendants.</li>
+        <li>$B \cap C$: "le deuxième dé est pair et la somme est paire". Si le deuxième est pair, la somme est paire ssi le premier est pair. Donc $B \cap C = A \cap B$. $P(B \cap C)=1/4$. On a $P(B)P(C) = (1/2)(1/2) = 1/4$. Donc $B$ et $C$ sont indépendants.</li>
+    </ul>
+    Les événements $A, B, C$ sont donc deux à deux indépendants.
+    Sont-ils mutuellement indépendants ? Il faut vérifier pour $J=\{A, B, C\}$.
+    $A \cap B \cap C$: "1er pair, 2e pair, somme paire". C'est $A \cap B$. $P(A \cap B \cap C)=1/4$.
+    $P(A)P(B)P(C) = (1/2)(1/2)(1/2) = 1/8$.
+    Comme $P(A \cap B \cap C) \neq P(A)P(B)P(C)$, les événements $A, B, C$ ne sont pas mutuellement indépendants.
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Indépendance et complémentaire).</strong>
+    <ol>
+        <li>Si $A$ et $B$ sont deux événements indépendants, alors $\bar{A}$ et $B$ sont indépendants (ainsi que $A$ et $\bar{B}$, et $\bar{A}$ et $\bar{B}$).</li>
+        <li>Si $(A_i)_{i \in I}$ est une famille d'événements mutuellement indépendants, et si pour tout $i \in I$, on choisit $B_i = A_i$ ou $B_i = \bar{A}_i$, alors la famille $(B_i)_{i \in I}$ est aussi mutuellement indépendante.</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve (point 1 pour $\bar{A}$ et $B$) :</span>
+    On veut montrer que $P(\bar{A} \cap B) = P(\bar{A}) P(B)$.
+    On sait que $B = (A \cap B) \cup (\bar{A} \cap B)$ (réunion disjointe).
+    Donc $P(B) = P(A \cap B) + P(\bar{A} \cap B)$.
+    $P(\bar{A} \cap B) = P(B) - P(A \cap B)$.
+    Comme $A$ et $B$ sont indépendants, $P(A \cap B) = P(A) P(B)$.
+    $P(\bar{A} \cap B) = P(B) - P(A) P(B) = P(B) (1 - P(A))$.
+    Or $1 - P(A) = P(\bar{A})$.
+    Donc $P(\bar{A} \cap B) = P(B) P(\bar{A})$. $\square$
+</div>
+
+<div class="definition">
+    <strong>Définition (Probabilité conditionnelle).</strong>
+    Soient $A$ et $B$ deux événements avec $P(B) > 0$. On appelle <strong>probabilité conditionnelle de $A$ sachant $B$</strong> le réel, noté $P(A|B)$ ou $P_B(A)$, défini par :
+    $$ P(A|B) = \frac{P(A \cap B)}{P(B)} $$
+</div>
+
+<div class="remark">
+    <strong>Interprétation :</strong> $P(A|B)$ est la probabilité que l'événement $A$ se réalise, sachant que l'événement $B$ s'est déjà réalisé. On restreint en quelque sorte l'univers à $B$, et on renormalise la mesure de probabilité pour que la masse totale sur $B$ soit 1.
+    On peut vérifier que l'application $A \mapsto P(A|B)$, définie sur $\mathcal{T}$, est elle-même une probabilité sur $(\Omega, \mathcal{T})$. On l'appelle la probabilité conditionnelle sachant $B$.
+</div>
+
+<div class="remark">
+    <strong>Lien avec l'indépendance :</strong> Si $P(A) > 0$ et $P(B) > 0$, alors $A$ et $B$ sont indépendants si et seulement si $P(A|B) = P(A)$, ce qui équivaut aussi à $P(B|A) = P(B)$. L'information que $B$ s'est réalisé ne change pas la probabilité de $A$.
+</div>
+
+<div class="proposition">
+    <strong>Formule des probabilités composées.</strong>
+    Soient $A_1, \dots, A_m$ des événements tels que $P(A_1 \cap \dots \cap A_{m-1}) > 0$. Alors :
+    $$ P(A_1 \cap \dots \cap A_m) = P(A_1) P(A_2 | A_1) P(A_3 | A_1 \cap A_2) \dots P(A_m | A_1 \cap \dots \cap A_{m-1}) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    La définition de la probabilité conditionnelle donne $P(X \cap Y) = P(X) P(Y | X)$ si $P(X) > 0$.
+    Appliquons ceci de proche en proche. Notons $C_k = A_1 \cap \dots \cap A_k$. On a $P(C_{m-1}) > 0$, ce qui implique $P(C_k) > 0$ pour tout $1 \le k \le m-1$ (car $C_{m-1} \subset C_k$).
+    $P(A_m | C_{m-1}) = \frac{P(A_m \cap C_{m-1})}{P(C_{m-1})} = \frac{P(C_m)}{P(C_{m-1})}$. Donc $P(C_m) = P(C_{m-1}) P(A_m | C_{m-1})$.
+    De même, $P(C_{m-1}) = P(C_{m-2}) P(A_{m-1} | C_{m-2})$, et ainsi de suite jusqu'à $P(C_2) = P(C_1) P(A_2 | C_1) = P(A_1) P(A_2 | A_1)$.
+    En substituant récursivement :
+    $P(C_m) = P(C_{m-1}) P(A_m | C_{m-1})$
+    $= [ P(C_{m-2}) P(A_{m-1} | C_{m-2}) ] P(A_m | C_{m-1})$
+    $= \dots$
+    $= P(A_1) P(A_2 | A_1) P(A_3 | A_1 \cap A_2) \dots P(A_m | A_1 \cap \dots \cap A_{m-1})$. $\square$
+</div>
+
+<div class="proposition">
+    <strong>Formule des probabilités totales (cas dénombrable).</strong>
+    Soit $(A_i)_{i \in I}$ un système quasi-complet d'événements (où $I$ est fini ou dénombrable), tel que $P(A_i) > 0$ pour tout $i \in I$. Soit $B$ un événement quelconque. Alors :
+    $$ P(B) = \sum_{i \in I} P(B \cap A_i) = \sum_{i \in I} P(A_i) P(B | A_i) $$
+    (La convergence de la série est assurée).
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Les événements $(B \cap A_i)_{i \in I}$ sont deux à deux incompatibles car les $A_i$ le sont ($ (B \cap A_i) \cap (B \cap A_j) = B \cap (A_i \cap A_j) = B \cap \emptyset = \emptyset $ si $i \neq j$).
+    Leur réunion est $\bigcup_{i \in I} (B \cap A_i) = B \cap (\bigcup_{i \in I} A_i)$.
+    Posons $A = \bigcup_{i \in I} A_i$. Comme $(A_i)$ est un système quasi-complet, $P(A)=1$. L'événement $\bar{A}$ est négligeable.
+    On a $B = (B \cap A) \cup (B \cap \bar{A})$. C'est une réunion disjointe.
+    $P(B) = P(B \cap A) + P(B \cap \bar{A})$.
+    Comme $B \cap \bar{A} \subset \bar{A}$, on a $0 \le P(B \cap \bar{A}) \le P(\bar{A}) = 0$. Donc $P(B \cap \bar{A}) = 0$.
+    Il reste $P(B) = P(B \cap A) = P(\bigcup_{i \in I} (B \cap A_i))$.
+    Par $\sigma$-additivité (car les $B \cap A_i$ sont incompatibles) :
+    $P(B) = \sum_{i \in I} P(B \cap A_i)$.
+    Comme $P(A_i) > 0$, on peut écrire $P(B \cap A_i) = P(A_i) P(B | A_i)$.
+    D'où $P(B) = \sum_{i \in I} P(A_i) P(B | A_i)$.
+    La convergence de la série $\sum P(B \cap A_i)$ est assurée car sa somme est $P(B)$ qui est finie. Comme $P(A_i) P(B|A_i) = P(B \cap A_i) \ge 0$, la série $\sum P(A_i) P(B | A_i)$ converge aussi. $\square$
+</div>
+
+<div class="remark">
+    <strong>Cas fini :</strong> Si $(A_1, \dots, A_n)$ est un système complet d'événements avec $P(A_i) > 0$, alors pour tout événement $B$ :
+    $$ P(B) = \sum_{i=1}^n P(A_i) P(B | A_i) $$
+</div>
+
+<div class="proposition">
+    <strong>Formule de Bayes (cas dénombrable).</strong>
+    Soit $(A_i)_{i \in I}$ un système quasi-complet d'événements tel que $P(A_i) > 0$ pour tout $i \in I$. Soit $B$ un événement tel que $P(B) > 0$. Alors, pour tout $k \in I$ :
+    $$ P(A_k | B) = \frac{P(A_k \cap B)}{P(B)} = \frac{P(A_k) P(B | A_k)}{\sum_{i \in I} P(A_i) P(B | A_i)} $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Par définition de la probabilité conditionnelle : $P(A_k | B) = \frac{P(A_k \cap B)}{P(B)}$.
+    On utilise $P(A_k \cap B) = P(A_k) P(B | A_k)$ (car $P(A_k)>0$).
+    On remplace $P(B)$ au dénominateur par son expression issue de la formule des probabilités totales : $P(B) = \sum_{i \in I} P(A_i) P(B | A_i)$.
+    On obtient la formule de Bayes. $\square$
+</div>
+
+<div class="remark">
+    <strong>Formule de Bayes pour deux événements :</strong> Si $A$ et $B$ sont deux événements de probabilités non nulles, alors :
+    $$ P(A | B) = \frac{P(A \cap B)}{P(B)} = \frac{P(B | A) P(A)}{P(B)} $$
+    Cette formule permet d'"inverser" la condition. $P(A|B)$ (probabilité de la "cause" A sachant l'"effet" B) est liée à $P(B|A)$ (probabilité de l'"effet" B sachant la "cause" A).
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
