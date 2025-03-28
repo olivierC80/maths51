@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cours : Groupes, Anneaux, Corps (Math Sup)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"  crossorigin="anonymous"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .definition, .theorem, .proposition, .corollary, .remark, .example {
+            margin: 15px 0; padding: 10px; border-left: 5px solid;
+        }
+        .definition { border-color: #17a2b8; background-color: #e1f5fe; }
+        .theorem { border-color: #dc3545; background-color: #ffebee; }
+        .proposition { border-color: #28a745; background-color: #e8f5e9; }
+        .corollary { border-color: #ffc107; background-color: #fffde7; }
+        .remark { border-color: #6c757d; background-color: #f8f9fa; }
+        .example { border-color: #fd7e14; background-color: #fff3e0; }
+        .proof { margin: 10px 0 10px 20px; padding: 10px; border: 1px dashed #ccc; background-color: #f9f9f9; }
+        .proof-title { font-weight: bold; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Pour les formules longues */
+    </style>
+</head>
+<body>
+
+<h1>Structures Algébriques : Groupes, Anneaux, Corps</h1>
+
+<h2>Introduction</h2>
+<p>
+    L'algèbre générale étudie les structures algébriques, c'est-à-dire des ensembles munis d'une ou plusieurs lois de composition interne vérifiant certains axiomes. Ces structures (groupes, anneaux, corps, espaces vectoriels...) fournissent un cadre unifié pour étudier des objets mathématiques variés (nombres, polynômes, matrices, fonctions, permutations...). Ce chapitre introduit les structures de groupe, d'anneau et de corps.
+</p>
+<p>$K$ désigne $\mathbb{R}$ ou $\mathbb{C}$ dans les exemples, mais les définitions sont plus générales.</p>
+
+<h2>1. Loi de Composition Interne</h2>
+
+<div class="definition">
+    <strong>Loi de composition interne (LCI).</strong>
+    Soit $E$ un ensemble non vide. Une <strong>loi de composition interne</strong> (LCI) sur $E$ est une application $*: E \times E \to E$.
+    Pour $x, y \in E$, l'image du couple $(x, y)$ par $*$ est notée $x * y$.
+    <br>Un ensemble $E$ muni d'une LCI $*$ est appelé un <strong>magma</strong>, noté $(E, *)$.
+</div>
+
+<div class="example">
+    <strong>Exemples :</strong>
+    <ul>
+        <li>L'addition ($+$) et la multiplication ($\times$) sont des LCI sur $\mathbb{N}, \mathbb{Z}, \mathbb{Q}, \mathbb{R}, \mathbb{C}$.</li>
+        <li>La soustraction ($-$) est une LCI sur $\mathbb{Z}, \mathbb{Q}, \mathbb{R}, \mathbb{C}$, mais pas sur $\mathbb{N}$ (ex: $3-5 \notin \mathbb{N}$).</li>
+        <li>La division ($/$) n'est pas une LCI sur $\mathbb{Q}, \mathbb{R}, \mathbb{C}$ (non définie pour diviseur nul), ni sur $\mathbb{Q}^*, \mathbb{R}^*, \mathbb{C}^*$ (résultat pas toujours dans l'ensemble pour $\mathbb{Z}^*$).</li>
+        <li>L'addition des matrices ($+$) est une LCI sur $\mathcal{M}_{n,p}(K)$.</li>
+        <li>Le produit matriciel ($\times$) est une LCI sur $\mathcal{M}_n(K)$ (matrices carrées).</li>
+        <li>La composition ($\circ$) est une LCI sur $\mathcal{F}(E, E)$, l'ensemble des applications de $E$ dans $E$.</li>
+        <li>La réunion ($\cup$) et l'intersection ($\cap$) sont des LCI sur $\mathcal{P}(X)$, l'ensemble des parties de $X$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Propriétés d'une LCI.</strong> Soit $(E, *)$ un magma.
+    <ul>
+        <li>$*$ est <strong>associative</strong> si $\forall x, y, z \in E, (x * y) * z = x * (y * z)$.</li>
+        <li>$*$ est <strong>commutative</strong> si $\forall x, y \in E, x * y = y * x$.</li>
+        <li>$e \in E$ est un <strong>élément neutre</strong> pour $*$ si $\forall x \in E, x * e = e * x = x$.
+            <br>S'il existe, l'élément neutre est unique. On le note souvent $0$ ou $0_E$ si la loi est notée $+$ (loi additive), et $1$ ou $1_E$ si la loi est notée $\times$ ou $*$ (loi multiplicative).</li>
+    </ul>
+</div>
+
+<div class="remark">
+    Si $*$ est associative, on peut noter $x*y*z$ sans parenthèses. On peut définir les puissances (notations additives ou multiplicatives) :
+    <ul>
+        <li>Notation multiplicative : $x^1 = x$, $x^{n+1} = x^n * x$.</li>
+        <li>Notation additive : $1x = x$, $(n+1)x = nx + x$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Élément inversible (ou symétrisable).</strong>
+    Soit $(E, *)$ un magma possédant un élément neutre $e$. Un élément $x \in E$ est dit <strong>inversible</strong> (ou symétrisable) s'il existe $y \in E$ tel que $x * y = y * x = e$. L'élément $y$ est appelé un <strong>inverse</strong> (ou symétrique) de $x$.
+</div>
+
+<div class="proposition">
+    <strong>Propriétés des inverses (si la loi est associative).</strong>
+    Soit $(E, *)$ un magma associatif avec un élément neutre $e$.
+    <ol>
+        <li>Si $x \in E$ admet un inverse, cet inverse est <strong>unique</strong>. On le note $x^{-1}$ (notation multiplicative) ou $-x$ (notation additive).</li>
+        <li>Si $x$ est inversible, alors $x^{-1}$ est inversible et $(x^{-1})^{-1} = x$. (Ou $-(-x)=x$).</li>
+        <li>Si $x$ et $y$ sont inversibles, alors $x * y$ est inversible et $(x * y)^{-1} = y^{-1} * x^{-1}$. (Ou $-(x+y)=(-y)+(-x)$). Attention à l'ordre !</li>
+        <li><strong>Régularité :</strong> Si $x$ est inversible, alors pour tous $z_1, z_2 \in E$:
+            <ul>
+                <li>$x * z_1 = x * z_2 \implies z_1 = z_2$ (simplification à gauche).</li>
+                <li>$z_1 * x = z_2 * x \implies z_1 = z_2$ (simplification à droite).</li>
+            </ul>
+        </li>
+        <li>Si $x$ est inversible, alors pour $n \in \mathbb{N}^*$, $x^n$ est inversible et $(x^n)^{-1} = (x^{-1})^n$. On note cet inverse $x^{-n}$. On convient que $x^0 = e$. Alors $x^k$ est défini pour tout $k \in \mathbb{Z}$ et $(x^k)^{-1} = x^{-k}$.</li>
+    </ul>
+</div>
+<div class="proof">
+    <span class="proof-title">Preuve (partielle) :</span>
+    1. Unicité : Si $y_1, y_2$ sont inverses de $x$. $y_1 = y_1 * e = y_1 * (x * y_2) = (y_1 * x) * y_2$ (associativité) $= e * y_2 = y_2$.
+    3. Inverse de $x*y$: $(y^{-1} * x^{-1}) * (x * y) = y^{-1} * (x^{-1} * x) * y = y^{-1} * e * y = y^{-1} * y = e$. De même $(x * y) * (y^{-1} * x^{-1}) = e$. Donc $(y^{-1}*x^{-1})$ est l'inverse de $x*y$.
+    4. Simplification : Si $x * z_1 = x * z_2$, on compose à gauche par $x^{-1}$ : $x^{-1} * (x * z_1) = x^{-1} * (x * z_2) \implies (x^{-1} * x) * z_1 = (x^{-1} * x) * z_2 \implies e * z_1 = e * z_2 \implies z_1 = z_2$. $\square$
+</div>
+
+<div class="definition">
+    <strong>Partie stable.</strong>
+    Soit $(E, *)$ un magma. Une partie $F \subset E$ est dite <strong>stable</strong> pour la loi $*$ si $\forall x, y \in F, x * y \in F$.
+    Si $F$ est stable, la restriction de $*$ à $F \times F$ est une LCI sur $F$, et $(F, *)$ est aussi un magma.
+</div>
+
+<h2>2. Groupes</h2>
+
+<div class="definition">
+    <strong>Groupe.</strong>
+    Un <strong>groupe</strong> est un couple $(G, *)$ où $G$ est un ensemble et $*$ est une LCI sur $G$ vérifiant les axiomes suivants :
+    <ol>
+        <li>$*$ est <strong>associative</strong>.</li>
+        <li>$G$ possède un <strong>élément neutre</strong> $e$ pour $*$.</li>
+        <li>Tout élément $x \in G$ possède un <strong>inverse</strong> (symétrique) $x^{-1} \in G$ pour $*$.</li>
+    </ol>
+    Un groupe $(G, *)$ est dit <strong>abélien</strong> (ou <strong>commutatif</strong>) si la loi $*$ est commutative.
+</div>
+
+<div class="example">
+    <strong>Exemples de groupes :</strong>
+    <ul>
+        <li>$(\mathbb{Z}, +), (\mathbb{Q}, +), (\mathbb{R}, +), (\mathbb{C}, +)$ sont des groupes abéliens (neutre 0, inverse $-x$).</li>
+        <li>$(\mathbb{N}, +)$ n'est pas un groupe (seul 0 a un inverse).</li>
+        <li>$(\mathbb{Q}^*, \times), (\mathbb{R}^*, \times), (\mathbb{C}^*, \times)$ sont des groupes abéliens (neutre 1, inverse $1/x$). $\mathbb{Q}^* = \mathbb{Q} \setminus \{0\}$, etc.</li>
+        <li>$(\mathbb{Q}_+^*, \times), (\mathbb{R}_+^*, \times)$ sont des groupes abéliens.</li>
+        <li>$(\mathbb{Z}^*, \times)$ n'est pas un groupe (seuls 1 et -1 ont un inverse dans $\mathbb{Z}^*$).</li>
+        <li>$(\mathbb{U}, \times)$ où $\mathbb{U} = \{z \in \mathbb{C} \mid |z|=1\}$ (nombres complexes de module 1) est un groupe abélien.</li>
+        <li>$(\mathbb{U}_n, \times)$ où $\mathbb{U}_n = \{z \in \mathbb{C} \mid z^n = 1\}$ (racines $n$-ièmes de l'unité) est un groupe abélien fini (à $n$ éléments).</li>
+        <li>$(\mathcal{M}_{n,p}(K), +)$ est un groupe abélien.</li>
+        <li>$(\mathcal{M}_n(K), \times)$ n'est pas un groupe pour $n \ge 2$ (matrices non nulles pas forcément inversibles).</li>
+        <li>$(GL_n(K), \times)$, ensemble des matrices carrées inversibles d'ordre $n$, est un groupe (non abélien si $n \ge 2$).</li>
+        <li>$(\mathcal{F}(E, G), \star)$ où $G$ est un groupe et $(f \star g)(x) = f(x) * g(x)$ est un groupe.</li>
+        <li>$(\mathcal{S}(X), \circ)$, ensemble des bijections (permutations) d'un ensemble $X$ sur lui-même, est un groupe (non abélien si Card(X) $\ge 3$). Le neutre est $\mathrm{Id}_X$, l'inverse est $f^{-1}$.</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Groupe produit.</strong>
+    Si $(G_1, *_1)$ et $(G_2, *_2)$ sont deux groupes, on peut définir une structure de groupe sur le produit cartésien $G = G_1 \times G_2$ en posant :
+    $$ (x_1, x_2) * (y_1, y_2) = (x_1 *_1 y_1, x_2 *_2 y_2) $$
+    L'élément neutre est $(e_1, e_2)$ et l'inverse de $(x_1, x_2)$ est $(x_1^{-1}, x_2^{-1})$. Ce groupe $(G, *)$ est appelé le <strong>groupe produit</strong>. Il est abélien si $G_1$ et $G_2$ le sont.
+</div>
+
+<div class="definition">
+    <strong>Sous-groupe.</strong>
+    Soit $(G, *)$ un groupe. Une partie $H \subset G$ est un <strong>sous-groupe</strong> de $G$ si :
+    <ol>
+        <li>$H$ est stable pour la loi $*$ : $\forall x, y \in H, x * y \in H$.</li>
+        <li>$(H, *)$ est lui-même un groupe (avec la loi induite).</li>
+    </ol>
+</div>
+
+<div class="proposition">
+    <strong>Caractérisation des sous-groupes.</strong>
+    Soit $(G, *)$ un groupe d'élément neutre $e$, et $H$ une partie de $G$. $H$ est un sous-groupe de $G$ si et seulement si :
+    <ol>
+        <li>$H$ n'est pas vide (en pratique, on vérifie que $e \in H$).</li>
+        <li>$H$ est stable par la loi $*$ : $\forall x, y \in H, x * y \in H$.</li>
+        <li>$H$ est stable par passage à l'inverse : $\forall x \in H, x^{-1} \in H$.</li>
+    </ol>
+    Condition équivalente et compacte : $H$ est un sous-groupe de $G$ ssi ($H \neq \emptyset$ et $\forall x, y \in H, x * y^{-1} \in H$).
+</div>
+
+<div class="example">
+    $(\mathbb{Z}, +)$ est un sous-groupe de $(\mathbb{R}, +)$.
+    $(\mathbb{U}, \times)$ est un sous-groupe de $(\mathbb{C}^*, \times)$.
+    $(\mathbb{U}_n, \times)$ est un sous-groupe de $(\mathbb{U}, \times)$.
+    Pour $n \in \mathbb{Z}$, $n\mathbb{Z} = \{nk \mid k \in \mathbb{Z}\}$ est un sous-groupe de $(\mathbb{Z}, +)$. Ce sont les seuls sous-groupes de $(\mathbb{Z},+)$.
+    Le centre d'un groupe $G$, $Z(G) = \{x \in G \mid \forall y \in G, xy=yx\}$, est un sous-groupe de $G$.
+</div>
+
+<div class="definition">
+    <strong>Morphisme de groupes.</strong>
+    Soient $(G, *_G)$ et $(H, *_H)$ deux groupes. Une application $f: G \to H$ est un <strong>morphisme de groupes</strong> si elle "respecte" les lois :
+    $$ \forall x, y \in G, \quad f(x *_G y) = f(x) *_H f(y) $$
+</div>
+
+<div class="proposition">
+    <strong>Propriétés des morphismes de groupes.</strong>
+    Soit $f: G \to H$ un morphisme de groupes. Notons $e_G, e_H$ les éléments neutres respectifs.
+    <ul>
+        <li>$f(e_G) = e_H$.</li>
+        <li>Pour tout $x \in G$, $f(x^{-1}) = (f(x))^{-1}$.</li>
+        <li>Pour tout $k \in \mathbb{Z}$, $f(x^k) = (f(x))^k$.</li>
+        <li>L'image directe d'un sous-groupe de $G$ par $f$ est un sous-groupe de $H$.</li>
+        <li>L'image réciproque d'un sous-groupe de $H$ par $f$ est un sous-groupe de $G$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Noyau et Image d'un morphisme.</strong>
+    Soit $f: G \to H$ un morphisme de groupes.
+    <ul>
+        <li>Le <strong>noyau</strong> de $f$, noté $\ker(f)$, est l'image réciproque du sous-groupe trivial $\{e_H\}$ de $H$ :
+            $$ \ker(f) = f^{-1}(\{e_H\}) = \{ x \in G \mid f(x) = e_H \} $$
+            C'est un sous-groupe de $G$.</li>
+        <li>L'<strong>image</strong> de $f$, notée $\mathrm{Im}(f)$, est l'image directe de $G$ par $f$ :
+            $$ \mathrm{Im}(f) = f(G) = \{ f(x) \mid x \in G \} $$
+            C'est un sous-groupe de $H$.</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Caractérisation de l'injectivité et de la surjectivité.</strong>
+    Soit $f: G \to H$ un morphisme de groupes.
+    <ul>
+        <li>$f$ est <strong>injectif</strong> si et seulement si $\ker(f) = \{e_G\}$.</li>
+        <li>$f$ est <strong>surjectif</strong> si et seulement si $\mathrm{Im}(f) = H$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Isomorphisme, Endomorphisme, Automorphisme.</strong>
+    Soit $f: G \to H$ un morphisme de groupes.
+    <ul>
+        <li>$f$ est un <strong>isomorphisme</strong> si $f$ est bijective. On dit alors que $G$ et $H$ sont isomorphes ($G \simeq H$).</li>
+        <li>Si $G=H$, $f$ est appelé un <strong>endomorphisme</strong> de $G$.</li>
+        <li>Si $G=H$ et $f$ est bijective, $f$ est appelé un <strong>automorphisme</strong> de $G$.</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    Si $f: G \to H$ est un isomorphisme de groupes, alors son application réciproque $f^{-1}: H \to G$ est aussi un isomorphisme de groupes.
+</div>
+
+<h2>3. Anneaux</h2>
+
+<div class="definition">
+    <strong>Anneau.</strong>
+    Un <strong>anneau</strong> est un triplet $(A, +, \times)$ où $A$ est un ensemble et $+, \times$ sont deux lois de composition internes sur $A$ vérifiant :
+    <ol>
+        <li>$(A, +)$ est un <strong>groupe abélien</strong> (associativité, neutre $0_A$, inverse $-a$, commutativité).</li>
+        <li>La loi $\times$ est <strong>associative</strong> : $\forall a,b,c \in A, (a \times b) \times c = a \times (b \times c)$.</li>
+        <li>La loi $\times$ possède un <strong>élément neutre</strong>, noté $1_A$ : $\forall a \in A, a \times 1_A = 1_A \times a = a$.</li>
+        <li>La loi $\times$ est <strong>distributive</strong> par rapport à la loi $+$ :
+            <ul>
+                <li>$\forall a,b,c \in A, a \times (b+c) = (a \times b) + (a \times c)$ (distributivité à gauche).</li>
+                <li>$\forall a,b,c \in A, (b+c) \times a = (b \times a) + (c \times a)$ (distributivité à droite).</li>
+            </ul>
+        </li>
+    </ol>
+    Un anneau $(A, +, \times)$ est dit <strong>commutatif</strong> si la loi $\times$ est commutative. On suppose $1_A \neq 0_A$ pour éviter l'anneau trivial $\{0\}$.
+</div>
+
+<div class="example">
+    <strong>Exemples :</strong>
+    <ul>
+        <li>$(\mathbb{Z}, +, \times), (\mathbb{Q}, +, \times), (\mathbb{R}, +, \times), (\mathbb{C}, +, \times)$ sont des anneaux commutatifs.</li>
+        <li>$(\mathcal{M}_n(K), +, \times)$ est un anneau, non commutatif si $n \ge 2$.</li>
+        <li>$(\mathcal{F}(I, \mathbb{R}), +, \times)$ (fonctions de $I$ dans $\mathbb{R}$ avec opérations point par point) est un anneau commutatif.</li>
+        <li>$(\mathbb{Z}/n\mathbb{Z}, +, \times)$ (entiers modulo $n$) est un anneau commutatif fini.</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Règles de calcul dans un anneau $A$.</strong> Soient $a, b \in A$.
+    <ul>
+        <li>$a \times 0_A = 0_A \times a = 0_A$.</li>
+        <li>$a \times (-b) = (-a) \times b = -(a \times b)$.</li>
+        <li>$(-a) \times (-b) = a \times b$.</li>
+        <li>Pour $n \in \mathbb{Z}$, $n(ab) = (na)b = a(nb)$ (où $na$ est la somme de $n$ termes $a$ ou l'opposé).</li>
+        <li><strong>Binôme de Newton :</strong> Si $a$ et $b$ <strong>commutent</strong> ($ab=ba$), alors $\forall p \in \mathbb{N}, (a+b)^p = \sum_{k=0}^p \binom{p}{k} a^k b^{p-k}$.</li>
+        <li><strong>Identité géométrique :</strong> Si $a$ et $b$ commutent, alors $\forall p \in \mathbb{N}^*, a^p - b^p = (a-b) \sum_{k=0}^{p-1} a^{p-1-k} b^k$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Éléments inversibles d'un anneau.</strong>
+    Soit $(A, +, \times)$ un anneau de neutre multiplicatif $1_A$. Un élément $a \in A$ est dit <strong>inversible</strong> (pour la loi $\times$) s'il existe $a' \in A$ tel que $a \times a' = a' \times a = 1_A$.
+    L'inverse $a'$, s'il existe, est unique et noté $a^{-1}$.
+    L'ensemble des éléments inversibles de $A$ est noté $A^\times$ ou $U(A)$.
+    <br>$(A^\times, \times)$ est un groupe, appelé le <strong>groupe des unités</strong> de l'anneau $A$.
+</div>
+
+<div class="example">
+    $U(\mathbb{Z}) = \{-1, 1\}$. $U(\mathbb{Q}) = \mathbb{Q}^*$. $U(\mathbb{R}) = \mathbb{R}^*$. $U(\mathbb{C}) = \mathbb{C}^*$. $U(\mathcal{M}_n(K)) = GL_n(K)$.
+</div>
+
+<div class="definition">
+    <strong>Sous-anneau.</strong>
+    Soit $(A, +, \times)$ un anneau. Une partie $B \subset A$ est un <strong>sous-anneau</strong> de $A$ si :
+    <ol>
+        <li>$(B, +)$ est un sous-groupe de $(A, +)$.</li>
+        <li>$B$ est stable pour la loi $\times$ : $\forall a, b \in B, a \times b \in B$.</li>
+        <li>L'élément neutre multiplicatif $1_A$ appartient à $B$.</li>
+    </ol>
+    $(B, +, \times)$ est alors lui-même un anneau.
+</div>
+
+<div class="proposition">
+    <strong>Caractérisation des sous-anneaux.</strong>
+    Une partie $B \subset A$ est un sous-anneau de $A$ si et seulement si :
+    <ol>
+        <li>$1_A \in B$.</li>
+        <li>$\forall a, b \in B, a - b \in B$ (caractérise les sous-groupes additifs).</li>
+        <li>$\forall a, b \in B, a \times b \in B$ (stabilité par produit).</li>
+    </ol>
+</div>
+
+<div class="definition">
+    <strong>Morphisme d'anneaux.</strong>
+    Soient $(A, +_A, \times_A)$ et $(B, +_B, \times_B)$ deux anneaux. Une application $f: A \to B$ est un <strong>morphisme d'anneaux</strong> si :
+    <ol>
+        <li>$f$ est un morphisme pour les structures de groupe additif : $\forall a, a' \in A, f(a +_A a') = f(a) +_B f(a')$.</li>
+        <li>$f$ "respecte" la multiplication : $\forall a, a' \in A, f(a \times_A a') = f(a) \times_B f(a')$.</li>
+        <li>$f$ envoie l'unité sur l'unité : $f(1_A) = 1_B$.</li>
+    </ol>
+    Un morphisme d'anneaux bijectif est un <strong>isomorphisme d'anneaux</strong>.
+</div>
+<div class="remark">
+La condition 1 implique $f(0_A)=0_B$ et $f(-a)=-f(a)$.
+</div>
+
+<h2>4. Corps</h2>
+
+<div class="definition">
+    <strong>Anneau intègre.</strong>
+    Un anneau $(A, +, \times)$ est dit <strong>intègre</strong> si :
+    <ol>
+        <li>$A$ est <strong>commutatif</strong> (pour $\times$).</li>
+        <li>$A \neq \{0_A\}$ (i.e., $1_A \neq 0_A$).</li>
+        <li>$A$ n'a pas de diviseurs de zéro : $\forall a, b \in A, (a \times b = 0_A \implies a = 0_A \text{ ou } b = 0_A)$.</li>
+    </ol>
+</div>
+
+<div class="example">
+    $\mathbb{Z}, \mathbb{Q}, \mathbb{R}, \mathbb{C}$ sont des anneaux intègres.
+    $\mathbb{Z}/6\mathbb{Z}$ n'est pas intègre car $\bar{2} \times \bar{3} = \bar{6} = \bar{0}$ mais $\bar{2} \neq \bar{0}$ et $\bar{3} \neq \bar{0}$.
+    $\mathcal{M}_n(K)$ ($n \ge 2$) n'est pas commutatif et a des diviseurs de zéro, donc non intègre.
+</div>
+
+<div class="definition">
+    <strong>Corps.</strong>
+    Un <strong>corps</strong> est un anneau $(K, +, \times)$ vérifiant :
+    <ol>
+        <li>$K$ est <strong>commutatif</strong>.</li>
+        <li>$K \neq \{0_K\}$ (i.e., $1_K \neq 0_K$).</li>
+        <li>Tout élément non nul de $K$ est <strong>inversible</strong> pour la loi $\times$. (i.e., $K^\times = K \setminus \{0_K\}$).</li>
+    </ol>
+    Autrement dit, un corps est un anneau commutatif non réduit à $\{0\}$ où tous les éléments non nuls ont un inverse multiplicatif.
+</div>
+
+<div class="remark">
+    Tout corps est un anneau intègre. (Preuve: si $ab=0$ et $a \neq 0$, alors $a$ est inversible. $a^{-1}(ab) = a^{-1}0 \implies (a^{-1}a)b = 0 \implies 1_K b = 0 \implies b=0$).
+    La réciproque est fausse : $\mathbb{Z}$ est intègre mais n'est pas un corps.
+</div>
+
+<div class="example">
+    $(\mathbb{Q}, +, \times)$, $(\mathbb{R}, +, \times)$, $(\mathbb{C}, +, \times)$ sont des corps.
+    $\mathbb{Z}/p\mathbb{Z}$ est un corps si et seulement si $p$ est un nombre premier.
+</div>
+
+<div class="definition">
+    <strong>Sous-corps.</strong>
+    Soit $(K, +, \times)$ un corps. Une partie $L \subset K$ est un <strong>sous-corps</strong> de $K$ si :
+    <ol>
+        <li>$L$ est un sous-anneau de $K$.</li>
+        <li>Pour tout $x \in L \setminus \{0_K\}$, son inverse $x^{-1}$ (calculé dans $K$) appartient aussi à $L$.</li>
+    </ol>
+    $(L, +, \times)$ est alors lui-même un corps.
+</div>
+<div class="example">
+$\mathbb{Q}$ est un sous-corps de $\mathbb{R}$. $\mathbb{R}$ est un sous-corps de $\mathbb{C}$.
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
