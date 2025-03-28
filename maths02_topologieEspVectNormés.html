@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Topologie des espaces vectoriels normés</title>
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            tags: 'ams', // Automatic equation numbering
+            macros: {
+              K: '\\mathbb{K}',
+              R: '\\mathbb{R}',
+              C: '\\mathbb{C}',
+              N: '\\mathbb{N}',
+              Z: '\\mathbb{Z}',
+              Q: '\\mathbb{Q}',
+              GLnK: '{\\mathrm{GL}_n(\\K)}', // Assuming K=R or C
+              MnK: '{\\mathcal{M}_n(\\K)}',
+              LEF: '{\\mathcal{L}(E, F)}',
+              LcEF: '{\\mathcal{L}_c(E, F)}',
+              Id: '\\mathrm{Id}',
+              dim: '\\dim',
+              Vect: '\\mathrm{Vect}',
+              Ker: '\\mathrm{Ker}',
+              Im: '\\mathrm{Im}',
+              det: '\\det',
+              Tr: '\\mathrm{Tr}',
+              Sp: '\\mathrm{Sp}',
+              Mat: '\\mathrm{Mat}',
+              Int: ['{\\mathring{#1}}', 1], // Interior
+              Cl: ['{\\overline{#1}}', 1], // Closure
+              Fr: ['{\\mathrm{Fr}(#1)}', 1], // Boundary
+              norm: ['{\\|\| #1 \\|}', 1], // Norm macro
+              abs: ['{| #1 |}', 1], // Absolute value
+              eps: '\\varepsilon',
+              phi: '\\varphi',
+              B: ['{B(#1, #2)}', 2], // Open ball B(a,r)
+              Bf: ['{\\overline{B}(#1, #2)}', 2], // Closed ball
+              S: ['{S(#1, #2)}', 2] // Sphere
+            }
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+        </script>
+        <script type="text/javascript" id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+        </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa; /* Gris très clair */
+        }
+        h1, h2, h3 {
+            color: #1565C0; /* Bleu foncé */
+            border-bottom: 2px solid #1565C0;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; font-style: italic; border-bottom: none; color: #1E88E5;} /* Bleu */
+
+        .definition, .theorem, .proposition, .corollary, .example, .proof, .remark {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-left: 5px solid #42A5F5; /* Bleu clair */
+            background-color: #E3F2FD; /* Bleu très très clair */
+            border-radius: 0 5px 5px 0;
+        }
+        .definition strong, .theorem strong, .proposition strong, .corollary strong, .remark strong {
+            color: #0D47A1; /* Bleu encore plus foncé */
+            font-weight: bold;
+        }
+        .proof {
+            border-left-color: #4CAF50; /* Vert */
+            background-color: #E8F5E9; /* Vert très clair */
+        }
+        .proof strong {
+            color: #1B5E20; /* Vert foncé */
+            font-weight: bold;
+        }
+        .example {
+            border-left-color: #FFB300; /* Ambre */
+            background-color: #FFF8E1; /* Ambre très clair */
+        }
+         .example strong {
+            color: #FF6F00; /* Ambre foncé */
+            font-weight: bold;
+        }
+         .remark {
+            border-left-color: #78909C; /* Gris bleu */
+            background-color: #ECEFF1; /* Gris bleu clair */
+        }
+         .remark strong {
+            color: #37474F; /* Gris bleu foncé */
+            font-weight: bold;
+        }
+        code {
+            background-color: #CFD8DC; /* Gris bleu plus clair */
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        ul {
+            margin-left: 20px;
+            list-style-type: square;
+            padding-left: 20px;
+        }
+         ul ul {
+             list-style-type: circle;
+             margin-top: 5px;
+         }
+        li {
+            margin-bottom: 8px;
+        }
+        .MJX-TeXAtom-ORD { }
+        a { color: #0277BD; text-decoration: none; } /* Bleu lien */
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>Topologie des espaces vectoriels normés</h1>
+
+    <p>Dans ce chapitre, $(E, \norm{\cdot})$ désigne un espace vectoriel normé sur le corps $\K = \R$ ou $\C$. La distance associée est $d(x, y) = \norm{x-y}$.</p>
+
+    <h2>1. Ouverts, fermés, parties denses</h2>
+
+    <div class="definition">
+        <strong>Définition (Voisinage)</strong><br>
+        Soit $x \in E$ et $V$ une partie de $E$. On dit que $V$ est un <strong>voisinage</strong> de $x$ s'il existe un réel $r > 0$ tel que la boule ouverte $\B{x}{r}$ soit incluse dans $V$: $\B{x}{r} \subset V$.
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Ouvert)</strong><br>
+        Une partie $U$ de $E$ est dite <strong>ouverte</strong> (ou un ouvert de $E$) si elle est voisinage de tous ses points. Autrement dit :
+        $$ U \text{ ouvert } \iff \forall x \in U, \exists r > 0, \B{x}{r} \subset U $$
+    </div>
+
+    <div class="example">
+        <strong>Exemples :</strong>
+        <ul>
+            <li>Toute boule ouverte $\B{a}{r}$ de $E$ (avec $r>0$) est un ouvert de $E$.</li>
+            <li>L'ensemble $E$ tout entier et l'ensemble vide $\emptyset$ sont des ouverts.</li>
+            <li>Dans $\R$ (muni de la valeur absolue), les ouverts sont les réunions quelconques d'intervalles ouverts. Les intervalles ouverts sont de la forme $]a, b[$ avec $-\infty \le a \le b \le +\infty$.</li>
+        </ul>
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Propriétés des ouverts)</strong><br>
+        L'ensemble $\mathcal{O}$ des ouverts de $E$ vérifie :
+        <ol>
+            <li>$\emptyset \in \mathcal{O}$ et $E \in \mathcal{O}$.</li>
+            <li>Toute réunion (finie ou infinie) d'ouverts est un ouvert : Si $(U_i)_{i \in I}$ est une famille d'ouverts, alors $\bigcup_{i \in I} U_i$ est un ouvert.</li>
+            <li>Toute intersection <strong>finie</strong> d'ouverts est un ouvert : Si $U_1, \dots, U_p$ sont des ouverts, alors $\bigcap_{i=1}^p U_i$ est un ouvert.</li>
+        </ol>
+    </div>
+     <div class="proof">
+        <strong>Preuve (Esquisse) :</strong><br>
+        1. Trivial.
+        2. Soit $x \in \bigcup U_i$. Alors il existe $i_0$ tel que $x \in U_{i_0}$. Comme $U_{i_0}$ est ouvert, $\exists r>0, \B{x}{r} \subset U_{i_0}$. A fortiori, $\B{x}{r} \subset \bigcup U_i$. Donc $\bigcup U_i$ est voisinage de $x$.
+        3. Soit $x \in \bigcap_{i=1}^p U_i$. Pour chaque $i$, $x \in U_i$. Comme $U_i$ est ouvert, $\exists r_i > 0, \B{x}{r_i} \subset U_i$. Posons $r = \min(r_1, \dots, r_p)$. Puisque $p$ est fini, $r>0$. Alors, pour tout $i$, $\B{x}{r} \subset \B{x}{r_i} \subset U_i$. Donc $\B{x}{r} \subset \bigcap_{i=1}^p U_i$. L'intersection est voisinage de $x$. $\Box$
+    </div>
+
+     <div class="remark">
+        <strong>Attention :</strong> L'intersection d'une infinité d'ouverts n'est pas nécessairement un ouvert.
+        <br><strong>Exemple :</strong> Dans $\R$, $\bigcap_{n=1}^\infty ]-\frac{1}{n}, \frac{1}{n}[ = \{0\}$. L'ensemble $\{0\}$ n'est pas un ouvert de $\R$ (il ne contient aucune boule ouverte centrée en 0).
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Fermé)</strong><br>
+        Une partie $F$ de $E$ est dite <strong>fermée</strong> (ou un fermé de $E$) si son complémentaire $E \setminus F$ est un ouvert de $E$.
+    </div>
+
+    <div class="example">
+        <strong>Exemples :</strong>
+        <ul>
+            <li>Toute boule fermée $\Bf{a}{r}$ de $E$ est un fermé de $E$.</li>
+            <li>Toute sphère $\S{a}{r}$ de $E$ est un fermé de $E$.</li>
+            <li>Toute partie finie de $E$ est fermée.</li>
+            <li>L'ensemble $E$ tout entier et l'ensemble vide $\emptyset$ sont des fermés (et aussi des ouverts).</li>
+            <li>Dans $\R$, les intervalles fermés sont de la forme $[a, b]$ (avec $a \le b$), $[a, +\infty[$, $]-\infty, a]$, et $\R = ]-\infty, +\infty[$.</li>
+        </ul>
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Propriétés des fermés)</strong><br>
+        L'ensemble $\mathcal{F}$ des fermés de $E$ vérifie :
+        <ol>
+            <li>$\emptyset \in \mathcal{F}$ et $E \in \mathcal{F}$.</li>
+            <li>Toute réunion <strong>finie</strong> de fermés est un fermé : Si $F_1, \dots, F_p$ sont des fermés, alors $\bigcup_{i=1}^p F_i$ est un fermé.</li>
+            <li>Toute intersection (finie ou infinie) de fermés est un fermé : Si $(F_i)_{i \in I}$ est une famille de fermés, alors $\bigcap_{i \in I} F_i$ est un fermé.</li>
+        </ol>
+    </div>
+     <div class="proof">
+        <strong>Preuve (par dualité avec les ouverts) :</strong><br>
+        Utilise les lois de De Morgan : $E \setminus (\bigcup F_i) = \bigcap (E \setminus F_i)$ et $E \setminus (\bigcap F_i) = \bigcup (E \setminus F_i)$.
+        1. $E \setminus \emptyset = E$ (ouvert), $E \setminus E = \emptyset$ (ouvert).
+        2. $E \setminus (\bigcup_{i=1}^p F_i) = \bigcap_{i=1}^p (E \setminus F_i)$. Chaque $E \setminus F_i$ est ouvert. L'intersection finie d'ouverts est ouverte. Donc $\bigcup F_i$ est fermé.
+        3. $E \setminus (\bigcap_{i \in I} F_i) = \bigcup_{i \in I} (E \setminus F_i)$. Chaque $E \setminus F_i$ est ouvert. La réunion quelconque d'ouverts est ouverte. Donc $\bigcap F_i$ est fermé. $\Box$
+    </div>
+
+     <div class="remark">
+        <strong>Attention :</strong> La réunion d'une infinité de fermés n'est pas nécessairement un fermé.
+        <br><strong>Exemple :</strong> Dans $\R$, $\bigcup_{n=1}^\infty [\frac{1}{n}, 1] = ]0, 1]$. L'intervalle $]0, 1]$ n'est pas fermé (car son complémentaire $]-\infty, 0] \cup ]1, +\infty[$ n'est pas ouvert).
+    </div>
+
+
+    <div class="theorem">
+        <strong>Théorème (Normes équivalentes et topologie)</strong><br>
+        Soient $N_1$ et $N_2$ deux normes sur $E$. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$N_1$ et $N_2$ sont équivalentes (i.e., $\exists a, b > 0, \forall x \in E, a N_1(x) \le N_2(x) \le b N_1(x)$).</li>
+            <li>Les normes $N_1$ et $N_2$ définissent la même topologie sur $E$, c'est-à-dire que les parties ouvertes pour $N_1$ sont exactement les parties ouvertes pour $N_2$.</li>
+            <li>Les normes $N_1$ et $N_2$ définissent les mêmes voisinages pour chaque point $x \in E$.</li>
+        </ol>
+        En particulier, en dimension finie, toutes les normes sont équivalentes, donc la topologie (notions d'ouvert, fermé, limite, continuité...) ne dépend pas du choix de la norme.
+    </div>
+
+     <div class="theorem">
+        <strong>Théorème (Topologie produit)</strong><br>
+        Soient $(E_1, \norm{\cdot}_1)$ et $(E_2, \norm{\cdot}_2)$ deux espaces vectoriels normés. On munit l'espace produit $E = E_1 \times E_2$ d'une norme produit (par exemple $\norm{(x_1, x_2)} = \max(\norm{x_1}_1, \norm{x_2}_2)$).
+        <ul>
+            <li>Si $U_1$ est un ouvert de $E_1$ et $U_2$ est un ouvert de $E_2$, alors $U_1 \times U_2$ est un ouvert de $E$.</li>
+            <li>Si $F_1$ est un fermé de $E_1$ et $F_2$ est un fermé de $E_2$, alors $F_1 \times F_2$ est un fermé de $E$.</li>
+        </ul>
+    </div>
+     <div class="remark">
+        Attention : Un ouvert de $E_1 \times E_2$ n'est pas forcément de la forme $U_1 \times U_2$.
+        <br><strong>Exemple :</strong> La boule ouverte unité $U = \{ (x, y) \in \R^2 \mid x^2+y^2 < 1 \}$ (pour la norme euclidienne, qui est équivalente à la norme max) est un ouvert de $\R^2$. Cependant, $U$ ne peut pas s'écrire comme $U_1 \times U_2$ où $U_1, U_2$ sont des ouverts de $\R$. (Si c'était le cas, $U$ serait un rectangle ouvert, ce qui n'est pas le cas du disque).
+    </div>
+
+    <h2>2. Intérieur, Adhérence, Frontière, Densité</h2>
+
+     <div class="definition">
+        <strong>Définition (Intérieur)</strong><br>
+        Soit $A$ une partie de $E$.
+        <ul>
+            <li>Un point $x \in E$ est dit <strong>intérieur</strong> à $A$ si $A$ est un voisinage de $x$, c'est-à-dire s'il existe $r > 0$ tel que $\B{x}{r} \subset A$.</li>
+            <li>L'<strong>intérieur</strong> de $A$, noté $\Int{A}$ (ou $A^\circ$), est l'ensemble des points intérieurs à $A$.</li>
+        </ul>
+        $\Int{A}$ est un ouvert. C'est le plus grand ouvert (au sens de l'inclusion) contenu dans $A$.
+        <br>$A$ est ouvert $\iff A = \Int{A}$.
+    </div>
+
+     <div class="definition">
+        <strong>Définition (Adhérence)</strong><br>
+        Soit $A$ une partie de $E$.
+        <ul>
+            <li>Un point $x \in E$ est dit <strong>adhérent</strong> à $A$ si tout voisinage de $x$ rencontre $A$, c'est-à-dire : $\forall r > 0, \B{x}{r} \cap A \neq \emptyset$.</li>
+            <li>L'<strong>adhérence</strong> (ou fermeture) de $A$, notée $\Cl{A}$, est l'ensemble des points adhérents à $A$.</li>
+        </ul>
+        $\Cl{A}$ est un fermé. C'est le plus petit fermé (au sens de l'inclusion) contenant $A$.
+        <br>$A$ est fermé $\iff A = \Cl{A}$.
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Frontière)</strong><br>
+        Soit $A$ une partie de $E$. La <strong>frontière</strong> de $A$, notée $\Fr{A}$ (ou $\partial A$), est l'ensemble des points qui sont adhérents à $A$ et adhérents à son complémentaire $E \setminus A$.
+        $$ \Fr{A} = \Cl{A} \cap \Cl{E \setminus A} = \Cl{A} \setminus \Int{A} $$
+        Un point $x \in E$ appartient à $\Fr{A}$ si et seulement si toute boule ouverte $\B{x}{r}$ ($r>0$) rencontre à la fois $A$ et $E \setminus A$. La frontière est toujours un ensemble fermé.
+    </div>
+
+    <div class="example">
+        <strong>Exemples (pour les boules, $r>0$) :</strong>
+        <ul>
+            <li>$\Cl{\B{a}{r}} = \Bf{a}{r}$.</li>
+            <li>$\Int{\Bf{a}{r}} = \B{a}{r}$.</li>
+            <li>$\Fr{\B{a}{r}} = \Fr{\Bf{a}{r}} = \S{a}{r}$.</li>
+            <li>Pour $A = \mathbb{Q}$ dans $E = \R$: $\Int{\mathbb{Q}} = \emptyset$, $\Cl{\mathbb{Q}} = \R$, $\Fr{\mathbb{Q}} = \R$.</li>
+        </ul>
+    </div>
+
+     <div class="theorem">
+        <strong>Théorème (Caractérisation séquentielle de l'adhérence et des fermés)</strong><br>
+        Soit $A$ une partie de $E$ et $x \in E$.
+        <ol>
+            <li>$x \in \Cl{A}$ si et seulement s'il existe une suite $(u_n)_{n \in \N}$ d'éléments de $A$ qui converge vers $x$.</li>
+            <li>$A$ est fermé si et seulement si, pour toute suite $(u_n)_{n \in \N}$ d'éléments de $A$ qui converge vers une limite $\ell \in E$, alors cette limite $\ell$ appartient à $A$ (un fermé contient les limites de toutes ses suites convergentes).</li>
+        </ol>
+    </div>
+     <div class="proof">
+        <strong>Preuve (1) :</strong><br>
+        ($\impliedby$) Supposons $u_n \to x$ avec $u_n \in A$. Soit $r > 0$. Par définition de la limite, $\exists N, \forall n \ge N, \norm{u_n - x} < r$. Donc $u_N \in \B{x}{r}$. Comme $u_N \in A$, on a $u_N \in \B{x}{r} \cap A$. Donc $\B{x}{r} \cap A \neq \emptyset$. Ceci étant vrai pour tout $r>0$, $x \in \Cl{A}$.
+        <br>($\implies$) Supposons $x \in \Cl{A}$. Pour chaque entier $n \ge 1$, considérons $r_n = 1/n > 0$. Comme $x \in \Cl{A}$, $\B{x}{r_n} \cap A \neq \emptyset$. On peut donc choisir un élément $u_n \in \B{x}{1/n} \cap A$.
+        La suite $(u_n)_{n \ge 1}$ est une suite d'éléments de $A$. De plus, pour tout $n \ge 1$, $\norm{u_n - x} < 1/n$. Comme $1/n \to 0$, par encadrement, $\norm{u_n - x} \to 0$. Donc la suite $(u_n)$ converge vers $x$. $\Box$
+    </div>
+
+     <div class="definition">
+        <strong>Définition (Partie dense)</strong><br>
+        Une partie $A$ de $E$ est dite <strong>dense</strong> dans $E$ si son adhérence est égale à $E$ tout entier : $\Cl{A} = E$.
+        <br>Autrement dit, $A$ est dense dans $E$ si et seulement si tout point de $E$ est adhérent à $A$.
+        <br>Caractérisation séquentielle : $A$ est dense dans $E$ si et seulement si tout élément $x \in E$ est limite d'une suite $(x_n)$ d'éléments de $A$.
+    </div>
+
+     <div class="example">
+        <strong>Exemples de parties denses :</strong>
+        <ul>
+            <li>$\mathbb{Q}$ est dense dans $\R$. $\R \setminus \mathbb{Q}$ est aussi dense dans $\R$.</li>
+            <li>L'ensemble $\GLnK$ des matrices inversibles est dense dans $\MnK$ (muni de n'importe quelle norme, par exemple $\norm{\cdot}_\infty$). (On peut approcher $A$ par $A - \eps \In$, qui est inversible pour $\eps$ assez petit n'étant pas l'inverse d'une valeur propre de $A$).</li>
+            <li>L'ensemble des polynômes est dense dans l'espace des fonctions continues sur un segment $[a, b]$ pour la norme $\norm{\cdot}_\infty$ (Théorème de Weierstrass).</li>
+        </ul>
+    </div>
+
+    <h2>3. Topologie Relative</h2>
+
+     <div class="definition">
+        <strong>Définition (Ouvert relatif, Fermé relatif)</strong><br>
+        Soit $A$ une partie de $E$.
+        <ul>
+            <li>Une partie $U' \subset A$ est un <strong>ouvert relatif</strong> de $A$ s'il existe un ouvert $U$ de $E$ tel que $U' = U \cap A$.</li>
+            <li>Une partie $F' \subset A$ est un <strong>fermé relatif</strong> de $A$ s'il existe un fermé $F$ de $E$ tel que $F' = F \cap A$.</li>
+        </ul>
+        Une partie $F'$ de $A$ est un fermé relatif de $A$ si et seulement si son complémentaire dans $A$, $A \setminus F'$, est un ouvert relatif de $A$.
+    </div>
+
+     <div class="proposition">
+        <strong>Proposition (Caractérisation séquentielle des fermés relatifs)</strong><br>
+        Soit $A \subset E$ et $F' \subset A$. Alors $F'$ est un fermé relatif de $A$ si et seulement si : pour toute suite $(x_n)$ d'éléments de $F'$ qui converge vers une limite $\ell \in A$, alors cette limite $\ell$ appartient à $F'$.
+    </div>
+
+    <h2>4. Limites de fonctions</h2>
+
+    <p>Soient $(E, \norm{\cdot}_E)$ et $(F, \norm{\cdot}_F)$ deux espaces vectoriels normés. Soit $A$ une partie non vide de $E$ et $f : A \to F$ une fonction.</p>
+
+    <div class="definition">
+        <strong>Définition (Limite en un point)</strong><br>
+        Soit $a \in \Cl{A}$ (un point adhérent à $A$). On dit que $f$ admet pour <strong>limite</strong> $\ell \in F$ au point $a$ si :
+        $$ \forall \eps > 0, \exists \delta > 0, \forall x \in A, (\norm{x-a}_E < \delta \implies \norm{f(x) - \ell}_F < \eps) $$
+        Si une telle limite $\ell$ existe, elle est unique et on note $\lim_{x \to a} f(x) = \ell$ ou $f(x) \xrightarrow[x \to a]{} \ell$.
+    </div>
+
+     <div class="proposition">
+        <strong>Proposition (Caractérisation séquentielle de la limite)</strong><br>
+        Soit $a \in \Cl{A}$ et $\ell \in F$. On a $\lim_{x \to a} f(x) = \ell$ si et seulement si pour toute suite $(x_n)$ d'éléments de $A$ qui converge vers $a$ (dans $E$), la suite image $(f(x_n))$ converge vers $\ell$ (dans $F$).
+    </div>
+
+     <div class="definition">
+        <strong>Définition (Limites infinies et à l'infini)</strong><br>
+        <ul>
+            <li>Si $F=\R$. On dit que $\lim_{x \to a} f(x) = +\infty$ si $\forall M > 0, \exists \delta > 0, \forall x \in A, (\norm{x-a}_E < \delta \implies f(x) > M)$. (Définition similaire pour $-\infty$).</li>
+            <li>Si $E=\R$ et $A$ n'est pas majorée. On dit que $\lim_{x \to +\infty} f(x) = \ell \in F$ si $\forall \eps > 0, \exists M > 0, \forall x \in A, (x > M \implies \norm{f(x) - \ell}_F < \eps)$. (Définition similaire en $-\infty$).</li>
+            <li>Si $A$ n'est pas bornée. On dit que $\lim_{\norm{x}_E \to +\infty} f(x) = \ell \in F$ si $\forall \eps > 0, \exists M > 0, \forall x \in A, (\norm{x}_E > M \implies \norm{f(x) - \ell}_F < \eps)$.</li>
+        </ul>
+    </div>
+
+     <div class="proposition">
+        <strong>Proposition (Limite dans un espace produit)</strong><br>
+        Soit $F = F_1 \times \dots \times F_p$ un espace vectoriel normé produit (muni d'une norme produit). Soit $f = (f_1, \dots, f_p)$ une application de $A \subset E$ dans $F$. Soit $a \in \Cl{A}$ et $\ell = (\ell_1, \dots, \ell_p) \in F$.
+        Alors $\lim_{x \to a} f(x) = \ell$ si et seulement si, pour tout $i \in \{1, \dots, p\}$, $\lim_{x \to a} f_i(x) = \ell_i$.
+    </div>
+
+    <h2>5. Opérations sur les limites</h2>
+
+    <p>Soient $(E, \norm{\cdot}_E)$, $(F, \norm{\cdot}_F)$ et $(G, \norm{\cdot}_G)$ des evn. Soit $A \subset E$, $B \subset F$. Soient $f, h : A \to F$, $g : B \to G$, $u : A \to \K$. Soit $a \in \Cl{A}$.</p>
+
+    <div class="proposition">
+        <strong>Proposition (Opérations algébriques)</strong><br>
+        <ul>
+            <li><strong>Combinaison linéaire :</strong> Si $\lim_{x \to a} f(x) = \ell_1$ et $\lim_{x \to a} h(x) = \ell_2$, alors pour tout $\lambda \in \K$, $\lim_{x \to a} (f + \lambda h)(x) = \ell_1 + \lambda \ell_2$. (L'ensemble des fonctions ayant une limite en $a$ est un espace vectoriel, et l'application limite est linéaire).</li>
+            <li><strong>Produit par un scalaire (fonction) :</strong> Si $\lim_{x \to a} f(x) = \ell$ et $\lim_{x \to a} u(x) = \alpha \in \K$, alors $\lim_{x \to a} (u \cdot f)(x) = \alpha \ell$.</li>
+            <li>(Si $F=\K$) <strong>Produit :</strong> Si $\lim_{x \to a} f(x) = \ell_1$ et $\lim_{x \to a} h(x) = \ell_2$ (avec $F=\K$), alors $\lim_{x \to a} (f h)(x) = \ell_1 \ell_2$.</li>
+            <li>(Si $F=\K, \ell_2 \neq 0$) <strong>Quotient :</strong> Si $\lim_{x \to a} f(x) = \ell_1$ et $\lim_{x \to a} h(x) = \ell_2 \neq 0$, alors $\lim_{x \to a} (f / h)(x) = \ell_1 / \ell_2$.</li>
+        </ul>
+    </div>
+
+     <div class="theorem">
+        <strong>Théorème (Composition des limites)</strong><br>
+        On suppose que $f(A) \subset B$. On suppose que $\lim_{x \to a} f(x) = b$. Alors $b \in \Cl{B}$.
+        Si de plus $\lim_{y \to b} g(y) = \ell$, alors $\lim_{x \to a} (g \circ f)(x) = \ell$.
+    </div>
+
+
+    <h2>6. Continuité</h2>
+
+    <p>Soient $(E, \norm{\cdot}_E)$ et $(F, \norm{\cdot}_F)$ deux evn, et $A$ une partie de $E$.</p>
+
+    <div class="definition">
+        <strong>Définition (Continuité en un point, sur un ensemble)</strong><br>
+        <ul>
+            <li>Soit $a \in A$. On dit que $f : A \to F$ est <strong>continue en $a$</strong> si $\lim_{x \to a} f(x) = f(a)$.</li>
+            <li>On dit que $f$ est <strong>continue sur $A$</strong> si elle est continue en chaque point de $A$.</li>
+        </ul>
+        La définition de la continuité en $a$ s'écrit donc :
+        $$ \forall \eps > 0, \exists \delta > 0, \forall x \in A, (\norm{x-a}_E < \delta \implies \norm{f(x) - f(a)}_F < \eps) $$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Caractérisation séquentielle de la continuité)</strong><br>
+        $f: A \to F$ est continue en $a \in A$ si et seulement si pour toute suite $(x_n)$ d'éléments de $A$ qui converge vers $a$, la suite image $(f(x_n))$ converge vers $f(a)$.
+    </div>
+
+     <div class="corollary">
+        <strong>Corollaire (Densité et continuité)</strong><br>
+        Soient $f, g : E \to F$ deux applications continues sur $E$ tout entier. Si $f$ et $g$ coïncident sur une partie dense $A$ de $E$ ($f(x)=g(x)$ pour tout $x \in A$), alors $f$ et $g$ sont égales sur $E$ ($f=g$).
+    </div>
+     <div class="proof">
+        <strong>Preuve :</strong><br>
+        Soit $x \in E$. Comme $A$ est dense, il existe une suite $(x_n)$ d'éléments de $A$ qui converge vers $x$.
+        Par hypothèse, $f(x_n) = g(x_n)$ pour tout $n$.
+        Comme $f$ est continue en $x$, $f(x_n) \to f(x)$.
+        Comme $g$ est continue en $x$, $g(x_n) \to g(x)$.
+        Par unicité de la limite de la suite $(f(x_n))=(g(x_n))$, on a $f(x) = g(x)$. Ceci étant vrai pour tout $x \in E$, $f=g$. $\Box$
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Opérations et continuité)</strong><br>
+        Les opérations usuelles préservent la continuité :
+        <ul>
+            <li>La somme, la combinaison linéaire d'applications continues est continue.</li>
+            <li>Le produit par une fonction scalaire continue d'une fonction continue est continu.</li>
+            <li>(Si $F=\K$) Le produit, le quotient (là où le dénominateur ne s'annule pas) d'applications continues sont continus.</li>
+            <li>La composée de deux applications continues est continue ($g \circ f$ est continue si $f$ et $g$ le sont).</li>
+        </ul>
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Caractérisation topologique de la continuité)</strong><br>
+        Soit $f : E \to F$ une application définie sur $E$ tout entier. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$f$ est continue sur $E$.</li>
+            <li>L'image réciproque par $f$ de tout ouvert de $F$ est un ouvert de $E$ ($\forall U \text{ ouvert de } F, f^{-1}(U) \text{ est ouvert de } E$).</li>
+            <li>L'image réciproque par $f$ de tout fermé de $F$ est un fermé de $E$ ($\forall V \text{ fermé de } F, f^{-1}(V) \text{ est fermé de } E$).</li>
+        </ol>
+        (Attention : l'image *directe* d'un ouvert/fermé n'est pas forcément un ouvert/fermé).
+    </div>
+
+
+    <h2>7. Continuité uniforme, Applications lipschitziennes</h2>
+
+    <p>Soient $(E, \norm{\cdot}_E)$ et $(F, \norm{\cdot}_F)$ deux evn, $A$ une partie non vide de $E$ et $f : A \to F$.</p>
+
+    <div class="definition">
+        <strong>Définition (Continuité uniforme)</strong><br>
+        On dit que $f$ est <strong>uniformément continue</strong> sur $A$ si :
+        $$ \forall \eps > 0, \exists \delta > 0, \forall x, y \in A, (\norm{x-y}_E < \delta \implies \norm{f(x) - f(y)}_F < \eps) $$
+        (Le $\delta$ ne dépend que de $\eps$, pas du point $x$ ou $y$ considéré, contrairement à la continuité simple).
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Application lipschitzienne)</strong><br>
+        On dit que $f$ est <strong>lipschitzienne</strong> sur $A$ s'il existe une constante $k \ge 0$ (appelée rapport de Lipschitz) telle que :
+        $$ \forall x, y \in A, \norm{f(x) - f(y)}_F \le k \norm{x-y}_E $$
+        Si $k < 1$, on parle d'application contractante.
+    </div>
+
+    <div class="proposition">
+        <strong>Implications :</strong><br>
+        $$ f \text{ lipschitzienne } \implies f \text{ uniformément continue } \implies f \text{ continue } $$
+        Les réciproques sont fausses en général.
+        <br>Exemple : $f(x)=x^2$ est continue sur $\R$ mais pas uniformément continue (ni lipschitzienne). $f(x)=\sqrt{x}$ est uniformément continue sur $[0, +\infty)$ mais pas lipschitzienne (à cause du comportement en 0).
+    </div>
+
+    <div class="example">
+        <strong>Exemple : Distance à une partie</strong><br>
+        Soit $A$ une partie non vide de $E$. Pour $x \in E$, on définit la distance de $x$ à $A$ par :
+        $$ d(x, A) = \inf \{ \norm{x-a} \mid a \in A \} $$
+        Alors l'application $x \mapsto d(x, A)$ est 1-lipschitzienne de $E$ dans $\R$. En particulier, elle est uniformément continue sur $E$.
+    </div>
+     <div class="proof">
+        <strong>Preuve (1-lipschitzienne) :</strong><br>
+        Soient $x, y \in E$. Pour tout $a \in A$, par l'inégalité triangulaire :
+        $\norm{x-a} \le \norm{x-y} + \norm{y-a}$.
+        En passant à l'infimum sur $a \in A$ à droite : $\norm{x-a} \le \norm{x-y} + \inf_{a' \in A} \norm{y-a'} = \norm{x-y} + d(y, A)$.
+        Ceci étant vrai pour tout $a \in A$, on peut passer à l'infimum à gauche :
+        $d(x, A) = \inf_{a \in A} \norm{x-a} \le \norm{x-y} + d(y, A)$.
+        Donc $d(x, A) - d(y, A) \le \norm{x-y}$.
+        En échangeant les rôles de $x$ et $y$, on a $d(y, A) - d(x, A) \le \norm{y-x} = \norm{x-y}$.
+        On en déduit $| d(x, A) - d(y, A) | \le \norm{x-y}$. L'application est 1-lipschitzienne. $\Box$
+    </div>
+
+
+    <h2>8. Applications linéaires continues</h2>
+
+     <div class="theorem">
+        <strong>Théorème (Caractérisation de la continuité des applications linéaires)</strong><br>
+        Soient $(E, \norm{\cdot}_E)$ et $(F, \norm{\cdot}_F)$ deux evn, et $u \in \LEF$ une application linéaire. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$u$ est continue sur $E$.</li>
+            <li>$u$ est continue en $0_E$.</li>
+            <li>Il existe une constante $C \ge 0$ telle que $\forall x \in E, \norm{u(x)}_F \le C \norm{x}_E$ ($u$ est bornée sur la boule unité).</li>
+            <li>$u$ est lipschitzienne sur $E$.</li>
+        </ol>
+    </div>
+    <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+         <strong>Preuve (Idée 3 $\implies$ 4 $\implies$ 1 $\implies$ 2 $\implies$ 3) :</strong><br>
+        (3 $\implies$ 4) $\norm{u(x)-u(y)}_F = \norm{u(x-y)}_F \le C \norm{x-y}_E$. $u$ est $C$-lipschitzienne.
+        (4 $\implies$ 1) Toute application lipschitzienne est continue.
+        (1 $\implies$ 2) Trivial.
+        (2 $\implies$ 3) $u$ continue en $0$. Pour $\eps=1$, $\exists \delta > 0$, $\norm{x-0}_E < \delta \implies \norm{u(x)-u(0)}_F < 1$. Donc $\norm{x}_E < \delta \implies \norm{u(x)}_F < 1$.
+        Soit $y \in E, y \neq 0$. Posons $x = \frac{\delta}{2} \frac{y}{\norm{y}_E}$. Alors $\norm{x}_E = \delta/2 < \delta$, donc $\norm{u(x)}_F < 1$.
+        $\norm{u(\frac{\delta}{2\norm{y}_E} y)}_F < 1 \implies \frac{\delta}{2\norm{y}_E} \norm{u(y)}_F < 1 \implies \norm{u(y)}_F < \frac{2}{\delta} \norm{y}_E$.
+        On pose $C = 2/\delta$. L'inégalité est vraie pour $y \neq 0$. Elle est aussi vraie pour $y=0$. $\Box$
+    </div>
+     <div class="remark">
+        <strong>Important :</strong> En dimension <strong>finie</strong> (au départ), toute application linéaire est continue.
+     </div>
+
+    <div class="definition">
+        <strong>Définition (Norme d'opérateur)</strong><br>
+        L'ensemble des applications linéaires continues de $E$ dans $F$ est noté $\LcEF$. C'est un sous-espace vectoriel de $\LEF$.
+        Si $u \in \LcEF$, on appelle <strong>norme de $u$</strong> (ou norme d'opérateur, norme subordonnée) le réel, noté $\norm{u}_{op}$ ou $\norm{u}_{\mathcal{L}(E,F)}$ ou simplement $\norm{u}$ :
+        $$ \norm{u}_{op} = \sup_{x \in E, \norm{x}_E \le 1} \norm{u(x)}_F = \sup_{x \in E, \norm{x}_E = 1} \norm{u(x)}_F = \sup_{x \in E, x \neq 0_E} \frac{\norm{u(x)}_F}{\norm{x}_E} $$
+        C'est la plus petite constante $C \ge 0$ telle que $\forall x \in E, \norm{u(x)}_F \le C \norm{x}_E$.
+    </div>
+
+     <div class="theorem">
+        <strong>Théorème (Norme sur $\LcEF$)</strong><br>
+        L'application $u \mapsto \norm{u}_{op}$ est une norme sur l'espace vectoriel $\LcEF$. On l'appelle <strong>norme subordonnée</strong> aux normes $\norm{\cdot}_E$ et $\norm{\cdot}_F$.
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Norme et composition)</strong><br>
+        Soient $u \in \LcEF$ et $v \in \mathcal{L}_c(F, G)$. Alors $v \circ u \in \mathcal{L}_c(E, G)$ et on a l'inégalité (submultiplicativité) :
+        $$ \norm{v \circ u}_{op} \le \norm{v}_{op} \cdot \norm{u}_{op} $$
+    </div>
+     <div class="proof">
+        <strong>Preuve :</strong><br>
+        Pour tout $x \in E$, $\norm{(v \circ u)(x)}_G = \norm{v(u(x))}_G \le \norm{v}_{op} \norm{u(x)}_F$.
+        Or $\norm{u(x)}_F \le \norm{u}_{op} \norm{x}_E$.
+        Donc $\norm{(v \circ u)(x)}_G \le \norm{v}_{op} \norm{u}_{op} \norm{x}_E$.
+        Ceci montre que $v \circ u$ est continue et que $\norm{v \circ u}_{op}$ (la plus petite constante $C$ telle que $\norm{(v \circ u)(x)}_G \le C \norm{x}_E$) est inférieure ou égale à $\norm{v}_{op} \norm{u}_{op}$. $\Box$
+    </div>
+
+    <h2>9. Applications Multilinéaires Continues</h2>
+
+     <div class="theorem">
+        <strong>Théorème (Continuité des applications bilinéaires)</strong><br>
+        Soient $(E, \norm{\cdot}_E)$, $(F, \norm{\cdot}_F)$ et $(G, \norm{\cdot}_G)$ trois evn. Soit $B : E \times F \to G$ une application <strong>bilinéaire</strong>. (On munit $E \times F$ d'une norme produit, par exemple $\norm{(x,y)} = \max(\norm{x}_E, \norm{y}_F)$).
+        Alors $B$ est continue sur $E \times F$ si et seulement s'il existe une constante $C \ge 0$ telle que :
+        $$ \forall (x, y) \in E \times F, \norm{B(x, y)}_G \le C \norm{x}_E \norm{y}_F $$
+    </div>
+     <div class="remark">
+        Ce résultat se généralise aux applications $p$-linéaires. En particulier, en dimension finie, toute application $p$-linéaire est continue. Exemples : produit scalaire, déterminant, produit matriciel.
+     </div>
+
+</body>
+</html>
