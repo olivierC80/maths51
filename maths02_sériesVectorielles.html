@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Séries vectorielles et numériques</title>
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            tags: 'ams', // Automatic equation numbering
+            macros: {
+              K: '\\mathbb{K}', // Base field, R or C
+              R: '\\mathbb{R}',
+              C: '\\mathbb{C}',
+              N: '\\mathbb{N}',
+              Z: '\\mathbb{Z}',
+              MnK: '{\\mathcal{M}_n(\\K)}',
+              MnR: '{\\mathcal{M}_n(\\R)}', // Explicitly R
+              GLnK: '{\\mathrm{GL}_n(\\K)}',
+              LE: '{\\mathcal{L}(E)}',
+              norm: ['{\\|\| #1 \\|}', 1], // Norm macro
+              abs: ['{| #1 |}', 1], // Absolute value
+              eps: '\\varepsilon',
+              phi: '\\varphi',
+              comp: ['{(#1)}', 1] // Component notation
+            }
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+        </script>
+        <script type="text/javascript" id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+        </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa; /* Gris très clair */
+        }
+        h1, h2, h3 {
+            color: #673AB7; /* Violet */
+            border-bottom: 2px solid #673AB7;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; font-style: italic; border-bottom: none; color: #7E57C2;} /* Violet clair */
+
+        .definition, .theorem, .proposition, .corollary, .example, .proof, .remark, .warning {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-left: 5px solid #9575CD; /* Violet plus clair */
+            background-color: #EDE7F6; /* Violet très très clair */
+            border-radius: 0 5px 5px 0;
+        }
+        .definition strong, .theorem strong, .proposition strong, .corollary strong, .remark strong, .warning strong {
+            color: #4527A0; /* Violet foncé */
+            font-weight: bold;
+        }
+        .proof {
+            border-left-color: #4CAF50; /* Vert */
+            background-color: #E8F5E9; /* Vert très clair */
+        }
+        .proof strong {
+            color: #1B5E20; /* Vert foncé */
+            font-weight: bold;
+        }
+        .example {
+            border-left-color: #03A9F4; /* Bleu clair */
+            background-color: #E1F5FE; /* Bleu très très clair */
+        }
+         .example strong {
+            color: #01579B; /* Bleu foncé */
+            font-weight: bold;
+        }
+         .remark {
+            border-left-color: #78909C; /* Gris bleu */
+            background-color: #ECEFF1; /* Gris bleu clair */
+        }
+         .remark strong {
+            color: #37474F; /* Gris bleu foncé */
+            font-weight: bold;
+        }
+        .warning {
+             border-left-color: #FF7043; /* Orange foncé */
+             background-color: #FBE9E7; /* Orange très très clair */
+        }
+        .warning strong {
+             color: #D84315; /* Orange encore plus foncé */
+        }
+        code {
+            background-color: #D1C4E9; /* Violet très pâle */
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        ul {
+            margin-left: 20px;
+            list-style-type: square;
+            padding-left: 20px;
+        }
+         ul ul {
+             list-style-type: circle;
+             margin-top: 5px;
+         }
+        li {
+            margin-bottom: 8px;
+        }
+        .MJX-TeXAtom-ORD { }
+        a { color: #0277BD; text-decoration: none; } /* Bleu lien */
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>Séries vectorielles et numériques</h1>
+
+    <h2>1. Généralités sur les séries vectorielles</h2>
+
+    <p>Soit $E$ un $\K$-espace vectoriel de dimension finie (donc normé, toutes les normes étant équivalentes, $\K=\R$ ou $\C$) et soit $(u_n)_{n \in \N}$ une suite d'éléments de $E$.</p>
+
+    <div class="definition">
+        <strong>Définition (Série, Somme partielle, Convergence, Somme, Reste)</strong><br>
+        <ul>
+            <li>On appelle <strong>série de terme général $u_n$</strong> la suite $(S_n)_{n \in \N}$ où $S_n$ est la <strong>somme partielle d'ordre $n$</strong> :
+            $$ S_n = \sum_{k=0}^n u_k $$</li>
+            <li>On dit que la série $\sum u_n$ <strong>converge</strong> si la suite des sommes partielles $(S_n)$ converge vers une limite $S \in E$.</li>
+            <li>Si la série converge, $S = \lim_{n \to +\infty} S_n$ est appelée la <strong>somme</strong> de la série, et on note $S = \sum_{k=0}^{+\infty} u_k$.</li>
+            <li>Si $(S_n)$ ne converge pas, on dit que la série $\sum u_n$ <strong>diverge</strong>.</li>
+            <li>Si la série $\sum u_n$ converge, on appelle <strong>reste d'ordre $n$</strong> la quantité $R_n = S - S_n = \sum_{k=n+1}^{+\infty} u_k$. On a $\lim_{n \to +\infty} R_n = 0_E$.</li>
+        </ul>
+    </div>
+
+    <div class="remark">
+        <strong>Convergence et Coordonnées :</strong><br>
+        Soit $\mathcal{B} = (e_1, \dots, e_d)$ une base de $E$. Écrivons $u_n = \sum_{i=1}^d u_n^{(i)} e_i$ et $S_n = \sum_{i=1}^d S_n^{(i)} e_i$, où $S_n^{(i)} = \sum_{k=0}^n u_k^{(i)}$.
+        La suite $(S_n)$ converge dans $E$ si et seulement si chacune des suites de coordonnées $(S_n^{(i)})_{n \in \N}$ converge dans $\K$.
+        Cela signifie que la série vectorielle $\sum u_n$ converge si et seulement si toutes les séries numériques (réelles ou complexes) $\sum_n u_n^{(i)}$ convergent (pour $i=1, \dots, d$).
+        Dans ce cas, si $S = \sum_{i=0}^{+\infty} u_i$ et $S^{(i)} = \sum_{n=0}^{+\infty} u_n^{(i)}$, alors $S = \sum_{i=1}^d S^{(i)} e_i$.
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Condition nécessaire de convergence)</strong><br>
+        Si la série $\sum u_n$ converge, alors son terme général $u_n$ tend vers $0_E$ lorsque $n \to +\infty$.
+        $$ \sum u_n \text{ converge } \implies \lim_{n \to +\infty} u_n = 0_E $$
+        (Cela revient à $\lim_{n \to +\infty} \norm{u_n} = 0$).
+    </div>
+     <div class="proof">
+        <strong>Preuve :</strong><br>
+        Si $\sum u_n$ converge, la suite $(S_n)$ converge vers $S$. Donc $S_{n-1}$ converge aussi vers $S$.
+        Pour $n \ge 1$, $u_n = S_n - S_{n-1}$. Par opérations sur les limites, $u_n \to S - S = 0_E$. $\Box$
+    </div>
+     <div class="warning">
+        <strong>Divergence grossière :</strong> Si le terme général $u_n$ ne tend pas vers $0_E$, alors la série $\sum u_n$ diverge. On dit qu'elle <strong>diverge grossièrement</strong>.
+        <br>Attention, la réciproque est fausse : $u_n \to 0_E$ n'implique pas la convergence de $\sum u_n$ (exemple : $u_n = 1/n$ dans $\R$).
+    </div>
+
+    <div class="proposition">
+        <strong>Lien Suite-Série (Séries télescopiques) :</strong><br>
+        Soit $(u_n)_{n \in \N}$ une suite de $E$. Posons $v_n = u_{n+1} - u_n$ pour $n \ge 0$. Alors la somme partielle de la série $\sum v_k$ est :
+        $$ \sum_{k=0}^n v_k = \sum_{k=0}^n (u_{k+1} - u_k) = u_{n+1} - u_0 $$
+        Par conséquent, la suite $(u_n)_{n \in \N}$ converge si et seulement si la série $\sum (u_{n+1} - u_n)$ converge.
+        <br>Si la série converge, sa somme est $(\lim u_n) - u_0$.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Convergence absolue $\implies$ Convergence)</strong><br>
+        Si la série numérique à termes réels positifs $\sum \norm{u_n}$ converge, alors la série vectorielle $\sum u_n$ converge.
+        <br>On dit dans ce cas que la série $\sum u_n$ est <strong>absolument convergente</strong>.
+        <br>De plus, on a l'inégalité triangulaire généralisée :
+        $$ \norm{ \sum_{n=0}^{+\infty} u_n } \le \sum_{n=0}^{+\infty} \norm{u_n} $$
+    </div>
+    <div class="remark">
+        La réciproque est fausse : une série peut converger sans converger absolument (on parle de semi-convergence). Exemple : $\sum (-1)^n/n$.
+        L'absolue convergence est une condition suffisante très utile. Pour la montrer, on étudie la série à termes positifs $\sum \norm{u_n}$.
+    </div>
+
+    <div class="example">
+        <strong>Exemple : Exponentielle de matrice</strong><br>
+        Soit $E = \MnR$ muni d'une norme matricielle $\norm{\cdot}$ (par exemple, une norme subordonnée, qui vérifie $\norm{AB} \le \norm{A}\norm{B}$). Soit $A \in \MnR$. Considérons la série $\sum_{n=0}^{+\infty} \frac{A^n}{n!}$.
+        Son terme général est $u_n = \frac{A^n}{n!}$.
+        $\norm{u_n} = \norm{\frac{A^n}{n!}} = \frac{1}{n!} \norm{A^n} \le \frac{1}{n!} \norm{A}^n$.
+        La série numérique $\sum_{n=0}^{+\infty} \frac{\norm{A}^n}{n!}$ converge (c'est le développement de $e^{\norm{A}}$).
+        Par comparaison de séries à termes positifs, la série $\sum \norm{u_n}$ converge.
+        Donc, la série vectorielle $\sum u_n = \sum_{n=0}^{+\infty} \frac{A^n}{n!}$ converge absolument, et donc converge dans $\MnR$.
+        La somme de cette série est appelée l'<strong>exponentielle de $A$</strong>, notée $\exp(A)$ ou $e^A$.
+    </div>
+
+    <h2>2. Séries à termes positifs</h2>
+
+    <p>On s'intéresse ici aux séries $\sum u_n$ où $u_n \in \R$ et $u_n \ge 0$ pour tout $n$ (ou au moins à partir d'un certain rang).</p>
+
+    <div class="theorem">
+        <strong>Théorème fondamental (Séries à termes positifs)</strong><br>
+        Une série à termes positifs $\sum u_n$ ($u_n \ge 0$) converge si et seulement si la suite de ses sommes partielles $(S_n)$ est <strong>majorée</strong>.
+        <br>(Car la suite $(S_n)$ est croissante : $S_{n+1} - S_n = u_{n+1} \ge 0$. Une suite croissante converge si et seulement si elle est majorée).
+    </div>
+
+    <div class="corollary">
+        <strong>Corollaire (Comparaison directe)</strong><br>
+        Soient $\sum u_n$ et $\sum v_n$ deux séries telles que $0 \le u_n \le v_n$ pour tout $n$ (à partir d'un certain rang).
+        <ul>
+            <li>Si $\sum v_n$ converge, alors $\sum u_n$ converge. (Car $S_n(u) \le S_n(v) \le \sum v_k$, donc $(S_n(u))$ est majorée).</li>
+            <li>Si $\sum u_n$ diverge, alors $\sum v_n$ diverge. (Contraposée).</li>
+        </ul>
+    </div>
+    <div class="remark">
+    Ce corollaire s'applique aussi si $u_n = O(v_n)$ ou $u_n = o(v_n)$ avec $v_n \ge 0$. Si $\sum v_n$ converge, alors $\sum u_n$ converge absolument.
+    </div>
+
+
+    <div class="theorem">
+        <strong>Théorème (Sommation des relations de comparaison)</strong><br>
+        Soient $(u_n)$ et $(v_n)$ deux suites de réels. On suppose que $v_n \ge 0$ pour $n$ assez grand.
+        <ol>
+            <li><strong>Équivalence ($u_n \sim_{+\infty} v_n$) :</strong><br>
+            Alors $u_n$ est aussi $\ge 0$ pour $n$ assez grand. Les séries $\sum u_n$ et $\sum v_n$ sont de <strong>même nature</strong>.
+            <ul>
+                <li>Cas <strong>divergent :</strong> Si $\sum v_n$ diverge, alors $\sum u_n$ diverge et les sommes partielles sont équivalentes :
+                   $$ \sum_{k=0}^n u_k \sim_{n \to +\infty} \sum_{k=0}^n v_k $$</li>
+                <li>Cas <strong>convergent :</strong> Si $\sum v_n$ converge, alors $\sum u_n$ converge et les restes sont équivalents :
+                   $$ \sum_{k=n+1}^{+\infty} u_k \sim_{n \to +\infty} \sum_{k=n+1}^{+\infty} v_k $$</li>
+            </ul>
+            </li>
+            <li><strong>Domination ($u_n = O(v_n)$) :</strong><br>
+             Si $\sum v_n$ converge, alors $\sum u_n$ converge (absolument) et les restes vérifient :
+               $$ \sum_{k=n+1}^{+\infty} u_k = O\left( \sum_{k=n+1}^{+\infty} v_k \right) $$
+             Si $\sum v_n$ diverge, on ne peut rien conclure sur $\sum u_n$. Si $\sum u_n$ diverge aussi, alors les sommes partielles vérifient :
+                $$ \sum_{k=0}^n u_k = O\left( \sum_{k=0}^n v_k \right) $$
+            </li>
+            <li><strong>Négligeabilité ($u_n = o(v_n)$) :</strong><br>
+             Si $\sum v_n$ converge, alors $\sum u_n$ converge (absolument) et les restes vérifient :
+               $$ \sum_{k=n+1}^{+\infty} u_k = o\left( \sum_{k=n+1}^{+\infty} v_k \right) $$
+             Si $\sum v_n$ diverge, on ne peut rien conclure sur $\sum u_n$. Si $\sum u_n$ diverge aussi, alors les sommes partielles vérifient :
+                $$ \sum_{k=0}^n u_k = o\left( \sum_{k=0}^n v_k \right) $$
+            </li>
+        </ol>
+    </div>
+    <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+    </div>
+
+    <div class="remark">
+        <strong>Série de référence (Riemann) :</strong> La série $\sum_{n \ge 1} \frac{1}{n^\alpha}$ converge si et seulement si $\alpha > 1$. C'est la référence principale pour utiliser les comparaisons.
+    </div>
+
+    <div class="example">
+        <strong>Exemple : Lemme de Cesàro</strong><br>
+        Soit $(u_n)_{n \ge 1}$ une suite de réels ou complexes de limite $\ell \in \K$. Notons $v_n = \frac{u_1 + \dots + u_n}{n}$ la moyenne de Cesàro. Montrons que $v_n \to \ell$.
+        <ul>
+            <li>Si $\ell \neq 0$: $u_n \sim_{+\infty} \ell$. La série $\sum \ell$ diverge ($v_n = \ell \ge 0$ si $\ell>0$, ou $v_n=|\ell|>0$). Par sommation des équivalents pour les séries divergentes :
+               $S_n = \sum_{k=1}^n u_k \sim_{+\infty} \sum_{k=1}^n \ell = n \ell$.
+               Alors $v_n = S_n / n \sim_{+\infty} (n \ell) / n = \ell$. Donc $v_n \to \ell$.</li>
+            <li>Si $\ell = 0$: $u_n = o(1)$. La série $\sum 1$ diverge. Par sommation des relations de négligeabilité pour les séries divergentes :
+               $S_n = \sum_{k=1}^n u_k = o\left( \sum_{k=1}^n 1 \right) = o(n)$.
+               Alors $v_n = S_n / n = o(n) / n = o(1)$. Donc $v_n \to 0$.</li>
+        </ul>
+        Dans les deux cas, $\lim_{n \to +\infty} v_n = \ell$.
+    </div>
+
+    <div class="example">
+        <strong>Exemple : Développement asymptotique de la série harmonique</strong><br>
+        Pour $n \in \N^*$, on note $H_n = \sum_{k=1}^n \frac{1}{k}$. En utilisant la comparaison série-intégrale (voir section 3), on peut montrer qu'il existe une constante $\gamma \in \R$ (constante d'Euler-Mascheroni) telle que :
+        $$ H_n = \ln(n) + \gamma + \frac{1}{2n} - \frac{1}{12n^2} + o\left(\frac{1}{n^2}\right) $$
+        Le développement $\ln(n) + \gamma + o(1)$ est plus classique.
+        <a href="#">(Démonstration en vidéo!)</a>
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Règle de d'Alembert)</strong><br>
+        Soit $(u_n)$ une suite d'éléments de $\K$ telle que $u_n \neq 0$ pour $n$ assez grand. On suppose que la suite $\left( \frac{\abs{u_{n+1}}}{\abs{u_n}} \right)$ admet une limite $\ell \in [0, +\infty]$.
+        <ul>
+            <li>Si $\ell < 1$, la série $\sum u_n$ converge absolument.</li>
+            <li>Si $\ell > 1$ (y compris $\ell=+\infty$), la série $\sum u_n$ diverge grossièrement ($\abs{u_n} \to +\infty$).</li>
+            <li>Si $\ell = 1$, on ne peut pas conclure a priori.</li>
+        </ul>
+    </div>
+     <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+    </div>
+    <div class="remark">
+        La règle de d'Alembert est particulièrement utile pour les séries faisant intervenir des factorielles ou des puissances $n$-ièmes. Elle compare asymptotiquement la série à une série géométrique.
+    </div>
+
+    <h2>3. Comparaison Série-Intégrale</h2>
+
+    <p>Soit $f : [a, +\infty[ \to \R$ une fonction continue par morceaux.</p>
+
+    <div class="proposition">
+        <strong>Encadrement par des intégrales (si $f$ monotone)</strong><br>
+        <ul>
+            <li>Si $f$ est <strong>croissante</strong> sur $[a, +\infty[$, alors pour tout entier $n \ge a+1$ :
+            $$ \int_{n-1}^n f(t) dt \le f(n) \le \int_n^{n+1} f(t) dt $$</li>
+            <li>Si $f$ est <strong>décroissante</strong> sur $[a, +\infty[$, alors pour tout entier $n \ge a+1$ :
+            $$ \int_n^{n+1} f(t) dt \le f(n) \le \int_{n-1}^n f(t) dt $$</li>
+        </ul>
+    </div>
+    <div class="remark">
+        En sommant ces inégalités, on obtient des encadrements pour les sommes partielles $\sum_{k=N}^n f(k)$ par des intégrales $\int_{N-1}^n f(t) dt$ et $\int_N^{n+1} f(t) dt$ (ou similaires). Ceci permet de comparer la nature de la série et de l'intégrale.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème de comparaison Série-Intégrale</strong><br>
+        Soit $f : [a, +\infty[ \to \R_+$ une fonction continue par morceaux, <strong>positive</strong> et <strong>décroissante</strong>.
+        Alors la série $\sum_{n \ge a} f(n)$ et l'intégrale $\int_a^{+\infty} f(t) dt$ sont de <strong>même nature</strong> (convergentes ou divergentes).
+        <br>De plus, en cas de convergence, on a l'encadrement des restes :
+        $$ \int_{n+1}^{+\infty} f(t) dt \le \sum_{k=n+1}^{+\infty} f(k) \le \int_n^{+\infty} f(t) dt $$
+        En cas de divergence, on a l'encadrement des sommes partielles :
+        $$ \int_a^{n+1} f(t) dt \le \sum_{k=a}^n f(k) \le f(a) + \int_a^n f(t) dt $$
+        Et la suite $(S_n - \int_a^n f(t) dt)_{n \ge a}$ admet une limite finie.
+    </div>
+     <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+    </div>
+    <div class="example">
+    Ce théorème permet de retrouver la nature des séries de Riemann $\sum 1/n^\alpha$ en comparant avec $\int_1^\infty 1/t^\alpha dt$. Il permet aussi d'obtenir l'équivalent $H_n \sim \ln n$.
+    </div>
+
+
+    <h2>4. Séries alternées</h2>
+
+    <p>On revient aux séries numériques réelles $\sum u_n$.</p>
+
+    <div class="theorem">
+        <strong>Critère Spécial des Séries Alternées (CSSA)</strong><br>
+        Soit $(a_n)_{n \in \N}$ une suite de réels vérifiant :
+        <ol>
+            <li>$a_n \ge 0$ pour tout $n$. (Positivité)</li>
+            <li>$(a_n)$ est décroissante ($a_{n+1} \le a_n$).</li>
+            <li>$\lim_{n \to +\infty} a_n = 0$. (Tend vers 0)</li>
+        </ol>
+        Alors la série alternée $\sum_{n=0}^{+\infty} (-1)^n a_n$ <strong>converge</strong>.
+        <br>De plus, si on note $S$ sa somme, $S_n = \sum_{k=0}^n (-1)^k a_k$ la somme partielle d'ordre $n$, et $R_n = S - S_n = \sum_{k=n+1}^{+\infty} (-1)^k a_k$ le reste d'ordre $n$, alors :
+        <ul>
+            <li>Les suites $(S_{2n})$ (sommes partielles paires) et $(S_{2n+1})$ (sommes partielles impaires) sont adjacentes et encadrent la somme $S$ : $S_{2n+1} \le S \le S_{2n}$ pour tout $n$.</li>
+            <li>Le reste $R_n$ est du signe du premier terme non sommé $(-1)^{n+1} a_{n+1}$.</li>
+            <li>La valeur absolue du reste est majorée par la valeur absolue du premier terme non sommé : $\abs{R_n} \le a_{n+1}$.</li>
+        </ul>
+    </div>
+    <div class="proof">
+        <a href="#">(Démonstration du critère des séries alternées)</a>
+        <!-- Preuve classique montre que (S_2n) décroit, (S_{2n+1}) croit et S_{2n}-S_{2n+1}=a_{2n+1} -> 0 -->
+    </div>
+
+    <div class="example">
+        <strong>Exemple : Séries de Riemann alternées</strong><br>
+        La série $\sum_{n \ge 1} \frac{(-1)^n}{n^\alpha}$.
+        Posons $a_n = 1/n^\alpha$.
+        - Si $\alpha > 0$, $a_n > 0$, $(a_n)$ est décroissante et $a_n \to 0$. Par le CSSA, la série $\sum (-1)^n a_n$ converge.
+        - Si $\alpha \le 0$, $a_n$ ne tend pas vers 0. Le terme général $(-1)^n a_n$ ne tend pas vers 0. La série diverge grossièrement.
+        <br>
+        Conclusion : $\sum_{n \ge 1} \frac{(-1)^n}{n^\alpha}$ converge si et seulement si $\alpha > 0$.
+        <br>
+        Comparaison avec la convergence absolue : $\sum \abs{\frac{(-1)^n}{n^\alpha}} = \sum \frac{1}{n^\alpha}$ converge ssi $\alpha > 1$.
+        Donc, pour $0 < \alpha \le 1$, la série $\sum (-1)^n/n^\alpha$ est semi-convergente.
+    </div>
+
+</body>
+</html>
