@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cours : Comparaison de Suites et de Fonctions (Math Sup)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"  crossorigin="anonymous"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .definition, .theorem, .proposition, .corollary, .remark, .example, .warning {
+            margin: 15px 0; padding: 10px; border-left: 5px solid;
+        }
+        .definition { border-color: #17a2b8; background-color: #e1f5fe; }
+        .theorem { border-color: #dc3545; background-color: #ffebee; }
+        .proposition { border-color: #28a745; background-color: #e8f5e9; }
+        .corollary { border-color: #ffc107; background-color: #fffde7; }
+        .remark { border-color: #6c757d; background-color: #f8f9fa; }
+        .example { border-color: #fd7e14; background-color: #fff3e0; }
+        .warning { border-color: #ffc107; background-color: #fff8e1; font-weight: bold; } /* Style for warnings */
+        .proof { margin: 10px 0 10px 20px; padding: 10px; border: 1px dashed #ccc; background-color: #f9f9f9; }
+        .proof-title { font-weight: bold; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Pour les formules longues */
+    </style>
+</head>
+<body>
+
+<h1>Comparaison Locale de Suites et de Fonctions</h1>
+
+<h2>Introduction</h2>
+<p>
+    En analyse, il est souvent crucial de comprendre le comportement local d'une fonction au voisinage d'un point (fini ou infini) ou le comportement asymptotique d'une suite. Les relations de comparaison (domination, négligeabilité, équivalence) permettent de formaliser l'idée qu'une fonction ou une suite est "plus petite", "beaucoup plus petite" ou "se comporte de la même manière" qu'une autre au voisinage d'un point ou à l'infini. Ces outils sont essentiels pour calculer des limites, déterminer la nature de séries ou d'intégrales, et obtenir des développements asymptotiques.
+</p>
+<p>$K$ désigne $\mathbb{R}$ ou $\mathbb{C}$. $I$ est un intervalle de $\mathbb{R}$.</p>
+
+<h2>1. Relation de Domination, Négligeabilité, Équivalence : Cas des Fonctions</h2>
+
+<div class="remark">
+    <strong>Contexte :</strong> Soit $I$ un intervalle de $\mathbb{R}$, $f, g: I \to K$ deux fonctions, et $a \in \overline{\mathbb{R}}$ un point adhérent à $I$ ($a$ est un point de $I$ ou une extrémité finie ou infinie de $I$). On suppose que $g$ ne s'annule pas sur un voisinage de $a$ (sauf éventuellement en $a$).
+</div>
+
+<div class="definition">
+    <strong>Domination ($O$).</strong>
+    On dit que $f$ est <strong>dominée</strong> par $g$ au voisinage de $a$ s'il existe un voisinage $V$ de $a$ et une constante $M \ge 0$ tels que :
+    $$ \forall x \in V \cap I, \quad |f(x)| \le M |g(x)| $$
+    Cela équivaut à dire que la fonction $x \mapsto f(x)/g(x)$ est <strong>bornée</strong> au voisinage de $a$.
+    On note $f = \underset{a}{O}(g)$ ou $f(x) = \underset{a}{O}(g(x))$ (lire "f est un grand O de g en a").
+    <br>Intuitivement : $f$ ne croît pas "plus vite" que $g$ au voisinage de $a$.
+</div>
+
+<div class="definition">
+    <strong>Négligeabilité ($o$).</strong>
+    On dit que $f$ est <strong>négligeable</strong> devant $g$ au voisinage de $a$ si :
+    $$ \lim_{x \to a} \frac{f(x)}{g(x)} = 0 $$
+    On note $f = \underset{a}{o}(g)$ ou $f(x) = \underset{a}{o}(g(x))$ (lire "f est un petit o de g en a").
+    <br>Intuitivement : $f$ devient "infiniment petite" par rapport à $g$ au voisinage de $a$.
+    <br>Cela équivaut à dire : $\forall \epsilon > 0, \exists V$ voisinage de $a$, $\forall x \in V \cap I, |f(x)| \le \epsilon |g(x)|$.
+</div>
+
+<div class="definition">
+    <strong>Équivalence ($\sim$).</strong>
+    On dit que $f$ est <strong>équivalente</strong> à $g$ au voisinage de $a$ si :
+    $$ \lim_{x \to a} \frac{f(x)}{g(x)} = 1 $$
+    On note $f \underset{a}{\sim} g$ ou $f(x) \underset{a}{\sim} g(x)$.
+    <br>Intuitivement : $f$ et $g$ ont le même comportement multiplicatif au voisinage de $a$.
+</div>
+
+<div class="proposition">
+    <strong>Lien entre $\sim$ et $o$.</strong>
+    Soient $f, g$ ne s'annulant pas au voisinage de $a$ (sauf peut-être en $a$). Les assertions suivantes sont équivalentes :
+    <ol>
+        <li>$f \underset{a}{\sim} g$</li>
+        <li>$f(x) = g(x) + \underset{a}{o}(g(x))$</li>
+        <li>$f(x) - g(x) = \underset{a}{o}(g(x))$</li>
+        <li>Il existe une fonction $\epsilon$ telle que $f(x) = g(x)(1 + \epsilon(x))$ avec $\lim_{x \to a} \epsilon(x) = 0$.</li>
+    </ol>
+    Si $f \underset{a}{\sim} g$, alors $g \underset{a}{\sim} f$. La relation $\sim$ est une relation d'équivalence sur l'ensemble des fonctions ne s'annulant pas au voisinage de $a$.
+</div>
+
+<div class="remark">
+    <strong>Liens entre les relations :</strong>
+    <ul>
+        <li>Si $f = \underset{a}{o}(g)$, alors $f = \underset{a}{O}(g)$. (Car si $f/g \to 0$, $f/g$ est bornée au voisinage de $a$).</li>
+        <li>Si $f \underset{a}{\sim} g$, alors $f = \underset{a}{O}(g)$ et $g = \underset{a}{O}(f)$. (Car si $f/g \to 1$, $f/g$ est bornée, et $g/f \to 1$ donc $g/f$ est bornée).</li>
+        <li>$f = \underset{a}{o}(g) \iff f = \epsilon(x) g(x)$ avec $\epsilon(x) \to 0$.</li>
+        <li>$f = \underset{a}{O}(g) \iff f = \alpha(x) g(x)$ avec $\alpha(x)$ bornée au voisinage de $a$.</li>
+    </ul>
+</div>
+
+<h2>2. Propriétés et Règles de Calcul</h2>
+
+<div class="proposition">
+    <strong>Propriétés de l'équivalence.</strong> Soient $f, g, u, v$ définies au voisinage de $a$. On suppose que $g, v$ ne s'annulent pas au voisinage de $a$.
+    <ol>
+        <li><strong>Signe :</strong> Si $f \underset{a}{\sim} g$, alors il existe un voisinage $V$ de $a$ tel que pour tout $x \in V \cap I$, $f(x)$ et $g(x)$ ont le même signe.</li>
+        <li><strong>Limite :</strong> Si $f \underset{a}{\sim} g$ et si $g$ admet une limite $\ell \in \overline{\mathbb{R}}$ en $a$, alors $f$ admet la même limite $\ell$ en $a$.
+            $$ \left( f \underset{a}{\sim} g \text{ et } \lim_{x \to a} g(x) = \ell \right) \implies \lim_{x \to a} f(x) = \ell $$
+            C'est l'intérêt principal des équivalents : remplacer une fonction compliquée par une fonction équivalente plus simple pour trouver la limite.</li>
+        <li><strong>Produit :</strong> Si $f \underset{a}{\sim} g$ et $u \underset{a}{\sim} v$, alors $fu \underset{a}{\sim} gv$.</li>
+        <li><strong>Quotient :</strong> Si $f \underset{a}{\sim} g$ et $u \underset{a}{\sim} v$ (et $u, v$ ne s'annulent pas au voisinage de $a$), alors $f/u \underset{a}{\sim} g/v$.</li>
+        <li><strong>Puissance (constante) :</strong> Si $f \underset{a}{\sim} g$ et $\alpha \in \mathbb{R}$, alors $f^\alpha \underset{a}{\sim} g^\alpha$ (à condition que les puissances soient définies, par ex. si $f, g > 0$ au voisinage de $a$). La notation $f^p$ pour $p \in \mathbb{Z}$ est toujours valide.</li>
+    </ol>
+</div>
+<div class="proof">
+    <span class="proof-title">Preuves (idées) :</span>
+    1. $f/g \to 1$. Pour $\epsilon = 1/2$, il existe $V$ tq $|f/g - 1| \le 1/2$, soit $1/2 \le f/g \le 3/2$. Donc $f/g > 0$ sur $V \cap I$, $f$ et $g$ ont même signe.
+    2. $f(x) = g(x) \times (f(x)/g(x))$. La limite du produit est $\ell \times 1 = \ell$.
+    3. $(fu)/(gv) = (f/g) \times (u/v) \to 1 \times 1 = 1$.
+    4. $(f/u) / (g/v) = (f/g) \times (v/u) = (f/g) / (u/v) \to 1 / 1 = 1$.
+    5. $f^\alpha / g^\alpha = (f/g)^\alpha$. Comme $f/g \to 1$ et $t \mapsto t^\alpha$ est continue en 1 (si bien défini), $(f/g)^\alpha \to 1^\alpha = 1$. $\square$
+</div>
+
+<div class="warning">
+    <strong>Interdiction d'additionner ou soustraire les équivalents !</strong>
+    Si $f \underset{a}{\sim} g$ et $u \underset{a}{\sim} v$, on n'a <strong>pas</strong> en général $f+u \underset{a}{\sim} g+v$.
+    <br><strong>Contre-exemple :</strong> En $a=+\infty$.
+    $f(x) = x+1 \underset{+\infty}{\sim} x = g(x)$.
+    $u(x) = -x \underset{+\infty}{\sim} -x = v(x)$.
+    $f(x)+u(x) = (x+1) + (-x) = 1$.
+    $g(x)+v(x) = x + (-x) = 0$.
+    Or, $1 \underset{+\infty}{\not\sim} 0$. (Le rapport $1/0$ n'est pas défini / tend vers l'infini).
+    <!-- Pourquoi ne peut-on pas ajouter des équivalents ? -->
+    <br>L'erreur vient de $f = g + o(g)$ et $u = v + o(v)$. Alors $f+u = (g+v) + (o(g)+o(v))$. Le terme d'erreur $o(g)+o(v)$ n'est pas forcément $o(g+v)$, surtout si $g+v$ est petit par rapport à $g$ et $v$ (comme dans le contre-exemple où $g+v=0$).
+</div>
+<div class="remark">
+    On peut cependant additionner des équivalents s'ils sont de <strong>même signe</strong> et ne s'annulent pas. Si $f \underset{a}{\sim} g$ et $u \underset{a}{\sim} v$, et si $g, v$ sont de même signe strict au voisinage de $a$, alors $f+u \underset{a}{\sim} g+v$.
+</div>
+
+<div class="proposition">
+    <strong>Règles de calcul pour les $o$.</strong> Soient $f, g, h, k$ définies au voisinage de $a$.
+    <ul>
+        <li><strong>Somme :</strong> Si $f = \underset{a}{o}(h)$ et $g = \underset{a}{o}(h)$, alors $\alpha f + \beta g = \underset{a}{o}(h)$ pour tous $\alpha, \beta \in K$. ($o(h)$ est stable par combinaison linéaire).</li>
+        <li><strong>Transitivité :</strong> Si $f = \underset{a}{o}(g)$ et $g = \underset{a}{o}(h)$, alors $f = \underset{a}{o}(h)$.</li>
+        <li><strong>Produit :</strong> Si $f = \underset{a}{o}(g)$, alors $f h = \underset{a}{o}(gh)$.</li>
+        <li><strong>Produit de $o$:</strong> Si $f = \underset{a}{o}(g)$ et $h = \underset{a}{o}(k)$, alors $fh = \underset{a}{o}(gk)$. (Ex: $o(x^2) \times o(x^3) = o(x^5)$ en 0).</li>
+    </ul>
+    Des règles similaires existent pour les $O$. Par exemple, $O(h)+O(h)=O(h)$, $o(g)O(h)=o(gh)$, $O(g)O(h)=O(gh)$.
+</div>
+
+
+<h2>3. Relation de Domination, Négligeabilité, Équivalence : Cas des Suites</h2>
+
+<p>Les définitions et propriétés sont analogues au cas des fonctions, en considérant la limite quand $n \to +\infty$. On suppose que $(v_n)$ ne s'annule pas à partir d'un certain rang.</p>
+
+<div class="definition">
+    <strong>Domination ($O$).</strong>
+    On dit que $(u_n)$ est <strong>dominée</strong> par $(v_n)$ si la suite $(u_n / v_n)$ est bornée.
+    $$ u_n = O(v_n) \iff \exists M \ge 0, \exists n_0 \in \mathbb{N}, \forall n \ge n_0, |u_n| \le M |v_n| $$
+</div>
+
+<div class="definition">
+    <strong>Négligeabilité ($o$).</strong>
+    On dit que $(u_n)$ est <strong>négligeable</strong> devant $(v_n)$ si $\lim_{n \to +\infty} \frac{u_n}{v_n} = 0$.
+    $$ u_n = o(v_n) $$
+</div>
+
+<div class="definition">
+    <strong>Équivalence ($\sim$).</strong>
+    On dit que $(u_n)$ est <strong>équivalente</strong> à $(v_n)$ si $\lim_{n \to +\infty} \frac{u_n}{v_n} = 1$.
+    $$ u_n \sim v_n $$
+    Ceci équivaut à $u_n = v_n + o(v_n)$ (ou $u_n = v_n (1 + \epsilon_n)$ avec $\epsilon_n \to 0$).
+</div>
+
+<div class="remark">
+    Les règles de calcul (produit, quotient, puissance) et les propriétés (signe, limite) pour les équivalents de suites sont les mêmes que pour les fonctions. L'addition est également interdite en général. Les règles pour les $o$ et $O$ sont aussi analogues.
+</div>
+
+<h2>4. Équivalents Usuels et Croissance Comparée</h2>
+
+<div class="proposition">
+    <strong>Équivalent et dérivée non nulle.</strong>
+    <ul>
+        <li><strong>Fonctions :</strong> Soit $f: I \to \mathbb{R}$ et $a \in I$. Si $f$ est dérivable en $a$ et si $f'(a) \neq 0$, alors :
+            $$ f(x) - f(a) \underset{a}{\sim} f'(a)(x-a) $$</li>
+        <li><strong>Suites :</strong> Soit $(u_n)$ une suite réelle telle que $u_n \to a \in \mathbb{R}$. Soit $f$ une fonction définie au voisinage de $a$, dérivable en $a$ avec $f'(a) \neq 0$. Alors :
+            $$ f(u_n) - f(a) \sim f'(a)(u_n - a) $$</li>
+    </ul>
+</div>
+<div class="proof">
+    <span class="proof-title">Preuve (cas fonctions) :</span>
+    On a $\lim_{x \to a} \frac{f(x)-f(a)}{x-a} = f'(a)$.
+    Comme $f'(a) \neq 0$, on peut écrire $\lim_{x \to a} \frac{f(x)-f(a)}{f'(a)(x-a)} = \frac{f'(a)}{f'(a)} = 1$.
+    Par définition de l'équivalence, $f(x)-f(a) \underset{a}{\sim} f'(a)(x-a)$. $\square$
+</div>
+
+<div class="proposition">
+    <strong>Équivalents usuels en 0.</strong>
+    <ul>
+        <li>$\sin x \underset{0}{\sim} x$</li>
+        <li>$\tan x \underset{0}{\sim} x$</li>
+        <li>$\arcsin x \underset{0}{\sim} x$</li>
+        <li>$\arctan x \underset{0}{\sim} x$</li>
+        <li>$\ln(1+x) \underset{0}{\sim} x$</li>
+        <li>$e^x - 1 \underset{0}{\sim} x$</li>
+        <li>$(1+x)^\alpha - 1 \underset{0}{\sim} \alpha x$ (pour $\alpha \in \mathbb{R}$)</li>
+        <li>$1 - \cos x \underset{0}{\sim} \frac{x^2}{2}$</li>
+        <li>$\cosh x - 1 \underset{0}{\sim} \frac{x^2}{2}$</li>
+        <li>$\sinh x \underset{0}{\sim} x$</li>
+        <li>$\tanh x \underset{0}{\sim} x$</li>
+    </ul>
+    Ces équivalents peuvent être retrouvés en utilisant $f(x) - f(0) \sim f'(0)x$ (si $f'(0) \neq 0$) ou avec les développements limités d'ordre 1 ou 2.
+</div>
+
+<div class="proposition">
+    <strong>Croissances comparées (avec notations $o$).</strong>
+    Pour tous $\alpha > 0, \beta > 0, \gamma > 0$ :
+    <ul>
+        <li>En $+\infty$:
+            $$ (\ln x)^\beta = \underset{+\infty}{o}(x^\alpha) \quad \text{et} \quad x^\alpha = \underset{+\infty}{o}(e^{\gamma x}) $$</li>
+        <li>En $0^+$:
+            $$ |\ln x|^\beta = \underset{0^+}{o}(x^{-\alpha}) \quad \text{(ou } x^\alpha |\ln x|^\beta \to 0 \text{)} $$</li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Comparaison des fonctions puissance.</strong> Soient $\alpha, \beta \in \mathbb{R}$.
+    <ul>
+        <li>Au voisinage de $0^+$: $x^\alpha = \underset{0^+}{o}(x^\beta) \iff \alpha > \beta$.</li>
+        <li>Au voisinage de $+\infty$: $x^\alpha = \underset{+\infty}{o}(x^\beta) \iff \alpha < \beta$.</li>
+    </ul>
+    (La puissance la plus grande l'emporte en 0, la plus petite l'emporte en $+\infty$).
+</div>
+
+<div class="formula">
+    <strong>Formule de Stirling (pour la factorielle).</strong>
+    $$ n! \sim \sqrt{2 \pi n} \left(\frac{n}{e}\right)^n $$
+    (quand $n \to +\infty$).
+</div>
+
+<div class="corollary">
+    <strong>Comparaisons asymptotiques usuelles (suites).</strong>
+    Pour tout $a \in \mathbb{R}$ avec $|a|>1$, et tout $\alpha \in \mathbb{R}$:
+    <ul>
+        <li>$(\ln n)^\beta = o(n^\alpha)$ pour $\alpha > 0$.</li>
+        <li>$n^\alpha = o(|a|^n)$.</li>
+        <li>$|a|^n = o(n!)$.</li>
+        <li>$n! = o(n^n)$.</li>
+    </ul>
+    Ordre de croissance typique : $\ln^\beta \ll n^\alpha \ll |a|^n \ll n! \ll n^n$.
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
