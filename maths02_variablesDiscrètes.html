@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cours : Variables Aléatoires Discrètes (Math Spé)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" " crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js "crossorigin="anonymous"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .definition, .theorem, .proposition, .corollary, .remark, .example, .lemma {
+            margin: 15px 0; padding: 10px; border-left: 5px solid;
+        }
+        .definition { border-color: #17a2b8; background-color: #e1f5fe; }
+        .theorem { border-color: #dc3545; background-color: #ffebee; }
+        .proposition { border-color: #28a745; background-color: #e8f5e9; }
+        .corollary { border-color: #ffc107; background-color: #fffde7; }
+        .remark { border-color: #6c757d; background-color: #f8f9fa; }
+        .example { border-color: #fd7e14; background-color: #fff3e0; }
+        .lemma { border-color: #6f42c1; background-color: #f3e5f5; } /* Added style for lemma */
+        .proof { margin: 10px 0 10px 20px; padding: 10px; border: 1px dashed #ccc; background-color: #f9f9f9; }
+        .proof-title { font-weight: bold; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Pour les formules longues */
+    </style>
+</head>
+<body>
+
+<h1>Variables Aléatoires Discrètes</h1>
+
+<h2>Préambule</h2>
+<p>
+    Dans tout ce cours, $(\Omega, \mathcal{T}, P)$ désigne un espace probabilisé. $E$ désigne un ensemble quelconque, qui servira d'ensemble d'arrivée pour les variables aléatoires.
+</p>
+
+<h2>1. Variables aléatoires discrètes : Définition et Loi</h2>
+
+<div class="definition">
+    <strong>Définition (Variable aléatoire discrète).</strong>
+    Soit $X: \Omega \to E$ une application. On dit que $X$ est une <strong>variable aléatoire discrète</strong> (v.a.d.) si :
+    <ol>
+        <li>L'image $X(\Omega) = \{ X(\omega) \mid \omega \in \Omega \}$ est un ensemble au plus dénombrable (fini ou dénombrable).</li>
+        <li>Pour tout $x$ dans l'image $X(\Omega)$, l'ensemble préimage $X^{-1}(\{x\}) = \{ \omega \in \Omega \mid X(\omega) = x \}$ est un événement (appartient à la tribu $\mathcal{T}$).</li>
+    </ol>
+    Lorsque $E = \mathbb{R}$ (ou $\mathbb{C}$), la variable aléatoire $X$ est dite <strong>réelle</strong> (ou complexe). Elle est dite <strong>finie</strong> si son image $X(\Omega)$ est un ensemble fini.
+</div>
+
+<div class="remark">
+    Dans le cas où $\mathcal{T} = \mathcal{P}(\Omega)$ (tribu discrète, ce qui est souvent le cas lorsque $\Omega$ est lui-même dénombrable), la condition 2 est toujours vérifiée. La définition se réduit alors à la condition 1 : $X(\Omega)$ est au plus dénombrable.
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Mesurabilité).</strong>
+    Soit $X: \Omega \to E$ une variable aléatoire discrète sur $(\Omega, \mathcal{T})$. Alors, pour toute partie $A$ de $E$, l'ensemble préimage $X^{-1}(A) = \{ \omega \in \Omega \mid X(\omega) \in A \}$ est un événement (appartient à $\mathcal{T}$).
+    On dit que $X$ est une application mesurable de $(\Omega, \mathcal{T})$ dans $(E, \mathcal{P}(E))$.
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Soit $A \subset E$. On peut écrire $A = (A \cap X(\Omega)) \cup (A \setminus X(\Omega))$.
+    Alors $X^{-1}(A) = X^{-1}(A \cap X(\Omega)) \cup X^{-1}(A \setminus X(\Omega))$.
+    Comme l'image de $X$ est $X(\Omega)$, $X^{-1}(A \setminus X(\Omega)) = \emptyset$.
+    Donc $X^{-1}(A) = X^{-1}(A \cap X(\Omega))$.
+    L'ensemble $A \cap X(\Omega)$ est une partie de $X(\Omega)$. Puisque $X(\Omega)$ est au plus dénombrable, $A \cap X(\Omega)$ l'est aussi. On peut écrire $A \cap X(\Omega) = \{ x_k \mid k \in K \}$, où $K$ est un ensemble d'indices fini ou dénombrable.
+    Alors $X^{-1}(A \cap X(\Omega)) = X^{-1}(\bigcup_{k \in K} \{x_k\}) = \bigcup_{k \in K} X^{-1}(\{x_k\})$.
+    Par définition d'une v.a.d., chaque $X^{-1}(\{x_k\})$ est un événement (appartient à $\mathcal{T}$).
+    Comme $\mathcal{T}$ est stable par réunion finie ou dénombrable, $\bigcup_{k \in K} X^{-1}(\{x_k\})$ appartient à $\mathcal{T}$.
+    Donc $X^{-1}(A) \in \mathcal{T}$. $\square$
+</div>
+
+<div class="remark">
+    <strong>Notations usuelles pour les événements liés à $X$:</strong>
+    <ul>
+        <li>L'événement $X^{-1}(A)$ est souvent noté $\{X \in A\}$ ou $(X \in A)$.</li>
+        <li>L'événement $X^{-1}(\{x\})$ est souvent noté $\{X = x\}$ ou $(X = x)$.</li>
+        <li>Si $X$ est à valeurs réelles, l'événement $X^{-1}(]-\infty, x])$ est noté $\{X \le x\}$ ou $(X \le x)$. De même pour $\{X < x\}$, $\{X \ge x\}$, $\{X > x\}$, $\{a \le X \le b\}$, etc.</li>
+    </ul>
+    La famille d'événements $(\{X=x\})_{x \in X(\Omega)}$ forme un système complet d'événements.
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Loi d'une variable aléatoire discrète).</strong>
+    Soit $X$ une variable aléatoire discrète sur $(\Omega, \mathcal{T}, P)$ à valeurs dans $E$. L'application $P_X$, définie sur $\mathcal{P}(X(\Omega))$ par :
+    $$ P_X: \mathcal{P}(X(\Omega)) \to [0, 1] $$
+    $$ A \mapsto P(X^{-1}(A)) = P(X \in A) $$
+    est une probabilité sur l'espace probabilisable $(X(\Omega), \mathcal{P}(X(\Omega)))$. On l'appelle la <strong>loi de probabilité</strong> (ou simplement <strong>loi</strong>) de la variable aléatoire $X$.
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Vérifions les axiomes d'une probabilité pour $P_X$.
+    <ol>
+        <li>$P_X(X(\Omega)) = P(X^{-1}(X(\Omega))) = P(\Omega) = 1$.</li>
+        <li>Soit $(A_n)_{n \in \mathbb{N}}$ une suite de parties de $X(\Omega)$ deux à deux disjointes. Posons $A = \bigcup_{n=0}^\infty A_n$.
+           Les événements $B_n = X^{-1}(A_n)$ sont dans $\mathcal{T}$. Montrons qu'ils sont deux à deux incompatibles.
+           Si $\omega \in B_n \cap B_m$ avec $n \neq m$, alors $X(\omega) \in A_n$ et $X(\omega) \in A_m$. Ceci contredit $A_n \cap A_m = \emptyset$. Donc $B_n \cap B_m = \emptyset$.
+           L'événement $X^{-1}(A)$ est $X^{-1}(\bigcup_{n=0}^\infty A_n) = \bigcup_{n=0}^\infty X^{-1}(A_n) = \bigcup_{n=0}^\infty B_n$.
+           Par $\sigma$-additivité de $P$ sur $(\Omega, \mathcal{T})$ :
+           $P_X(A) = P(X^{-1}(A)) = P(\bigcup_{n=0}^\infty B_n) = \sum_{n=0}^\infty P(B_n) = \sum_{n=0}^\infty P(X^{-1}(A_n)) = \sum_{n=0}^\infty P_X(A_n)$.
+        </li>
+    </ol>
+    Donc $P_X$ est une probabilité sur $(X(\Omega), \mathcal{P}(X(\Omega)))$. $\square$
+</div>
+
+<div class="remark">
+    Si $X$ et $Y$ sont deux variables aléatoires discrètes (définies éventuellement sur des espaces probabilisés différents) telles que $P_X = P_Y$ (c'est-à-dire qu'elles ont la même loi), on note $X \sim Y$ et on dit que $X$ et $Y$ suivent la même loi.
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Caractérisation de la loi).</strong>
+    La loi $P_X$ d'une variable aléatoire discrète $X$ est entièrement déterminée par la donnée des probabilités $P(X=x)$ pour tous les $x$ dans l'image $X(\Omega)$. Ces valeurs $(P(X=x))_{x \in X(\Omega)}$ forment une distribution de probabilités discrète sur $X(\Omega)$.
+    Plus précisément, pour toute partie $A \subset X(\Omega)$, on a :
+    $$ P_X(A) = P(X \in A) = \sum_{x \in A} P(X = x) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Ceci découle directement du théorème précédent sur la caractérisation des probabilités sur un espace au plus dénombrable (ici $X(\Omega)$) par une distribution discrète (ici $p_x = P(X=x)$). La probabilité de $A$ est la somme des probabilités des singletons qui la composent. $\square$
+</div>
+
+<div class="remark">
+    En pratique, "déterminer la loi de $X$" signifie déterminer l'ensemble des valeurs possibles $X(\Omega)$ et calculer $P(X=x)$ pour chaque $x \in X(\Omega)$. Il faut aussi vérifier que $\sum_{x \in X(\Omega)} P(X=x) = 1$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Fonction d'une variable aléatoire discrète - Théorème de transfert pour la loi).</strong>
+    Soit $X: \Omega \to E$ une variable aléatoire discrète sur $(\Omega, \mathcal{T}, P)$. Soit $F$ un autre ensemble et $f: E \to F$ une application.
+    Alors $Y = f \circ X = f(X)$ est une variable aléatoire discrète de $(\Omega, \mathcal{T}, P)$ à valeurs dans $F$.
+    La loi de $Y=f(X)$ est donnée par : pour tout $y \in Y(\Omega) = f(X(\Omega))$,
+    $$ P(Y = y) = P(f(X) = y) = \sum_{x \in X(\Omega) \text{ t.q. } f(x)=y} P(X = x) $$
+    En particulier, si $X \sim Z$, alors $f(X) \sim f(Z)$.
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    L'image $Y(\Omega) = f(X(\Omega))$ est l'image d'un ensemble au plus dénombrable, donc elle est au plus dénombrable.
+    Pour $y \in Y(\Omega)$, on cherche $Y^{-1}(\{y\}) = \{ \omega \in \Omega \mid f(X(\omega)) = y \}$.
+    Soit $A_y = \{ x \in E \mid f(x) = y \}$. C'est $f^{-1}(\{y\})$.
+    Alors $Y^{-1}(\{y\}) = \{ \omega \in \Omega \mid X(\omega) \in A_y \} = X^{-1}(A_y)$.
+    D'après la proposition de mesurabilité, $X^{-1}(A_y)$ est un événement. Donc $Y=f(X)$ est bien une v.a.d.
+    Calculons $P(Y=y)$:
+    $P(Y=y) = P(X^{-1}(A_y))$.
+    L'ensemble $A_y$ peut être écrit comme $A_y = \bigcup_{x \in A_y \cap X(\Omega)} \{x\}$.
+    Donc $X^{-1}(A_y) = X^{-1}(\bigcup_{x \in A_y \cap X(\Omega)} \{x\}) = \bigcup_{x \in A_y \cap X(\Omega)} X^{-1}(\{x\})$.
+    Les événements $X^{-1}(\{x\})$ sont deux à deux incompatibles pour des $x$ différents.
+    Par $\sigma$-additivité de $P$:
+    $P(Y=y) = \sum_{x \in A_y \cap X(\Omega)} P(X^{-1}(\{x\})) = \sum_{x \in X(\Omega) \text{ t.q. } f(x)=y} P(X = x)$. $\square$
+</div>
+
+
+<div class="definition">
+    <strong>Définition (Loi conditionnelle).</strong>
+    Soit $X$ une variable aléatoire discrète sur $(\Omega, \mathcal{T}, P)$ et soit $B \in \mathcal{T}$ un événement tel que $P(B) > 0$.
+    On appelle <strong>loi conditionnelle de $X$ sachant $B$</strong> la probabilité $P_{X|B}$ sur $(X(\Omega), \mathcal{P}(X(\Omega)))$ définie par :
+    $$ P_{X|B}(A) = P(X \in A | B) = \frac{P(\{X \in A\} \cap B)}{P(B)} \quad \text{pour } A \subset X(\Omega) $$
+    Cette loi est déterminée par la distribution de probabilités $(P(X=x | B))_{x \in X(\Omega)}$, où
+    $$ P(X=x | B) = \frac{P(\{X=x\} \cap B)}{P(B)} $$
+    Le plus souvent, l'événement $B$ sera de la forme $\{Y=y\}$ pour une autre v.a.d. $Y$. On parle alors de la loi de $X$ sachant $Y=y$.
+</div>
+
+<h2>2. Lois discrètes usuelles</h2>
+
+<div class="definition">
+    <strong>Loi de Bernoulli $\mathcal{B}(p)$.</strong>
+    Une v.a.d. $X$ suit une loi de Bernoulli de paramètre $p \in [0, 1]$ si $X(\Omega) = \{0, 1\}$ et
+    $$ P(X=1) = p, \quad P(X=0) = 1-p $$
+    On note $X \sim \mathcal{B}(p)$.
+    Interprétation : succès (1) ou échec (0) d'une épreuve aléatoire. $p$ est la probabilité de succès.
+</div>
+
+<div class="definition">
+    <strong>Loi Binomiale $\mathcal{B}(n, p)$.</strong>
+    Une v.a.d. $X$ suit une loi binomiale de paramètres $n \in \mathbb{N}^*$ et $p \in [0, 1]$ si $X(\Omega) = \{0, 1, \dots, n\}$ et pour tout $k \in \{0, 1, \dots, n\}$ :
+    $$ P(X=k) = \binom{n}{k} p^k (1-p)^{n-k} $$
+    On note $X \sim \mathcal{B}(n, p)$.
+    Interprétation : nombre de succès dans une suite de $n$ épreuves de Bernoulli indépendantes de même paramètre $p$.
+</div>
+
+<div class="definition">
+    <strong>Loi Géométrique $\mathcal{G}(p)$.</strong>
+    Soit $p \in ]0, 1[$. Une v.a.d. $X$ suit une loi géométrique de paramètre $p$ si $X(\Omega) = \mathbb{N}^* = \{1, 2, 3, \dots\}$ et pour tout $n \in \mathbb{N}^*$ :
+    $$ P(X=n) = p (1-p)^{n-1} $$
+    On note $X \sim \mathcal{G}(p)$.
+    Vérification : $\sum_{n=1}^\infty P(X=n) = \sum_{n=1}^\infty p(1-p)^{n-1} = p \sum_{k=0}^\infty (1-p)^k = p \frac{1}{1 - (1-p)} = p \frac{1}{p} = 1$.
+</div>
+
+<div class="example">
+    <strong>Interprétation de la loi géométrique.</strong>
+    On considère une suite d'épreuves de Bernoulli indépendantes avec probabilité de succès $p \in ]0, 1[$ à chaque épreuve (par exemple, lancers répétés d'une pièce jusqu'à obtenir Pile).
+    Soit $T$ la variable aléatoire égale au rang du premier succès.
+    L'événement $\{T=n\}$ signifie que les $n-1$ premières épreuves sont des échecs (probabilité $(1-p)^{n-1}$) et la $n$-ième est un succès (probabilité $p$). Par indépendance :
+    $P(T=n) = (1-p)^{n-1} p$.
+    Donc $T$ suit une loi géométrique $\mathcal{G}(p)$.
+    (On peut montrer que l'événement "n'avoir jamais de succès", qui correspondrait à $T=+\infty$, est de probabilité nulle si $p>0$).
+</div>
+<div class="remark">
+    Attention : certains auteurs définissent la loi géométrique sur $\mathbb{N}$ comme le nombre d'échecs *avant* le premier succès. La loi est alors $P(X=k) = p(1-p)^k$ pour $k \in \mathbb{N}$. Vérifiez toujours la convention utilisée. Ici, nous utilisons la définition sur $\mathbb{N}^*$.
+</div>
+
+<div class="definition">
+    <strong>Loi de Poisson $\mathcal{P}(\lambda)$.</strong>
+    Soit $\lambda > 0$. Une v.a.d. $X$ suit une loi de Poisson de paramètre $\lambda$ si $X(\Omega) = \mathbb{N} = \{0, 1, 2, \dots\}$ et pour tout $n \in \mathbb{N}$ :
+    $$ P(X=n) = e^{-\lambda} \frac{\lambda^n}{n!} $$
+    On note $X \sim \mathcal{P}(\lambda)$.
+    Vérification : $\sum_{n=0}^\infty P(X=n) = \sum_{n=0}^\infty e^{-\lambda} \frac{\lambda^n}{n!} = e^{-\lambda} \sum_{n=0}^\infty \frac{\lambda^n}{n!} = e^{-\lambda} e^{\lambda} = 1$.
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Approximation de la loi binomiale par la loi de Poisson).</strong>
+    Soit $(X_n)_{n \in \mathbb{N}^*}$ une suite de variables aléatoires telle que $X_n \sim \mathcal{B}(n, p_n)$. On suppose que $\lim_{n \to +\infty} n p_n = \lambda$, où $\lambda > 0$.
+    Alors, pour tout $k \in \mathbb{N}$ fixé :
+    $$ \lim_{n \to +\infty} P(X_n = k) = e^{-\lambda} \frac{\lambda^k}{k!} $$
+    On dit que la loi de $X_n$ converge vers la loi $\mathcal{P}(\lambda)$.
+    <!-- Démonstration en vidéo! -->
+</div>
+
+<div class="proof">
+    <span class="proof-title">Idée de la preuve :</span>
+    $P(X_n = k) = \binom{n}{k} p_n^k (1-p_n)^{n-k}$.
+    On a $\binom{n}{k} = \frac{n(n-1)\dots(n-k+1)}{k!}$. Pour $k$ fixé, quand $n \to \infty$, $\binom{n}{k} \sim \frac{n^k}{k!}$.
+    On pose $\lambda_n = n p_n$. Alors $p_n = \lambda_n / n$.
+    $P(X_n=k) \sim \frac{n^k}{k!} \left(\frac{\lambda_n}{n}\right)^k \left(1 - \frac{\lambda_n}{n}\right)^{n-k}$
+    $P(X_n=k) \sim \frac{n^k}{k!} \frac{\lambda_n^k}{n^k} \left(1 - \frac{\lambda_n}{n}\right)^{n} \left(1 - \frac{\lambda_n}{n}\right)^{-k}$
+    $P(X_n=k) \sim \frac{\lambda_n^k}{k!} \left(1 - \frac{\lambda_n}{n}\right)^{n} \left(1 - \frac{\lambda_n}{n}\right)^{-k}$.
+    Comme $\lambda_n \to \lambda$, on a $\lambda_n^k \to \lambda^k$.
+    Pour $k$ fixé, $\left(1 - \frac{\lambda_n}{n}\right)^{-k} \to (1-0)^{-k} = 1$.
+    Le terme clé est $\left(1 - \frac{\lambda_n}{n}\right)^{n} = \exp\left( n \ln\left(1 - \frac{\lambda_n}{n}\right) \right)$.
+    Comme $\lambda_n/n \to 0$, on a $\ln(1 - \lambda_n/n) \sim - \lambda_n/n$.
+    Donc $n \ln(1 - \lambda_n/n) \sim n (-\lambda_n/n) = -\lambda_n$.
+    Puisque $\lambda_n \to \lambda$, $n \ln(1 - \lambda_n/n) \to -\lambda$.
+    Par continuité de l'exponentielle, $\left(1 - \frac{\lambda_n}{n}\right)^{n} \to e^{-\lambda}$.
+    En combinant les limites, on obtient $\lim_{n \to \infty} P(X_n=k) = \frac{\lambda^k}{k!} e^{-\lambda}$. $\square$
+</div>
+
+<div class="remark">
+    Cette approximation est utile lorsque $n$ est grand et $p$ est petit (événements rares), avec $\lambda = np$ d'ordre de grandeur modéré. Par exemple, le nombre d'erreurs typographiques sur une page, le nombre d'appels à un standard téléphonique dans un intervalle de temps court, etc.
+</div>
+
+<h2>3. Couple de variables aléatoires - Indépendance</h2>
+
+<div class="definition">
+    <strong>Définition (Couple de v.a.d., Loi conjointe, Lois marginales).</strong>
+    Si $X: \Omega \to E$ et $Y: \Omega \to F$ sont deux variables aléatoires discrètes définies sur le même espace probabilisé $(\Omega, \mathcal{T}, P)$, alors l'application
+    $$ (X, Y): \omega \mapsto (X(\omega), Y(\omega)) $$
+    est une variable aléatoire discrète à valeurs dans $E \times F$, appelée le <strong>couple</strong> $(X, Y)$.
+    <ul>
+        <li>La <strong>loi conjointe</strong> de $(X, Y)$ est la loi de cette v.a.d. couple. Elle est déterminée par la donnée des probabilités $P(X=x, Y=y) = P(\{X=x\} \cap \{Y=y\})$ pour tout $(x, y) \in X(\Omega) \times Y(\Omega)$.</li>
+        <li>Les lois de $X$ et de $Y$ considérées individuellement sont appelées les <strong>lois marginales</strong> du couple $(X, Y)$.</li>
+    </ul>
+    Ces définitions se généralisent à des $n$-uplets $(X_1, \dots, X_n)$, appelés <strong>vecteurs aléatoires discrets</strong>.
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Lois marginales à partir de la loi conjointe).</strong>
+    Soit $(X, Y)$ un couple de variables aléatoires discrètes. On peut retrouver les lois marginales à partir de la loi conjointe :
+    <ul>
+        <li>Pour tout $x \in X(\Omega)$, $P(X=x) = \sum_{y \in Y(\Omega)} P(X=x, Y=y)$.</li>
+        <li>Pour tout $y \in Y(\Omega)$, $P(Y=y) = \sum_{x \in X(\Omega)} P(X=x, Y=y)$.</li>
+    </ul>
+    (Ces sommes sont bien définies car les familles sont sommables à termes positifs).
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve (pour $P(X=x)$) :</span>
+    L'événement $\{X=x\}$ peut s'écrire comme la réunion disjointe des événements $\{X=x\} \cap \{Y=y\}$ sur toutes les valeurs possibles $y$ de $Y$.
+    $\{X=x\} = \{X=x\} \cap \Omega = \{X=x\} \cap \left( \bigcup_{y \in Y(\Omega)} \{Y=y\} \right) = \bigcup_{y \in Y(\Omega)} (\{X=x\} \cap \{Y=y\})$.
+    Cette réunion est au plus dénombrable et les événements sont deux à deux incompatibles. Par $\sigma$-additivité :
+    $P(X=x) = P\left( \bigcup_{y \in Y(\Omega)} \{X=x, Y=y\} \right) = \sum_{y \in Y(\Omega)} P(X=x, Y=y)$. $\square$
+</div>
+
+<div class="remark">
+    La connaissance des lois marginales $P_X$ et $P_Y$ ne suffit généralement pas à déterminer la loi conjointe $P_{(X,Y)}$, sauf dans le cas d'indépendance.
+</div>
+
+<div class="definition">
+    <strong>Définition (Indépendance de deux v.a.d.).</strong>
+    Deux variables aléatoires discrètes $X$ et $Y$ définies sur le même espace $(\Omega, \mathcal{T}, P)$ sont dites <strong>indépendantes</strong> si pour tout $x \in X(\Omega)$ et tout $y \in Y(\Omega)$, les événements $\{X=x\}$ et $\{Y=y\}$ sont indépendants, c'est-à-dire :
+    $$ P(X=x, Y=y) = P(X=x) P(Y=y) $$
+    On note $X \perp \!\!\! \perp Y$.
+</div>
+
+<div class="proposition">
+    <strong>Proposition (Caractérisation de l'indépendance).</strong>
+    Deux variables aléatoires discrètes $X: \Omega \to E$ et $Y: \Omega \to F$ sont indépendantes si et seulement si, pour toute partie $A \subset X(\Omega)$ et toute partie $B \subset Y(\Omega)$, les événements $\{X \in A\}$ et $\{Y \in B\}$ sont indépendants :
+    $$ P(X \in A, Y \in B) = P(X \in A) P(Y \in B) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve (Idée) :</span>
+    Le sens ($\Leftarrow$) est trivial en prenant $A=\{x\}$ et $B=\{y\}$.
+    Pour le sens ($\Rightarrow$) : On suppose $P(X=x, Y=y) = P(X=x)P(Y=y)$ pour tous $x, y$.
+    Soit $A \subset X(\Omega)$ et $B \subset Y(\Omega)$.
+    $P(X \in A, Y \in B) = P( (\cup_{x \in A} \{X=x\}) \cap (\cup_{y \in B} \{Y=y\}) ) = P( \cup_{x \in A, y \in B} \{X=x, Y=y\} )$
+    Cette dernière union est disjointe. Par $\sigma$-additivité :
+    $P(X \in A, Y \in B) = \sum_{x \in A} \sum_{y \in B} P(X=x, Y=y)$
+    Par indépendance :
+    $= \sum_{x \in A} \sum_{y \in B} P(X=x) P(Y=y)$
+    On peut factoriser :
+    $= \left( \sum_{x \in A} P(X=x) \right) \left( \sum_{y \in B} P(Y=y) \right)$
+    $= P(X \in A) P(Y \in B)$. $\square$
+</div>
+
+
+<div class="definition">
+    <strong>Définition (Indépendance mutuelle d'une famille de v.a.d.).</strong>
+    Soit $(X_i)_{i \in I}$ une famille de variables aléatoires discrètes définies sur le même espace. On dit qu'elles sont <strong>mutuellement indépendantes</strong> si, pour toute partie finie $J = \{i_1, \dots, i_p\} \subset I$, et pour tout choix de valeurs $(x_{i_1}, \dots, x_{i_p})$ dans $X_{i_1}(\Omega) \times \dots \times X_{i_p}(\Omega)$, on a :
+    $$ P(X_{i_1}=x_{i_1}, \dots, X_{i_p}=x_{i_p}) = P(X_{i_1}=x_{i_1}) \dots P(X_{i_p}=x_{i_p}) $$
+    Ceci équivaut à dire que pour toute partie finie $J \subset I$ et tout choix d'ensembles $A_j \subset X_j(\Omega)$ pour $j \in J$, on a $P(\bigcap_{j \in J} \{X_j \in A_j\}) = \prod_{j \in J} P(X_j \in A_j)$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Fonctions de variables aléatoires indépendantes).</strong>
+    Si $X$ et $Y$ sont deux variables aléatoires discrètes indépendantes, et si $f$ est une application définie sur $X(\Omega)$ et $g$ est une application définie sur $Y(\Omega)$, alors les variables aléatoires $f(X)$ et $g(Y)$ sont indépendantes.
+    Plus généralement, si $(X_i)_{i \in I}$ est une famille de v.a.d. mutuellement indépendantes et $(f_i)_{i \in I}$ est une famille d'applications ($f_i$ définie sur $X_i(\Omega)$), alors la famille $(f_i(X_i))_{i \in I}$ est mutuellement indépendante.
+</div>
+
+<div class="lemma">
+    <strong>Lemme des coalitions.</strong>
+    Si $X_1, \dots, X_n$ sont des variables aléatoires discrètes mutuellement indépendantes, alors pour tout $m \in \{1, \dots, n-1\}$, les variables aléatoires (vectorielles) $U = (X_1, \dots, X_m)$ et $V = (X_{m+1}, \dots, X_n)$ sont indépendantes.
+    En conséquence, pour toutes fonctions $f$ et $g$ (définies sur les espaces produits correspondants), les variables aléatoires $f(X_1, \dots, X_m)$ et $g(X_{m+1}, \dots, X_n)$ sont indépendantes.
+    Ce résultat se généralise : si $(X_i)_{i \in I}$ est une famille mutuellement indépendante, si $(I_j)_{j \in J}$ est une partition de $I$, et si $f_j$ est une fonction des $(X_i)_{i \in I_j}$, alors les variables $Y_j = f_j((X_i)_{i \in I_j})$ forment une famille $(Y_j)_{j \in J}$ mutuellement indépendante.
+</div>
+
+<h2>4. Espérance</h2>
+
+<div class="definition">
+    <strong>Définition (Espérance d'une v.a.d. positive).</strong>
+    Soit $X$ une variable aléatoire discrète à valeurs dans $\mathbb{R}_+ \cup \{+\infty\}$. L'<strong>espérance</strong> de $X$, notée $E(X)$, est définie comme la somme (dans $[0, +\infty]$) de la famille à termes positifs ou nuls $(x P(X=x))_{x \in X(\Omega)}$ :
+    $$ E(X) = \sum_{x \in X(\Omega)} x P(X=x) $$
+    Cette somme existe toujours dans $[0, +\infty]$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Formule de l'espérance par l'antirépartition pour $X$ à valeurs dans $\mathbb{N}$).</strong>
+    Soit $X$ une variable aléatoire à valeurs dans $\mathbb{N} \cup \{+\infty\}$. Alors :
+    $$ E(X) = \sum_{n=1}^{+\infty} P(X \ge n) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    On suppose pour simplifier $X(\Omega) \subset \mathbb{N}$.
+    $E(X) = \sum_{k=0}^\infty k P(X=k) = \sum_{k=1}^\infty k P(X=k)$.
+    $\sum_{n=1}^\infty P(X \ge n) = \sum_{n=1}^\infty \left( \sum_{k=n}^\infty P(X=k) \right)$.
+    C'est une somme double à termes positifs. On peut intervertir les sommations (théorème de Fubini-Tonelli pour les séries doubles) :
+    $\sum_{n=1}^\infty \sum_{k=n}^\infty P(X=k) = \sum_{k=1}^\infty \sum_{n=1}^k P(X=k)$ (l'inégalité $k \ge n \ge 1$ équivaut à $1 \le n \le k$ avec $k \ge 1$).
+    $\sum_{k=1}^\infty \left( P(X=k) \sum_{n=1}^k 1 \right) = \sum_{k=1}^\infty P(X=k) \times k = E(X)$. $\square$
+</div>
+
+
+<div class="definition">
+    <strong>Définition (Espérance d'une v.a.d. à valeurs complexes ou réelles).</strong>
+    Soit $X$ une variable aléatoire discrète à valeurs dans $\mathbb{C}$ (ou $\mathbb{R}$). On dit que $X$ admet une <strong>espérance finie</strong> (ou que $X$ est <strong>intégrable</strong>) si la famille $(x P(X=x))_{x \in X(\Omega)}$ est sommable dans $\mathbb{C}$ (ou $\mathbb{R}$).
+    Ceci équivaut à dire que la série $\sum_{x \in X(\Omega)} |x| P(X=x)$ converge, c'est-à-dire $E(|X|)$ est finie.
+    Si $X$ admet une espérance finie, son <strong>espérance</strong> $E(X)$ est la somme de cette famille :
+    $$ E(X) = \sum_{x \in X(\Omega)} x P(X=x) $$
+    L'ensemble des v.a.d. sur $(\Omega, \mathcal{T}, P)$ admettant une espérance finie est noté $L^1(\Omega, \mathcal{T}, P)$ ou $L^1$.
+    Une variable $X \in L^1$ est dite <strong>centrée</strong> si $E(X) = 0$.
+</div>
+
+<div class="remark">
+L'espérance $E(X)$ ne dépend que de la loi de $X$. Si $X \sim Y$ et $X \in L^1$, alors $Y \in L^1$ et $E(X)=E(Y)$.
+</div>
+
+<div class="example">
+    <strong>Espérances des lois usuelles :</strong>
+    <ul>
+        <li>Si $X \sim \mathcal{B}(p)$, $E(X) = 1 \times p + 0 \times (1-p) = p$.</li>
+        <li>Si $X \sim \mathcal{B}(n, p)$, $E(X) = np$. (Peut se montrer par calcul direct ou en voyant $X$ comme somme de $n$ Bernoulli indépendantes).</li>
+        <li>Si $X \sim \mathcal{G}(p)$ ($p \in ]0, 1[$), $E(X) = 1/p$.</li>
+        <li>Si $X \sim \mathcal{P}(\lambda)$ ($\lambda > 0$), $E(X) = \lambda$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Transfert (pour l'espérance).</strong>
+    Soit $X: \Omega \to E$ une variable aléatoire discrète et $f: E \to \mathbb{C}$ (ou $\mathbb{R}$) une application.
+    Alors la variable aléatoire $Y=f(X)$ admet une espérance finie si et seulement si la famille $(f(x) P(X=x))_{x \in X(\Omega)}$ est sommable (ou de manière équivalente, si $\sum_{x \in X(\Omega)} |f(x)| P(X=x) < +\infty$).
+    Dans ce cas,
+    $$ E(f(X)) = \sum_{x \in X(\Omega)} f(x) P(X=x) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Idée de la preuve :</span>
+    Par définition, $Y=f(X)$ a une espérance finie si $E(|Y|) < \infty$.
+    $E(|Y|) = \sum_{y \in Y(\Omega)} |y| P(Y=y)$.
+    En utilisant la loi de $Y$: $P(Y=y) = \sum_{x: f(x)=y} P(X=x)$.
+    $E(|Y|) = \sum_{y \in Y(\Omega)} |y| \left( \sum_{x: f(x)=y} P(X=x) \right)$.
+    Comme $y=f(x)$ dans la somme interne, $|y|=|f(x)|$.
+    $E(|Y|) = \sum_{y \in Y(\Omega)} \sum_{x: f(x)=y} |f(x)| P(X=x)$.
+    Par regroupement (possible car termes positifs), c'est $\sum_{x \in X(\Omega)} |f(x)| P(X=x)$.
+    Donc $Y \in L^1 \iff \sum |f(x)| P(X=x) < \infty$.
+    Si c'est le cas, un calcul similaire sans les valeurs absolues montre $E(Y) = \sum_{x \in X(\Omega)} f(x) P(X=x)$. $\square$
+</div>
+
+<div class="remark">
+Ce théorème est très utile : pour calculer $E(f(X))$, on n'a pas besoin de déterminer explicitement la loi de $f(X)$, il suffit de connaître la loi de $X$.
+</div>
+
+<div class="proposition">
+    <strong>Propriétés de l'espérance.</strong> Soient $X, Y$ des v.a.d. sur $(\Omega, \mathcal{T}, P)$ à valeurs dans $\mathbb{C}$ (ou $\mathbb{R}$).
+    <ul>
+        <li><strong>Linéarité :</strong> Si $X, Y \in L^1$ et $\lambda \in \mathbb{C}$, alors $\lambda X + Y \in L^1$ et $E(\lambda X + Y) = \lambda E(X) + E(Y)$. L'ensemble $L^1$ est un espace vectoriel sur $\mathbb{C}$ (ou $\mathbb{R}$), et l'application $E: L^1 \to \mathbb{C}$ est linéaire.</li>
+        <li><strong>Positivité :</strong> Si $X$ est à valeurs dans $\mathbb{R}_+$ ($X \ge 0$), alors $E(X) \ge 0$.</li>
+        <li><strong>Croissance :</strong> Si $X, Y$ sont à valeurs réelles, $X, Y \in L^1$ et $X \le Y$ (signifie $X(\omega) \le Y(\omega)$ pour tout $\omega$), alors $E(X) \le E(Y)$.</li>
+        <li><strong>Inégalité triangulaire :</strong> $X \in L^1 \iff |X| \in L^1$. Si $X \in L^1$, alors $|E(X)| \le E(|X|)$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <span class="proof-title">Idées des preuves :</span>
+    La linéarité découle de la linéarité de la somme (finie ou de série convergente). La sommabilité de $\lambda X+Y$ vient de $|\lambda X+Y| \le |\lambda||X| + |Y|$ et de $E(|\lambda||X| + |Y|) = |\lambda|E(|X|) + E(|Y|) < \infty$.
+    La positivité est immédiate car la somme est à termes positifs.
+    La croissance découle de la positivité appliquée à $Y-X \ge 0$, et de la linéarité : $E(Y-X) \ge 0 \implies E(Y) - E(X) \ge 0$.
+    L'équivalence $X \in L^1 \iff |X| \in L^1$ est par définition. L'inégalité $|E(X)| \le E(|X|)$ vient de $|\sum x P(X=x)| \le \sum |x P(X=x)| = \sum |x| P(X=x) = E(|X|)$. $\square$
+</div>
+
+<div class="theorem">
+    <strong>Espérance d'un produit de variables indépendantes.</strong>
+    Si $X$ et $Y$ sont deux variables aléatoires discrètes indépendantes et $X, Y \in L^1$, alors le produit $XY$ est aussi dans $L^1$ et
+    $$ E(XY) = E(X) E(Y) $$
+    Plus généralement, si $X_1, \dots, X_n$ sont des v.a.d. mutuellement indépendantes et dans $L^1$, alors le produit $X_1 \dots X_n$ est dans $L^1$ et
+    $$ E(X_1 \dots X_n) = E(X_1) \dots E(X_n) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Idée de la preuve (pour $X, Y$ réelles positives) :</span>
+    $E(XY) = \sum_{z} z P(XY=z)$ par définition.
+    Par le théorème de transfert, $E(XY) = \sum_{(x,y) \in X(\Omega) \times Y(\Omega)} xy P(X=x, Y=y)$.
+    Par indépendance, $P(X=x, Y=y) = P(X=x) P(Y=y)$.
+    $E(XY) = \sum_{x \in X(\Omega)} \sum_{y \in Y(\Omega)} xy P(X=x) P(Y=y)$.
+    Comme les termes sont positifs, on peut réarranger :
+    $E(XY) = \left( \sum_{x \in X(\Omega)} x P(X=x) \right) \left( \sum_{y \in Y(\Omega)} y P(Y=y) \right) = E(X) E(Y)$.
+    Le cas général demande de vérifier la sommabilité $E(|XY|) < \infty$ en utilisant l'indépendance de $|X|$ et $|Y|$, puis d'appliquer le même calcul. $\square$
+</div>
+
+
+<h2>5. Variance, Covariance, Écart-type</h2>
+
+<div class="definition">
+    <strong>Espace $L^2$.</strong>
+    On note $L^2(\Omega, \mathcal{T}, P)$ ou $L^2$ l'ensemble des variables aléatoires discrètes $X$ à valeurs réelles telles que $X^2$ admet une espérance finie, i.e., $E(X^2) < +\infty$.
+    On dit aussi que $X$ admet un moment d'ordre 2.
+</div>
+
+<div class="proposition">
+    <strong>Inégalité de Cauchy-Schwarz.</strong>
+    Si $X, Y \in L^2$, alors le produit $XY$ est dans $L^1$ ($E(|XY|) < \infty$) et on a :
+    $$ (E(XY))^2 \le E(X^2) E(Y^2) $$
+</div>
+<div class="proof">
+    <span class="proof-title">Idée de la preuve :</span>
+    Considérer $P(t) = E((tX+Y)^2) = E(t^2 X^2 + 2t XY + Y^2) = t^2 E(X^2) + 2t E(XY) + E(Y^2)$.
+    Comme $(tX+Y)^2 \ge 0$, on a $P(t) \ge 0$ pour tout $t \in \mathbb{R}$.
+    C'est un polynôme du second degré en $t$ qui est toujours positif ou nul. Son discriminant $\Delta$ doit donc être $\le 0$.
+    $\Delta = (2 E(XY))^2 - 4 E(X^2) E(Y^2) = 4 [ (E(XY))^2 - E(X^2) E(Y^2) ]$.
+    $\Delta \le 0 \implies (E(XY))^2 \le E(X^2) E(Y^2)$.
+    Pour montrer $XY \in L^1$, on utilise $|XY| \le \frac{1}{2}(X^2 + Y^2)$, donc $E(|XY|) \le \frac{1}{2}(E(X^2) + E(Y^2)) < \infty$. $\square$
+</div>
+
+<div class="corollary">
+    Si $X \in L^2$, alors $X \in L^1$. ($L^2 \subset L^1$).
+</div>
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Appliquer Cauchy-Schwarz avec $Y=1$. $Y=1$ est dans $L^2$ car $E(Y^2)=E(1)=1$.
+    $(E(X \times 1))^2 \le E(X^2) E(1^2) = E(X^2)$.
+    $(E(X))^2 \le E(X^2) < \infty$. Donc $E(X)$ est fini, mais ça ne suffit pas.
+    Il faut montrer $E(|X|) < \infty$. On utilise Cauchy-Schwarz pour $E(|X| \times 1)$:
+    $(E(|X|))^2 \le E(|X|^2) E(1^2) = E(X^2) < \infty$. Donc $E(|X|)$ est fini. $\square$
+</div>
+
+<div class="corollary">
+    L'ensemble $L^2(\Omega, \mathcal{T}, P)$ est un sous-espace vectoriel de $L^1$.
+</div>
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Si $X, Y \in L^2$, $\lambda \in \mathbb{R}$. On veut montrer $\lambda X + Y \in L^2$.
+    $E((\lambda X + Y)^2) = E(\lambda^2 X^2 + 2\lambda XY + Y^2)$.
+    Par linéarité (possible car $X^2, Y^2 \in L^1$ et $XY \in L^1$ par Cauchy-Schwarz) :
+    $E((\lambda X + Y)^2) = \lambda^2 E(X^2) + 2\lambda E(XY) + E(Y^2)$.
+    Comme $E(X^2)$, $E(Y^2)$ et $E(XY)$ sont finis, cette quantité est finie. $\square$
+</div>
+
+<div class="definition">
+    <strong>Variance et Écart-type.</strong>
+    Soit $X \in L^2$ (à valeurs réelles).
+    <ul>
+        <li>La <strong>variance</strong> de $X$ est le réel positif ou nul :
+            $$ V(X) = E\left( (X - E(X))^2 \right) $$</li>
+        <li>L'<strong>écart-type</strong> de $X$ est le réel positif ou nul :
+            $$ \sigma(X) = \sqrt{V(X)} $$</li>
+    </ul>
+    La variance mesure la dispersion de la variable aléatoire autour de son espérance.
+</div>
+
+<div class="proposition">
+    <strong>Propriétés de la variance.</strong> Soit $X \in L^2$.
+    <ul>
+        <li>$V(X) \ge 0$. $V(X)=0$ si et seulement si $X$ est une variable aléatoire constante presque sûrement (i.e., $P(X = E(X)) = 1$).</li>
+        <li><strong>Formule de Koenig-Huygens :</strong> $V(X) = E(X^2) - (E(X))^2$.</li>
+        <li>Pour tous $a, b \in \mathbb{R}$, $aX+b \in L^2$ et $V(aX + b) = a^2 V(X)$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve (Koenig-Huygens) :</span>
+    $V(X) = E((X - E(X))^2)$. Notons $m=E(X)$ (qui est fini car $X \in L^2 \subset L^1$).
+    $V(X) = E(X^2 - 2mX + m^2)$.
+    Par linéarité de l'espérance (applicable car $X^2, X, m^2$ sont dans $L^1$) :
+    $V(X) = E(X^2) - E(2mX) + E(m^2)$
+    $V(X) = E(X^2) - 2m E(X) + m^2$
+    $V(X) = E(X^2) - 2m(m) + m^2 = E(X^2) - m^2 = E(X^2) - (E(X))^2$. $\square$
+</div>
+
+<div class="definition">
+    <strong>Variable centrée réduite.</strong>
+    <ul>
+        <li>Une variable $X \in L^1$ est <strong>centrée</strong> si $E(X)=0$.</li>
+        <li>Une variable $X \in L^2$ est <strong>réduite</strong> si $V(X)=1$.</li>
+    </ul>
+    Si $X \in L^2$ avec $V(X) > 0$, alors la variable $X^* = \frac{X - E(X)}{\sigma(X)}$ est centrée et réduite. ($E(X^*) = E(\frac{X-m}{\sigma}) = \frac{1}{\sigma}(E(X)-m)=0$. $V(X^*) = V(\frac{1}{\sigma}X - \frac{m}{\sigma}) = (\frac{1}{\sigma})^2 V(X) = \frac{1}{V(X)} V(X) = 1$.)
+</div>
+
+<div class="example">
+    <strong>Variances des lois usuelles :</strong>
+    <ul>
+        <li>Si $X \sim \mathcal{B}(p)$, $E(X^2) = 1^2 p + 0^2 (1-p) = p$. $V(X) = E(X^2) - (E(X))^2 = p - p^2 = p(1-p)$.</li>
+        <li>Si $X \sim \mathcal{B}(n, p)$, $V(X) = np(1-p)$.</li>
+        <li>Si $X \sim \mathcal{G}(p)$ ($p \in ]0, 1[$), $V(X) = (1-p)/p^2$.</li>
+        <li>Si $X \sim \mathcal{P}(\lambda)$ ($\lambda > 0$), $V(X) = \lambda$. (Fait remarquable : $E(X)=V(X)=\lambda$).</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Covariance.</strong>
+    Si $X, Y \in L^2$, on appelle <strong>covariance</strong> de $X$ et $Y$ le réel :
+    $$ \text{Cov}(X, Y) = E\left( (X - E(X)) (Y - E(Y)) \right) $$
+    Formule de Koenig-Huygens pour la covariance :
+    $$ \text{Cov}(X, Y) = E(XY) - E(X) E(Y) $$
+    Remarques :
+    <ul>
+        <li>$\text{Cov}(X, X) = V(X)$.</li>
+        <li>La covariance est bilinéaire symétrique.</li>
+        <li>Si $X$ et $Y$ sont indépendantes et dans $L^2$ (donc $L^1$), alors $E(XY) = E(X)E(Y)$, donc $\text{Cov}(X, Y) = 0$.</li>
+        <li>Attention : la réciproque est fausse ! $\text{Cov}(X, Y) = 0$ n'implique pas que $X$ et $Y$ sont indépendantes. On dit alors que $X$ et $Y$ sont non corrélées.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Variance d'une somme.</strong>
+    Soient $X_1, \dots, X_n$ des variables aléatoires dans $L^2$. Alors la somme $S_n = \sum_{i=1}^n X_i$ est aussi dans $L^2$ et sa variance est :
+    $$ V(S_n) = V\left( \sum_{i=1}^n X_i \right) = \sum_{i=1}^n V(X_i) + 2 \sum_{1 \le i < j \le n} \text{Cov}(X_i, X_j) $$
+    Cas particulier important : si les variables $X_1, \dots, X_n$ sont <strong>deux à deux indépendantes</strong> (ce qui implique $\text{Cov}(X_i, X_j)=0$ pour $i \neq j$), alors :
+    $$ V\left( \sum_{i=1}^n X_i \right) = \sum_{i=1}^n V(X_i) $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Idée de la preuve (cas $n=2$) :</span>
+    $V(X+Y) = E((X+Y - E(X+Y))^2) = E(((X-E(X)) + (Y-E(Y)))^2)$
+    Notons $\tilde{X} = X-E(X)$ et $\tilde{Y} = Y-E(Y)$. $E(\tilde{X})=E(\tilde{Y})=0$.
+    $V(X+Y) = E((\tilde{X} + \tilde{Y})^2) = E(\tilde{X}^2 + 2\tilde{X}\tilde{Y} + \tilde{Y}^2)$
+    Par linéarité : $V(X+Y) = E(\tilde{X}^2) + 2 E(\tilde{X}\tilde{Y}) + E(\tilde{Y}^2)$.
+    $E(\tilde{X}^2) = V(X)$, $E(\tilde{Y}^2) = V(Y)$, et $E(\tilde{X}\tilde{Y}) = \text{Cov}(X, Y)$.
+    Donc $V(X+Y) = V(X) + V(Y) + 2 \text{Cov}(X, Y)$. La formule générale s'obtient par récurrence ou en développant le carré de la somme. $\square$
+</div>
+
+<h2>6. Estimation et Convergence</h2>
+
+<div class="proposition">
+    <strong>Inégalité de Markov.</strong>
+    Soit $X$ une variable aléatoire réelle dans $L^1$. Pour tout $t > 0$ :
+    $$ P(|X| \ge t) \le \frac{E(|X|)}{t} $$
+    Si $X \ge 0$, $P(X \ge t) \le E(X)/t$.
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve (cas $X \ge 0$) :</span>
+    Soit $t > 0$. Considérons la variable aléatoire $Y = t \mathbb{1}_{\{X \ge t\}}$, où $\mathbb{1}_A$ est la fonction indicatrice de l'événement $A$.
+    Clairement, $Y(\omega) = t$ si $X(\omega) \ge t$, et $Y(\omega) = 0$ si $X(\omega) < t$.
+    Dans tous les cas, $Y(\omega) \le X(\omega)$.
+    Par croissance de l'espérance, $E(Y) \le E(X)$.
+    Calculons $E(Y)$ par le théorème de transfert (ou directement) :
+    $E(Y) = t \times P(X \ge t) + 0 \times P(X < t) = t P(X \ge t)$.
+    Donc $t P(X \ge t) \le E(X)$. Comme $t > 0$, on divise par $t$ : $P(X \ge t) \le E(X)/t$.
+    Le cas général s'obtient en appliquant ceci à $|X|$. $\square$
+</div>
+
+<div class="proposition">
+    <strong>Inégalité de Bienaymé-Tchebychev.</strong>
+    Soit $X \in L^2$. Pour tout $\varepsilon > 0$ :
+    $$ P(|X - E(X)| \ge \varepsilon) \le \frac{V(X)}{\varepsilon^2} $$
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Appliquons l'inégalité de Markov à la variable aléatoire $Y = (X - E(X))^2$. $Y$ est positive.
+    Son espérance est $E(Y) = E((X - E(X))^2) = V(X)$.
+    L'événement $\{|X - E(X)| \ge \varepsilon\}$ est le même que l'événement $\{ (X - E(X))^2 \ge \varepsilon^2 \}$, c'est-à-dire $\{ Y \ge \varepsilon^2 \}$.
+    Markov appliquée à $Y$ avec $t = \varepsilon^2 > 0$ donne :
+    $P(Y \ge \varepsilon^2) \le \frac{E(Y)}{\varepsilon^2}$.
+    En substituant, on obtient $P(|X - E(X)| \ge \varepsilon) \le \frac{V(X)}{\varepsilon^2}$. $\square$
+</div>
+
+<div class="theorem">
+    <strong>Loi Faible des Grands Nombres (WLLN).</strong>
+    Soit $(X_n)_{n \ge 1}$ une suite de variables aléatoires discrètes réelles définies sur le même espace $(\Omega, \mathcal{T}, P)$. On suppose que :
+    <ol>
+        <li>Les $X_n$ sont deux à deux indépendantes.</li>
+        <li>Les $X_n$ suivent toutes la même loi.</li>
+        <li>Elles admettent une variance finie $\sigma^2 = V(X_1)$ (ce qui implique qu'elles ont une espérance finie $m = E(X_1)$).</li>
+    </ol>
+    Soit $S_n = X_1 + \dots + X_n$ la somme partielle, et $\bar{X}_n = S_n / n$ la moyenne empirique.
+    Alors, pour tout $\varepsilon > 0$ :
+    $$ \lim_{n \to +\infty} P\left( \left| \frac{S_n}{n} - m \right| \ge \varepsilon \right) = 0 $$
+    On dit que la moyenne empirique $\bar{X}_n$ converge en probabilité vers l'espérance théorique $m$.
+    <!-- Présentation et démonstration de la loi faible des grands nombres -->
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    Calculons l'espérance et la variance de $\bar{X}_n = S_n / n$.
+    $E(\bar{X}_n) = E(\frac{1}{n} \sum_{i=1}^n X_i) = \frac{1}{n} \sum_{i=1}^n E(X_i)$. Comme $E(X_i)=m$ pour tout $i$, $E(\bar{X}_n) = \frac{1}{n} (n m) = m$.
+    $V(\bar{X}_n) = V(\frac{1}{n} S_n) = (\frac{1}{n})^2 V(S_n)$.
+    Comme les $X_i$ sont deux à deux indépendantes, $V(S_n) = \sum_{i=1}^n V(X_i)$. Comme $V(X_i) = \sigma^2$ pour tout $i$, $V(S_n) = n \sigma^2$.
+    Donc $V(\bar{X}_n) = \frac{1}{n^2} (n \sigma^2) = \frac{\sigma^2}{n}$.
+    Appliquons l'inégalité de Bienaymé-Tchebychev à la variable $\bar{X}_n$ :
+    $P(|\bar{X}_n - E(\bar{X}_n)| \ge \varepsilon) \le \frac{V(\bar{X}_n)}{\varepsilon^2}$.
+    $P(|\bar{X}_n - m| \ge \varepsilon) \le \frac{\sigma^2 / n}{\varepsilon^2} = \frac{\sigma^2}{n \varepsilon^2}$.
+    Quand $n \to +\infty$, $\frac{\sigma^2}{n \varepsilon^2} \to 0$.
+    Par le théorème des gendarmes ($0 \le P(|\bar{X}_n - m| \ge \varepsilon) \le \frac{\sigma^2}{n \varepsilon^2}$), on conclut que $\lim_{n \to \infty} P(|\bar{X}_n - m| \ge \varepsilon) = 0$. $\square$
+</div>
+
+
+<h2>7. Fonction Génératrice</h2>
+<!-- Cours sur la fonction génératrice -->
+
+<div class="definition">
+    <strong>Définition (Fonction Génératrice).</strong>
+    Soit $X$ une variable aléatoire discrète à valeurs dans $\mathbb{N}$. On appelle <strong>fonction génératrice</strong> de $X$ (PGF: Probability Generating Function) l'application $G_X$ définie pour $t \in \mathbb{R}$ par la série entière :
+    $$ G_X(t) = E(t^X) = \sum_{n=0}^{+\infty} P(X=n) t^n $$
+</div>
+
+<div class="proposition">
+    <strong>Propriétés de la fonction génératrice.</strong>
+    <ul>
+        <li>Le rayon de convergence $R$ de la série entière $\sum P(X=n) t^n$ est supérieur ou égal à 1. En effet, pour $|t| \le 1$, $|P(X=n) t^n| \le P(X=n)$, et $\sum P(X=n) = 1$ (série convergente).</li>
+        <li>$G_X(t)$ est donc bien définie et de classe $C^\infty$ sur l'intervalle $]-R, R[$, qui contient au moins $]-1, 1[$.</li>
+        <li>$G_X(1) = \sum_{n=0}^\infty P(X=n) = 1$. Si $R > 1$, $G_X$ est continue en $t=1$. Si $R=1$, le théorème d'Abel radial assure que $\lim_{t \to 1^-} G_X(t) = G_X(1) = 1$ (car la série $\sum P(X=n)$ converge).</li>
+        <li>La fonction $G_X$ est définie et continue sur $[-1, 1]$.</li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Fonctions génératrices des lois usuelles :</strong>
+    <ul>
+        <li>$X \sim \mathcal{B}(p)$: $G_X(t) = P(X=0)t^0 + P(X=1)t^1 = (1-p) + pt$.</li>
+        <li>$X \sim \mathcal{B}(n, p)$: $G_X(t) = \sum_{k=0}^n \binom{n}{k} p^k (1-p)^{n-k} t^k = \sum_{k=0}^n \binom{n}{k} (pt)^k (1-p)^{n-k} = ( (1-p) + pt )^n$.</li>
+        <li>$X \sim \mathcal{G}(p)$ (sur $\mathbb{N}^*$): $G_X(t) = \sum_{n=1}^\infty p(1-p)^{n-1} t^n = pt \sum_{n=1}^\infty ((1-p)t)^{n-1} = pt \sum_{k=0}^\infty ((1-p)t)^k$. La série converge pour $|(1-p)t| < 1$, soit $|t| < 1/(1-p)$ (ici $R=1/(1-p) > 1$). La somme vaut $pt \frac{1}{1 - (1-p)t} = \frac{pt}{1 - (1-p)t}$.</li>
+        <li>$X \sim \mathcal{P}(\lambda)$: $G_X(t) = \sum_{n=0}^\infty e^{-\lambda} \frac{\lambda^n}{n!} t^n = e^{-\lambda} \sum_{n=0}^\infty \frac{(\lambda t)^n}{n!} = e^{-\lambda} e^{\lambda t} = e^{\lambda(t-1)}$. (Ici $R=+\infty$).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>La fonction génératrice caractérise la loi.</strong>
+    Si $X$ est une variable aléatoire à valeurs dans $\mathbb{N}$, sa loi $(P(X=n))_{n \in \mathbb{N}}$ est entièrement déterminée par sa fonction génératrice $G_X(t)$. Plus précisément, $G_X$ est la somme d'une série entière dont les coefficients sont les probabilités :
+    $$ P(X=n) = \frac{G_X^{(n)}(0)}{n!} $$
+    où $G_X^{(n)}(0)$ est la dérivée $n$-ième de $G_X$ évaluée en 0.
+    En conséquence, si $X$ et $Y$ sont deux v.a. à valeurs dans $\mathbb{N}$, $X \sim Y$ si et seulement si $G_X(t) = G_Y(t)$ pour tout $t$ dans un voisinage de 0 (ou sur $]-1, 1[$).
+</div>
+
+<div class="theorem">
+    <strong>Fonction génératrice d'une somme de variables indépendantes.</strong>
+    Si $X$ et $Y$ sont deux variables aléatoires indépendantes à valeurs dans $\mathbb{N}$, alors la fonction génératrice de leur somme $S = X+Y$ est le produit de leurs fonctions génératrices :
+    $$ G_{X+Y}(t) = G_X(t) G_Y(t) $$
+    pour tout $t$ où les deux membres sont définis (au moins sur $]-1, 1[$).
+</div>
+
+<div class="proof">
+    <span class="proof-title">Preuve :</span>
+    $G_{X+Y}(t) = E(t^{X+Y}) = E(t^X t^Y)$.
+    Comme $X$ et $Y$ sont indépendantes, les variables $f(X)=t^X$ et $g(Y)=t^Y$ sont indépendantes (pour $t$ fixé).
+    Si $t \ge 0$, elles sont positives, donc $E(t^X t^Y) = E(t^X) E(t^Y) = G_X(t) G_Y(t)$.
+    Le cas $t<0$ demande un peu plus d'attention sur la convergence absolue mais le résultat tient. $\square$
+</div>
+
+<div class="example">
+    <strong>Somme de lois Binomiales indépendantes :</strong> Si $X \sim \mathcal{B}(n, p)$ et $Y \sim \mathcal{B}(m, p)$ sont indépendantes, alors $G_X(t) = ((1-p)+pt)^n$ et $G_Y(t) = ((1-p)+pt)^m$.
+    $G_{X+Y}(t) = G_X(t) G_Y(t) = ((1-p)+pt)^{n+m}$.
+    On reconnaît la fonction génératrice d'une loi $\mathcal{B}(n+m, p)$. Donc $X+Y \sim \mathcal{B}(n+m, p)$.
+</div>
+<div class="example">
+    <strong>Somme de lois de Poisson indépendantes :</strong> Si $X \sim \mathcal{P}(\lambda)$ et $Y \sim \mathcal{P}(\mu)$ sont indépendantes, alors $G_X(t) = e^{\lambda(t-1)}$ et $G_Y(t) = e^{\mu(t-1)}$.
+    $G_{X+Y}(t) = G_X(t) G_Y(t) = e^{\lambda(t-1)} e^{\mu(t-1)} = e^{(\lambda+\mu)(t-1)}$.
+    On reconnaît la fonction génératrice d'une loi $\mathcal{P}(\lambda+\mu)$. Donc $X+Y \sim \mathcal{P}(\lambda+\mu)$.
+</div>
+
+<div class="theorem">
+    <strong>Calcul de l'espérance et de la variance via la fonction génératrice.</strong>
+    Soit $X$ une variable aléatoire à valeurs dans $\mathbb{N}$.
+    <ol>
+        <li>$X$ admet une espérance finie ($X \in L^1$) si et seulement si $G_X$ est dérivable à gauche en $t=1$. Dans ce cas :
+            $$ E(X) = G_X'(1^-) = \lim_{t \to 1^-} G_X'(t) $$
+            (Si le rayon de convergence $R > 1$, $G_X$ est dérivable en 1 et $E(X) = G_X'(1)$).
+        </li>
+        <li>$X$ admet un moment d'ordre 2 fini ($X \in L^2$) si et seulement si $G_X$ est deux fois dérivable à gauche en $t=1$. Dans ce cas :
+            $$ E(X(X-1)) = G_X''(1^-) = \lim_{t \to 1^-} G_X''(t) $$
+            Et la variance est donnée par :
+            $$ V(X) = E(X^2) - (E(X))^2 = E(X(X-1)) + E(X) - (E(X))^2 $$
+            $$ V(X) = G_X''(1^-) + G_X'(1^-) - (G_X'(1^-))^2 $$
+            (Si $R>1$, on peut remplacer $1^-$ par $1$).
+        </li>
+    </ol>
+</div>
+
+<div class="proof">
+    <span class="proof-title">Idée de la preuve (cas $R>1$) :</span>
+    $G_X(t) = \sum_{n=0}^\infty P(X=n) t^n$.
+    On peut dériver terme à terme une série entière à l'intérieur de son disque ouvert de convergence.
+    $G_X'(t) = \sum_{n=1}^\infty P(X=n) n t^{n-1}$ pour $t \in ]-R, R[$.
+    En $t=1$: $G_X'(1) = \sum_{n=1}^\infty n P(X=n) = E(X)$.
+    $G_X''(t) = \sum_{n=2}^\infty P(X=n) n(n-1) t^{n-2}$ pour $t \in ]-R, R[$.
+    En $t=1$: $G_X''(1) = \sum_{n=2}^\infty n(n-1) P(X=n) = \sum_{n=0}^\infty n(n-1) P(X=n) = E(X(X-1))$.
+    La variance est $V(X) = E(X^2) - (E(X))^2 = E(X^2 - X + X) - (E(X))^2 = E(X(X-1)) + E(X) - (E(X))^2$. $\square$
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
