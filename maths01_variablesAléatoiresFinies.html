@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours - Variables Aléatoires Finies</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1tBCETigMK6kqQRJOKFJrtM4gtxA" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmImMNMokj" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .definition, .theorem, .proposition, .proof, .example, .corollary, .remark {
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 4px solid;
+        }
+        .definition { border-color: #17a2b8; background-color: #e1f5fe; }
+        .theorem { border-color: #28a745; background-color: #e8f5e9; }
+        .proposition { border-color: #ffc107; background-color: #fff8e1; }
+        .proof { border-color: #6c757d; background-color: #f8f9fa; font-style: italic; }
+        .example { border-color: #fd7e14; background-color: #fff3e0; }
+        .corollary { border-color: #007bff; background-color: #e7f3ff; }
+        .remark { border-color: #adb5bd; background-color: #e9ecef; }
+        strong { color: #0056b3; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Allow scrolling for wide formulas */
+        .video-link { font-style: italic; color: #6c757d; margin-left: 10px; }
+    </style>
+</head>
+<body>
+
+<h1>Variables Aléatoires Finies</h1>
+
+<div class="remark">
+    <strong>Contexte :</strong> $(\Omega, \mathcal{P}(\Omega), P)$ désigne un espace probabilisé fini. $\Omega$ est l'univers fini des issues possibles, $\mathcal{P}(\Omega)$ l'ensemble des événements, et $P$ une probabilité sur $\Omega$.
+</div>
+
+<h2>I. Variables aléatoires</h2>
+
+<div class="definition">
+    <strong>Variable aléatoire</strong><br>
+    On appelle <strong>variable aléatoire</strong> (v.a.) définie sur $\Omega$ à valeurs dans un ensemble $E$, toute application $X: \Omega \to E$.
+    Si $E$ est une partie de $\mathbb{R}$ (souvent un ensemble fini de réels), la variable aléatoire est dite <strong>réelle</strong>.
+    <br>
+    Intuitivement, une variable aléatoire associe une valeur (numérique ou non) à chaque issue de l'expérience aléatoire.
+</div>
+
+<div class="example">
+    On lance deux dés équilibrés. $\Omega = \{(i, j) \mid 1 \le i, j \le 6\}$.
+    <ul>
+        <li>$X(\omega) = i+j$ : somme des deux dés. $X$ est une v.a. réelle à valeurs dans $E=\{2, 3, \dots, 12\}$.</li>
+        <li>$Y(\omega) = \max(i, j)$ : le plus grand des deux résultats. $Y$ est une v.a. réelle à valeurs dans $E=\{1, 2, \dots, 6\}$.</li>
+        <li>$Z(\omega) = $ "pair" si $i+j$ est pair, "impair" sinon. $Z$ est une v.a. à valeurs dans $E=\{\text{pair, impair}\}$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Notation des événements liés à une v.a.</strong><br>
+    Soit $X: \Omega \to E$ une variable aléatoire.
+    <ul>
+        <li>Pour $A \subset E$, on note $(X \in A)$ l'événement $\{\omega \in \Omega \mid X(\omega) \in A\}$. C'est l'image réciproque $X^{-1}(A)$.</li>
+        <li>Si $A = \{x\}$, on note $(X=x)$ l'événement $\{\omega \in \Omega \mid X(\omega) = x\} = X^{-1}(\{x\})$.</li>
+        <li>Si $X$ est réelle, on utilise des notations similaires pour les intervalles :
+            <ul>
+                <li>$(X \le x) = \{\omega \in \Omega \mid X(\omega) \le x\} = X^{-1}(]-\infty, x])$.</li>
+                <li>$(X > x) = \{\omega \in \Omega \mid X(\omega) > x\} = X^{-1}(]x, +\infty[)$.</li>
+                <li>Etc. pour $(X < x)$, $(X \ge x)$, $(a < X \le b)$, etc.</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="theorem definition">
+    <strong>Loi d'une variable aléatoire</strong><br>
+    Soit $X: \Omega \to E$ une variable aléatoire. L'application $P_X$ définie sur $\mathcal{P}(E)$ par :
+    $$ \forall A \subset E, \quad P_X(A) = P(X \in A) = P(X^{-1}(A)) $$
+    est une probabilité sur l'ensemble d'arrivée $E$ (muni de sa tribu $\mathcal{P}(E)$).
+    $P_X$ est appelée la <strong>loi de probabilité</strong> (ou distribution) de la variable aléatoire $X$.
+</div>
+
+<div class="remark">
+    Comme $E$ est l'ensemble des valeurs possibles pour $X$, on se restreint souvent à l'ensemble image $X(\Omega) \subset E$.
+    La loi $P_X$ est entièrement déterminée par la donnée des probabilités des événements élémentaires $(X=x)$ pour $x \in E$ (ou juste $x \in X(\Omega)$). En effet, pour tout $A \subset E$:
+    $$ P_X(A) = P(X \in A) = \sum_{x \in A \cap X(\Omega)} P(X=x) $$
+    La famille $(P(X=x))_{x \in X(\Omega)}$ forme une distribution de probabilité sur $X(\Omega)$ : $P(X=x) \ge 0$ et $\sum_{x \in X(\Omega)} P(X=x) = P(\cup_{x \in X(\Omega)} \{X=x\}) = P(\Omega) = 1$.
+    Donner la loi d'une variable aléatoire finie $X$, c'est donner le tableau des valeurs $P(X=x)$ pour toutes les valeurs $x$ possibles prises par $X$.
+</div>
+
+<div class="definition">
+    <strong>Variables aléatoires de même loi</strong><br>
+    Deux variables aléatoires $X$ et $Y$ (pas nécessairement définies sur le même $\Omega$ ni à valeurs dans le même $E$) sont dites suivre la <strong>même loi</strong> si elles ont la même distribution de probabilité sur leurs ensembles images respectifs. Si elles sont à valeurs dans le même $E$, cela signifie $P_X = P_Y$, c'est-à-dire $P(X \in A) = P(Y \in A)$ pour tout $A \subset E$. On note $X \sim Y$.
+</div>
+
+<div class="definition">
+    <strong>Fonction d'une variable aléatoire</strong><br>
+    Si $X: \Omega \to E$ est une variable aléatoire et $f: E \to F$ est une fonction, alors $Y = f(X)$ (définie par $Y(\omega) = f(X(\omega))$) est une variable aléatoire $Y: \Omega \to F$.
+    Sa loi $P_Y$ est appelée la <strong>loi image</strong> de $P_X$ par $f$.
+</div>
+
+<div class="proposition">
+    <strong>Loi de $f(X)$</strong><br>
+    Pour calculer la loi de $Y = f(X)$, on calcule $P(Y=y)$ pour chaque $y \in f(E)$.
+    $$ P(Y=y) = P(f(X) = y) = P(X \in f^{-1}(\{y\})) = \sum_{x \in E, f(x)=y} P(X=x) $$
+</div>
+
+<div class="proposition">
+    <strong>Fonction de variables de même loi</strong><br>
+    Si $X, Y: \Omega \to E$ suivent la même loi ($X \sim Y$) et si $f: E \to F$, alors les variables aléatoires $f(X)$ et $f(Y)$ suivent la même loi ($f(X) \sim f(Y)$).
+</div>
+
+<div class="definition">
+    <strong>Loi conditionnelle</strong><br>
+    Soit $X: \Omega \to E$ une variable aléatoire et $A \subset \Omega$ un événement tel que $P(A) > 0$. La <strong>loi conditionnelle de $X$ sachant $A$</strong> est la probabilité $P_{X|A}$ sur $E$ définie par :
+    $$ P_{X|A}(\{x\}) = P(X=x | A) = \frac{P((X=x) \cap A)}{P(A)} $$
+    pour tout $x \in E$.
+</div>
+
+<h2>II. Lois usuelles (discrètes finies)</h2>
+
+<div class="definition">
+    <strong>Loi de Bernoulli</strong><br>
+    Une variable aléatoire $X$ suit une <strong>loi de Bernoulli</strong> de paramètre $p \in [0, 1]$, notée $X \sim \mathcal{B}(p)$, si $X$ est à valeurs dans $\{0, 1\}$ avec :
+    $$ P(X=1) = p \quad \text{et} \quad P(X=0) = 1-p $$
+    Elle modélise une expérience aléatoire avec deux issues : "succès" (codé 1, probabilité $p$) et "échec" (codé 0, probabilité $1-p$). Une telle expérience est appelée <strong>épreuve de Bernoulli</strong>.
+</div>
+
+<div class="definition">
+    <strong>Loi Binomiale</strong><br>
+    Une variable aléatoire $X$ suit une <strong>loi binomiale</strong> de paramètres $n \in \mathbb{N}^*$ et $p \in [0, 1]$, notée $X \sim \mathcal{B}(n, p)$, si $X$ est à valeurs dans $\{0, 1, \dots, n\}$ avec :
+    $$ \forall k \in \{0, 1, \dots, n\}, \quad P(X=k) = \binom{n}{k} p^k (1-p)^{n-k} $$
+    Elle modélise le nombre de succès obtenus lors de la répétition de $n$ épreuves de Bernoulli indépendantes, chacune ayant une probabilité de succès $p$.
+    (Vérification : $\sum_{k=0}^n P(X=k) = \sum_{k=0}^n \binom{n}{k} p^k (1-p)^{n-k} = (p + (1-p))^n = 1^n = 1$ par la formule du binôme de Newton).
+</div>
+
+<div class="definition">
+    <strong>Loi Uniforme Discrète</strong><br>
+    Une variable aléatoire $X$ suit une <strong>loi uniforme</strong> sur un ensemble fini $E = \{x_1, \dots, x_n\}$, notée $X \sim \mathcal{U}(E)$, si $X$ prend ses valeurs dans $E$ et si toutes les valeurs sont équiprobables :
+    $$ \forall k \in \{1, \dots, n\}, \quad P(X=x_k) = \frac{1}{\text{card}(E)} = \frac{1}{n} $$
+</div>
+
+<div class="example">
+    - Indicateur d'un événement : Soit $A$ un événement. La v.a. $\mathbf{1}_A$ définie par $\mathbf{1}_A(\omega)=1$ si $\omega \in A$ et $\mathbf{1}_A(\omega)=0$ si $\omega \notin A$ suit une loi de Bernoulli $\mathcal{B}(P(A))$.
+    - Lancer d'un dé équilibré : La v.a. $X$ donnant le résultat suit une loi uniforme $\mathcal{U}(\{1, 2, 3, 4, 5, 6\})$. $P(X=k) = 1/6$ pour $k \in \{1, \dots, 6\}$.
+    - Lancer 10 fois une pièce équilibrée ($p=1/2$). Le nombre $X$ de "Face" obtenus suit une loi binomiale $\mathcal{B}(10, 1/2)$. $P(X=k) = \binom{10}{k} (1/2)^k (1/2)^{10-k} = \binom{10}{k} / 2^{10}$.
+</div>
+
+<h2>III. Couple de variables aléatoires finies</h2>
+
+<div class="definition">
+    <strong>Couple de variables aléatoires</strong><br>
+    Soient $X: \Omega \to E$ et $Y: \Omega \to F$ deux variables aléatoires (sur le même espace $\Omega$). L'application $(X, Y): \Omega \to E \times F$ définie par $\omega \mapsto (X(\omega), Y(\omega))$ est une variable aléatoire appelée <strong>couple $(X, Y)$</strong>.
+    Sa loi $P_{(X,Y)}$ est appelée <strong>loi conjointe</strong> de $X$ et $Y$.
+    Les lois $P_X$ et $P_Y$ sont appelées les <strong>lois marginales</strong> du couple.
+</div>
+
+<div class="remark">
+    La loi conjointe est déterminée par la distribution de probabilité jointe :
+    $$ P(X=x, Y=y) := P((X=x) \cap (Y=y)) $$
+    pour tous $(x, y) \in E \times F$.
+    On a $P_{(X,Y)}(A \times B) = P(X \in A, Y \in B) = \sum_{x \in A, y \in B} P(X=x, Y=y)$.
+</div>
+
+<div class="proposition">
+    <strong>Lois marginales à partir de la loi conjointe</strong><br>
+    Soit $(X, Y)$ un couple de v.a. à valeurs dans $E \times F$. On peut retrouver les lois marginales à partir de la loi conjointe en utilisant la formule des probabilités totales (avec le système complet $\cup_{y \in Y(\Omega)} (Y=y)$) :
+    $$ \forall x \in X(\Omega), \quad P(X=x) = \sum_{y \in Y(\Omega)} P(X=x, Y=y) $$
+    $$ \forall y \in Y(\Omega), \quad P(Y=y) = \sum_{x \in X(\Omega)} P(X=x, Y=y) $$
+</div>
+
+<div class="remark">
+    Attention : En général, la connaissance des lois marginales $P_X$ et $P_Y$ ne suffit pas à déterminer la loi conjointe $P_{(X,Y)}$. Il faut connaître la dépendance entre $X$ et $Y$.
+    Une exception importante est le cas où les variables sont indépendantes.
+</div>
+
+<h2>IV. Indépendance de variables aléatoires</h2>
+
+<div class="definition">
+    <strong>Indépendance de deux variables aléatoires</strong><br>
+    Deux variables aléatoires $X: \Omega \to E$ et $Y: \Omega \to F$ sont dites <strong>indépendantes</strong> si pour tout $(x, y) \in E \times F$ :
+    $$ P(X=x, Y=y) = P(X=x) P(Y=y) $$
+    On note $X \perp\!\!\!\perp Y$.
+</div>
+
+<div class="proposition">
+    <strong>Caractérisation de l'indépendance</strong><br>
+    $X$ et $Y$ sont indépendantes si et seulement si pour toutes parties $A \subset E$ et $B \subset F$ :
+    $$ P(X \in A, Y \in B) = P(X \in A) P(Y \in B) $$
+    Autrement dit, les événements $(X \in A)$ et $(Y \in B)$ sont indépendants pour tous choix de $A$ et $B$.
+</div>
+
+<div class="definition">
+    <strong>Indépendance mutuelle de $n$ variables aléatoires</strong><br>
+    Les variables aléatoires $X_1, \dots, X_n$ (définies sur $\Omega$) sont dites <strong>mutuellement indépendantes</strong> si pour tout $(x_1, \dots, x_n)$ dans l'ensemble des valeurs possibles :
+    $$ P(X_1=x_1, \dots, X_n=x_n) = P(X_1=x_1) \times \dots \times P(X_n=x_n) $$
+</div>
+
+<div class="proposition">
+    <strong>Événements et indépendance mutuelle</strong><br>
+    Si $X_1, \dots, X_n$ sont mutuellement indépendantes, alors pour tous choix de sous-ensembles $A_i$ des ensembles d'arrivée respectifs, les événements $(X_1 \in A_1), \dots, (X_n \in A_n)$ sont mutuellement indépendants.
+    $$ P(X_1 \in A_1, \dots, X_n \in A_n) = P(X_1 \in A_1) \times \dots \times P(X_n \in A_n) $$
+</div>
+
+<div class="proposition">
+    <strong>Somme de Bernoulli indépendantes</strong><br>
+    Si $X_1, \dots, X_n$ sont $n$ variables aléatoires mutuellement indépendantes suivant toutes la même loi de Bernoulli $\mathcal{B}(p)$, alors leur somme $S_n = X_1 + \dots + X_n$ suit une loi binomiale $\mathcal{B}(n, p)$.
+</div>
+
+<div class="proposition">
+    <strong>Fonctions de variables indépendantes</strong><br>
+    Si $X$ et $Y$ sont indépendantes, et si $f: E \to F$, $g: E' \to G$ sont des fonctions ($X$ à valeurs dans $E$, $Y$ à valeurs dans $E'$), alors les variables aléatoires $f(X)$ et $g(Y)$ sont indépendantes.
+</div>
+
+<div class="theorem">
+    <strong>Lemme des coalitions</strong><br>
+    Soient $X_1, \dots, X_n$ des variables aléatoires mutuellement indépendantes. Soit $m \in \{1, \dots, n-1\}$. Soient $f$ une fonction des $m$ premières variables et $g$ une fonction des $n-m$ dernières variables.
+    Alors les variables aléatoires $Y = f(X_1, \dots, X_m)$ et $Z = g(X_{m+1}, \dots, X_n)$ sont indépendantes.
+    <br>
+    (Exemple: Si $X, Y, Z, W$ sont indep., alors $X+Y$ et $Z \times W$ sont indep.)
+</div>
+
+<h2>V. Espérance, Variance, Covariance</h2>
+
+<div class="remark">
+    Dans cette section, les variables aléatoires sont supposées réelles ($E \subset \mathbb{R}$).
+</div>
+
+<div class="definition">
+    <strong>Espérance</strong><br>
+    Soit $X$ une variable aléatoire réelle prenant les valeurs $x_1, \dots, x_k$ (distinctes) avec les probabilités $P(X=x_i) = p_i$. L'<strong>espérance</strong> de $X$ est le réel noté $E(X)$ défini par :
+    $$ E(X) = \sum_{i=1}^k x_i P(X=x_i) = \sum_{x \in X(\Omega)} x P(X=x) $$
+    C'est la moyenne des valeurs prises par $X$, pondérée par leurs probabilités.
+</div>
+
+<div class="proposition">
+    <strong>Espérance comme moyenne sur $\Omega$</strong><br>
+    Si $\Omega = \{\omega_1, \dots, \omega_N\}$, l'espérance peut aussi se calculer comme :
+    $$ E(X) = \sum_{j=1}^N X(\omega_j) P(\{\omega_j\}) $$
+    <span class="video-link">(Pourquoi y-a-t-il deux définitions de l'espérance ?)</span>
+</div>
+
+<div class="definition">
+    <strong>Variable centrée</strong><br>
+    Une v.a. $X$ est dite <strong>centrée</strong> si son espérance est nulle, $E(X)=0$.
+</div>
+
+<div class="proposition">
+    <strong>Propriétés de l'espérance</strong><br>
+    Soient $X, Y$ des v.a. réelles, $a, b \in \mathbb{R}$.
+    <ul>
+        <li><strong>Linéarité :</strong> $E(aX + bY) = a E(X) + b E(Y)$. (L'espérance est une forme linéaire).</li>
+        <li><strong>Positivité :</strong> Si $X(\omega) \ge 0$ pour tout $\omega \in \Omega$, alors $E(X) \ge 0$.</li>
+        <li><strong>Croissance :</strong> Si $X(\omega) \le Y(\omega)$ pour tout $\omega \in \Omega$, alors $E(X) \le E(Y)$.</li>
+        <li>$E(c) = c$ pour une constante $c$.</li>
+        <li>$|E(X)| \le E(|X|)$ (Inégalité de Jensen pour la fonction convexe $x \mapsto |x|$).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème de transfert (ou Loi de la variable aléatoire inconsciente - LOTUS)</strong><br>
+    Soit $X: \Omega \to E$ une variable aléatoire ( $E$ fini) et soit $f: E \to \mathbb{R}$ une fonction. Alors l'espérance de la v.a. $Y = f(X)$ est donnée par :
+    $$ E(f(X)) = \sum_{x \in X(\Omega)} f(x) P(X=x) $$
+    Il n'est pas nécessaire de calculer explicitement la loi de $Y=f(X)$ pour trouver son espérance. Il suffit de connaître la loi de $X$.
+</div>
+
+<div class="proposition">
+    <strong>Espérance d'un produit de variables indépendantes</strong><br>
+    Si $X$ et $Y$ sont deux variables aléatoires réelles <strong>indépendantes</strong>, alors :
+    $$ E(XY) = E(X) E(Y) $$
+    Attention : La réciproque est fausse en général. Si $E(XY)=E(X)E(Y)$, les variables sont dites décorrélées, mais pas nécessairement indépendantes.
+</div>
+
+<div class="definition">
+    <strong>Variance et Écart-type</strong><br>
+    Soit $X$ une variable aléatoire réelle.
+    <ul>
+        <li>La <strong>variance</strong> de $X$, notée $V(X)$ ou $\text{Var}(X)$, est le réel positif défini par :
+            $$ V(X) = E[(X - E(X))^2] $$
+            C'est l'espérance du carré de l'écart à la moyenne. Elle mesure la dispersion de la loi autour de son espérance.
+        </li>
+        <li>L'<strong>écart-type</strong> de $X$, noté $\sigma(X)$ ou $\sigma_X$, est la racine carrée de la variance :
+            $$ \sigma(X) = \sqrt{V(X)} $$
+            Il a la même unité que $X$.
+        </li>
+    </ul>
+</div>
+
+<div class="proposition">
+    <strong>Propriétés et calcul de la variance</strong><br>
+    Soient $X$ une v.a. réelle, $a, b \in \mathbb{R}$.
+    <ul>
+        <li>$V(X) \ge 0$.</li>
+        <li>$V(X) = 0 \iff X$ est une variable aléatoire certaine (constante presque sûrement).</li>
+        <li><strong>Formule de Koenig-Huygens :</strong>
+            $$ V(X) = E(X^2) - [E(X)]^2 $$
+            (L'espérance du carré moins le carré de l'espérance). C'est souvent la formule la plus pratique pour le calcul.
+        </li>
+        <li>$V(aX + b) = a^2 V(X)$. (Attention, $b$ disparaît et $a$ sort au carré).</li>
+        <li>$V(X) = E(X(X-1)) + E(X) - (E(X))^2$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Variable centrée réduite</strong><br>
+    Une v.a. $X$ est dite <strong>centrée réduite</strong> si $E(X)=0$ et $V(X)=1$.
+    Si $V(X) > 0$, la variable $X^* = \frac{X - E(X)}{\sigma(X)}$ est centrée réduite.
+</div>
+
+<div class="definition">
+    <strong>Covariance</strong><br>
+    Soient $X$ et $Y$ deux v.a. réelles. Leur <strong>covariance</strong>, notée $\text{Cov}(X, Y)$, est le réel :
+    $$ \text{Cov}(X, Y) = E[(X - E(X))(Y - E(Y))] $$
+    Formule de calcul (analogue à Koenig-Huygens) :
+    $$ \text{Cov}(X, Y) = E(XY) - E(X)E(Y) $$
+    Propriétés :
+    <ul>
+        <li>$\text{Cov}(X, X) = V(X)$.</li>
+        <li>$\text{Cov}(X, Y) = \text{Cov}(Y, X)$ (symétrie).</li>
+        <li>$\text{Cov}(\cdot, \cdot)$ est bilinéaire.</li>
+        <li>$\text{Cov}(aX+b, cY+d) = ac \, \text{Cov}(X, Y)$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Variables décorrélées</strong><br>
+    Deux variables aléatoires $X$ et $Y$ sont dites <strong>décorrélées</strong> si leur covariance est nulle : $\text{Cov}(X, Y) = 0$.
+    Cela équivaut à $E(XY) = E(X)E(Y)$.
+    <br>
+    Si $X$ et $Y$ sont <strong>indépendantes</strong>, alors elles sont <strong>décorrélées</strong>.
+    La réciproque est <strong>fausse</strong> en général.
+</div>
+
+<div class="proposition">
+    <strong>Variance d'une somme</strong><br>
+    Soient $X$ et $Y$ deux v.a. réelles.
+    $$ V(X+Y) = V(X) + V(Y) + 2 \text{Cov}(X, Y) $$
+    Plus généralement, pour $X_1, \dots, X_n$ :
+    $$ V\left(\sum_{i=1}^n X_i\right) = \sum_{i=1}^n V(X_i) + 2 \sum_{1 \le i < j \le n} \text{Cov}(X_i, X_j) $$
+    Cas particulier important : Si $X_1, \dots, X_n$ sont <strong>deux à deux indépendantes</strong> (ou même juste deux à deux décorrélées), alors $\text{Cov}(X_i, X_j) = 0$ pour $i \neq j$, et :
+    $$ V(X_1 + \dots + X_n) = V(X_1) + \dots + V(X_n) $$
+    La variance d'une somme de variables indépendantes est la somme des variances.
+</div>
+
+<h2>VI. Espérance et Variance des Lois Usuelles</h2>
+
+<div class="proposition">
+    <strong>Loi de Bernoulli $\mathcal{B}(p)$</strong><br>
+    Si $X \sim \mathcal{B}(p)$, alors :
+    <ul>
+        <li>$E(X) = 1 \cdot P(X=1) + 0 \cdot P(X=0) = p$.</li>
+        <li>$E(X^2) = 1^2 \cdot P(X=1) + 0^2 \cdot P(X=0) = p$.</li>
+        <li>$V(X) = E(X^2) - [E(X)]^2 = p - p^2 = p(1-p)$.</li>
+    </ul>
+    $$ E(X) = p, \quad V(X) = p(1-p) $$
+</div>
+
+<div class="proposition">
+    <strong>Loi Binomiale $\mathcal{B}(n, p)$</strong><br>
+    Si $X \sim \mathcal{B}(n, p)$, alors $X$ peut être vue comme la somme $X = X_1 + \dots + X_n$ de $n$ v.a. de Bernoulli $\mathcal{B}(p)$ indépendantes.
+    <ul>
+        <li>Par linéarité de l'espérance : $E(X) = E(X_1 + \dots + X_n) = \sum_{i=1}^n E(X_i) = \sum_{i=1}^n p = np$.</li>
+        <li>Par indépendance des $X_i$ : $V(X) = V(X_1 + \dots + X_n) = \sum_{i=1}^n V(X_i) = \sum_{i=1}^n p(1-p) = np(1-p)$.</li>
+    </ul>
+    $$ E(X) = np, \quad V(X) = np(1-p) $$
+</div>
+
+<div class="remark">
+    Pour la loi uniforme $\mathcal{U}(\{x_1, \dots, x_n\})$, $E(X) = \frac{1}{n} \sum x_i$ (moyenne arithmétique) et $V(X) = E(X^2) - [E(X)]^2 = (\frac{1}{n} \sum x_i^2) - (\frac{1}{n} \sum x_i)^2$. Si $E = \{1, \dots, n\}$, $E(X) = \frac{n+1}{2}$ et $V(X) = \frac{n^2-1}{12}$.
+</div>
+
+<h2>VII. Inégalités probabilistes</h2>
+
+<div class="theorem">
+    <strong>Inégalité de Markov</strong><br>
+    Soit $X$ une variable aléatoire réelle telle que $X(\omega) \ge 0$ pour tout $\omega$. Alors pour tout $t > 0$ :
+    $$ P(X \ge t) \le \frac{E(X)}{t} $$
+    Si $X$ n'est pas nécessairement positive, l'inégalité s'applique à $|X|$ (qui est positive) :
+    $$ P(|X| \ge t) \le \frac{E(|X|)}{t} $$
+    Elle fournit une majoration (souvent grossière) de la probabilité que $X$ prenne de grandes valeurs.
+    <span class="video-link">(Démonstration et application)</span>
+</div>
+
+<div class="theorem">
+    <strong>Inégalité de Bienaymé-Tchebychev</strong><br>
+    Soit $X$ une variable aléatoire réelle admettant une espérance $E(X)$ et une variance $V(X)$. Alors pour tout $\varepsilon > 0$ :
+    $$ P(|X - E(X)| \ge \varepsilon) \le \frac{V(X)}{\varepsilon^2} $$
+    Cette inégalité majore la probabilité que $X$ s'écarte de son espérance d'une quantité au moins égale à $\varepsilon$. Elle relie dispersion (variance) et probabilité d'écart à la moyenne.
+    <span class="video-link">(Démonstration et 3 applications)</span>
+</div>
+
+<div class="proof">
+    <strong>Preuve de Bienaymé-Tchebychev (via Markov) :</strong>
+    Soit $Y = (X - E(X))^2$. $Y$ est une variable aléatoire positive. Son espérance est $E(Y) = E[(X - E(X))^2] = V(X)$.
+    L'événement $|X - E(X)| \ge \varepsilon$ est le même que l'événement $(X - E(X))^2 \ge \varepsilon^2$, c'est-à-dire $Y \ge \varepsilon^2$.
+    Appliquons l'inégalité de Markov à la variable positive $Y$ avec $t = \varepsilon^2 > 0$:
+    $P(Y \ge \varepsilon^2) \le \frac{E(Y)}{\varepsilon^2}$.
+    En remplaçant $Y$ et $E(Y)$, on obtient :
+    $P(|X - E(X)| \ge \varepsilon) \le \frac{V(X)}{\varepsilon^2}$.
+</div>
+
+<div class="corollary">
+    <strong>Inégalité de concentration (Loi faible des grands nombres - version Bienaymé-Tchebychev)</strong><br>
+    Soit $(X_n)_{n \ge 1}$ une suite de variables aléatoires <strong>indépendantes</strong> et de <strong>même loi</strong> (i.i.d.), admettant une espérance commune $m = E(X_i)$ et une variance commune $V = V(X_i)$.
+    Soit $S_n = X_1 + \dots + X_n$ leur somme, et $\bar{X}_n = S_n / n$ leur moyenne empirique.
+    Alors $E(\bar{X}_n) = m$ et $V(\bar{X}_n) = V/n$.
+    L'inégalité de Bienaymé-Tchebychev appliquée à $\bar{X}_n$ donne, pour tout $\varepsilon > 0$:
+    $$ P(|\bar{X}_n - m| \ge \varepsilon) = P\left(\left|\frac{S_n}{n} - m\right| \ge \varepsilon\right) \le \frac{V(\bar{X}_n)}{\varepsilon^2} = \frac{V}{n \varepsilon^2} $$
+    En conséquence, lorsque $n \to +\infty$, la probabilité que la moyenne empirique s'écarte de l'espérance théorique tend vers 0 :
+    $$ \lim_{n \to +\infty} P(|\bar{X}_n - m| \ge \varepsilon) = 0 $$
+    C'est la <strong>convergence en probabilité</strong> de $\bar{X}_n$ vers $m$, connue sous le nom de <strong>loi faible des grands nombres</strong>.
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            // customised options
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            // • rendering keys, e.g.:
+            throwOnError : false
+        });
+    });
+</script>
+
+</body>
+</html>
