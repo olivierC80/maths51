@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Endomorphismes des espaces euclidiens</title>
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            tags: 'ams', // Automatic equation numbering
+            macros: {
+              K: '\\mathbb{K}', // Base field, usually R for Euclidean
+              R: '\\mathbb{R}',
+              C: '\\mathbb{C}',
+              N: '\\mathbb{N}',
+              Z: '\\mathbb{Z}',
+              GLnK: '{\\mathrm{GL}_n(\\R)}', // Using R now
+              MnK: '{\\mathcal{M}_n(\\R)}',
+              MnR: '{\\mathcal{M}_n(\\R)}',
+              OnR: '{\\mathrm{O}_n(\\R)}',
+              SOnR: '{\\mathrm{SO}_n(\\R)}',
+              SnR: '{\\mathcal{S}_n(\\R)}',
+              SnRp: '{\\mathcal{S}_n^+(\\R)}',
+              SnRpp: '{\\mathcal{S}_n^{++}(\\R)}',
+              LE: '{\\mathcal{L}(E)}',
+              SE: '{\\mathcal{S}(E)}',
+              SEp: '{\\mathcal{S}^+(E)}',
+              SEpp: '{\\mathcal{S}^{++}(E)}',
+              OE: '{\\mathrm{O}(E)}',
+              SOE: '{\\mathrm{SO}(E)}',
+              GLE: '{\\mathrm{GL}(E)}',
+              Id: '\\mathrm{Id}_E',
+              In: '\\mathrm{I}_n',
+              dim: '\\dim', // using \dim instead of \text{dim}
+              Vect: '\\mathrm{Vect}',
+              Ker: '\\mathrm{Ker}',
+              Im: '\\mathrm{Im}',
+              det: '\\det',
+              Tr: '\\mathrm{Tr}',
+              Sp: '\\mathrm{Sp}',
+              rg: '\\mathrm{rg}', // rank
+              Mat: '\\mathrm{Mat}',
+              ip: ['{\\langle #1, #2 \\rangle}', 2], // Inner product macro
+              norm: ['{\\|\| #1 \\|}', 1], // Norm macro
+              adj: ['{#1^*}', 1], // Adjoint macro
+              orth: ['{#1^\\perp}', 1] // Orthogonal complement
+            }
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+        </script>
+        <script type="text/javascript" id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+        </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa; /* Gris très clair */
+        }
+        h1, h2, h3 {
+            color: #004D40; /* Vert très foncé (teal) */
+            border-bottom: 2px solid #004D40;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; font-style: italic; border-bottom: none; color: #00796B;} /* Teal */
+
+        .definition, .theorem, .proposition, .corollary, .example, .proof, .remark {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-left: 5px solid #009688; /* Teal plus clair */
+            background-color: #E0F2F1; /* Teal très très clair */
+            border-radius: 0 5px 5px 0;
+        }
+        .definition strong, .theorem strong, .proposition strong, .corollary strong, .remark strong {
+            color: #004D40; /* Vert très foncé (teal) */
+            font-weight: bold;
+        }
+        .proof {
+            border-left-color: #4CAF50; /* Vert */
+            background-color: #E8F5E9; /* Vert très clair */
+        }
+        .proof strong {
+            color: #1B5E20; /* Vert foncé */
+            font-weight: bold;
+        }
+        .example {
+            border-left-color: #FF9800; /* Orange */
+            background-color: #FFF3E0; /* Orange très clair */
+        }
+         .example strong {
+            color: #E65100; /* Orange foncé */
+            font-weight: bold;
+        }
+         .remark {
+            border-left-color: #607D8B; /* Gris bleu */
+            background-color: #ECEFF1; /* Gris bleu clair */
+        }
+         .remark strong {
+            color: #37474F; /* Gris bleu foncé */
+            font-weight: bold;
+        }
+        code {
+            background-color: #CFD8DC; /* Gris bleu plus clair */
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        ul {
+            margin-left: 20px;
+            list-style-type: square;
+            padding-left: 20px;
+        }
+         ul ul {
+             list-style-type: circle;
+             margin-top: 5px;
+         }
+        li {
+            margin-bottom: 8px;
+        }
+        .MJX-TeXAtom-ORD { }
+        a { color: #0288D1; text-decoration: none; } /* Bleu lien */
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>Endomorphismes des espaces euclidiens</h1>
+
+    <p>On pourra avant d'aborder ce cours relire le cours de Math Sup concernant les espaces euclidiens.</p>
+    <p>On fixe $E$ un espace euclidien, c'est-à-dire un $\R$-espace vectoriel de dimension finie muni d'un produit scalaire $\ip{\cdot}{\cdot}$. La norme associée est $\norm{x} = \sqrt{\ip{x}{x}}$.</p>
+
+    <h2>1. Adjoint d'un endomorphisme</h2>
+
+    <p>On rappelle que $E^*$ désigne l'ensemble des formes linéaires sur $E$. Dans un espace euclidien, ces formes linéaires ont une représentation particulière.</p>
+
+    <div class="theorem">
+        <strong>Théorème de représentation de Riesz</strong><br>
+        Soit $E$ un espace euclidien. Pour toute forme linéaire $\varphi \in E^*$, il existe un unique vecteur $a \in E$ tel que :
+        $$ \forall x \in E, \varphi(x) = \ip{x}{a} $$
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Adjoint d'un endomorphisme)</strong><br>
+        Soit $u \in \LE$. Pour tout $x \in E$ fixé, l'application $y \mapsto \ip{u(y)}{x}$ est une forme linéaire sur $E$. D'après le théorème de Riesz, il existe un unique vecteur de $E$, que l'on note $\adj{u}(x)$, tel que :
+        $$ \forall y \in E, \ip{u(y)}{x} = \ip{y}{\adj{u}(x)} $$
+        L'application $u^* : E \to E$ ainsi définie s'appelle l'<strong>adjoint</strong> de $u$. On montre que $\adj{u}$ est un endomorphisme de $E$.
+    </div>
+
+    <div class="proposition">
+        <strong>Propriétés de l'adjoint :</strong><br>
+        L'application $u \mapsto \adj{u}$ de $\LE$ dans $\LE$ vérifie :
+        <ul>
+            <li>$(\Id)^* = \Id$.</li>
+            <li>$\forall u \in \LE, (\adj{u})^* = u$ (l'adjonction est involutive).</li>
+            <li>$\forall (u, v) \in \LE^2, (u \circ v)^* = \adj{v} \circ \adj{u}$.</li>
+            <li>$\forall (u, v) \in \LE^2, \forall (\lambda, \mu) \in \R^2, (\lambda u + \mu v)^* = \lambda \adj{u} + \mu \adj{v}$ (l'adjonction est linéaire).</li>
+        </ul>
+        En particulier, l'application $u \mapsto \adj{u}$ est un automorphisme involutif de l'espace vectoriel $\LE$. C'est une symétrie de $\LE$.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Matrice de l'adjoint)</strong><br>
+        Soit $u \in \LE$ et $\mathcal{B}$ une base <strong>orthonormée</strong> de $E$. Alors la matrice de l'adjoint $\adj{u}$ dans la base $\mathcal{B}$ est la transposée de la matrice de $u$ dans la base $\mathcal{B}$ :
+        $$ \Mat(\adj{u}, \mathcal{B}) = \Mat(u, \mathcal{B})^T $$
+    </div>
+    <div class="corollary">
+        <strong>Corollaire :</strong> Comme $\det(A^T) = \det(A)$, $\rg(A^T) = \rg(A)$ et $\Tr(A^T) = \Tr(A)$, on a :
+        $$ \det(\adj{u}) = \det(u), \quad \rg(\adj{u}) = \rg(u), \quad \Tr(\adj{u}) = \Tr(u) $$
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Stabilité et orthogonalité)</strong><br>
+        Soit $u \in \LE$ et $F$ un sous-espace vectoriel de $E$. Alors :
+        $$ F \text{ est stable par } u \iff \orth{F} \text{ est stable par } \adj{u} $$
+    </div>
+    <div class="proof">
+        <strong>Preuve :</strong><br>
+        ($\implies$) Supposons $u(F) \subseteq F$. Soit $x \in \orth{F}$. Montrons que $\adj{u}(x) \in \orth{F}$.
+        Il faut vérifier que $\forall y \in F, \ip{\adj{u}(x)}{y} = 0$.
+        Par définition de l'adjoint, $\ip{\adj{u}(x)}{y} = \ip{x}{u(y)}$.
+        Comme $y \in F$ et $F$ est stable par $u$, $u(y) \in F$.
+        Puisque $x \in \orth{F}$, $\ip{x}{z} = 0$ pour tout $z \in F$. En particulier, $\ip{x}{u(y)} = 0$.
+        Donc $\ip{\adj{u}(x)}{y} = 0$ pour tout $y \in F$, ce qui signifie $\adj{u}(x) \in \orth{F}$. Donc $\orth{F}$ est stable par $\adj{u}$.
+        <br>($\impliedby$) Supposons $\adj{u}(\orth{F}) \subseteq \orth{F}$. Par le sens direct appliqué à $\adj{u}$, on a $(\orth{F})^\perp$ est stable par $(\adj{u})^*$. Or $(\orth{F})^\perp = F$ et $(\adj{u})^* = u$. Donc $F$ est stable par $u$. $\Box$
+    </div>
+
+    <h2>2. Matrices orthogonales</h2>
+
+    <div class="proposition">
+        <strong>Proposition (Caractérisation des matrices orthogonales)</strong><br>
+        Soit $A \in \MnR$. Les propriétés suivantes sont équivalentes :
+        <ol>
+            <li>$A^T A = \In$.</li>
+            <li>$A A^T = \In$.</li>
+            <li>Les colonnes de $A$ forment une base orthonormée de $\R^n$ (muni du produit scalaire canonique).</li>
+            <li>Les lignes de $A$ forment une base orthonormée de $\R^n$.</li>
+            <li>$A$ est inversible et $A^{-1} = A^T$.</li>
+            <li>L'endomorphisme canoniquement associé $X \mapsto AX$ est une isométrie vectorielle de $\R^n$ (voir section 4).</li>
+        </ol>
+        Une matrice vérifiant ces propriétés est dite <strong>orthogonale</strong>.
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Groupe orthogonal)</strong><br>
+        L'ensemble des matrices orthogonales de taille $n \times n$ à coefficients réels est un sous-groupe de $\mathrm{GL}_n(\R)$ (le groupe des matrices inversibles). On l'appelle le <strong>groupe orthogonal</strong> et on le note $\OnR$.
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Changement de base orthonormée)</strong><br>
+        Soit $\mathcal{B} = (e_1, \dots, e_n)$ une base orthonormée de $E$. Soit $\mathcal{B}' = (f_1, \dots, f_n)$ une autre famille de vecteurs de $E$. Soit $P = P_{\mathcal{B} \to \mathcal{B}'}$ la matrice de passage de $\mathcal{B}$ à $\mathcal{B}'$.
+        Alors $\mathcal{B}'$ est une base orthonormée de $E$ si et seulement si la matrice $P$ est orthogonale ($P \in \OnR$).
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Matrices orthogonalement semblables)</strong><br>
+        Deux matrices $A, B \in \MnR$ sont dites <strong>orthogonalement semblables</strong> s'il existe une matrice orthogonale $P \in \OnR$ telle que $B = P^{-1} A P = P^T A P$.
+        <br>Deux matrices représentent le même endomorphisme $u \in \LE$ dans deux bases <strong>orthonormées</strong> différentes si et seulement si elles sont orthogonalement semblables.
+    </div>
+
+    <div class="proposition">
+        <strong>Propriétés des matrices orthogonales :</strong><br>
+        Si $A \in \OnR$, alors $\det(A) = \pm 1$.
+        <ul>
+            <li>Si $\det(A)=1$, $A$ est dite <strong>directe</strong> (ou positive).</li>
+            <li>Si $\det(A)=-1$, $A$ est dite <strong>indirecte</strong> (ou négative).</li>
+        </ul>
+        L'ensemble des matrices orthogonales directes forme un sous-groupe de $\OnR$, appelé le <strong>groupe spécial orthogonal</strong> et noté $\SOnR$.
+    </div>
+    <div class="proof">
+        <strong>Preuve ($\det(A)=\pm 1$) :</strong><br>
+        Si $A \in \OnR$, alors $A^T A = \In$. En prenant le déterminant :
+        $\det(A^T A) = \det(\In) = 1$.
+        $\det(A^T) \det(A) = 1$.
+        Comme $\det(A^T) = \det(A)$, on obtient $(\det(A))^2 = 1$.
+        Donc $\det(A) = 1$ ou $\det(A) = -1$. $\Box$
+    </div>
+
+    <h2>3. Endomorphismes symétriques (autoadjoints)</h2>
+
+    <div class="definition">
+        <strong>Définition (Endomorphisme autoadjoint / symétrique)</strong><br>
+        Un endomorphisme $u \in \LE$ est dit <strong>autoadjoint</strong> (ou <strong>symétrique</strong>) s'il est égal à son adjoint : $\adj{u} = u$.
+        <br>Cela équivaut à la condition :
+        $$ \forall x, y \in E, \ip{u(x)}{y} = \ip{x}{u(y)} $$
+        On note $\SE$ l'ensemble des endomorphismes autoadjoints de $E$. C'est un sous-espace vectoriel de $\LE$.
+    </div>
+
+    <div class="proposition">
+        <strong>Caractérisation matricielle :</strong><br>
+        Un endomorphisme $u \in \LE$ est symétrique si et seulement si sa matrice dans une (et donc dans toute) base <strong>orthonormée</strong> $\mathcal{B}$ est une matrice symétrique ($\Mat(u, \mathcal{B})^T = \Mat(u, \mathcal{B})$).
+    </div>
+
+    <div class="remark">
+        Rappel : un projecteur $p \in \LE$ est dit <strong>orthogonal</strong> si $\Ker(p) = (\Im(p))^\perp$ (ou $\Ker(p) \perp \Im(p)$).
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Projecteurs orthogonaux et symétrie)</strong><br>
+        Un projecteur $p \in \LE$ est autoadjoint (symétrique) si et seulement si c'est un projecteur orthogonal.
+    </div>
+     <div class="proof">
+        <strong>Preuve (Idée) :</strong><br>
+        ($\implies$) Si $p=p^*$. $E = \Ker(p) \oplus \Im(p)$. Soit $x \in \Ker(p)$ et $y \in \Im(p)$. Alors $p(x)=0$ et $y=p(y)$.
+        $\ip{x}{y} = \ip{x}{p(y)} = \ip{\adj{p}(x)}{y} = \ip{p(x)}{y} = \ip{0}{y} = 0$. Donc $\Ker(p) \perp \Im(p)$. $p$ est orthogonal.
+        ($\impliedby$) Si $p$ est orthogonal. $E = \Ker(p) \oplus^\perp \Im(p)$. Soient $x,y \in E$, $x=x_k+x_i, y=y_k+y_i$.
+        $\ip{p(x)}{y} = \ip{x_i}{y_k+y_i} = \ip{x_i}{y_i}$ (car $\ip{x_i}{y_k}=0$).
+        $\ip{x}{p(y)} = \ip{x_k+x_i}{y_i} = \ip{x_i}{y_i}$ (car $\ip{x_k}{y_i}=0$).
+        Donc $\ip{p(x)}{y} = \ip{x}{p(y)}$, $p$ est symétrique. $\Box$
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Stabilité pour endomorphismes symétriques)</strong><br>
+        Si $u \in \SE$ est symétrique et si $F$ est un sous-espace vectoriel de $E$ stable par $u$, alors son orthogonal $\orth{F}$ est aussi stable par $u$.
+    </div>
+    <div class="proof">
+        <strong>Preuve :</strong><br>
+        On sait que $F$ stable par $u \iff \orth{F}$ stable par $\adj{u}$.
+        Comme $u$ est symétrique, $\adj{u}=u$.
+        Donc $F$ stable par $u \implies \orth{F}$ stable par $u$. $\Box$
+    </div>
+
+
+    <div class="theorem">
+        <strong>Théorème Spectral (pour endomorphismes symétriques)</strong><br>
+        Soit $u \in \LE$. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$u$ est autoadjoint (symétrique).</li>
+            <li>$u$ est diagonalisable dans une base <strong>orthonormée</strong>.</li>
+            <li>Il existe une base orthonormée de $E$ constituée de vecteurs propres pour $u$.</li>
+            <li>$E$ est la somme directe <strong>orthogonale</strong> des sous-espaces propres de $u$ : $E = \bigoplus_{\lambda \in \Sp(u)}^{\perp} E_\lambda$.</li>
+        </ol>
+        De plus, les sous-espaces propres associés à des valeurs propres distinctes d'un endomorphisme symétrique sont toujours orthogonaux entre eux.
+    </div>
+     <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+        <!-- La preuve (1 => 2) est non triviale, souvent admise ou faite par récurrence sur la dim en montrant l'existence d'au moins une valeur propre réelle. -->
+         <strong>Preuve (Orthogonalité des sous-espaces propres) :</strong><br>
+         Soient $\lambda \neq \mu$ deux valeurs propres de $u$ symétrique. Soit $x \in E_\lambda$ et $y \in E_\mu$.
+         On a $u(x)=\lambda x$ et $u(y)=\mu y$.
+         Calculons $\ip{u(x)}{y}$ de deux façons :
+         $\ip{u(x)}{y} = \ip{\lambda x}{y} = \lambda \ip{x}{y}$.
+         $\ip{u(x)}{y} = \ip{x}{u(y)}$ (car $u$ symétrique) $= \ip{x}{\mu y} = \mu \ip{x}{y}$.
+         Donc $\lambda \ip{x}{y} = \mu \ip{x}{y}$, soit $(\lambda - \mu) \ip{x}{y} = 0$.
+         Comme $\lambda \neq \mu$, on a $\lambda - \mu \neq 0$. Donc $\ip{x}{y} = 0$.
+         Ceci montre que $E_\lambda \perp E_\mu$. $\Box$
+    </div>
+
+    <div class="corollary">
+        <strong>Corollaire (Diagonalisation des matrices symétriques réelles)</strong><br>
+        Soit $M \in \MnR$. $M$ est symétrique ($M^T = M$) si et seulement s'il existe une matrice orthogonale $P \in \OnR$ et une matrice diagonale $D \in \MnR$ telles que :
+        $$ M = P D P^T \quad (\text{ou } M = P D P^{-1}) $$
+        La matrice $D$ contient les valeurs propres (réelles) de $M$ sur sa diagonale. Les colonnes de $P$ forment une base orthonormée de $\R^n$ constituée de vecteurs propres de $M$.
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Endomorphismes/Matrices symétriques positifs/définis positifs)</strong><br>
+        Soit $u \in \SE$ un endomorphisme symétrique.
+        <ul>
+            <li>$u$ est dit <strong>positif</strong> si $\forall x \in E, \ip{u(x)}{x} \ge 0$. On note $u \in \SEp$.</li>
+            <li>$u$ est dit <strong>défini positif</strong> si $\forall x \in E \setminus \{0_E\}, \ip{u(x)}{x} > 0$. On note $u \in \SEpp$.</li>
+        </ul>
+        De même, une matrice $A \in \mathcal{S}_n(\R)$ (symétrique réelle) est :
+        <ul>
+            <li><strong>positive</strong> si $\forall X \in \R^n, X^T A X \ge 0$. ($A \in \mathcal{S}_n^+(\R)$)</li>
+            <li><strong>définie positive</strong> si $\forall X \in \R^n \setminus \{0\}, X^T A X > 0$. ($A \in \mathcal{S}_n^{++}(\R)$)</li>
+        </ul>
+        (Ici $X^T A X$ correspond à $\ip{AX}{X}$ pour le produit scalaire canonique).
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Caractérisation par les valeurs propres)</strong><br>
+        Soit $u \in \SE$ (ou $A \in \mathcal{S}_n(\R)$).
+        <ul>
+            <li>$u$ est positif $\iff \Sp(u) \subset \R_+ = [0, +\infty)$.</li>
+            <li>$u$ est défini positif $\iff \Sp(u) \subset \R_+^* = (0, +\infty)$.</li>
+        </ul>
+    </div>
+    <div class="proof">
+        <strong>Preuve (Idée pour $\implies$ dans le cas défini positif) :</strong><br>
+        Soit $\lambda$ une valeur propre de $u$ et $x \neq 0$ un vecteur propre associé.
+        $\ip{u(x)}{x} = \ip{\lambda x}{x} = \lambda \ip{x}{x} = \lambda \norm{x}^2$.
+        Si $u$ est défini positif, $\ip{u(x)}{x} > 0$. Comme $\norm{x}^2 > 0$, on doit avoir $\lambda > 0$. $\Box$
+    </div>
+
+    <h2>4. Isométries vectorielles (Automorphismes orthogonaux)</h2>
+
+    <div class="definition">
+        <strong>Définition (Isométrie vectorielle)</strong><br>
+        Un endomorphisme $u \in \LE$ est une <strong>isométrie vectorielle</strong> (ou automorphisme orthogonal) s'il conserve la norme :
+        $$ \forall x \in E, \norm{u(x)} = \norm{x} $$
+        L'ensemble des isométries vectorielles de $E$ est noté $\OE$. C'est un sous-groupe de $\GLE$ (le groupe des automorphismes de $E$), appelé le <strong>groupe orthogonal</strong> de $E$.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Caractérisations des isométries vectorielles)</strong><br>
+        Soit $u \in \LE$. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$u$ est une isométrie vectorielle ($\forall x, \norm{u(x)} = \norm{x}$).</li>
+            <li>$u$ conserve le produit scalaire ($\forall x, y \in E, \ip{u(x)}{u(y)} = \ip{x}{y}$).</li>
+            <li>$u$ est inversible et son inverse est son adjoint ($\adj{u} = u^{-1}$, ou $\adj{u} \circ u = u \circ \adj{u} = \Id$).</li>
+            <li>L'image par $u$ d'une (et donc de toute) base orthonormée de $E$ est une base orthonormée de $E$.</li>
+            <li>La matrice de $u$ dans une (et donc dans toute) base <strong>orthonormée</strong> est une matrice orthogonale.</li>
+        </ol>
+    </div>
+    <div class="proof">
+        <strong>Preuve (Idée 1 $\iff$ 2) :</strong><br>
+        Utiliser l'identité de polarisation : $\ip{a}{b} = \frac{1}{4} (\norm{a+b}^2 - \norm{a-b}^2)$.
+        Si $u$ conserve la norme, $\norm{u(a+b)}^2 = \norm{a+b}^2$ et $\norm{u(a-b)}^2 = \norm{a-b}^2$.
+        $\ip{u(a)}{u(b)} = \frac{1}{4} (\norm{u(a)+u(b)}^2 - \norm{u(a)-u(b)}^2) = \frac{1}{4} (\norm{u(a+b)}^2 - \norm{u(a-b)}^2) = \frac{1}{4} (\norm{a+b}^2 - \norm{a-b}^2) = \ip{a}{b}$.
+        La réciproque (2 $\implies$ 1) est évidente en prenant $y=x$. $\Box$
+    </div>
+
+
+    <div class="proposition">
+        <strong>Propriétés des isométries :</strong><br>
+        Si $u \in \OE$ est une isométrie vectorielle, alors :
+        <ul>
+            <li>$u$ est un automorphisme (inversible).</li>
+            <li>$\det(u) = \pm 1$.</li>
+            <li>Les seules valeurs propres réelles possibles sont $1$ et $-1$.</li>
+        </ul>
+        Une isométrie $u$ est dite <strong>directe</strong> si $\det(u)=1$, et <strong>indirecte</strong> si $\det(u)=-1$.
+        <br>L'ensemble des isométries directes forme un sous-groupe de $\OE$, appelé le <strong>groupe spécial orthogonal</strong> de $E$ et noté $\SOE$.
+    </div>
+
+    <div class="example">
+        <strong>Exemple : Symétries orthogonales</strong><br>
+        Soit $F$ un sous-espace vectoriel de $E$. La <strong>symétrie orthogonale</strong> par rapport à $F$ est la symétrie $s$ par rapport à $F$ parallèlement à $\orth{F}$.
+        Pour $x = x_F + x_{\orth{F}}$, $s(x) = x_F - x_{\orth{F}}$.
+        On vérifie que $\norm{s(x)}^2 = \norm{x_F - x_{\orth{F}}}^2 = \norm{x_F}^2 + \norm{x_{\orth{F}}}^2$ (car $x_F \perp x_{\orth{F}}$) $= \norm{x_F + x_{\orth{F}}}^2 = \norm{x}^2$.
+        Donc $s$ est une isométrie vectorielle ($s \in \OE$).
+        Une symétrie orthogonale est aussi autoadjointe ($s=s^*$).
+        Si $F$ est un hyperplan, la symétrie orthogonale par rapport à $F$ est appelée une <strong>réflexion</strong> (par rapport à $F$).
+    </div>
+
+    <h2>5. Réduction des isométries vectorielles</h2>
+
+     <div class="theorem">
+        <strong>Théorème (Classification des isométries planes $\OE$, dim E = 2)</strong><br>
+        Soit $E$ un plan euclidien (dim $E=2$). Soit $\mathcal{B}$ une base orthonormée de $E$. Soit $u \in \OE$ et $A = \Mat(u, \mathcal{B}) \in \OnR[2]$.
+        <ul>
+            <li>Si $u$ est <strong>directe</strong> ($\det(u)=1$, $A \in \SOnR[2]$), alors $u$ est une <strong>rotation</strong>. Il existe $\theta \in \R$ tel que :
+               $$ A = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} $$
+               Si $\theta \not\equiv 0 \pmod{2\pi}$, $u$ n'a pas de valeurs propres réelles (sauf si $\theta = \pi$, où $u=-\Id$ a vp $-1$). Si $\theta = 0$, $u=\Id$ a vp $1$.
+            </li>
+            <li>Si $u$ est <strong>indirecte</strong> ($\det(u)=-1$, $A \in \OnR[2] \setminus \SOnR[2]$), alors $u$ est une <strong>réflexion</strong> (symétrie orthogonale par rapport à une droite). Il existe $\theta \in \R$ tel que :
+                $$ A = \begin{pmatrix} \cos\theta & \sin\theta \\ \sin\theta & -\cos\theta \end{pmatrix} $$
+                Une telle matrice a toujours pour valeurs propres $1$ et $-1$. Elle est diagonalisable. L'axe de la réflexion est l'espace propre $E_1$.
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="proposition">
+        <strong>Proposition (Stabilité pour les isométries)</strong><br>
+        Si $u \in \OE$ est une isométrie vectorielle et si $F$ est un sous-espace vectoriel de $E$ stable par $u$, alors son orthogonal $\orth{F}$ est aussi stable par $u$.
+    </div>
+     <div class="proof">
+        <strong>Preuve :</strong><br>
+        On sait $F$ stable par $u \iff \orth{F}$ stable par $\adj{u}$.
+        Comme $u$ est une isométrie, $u$ est inversible et $\adj{u} = u^{-1}$.
+        Donc $F$ stable par $u \implies \orth{F}$ stable par $u^{-1}$.
+        Montrons que si $\orth{F}$ est stable par $u^{-1}$, il l'est aussi par $u$.
+        Soit $y \in \orth{F}$. On a $u^{-1}(y) \in \orth{F}$. Pour montrer $u(y) \in \orth{F}$, prenons $x \in F$.
+        $\ip{u(y)}{x} = \ip{u(y)}{u(u^{-1}(x))}$. Comme $F$ est stable par $u$, $u^{-1}(x)$ doit aussi être dans $F$ (car $u$ est un automorphisme et $u(F)=F$).
+        $\ip{u(y)}{u(u^{-1}(x))} = \ip{y}{u^{-1}(x)}$ (car $u$ conserve le produit scalaire).
+        Comme $y \in \orth{F}$ et $u^{-1}(x) \in F$, $\ip{y}{u^{-1}(x)} = 0$.
+        Donc $\ip{u(y)}{x}=0$ pour tout $x \in F$, ce qui signifie $u(y) \in \orth{F}$. $\Box$
+        Alternative : Si $F$ est stable par $u$, $u(F)=F$ car $u$ est bijectif et $E$ de dimension finie. L'endomorphisme induit $u_F$ est une isométrie de $F$. De même $u_{\orth{F}}$ est une isométrie de $\orth{F}$.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème Spectral (pour isométries vectorielles)</strong><br>
+        Soit $u \in \OE$. Alors il existe une base orthonormée $\mathcal{B}$ de $E$ dans laquelle la matrice de $u$ est diagonale par blocs, où les blocs diagonaux sont de l'une des trois formes suivantes :
+        <ul>
+            <li>$(1)$ (matrice $1 \times 1$)</li>
+            <li>$(-1)$ (matrice $1 \times 1$)</li>
+            <li>$\begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}$ (matrice $2 \times 2$) avec $\theta \in \R \setminus \pi\Z$.</li>
+        </ul>
+        Autrement dit, il existe $P \in \OnR$ telle que $P^T \Mat(u, \mathcal{C}) P$ (où $\mathcal{C}$ est une ONB quelconque) est de la forme :
+        $$ \begin{pmatrix}
+            \In[p] & & & & \\
+            & -\In[q] & & & \\
+            & & R(\theta_1) & & \\
+            & & & \ddots & \\
+            & & & & R(\theta_r)
+           \end{pmatrix}
+        $$
+        où $p = \dim E_1$, $q = \dim E_{-1}$, $R(\theta) = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}$, et $p+q+2r = n = \dim E$.
+    </div>
+    <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+        <!-- Preuve utilise la décomposition en sous-espaces stables orthogonaux $E = E_1 \oplus^\perp E_{-1} \oplus^\perp F$ et analyse de $u|_F$ -->
+    </div>
+
+    <h2>6. Orientation, Rotations et Angles</h2>
+
+    <div class="definition">
+        <strong>Définition (Orientation d'un espace euclidien)</strong><br>
+        Fixer une <strong>orientation</strong> sur $E$ consiste à choisir une classe d'équivalence de bases, où deux bases $\mathcal{B}$ et $\mathcal{B}'$ sont dans la même classe si la matrice de passage $P_{\mathcal{B} \to \mathcal{B}'}$ a un déterminant strictement positif ($\det(P_{\mathcal{B} \to \mathcal{B}'}) > 0$).
+        Il y a exactement deux orientations possibles. L'une est choisie arbitrairement comme l'orientation "directe", l'autre est dite "indirecte". On parle alors d'espace euclidien <strong>orienté</strong>.
+        <br>Si $E$ est orienté, une base $\mathcal{B}$ est dite <strong>directe</strong> si elle appartient à la classe d'orientation choisie, <strong>indirecte</strong> sinon.
+    </div>
+
+     <div class="remark">
+        Soit $E$ un espace euclidien orienté.
+        <ul>
+            <li>Si $\mathcal{B}$ et $\mathcal{B}'$ sont deux bases orthonormées <strong>directes</strong>, alors la matrice de passage $P_{\mathcal{B} \to \mathcal{B}'}$ est dans $\SOnR$ (orthogonale de déterminant 1).</li>
+            <li>Pour tout endomorphisme $u \in \LE$, $\det_{\mathcal{B}}(u) = \det_{\mathcal{B}'}(u)$ si $\mathcal{B}, \mathcal{B}'$ sont deux bases directes (orthonormées ou non). On peut donc parler de $\det(u)$ sans ambiguïté une fois l'orientation fixée.</li>
+        </ul>
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Rotations planes)</strong><br>
+        Soit $E$ un plan euclidien <strong>orienté</strong> et $u \in \SOE$ (isométrie directe). Alors il existe un unique $\theta \in \R / 2\pi\Z$ tel que, pour toute base orthonormée <strong>directe</strong> $\mathcal{B}$ de $E$, on ait :
+        $$ \Mat_{\mathcal{B}}(u) = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} $$
+        Un tel endomorphisme $u$ est appelé la <strong>rotation d'angle $\theta$</strong>. L'angle $\theta$ est appelé mesure de l'angle de la rotation $u$.
+    </div>
+
+     <div class="corollary">
+        <strong>Corollaire :</strong> Pour un plan euclidien orienté $E$, le groupe des rotations $\SOE$ est isomorphe au groupe multiplicatif $\mathbb{U} = \{ z \in \C \mid |z|=1 \}$.
+    </div>
+
+    <div class="proposition">
+        <strong>Isométries indirectes planes :</strong><br>
+        Soit $E$ un plan euclidien (orienté ou non). Toute isométrie indirecte $u \in \OE \setminus \SOE$ est une <strong>réflexion</strong> (symétrie orthogonale par rapport à une droite).
+    </div>
+
+    <div class="remark">
+        <strong>Conclusion (Isométries planes) :</strong> Une isométrie vectorielle d'un plan euclidien est soit une rotation, soit une réflexion.
+        <br><strong>Interprétation du théorème de réduction général :</strong> Le théorème spectral pour les isométries $u \in \OE$ signifie que l'espace $E$ se décompose en somme directe orthogonale $E = E_1 \oplus^\perp E_{-1} \oplus^\perp P_1 \oplus^\perp \dots \oplus^\perp P_r$, où $E_1$ est l'axe des points fixes, $E_{-1}$ l'axe des points envoyés sur leur opposé, et chaque $P_i$ est un plan stable sur lequel $u$ agit comme une rotation d'angle $\theta_i \in (0, 2\pi) \setminus \{\pi\}$.
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Angle orienté de deux vecteurs)</strong><br>
+        Soit $E$ un plan euclidien <strong>orienté</strong>. Soient $x, y$ deux vecteurs non nuls de $E$. Il existe une unique rotation $u \in \SOE$ telle que $u\left(\frac{x}{\norm{x}}\right) = \frac{y}{\norm{y}}$.
+        L'angle $\theta$ de cette rotation (unique modulo $2\pi$) est appelé <strong>mesure de l'angle orienté</strong> des vecteurs $(x, y)$.
+    </div>
+
+    <h2>7. Isométries vectorielles en dimension 3</h2>
+
+    <p>On suppose dans cette partie que $E$ est un espace euclidien <strong>orienté</strong> de dimension 3.</p>
+
+    <div class="remark">
+        <strong>Orientation d'un plan par un vecteur normal :</strong><br>
+        Soit $P$ un plan de $E$ et $D = \orth{P}$ la droite normale. Choisir une orientation sur $D$ revient à choisir un vecteur directeur unitaire $\vec{u}$. On peut alors orienter le plan $P$ de la manière suivante : une base orthonormée $(\vec{v}, \vec{w})$ de $P$ est dite directe (pour l'orientation de $P$ induite par $\vec{u}$) si la base $(\vec{u}, \vec{v}, \vec{w})$ est directe dans $E$.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Rotations en dimension 3)</strong><br>
+        Soit $u \in \SOE$ (isométrie directe de $E$, $\dim E = 3$). Alors :
+        <ol>
+            <li>$1$ est valeur propre de $u$. L'espace propre $E_1 = \Ker(u-\Id)$ est de dimension 1 ou 3.</li>
+            <li>Si $u \neq \Id$, $E_1$ est une droite $D$, appelée l'<strong>axe</strong> de la rotation.</li>
+            <li>Le plan $P = \orth{D}$ est stable par $u$, et l'endomorphisme induit $u_P$ est une rotation plane de $P$ (orienté par un vecteur directeur de $D$).</li>
+            <li>Il existe une base orthonormée <strong>directe</strong> $\mathcal{B} = (\vec{u}, \vec{v}, \vec{w})$ de $E$, où $\vec{u}$ est un vecteur directeur unitaire de $D$, telle que :
+            $$ \Mat_{\mathcal{B}}(u) = \begin{pmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{pmatrix} $$
+            L'angle $\theta$ est l'angle de la rotation $u_P$ dans le plan $P$ orienté par $\vec{u}$.</li>
+        </ol>
+        On dit alors que $u$ est la <strong>rotation d'axe $D$ (orienté par $\vec{u}$) et d'angle $\theta$</strong>.
+        <br> La trace de $u$ est $\Tr(u) = 1 + 2\cos\theta$.
+    </div>
+
+     <div class="remark">
+        <strong>Isométries indirectes en dimension 3 :</strong> Si $u \in \OE \setminus \SOE$ ($\det u = -1$), alors $-1$ est valeur propre.
+        <ul>
+            <li>Si $u$ est une réflexion $s$ par rapport à un plan $P$, sa matrice dans une BON adaptée est $\text{diag}(1, 1, -1)$.</li>
+            <li>Toute isométrie indirecte $u$ s'écrit comme $u = r \circ s = s \circ r$, où $r$ est une rotation d'axe $D$ et $s$ est la réflexion par rapport au plan $P = \orth{D}$. C'est une "rotation-réflexion" ou "anti-rotation". Sa matrice dans une BON adaptée est $\begin{pmatrix} -1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{pmatrix}$.</li>
+        </ul>
+    </div>
+
+</body>
+</html>
