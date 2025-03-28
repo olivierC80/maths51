@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Suites et Séries de fonctions</title>
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            tags: 'ams', // Automatic equation numbering
+            macros: {
+              K: '\\mathbb{K}', // Base field, R or C
+              R: '\\mathbb{R}',
+              C: '\\mathbb{C}',
+              N: '\\mathbb{N}',
+              Z: '\\mathbb{Z}',
+              norm: ['{\\|\| #1 \\|}', 1], // Norm macro
+              abs: ['{| #1 |}', 1], // Absolute value
+              eps: '\\varepsilon',
+              phi: '\\varphi',
+              norminf: ['{\\|\| #1 \\|_{#2, \infty}}', 2] // Norm infinity on A
+            }
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+        </script>
+        <script type="text/javascript" id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+        </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa; /* Gris très clair */
+        }
+        h1, h2, h3 {
+            color: #26A69A; /* Teal clair */
+            border-bottom: 2px solid #26A69A;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; font-style: italic; border-bottom: none; color: #00897B;} /* Teal */
+
+        .definition, .theorem, .proposition, .corollary, .example, .proof, .remark, .explanation {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-left: 5px solid #80CBC4; /* Teal très clair */
+            background-color: #E0F2F1; /* Teal très très clair */
+            border-radius: 0 5px 5px 0;
+        }
+        .definition strong, .theorem strong, .proposition strong, .corollary strong, .remark strong, .explanation strong {
+            color: #004D40; /* Teal très foncé */
+            font-weight: bold;
+        }
+        .proof {
+            border-left-color: #4CAF50; /* Vert */
+            background-color: #E8F5E9; /* Vert très clair */
+        }
+        .proof strong {
+            color: #1B5E20; /* Vert foncé */
+            font-weight: bold;
+        }
+        .example {
+            border-left-color: #FFB300; /* Ambre */
+            background-color: #FFF8E1; /* Ambre très clair */
+        }
+         .example strong {
+            color: #FF6F00; /* Ambre foncé */
+            font-weight: bold;
+        }
+         .remark {
+            border-left-color: #78909C; /* Gris bleu */
+            background-color: #ECEFF1; /* Gris bleu clair */
+        }
+         .remark strong {
+            color: #37474F; /* Gris bleu foncé */
+            font-weight: bold;
+        }
+        .explanation {
+             border-left-color: #BDBDBD; /* Gris */
+             background-color: #FAFAFA; /* Gris très pâle */
+        }
+        code {
+            background-color: #B2DFDB; /* Teal très très très clair */
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        ul {
+            margin-left: 20px;
+            list-style-type: square;
+            padding-left: 20px;
+        }
+         ul ul {
+             list-style-type: circle;
+             margin-top: 5px;
+         }
+        li {
+            margin-bottom: 8px;
+        }
+        .MJX-TeXAtom-ORD { }
+        a { color: #0277BD; text-decoration: none; } /* Bleu lien */
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>Suites et Séries de fonctions</h1>
+
+    <h2>1. Convergence simple, convergence uniforme</h2>
+
+    <p>Soit $A$ une partie de $\R$. Soit $(f_n)_{n \in \N}$ une suite de fonctions définies sur $A$ à valeurs dans $\R$ (ou $\C$, ou un evn $F$). Soit $f: A \to \R$ une fonction.</p>
+
+    <div class="definition">
+        <strong>Définition (Convergence simple)</strong><br>
+        On dit que la suite de fonctions $(f_n)$ <strong>converge simplement</strong> vers la fonction $f$ sur $A$ si, pour chaque $x \in A$ fixé, la suite numérique $(f_n(x))_{n \in \N}$ converge vers $f(x)$.
+        <br>Formellement :
+        $$ \forall x \in A, \lim_{n \to +\infty} f_n(x) = f(x) $$
+        Ce qui s'écrit avec les quantificateurs :
+        $$ \forall x \in A, \forall \eps > 0, \exists n_0 \in \N, \forall n \in \N, (n \ge n_0 \implies \abs{f_n(x) - f(x)} \le \eps) $$
+        L'entier $n_0$ peut dépendre de $x$ et de $\eps$.
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Convergence uniforme)</strong><br>
+        On dit que la suite de fonctions $(f_n)$ <strong>converge uniformément</strong> vers la fonction $f$ sur $A$ si la vitesse de convergence est indépendante de $x \in A$.
+        <br>Formellement :
+        $$ \forall \eps > 0, \exists n_0 \in \N, \forall x \in A, \forall n \in \N, (n \ge n_0 \implies \abs{f_n(x) - f(x)} \le \eps) $$
+        L'entier $n_0$ ne dépend que de $\eps$, il est "uniforme" pour tous les $x$ de $A$.
+    </div>
+
+     <div class="remark">
+        <strong>Lien avec la norme infinie :</strong><br>
+        Introduisons la <strong>norme de la convergence uniforme</strong> (ou norme infinie) sur l'espace $B(A, \R)$ des fonctions bornées de $A$ dans $\R$:
+        $$ \norminf{g}{A} = \sup_{x \in A} \abs{g(x)} $$
+        Si les fonctions $f_n$ et $f$ sont bornées sur $A$, alors la convergence uniforme de $(f_n)$ vers $f$ sur $A$ est équivalente à la convergence de la suite numérique $(\norminf{f_n - f}{A})$ vers 0 :
+        $$ (f_n) \xrightarrow[CVU]{A} f \iff \lim_{n \to +\infty} \norminf{f_n - f}{A} = 0 $$
+        Pour montrer la convergence uniforme, on cherche donc souvent à majorer $\sup_{x \in A} \abs{f_n(x) - f(x)}$ par une quantité $\alpha_n$ qui tend vers 0 (indépendamment de $x$).
+    </div>
+
+     <div class="explanation">
+        <strong>Explication de la différence entre convergence simple et convergence uniforme :</strong><br>
+        <p>Imaginez que chaque fonction $f_n(x)$ représente la position d'un coureur $x$ au temps $n$. La fonction $f(x)$ est la ligne d'arrivée pour le coureur $x$.</p>
+        <ul>
+            <li><strong>Convergence simple :</strong> Chaque coureur $x$ finit par atteindre (ou s'approcher infiniment près de) sa ligne d'arrivée $f(x)$ quand le temps $n$ devient grand. $\forall x, f_n(x) \to f(x)$. Mais certains coureurs peuvent être beaucoup plus lents que d'autres.</li>
+            <li><strong>Convergence uniforme :</strong> Non seulement chaque coureur atteint sa ligne d'arrivée, mais ils y arrivent tous "en même temps" (à $\eps$ près) après un certain temps $n_0$. C'est-à-dire qu'à partir du temps $n_0$, *tous* les coureurs sont à moins de $\eps$ de leur ligne d'arrivée respective. L'écart maximal $\sup_x \abs{f_n(x) - f(x)}$ entre un coureur et sa ligne d'arrivée tend vers 0.</li>
+        </ul>
+        <p>La convergence uniforme est une condition plus forte que la convergence simple.</p>
+        <p>Exemple classique : $f_n(x) = x^n$ sur $A = [0, 1]$.
+        - CV Simple : Si $x \in [0, 1[$, $f_n(x) \to 0$. Si $x=1$, $f_n(1) = 1 \to 1$. Donc $(f_n)$ converge simplement vers $f(x) = \begin{cases} 0 & \text{si } x \in [0, 1[ \\ 1 & \text{si } x=1 \end{cases}$.
+        - CV Uniforme ? $\norminf{f_n - f}{[0,1]} = \sup_{x \in [0,1]} \abs{f_n(x) - f(x)}$. Pour $x \in [0, 1[$, c'est $\sup x^n$. Cette borne sup est 1 (atteinte pour $x \to 1^-$). Donc $\norminf{f_n - f}{[0,1]} = 1$, qui ne tend pas vers 0. Pas de CVU sur $[0, 1]$.
+        Par contre, sur $[0, a]$ avec $0 < a < 1$, $\norminf{f_n - f}{[0,a]} = \sup_{x \in [0, a]} x^n = a^n$. Comme $a^n \to 0$, il y a CVU sur $[0, a]$.</p>
+    </div>
+
+    <h2>2. Propriétés conservées par convergence uniforme</h2>
+
+    <p>Soit $I$ un intervalle de $\R$, $(f_n)$ une suite de fonctions de $I$ dans $\R$ (ou $\C$, ou un evn $F$) et $f : I \to \R$. La convergence simple préserve mal les propriétés analytiques (continuité, dérivabilité, intégrabilité). La convergence uniforme les préserve mieux.</p>
+
+    <div class="theorem">
+        <strong>Théorème (Continuité et CVU)</strong><br>
+        On suppose que :
+        <ol>
+            <li>Toutes les fonctions $f_n$ sont continues sur $I$.</li>
+            <li>La suite $(f_n)$ converge <strong>uniformément</strong> vers $f$ sur $I$.</li>
+        </ol>
+        Alors la fonction limite $f$ est <strong>continue</strong> sur $I$.
+        <br>(Dit autrement : une limite uniforme de fonctions continues est continue).
+    </div>
+     <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+        <!-- Preuve classique en epsilon/3 -->
+    </div>
+     <div class="remark">
+        La convergence simple ne suffit pas. Dans l'exemple $f_n(x)=x^n$ sur $[0, 1]$, les $f_n$ sont continues mais la limite simple $f$ n'est pas continue en $x=1$.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Permutation Limite/Intégrale sur un segment)</strong><br>
+        On suppose que :
+        <ol>
+            <li>$I = [a, b]$ est un <strong>segment</strong>.</li>
+            <li>Toutes les fonctions $f_n$ sont continues (ou au moins continues par morceaux) sur $[a, b]$.</li>
+            <li>La suite $(f_n)$ converge <strong>uniformément</strong> vers $f$ sur $[a, b]$.</li>
+        </ol>
+        Alors la fonction limite $f$ est continue (ou continue par morceaux) et intégrable sur $[a, b]$, et on peut permuter limite et intégrale :
+        $$ \lim_{n \to +\infty} \int_a^b f_n(t) dt = \int_a^b \left( \lim_{n \to +\infty} f_n(t) \right) dt = \int_a^b f(t) dt $$
+    </div>
+     <div class="proof">
+        <strong>Preuve (si $f_n$ continues) :</strong><br>
+        $f$ est continue par le théorème précédent. L'intégrale $\int_a^b f(t) dt$ existe.
+        $\abs{\int_a^b f_n(t) dt - \int_a^b f(t) dt} = \abs{\int_a^b (f_n(t) - f(t)) dt}$.
+        Par l'inégalité de la moyenne :
+        $\le \int_a^b \abs{f_n(t) - f(t)} dt$.
+        Comme $(f_n)$ CVU vers $f$ sur $[a, b]$, $\abs{f_n(t) - f(t)} \le \norminf{f_n - f}{[a,b]}$ pour tout $t$.
+        $\le \int_a^b \norminf{f_n - f}{[a,b]} dt = (b-a) \norminf{f_n - f}{[a,b]}$.
+        Comme $\norminf{f_n - f}{[a,b]} \to 0$ (CVU), la différence des intégrales tend vers 0. $\Box$
+    </div>
+
+
+    <div class="theorem">
+        <strong>Théorème (Dérivabilité et CVU)</strong><br>
+        On suppose que $I$ est un intervalle. On suppose que :
+        <ol>
+            <li>Toutes les fonctions $f_n$ sont de classe $C^1$ sur $I$.</li>
+            <li>La suite $(f_n)$ converge <strong>simplement</strong> vers $f$ sur $I$ (il suffit même qu'elle converge en un point $x_0 \in I$).</li>
+            <li>La suite des dérivées $(f'_n)$ converge <strong>uniformément</strong> vers une fonction $g$ sur <strong>tout segment</strong> contenu dans $I$.</li>
+        </ol>
+        Alors :
+        <ul>
+            <li>La fonction limite $f$ est de classe $C^1$ sur $I$.</li>
+            <li>La dérivée de la limite est la limite des dérivées : $f' = g$. Autrement dit:
+               $$ \left( \lim_{n \to +\infty} f_n \right)' = \lim_{n \to +\infty} f'_n $$</li>
+        </ul>
+    </div>
+     <div class="remark">
+        L'hypothèse cruciale est la convergence uniforme de la suite des dérivées $(f'_n)$. La convergence simple de $(f_n)$ ne suffit pas pour garantir la dérivabilité de $f$, ni que $f'$ soit la limite des $f'_n$.
+        L'hypothèse "sur tout segment" pour la CVU de $(f'_n)$ est une hypothèse technique souvent vérifiée en pratique (convergence uniforme locale). Si la CVU a lieu sur $I$ entier, c'est encore mieux.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Caractère $C^k$ et CVU)</strong><br>
+        On suppose que $I$ est un intervalle et $k \ge 1$ un entier. On suppose que :
+        <ol>
+            <li>Toutes les fonctions $f_n$ sont de classe $C^k$ sur $I$.</li>
+            <li>Pour chaque $j \in \{0, 1, \dots, k-1\}$, la suite des dérivées $j$-èmes $(f_n^{(j)})$ converge <strong>simplement</strong> vers une fonction $g_j$ sur $I$.</li>
+            <li>La suite des dérivées $k$-èmes $(f_n^{(k)})$ converge <strong>uniformément</strong> vers une fonction $g_k$ sur <strong>tout segment</strong> contenu dans $I$.</li>
+        </ol>
+        Alors la fonction limite $g_0$ (qui est $\lim f_n$) est de classe $C^k$ sur $I$ et pour tout $j \in \{0, \dots, k\}$, on a $g_0^{(j)} = g_j$. En particulier :
+        $$ \left( \lim_{n \to +\infty} f_n \right)^{(j)} = \lim_{n \to +\infty} f_n^{(j)} \quad \text{pour } j=0, \dots, k $$
+    </div>
+
+
+    <div class="theorem">
+        <strong>Théorème d'interversion des limites (double limite)</strong><br>
+        Soit $I$ un intervalle de $\R$. Soit $a$ un point de $I$ ou une borne de $I$ (finie ou infinie). Soit $(f_n)$ une suite de fonctions de $I$ dans $F$ (evn).
+        On suppose que :
+        <ol>
+            <li>La suite $(f_n)$ converge <strong>uniformément</strong> vers $f$ sur une partie $J \subset I$ telle que $a$ soit adhérent à $J$. (Souvent $J=I$ ou $J = I \setminus \{a\}$).</li>
+            <li>Pour chaque $n \in \N$, la fonction $f_n$ admet une limite $\ell_n \in F$ lorsque $x$ tend vers $a$ ($x \in J$).
+               $$ \lim_{x \to a, x \in J} f_n(x) = \ell_n $$</li>
+        </ol>
+        Alors :
+        <ul>
+            <li>La suite $(\ell_n)$ converge vers une limite $\ell \in F$.</li>
+            <li>La fonction limite $f$ admet une limite lorsque $x$ tend vers $a$ ($x \in J$).</li>
+            <li>Ces deux limites sont égales : $\lim_{x \to a, x \in J} f(x) = \ell = \lim_{n \to \infty} \ell_n$.</li>
+        </ul>
+        Autrement dit, sous ces hypothèses, on peut intervertir les limites :
+        $$ \lim_{x \to a} \left( \lim_{n \to \infty} f_n(x) \right) = \lim_{n \to \infty} \left( \lim_{x \to a} f_n(x) \right) $$
+        (Ce théorème est souvent appliqué avec $a=+\infty$ ou $a$ une borne finie).
+    </div>
+
+
+    <h2>3. Séries de fonctions</h2>
+
+    <p>Soit $I$ un intervalle de $\R$. Soit $(u_n)_{n \in \N}$ une suite de fonctions de $I$ dans $\R$ (ou $\C$, ou un evn $F$). On s'intéresse à la série de fonctions $\sum_{n \ge 0} u_n$.</p>
+
+    <div class="definition">
+        <strong>Définition (Convergence simple, uniforme, normale)</strong><br>
+        Soit $S_n(x) = \sum_{k=0}^n u_k(x)$ la $n$-ième somme partielle.
+        <ul>
+            <li>La série $\sum u_n$ <strong>converge simplement</strong> sur $I$ vers une fonction somme $S$ si la suite des sommes partielles $(S_n)$ converge simplement vers $S$ sur $I$.
+               $$ \forall x \in I, S(x) = \sum_{n=0}^{+\infty} u_n(x) = \lim_{n \to \infty} S_n(x) $$</li>
+            <li>La série $\sum u_n$ <strong>converge uniformément</strong> sur $I$ vers $S$ si la suite des sommes partielles $(S_n)$ converge uniformément vers $S$ sur $I$.</li>
+            <li>La série $\sum u_n$ <strong>converge normalement</strong> sur $I$ si :
+                <ol>
+                    <li>Chaque fonction $u_n$ est bornée sur $I$.</li>
+                    <li>La série numérique $\sum_{n \ge 0} \norminf{u_n}{I}$ converge (où $\norminf{u_n}{I} = \sup_{x \in I} \abs{u_n(x)}$).</li>
+                </ol>
+            </li>
+        </ul>
+    </div>
+
+     <div class="remark">
+        <strong>Convergence uniforme et reste :</strong><br>
+        Si la série $\sum u_n$ converge simplement vers $S$, on définit le <strong>reste d'ordre $n$</strong> par $R_n(x) = S(x) - S_n(x) = \sum_{k=n+1}^{+\infty} u_k(x)$.
+        Alors, la série $\sum u_n$ converge uniformément sur $I$ si et seulement si la suite des restes $(R_n)$ converge uniformément vers la fonction nulle sur $I$.
+        $$ \sum u_n \text{ CVU sur } I \iff \lim_{n \to +\infty} \norminf{R_n}{I} = \lim_{n \to +\infty} \sup_{x \in I} \abs{\sum_{k=n+1}^{+\infty} u_k(x)} = 0 $$
+    </div>
+
+    <p><a href="#">Vidéo expliquant les modes de convergence des séries de fonctions</a></p>
+
+    <div class="theorem">
+        <strong>Théorème (Convergence normale $\implies$ Convergence uniforme)</strong><br>
+        Si la série de fonctions $\sum u_n$ converge <strong>normalement</strong> sur $I$, alors elle converge <strong>uniformément</strong> sur $I$.
+        <br>(Elle converge aussi simplement, et absolument pour chaque $x \in I$).
+    </div>
+    <div class="proof">
+        <strong>Preuve :</strong><br>
+        Supposons $\sum \norminf{u_n}{I}$ converge. Notons $M_n = \norminf{u_n}{I}$. $\sum M_n$ converge.
+        Pour $x \in I$ fixé, $\abs{u_n(x)} \le M_n$. Par comparaison, $\sum \abs{u_n(x)}$ converge. Donc $\sum u_n(x)$ converge. La série converge simplement vers une somme $S(x)$.
+        Soit $R_n(x) = \sum_{k=n+1}^{+\infty} u_k(x)$.
+        $\abs{R_n(x)} = \abs{\sum_{k=n+1}^{+\infty} u_k(x)} \le \sum_{k=n+1}^{+\infty} \abs{u_k(x)}$ (inégalité triangulaire généralisée).
+        $\le \sum_{k=n+1}^{+\infty} \norminf{u_k}{I}$.
+        Le majorant $\sum_{k=n+1}^{+\infty} M_k$ est le reste d'une série numérique convergente, il tend donc vers 0 quand $n \to \infty$. Ce majorant est indépendant de $x$.
+        Donc $\norminf{R_n}{I} = \sup_{x \in I} \abs{R_n(x)} \le \sum_{k=n+1}^{+\infty} M_k \xrightarrow[n \to \infty]{} 0$.
+        Ceci prouve la convergence uniforme de $(S_n)$ vers $S$ (ou de $(R_n)$ vers 0). $\Box$
+    </div>
+    <div class="warning">
+    La réciproque est fausse : la convergence uniforme n'implique pas la convergence normale.
+    </div>
+
+
+    <h3>Propriétés de la somme d'une série de fonctions</h3>
+    <p>Les théorèmes de transfert (continuité, intégration, dérivation) vus pour les suites de fonctions s'appliquent directement aux séries de fonctions via la suite des sommes partielles $(S_n)$.</p>
+
+    <div class="theorem">
+        <strong>Théorème (Continuité de la somme)</strong><br>
+        On suppose que :
+        <ol>
+            <li>Toutes les fonctions $u_n$ sont continues sur $I$.</li>
+            <li>La série $\sum u_n$ converge <strong>uniformément</strong> sur $I$.</li>
+        </ol>
+        Alors la fonction somme $S(x) = \sum_{n=0}^{+\infty} u_n(x)$ est <strong>continue</strong> sur $I$.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Intégration terme à terme sur un segment)</strong><br>
+        On suppose que :
+        <ol>
+            <li>$I = [a, b]$ est un <strong>segment</strong>.</li>
+            <li>Toutes les fonctions $u_n$ sont continues (ou continues par morceaux) sur $[a, b]$.</li>
+            <li>La série $\sum u_n$ converge <strong>uniformément</strong> sur $[a, b]$.</li>
+        </ol>
+        Alors la série numérique $\sum_{n=0}^{+\infty} \left( \int_a^b u_n(t) dt \right)$ converge, et on peut permuter somme et intégrale :
+        $$ \int_a^b \left( \sum_{n=0}^{+\infty} u_n(t) \right) dt = \sum_{n=0}^{+\infty} \left( \int_a^b u_n(t) dt \right) $$
+        $$ \int_a^b S(t) dt = \sum_{n=0}^{+\infty} \int_a^b u_n(t) dt $$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Dérivation terme à terme)</strong><br>
+        On suppose que $I$ est un intervalle. On suppose que :
+        <ol>
+            <li>Toutes les fonctions $u_n$ sont de classe $C^1$ sur $I$.</li>
+            <li>La série $\sum u_n$ converge <strong>simplement</strong> sur $I$ vers $S(x)$.</li>
+            <li>La série des dérivées $\sum u'_n$ converge <strong>uniformément</strong> sur <strong>tout segment</strong> contenu dans $I$.</li>
+        </ol>
+        Alors la fonction somme $S$ est de classe $C^1$ sur $I$ et sa dérivée est la somme des dérivées :
+        $$ S'(x) = \left( \sum_{n=0}^{+\infty} u_n(x) \right)' = \sum_{n=0}^{+\infty} u'_n(x) $$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Caractère $C^k$ terme à terme)</strong><br>
+        On suppose que $I$ est un intervalle et $k \ge 1$ un entier. On suppose que :
+        <ol>
+            <li>Toutes les fonctions $u_n$ sont de classe $C^k$ sur $I$.</li>
+            <li>Pour chaque $j \in \{0, 1, \dots, k-1\}$, la série $\sum u_n^{(j)}$ converge <strong>simplement</strong> sur $I$.</li>
+            <li>La série des dérivées $k$-èmes $\sum u_n^{(k)}$ converge <strong>uniformément</strong> sur <strong>tout segment</strong> contenu dans $I$.</li>
+        </ol>
+        Alors la fonction somme $S(x) = \sum_{n=0}^{+\infty} u_n(x)$ est de classe $C^k$ sur $I$, et pour tout $j \in \{0, \dots, k\}$, on peut dériver terme à terme $j$ fois :
+        $$ S^{(j)}(x) = \sum_{n=0}^{+\infty} u_n^{(j)}(x) $$
+    </div>
+
+     <div class="theorem">
+        <strong>Théorème d'interversion Limite/Somme</strong><br>
+        Soit $I$ un intervalle, $a$ un point de $I$ ou une borne de $I$.
+        On suppose que :
+        <ol>
+            <li>La série $\sum u_n$ converge <strong>uniformément</strong> sur une partie $J \subset I$ telle que $a$ soit adhérent à $J$.</li>
+            <li>Pour chaque $n \in \N$, la fonction $u_n$ admet une limite $\ell_n$ lorsque $x$ tend vers $a$ ($x \in J$).</li>
+        </ol>
+        Alors :
+        <ul>
+            <li>La série numérique $\sum \ell_n$ converge.</li>
+            <li>La fonction somme $S(x) = \sum_{n=0}^{+\infty} u_n(x)$ admet une limite lorsque $x$ tend vers $a$ ($x \in J$).</li>
+            <li>Ces limites sont égales : $\lim_{x \to a, x \in J} S(x) = \sum_{n=0}^{+\infty} \ell_n$.</li>
+        </ul>
+        Autrement dit, sous ces hypothèses, on peut intervertir limite et somme :
+        $$ \lim_{x \to a} \left( \sum_{n=0}^{+\infty} u_n(x) \right) = \sum_{n=0}^{+\infty} \left( \lim_{x \to a} u_n(x) \right) $$
+    </div>
+
+
+    <h2>4. Extension aux espaces vectoriels normés</h2>
+
+    <p>La plupart des définitions et théorèmes précédents s'étendent lorsque les fonctions $f_n$ (ou $u_n$) sont à valeurs dans un espace vectoriel normé $(F, \norm{\cdot}_F)$ de dimension finie. L'ensemble de départ $A$ peut aussi être une partie d'un evn $(E, \norm{\cdot}_E)$.</p>
+    <ul>
+        <li>Les définitions de convergence simple, uniforme, normale sont identiques en remplaçant $\abs{\cdot}$ par $\norm{\cdot}_F$.</li>
+        <li>La convergence normale implique la convergence uniforme, qui implique la convergence simple.</li>
+        <li>Le théorème sur la <strong>continuité</strong> de la limite uniforme (ou de la somme d'une série uniformément convergente) reste vrai.</li>
+        <li>Le théorème d'<strong>interversion des limites</strong> reste vrai.</li>
+        <li>Les théorèmes sur l'<strong>intégration</strong> et la <strong>dérivation</strong> nécessitent que l'ensemble de départ soit un intervalle $I \subset \R$. Ils restent valables pour les fonctions à valeurs dans un evn $F$ de dimension finie.</li>
+    </ul>
+
+
+    <h2>5. Approximation uniforme</h2>
+
+    <div class="theorem">
+        <strong>Théorème (Densité des fonctions en escalier)</strong><br>
+        Toute fonction <strong>continue par morceaux</strong> sur un segment $[a, b]$ (à valeurs réelles ou complexes, ou dans un evn de dimension finie) est limite uniforme sur ce segment d'une suite de fonctions <strong>en escalier</strong>.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème de Weierstrass (Approximation polynomiale)</strong><br>
+        Toute fonction <strong>continue</strong> sur un segment $[a, b]$ à valeurs dans $\R$ (ou $\C$, ou un evn de dimension finie) est limite uniforme sur ce segment d'une suite de fonctions <strong>polynomiales</strong>.
+        <br>(Autrement dit, l'espace des fonctions polynomiales est dense dans $C([a, b], F)$ pour la norme de la convergence uniforme $\norm{\cdot}_\infty$).
+    </div>
+
+</body>
+</html>
