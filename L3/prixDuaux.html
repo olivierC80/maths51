@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimisation Linéaire : Les Prix Duaux</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 30px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        .formula {
+            font-style: italic;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #e9f5ff;
+            border-left: 5px solid #0056b3;
+            overflow-x: auto; /* Pour les formules longues */
+        }
+        .formula-inline {
+             font-style: italic;
+        }
+         /* Style pour centrer les formules $$ */
+        .formula-block {
+            text-align: center;
+            margin: 20px auto; /* Ajoute de l'espace vertical et centre horizontalement */
+            padding: 15px;
+            background-color: #e9f5ff;
+            border: 1px solid #b3d7ff;
+            border-radius: 5px;
+            overflow-x: auto;
+            display: block; /* Assure que c'est un bloc */
+        }
+
+        /* Simuler le rendu LaTeX pour $...$ et $$...$$ */
+        /* (Note: Ceci est une simulation très basique. Pour un vrai rendu LaTeX, il faudrait utiliser MathJax ou KaTeX) */
+        .math { font-family: "Computer Modern", serif; /* Police ressemblant à LaTeX si disponible */ }
+        .math-inline { display: inline; }
+        .math-block { display: block; text-align: center; margin: 1em 0; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <!-- Pour un rendu mathématique correct, intégrer MathJax -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script"></script>
+</head>
+<body>
+    <div class="container">
+
+        <h1>Cours d'Optimisation Linéaire : Les Prix Duaux (Niveau L3 Gestion)</h1>
+
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>L'optimisation linéaire (OL) est un outil puissant utilisé en gestion pour prendre des décisions optimales concernant l'allocation de ressources limitées (comme le temps, l'argent, les matières premières) afin de maximiser un objectif (comme le profit) ou de minimiser un autre (comme les coûts).</p>
+            <p>Chaque problème d'optimisation linéaire, appelé <strong>problème primal</strong>, a un problème associé appelé <strong>problème dual</strong>. Les variables de ce problème dual, appelées <strong>variables duales</strong> ou <strong>prix duaux</strong> (aussi connus sous le nom de <strong>prix fantômes</strong> ou <strong>shadow prices</strong> en anglais), ont une interprétation économique extrêmement utile pour les gestionnaires.</p>
+            <p>Ce cours se concentre sur la compréhension et l'interprétation de ces prix duaux.</p>
+        </section>
+
+        <section id="primal">
+            <h2>1. Rappel : Le Problème Primal</h2>
+            <p>Considérons un problème typique de maximisation (le primal) où une entreprise produit $n$ produits en utilisant $m$ ressources limitées.</p>
+            <ul>
+                <li>$x_j$ : quantité du produit $j$ à fabriquer ($j=1, \dots, n$)</li>
+                <li>$c_j$ : profit unitaire du produit $j$</li>
+                <li>$b_i$ : quantité disponible de la ressource $i$ ($i=1, \dots, m$)</li>
+                <li>$a_{ij}$ : quantité de ressource $i$ nécessaire pour produire une unité du produit $j$</li>
+            </ul>
+            <p>Le problème primal (P) s'écrit :</p>
+            <div class="formula formula-block">
+            $$
+            \begin{array}{lll}
+            \text{Maximiser} & Z = \sum_{j=1}^{n} c_j x_j & \text{(Profit total)} \\
+            \text{Sujet à :} & & \\
+            & \sum_{j=1}^{n} a_{ij} x_j \leq b_i, & \forall i = 1, \dots, m \quad \text{(Contraintes de ressources)} \\
+            & x_j \geq 0, & \forall j = 1, \dots, n \quad \text{(Non-négativité)}
+            \end{array}
+            $$
+            </div>
+            <p><strong>Exemple simple :</strong> Une entreprise fabrique deux produits, A et B.
+            Profit : 5€/unité pour A ($x_1$), 8€/unité pour B ($x_2$).
+            Ressources : 10h de travail, 12kg de matière première.
+            Fabrication :
+            A nécessite 1h de travail et 2kg de matière.
+            B nécessite 2h de travail et 1kg de matière.
+            </p>
+             <p>Le primal est :</p>
+            <div class="formula formula-block">
+            $$
+            \begin{array}{lll}
+            \text{Maximiser} & Z = 5x_1 + 8x_2 & \\
+            \text{Sujet à :} & & \\
+            & 1x_1 + 2x_2 \leq 10 & \text{(Travail)} \\
+            & 2x_1 + 1x_2 \leq 12 & \text{(Matière)} \\
+            & x_1 \geq 0, x_2 \geq 0 &
+            \end{array}
+            $$
+            </div>
+        </section>
+
+        <section id="dual">
+            <h2>2. Le Problème Dual</h2>
+            <p>À chaque problème primal (P) est associé un problème dual (D). Si le primal est un problème de maximisation avec des contraintes $\leq$, le dual est un problème de minimisation avec des contraintes $\geq$.</p>
+            <p>On introduit une nouvelle variable, $y_i$, pour chaque contrainte $i$ du primal. Ces $y_i$ sont les <strong>variables duales</strong>.</p>
+            <p>Les règles de construction du dual (pour un primal Max $\leq$) sont :</p>
+            <ul>
+                <li>L'objectif devient Minimiser.</li>
+                <li>Les coefficients de la fonction objectif du dual sont les seconds membres ($b_i$) des contraintes du primal.</li>
+                <li>Les seconds membres des contraintes du dual sont les coefficients de la fonction objectif ($c_j$) du primal.</li>
+                <li>La matrice des coefficients des contraintes du dual est la transposée ($a_{ji}$) de celle du primal ($a_{ij}$).</li>
+                <li>Le sens des inégalités des contraintes est inversé ($\leq$ devient $\geq$).</li>
+                <li>Les variables duales $y_i$ sont non-négatives ($y_i \geq 0$).</li>
+            </ul>
+             <p>Le problème dual (D) associé au primal (P) général est :</p>
+            <div class="formula formula-block">
+            $$
+            \begin{array}{lll}
+            \text{Minimiser} & W = \sum_{i=1}^{m} b_i y_i & \\
+            \text{Sujet à :} & & \\
+            & \sum_{i=1}^{m} a_{ji} y_i \geq c_j, & \forall j = 1, \dots, n \\
+            & y_i \geq 0, & \forall i = 1, \dots, m
+            \end{array}
+            $$
+            </div>
+            <p><strong>Pour notre exemple :</strong> Le primal a 2 contraintes, donc le dual aura 2 variables, $y_1$ (associée au travail) et $y_2$ (associée à la matière).</p>
+            <div class="formula formula-block">
+            $$
+            \begin{array}{lll}
+            \text{Minimiser} & W = 10y_1 + 12y_2 & \\
+            \text{Sujet à :} & & \\
+            & 1y_1 + 2y_2 \geq 5 & \text{(Contrainte associée à } x_1) \\
+            & 2y_1 + 1y_2 \geq 8 & \text{(Contrainte associée à } x_2) \\
+            & y_1 \geq 0, y_2 \geq 0 &
+            \end{array}
+            $$
+            </div>
+        </section>
+
+        <section id="dual-variables">
+            <h2>3. Les Variables Duales : Prix Duaux ou Prix Marg Chirurgicaux</h2>
+            <p>La question clé est : Que représentent $y_1$ et $y_2$ dans la solution optimale ?</p>
+            <p>Soit $Z^*$ la valeur optimale de la fonction objectif du primal (le profit maximum) et $W^*$ la valeur optimale du dual. Le <strong>théorème de la dualité forte</strong> stipule que $Z^* = W^*$.</p>
+            <p>La valeur optimale d'une variable duale, $y_i^*$, représente l'<strong>augmentation marginale de la valeur optimale de la fonction objectif du primal ($Z^*$) résultant d'une augmentation d'une unité du second membre ($b_i$) de la $i$-ème contrainte du primal</strong>, en supposant que la base optimale actuelle reste inchangée.</p>
+            <p>En termes de gestion :</p>
+            <blockquote>
+                Le prix dual $y_i^*$ mesure la <strong>valeur économique marginale</strong> de la ressource $i$. C'est le supplément de profit maximal que l'entreprise pourrait obtenir si elle disposait d'une unité supplémentaire de la ressource $i$.
+            </blockquote>
+            <p>Par exemple :</p>
+            <ul>
+                <li>$y_1^*$ (associé à la contrainte de travail $\leq 10$) : représente le profit supplémentaire généré par une heure de travail additionnelle (si on passait de 10h à 11h disponibles).</li>
+                <li>$y_2^*$ (associé à la contrainte de matière $\leq 12$) : représente le profit supplémentaire généré par un kg de matière première additionnel (si on passait de 12kg à 13kg disponibles).</li>
+            </ul>
+            <p>Cette interprétation est cruciale pour la prise de décision :</p>
+            <ul>
+                <li><strong>Identifier les goulots d'étranglement :</strong> Une ressource avec un prix dual $y_i^* > 0$ est une ressource rare, limitante (la contrainte est saturée à l'optimum). Une ressource avec $y_i^* = 0$ est abondante (non entièrement utilisée à l'optimum).</li>
+                <li><strong>Décider d'acquérir des ressources supplémentaires :</strong> Si le coût d'acquisition d'une unité supplémentaire de ressource $i$ est inférieur à son prix dual $y_i^*$, il est économiquement intéressant de l'acquérir (car le gain marginal $y_i^*$ dépasse le coût marginal).</li>
+                <li><strong>Valorisation interne :</strong> Les prix duaux peuvent servir à fixer des prix de transfert internes pour des ressources partagées entre différents départements.</li>
+            </ul>
+            <p><strong>Important :</strong> L'interprétation marginale du prix dual n'est valide que dans une certaine plage de variation du second membre $b_i$. Au-delà de cette plage, la base optimale du problème change, et le prix dual aussi.</p>
+        </section>
+
+        <section id="duality-theorems">
+            <h2>4. Théorèmes Fondamentaux de la Dualité</h2>
+            <p>Il existe des relations mathématiques fortes entre le primal et le dual.</p>
+            <h3>4.1 Dualité Faible</h3>
+            <p>Pour toute solution réalisable $x$ du primal (Max) et toute solution réalisable $y$ du dual (Min), on a $Z(x) \leq W(y)$. C'est-à-dire que la valeur de l'objectif de n'importe quelle solution primale réalisable est toujours inférieure ou égale à la valeur de l'objectif de n'importe quelle solution duale réalisable.</p>
+            <h3>4.2 Dualité Forte</h3>
+            <p>Si le problème primal admet une solution optimale finie $x^*$, alors le problème dual admet aussi une solution optimale finie $y^*$, et leurs valeurs optimales sont égales : $Z(x^*) = W(y^*)$.</p>
+            <div class="formula formula-inline">
+            Soit $Z^* = \sum c_j x_j^*$ et $W^* = \sum b_i y_i^*$. Alors $Z^* = W^*$.
+            </div>
+            <h3>4.3 Théorème des Écarts Complémentaires</h3>
+            <p>Ce théorème relie directement les solutions optimales $x^*$ et $y^*$ aux contraintes.</p>
+            <p>Soit $x^*$ une solution optimale du primal et $y^*$ une solution optimale du dual.</p>
+            <p><strong>Condition 1 :</strong> Pour chaque variable primale $x_j^*$, soit $x_j^* = 0$, soit la $j$-ème contrainte du dual est saturée (égalité), soit les deux.</p>
+            <div class="formula formula-block">
+            $x_j^* \left( \sum_{i=1}^{m} a_{ji} y_i^* - c_j \right) = 0, \quad \forall j = 1, \dots, n$
+            </div>
+            <p><i>Interprétation :</i> Si un produit $j$ est fabriqué ($x_j^* > 0$), alors sa "rentabilité marginale" dans le dual est nulle (la valeur imputée des ressources utilisées $\sum a_{ji} y_i^*$ est exactement égale au profit $c_j$). Si la valeur imputée des ressources est strictement supérieure au profit ($\sum a_{ji} y_i^* > c_j$), alors il n'est pas rentable de produire ce produit ($x_j^* = 0$).</p>
+
+            <p><strong>Condition 2 :</strong> Pour chaque variable duale $y_i^*$, soit $y_i^* = 0$, soit la $i$-ème contrainte du primal est saturée (égalité), soit les deux.</p>
+            <div class="formula formula-block">
+             $y_i^* \left( b_i - \sum_{j=1}^{n} a_{ij} x_j^* \right) = 0, \quad \forall i = 1, \dots, m$
+            </div>
+            <p><i>Interprétation :</i> Si une ressource $i$ n'est pas entièrement utilisée à l'optimum ($ \sum a_{ij} x_j^* < b_i $), alors sa valeur marginale est nulle ($y_i^* = 0$). Si une ressource a une valeur marginale positive ($y_i^* > 0$), c'est qu'elle est rare et donc entièrement consommée ($ \sum a_{ij} x_j^* = b_i $).</p>
+        </section>
+
+        <section id="sensitivity">
+            <h2>5. Prix Duaux et Analyse de Sensibilité</h2>
+            <p>Les prix duaux sont un résultat clé de l'<strong>analyse de sensibilité</strong> effectuée après avoir résolu un problème d'optimisation linéaire (par exemple, avec le Simplex).</p>
+            <p>Les solveurs d'OL (comme ceux intégrés dans Excel, ou des logiciels spécialisés) fournissent généralement :</p>
+            <ul>
+                <li>La solution optimale $x^*$.</li>
+                <li>La valeur optimale $Z^*$.</li>
+                <li>Les valeurs optimales des variables duales $y_i^*$ (les prix duaux).</li>
+                <li>Les <strong>plages de validité</strong> (ou "Allowable Increase/Decrease" pour les $b_i$) : Ce sont les intervalles dans lesquels chaque $b_i$ peut varier (un seul à la fois) sans changer la base optimale courante, et donc sans changer la valeur du prix dual $y_i^*$.</li>
+            </ul>
+            <p><strong>Exemple :</strong> Si pour notre exemple, on trouve $y_1^* = 3$ et $y_2^* = 1$, avec une plage de validité pour $b_1$ (travail) de [8, 14].</p>
+            <ul>
+                <li>Cela signifie que tant que les heures de travail disponibles restent entre 8 et 14 (et que la matière première reste à 12kg), chaque heure de travail supplémentaire ajoute 3€ au profit total maximum.</li>
+                <li>Si le nombre d'heures disponibles passe à 11 (dans la plage), le nouveau profit max sera $Z_{ancien}^* + 1 \times y_1^* = Z_{ancien}^* + 3$.</li>
+                <li>Si le nombre d'heures disponibles passe à 15 (hors de la plage), le prix dual de 3€/h n'est plus garanti. Il faudrait résoudre à nouveau le problème pour connaître le nouveau profit et le nouveau prix dual.</li>
+                <li>$y_2^* = 1$ signifie que chaque kg supplémentaire de matière première ajoute 1€ au profit (dans sa propre plage de validité).</li>
+            </ul>
+             <p>Comparer $y_1^* = 3$ et $y_2^* = 1$ montre que, marginalement, la ressource "travail" est plus précieuse (contribue plus au profit) que la ressource "matière première" dans cette situation.</p>
+        </section>
+
+        <section id="conclusion">
+            <h2>Conclusion</h2>
+            <p>Les prix duaux sont bien plus qu'un sous-produit mathématique de l'optimisation linéaire. Pour un gestionnaire, ils constituent une information économique essentielle :</p>
+            <ul>
+                <li>Ils quantifient la <strong>valeur marginale des ressources rares</strong>.</li>
+                <li>Ils aident à identifier les <strong>goulots d'étranglement</strong> de la production ou des opérations.</li>
+                <li>Ils guident les décisions concernant l'<strong>acquisition de ressources supplémentaires</strong>.</li>
+                <li>Ils fournissent une base pour la <strong>tarification interne</strong> des ressources.</li>
+            </ul>
+            <p>Comprendre les prix duaux permet de passer d'une simple solution numérique d'un problème d'OL à une véritable aide à la décision stratégique et opérationnelle en gestion.</p>
+        </section>
+
+    </div>
+</body>
+</html>
