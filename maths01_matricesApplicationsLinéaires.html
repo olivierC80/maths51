@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours - Matrices et Applications Linéaires</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .definition, .theorem, .proposition, .proof, .example, .corollary, .remark {
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 4px solid;
+        }
+        .definition { border-color: #17a2b8; background-color: #e1f5fe; }
+        .theorem { border-color: #28a745; background-color: #e8f5e9; }
+        .proposition { border-color: #ffc107; background-color: #fff8e1; }
+        .proof { border-color: #6c757d; background-color: #f8f9fa; font-style: italic; }
+        .example { border-color: #fd7e14; background-color: #fff3e0; }
+        .corollary { border-color: #007bff; background-color: #e7f3ff; }
+        .remark { border-color: #adb5bd; background-color: #e9ecef; }
+        strong { color: #0056b3; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Allow scrolling for wide formulas */
+    </style>
+</head>
+<body>
+
+<h1>Matrices et Applications Linéaires</h1>
+
+<div class="remark">
+    <strong>Notations préliminaires :</strong>
+    <ul>
+        <li>$\mathbb{K}$ désigne le corps $\mathbb{R}$ ou $\mathbb{C}$.</li>
+        <li>$m, n, p$ sont des entiers strictement positifs.</li>
+        <li>$E, F, G$ désignent des $\mathbb{K}$-espaces vectoriels de dimensions finies respectives $p, n, m$.</li>
+        <li>$\mathcal{B} = (e_1, \dots, e_p)$, $\mathcal{C} = (f_1, \dots, f_n)$ et $\mathcal{D} = (g_1, \dots, g_m)$ sont des bases respectives de $E, F, G$.</li>
+        <li>$\mathcal{L}(E, F)$ désigne l'espace vectoriel des applications linéaires de $E$ dans $F$.</li>
+        <li>$\mathcal{M}_{n,p}(\mathbb{K})$ désigne l'espace vectoriel des matrices à $n$ lignes et $p$ colonnes à coefficients dans $\mathbb{K}$. Si $n=p$, on note $\mathcal{M}_n(\mathbb{K})$.</li>
+        <li>$\text{Id}_E$ désigne l'application identité sur $E$.</li>
+        <li>$GL_n(\mathbb{K})$ désigne le groupe des matrices inversibles de $\mathcal{M}_n(\mathbb{K})$.</li>
+    </ul>
+</div>
+
+<h2>I. Matrice d'un vecteur, d'une famille de vecteurs</h2>
+
+<div class="definition">
+    <strong>Matrice d'un vecteur dans une base</strong><br>
+    Soit $x \in E$. La <strong>matrice du vecteur $x$</strong> dans la base $\mathcal{B}$ est la matrice colonne $X \in \mathcal{M}_{p,1}(\mathbb{K})$ constituée par les coordonnées de $x$ dans la base $\mathcal{B}$.
+    Si $x = a_1 e_1 + \dots + a_p e_p = \sum_{i=1}^p a_i e_i$, alors
+    $$ X = \text{Mat}_{\mathcal{B}}(x) = \begin{pmatrix} a_1 \\ a_2 \\ \vdots \\ a_p \end{pmatrix} $$
+</div>
+
+<div class="example">
+    Soit $E = \mathbb{R}^3$ muni de sa base canonique $\mathcal{B} = (e_1, e_2, e_3)$ où $e_1=(1,0,0)$, $e_2=(0,1,0)$, $e_3=(0,0,1)$.
+    Soit $x = (2, -1, 5) = 2e_1 - 1e_2 + 5e_3$.
+    La matrice de $x$ dans la base $\mathcal{B}$ est $X = \begin{pmatrix} 2 \\ -1 \\ 5 \end{pmatrix}$.
+</div>
+
+<div class="definition">
+    <strong>Matrice d'une famille de vecteurs dans une base</strong><br>
+    Soit $(x_1, \dots, x_r)$ une famille de $r$ vecteurs de $E$. La <strong>matrice de la famille $(x_1, \dots, x_r)$</strong> dans la base $\mathcal{B}$ est la matrice de $\mathcal{M}_{p,r}(\mathbb{K})$ dont la $j$-ème colonne est constituée par les coordonnées de $x_j$ dans la base $\mathcal{B}$. On la note $\text{Mat}_{\mathcal{B}}(x_1, \dots, x_r)$.
+    Si $X_j = \text{Mat}_{\mathcal{B}}(x_j)$, alors
+    $$ \text{Mat}_{\mathcal{B}}(x_1, \dots, x_r) = \begin{pmatrix} | & & | \\ X_1 & \dots & X_r \\ | & & | \end{pmatrix} $$
+</div>
+
+<div class="example">
+    Soit $E = \mathbb{R}^2$ avec la base canonique $\mathcal{B} = (e_1, e_2)$.
+    Soit $x_1 = (1, 2) = 1e_1 + 2e_2$ et $x_2 = (-3, 0) = -3e_1 + 0e_2$.
+    La matrice de la famille $(x_1, x_2)$ dans la base $\mathcal{B}$ est
+    $$ \text{Mat}_{\mathcal{B}}(x_1, x_2) = \begin{pmatrix} 1 & -3 \\ 2 & 0 \end{pmatrix} $$
+</div>
+
+<h2>II. Matrice d'une application linéaire</h2>
+
+<div class="definition">
+    <strong>Matrice d'une application linéaire dans des bases</strong><br>
+    Soit $u \in \mathcal{L}(E, F)$. La <strong>matrice de $u$</strong> dans les bases $\mathcal{B}$ et $\mathcal{C}$ est la matrice de $\mathcal{M}_{n,p}(\mathbb{K})$ dont les vecteurs colonnes sont les coordonnées des vecteurs $(u(e_1), \dots, u(e_p))$ dans la base $\mathcal{C} = (f_1, \dots, f_n)$. On la note $\text{Mat}_{\mathcal{B},\mathcal{C}}(u)$.
+    La $j$-ème colonne de $\text{Mat}_{\mathcal{B},\mathcal{C}}(u)$ est $\text{Mat}_{\mathcal{C}}(u(e_j))$.
+    Si $u(e_j) = \sum_{i=1}^n a_{i,j} f_i$, alors $\text{Mat}_{\mathcal{B},\mathcal{C}}(u) = (a_{i,j})_{1 \leq i \leq n, 1 \leq j \leq p}$.
+    $$ \text{Mat}_{\mathcal{B},\mathcal{C}}(u) = \begin{pmatrix} | & & | \\ \text{Mat}_{\mathcal{C}}(u(e_1)) & \dots & \text{Mat}_{\mathcal{C}}(u(e_p)) \\ | & & | \end{pmatrix} $$
+    Si $E=F$ et $\mathcal{B}=\mathcal{C}$, on note $\text{Mat}_{\mathcal{B}}(u)$ au lieu de $\text{Mat}_{\mathcal{B},\mathcal{B}}(u)$.
+</div>
+
+<div class="example">
+    Soit $E = \mathbb{R}^3$, $F = \mathbb{R}^2$. Soit $\mathcal{B}=(e_1, e_2, e_3)$ la base canonique de $\mathbb{R}^3$ et $\mathcal{C}=(f_1, f_2)$ la base canonique de $\mathbb{R}^2$.
+    Soit $u: E \to F$ définie par $u(x,y,z) = (2x-y, y+3z)$.
+    Calculons les images des vecteurs de $\mathcal{B}$:
+    $u(e_1) = u(1,0,0) = (2, 0) = 2f_1 + 0f_2$. Colonne 1 : $\begin{pmatrix} 2 \\ 0 \end{pmatrix}$.
+    $u(e_2) = u(0,1,0) = (-1, 1) = -1f_1 + 1f_2$. Colonne 2 : $\begin{pmatrix} -1 \\ 1 \end{pmatrix}$.
+    $u(e_3) = u(0,0,1) = (0, 3) = 0f_1 + 3f_2$. Colonne 3 : $\begin{pmatrix} 0 \\ 3 \end{pmatrix}$.
+    Donc, la matrice de $u$ dans les bases $\mathcal{B}$ et $\mathcal{C}$ est :
+    $$ \text{Mat}_{\mathcal{B},\mathcal{C}}(u) = \begin{pmatrix} 2 & -1 & 0 \\ 0 & 1 & 3 \end{pmatrix} \in \mathcal{M}_{2,3}(\mathbb{R}) $$
+</div>
+
+<div class="proposition">
+    <strong>Calcul de l'image d'un vecteur</strong><br>
+    Soit $u \in \mathcal{L}(E, F)$. Soit $x \in E$ de matrice $X = \text{Mat}_{\mathcal{B}}(x)$ dans la base $\mathcal{B}$, et $y = u(x)$ de matrice $Y = \text{Mat}_{\mathcal{C}}(y)$ dans la base $\mathcal{C}$. Alors on a :
+    $$ Y = \text{Mat}_{\mathcal{B},\mathcal{C}}(u) \, X $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Notons $A = \text{Mat}_{\mathcal{B},\mathcal{C}}(u) = (a_{i,j})$. Par définition, $u(e_j) = \sum_{i=1}^n a_{i,j} f_i$.
+    Soit $x = \sum_{j=1}^p x_j e_j$. Alors $X = \begin{pmatrix} x_1 \\ \vdots \\ x_p \end{pmatrix}$.
+    On calcule $u(x)$ par linéarité :
+    $$ y = u(x) = u\left(\sum_{j=1}^p x_j e_j\right) = \sum_{j=1}^p x_j u(e_j) $$
+    On exprime $u(x)$ dans la base $\mathcal{C}$:
+    $$ y = \sum_{j=1}^p x_j \left(\sum_{i=1}^n a_{i,j} f_i\right) = \sum_{i=1}^n \left(\sum_{j=1}^p a_{i,j} x_j\right) f_i $$
+    Les coordonnées de $y$ dans la base $\mathcal{C}$ sont $y_i = \sum_{j=1}^p a_{i,j} x_j$.
+    La matrice $Y = \text{Mat}_{\mathcal{C}}(y)$ est donc :
+    $$ Y = \begin{pmatrix} y_1 \\ \vdots \\ y_n \end{pmatrix} = \begin{pmatrix} \sum_{j=1}^p a_{1,j} x_j \\ \vdots \\ \sum_{j=1}^p a_{n,j} x_j \end{pmatrix} $$
+    Cette dernière expression est exactement le produit de la matrice $A$ par le vecteur colonne $X$.
+    $$ A X = \begin{pmatrix} a_{1,1} & \dots & a_{1,p} \\ \vdots & & \vdots \\ a_{n,1} & \dots & a_{n,p} \end{pmatrix} \begin{pmatrix} x_1 \\ \vdots \\ x_p \end{pmatrix} = \begin{pmatrix} \sum_{j=1}^p a_{1,j} x_j \\ \vdots \\ \sum_{j=1}^p a_{n,j} x_j \end{pmatrix} = Y $$
+    D'où $Y = AX$.
+</div>
+
+<div class="theorem">
+    <strong>Isomorphisme entre $\mathcal{L}(E, F)$ et $\mathcal{M}_{n,p}(\mathbb{K})$</strong><br>
+    Les bases $\mathcal{B}$ de $E$ et $\mathcal{C}$ de $F$ étant fixées, l'application
+    $$ \Phi_{\mathcal{B},\mathcal{C}}: \mathcal{L}(E, F) \to \mathcal{M}_{n,p}(\mathbb{K}) $$
+    $$ u \mapsto \text{Mat}_{\mathcal{B},\mathcal{C}}(u) $$
+    est un isomorphisme d'espaces vectoriels.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong>
+    1.  <strong>Linéarité :</strong> Soient $u, v \in \mathcal{L}(E, F)$ et $\lambda \in \mathbb{K}$.
+        La $j$-ème colonne de $\text{Mat}_{\mathcal{B},\mathcal{C}}(u + \lambda v)$ est $\text{Mat}_{\mathcal{C}}((u + \lambda v)(e_j)) = \text{Mat}_{\mathcal{C}}(u(e_j) + \lambda v(e_j))$.
+        Comme la correspondance $x \mapsto \text{Mat}_{\mathcal{C}}(x)$ est linéaire (isomorphisme entre $F$ et $\mathbb{K}^n$), on a :
+        $\text{Mat}_{\mathcal{C}}(u(e_j) + \lambda v(e_j)) = \text{Mat}_{\mathcal{C}}(u(e_j)) + \lambda \text{Mat}_{\mathcal{C}}(v(e_j))$.
+        Ceci est la $j$-ème colonne de $\text{Mat}_{\mathcal{B},\mathcal{C}}(u) + \lambda \text{Mat}_{\mathcal{B},\mathcal{C}}(v)$.
+        Donc, $\text{Mat}_{\mathcal{B},\mathcal{C}}(u + \lambda v) = \text{Mat}_{\mathcal{B},\mathcal{C}}(u) + \lambda \text{Mat}_{\mathcal{B},\mathcal{C}}(v)$. L'application $\Phi_{\mathcal{B},\mathcal{C}}$ est linéaire.
+
+    2.  <strong>Injectivité :</strong> Soit $u \in \mathcal{L}(E, F)$ tel que $\text{Mat}_{\mathcal{B},\mathcal{C}}(u) = 0$.
+        Cela signifie que pour tout $j \in \{1, \dots, p\}$, $\text{Mat}_{\mathcal{C}}(u(e_j)) = 0$. Donc $u(e_j) = 0$ pour tout $j$.
+        Soit $x = \sum x_j e_j \in E$. Alors $u(x) = \sum x_j u(e_j) = \sum x_j \cdot 0 = 0$.
+        Donc $u$ est l'application nulle. Le noyau de $\Phi_{\mathcal{B},\mathcal{C}}$ est réduit à $\{0\}$, donc $\Phi_{\mathcal{B},\mathcal{C}}$ est injective.
+
+    3.  <strong>Surjectivité :</strong> Soit $A = (a_{i,j}) \in \mathcal{M}_{n,p}(\mathbb{K})$. Définissons une application $u: E \to F$ comme suit : pour tout $x = \sum_{j=1}^p x_j e_j \in E$, on pose $u(x) = \sum_{j=1}^p x_j \left( \sum_{i=1}^n a_{i,j} f_i \right)$.
+        On vérifie que $u$ est linéaire.
+        De plus, pour $x=e_k$, on a $x_j = \delta_{j,k}$ (symbole de Kronecker), donc $u(e_k) = \sum_{j=1}^p \delta_{j,k} \left( \sum_{i=1}^n a_{i,j} f_i \right) = \sum_{i=1}^n a_{i,k} f_i$.
+        La matrice de $u(e_k)$ dans la base $\mathcal{C}$ est la $k$-ème colonne de $A$.
+        Donc, $\text{Mat}_{\mathcal{B},\mathcal{C}}(u) = A$. $\Phi_{\mathcal{B},\mathcal{C}}$ est surjective.
+
+    Étant linéaire, injective et surjective, $\Phi_{\mathcal{B},\mathcal{C}}$ est un isomorphisme. De plus, $\dim(\mathcal{L}(E, F)) = \dim(E) \times \dim(F) = p \times n = \dim(\mathcal{M}_{n,p}(\mathbb{K}))$, ce qui est cohérent.
+</div>
+
+<div class="theorem">
+    <strong>Composition d'applications linéaires et produit matriciel</strong><br>
+    Soient $u \in \mathcal{L}(E, F)$ et $v \in \mathcal{L}(F, G)$. Alors $v \circ u \in \mathcal{L}(E, G)$ et on a :
+    $$ \text{Mat}_{\mathcal{B},\mathcal{D}}(v \circ u) = \text{Mat}_{\mathcal{C},\mathcal{D}}(v) \, \text{Mat}_{\mathcal{B},\mathcal{C}}(u) $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Notons $A = \text{Mat}_{\mathcal{B},\mathcal{C}}(u)$ et $B = \text{Mat}_{\mathcal{C},\mathcal{D}}(v)$.
+    Soit $x \in E$, de matrice $X$ dans $\mathcal{B}$.
+    Soit $y = u(x) \in F$, de matrice $Y$ dans $\mathcal{C}$.
+    Soit $z = v(y) = (v \circ u)(x) \in G$, de matrice $Z$ dans $\mathcal{D}$.
+    D'après la proposition précédente, on a $Y = AX$ et $Z = BY$.
+    En substituant, $Z = B(AX) = (BA)X$.
+    Soit $w = v \circ u$. On a $z = w(x)$, et $Z = \text{Mat}_{\mathcal{B},\mathcal{D}}(w) X$.
+    Par unicité de la matrice associée à l'application linéaire $w$, on doit avoir $\text{Mat}_{\mathcal{B},\mathcal{D}}(v \circ u) = BA$.
+    En respectant l'ordre des matrices : $\text{Mat}_{\mathcal{B},\mathcal{D}}(v \circ u) = \text{Mat}_{\mathcal{C},\mathcal{D}}(v) \, \text{Mat}_{\mathcal{B},\mathcal{C}}(u)$.
+</div>
+
+<div class="corollary">
+    <strong>Isomorphisme d'anneaux</strong><br>
+    Dans le cas particulier où $E=F=G$ (donc $p=n=m$) et $\mathcal{B}=\mathcal{C}=\mathcal{D}$, l'application
+    $$ \Phi_{\mathcal{B}}: \mathcal{L}(E) \to \mathcal{M}_p(\mathbb{K}) $$
+    $$ u \mapsto \text{Mat}_{\mathcal{B}}(u) $$
+    est un isomorphisme d'anneaux (et d'algèbres).
+    Cela signifie que c'est un isomorphisme d'espaces vectoriels qui vérifie de plus :
+    $\text{Mat}_{\mathcal{B}}(v \circ u) = \text{Mat}_{\mathcal{B}}(v) \text{Mat}_{\mathcal{B}}(u)$ et $\text{Mat}_{\mathcal{B}}(\text{Id}_E) = I_p$ (matrice identité).
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation des isomorphismes</strong><br>
+    Soit $u \in \mathcal{L}(E, F)$. Si $\dim(E) = \dim(F) = n$ (donc $p=n$).
+    Alors $u$ est un isomorphisme si et seulement si $\text{Mat}_{\mathcal{B},\mathcal{C}}(u)$ est inversible.
+    Dans ce cas, on a :
+    $$ \text{Mat}_{\mathcal{C},\mathcal{B}}(u^{-1}) = \left[ \text{Mat}_{\mathcal{B},\mathcal{C}}(u) \right]^{-1} $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong>
+    ($\Rightarrow$) Supposons $u$ est un isomorphisme. Alors $u^{-1} \in \mathcal{L}(F, E)$ existe.
+    On a $u \circ u^{-1} = \text{Id}_F$ et $u^{-1} \circ u = \text{Id}_E$.
+    En passant aux matrices :
+    $\text{Mat}_{\mathcal{C}}(u \circ u^{-1}) = \text{Mat}_{\mathcal{B},\mathcal{C}}(u) \text{Mat}_{\mathcal{C},\mathcal{B}}(u^{-1})$. Or $\text{Mat}_{\mathcal{C}}(\text{Id}_F) = I_n$.
+    Donc $\text{Mat}_{\mathcal{B},\mathcal{C}}(u) \text{Mat}_{\mathcal{C},\mathcal{B}}(u^{-1}) = I_n$.
+    De même, $\text{Mat}_{\mathcal{B}}(u^{-1} \circ u) = \text{Mat}_{\mathcal{C},\mathcal{B}}(u^{-1}) \text{Mat}_{\mathcal{B},\mathcal{C}}(u)$. Or $\text{Mat}_{\mathcal{B}}(\text{Id}_E) = I_n$.
+    Donc $\text{Mat}_{\mathcal{C},\mathcal{B}}(u^{-1}) \text{Mat}_{\mathcal{B},\mathcal{C}}(u) = I_n$.
+    Ces deux égalités montrent que la matrice $A = \text{Mat}_{\mathcal{B},\mathcal{C}}(u)$ est inversible, et que son inverse est $A^{-1} = \text{Mat}_{\mathcal{C},\mathcal{B}}(u^{-1})$.
+
+    ($\Leftarrow$) Supposons $A = \text{Mat}_{\mathcal{B},\mathcal{C}}(u)$ est inversible. Soit $B = A^{-1} \in \mathcal{M}_n(\mathbb{K})$.
+    Comme $\Phi_{\mathcal{C},\mathcal{B}}: \mathcal{L}(F, E) \to \mathcal{M}_n(\mathbb{K})$ est un isomorphisme (puisque $\dim E = \dim F = n$), il existe une unique application linéaire $v \in \mathcal{L}(F, E)$ telle que $\text{Mat}_{\mathcal{C},\mathcal{B}}(v) = B$.
+    Alors $\text{Mat}_{\mathcal{B}}(v \circ u) = \text{Mat}_{\mathcal{C},\mathcal{B}}(v) \text{Mat}_{\mathcal{B},\mathcal{C}}(u) = B A = A^{-1} A = I_n = \text{Mat}_{\mathcal{B}}(\text{Id}_E)$.
+    Comme $\Phi_{\mathcal{B}}$ est injective, $v \circ u = \text{Id}_E$.
+    De même, $\text{Mat}_{\mathcal{C}}(u \circ v) = \text{Mat}_{\mathcal{B},\mathcal{C}}(u) \text{Mat}_{\mathcal{C},\mathcal{B}}(v) = A B = A A^{-1} = I_n = \text{Mat}_{\mathcal{C}}(\text{Id}_F)$.
+    Donc $u \circ v = \text{Id}_F$.
+    Puisque $v \circ u = \text{Id}_E$ et $u \circ v = \text{Id}_F$, $u$ est bijective, donc c'est un isomorphisme, et $v = u^{-1}$.
+</div>
+
+<h2>III. Application linéaire associée à une matrice</h2>
+
+<div class="definition">
+    <strong>Application linéaire canoniquement associée à une matrice</strong><br>
+    Soit $A \in \mathcal{M}_{n,p}(\mathbb{K})$. On peut lui associer une application linéaire $u_A: \mathbb{K}^p \to \mathbb{K}^n$ définie comme suit :
+    Si $X \in \mathbb{K}^p$ est identifié au vecteur colonne de ses coordonnées dans la base canonique de $\mathbb{K}^p$, alors $u_A(X) = AX$.
+    Le vecteur $AX \in \mathbb{K}^n$ est identifié au vecteur colonne de ses coordonnées dans la base canonique de $\mathbb{K}^n$.
+    En notant $\mathcal{B}_p$ et $\mathcal{B}_n$ les bases canoniques de $\mathbb{K}^p$ et $\mathbb{K}^n$ respectivement, on a $\text{Mat}_{\mathcal{B}_p, \mathcal{B}_n}(u_A) = A$.
+</div>
+
+<div class="definition">
+    <strong>Noyau, Image, Rang d'une matrice</strong><br>
+    Le <strong>noyau</strong> de $A \in \mathcal{M}_{n,p}(\mathbb{K})$, noté $\ker(A)$, est le noyau de l'application linéaire $u_A$ associée.
+    $$ \ker(A) = \{ X \in \mathbb{K}^p \mid AX = 0 \} \subseteq \mathbb{K}^p $$
+    L'<strong>image</strong> de $A$, notée $\text{Im}(A)$, est l'image de $u_A$.
+    $$ \text{Im}(A) = \{ AX \mid X \in \mathbb{K}^p \} \subseteq \mathbb{K}^n $$
+    Le <strong>rang</strong> de $A$, noté $\text{rg}(A)$, est le rang de $u_A$, c'est-à-dire la dimension de $\text{Im}(A)$.
+    Le rang de $A$ est aussi égal au rang de la famille de ses vecteurs colonnes.
+</div>
+
+<div class="theorem">
+    <strong>Théorème du rang (version matricielle)</strong><br>
+    Pour $A \in \mathcal{M}_{n,p}(\mathbb{K})$, on a :
+    $$ \dim(\ker(A)) + \text{rg}(A) = p \quad (\text{nombre de colonnes}) $$
+</div>
+
+<h2>IV. Changements de base</h2>
+
+<div class="definition">
+    <strong>Matrice de passage</strong><br>
+    Soit $E$ un espace vectoriel de dimension $p$. Soient $\mathcal{B}_1 = (e_1, \dots, e_p)$ et $\mathcal{B}_2 = (e'_1, \dots, e'_p)$ deux bases de $E$.
+    La <strong>matrice de passage</strong> de la base $\mathcal{B}_1$ à la base $\mathcal{B}_2$ est la matrice de la famille de vecteurs $\mathcal{B}_2$ (les vecteurs de la *nouvelle* base) dans la base $\mathcal{B}_1$ (l'*ancienne* base). On la note $P_{\mathcal{B}_1 \to \mathcal{B}_2}$.
+    $$ P_{\mathcal{B}_1 \to \mathcal{B}_2} = \text{Mat}_{\mathcal{B}_1}(e'_1, \dots, e'_p) \in \mathcal{M}_p(\mathbb{K}) $$
+</div>
+
+<div class="proposition">
+    <strong>Interprétation avec l'identité</strong><br>
+    La matrice de passage $P_{\mathcal{B}_1 \to \mathcal{B}_2}$ est aussi la matrice de l'application identité $\text{Id}_E$ de $(E, \mathcal{B}_2)$ dans $(E, \mathcal{B}_1)$.
+    $$ P_{\mathcal{B}_1 \to \mathcal{B}_2} = \text{Mat}_{\mathcal{B}_2, \mathcal{B}_1}(\text{Id}_E) $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> La $j$-ème colonne de $\text{Mat}_{\mathcal{B}_2, \mathcal{B}_1}(\text{Id}_E)$ est $\text{Mat}_{\mathcal{B}_1}(\text{Id}_E(e'_j)) = \text{Mat}_{\mathcal{B}_1}(e'_j)$. C'est exactement la définition de $P_{\mathcal{B}_1 \to \mathcal{B}_2}$.
+</div>
+
+<div class="proposition">
+    <strong>Propriétés des matrices de passage</strong><br>
+    1. La matrice $P_{\mathcal{B}_1 \to \mathcal{B}_2}$ est inversible.
+    2. Son inverse est $P_{\mathcal{B}_2 \to \mathcal{B}_1}$.
+    $$ [P_{\mathcal{B}_1 \to \mathcal{B}_2}]^{-1} = P_{\mathcal{B}_2 \to \mathcal{B}_1} $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Utilisons l'interprétation avec l'identité et la formule de composition :
+    $$ P_{\mathcal{B}_1 \to \mathcal{B}_2} \, P_{\mathcal{B}_2 \to \mathcal{B}_1} = \text{Mat}_{\mathcal{B}_2, \mathcal{B}_1}(\text{Id}_E) \, \text{Mat}_{\mathcal{B}_1, \mathcal{B}_2}(\text{Id}_E) $$
+    $$ = \text{Mat}_{\mathcal{B}_1, \mathcal{B}_1}(\text{Id}_E \circ \text{Id}_E) = \text{Mat}_{\mathcal{B}_1, \mathcal{B}_1}(\text{Id}_E) = I_p $$
+    De même, $P_{\mathcal{B}_2 \to \mathcal{B}_1} P_{\mathcal{B}_1 \to \mathcal{B}_2} = \text{Mat}_{\mathcal{B}_2, \mathcal{B}_2}(\text{Id}_E) = I_p$.
+    Donc $P_{\mathcal{B}_1 \to \mathcal{B}_2}$ est inversible et son inverse est $P_{\mathcal{B}_2 \to \mathcal{B}_1}$.
+</div>
+
+<div class="proposition">
+    <strong>Formule de changement de coordonnées pour un vecteur</strong><br>
+    Soit $x \in E$. Notons $X_1 = \text{Mat}_{\mathcal{B}_1}(x)$ et $X_2 = \text{Mat}_{\mathcal{B}_2}(x)$ les matrices colonnes des coordonnées de $x$ dans les bases $\mathcal{B}_1$ et $\mathcal{B}_2$. Alors :
+    $$ X_1 = P_{\mathcal{B}_1 \to \mathcal{B}_2} \, X_2 $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> On applique la formule $Y = AX$ à l'application $u = \text{Id}_E$, avec la base de départ $\mathcal{B}_2$ et la base d'arrivée $\mathcal{B}_1$.
+    $x = \text{Id}_E(x)$.
+    $\text{Mat}_{\mathcal{B}_1}(x) = \text{Mat}_{\mathcal{B}_2, \mathcal{B}_1}(\text{Id}_E) \, \text{Mat}_{\mathcal{B}_2}(x)$.
+    C'est-à-dire $X_1 = P_{\mathcal{B}_1 \to \mathcal{B}_2} \, X_2$.
+    (Attention à l'ordre : anciennes coordonnées = P * nouvelles coordonnées).
+</div>
+
+<div class="example">
+    Soit $E = \mathbb{R}^2$. $\mathcal{B}_1 = (e_1, e_2)$ la base canonique. $\mathcal{B}_2 = (e'_1, e'_2)$ avec $e'_1 = (1,1)$ et $e'_2 = (1,-1)$.
+    $e'_1 = 1e_1 + 1e_2$. $e'_2 = 1e_1 - 1e_2$.
+    La matrice de passage de $\mathcal{B}_1$ à $\mathcal{B}_2$ est $P = P_{\mathcal{B}_1 \to \mathcal{B}_2} = \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$.
+    Soit $x = (3,1)$. Dans $\mathcal{B}_1$, $X_1 = \begin{pmatrix} 3 \\ 1 \end{pmatrix}$.
+    Cherchons $X_2 = \begin{pmatrix} a \\ b \end{pmatrix}$ tel que $x = a e'_1 + b e'_2$.
+    On a $X_1 = P X_2$. Donc $X_2 = P^{-1} X_1$.
+    Calculons $P^{-1}$. $\det(P) = -1-1 = -2$.
+    $P^{-1} = \frac{1}{-2} \begin{pmatrix} -1 & -1 \\ -1 & 1 \end{pmatrix} = \begin{pmatrix} 1/2 & 1/2 \\ 1/2 & -1/2 \end{pmatrix}$.
+    $X_2 = \begin{pmatrix} 1/2 & 1/2 \\ 1/2 & -1/2 \end{pmatrix} \begin{pmatrix} 3 \\ 1 \end{pmatrix} = \begin{pmatrix} 3/2+1/2 \\ 3/2-1/2 \end{pmatrix} = \begin{pmatrix} 2 \\ 1 \end{pmatrix}$.
+    Vérification : $2e'_1 + 1e'_2 = 2(1,1) + 1(1,-1) = (2,2) + (1,-1) = (3,1) = x$. C'est correct.
+</div>
+
+<div class="theorem">
+    <strong>Formule de changement de base pour les applications linéaires</strong><br>
+    Soit $u \in \mathcal{L}(E, F)$.
+    Soient $\mathcal{B}, \mathcal{B}'$ deux bases de $E$, et $\mathcal{C}, \mathcal{C}'$ deux bases de $F$.
+    Notons :
+    $A = \text{Mat}_{\mathcal{B},\mathcal{C}}(u)$
+    $A' = \text{Mat}_{\mathcal{B}',\mathcal{C}'}(u)$
+    $P = P_{\mathcal{B} \to \mathcal{B}'}$ (matrice de passage sur $E$)
+    $Q = P_{\mathcal{C} \to \mathcal{C}'}$ (matrice de passage sur $F$)
+    Alors on a la relation :
+    $$ A' = Q^{-1} A P $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Soit $x \in E$. Notons $X$ ses coordonnées dans $\mathcal{B}$ et $X'$ ses coordonnées dans $\mathcal{B}'$. On a $X = PX'$.
+    Soit $y = u(x) \in F$. Notons $Y$ ses coordonnées dans $\mathcal{C}$ et $Y'$ ses coordonnées dans $\mathcal{C}'$. On a $Y = QY'$.
+    La relation $y = u(x)$ s'écrit matriciellement dans les bases $\mathcal{B}$ et $\mathcal{C}$ : $Y = AX$.
+    Elle s'écrit aussi dans les bases $\mathcal{B}'$ et $\mathcal{C}'$ : $Y' = A'X'$.
+    Combinons ces équations : $Y = AX \implies QY' = A(PX')$.
+    Donc $Y' = Q^{-1} A P X'$.
+    En comparant avec $Y' = A'X'$, on obtient par unicité de la matrice de l'application linéaire $u$ dans les bases $\mathcal{B}', \mathcal{C}'$ :
+    $A' = Q^{-1} A P$.
+</div>
+
+<div class="corollary">
+    <strong>Cas particulier : Endomorphismes</strong><br>
+    Si $u \in \mathcal{L}(E)$ est un endomorphisme ($E=F$).
+    Soient $\mathcal{B}, \mathcal{B}'$ deux bases de $E$.
+    Notons $A = \text{Mat}_{\mathcal{B}}(u)$ et $A' = \text{Mat}_{\mathcal{B}'}(u)$.
+    Notons $P = P_{\mathcal{B} \to \mathcal{B}'}$.
+    Alors la formule de changement de base devient ($Q=P$, $\mathcal{C}=\mathcal{B}$, $\mathcal{C}'=\mathcal{B}'$) :
+    $$ A' = P^{-1} A P $$
+</div>
+
+<h2>V. Matrices équivalentes et matrices semblables</h2>
+
+<div class="definition">
+    <strong>Matrices équivalentes</strong><br>
+    Deux matrices $A, A' \in \mathcal{M}_{n,p}(\mathbb{K})$ sont dites <strong>équivalentes</strong> si elles représentent la même application linéaire dans des bases (potentiellement) différentes.
+    Autrement dit, $A$ et $A'$ sont équivalentes s'il existe $P \in GL_p(\mathbb{K})$ et $Q \in GL_n(\mathbb{K})$ telles que :
+    $$ A' = Q^{-1} A P $$
+    (Attention : certains auteurs utilisent $A' = Q A P^{-1}$ ou $A' = QAP$. La définition ici correspond à $Q^{-1}$ pour rester cohérent avec la formule de changement de base $A' = Q^{-1} A P$ où $Q = P_{\mathcal{C} \to \mathcal{C}'}$.)
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation des matrices équivalentes par le rang</strong><br>
+    Deux matrices $A, A' \in \mathcal{M}_{n,p}(\mathbb{K})$ sont équivalentes si et seulement si elles ont le même rang.
+    $$ A \text{ équivalente à } A' \iff \text{rg}(A) = \text{rg}(A') $$
+    De plus, si $A \in \mathcal{M}_{n,p}(\mathbb{K})$ a pour rang $r$, alors $A$ est équivalente à la matrice $J_r \in \mathcal{M}_{n,p}(\mathbb{K})$ définie par blocs :
+    $$ J_r = \begin{pmatrix} I_r & 0_{r, p-r} \\ 0_{n-r, r} & 0_{n-r, p-r} \end{pmatrix} $$
+    où $I_r$ est la matrice identité d'ordre $r$, et les autres blocs sont des matrices nulles de dimensions appropriées. (Tous les coefficients sont nuls, sauf les $r$ premiers de la diagonale qui valent 1).
+</div>
+
+<div class="proof">
+    <strong>Idée de la preuve :</strong>
+    ($\Rightarrow$) Si $A' = Q^{-1}AP$, multiplier par une matrice inversible (à gauche ou à droite) correspond à effectuer des opérations élémentaires sur les lignes ou colonnes, ou à un changement de base. Ces opérations conservent le rang. Donc $\text{rg}(A') = \text{rg}(A)$.
+    ($\Leftarrow$) Soit $u: \mathbb{K}^p \to \mathbb{K}^n$ l'application linéaire canoniquement associée à $A$ (donc $A$ est la matrice de $u$ dans les bases canoniques). Soit $r = \text{rg}(A) = \text{rg}(u)$. D'après le théorème du rang, $\dim(\ker u) = p-r$.
+    Soit $(e'_{r+1}, \dots, e'_p)$ une base de $\ker u$. On peut la compléter en une base $\mathcal{B}' = (e'_1, \dots, e'_r, e'_{r+1}, \dots, e'_p)$ de $\mathbb{K}^p$.
+    Alors la famille $(u(e'_1), \dots, u(e'_r))$ est une base de $\text{Im}(u)$ (car les $e'_1, \dots, e'_r$ forment une base d'un supplémentaire de $\ker u$). Notons $f'_i = u(e'_i)$ pour $i=1,\dots,r$.
+    La famille $(f'_1, \dots, f'_r)$ est libre dans $\mathbb{K}^n$. On peut la compléter en une base $\mathcal{C}' = (f'_1, \dots, f'_r, f'_{r+1}, \dots, f'_n)$ de $\mathbb{K}^n$.
+    Calculons la matrice de $u$ dans les bases $\mathcal{B}'$ et $\mathcal{C}'$.
+    Pour $j \in \{1, \dots, r\}$, $u(e'_j) = f'_j = 1 \cdot f'_j + \sum_{i=r+1}^n 0 \cdot f'_i$. La $j$-ème colonne est $\begin{pmatrix} 0 \\ \vdots \\ 1 \\ \vdots \\ 0 \end{pmatrix}$ (1 en position $j$).
+    Pour $j \in \{r+1, \dots, p\}$, $u(e'_j) = 0$ (car $e'_j \in \ker u$). La $j$-ème colonne est nulle.
+    Donc $\text{Mat}_{\mathcal{B}', \mathcal{C}'}(u) = J_r$.
+    Soit $A' = J_r$. Par la formule de changement de base, $A' = Q^{-1} A P$, où $P = P_{\mathcal{B}_{canonique} \to \mathcal{B}'}$ et $Q = P_{\mathcal{C}_{canonique} \to \mathcal{C}'}$. Donc $A$ est équivalente à $J_r$.
+    Si $A$ et $A''$ ont le même rang $r$, elles sont toutes deux équivalentes à $J_r$. La relation d'équivalence étant transitive, $A$ est équivalente à $A''$.
+</div>
+
+<div class="corollary">
+    Soit $u \in \mathcal{L}(E, F)$ de rang $r$. Il existe une base $\mathcal{B}'$ de $E$ et une base $\mathcal{C}'$ de $F$ telles que $\text{Mat}_{\mathcal{B}',\mathcal{C}'}(u) = J_r$.
+</div>
+
+<div class="corollary">
+    Soit $A \in \mathcal{M}_{n,p}(\mathbb{K})$. Alors $A$ et sa transposée $A^T \in \mathcal{M}_{p,n}(\mathbb{K})$ ont le même rang.
+    $$ \text{rg}(A) = \text{rg}(A^T) $$
+</div>
+
+<div class="remark">
+    Ce corollaire signifie que le rang d'une matrice est aussi la dimension de l'espace vectoriel engendré par ses vecteurs lignes. Le rang est le nombre maximal de lignes linéairement indépendantes, et aussi le nombre maximal de colonnes linéairement indépendantes.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation du rang par les mineurs</strong><br>
+    Une matrice $A \in \mathcal{M}_{n,p}(\mathbb{K})$ est de rang $r$ si et seulement si :
+    <ol>
+        <li>Il existe une matrice carrée d'ordre $r$ extraite de $A$ qui est inversible (on dit aussi : un mineur d'ordre $r$ non nul).</li>
+        <li>Toute matrice carrée extraite de $A$ d'ordre $r+1$ n'est pas inversible (on dit aussi : tous les mineurs d'ordre $r+1$ sont nuls).</li>
+    </ol>
+    (Un mineur d'ordre $k$ est le déterminant d'une matrice carrée d'ordre $k$ obtenue en sélectionnant $k$ lignes et $k$ colonnes de $A$).
+</div>
+
+<div class="definition">
+    <strong>Matrices semblables</strong><br>
+    Deux matrices carrées $A, A' \in \mathcal{M}_n(\mathbb{K})$ sont dites <strong>semblables</strong> s'il existe une matrice inversible $P \in GL_n(\mathbb{K})$ telle que :
+    $$ A' = P^{-1} A P $$
+    Autrement dit, $A$ et $A'$ représentent le même endomorphisme dans des bases différentes ($P$ étant la matrice de passage).
+</div>
+
+<div class="remark">
+    Attention : La similitude est une relation plus forte que l'équivalence pour les matrices carrées. Si $A$ et $A'$ sont semblables, elles sont équivalentes (prendre $Q=P$) et ont donc le même rang. La réciproque est fausse. Par exemple, $I_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ et $J_1 = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$ ont des rangs différents (2 et 1).
+    Considérons $A = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ et $B = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$. Elles ont le même rang 2. Elles sont donc équivalentes. Sont-elles semblables ? Si $B = P^{-1}AP$, alors $B = P^{-1}IP = P^{-1}P = I$. Donc $B=I$, ce qui est faux. $A$ et $B$ ne sont pas semblables.
+    Deux matrices semblables partagent de nombreux invariants : rang, déterminant, trace, polynôme caractéristique, valeurs propres.
+</div>
+
+<h2>VI. Trace d'une matrice</h2>
+
+<div class="definition">
+    <strong>Trace d'une matrice carrée</strong><br>
+    Si $A = (a_{i,j}) \in \mathcal{M}_n(\mathbb{K})$, on appelle <strong>trace</strong> de $A$, notée $\text{Tr}(A)$, la somme de ses coefficients diagonaux :
+    $$ \text{Tr}(A) = \sum_{i=1}^n a_{i,i} $$
+</div>
+
+<div class="proposition">
+    <strong>Propriétés de la trace</strong><br>
+    1. La trace est une forme linéaire sur $\mathcal{M}_n(\mathbb{K})$ :
+       $\text{Tr}(A + \lambda B) = \text{Tr}(A) + \lambda \text{Tr}(B)$ pour $A, B \in \mathcal{M}_n(\mathbb{K}), \lambda \in \mathbb{K}$.
+    2. Pour $A \in \mathcal{M}_{n,p}(\mathbb{K})$ et $B \in \mathcal{M}_{p,n}(\mathbb{K})$, on a $\text{Tr}(AB) = \text{Tr}(BA)$.
+       (Notez que $AB \in \mathcal{M}_n(\mathbb{K})$ et $BA \in \mathcal{M}_p(\mathbb{K})$).
+    3. Si $A, A' \in \mathcal{M}_n(\mathbb{K})$ sont semblables, alors $\text{Tr}(A) = \text{Tr}(A')$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong>
+    1. Immédiat par linéarité de la somme. $\text{Tr}(A + \lambda B) = \sum (a_{ii} + \lambda b_{ii}) = \sum a_{ii} + \lambda \sum b_{ii} = \text{Tr}(A) + \lambda \text{Tr}(B)$.
+    2. Soit $A=(a_{ik}) \in \mathcal{M}_{n,p}$ et $B=(b_{kj}) \in \mathcal{M}_{p,n}$.
+       $AB = C \in \mathcal{M}_n$ avec $c_{ij} = \sum_{k=1}^p a_{ik} b_{kj}$.
+       $\text{Tr}(AB) = \sum_{i=1}^n c_{ii} = \sum_{i=1}^n \sum_{k=1}^p a_{ik} b_{ki}$.
+       $BA = D \in \mathcal{M}_p$ avec $d_{kj} = \sum_{i=1}^n b_{ki} a_{ij}$.
+       $\text{Tr}(BA) = \sum_{k=1}^p d_{kk} = \sum_{k=1}^p \sum_{i=1}^n b_{ki} a_{ik}$.
+       Par commutativité de la somme, $\text{Tr}(AB) = \text{Tr}(BA)$.
+    3. Si $A' = P^{-1}AP$, alors $\text{Tr}(A') = \text{Tr}(P^{-1}(AP))$.
+       En utilisant la propriété 2 avec $X = P^{-1}$ et $Y = AP$, on a $\text{Tr}(XY) = \text{Tr}(YX)$.
+       $\text{Tr}(A') = \text{Tr}((AP)P^{-1}) = \text{Tr}(A(PP^{-1})) = \text{Tr}(AI_n) = \text{Tr}(A)$.
+</div>
+
+<div class="definition">
+    <strong>Trace d'un endomorphisme</strong><br>
+    Soit $u \in \mathcal{L}(E)$. Comme toutes les matrices représentant $u$ dans différentes bases sont semblables, elles ont la même trace. On peut donc définir la <strong>trace de l'endomorphisme $u$</strong>, notée $\text{Tr}(u)$, comme étant la trace de n'importe quelle matrice $\text{Mat}_{\mathcal{B}}(u)$ représentant $u$ dans une base $\mathcal{B}$ de $E$.
+    $$ \text{Tr}(u) = \text{Tr}(\text{Mat}_{\mathcal{B}}(u)) $$
+</div>
+
+<div class="proposition">
+    <strong>Propriétés de la trace d'endomorphismes</strong><br>
+    Soit $u, v \in \mathcal{L}(E)$.
+    1. $\text{Tr}(u + \lambda v) = \text{Tr}(u) + \lambda \text{Tr}(v)$. (La trace est une forme linéaire sur $\mathcal{L}(E)$).
+    2. $\text{Tr}(u \circ v) = \text{Tr}(v \circ u)$.
+    3. Si $p \in \mathcal{L}(E)$ est un projecteur, alors $\text{Tr}(p) = \text{rg}(p)$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong>
+    1. Se déduit de la linéarité de la trace matricielle et de l'isomorphisme $\Phi_{\mathcal{B}}$.
+    2. $\text{Tr}(u \circ v) = \text{Tr}(\text{Mat}_{\mathcal{B}}(u \circ v)) = \text{Tr}(\text{Mat}_{\mathcal{B}}(u) \text{Mat}_{\mathcal{B}}(v))$.
+       $\text{Tr}(v \circ u) = \text{Tr}(\text{Mat}_{\mathcal{B}}(v \circ u)) = \text{Tr}(\text{Mat}_{\mathcal{B}}(v) \text{Mat}_{\mathcal{B}}(u))$.
+       Comme $\text{Tr}(AB) = \text{Tr}(BA)$ pour les matrices, on a $\text{Tr}(u \circ v) = \text{Tr}(v \circ u)$.
+    3. Soit $p$ un projecteur. On sait que $E = \ker(p) \oplus \text{Im}(p)$. Soit $r = \dim(\text{Im}(p)) = \text{rg}(p)$.
+       Soit $(f_1, \dots, f_r)$ une base de $\text{Im}(p)$ et $(f_{r+1}, \dots, f_n)$ une base de $\ker(p)$.
+       Alors $\mathcal{B}' = (f_1, \dots, f_n)$ est une base de $E$.
+       Calculons la matrice de $p$ dans cette base $\mathcal{B}'$.
+       Pour $j \in \{1, \dots, r\}$, $f_j \in \text{Im}(p)$, donc $p(f_j) = f_j$.
+       Pour $j \in \{r+1, \dots, n\}$, $f_j \in \ker(p)$, donc $p(f_j) = 0$.
+       La matrice est $A' = \text{Mat}_{\mathcal{B}'}(p) = \begin{pmatrix} I_r & 0 \\ 0 & 0 \end{pmatrix}$.
+       La trace de $p$ est $\text{Tr}(A') = \sum_{i=1}^n a'_{ii} = \sum_{i=1}^r 1 + \sum_{i=r+1}^n 0 = r$.
+       Donc $\text{Tr}(p) = r = \text{rg}(p)$.
+</div>
+
+<h2>VII. Opérations élémentaires sur les matrices et rang</h2>
+
+<div class="definition">
+    <strong>Opérations élémentaires</strong><br>
+    Les <strong>opérations élémentaires sur les lignes</strong> d'une matrice $A \in \mathcal{M}_{n,p}(\mathbb{K})$ sont :
+    <ul>
+        <li>Permutation de deux lignes $L_i \leftrightarrow L_j$.</li>
+        <li>Multiplication d'une ligne par un scalaire non nul $L_i \leftarrow \lambda L_i$ ($\lambda \neq 0$).</li>
+        <li>Ajout d'un multiple d'une ligne à une autre ligne $L_i \leftarrow L_i + \lambda L_j$ ($i \neq j$).</li>
+    </ul>
+    On définit de même les <strong>opérations élémentaires sur les colonnes</strong> $C_i \leftrightarrow C_j$, $C_i \leftarrow \lambda C_i$, $C_i \leftarrow C_i + \lambda C_j$.
+</div>
+
+<div class="proposition">
+    <strong>Effet des opérations élémentaires</strong><br>
+    1. Chaque opération élémentaire sur les lignes (resp. colonnes) de $A$ correspond à multiplier $A$ à gauche (resp. à droite) par une matrice inversible spécifique (matrice de permutation, de dilatation, de transvection).
+    2. Les opérations élémentaires sur les lignes et les colonnes transforment une matrice en une matrice <strong>équivalente</strong>.
+    3. En particulier, les opérations élémentaires <strong>conservent le rang</strong> de la matrice.
+</div>
+
+<div class="remark">
+    La méthode du pivot de Gauss pour résoudre des systèmes linéaires ou inverser des matrices repose sur les opérations élémentaires sur les lignes. L'utilisation conjointe des opérations sur les lignes et les colonnes permet de transformer toute matrice $A$ en sa forme canonique équivalente $J_r$, ce qui est un moyen pratique de déterminer le rang $r$.
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            // customised options
+            // • auto-render specific keys, e.g.:
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            // • rendering keys, e.g.:
+            throwOnError : false
+        });
+    });
+</script>
+
+</body>
+</html>
