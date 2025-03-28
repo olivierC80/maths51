@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Polynômes d'endomorphismes</title>
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            tags: 'ams', // Automatic equation numbering
+            macros: {
+              K: '\\mathbb{K}',
+              C: '\\mathbb{C}',
+              R: '\\mathbb{R}',
+              N: '\\mathbb{N}',
+              Z: '\\mathbb{Z}',
+              GLnK: '{\\text{GL}_n(\\K)}',
+              MnK: '{\\mathcal{M}_n(\\K)}',
+              LE: '{\\mathcal{L}(E)}',
+              Id: '\\text{Id}_E', // Changed to Id_E for clarity
+              In: '\\text{I}_n', // Added for matrices
+              dim: '\\text{dim}',
+              Vect: '\\text{Vect}',
+              Ker: '\\text{Ker}',
+              Im: '\\text{Im}',
+              det: '\\text{det}',
+              Tr: '\\text{Tr}',
+              Sp: '\\text{Sp}',
+              mult: '\\text{mult}',
+              Mat: '\\text{Mat}',
+              piu: '{\\pi_u}',
+              chiu: '{\\chi_u}',
+              chiA: '{\\chi_A}'
+            }
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+        </script>
+        <script type="text/javascript" id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+        </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa; /* Gris très clair */
+        }
+        h1, h2, h3 {
+            color: #6A1B9A; /* Violet foncé */
+            border-bottom: 2px solid #6A1B9A;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; font-style: italic; border-bottom: none; color: #8E24AA;} /* Violet */
+
+        .definition, .theorem, .proposition, .corollary, .example, .proof, .remark {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-left: 5px solid #AB47BC; /* Violet clair */
+            background-color: #F3E5F5; /* Violet très très clair */
+            border-radius: 0 5px 5px 0;
+        }
+        .definition strong, .theorem strong, .proposition strong, .corollary strong, .remark strong {
+            color: #4A148C; /* Violet encore plus foncé */
+            font-weight: bold;
+        }
+        .proof {
+            border-left-color: #0288d1; /* Bleu */
+            background-color: #e1f5fe; /* Bleu très clair */
+        }
+        .proof strong {
+            color: #01579b; /* Bleu foncé */
+            font-weight: bold;
+        }
+        .example {
+            border-left-color: #ffc107; /* Jaune */
+            background-color: #fff8e1; /* Jaune très clair */
+        }
+         .example strong {
+            color: #856404; /* Jaune foncé */
+            font-weight: bold;
+        }
+         .remark {
+            border-left-color: #6c757d; /* Gris */
+            background-color: #f8f9fa; /* Gris très clair */
+        }
+         .remark strong {
+            color: #343a40; /* Gris foncé */
+            font-weight: bold;
+        }
+        code {
+            background-color: #e9ecef; /* Gris clair */
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        ul {
+            margin-left: 20px;
+            list-style-type: square;
+            padding-left: 20px;
+        }
+         ul ul {
+             list-style-type: circle;
+             margin-top: 5px;
+         }
+        li {
+            margin-bottom: 8px;
+        }
+        .MJX-TeXAtom-ORD { }
+        a { color: #1976d2; text-decoration: none; } /* Bleu pour les liens */
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>Polynômes d'endomorphismes</h1>
+
+    <p>Dans ce chapitre, $E$ désigne un $\K$-espace vectoriel ($\K = \R$ ou $\C$) et $u$ est un endomorphisme de $E$ ($u \in \LE$). On rappelle la notation $u^0 = \Id$, $u^1 = u$, $u^2 = u \circ u$, et plus généralement $u^n = u \circ u^{n-1}$ pour $n \ge 1$. On a $u^p \circ u^q = u^{p+q}$ pour $p, q \in \N$.</p>
+
+    <h2>1. Polynômes d'un endomorphisme</h2>
+
+    <div class="definition">
+        <strong>Définition (Polynôme d'endomorphisme)</strong><br>
+        Soit $P \in \K[X]$ un polynôme à coefficients dans $\K$, écrit sous la forme $P(X) = a_d X^d + a_{d-1} X^{d-1} + \dots + a_1 X + a_0$.
+        On note $P(u)$ l'endomorphisme de $E$ défini par :
+        $$ P(u) = a_d u^d + a_{d-1} u^{d-1} + \dots + a_1 u + a_0 \Id $$
+        où $u^k$ désigne la composition $u \circ \dots \circ u$ ($k$ fois) et $\Id$ est l'endomorphisme identité de $E$.
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Morphisme d'algèbres $\K[X] \to \LE$)</strong><br>
+        L'application $\phi_u : \K[X] \to \LE$ définie par $\phi_u(P) = P(u)$ est un <strong>morphisme d'algèbres</strong>. Cela signifie que pour tous $P, Q \in \K[X]$ et tout $\alpha \in \K$ :
+        <ul>
+            <li>$\phi_u(P+Q) = \phi_u(P) + \phi_u(Q) \implies (P+Q)(u) = P(u) + Q(u)$</li>
+            <li>$\phi_u(\alpha P) = \alpha \phi_u(P) \implies (\alpha P)(u) = \alpha P(u)$</li>
+            <li>$\phi_u(P \times Q) = \phi_u(P) \circ \phi_u(Q) \implies (PQ)(u) = P(u) \circ Q(u)$</li>
+            <li>$\phi_u(1_{\K[X]}) = \Id$ (où $1_{\K[X]}$ est le polynôme constant égal à 1).</li>
+        </ul>
+        L'image de ce morphisme, notée $\K[u] = \{ P(u) \mid P \in \K[X] \}$, est une sous-algèbre commutative de $\LE$. C'est la plus petite sous-algèbre de $\LE$ contenant $u$ et $\Id$.
+        <br>Le noyau de $\phi_u$, $\Ker(\phi_u) = \{ P \in \K[X] \mid P(u) = 0_{\LE} \}$, est un idéal de $\K[X]$, appelé l'<strong>idéal annulateur</strong> de $u$.
+    </div>
+     <div class="remark">
+        La propriété $(PQ)(u) = P(u) \circ Q(u)$ est fondamentale. Elle implique notamment que $P(u)$ et $Q(u)$ commutent toujours, car $P(u) \circ Q(u) = (PQ)(u) = (QP)(u) = Q(u) \circ P(u)$. Donc $\K[u]$ est bien une algèbre commutative.
+    </div>
+    <p><a href="#">Vidéo d'introduction aux polynômes d'endomorphisme</a></p>
+
+    <div class="theorem">
+        <strong>Théorème (Existence du polynôme minimal en dimension finie)</strong><br>
+        Si $E$ est de dimension finie $n$, alors l'algèbre $\LE$ est de dimension finie $n^2$. La famille $(u^k)_{k \in \N}$ (infinie) ne peut donc pas être libre dans $\LE$. Il existe nécessairement des coefficients $a_0, \dots, a_{n^2}$ non tous nuls tels que $\sum_{k=0}^{n^2} a_k u^k = 0_{\LE}$.
+        Cela signifie qu'il existe au moins un polynôme non nul $P(X) = \sum_{k=0}^{n^2} a_k X^k$ tel que $P(u) = 0_{\LE}$. L'idéal annulateur $\Ker(\phi_u)$ n'est donc pas réduit à $\{0\}$.
+        <br>Comme tout idéal de $\K[X]$ est principal, il existe un unique polynôme <strong>unitaire</strong>, noté $\piu$, qui engendre $\Ker(\phi_u)$.
+        $$ \Ker(\phi_u) = (\piu) = \{ Q \cdot \piu \mid Q \in \K[X] \} $$
+        Ce polynôme $\piu$ s'appelle le <strong>polynôme minimal</strong> de $u$.
+    </div>
+
+    <div class="proposition">
+        <strong>Caractérisation du polynôme minimal :</strong><br>
+        Le polynôme minimal $\piu$ de $u$ est l'unique polynôme vérifiant les trois propriétés :
+        <ol>
+            <li>$\piu$ est unitaire.</li>
+            <li>$\piu(u) = 0_{\LE}$ ($\piu$ est un polynôme annulateur).</li>
+            <li>Pour tout polynôme $P \in \K[X]$, si $P(u) = 0_{\LE}$, alors $\piu$ divise $P$ dans $\K[X]$.</li>
+        </ol>
+        C'est donc le polynôme unitaire de plus bas degré qui annule $u$.
+    </div>
+
+    <p>Dans la suite, on supposera désormais que $E$ est de dimension finie $n$.</p>
+
+    <div class="proposition">
+        <strong>Proposition (Dimension de $\K[u]$)</strong><br>
+        Si $d = \deg(\piu)$ est le degré du polynôme minimal de $u$, alors la famille $(\Id, u, u^2, \dots, u^{d-1})$ forme une base de la sous-algèbre $\K[u]$.
+        En particulier, $\dim(\K[u]) = d = \deg(\piu)$.
+    </div>
+    <div class="proof">
+        <strong>Preuve (Idée) :</strong><br>
+        - **Liberté :** Si $\sum_{k=0}^{d-1} a_k u^k = 0$, soit $P(X) = \sum_{k=0}^{d-1} a_k X^k$. Alors $P(u)=0$. Comme $\deg(P) < d = \deg(\piu)$ et $\piu$ est le polynôme annulateur unitaire de plus bas degré, on doit avoir $P=0$, donc tous les $a_k$ sont nuls. La famille est libre.
+        - **Génératrice :** Soit $Q(u) \in \K[u]$. Effectuons la division euclidienne de $Q$ par $\piu$ : $Q = S \cdot \piu + R$ avec $\deg(R) < \deg(\piu) = d$.
+        Alors $Q(u) = (S \cdot \piu)(u) + R(u) = S(u) \circ \underbrace{\piu(u)}_{=0} + R(u) = R(u)$.
+        Comme $\deg(R) < d$, $R(X) = \sum_{k=0}^{d-1} b_k X^k$. Donc $Q(u) = R(u) = \sum_{k=0}^{d-1} b_k u^k$. Tout élément de $\K[u]$ est combinaison linéaire de $(\Id, \dots, u^{d-1})$. $\Box$
+    </div>
+
+
+    <div class="proposition">
+        <strong>Proposition (Action de $P(u)$ sur les vecteurs propres)</strong><br>
+        Soit $P \in \K[X]$. Soit $\lambda \in \Sp(u)$ une valeur propre de $u$, et $x \in E_\lambda \setminus \{0_E\}$ un vecteur propre associé ($u(x) = \lambda x$). Alors :
+        $$ P(u)(x) = P(\lambda) x $$
+    </div>
+     <div class="proof">
+        <strong>Preuve :</strong><br>
+        On montre d'abord par récurrence que $u^k(x) = \lambda^k x$ pour tout $k \in \N$.
+        - $k=0$: $u^0(x) = \Id(x) = x = \lambda^0 x$.
+        - $k=1$: $u^1(x) = u(x) = \lambda x = \lambda^1 x$.
+        - Supposons $u^k(x) = \lambda^k x$. Alors $u^{k+1}(x) = u(u^k(x)) = u(\lambda^k x) = \lambda^k u(x)$ (par linéarité) $= \lambda^k (\lambda x) = \lambda^{k+1} x$.
+        Soit $P(X) = \sum a_k X^k$. Alors $P(u)(x) = (\sum a_k u^k)(x) = \sum a_k (u^k(x))$ (par linéarité de la somme d'endomorphismes) $= \sum a_k (\lambda^k x) = (\sum a_k \lambda^k) x = P(\lambda) x$. $\Box$
+    </div>
+
+    <div class="corollary">
+        <strong>Corollaire (Les valeurs propres sont racines des polynômes annulateurs)</strong><br>
+        Si $P \in \K[X]$ est un polynôme annulateur de $u$ ($P(u) = 0_{\LE}$) et si $\lambda$ est une valeur propre de $u$, alors $P(\lambda) = 0$.
+        <br>En particulier, les valeurs propres de $u$ sont <strong>toujours</strong> des racines du polynôme minimal $\piu$.
+    </div>
+    <div class="proof">
+        <strong>Preuve :</strong><br>
+        Soit $\lambda \in \Sp(u)$ et $x \neq 0_E$ un vecteur propre associé. On a $P(u)(x) = P(\lambda) x$.
+        Comme $P(u) = 0_{\LE}$, on a $P(u)(x) = 0_E$.
+        Donc $P(\lambda) x = 0_E$. Puisque $x \neq 0_E$, ceci implique $P(\lambda) = 0$. $\Box$
+    </div>
+     <div class="remark">
+        <strong>Attention :</strong> Les racines d'un polynôme annulateur ne sont pas forcément des valeurs propres. Par exemple, si $u=Id$, $P(X)=X^2-1 = (X-1)(X+1)$ est annulateur. $1$ est la seule valeur propre. $-1$ est racine de $P$ mais pas valeur propre (sauf si $n=0$).
+        Par contre, les racines du polynôme *minimal* $\piu$ sont *exactement* les valeurs propres de $u$. (Nous admettrons ici le sens : toute racine de $\piu$ est une valeur propre).
+    </div>
+
+
+    <div class="theorem">
+        <strong>Théorème de Cayley-Hamilton</strong><br>
+        Tout endomorphisme $u$ annule son propre polynôme caractéristique $\chiu$.
+        $$ \chiu(u) = 0_{\LE} $$
+        Autrement dit, le polynôme caractéristique est toujours un polynôme annulateur.
+    </div>
+    <div class="corollary">
+        <strong>Conséquence :</strong> Le polynôme minimal $\piu$ divise toujours le polynôme caractéristique $\chiu$.
+    </div>
+     <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+        <!-- Preuve typique (non exigible ?) utilise la comatrice de (XI_n - A) -->
+    </div>
+
+    <div class="remark">
+        <strong>Version matricielle :</strong> Pour toute matrice $A \in \MnK$, on définit $P(A)$ de manière analogue. Le morphisme $P \mapsto P(A)$ est un morphisme d'algèbres de $\K[X]$ dans $\MnK$. L'idéal annulateur de $A$ est non nul, engendré par un unique polynôme unitaire $\pi_A$, le polynôme minimal de $A$.
+        Le théorème de Cayley-Hamilton s'énonce : $\chiA(A) = 0_n$ (la matrice nulle). Et $\pi_A$ divise $\chiA$.
+        Les racines de $\pi_A$ sont exactement les valeurs propres de $A$.
+    </div>
+
+    <h2>2. Lemme de décomposition des noyaux</h2>
+
+    <div class="theorem">
+        <strong>Théorème (Lemme de décomposition des noyaux)</strong><br>
+        Soient $P_1, \dots, P_r \in \K[X]$ des polynômes <strong>premiers entre eux deux à deux</strong> ($\gcd(P_i, P_j) = 1$ pour $i \neq j$).
+        Soit $P = P_1 P_2 \dots P_r$ leur produit.
+        Alors le noyau de $P(u)$ est la somme directe des noyaux des $P_i(u)$ :
+        $$ \Ker(P(u)) = \bigoplus_{i=1}^r \Ker(P_i(u)) $$
+        De plus, le projecteur $p_i$ sur $\Ker(P_i(u))$ parallèlement à $\bigoplus_{j \neq i} \Ker(P_j(u))$ appartient à $\K[u]$ (c'est un polynôme en $u$).
+    </div>
+     <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+        <!-- Preuve utilise l'identité de Bézout généralisée -->
+    </div>
+     <div class="corollary">
+        <strong>Cas particulier important :</strong> Si $P(u) = 0$, alors $E = \bigoplus_{i=1}^r \Ker(P_i(u))$. L'espace $E$ se décompose en somme directe de sous-espaces stables par $u$ (car $\Ker(P_i(u))$ est stable par $u$).
+    </div>
+
+    <h2>3. Polynôme annulateur et réduction</h2>
+
+    <p>L'existence de polynômes annulateurs ayant certaines propriétés est directement liée à la possibilité de diagonaliser ou trigonaliser $u$. ($E$ est de dimension finie $n$).</p>
+
+    <div class="theorem">
+        <strong>Théorème (Critère de diagonalisabilité via polynôme annulateur)</strong><br>
+        Soit $u \in \LE$. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$u$ est diagonalisable.</li>
+            <li>$u$ admet un polynôme annulateur $P \in \K[X]$ qui est <strong>scindé</strong> sur $\K$ et dont toutes les racines sont <strong>simples</strong>.</li>
+            <li>Le polynôme minimal $\piu$ de $u$ est <strong>scindé</strong> sur $\K$ et a toutes ses racines <strong>simples</strong>.</li>
+        </ol>
+    </div>
+     <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+        <strong>Preuve (Idée 3 $\implies$ 1) :</strong><br>
+        Si $\piu(X) = \prod_{i=1}^p (X - \lambda_i)$ avec $\lambda_i$ distincts (racines simples) et $\piu(u)=0$.
+        Les polynômes $P_i(X) = X - \lambda_i$ sont premiers entre eux deux à deux.
+        Par le lemme de décomposition des noyaux appliqué à $\piu = P_1 \dots P_p$:
+        $E = \Ker(\piu(u)) = \bigoplus_{i=1}^p \Ker(P_i(u)) = \bigoplus_{i=1}^p \Ker(u - \lambda_i \Id) = \bigoplus_{i=1}^p E_{\lambda_i}$.
+        La somme des sous-espaces propres est $E$, donc $u$ est diagonalisable. $\Box$
+    </div>
+
+    <div class="proposition">
+        <strong>Proposition (Polynôme minimal de l'endomorphisme induit)</strong><br>
+        Soit $F$ un sous-espace vectoriel de $E$ stable par $u$. Notons $u_F \in \mathcal{L}(F)$ l'endomorphisme induit par $u$ sur $F$.
+        Alors le polynôme minimal $\pi_{u_F}$ de $u_F$ divise le polynôme minimal $\piu$ de $u$.
+    </div>
+    <div class="proof">
+        <strong>Preuve :</strong><br>
+        On sait que $\piu(u) = 0_{\LE}$. Considérons la restriction de cette égalité à $F$:
+        $\piu(u)|_F = 0_{\mathcal{L}(F)}$.
+        Or, pour tout polynôme $P$, $P(u)|_F = P(u_F)$. (Se vérifie facilement car la restriction est un morphisme d'algèbres).
+        Donc $\piu(u_F) = 0_{\mathcal{L}(F)}$. $\piu$ est un polynôme annulateur de $u_F$.
+        Par définition du polynôme minimal $\pi_{u_F}$, il doit diviser tout polynôme annulateur de $u_F$. Donc $\pi_{u_F}$ divise $\piu$. $\Box$
+    </div>
+
+    <div class="corollary">
+        <strong>Corollaire (Stabilité de la diagonalisabilité)</strong><br>
+        Si $u \in \LE$ est diagonalisable et si $F$ est un sous-espace stable par $u$, alors l'endomorphisme induit $u_F$ est lui-même diagonalisable.
+    </div>
+     <div class="proof">
+        <strong>Preuve :</strong><br>
+        Si $u$ est diagonalisable, son polynôme minimal $\piu$ est scindé à racines simples sur $\K$.
+        Le polynôme minimal $\pi_{u_F}$ de $u_F$ divise $\piu$.
+        Tout diviseur d'un polynôme scindé à racines simples est lui-même scindé à racines simples.
+        Donc $\pi_{u_F}$ est scindé à racines simples.
+        D'après le critère de diagonalisabilité via le polynôme minimal, $u_F$ est diagonalisable. $\Box$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Critère de trigonalisabilité via polynôme annulateur)</strong><br>
+        Soit $u \in \LE$. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$u$ est trigonalisable sur $\K$.</li>
+            <li>$u$ admet un polynôme annulateur $P \in \K[X]$ qui est <strong>scindé</strong> sur $\K$.</li>
+            <li>Le polynôme minimal $\piu$ de $u$ est <strong>scindé</strong> sur $\K$.</li>
+            <li>Le polynôme caractéristique $\chiu$ de $u$ est <strong>scindé</strong> sur $\K$.</li>
+        </ol>
+    </div>
+     <div class="proof">
+        <strong>Preuve (Lien entre les points) :</strong><br>
+        (4 $\implies$ 2) : Par Cayley-Hamilton, $\chiu$ est annulateur. Si $\chiu$ est scindé, on a trouvé un polynôme annulateur scindé.
+        <br>(2 $\implies$ 3) : Si $P$ est annulateur scindé, $\piu$ divise $P$. Tout diviseur d'un polynôme scindé est scindé. Donc $\piu$ est scindé.
+        <br>(3 $\implies$ 4) : Les racines de $\chiu$ sont les valeurs propres. Les racines de $\piu$ sont aussi les valeurs propres. Si $\piu$ est scindé, toutes les valeurs propres sont dans $\K$. Or $\chiu$ est un multiple de $\piu$. Si $\piu(X) = \prod (X-\lambda_i)^{k_i}$, alors $\chiu(X) = \prod (X-\lambda_i)^{m_i}$ avec $m_i \ge k_i$. Donc $\chiu$ est aussi scindé.
+        <br>(4 $\iff$ 1) : C'est le théorème de trigonalisation vu précédemment. $\Box$
+    </div>
+
+    <h2>4. Sous-espaces caractéristiques</h2>
+
+    <p>$E$ est de dimension finie $n$.</p>
+
+    <div class="definition">
+        <strong>Définition (Sous-espace caractéristique)</strong><br>
+        Soit $u \in \LE$. Soit $\lambda$ une valeur propre de $u$. Soit $m(\lambda) = \mult(\lambda)$ sa multiplicité algébrique (sa multiplicité comme racine de $\chiu$).
+        On appelle <strong>sous-espace caractéristique</strong> associé à $\lambda$, noté $C_\lambda$, le noyau :
+        $$ C_\lambda = \Ker( (u - \lambda \Id)^{m(\lambda)} ) $$
+    </div>
+    <div class="remark">
+        On a toujours $E_\lambda = \Ker(u - \lambda \Id) \subseteq \Ker( (u - \lambda \Id)^{m(\lambda)} ) = C_\lambda$. L'inclusion est en général stricte si $u$ n'est pas diagonalisable.
+        Les sous-espaces caractéristiques $C_\lambda$ sont stables par $u$.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Décomposition en sous-espaces caractéristiques)</strong><br>
+        On suppose que le polynôme caractéristique $\chiu$ de $u$ est scindé sur $\K$. Soient $\lambda_1, \dots, \lambda_p$ les valeurs propres distinctes de $u$, de multiplicités respectives $m_1, \dots, m_p$ (avec $\sum m_i = n$). Alors :
+        <ol>
+            <li>L'espace $E$ est la somme directe des sous-espaces caractéristiques :
+               $$ E = \bigoplus_{i=1}^p C_{\lambda_i} = \bigoplus_{i=1}^p \Ker( (u - \lambda_i \Id)^{m_i} ) $$</li>
+            <li>Pour chaque $i$, la dimension du sous-espace caractéristique $C_{\lambda_i}$ est égale à la multiplicité algébrique $m_i$: $\dim(C_{\lambda_i}) = m_i$.</li>
+            <li>Le polynôme minimal de l'endomorphisme $u_i$ induit par $u$ sur $C_{\lambda_i}$ est de la forme $(X-\lambda_i)^{k_i}$ pour un certain $k_i \le m_i$. (En fait, $k_i$ est la multiplicité de $\lambda_i$ comme racine de $\piu$).</li>
+        </ol>
+    </div>
+    <div class="proof">
+        <strong>Preuve (Idée pour 1) :</strong><br>
+        Comme $\chiu$ est scindé, $\chiu(X) = \prod_{i=1}^p (X - \lambda_i)^{m_i}$.
+        Par Cayley-Hamilton, $\chiu(u) = 0_{\LE}$.
+        Les polynômes $P_i(X) = (X - \lambda_i)^{m_i}$ sont premiers entre eux deux à deux (car les $\lambda_i$ sont distincts).
+        Par le lemme de décomposition des noyaux appliqué à $\chiu = P_1 \dots P_p$:
+        $E = \Ker(\chiu(u)) = \bigoplus_{i=1}^p \Ker(P_i(u)) = \bigoplus_{i=1}^p \Ker( (u - \lambda_i \Id)^{m_i} ) = \bigoplus_{i=1}^p C_{\lambda_i}$. $\Box$
+    </div>
+
+
+    <div class="corollary">
+        <strong>Corollaire (Forme bloc-triangulaire)</strong><br>
+        On suppose que le polynôme caractéristique $\chiu$ de $u$ est scindé sur $\K$.
+        Alors il existe une base de $E$ (obtenue en concaténant des bases adaptées à chaque $C_{\lambda_i}$) dans laquelle la matrice de $u$ est <strong>diagonale par blocs</strong> :
+        $$ \Mat(u) = \begin{pmatrix} A_1 & 0 & \dots & 0 \\ 0 & A_2 & \dots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \dots & A_p \end{pmatrix} $$
+        où chaque bloc $A_i \in \mathcal{M}_{m_i}(\K)$ représente l'endomorphisme induit $u_i$ sur $C_{\lambda_i}$.
+        De plus, on peut choisir les bases des $C_{\lambda_i}$ de sorte que chaque bloc $A_i$ soit <strong>triangulaire supérieur</strong> avec pour seuls coefficients diagonaux la valeur propre $\lambda_i$ (répétée $m_i$ fois).
+        $$ A_i = \begin{pmatrix} \lambda_i & * & \dots & * \\ 0 & \lambda_i & \dots & * \\ \vdots & \ddots & \ddots & \vdots \\ 0 & \dots & 0 & \lambda_i \end{pmatrix} $$
+    </div>
+    <div class="remark">
+        Ce corollaire montre que si $\chiu$ est scindé (toujours vrai sur $\C$), on peut toujours trouver une base où la matrice est triangulaire supérieure par blocs, chaque bloc correspondant à une valeur propre et étant lui-même triangulaire avec cette valeur propre sur la diagonale. C'est la base de la réduction de Jordan (hors programme).
+    </div>
+
+    <h2>5. Endomorphismes et matrices nilpotents</h2>
+
+    <p>L'espace vectoriel $E$ est de dimension finie $n$.</p>
+
+    <div class="definition">
+        <strong>Définition (Endomorphisme nilpotent)</strong><br>
+        Un endomorphisme $u \in \LE$ est dit <strong>nilpotent</strong> s'il existe un entier $p \in \N$ tel que $u^p = 0_{\LE}$ (l'endomorphisme nul).
+        <br>Si $u \neq 0$, le plus petit entier $p \ge 1$ tel que $u^p = 0_{\LE}$ s'appelle l'<strong>indice de nilpotence</strong> de $u$. (Si $u=0$, l'indice est 0 ou 1 selon les conventions).
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème (Caractérisation des endomorphismes nilpotents)</strong><br>
+        Soit $u \in \LE$. Les assertions suivantes sont équivalentes :
+        <ol>
+            <li>$u$ est nilpotent.</li>
+            <li>Le polynôme minimal de $u$ est de la forme $\piu(X) = X^p$ pour un certain entier $p \ge 1$ (si $u \neq 0$).</li>
+            <li>Le polynôme caractéristique de $u$ est $\chiu(X) = X^n$. (La seule valeur propre possible est 0).</li>
+            <li>Il existe une base de $E$ dans laquelle la matrice de $u$ est <strong>triangulaire supérieure stricte</strong> (c'est-à-dire triangulaire supérieure avec des zéros sur la diagonale).</li>
+        </ol>
+    </div>
+     <div class="proof">
+        <a href="#">(Démonstration en vidéo!)</a>
+        <strong>Preuve (Idées des implications) :</strong><br>
+        (1 $\implies$ 2) : $u^p=0$ signifie que $P(X)=X^p$ est annulateur. Donc $\piu$ divise $X^p$. $\piu$ est donc de la forme $X^k$ pour $k \le p$. ( $k$ est l'indice de nilpotence).
+        <br>(2 $\implies$ 3) : $\piu(X)=X^p$. Les racines de $\piu$ sont les valeurs propres. La seule valeur propre est $\lambda=0$. Comme $\chiu$ doit être scindé (car $\piu$ l'est, $\K=\R$ ou $\C$) et a pour seule racine 0, $\chiu(X) = (X-0)^n = X^n$.
+        <br>(3 $\implies$ 4) : Si $\chiu(X)=X^n$, $\chiu$ est scindé. Donc $u$ est trigonalisable. Il existe une base où $\Mat(u)=T$ est triangulaire supérieure. Les éléments diagonaux de $T$ sont les valeurs propres, qui sont toutes nulles ici. Donc $T$ est triangulaire supérieure stricte.
+        <br>(4 $\implies$ 1) : Si $\Mat(u)=T$ est triangulaire supérieure stricte dans une base $\mathcal{B}$. Alors $T^n = 0_n$ (propriété des matrices triangulaires strictes). Donc $\Mat(u^n, \mathcal{B}) = (\Mat(u, \mathcal{B}))^n = T^n = 0_n$. Ceci implique $u^n = 0_{\LE}$. $u$ est nilpotent. $\Box$
+    </div>
+
+    <div class="corollary">
+        <strong>Corollaire (Indice de nilpotence)</strong><br>
+        Si $u \in \LE$ est nilpotent, son indice de nilpotence $p$ est inférieur ou égal à la dimension de l'espace $n = \dim(E)$.
+        <br>(Ceci vient de $\piu | \chiu$, donc $\deg(\piu) \le \deg(\chiu) = n$. Si $\piu(X)=X^p$, alors $p \le n$. Ou directement de Cayley-Hamilton: $\chiu(u)=u^n=0$, donc l'indice est $\le n$).
+    </div>
+
+    <div class="definition">
+        <strong>Définition (Matrice nilpotente)</strong><br>
+        Une matrice $A \in \MnK$ est dite <strong>nilpotente</strong> s'il existe $p \in \N$ tel que $A^p = 0_n$ (la matrice nulle). Le plus petit $p \ge 1$ (si $A \neq 0$) est l'<strong>indice de nilpotence</strong> de $A$.
+    </div>
+
+    <div class="corollary">
+        <strong>Corollaire (Caractérisation des matrices nilpotentes)</strong><br>
+        Une matrice $A \in \MnK$ est nilpotente si et seulement si $A$ est <strong>semblable</strong> à une matrice triangulaire supérieure stricte.
+        <br>En particulier, une matrice nilpotente $A \in \MnK$ vérifie :
+        <ul>
+            <li>Son polynôme caractéristique est $\chiA(X) = X^n$.</li>
+            <li>Sa seule valeur propre est 0.</li>
+            <li>$\Tr(A) = 0$ et $\det(A) = 0$.</li>
+            <li>Son indice de nilpotence est inférieur ou égal à $n$.</li>
+            <li>$A^n = 0_n$ (par Cayley-Hamilton).</li>
+        </ul>
+    </div>
+
+</body>
+</html>
