@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Dynamique des Fluides Parfaits Incompressibles - Math Spé</title>
+    
+    <!-- Intégration de KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"  crossorigin="anonymous"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ]
+        });"></script>
+
+    <style>
+        body { 
+            font-family: sans-serif; 
+            line-height: 1.6; 
+            margin: 20px; 
+            background-color: #f4f7f6; /* Light greenish-gray */
+            color: #2c3e50; /* Dark grayish-blue */
+        }
+        h1, h2, h3 { 
+            color: #2980b9; /* Medium blue */
+            border-bottom: 1px solid #a9cce3; 
+            padding-bottom: 5px;
+        }
+        h1 { font-size: 2.2em; text-align: center; margin-bottom: 30px;}
+        h2 { font-size: 1.8em; margin-top: 35px; }
+        h3 { font-size: 1.4em; margin-top: 25px; }
+        .katex-display { 
+            display: block; 
+            margin: 1em 0; 
+            overflow-x: auto; 
+            background-color: #eaf2f8; /* Very light blue */
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #d4e6f1;
+        }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-left: 13px; margin-bottom: 1em; }
+        strong { color: #16a085; /* Teal */ }
+        code { 
+            background-color: #ecf0f1; /* Light gray */
+            padding: 2px 5px; 
+            border-radius: 3px; 
+            font-family: monospace;
+        }
+        .theorem {
+            border-left: 5px solid #2980b9; /* Medium blue */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #d6eaf8; 
+            border-radius: 5px;
+        }
+        .definition {
+            border-left: 5px solid #1abc9c; /* Turquoise */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #d1f2eb; 
+            border-radius: 5px;
+        }
+        .important {
+            border: 2px dashed #c0392b; /* Red dashed */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f9ebea; 
+            border-radius: 5px;
+        }
+         .derivation {
+            border: 1px solid #8e44ad; /* Purple */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f4ecf7; 
+            border-radius: 5px;
+        }
+        .assumptions {
+             border-left: 5px solid #f39c12; /* Orange */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #fef5e7; 
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Dynamique des Fluides Parfaits Incompressibles (Math Spé)</h1>
+
+    <p>La dynamique des fluides étudie les fluides en mouvement. Ce cours se concentre sur le modèle du <strong>fluide parfait</strong> (viscosité nulle) et <strong>incompressible</strong> (masse volumique $\rho$ constante), qui permet d'établir des relations fondamentales comme l'équation d'Euler et le théorème de Bernoulli.</p>
+    <p>L'étude est menée dans un <strong>référentiel $\mathcal{R}$ galiléen</strong>.</p>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 1 : Description Cinématique du Mouvement</h2>
+    <!-- ============================================== -->
+
+    <h3>1.1 Descriptions Lagrangienne et Eulérienne</h3>
+    <ul>
+        <li><strong>Description Lagrangienne :</strong> On suit chaque particule de fluide individuellement. On repère sa position $\vec{r}_P(t)$ en fonction du temps et de sa position initiale $\vec{r}_0$. Peu pratique sauf cas très simples.</li>
+        <li><strong>Description Eulérienne :</strong> On s'intéresse aux propriétés du fluide (vitesse, pression...) en un point fixe $M$ de l'espace, à l'instant $t$. C'est l'approche standard en mécanique des fluides. On définit le <strong>champ des vitesses</strong> $\vec{v}(M, t)$.</li>
+    </ul>
+
+    <h3>1.2 Particule Fluide et Dérivée Particulaire</h3>
+    <div class="definition">
+        Une <strong>particule fluide</strong> est un élément de volume $d\tau$ de fluide, macroscopiquement ponctuel mais contenant un grand nombre de molécules. On suit son mouvement et ses propriétés.
+        <br>
+        La <strong>dérivée particulaire</strong> (ou dérivée totale, ou dérivée lagrangienne) d'une grandeur scalaire $f(M,t)$ ou vectorielle $\vec{G}(M,t)$ représente le taux de variation de cette grandeur pour une particule fluide donnée lorsqu'elle se déplace. Elle est notée $\frac{df}{dt}$ ou $\frac{D f}{D t}$ (pour la distinguer de la dérivée partielle).
+        $$ \frac{df}{dt} = \frac{\partial f}{\partial t} + (\vec{v} \cdot \vec{\nabla}) f $$
+        $$ \frac{d\vec{G}}{dt} = \frac{\partial \vec{G}}{\partial t} + (\vec{v} \cdot \vec{\nabla}) \vec{G} $$
+        Le terme $\frac{\partial}{\partial t}$ représente la variation locale (en un point fixe), et le terme $(\vec{v} \cdot \vec{\nabla})$ représente la variation due au déplacement de la particule dans un champ non uniforme (terme <strong>convectif</strong> ou d'advection).
+    </div>
+    <p>L'opérateur $(\vec{v} \cdot \vec{\nabla})$ appliqué à un scalaire $f$ est $\vec{v} \cdot (\vec{\nabla}f) = v_x \frac{\partial f}{\partial x} + v_y \frac{\partial f}{\partial y} + v_z \frac{\partial f}{\partial z}$. Appliqué à un vecteur $\vec{G}$, il faut le calculer composante par composante ou utiliser l'identité $(\vec{v} \cdot \vec{\nabla})\vec{G} = \frac{1}{2}\vec{\nabla}(G^2) - \vec{v} \times (\vec{\nabla}\times\vec{G}) + ...$ (pas toujours simple).</p>
+
+    <h3>1.3 Accélération d'une Particule Fluide</h3>
+    <p>L'accélération $\vec{a}(M, t)$ d'une particule fluide est la dérivée particulaire de son vecteur vitesse $\vec{v}(M, t)$ :</p>
+    $$ \vec{a}(M, t) = \frac{d\vec{v}}{dt} = \frac{\partial \vec{v}}{\partial t} + (\vec{v} \cdot \vec{\nabla}) \vec{v} $$
+    <div class="important">
+        L'accélération n'est <strong>pas</strong> simplement $\partial \vec{v} / \partial t$. Le terme convectif $(\vec{v} \cdot \vec{\nabla}) \vec{v}$ est crucial et rend les équations de la dynamique des fluides <strong>non linéaires</strong>.
+        Même en régime <strong>stationnaire</strong> ($\partial / \partial t = 0$), l'accélération n'est pas nulle si le champ de vitesse n'est pas uniforme : $\vec{a} = (\vec{v} \cdot \vec{\nabla}) \vec{v}$.
+    </div>
+
+    <h3>1.4 Lignes de Courant, Trajectoires, Lignes d'Émission</h3>
+    <ul>
+        <li><strong>Ligne de Courant :</strong> Courbe tangente en chacun de ses points au vecteur vitesse $\vec{v}(M, t)$ à un instant $t$ donné. L'ensemble des lignes de courant à $t$ donne une "photographie" de l'écoulement. Équation: $d\vec{l} \parallel \vec{v}(M,t)$.</li>
+        <li><strong>Trajectoire :</strong> Chemin suivi par une particule fluide au cours du temps.</li>
+        <li><strong>Ligne d'Émission :</strong> Lieu, à un instant $t$, des particules fluides passées antérieurement par un point fixe donné.</li>
+    </ul>
+    <p>En régime <strong>stationnaire</strong> ($\vec{v}(M)$ indépendant de $t$), les lignes de courant, les trajectoires et les lignes d'émission coïncident.</p>
+
+    <h3>1.5 Écoulement Incompressible</h3>
+    <div class="definition">
+        Un écoulement est dit <strong>incompressible</strong> si la masse volumique $\rho$ de chaque particule fluide reste constante au cours de son mouvement : $\frac{d\rho}{dt} = 0$.
+        <br>
+        Pour un fluide <strong>homogène et incompressible</strong>, $\rho = \text{constante}$ partout et tout le temps. Dans ce cas, l'équation de conservation de la masse (voir Chapitre 4) se réduit à :
+        $$ \boxed{ \vec{\nabla} \cdot \vec{v} = 0 } $$
+        Le champ des vitesses est à divergence nulle.
+    </div>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 2 : Équation d'Euler pour un Fluide Parfait</h2>
+    <!-- ============================================== -->
+    <p>On applique le Principe Fondamental de la Dynamique (PFD) à une particule fluide de volume $d\tau$ et de masse $dm = \rho d\tau$.</p>
+    
+    <h3>2.1 Bilan des Forces</h3>
+    Les forces s'exerçant sur la particule fluide sont (comme en statique) :
+    <ul>
+        <li><strong>Forces de volume :</strong> $\vec{dF}_v = \vec{f}_v d\tau$, où $\vec{f}_v$ est la densité volumique de force (ex: $\vec{f}_v = \rho \vec{g}$).</li>
+        <li><strong>Forces de pression :</strong> $\vec{dF}_p = -(\vec{\nabla} p) d\tau$.</li>
+        <li><strong>Forces de viscosité :</strong> $\vec{dF}_{visc}$. Pour un <strong>fluide parfait</strong>, par définition, $\vec{dF}_{visc} = \vec{0}$.</li>
+    </ul>
+
+    <h3>2.2 Équation d'Euler</h3>
+    <p>Le PFD s'écrit : $dm \, \vec{a} = \vec{dF}_{tot} = \vec{dF}_v + \vec{dF}_p + \vec{dF}_{visc}$.</p>
+    $$ \rho d\tau \, \frac{d\vec{v}}{dt} = \vec{f}_v d\tau - (\vec{\nabla} p) d\tau + \vec{0} $$
+    En divisant par $\rho d\tau$ et en explicitant la dérivée particulaire :
+    
+    <div class="theorem">
+        <strong>Équation d'Euler (locale) pour un fluide parfait :</strong>
+        $$ \boxed{ \frac{\partial \vec{v}}{\partial t} + (\vec{v} \cdot \vec{\nabla}) \vec{v} = \frac{\vec{f}_v}{\rho} - \frac{1}{\rho} \vec{\nabla} p } $$
+        Dans le cas courant où $\vec{f}_v = \rho \vec{g}$ :
+        $$ \boxed{ \frac{\partial \vec{v}}{\partial t} + (\vec{v} \cdot \vec{\nabla}) \vec{v} = \vec{g} - \frac{1}{\rho} \vec{\nabla} p } $$
+    </div>
+    <p>C'est l'équation fondamentale de la dynamique des fluides parfaits. C'est une équation vectorielle non linéaire (à cause du terme convectif). Couplée à l'équation de conservation de la masse (et éventuellement une équation d'état si $\rho$ n'est pas constant), elle permet en principe de déterminer $\vec{v}(M,t)$ et $p(M,t)$.</p>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 3 : Théorème de Bernoulli</h2>
+    <!-- ============================================== -->
+    <p>Le théorème de Bernoulli est une forme intégrée de l'équation d'Euler dans certaines conditions, exprimant une forme de conservation de l'énergie le long d'une ligne de courant ou dans tout le fluide.</p>
+
+    <div class="assumptions">
+        <strong>Hypothèses pour le Théorème de Bernoulli (forme usuelle) :</strong>
+        <ol>
+            <li>Fluide <strong>parfait</strong>.</li>
+            <li>Écoulement <strong>stationnaire</strong> ($\partial / \partial t = 0$).</li>
+            <li>Fluide <strong>incompressible</strong> ($\rho = \text{constante}$).</li>
+            <li>Forces de volume <strong>conservatives</strong>, dérivant d'une énergie potentielle volumique $E_{p, vol}$ ($\vec{f}_v = -\vec{\nabla} E_{p, vol}$) ou massique $\mathcal{E}_p$ ($\vec{f}_v/\rho = -\vec{\nabla} \mathcal{E}_p$).
+                Exemple : pesanteur, $\vec{f}_v = \rho\vec{g}$, $\vec{g} = -\vec{\nabla}(gz)$, $E_{p, vol} = \rho g z$, $\mathcal{E}_p = gz$.</li>
+        </ol>
+    </div>
+
+    <div class="derivation">
+    En régime stationnaire, l'équation d'Euler devient : $\rho (\vec{v} \cdot \vec{\nabla}) \vec{v} = \vec{f}_v - \vec{\nabla} p = -\vec{\nabla} E_{p, vol} - \vec{\nabla} p$.
+    Utilisons l'identité vectorielle (pour tout champ $\vec{v}$) :
+    $(\vec{v} \cdot \vec{\nabla}) \vec{v} = \vec{\nabla} \left( \frac{1}{2} v^2 \right) - \vec{v} \times (\vec{\nabla} \times \vec{v})$.
+    En notant $\vec{\omega} = \vec{\nabla} \times \vec{v}$ le vecteur tourbillon :
+    $$ \rho \left[ \vec{\nabla} \left( \frac{1}{2} v^2 \right) - \vec{v} \times \vec{\omega} \right] = -\vec{\nabla} E_{p, vol} - \vec{\nabla} p $$
+    $$ \vec{\nabla} \left( p + \frac{1}{2}\rho v^2 + E_{p, vol} \right) = \rho (\vec{v} \times \vec{\omega}) $$
+    Considérons le déplacement $d\vec{l}$ le long d'une <strong>ligne de courant</strong>. Par définition, $d\vec{l} \parallel \vec{v}$.
+    Projetons l'équation précédente sur $d\vec{l}$ :
+    $d\vec{l} \cdot \vec{\nabla} \left( p + \frac{1}{2}\rho v^2 + E_{p, vol} \right) = d\vec{l} \cdot [\rho (\vec{v} \times \vec{\omega})]$.
+    Le terme de gauche est la différentielle $d(p + \frac{1}{2}\rho v^2 + E_{p, vol})$ le long de $d\vec{l}$.
+    Le terme de droite est nul car $d\vec{l}$ est colinéaire à $\vec{v}$, et $\vec{v} \times \vec{\omega}$ est orthogonal à $\vec{v}$ (produit mixte avec deux vecteurs colinéaires si projeté sur $\vec{v}$).
+    Donc, $d(p + \frac{1}{2}\rho v^2 + E_{p, vol}) = 0$ le long d'une ligne de courant.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème de Bernoulli (le long d'une ligne de courant) :</strong>
+        Pour un écoulement <strong>stationnaire</strong> d'un fluide <strong>parfait</strong>, <strong>incompressible</strong>, soumis à des forces de volume <strong>conservatives</strong> ($E_{p, vol}$), la quantité suivante est <strong>constante le long de chaque ligne de courant</strong> :
+        $$ \boxed{ p + \frac{1}{2}\rho v^2 + E_{p, vol} = \text{Constante (sur la ligne de courant)} } $$
+        Dans le cas de la pesanteur ($E_{p, vol} = \rho g z$) :
+        $$ \boxed{ p + \frac{1}{2}\rho v^2 + \rho g z = \text{Constante (sur la ligne de courant)} } $$
+        La constante peut varier d'une ligne de courant à l'autre.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème de Bernoulli (cas irrotationnel) :</strong>
+        Si, en plus des hypothèses précédentes, l'écoulement est <strong>irrotationnel</strong> ($\vec{\omega} = \vec{\nabla} \times \vec{v} = \vec{0}$), alors l'équation $\vec{\nabla}(p + \frac{1}{2}\rho v^2 + E_{p, vol}) = \rho (\vec{v} \times \vec{\omega})$ devient :
+        $$ \vec{\nabla} \left( p + \frac{1}{2}\rho v^2 + E_{p, vol} \right) = \vec{0} $$
+        Dans ce cas, la quantité est constante <strong>dans tout le domaine de l'écoulement</strong> où les hypothèses sont valides :
+        $$ \boxed{ p + \frac{1}{2}\rho v^2 + E_{p, vol} = \text{Constante (partout)} } $$
+        Pour la pesanteur :
+        $$ \boxed{ p + \frac{1}{2}\rho v^2 + \rho g z = \text{Constante (partout)} } $$
+        Ceci est souvent applicable loin des parois ou pour des écoulements issus d'un réservoir au repos.
+    </div>
+
+    <h3>3.3 Interprétation et Termes</h3>
+    <p>L'équation de Bernoulli $p + \frac{1}{2}\rho v^2 + \rho g z = \text{Cte}$ peut être interprétée comme une forme de conservation de l'énergie volumique :</p>
+    <ul>
+        <li>$p$ : Pression statique (énergie de pression par unité de volume).</li>
+        <li>$\frac{1}{2}\rho v^2$ : Pression dynamique (énergie cinétique par unité de volume).</li>
+        <li>$\rho g z$ : Pression de pesanteur (énergie potentielle de pesanteur par unité de volume).</li>
+    </ul>
+    <p>Le théorème montre que le long d'une ligne de courant (ou partout si irrotationnel), la somme de ces termes est constante. Si la vitesse augmente, la pression statique et/ou la pression de pesanteur doit diminuer.</p>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 4 : Conservation de la Masse et du Débit</h2>
+    <!-- ============================================== -->
+
+    <h3>4.1 Équation de Continuité (Conservation de la Masse)</h3>
+    <div class="derivation">
+    Considérons un volume de contrôle fixe $V$ délimité par une surface $\Sigma$. La masse $M_V = \int_V \rho d\tau$ contenue dans $V$ varie à cause du flux de masse à travers $\Sigma$.
+    Taux de variation de masse dans $V$ : $\frac{dM_V}{dt} = \frac{d}{dt} \int_V \rho d\tau = \int_V \frac{\partial \rho}{\partial t} d\tau$.
+    Flux de masse sortant de $\Sigma$ : $\oint_\Sigma \rho \vec{v} \cdot d\vec{S}_{out}$.
+    Le principe de conservation de la masse dit que (Taux de variation) = - (Flux sortant).
+    $$ \int_V \frac{\partial \rho}{\partial t} d\tau = - \oint_\Sigma \rho \vec{v} \cdot d\vec{S}_{out} $$
+    En utilisant le théorème de Green-Ostrogradsky sur le terme de droite ($\oint_\Sigma \vec{A} \cdot d\vec{S} = \int_V \vec{\nabla}\cdot\vec{A} d\tau$) :
+    $$ \int_V \frac{\partial \rho}{\partial t} d\tau = - \int_V \vec{\nabla} \cdot (\rho \vec{v}) d\tau $$
+    $$ \int_V \left( \frac{\partial \rho}{\partial t} + \vec{\nabla} \cdot (\rho \vec{v}) \right) d\tau = 0 $$
+    Ceci étant vrai pour tout volume $V$, l'intégrande doit être nul.
+    </div>
+
+    <div class="theorem">
+        <strong>Équation de Continuité (locale) :</strong>
+        $$ \boxed{ \frac{\partial \rho}{\partial t} + \vec{\nabla} \cdot (\rho \vec{v}) = 0 } $$
+        Pour un écoulement <strong>stationnaire</strong> ($\partial \rho / \partial t = 0$) : $\vec{\nabla} \cdot (\rho \vec{v}) = 0$.
+        <br>
+        Pour un fluide <strong>incompressible</strong> ($\rho = \text{cte}$) : $\rho (\vec{\nabla} \cdot \vec{v}) = 0$, donc :
+        $$ \boxed{ \vec{\nabla} \cdot \vec{v} = 0 } $$
+    </div>
+
+    <h3>4.2 Débit Volumique et Massique</h3>
+    <div class="definition">
+    Pour un écoulement à travers une surface $S$ (ex: section d'un tuyau) :
+        <ul>
+            <li>Le <strong>débit volumique</strong> $D_v$ est le volume de fluide traversant $S$ par unité de temps :
+            $$ D_v = \int_S \vec{v} \cdot d\vec{S}_{out} $$
+            Unité : m³·s⁻¹. Si $\vec{v}$ est uniforme et normal à $S$, $D_v = v S$.</li>
+            <li>Le <strong>débit massique</strong> $D_m$ est la masse de fluide traversant $S$ par unité de temps :
+            $$ D_m = \int_S \rho \vec{v} \cdot d\vec{S}_{out} $$
+            Unité : kg·s⁻¹. Si $\rho$ et $\vec{v}$ sont uniformes, $D_m = \rho v S = \rho D_v$.</li>
+        </ul>
+    </div>
+    <p>Pour un écoulement <strong>stationnaire</strong> dans un tube de courant (délimité par des lignes de courant) ou une conduite, le débit massique entrant est égal au débit massique sortant :</p>
+    $$ D_{m, entrée} = D_{m, sortie} \quad \implies \quad (\rho v S)_{entrée} = (\rho v S)_{sortie} $$
+    Si le fluide est de plus <strong>incompressible</strong> ($\rho = \text{cte}$), alors le débit volumique se conserve :
+    $$ D_{v, entrée} = D_{v, sortie} \quad \implies \quad (v S)_{entrée} = (v S)_{sortie} $$
+    Dans une conduite de section variable, la vitesse du fluide est plus grande là où la section est plus petite.
+
+    <!-- ============================================== -->
+    <h2>Chapitre 5 : Applications du Théorème de Bernoulli</h2>
+    <!-- ============================================== -->
+
+    <div class="important">
+    <strong>Méthodologie d'application de Bernoulli :</strong>
+    <ol>
+        <li>Vérifier les hypothèses (fluide parfait, incompressible, écoulement stationnaire, forces conservatives).</li>
+        <li>Choisir deux points (A et B) appartenant à la <strong>même ligne de courant</strong> (ou deux points quelconques si l'écoulement est irrotationnel).</li>
+        <li>Appliquer l'équation $p_A + \frac{1}{2}\rho v_A^2 + \rho g z_A = p_B + \frac{1}{2}\rho v_B^2 + \rho g z_B$.</li>
+        <li>Utiliser la conservation du débit ($v_A S_A = v_B S_B$) si nécessaire.</li>
+        <li>Exploiter les conditions aux limites (pression à une surface libre $p=p_{atm}$, vitesse nulle sur une paroi fixe ou en un point de stagnation, vitesse quasi-nulle dans un grand réservoir...).</li>
+    </ol>
+    </div>
+    
+    <h3>5.1 Effet Venturi</h3>
+    <p>Une conduite horizontale présente un étranglement. Soit S₁ la section large (vitesse $v_1$, pression $p_1$) et S₂ la section étroite ($v_2, p_2$). Fluide parfait, incompressible, écoulement stationnaire.</p>
+    <ul>
+        <li>Conservation du débit : $v_1 S_1 = v_2 S_2$. Comme $S_2 < S_1$, on a $v_2 > v_1$.</li>
+        <li>Bernoulli (horizontal $z_1=z_2$, on suppose une ligne de courant passant par les deux sections) : $p_1 + \frac{1}{2}\rho v_1^2 = p_2 + \frac{1}{2}\rho v_2^2$.</li>
+        <li>Comme $v_2 > v_1$, on a $\frac{1}{2}\rho v_2^2 > \frac{1}{2}\rho v_1^2$, donc nécessairement $p_2 < p_1$.</li>
+    </ul>
+    <strong>Conclusion :</strong> La pression est plus faible dans la zone où la vitesse est plus élevée (étranglement). Application : trompe à eau, mesure de débit.
+
+    <h3>5.2 Tube de Pitot</h3>
+    <p>Permet de mesurer la vitesse $v$ d'un écoulement uniforme (ex: avion). Le tube présente une ouverture frontale (point d'arrêt A, où $v_A=0$) et une ouverture latérale (point B, où la vitesse est $v_B \approx v$ et la pression $p_B \approx p_{statique}$). Les deux points sont à peu près à la même altitude $z_A \approx z_B$ et sur la même ligne de courant.</p>
+    <ul>
+        <li>Bernoulli : $p_A + \frac{1}{2}\rho v_A^2 + \rho g z_A = p_B + \frac{1}{2}\rho v_B^2 + \rho g z_B$.</li>
+        <li>$p_A + 0 = p_B + \frac{1}{2}\rho v^2$.</li>
+        <li>La pression au point d'arrêt $p_A$ (pression totale ou de stagnation) est supérieure à la pression statique $p_B$.</li>
+        <li>On mesure $\Delta p = p_A - p_B = \frac{1}{2}\rho v^2$. D'où $v = \sqrt{\frac{2(p_A - p_B)}{\rho}}$.</li>
+    </ul>
+
+    <h3>5.3 Théorème de Torricelli (Vidange d'un réservoir)</h3>
+    <p>Un grand réservoir rempli d'un liquide (hauteur $h$) est percé d'un petit trou à sa base. On cherche la vitesse d'éjection $v_S$ à la sortie du trou.</p>
+    <ul>
+        <li>Point A : Surface libre du réservoir. $p_A = p_{atm}$, $z_A = h$. Si le réservoir est grand, $v_A \approx 0$.</li>
+        <li>Point B : Juste à la sortie du trou. $p_B = p_{atm}$ (le jet est en contact avec l'air), $z_B = 0$. Vitesse $v_B = v_S$.</li>
+        <li>On suppose une ligne de courant allant de A à B. Bernoulli : $p_A + \frac{1}{2}\rho v_A^2 + \rho g z_A = p_B + \frac{1}{2}\rho v_B^2 + \rho g z_B$.</li>
+        <li>$p_{atm} + 0 + \rho g h = p_{atm} + \frac{1}{2}\rho v_S^2 + 0$.</li>
+        <li>$\rho g h = \frac{1}{2}\rho v_S^2 \implies v_S = \sqrt{2 g h}$.</li>
+    </ul>
+    La vitesse d'éjection est la même que celle d'un corps en chute libre depuis une hauteur $h$.
+
+    <!-- ============================================== -->
+    <h2>Chapitre 6 : Limites du Modèle du Fluide Parfait et Introduction à la Viscosité</h2>
+    <!-- ============================================== -->
+    <p>Le modèle du fluide parfait est très utile mais présente des limites :</p>
+    <ul>
+        <li>Il ne prédit aucune force de traînée sur un objet en mouvement uniforme (paradoxe de D'Alembert).</li>
+        <li>Il ne décrit pas la dissipation d'énergie (pertes de charge) dans les écoulements réels.</li>
+        <li>Il ne permet pas de satisfaire la condition d'adhérence du fluide aux parois solides ($\vec{v}=\vec{0}$ sur la paroi).</li>
+    </ul>
+    <p>Ces phénomènes sont dus à la <strong>viscosité</strong>, qui traduit les frottements internes au fluide.</p>
+    <div class="important">
+        Pour un fluide réel (visqueux) incompressible, l'équation de quantité de mouvement devient l'<strong>équation de Navier-Stokes</strong> :
+        $$ \rho \left( \frac{\partial \vec{v}}{\partial t} + (\vec{v} \cdot \vec{\nabla}) \vec{v} \right) = \vec{f}_v - \vec{\nabla} p + \mu \Delta \vec{v} $$
+        où $\mu$ est la viscosité dynamique du fluide et $\Delta \vec{v}$ est le laplacien vectoriel de la vitesse. Le terme $\mu \Delta \vec{v}$ représente la force volumique de viscosité.
+        <br>
+        Le <strong>nombre de Reynolds</strong> $Re = \frac{\rho v L}{\mu}$ (où $L$ est une taille caractéristique) compare l'importance des termes inertiels (convectifs) aux termes visqueux.
+        <ul>
+            <li>$Re \ll 1$ : Écoulement rampant (viscosité dominante).</li>
+            <li>$Re \gg 1$ : Écoulement inertiel (viscosité négligeable, sauf près des parois dans la couche limite). Peut devenir <strong>turbulent</strong>.</li>
+        </ul>
+        Le théorème de Bernoulli n'est plus applicable tel quel en présence de viscosité (il faut ajouter un terme de perte de charge).
+    </div>
+
+    <hr>
+    <p><em>Ce cours a introduit les concepts clés de la dynamique des fluides parfaits incompressibles : description eulérienne, dérivée particulaire, équation d'Euler et théorème de Bernoulli. Ces outils permettent d'analyser de nombreux écoulements idéalisés. Il est cependant crucial de garder à l'esprit les limites de ce modèle et l'importance de la viscosité dans les fluides réels.</em></p>
+
+</body>
+</html>
