@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Résonance et Filtrage Linéaire - Maths Sup</title>
+    
+    <!-- Intégration de KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"  crossorigin="anonymous"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ]
+        });"></script>
+
+    <style>
+        body { 
+            font-family: sans-serif; 
+            line-height: 1.6; 
+            margin: 20px; 
+            background-color: #fefefe; 
+            color: #333;
+        }
+        h1, h2, h3, h4 { 
+            color: #800080; /* Purple */
+            border-bottom: 1px solid #e0b0e0; /* Lighter purple border */
+            padding-bottom: 5px;
+        }
+        h1 { font-size: 2.2em; text-align: center; margin-bottom: 30px;}
+        h2 { font-size: 1.8em; margin-top: 35px; }
+        h3 { font-size: 1.4em; margin-top: 25px; }
+        h4 { font-size: 1.1em; margin-top: 20px; color: #a040a0; border-bottom: none;}
+        .katex-display { 
+            display: block; 
+            margin: 1em 0; 
+            overflow-x: auto; 
+            background-color: #f3e6f3; /* Very light purple */
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #e0b0e0;
+        }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-left: 13px; margin-bottom: 1em; }
+        strong { color: #007f5f; /* Dark green */ }
+        code { 
+            background-color: #e9ecef; 
+            padding: 2px 5px; 
+            border-radius: 3px; 
+            font-family: monospace;
+        }
+        .theorem {
+            border-left: 5px solid #4361ee; /* Blue */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #e0eaff; /* Light blue */
+            border-radius: 5px;
+        }
+        .definition {
+            border-left: 5px solid #fca311; /* Orange */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #fff7e6; /* Light orange */
+            border-radius: 5px;
+        }
+        .important {
+            border: 2px dashed #d00000; /* Dark red dashed */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #fdd; /* Light red */
+            border-radius: 5px;
+        }
+         .analysis {
+            border: 1px solid #52b788; /* Green */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #d8f3e5; /* Light green */
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Résonance et Filtrage Linéaire en Électrocinétique</h1>
+
+    <p>Ce cours explore deux concepts fondamentaux et interconnectés en régime sinusoïdal forcé (RSF) : le <strong>filtrage</strong>, qui décrit comment un circuit modifie l'amplitude et la phase d'un signal en fonction de sa fréquence, et la <strong>résonance</strong>, un phénomène d'amplification sélective qui se produit à certaines fréquences dans les circuits contenant des éléments réactifs (L et C).</p>
+    <p>Nous utiliserons systématiquement la <strong>notation complexe</strong> et les <strong>impédances complexes</strong> dans le cadre de l'ARQS.</p>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 1 : Fonction de Transfert et Filtrage</h2>
+    <!-- ============================================== -->
+
+    <h3>1.1 Notion de Filtre et Fonction de Transfert</h3>
+    <div class="definition">
+        Un <strong>filtre</strong> est un circuit électrique (souvent un quadripôle) conçu pour modifier l'amplitude et/ou la phase d'un signal électrique en fonction de sa fréquence. Il sélectionne ou atténue certaines gammes de fréquences.
+        <br><br>
+        Le comportement d'un filtre linéaire en RSF est entièrement caractérisé par sa <strong>fonction de transfert (ou transmittance isochrone)</strong> $\underline{H}(j\omega)$, définie comme le rapport entre l'amplitude complexe de la grandeur de sortie $\underline{X}_s$ (tension ou courant) et l'amplitude complexe de la grandeur d'entrée $\underline{X}_e$ (tension ou courant) :
+        $$ \underline{H}(j\omega) = \frac{\underline{X}_s}{\underline{X}_e} $$
+        Cette fonction complexe dépend de la pulsation $\omega$ et des composants du circuit.
+    </div>
+
+    <h3>1.2 Gain et Phase</h3>
+    <p>La fonction de transfert $\underline{H}(j\omega)$ est un nombre complexe qui peut s'écrire sous forme polaire :</p>
+    $$ \underline{H}(j\omega) = G(\omega) e^{j\phi(\omega)} $$
+    <ul>
+        <li>$G(\omega) = |\underline{H}(j\omega)| = \frac{|\underline{X}_s|}{|\underline{X}_e|} = \frac{X_{s,m}}{X_{e,m}}$ est le <strong>gain</strong> du filtre. Il représente le facteur d'amplification (si $G>1$) ou d'atténuation (si $G<1$) de l'amplitude du signal à la pulsation $\omega$. Le gain est une quantité réelle positive.</li>
+        <li>$\phi(\omega) = \arg(\underline{H}(j\omega)) = \arg(\underline{X}_s) - \arg(\underline{X}_e) = \phi_s - \phi_e$ est le <strong>déphasage</strong> (ou argument) introduit par le filtre entre le signal de sortie et le signal d'entrée à la pulsation $\omega$.</li>
+    </ul>
+    <p>L'étude d'un filtre consiste principalement à analyser les variations de son gain $G(\omega)$ et de son déphasage $\phi(\omega)$ en fonction de la pulsation $\omega$ (ou de la fréquence $f = \omega/2\pi$).</p>
+
+    <h3>1.3 Diagrammes de Bode</h3>
+    <div class="definition">
+        Les <strong>diagrammes de Bode</strong> sont une représentation graphique standard du comportement fréquentiel d'un filtre. Ils consistent en deux graphes :
+        <ol>
+            <li><strong>Diagramme de gain :</strong> Trace le gain exprimé en <strong>décibels (dB)</strong>, $G_{dB}(\omega) = 20 \log_{10}(G(\omega))$, en fonction de $\log(\omega)$ (ou $\log(f)$).</li>
+            <li><strong>Diagramme de phase :</strong> Trace le déphasage $\phi(\omega)$ (en degrés ou radians) en fonction de $\log(\omega)$ (ou $\log(f)$).</li>
+        </ol>
+        L'échelle logarithmique pour la fréquence permet de visualiser le comportement sur une large gamme de fréquences. Le gain en dB permet de transformer les produits de gains (circuits en cascade) en sommes de gains en dB.
+    </div>
+    <p><strong>Caractéristiques importantes sur les diagrammes de Bode :</strong></p>
+    <ul>
+        <li><strong>Pentes asymptotiques :</strong> Pour les filtres simples, le gain en dB présente souvent des pentes asymptotiques de $\pm 20 \text{ dB/décade}$ (pour un ordre 1) ou $\pm 40 \text{ dB/décade}$ (pour un ordre 2) dans certaines gammes de fréquences. Une décade correspond à un facteur 10 en fréquence.</li>
+        <li><strong>Pulsation(s) de coupure $\omega_c$ (ou fréquence $f_c$):</strong> Ce sont les pulsations pour lesquelles le gain $G(\omega_c)$ est réduit d'un facteur $1/\sqrt{2}$ par rapport au gain maximal dans la bande passante. En décibels, cela correspond à une <strong>atténuation de 3 dB</strong> ($G_{dB}(\omega_c) = G_{dB, max} - 20\log_{10}(\sqrt{2}) \approx G_{dB, max} - 3 \text{ dB}$). La pulsation de coupure sépare typiquement la bande passante (où le signal est transmis) de la bande coupée (où il est atténué).</li>
+    </ul>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 2 : Filtres du Premier Ordre</h2>
+    <!-- ============================================== -->
+    <p>Ces filtres sont basés sur des circuits RC ou RL (un seul élément réactif).</p>
+
+    <div class="analysis">
+    <h3>2.1 Filtre Passe-Bas du 1er Ordre (Exemple RC)</h3>
+    <p>Circuit RC série, sortie aux bornes de C. Entrée $U_e$, Sortie $U_s$.
+    Fonction de transfert : $\underline{H}(j\omega) = \frac{1}{1 + jRC\omega} = \frac{1}{1 + j\omega/\omega_c}$ avec $\omega_c = 1/(RC)$.</p>
+    <ul>
+        <li>Gain : $G(\omega) = \frac{1}{\sqrt{1+(\omega/\omega_c)^2}}$. $G_{dB}(\omega) = -10 \log_{10}(1+(\omega/\omega_c)^2)$.</li>
+        <li>Phase : $\phi(\omega) = -\arctan(\omega/\omega_c)$.</li>
+    </ul>
+    <p><strong>Comportement asymptotique (Bode) :</strong></p>
+    <ul>
+        <li>$\omega \ll \omega_c$ (BF): $G \approx 1$ ($G_{dB} \approx 0$ dB), $\phi \approx 0$. Le filtre laisse passer les basses fréquences.</li>
+        <li>$\omega \gg \omega_c$ (HF): $G \approx \omega_c/\omega$ ($G_{dB} \approx 20\log_{10}(\omega_c) - 20\log_{10}(\omega)$). La pente est de <strong>-20 dB/décade</strong>. $\phi \to -\pi/2$ (-90°). Le filtre coupe les hautes fréquences.</li>
+        <li>$\omega = \omega_c$: $G = 1/\sqrt{2}$ ($G_{dB} = -3$ dB), $\phi = -\pi/4$ (-45°). C'est la <strong>pulsation de coupure</strong>.</li>
+    </ul>
+    </div>
+    
+    <div class="analysis">
+    <h3>2.2 Filtre Passe-Haut du 1er Ordre (Exemple RC)</h3>
+    <p>Circuit RC série, sortie aux bornes de R. Entrée $U_e$, Sortie $U_s$.
+    Fonction de transfert : $\underline{H}(j\omega) = \frac{\underline{Z}_R}{\underline{Z}_R + \underline{Z}_C} = \frac{R}{R + 1/(jC\omega)} = \frac{jRC\omega}{1 + jRC\omega} = \frac{j\omega/\omega_c}{1 + j\omega/\omega_c}$ avec $\omega_c = 1/(RC)$.</p>
+    <ul>
+        <li>Gain : $G(\omega) = \frac{\omega/\omega_c}{\sqrt{1+(\omega/\omega_c)^2}}$. $G_{dB}(\omega) = 20 \log_{10}(\omega/\omega_c) - 10 \log_{10}(1+(\omega/\omega_c)^2)$.</li>
+        <li>Phase : $\phi(\omega) = \arg(j\omega/\omega_c) - \arg(1 + j\omega/\omega_c) = \pi/2 - \arctan(\omega/\omega_c)$.</li>
+    </ul>
+    <p><strong>Comportement asymptotique (Bode) :</strong></p>
+    <ul>
+        <li>$\omega \ll \omega_c$ (BF): $G \approx \omega/\omega_c \to 0$ ($G_{dB} \approx 20\log_{10}(\omega) - 20\log_{10}(\omega_c)$). La pente est de <strong>+20 dB/décade</strong>. $\phi \to +\pi/2$ (+90°). Le filtre coupe les basses fréquences.</li>
+        <li>$\omega \gg \omega_c$ (HF): $G \approx 1$ ($G_{dB} \approx 0$ dB), $\phi \approx 0$. Le filtre laisse passer les hautes fréquences.</li>
+        <li>$\omega = \omega_c$: $G = (1)/\sqrt{1+1^2} = 1/\sqrt{2}$ ($G_{dB} = -3$ dB), $\phi = \pi/2 - \pi/4 = +\pi/4$ (+45°). C'est la pulsation de coupure.</li>
+    </ul>
+    </div>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 3 : Filtres du Second Ordre et Résonance</h2>
+    <!-- ============================================== -->
+    <p>Ces filtres impliquent généralement des circuits RLC. Leur comportement est plus riche, pouvant inclure un pic de résonance.</p>
+
+    <h3>3.1 Forme Canonique de la Fonction de Transfert du 2nd Ordre</h3>
+    <p>La fonction de transfert d'un filtre linéaire du second ordre peut souvent se mettre sous la forme canonique suivante :</p>
+    $$ \underline{H}(j\omega) = \frac{H_0 \times N(j\omega)}{1 - \left(\frac{\omega}{\omega_0}\right)^2 + j \frac{\omega}{Q\omega_0}} $$
+    où :
+    <ul>
+        <li>$H_0$ est le gain statique (ou à une fréquence de référence).</li>
+        <li>$\omega_0$ est la pulsation propre (liée à L et C).</li>
+        <li>$Q$ est le facteur de qualité (lié à R, L, C).</li>
+        <li>$N(j\omega)$ est un terme au numérateur (souvent 1, $j\omega/\omega_0$, ou $(j\omega/\omega_0)^2$) qui détermine le type de filtre (passe-bas, passe-bande, passe-haut...).</li>
+    </ul>
+    <p>Le dénominateur $D(j\omega) = 1 - (\omega/\omega_0)^2 + j \omega/(Q\omega_0)$ est commun à de nombreux filtres du second ordre et joue un rôle clé dans la résonance.</p>
+
+    <div class="analysis">
+    <h3>3.2 Filtre Passe-Bas du 2nd Ordre (Exemple RLC Série, sortie sur C)</h3>
+    <p>Entrée $U_e$, Sortie $U_s$ aux bornes de C.
+    Fonction de transfert : $\underline{H}(j\omega) = \frac{\underline{Z}_C}{\underline{Z}_R + \underline{Z}_L + \underline{Z}_C} = \frac{1/(jC\omega)}{R + jL\omega + 1/(jC\omega)}$.
+    En multipliant numérateur et dénominateur par $jC\omega$ et en réarrangeant :</p>
+    $$ \underline{H}(j\omega) = \frac{1}{jRC\omega - LC\omega^2 + 1} = \frac{1}{1 - LC\omega^2 + jRC\omega} $$
+    Avec $\omega_0 = 1/\sqrt{LC}$ et $Q = \frac{1}{R}\sqrt{\frac{L}{C}}$ (donc $RC = \frac{L}{R}\frac{RC}{L} = \frac{\sqrt{LC}}{Q}\frac{1}{\sqrt{LC}} RC = \frac{1}{Q\omega_0}$), on obtient :
+    $$ \underline{H}(j\omega) = \frac{1}{1 - (\omega/\omega_0)^2 + j \frac{\omega}{Q\omega_0}} $$
+    <p><strong>Comportement :</strong></p>
+    <ul>
+        <li>BF ($\omega \ll \omega_0$) : $\underline{H} \approx 1$. Gain $G_{dB} \approx 0$.</li>
+        <li>HF ($\omega \gg \omega_0$) : $\underline{H} \approx \frac{1}{-(\omega/\omega_0)^2}$. Gain $G \approx (\omega_0/\omega)^2$. $G_{dB} \approx 40\log_{10}(\omega_0) - 40\log_{10}(\omega)$. Pente de <strong>-40 dB/décade</strong>.</li>
+        <li>Comportement autour de $\omega_0$ : Le gain $G(\omega) = 1 / \sqrt{(1 - (\omega/\omega_0)^2)^2 + (\omega/(Q\omega_0))^2}$ peut présenter un <strong>maximum (pic de résonance)</strong> si l'amortissement est faible ($Q > 1/\sqrt{2} \approx 0.707$). Ce pic se produit pour $\omega_{res} = \omega_0 \sqrt{1 - 1/(2Q^2)}$ (légèrement inférieur à $\omega_0$). Le gain à la résonance $G(\omega_{res})$ est d'autant plus grand que $Q$ est élevé. Si $Q \le 1/\sqrt{2}$, le gain est maximal pour $\omega=0$.</li>
+    </ul>
+    </div>
+    
+    <div class="analysis">
+    <h3>3.3 Filtre Passe-Bande du 2nd Ordre (Exemple RLC Série, sortie sur R)</h3>
+     <p>Entrée $U_e$, Sortie $U_s$ aux bornes de R.
+    Fonction de transfert : $\underline{H}(j\omega) = \frac{\underline{Z}_R}{\underline{Z}_R + \underline{Z}_L + \underline{Z}_C} = \frac{R}{R + jL\omega + 1/(jC\omega)}$.
+     En divisant par $R$ et en utilisant $\omega_0, Q$ :</p>
+     $$ \underline{H}(j\omega) = \frac{1}{1 + j\frac{L\omega}{R} + \frac{1}{jRC\omega}} = \frac{1}{1 + jQ(\frac{\omega}{\omega_0}) + \frac{1}{jQ(\omega/\omega_0)}} $$
+     Autre forme : Multiplier par $j\omega/(Q\omega_0)$ haut et bas :
+     $$ \underline{H}(j\omega) = \frac{j\omega/(Q\omega_0)}{1 - (\omega/\omega_0)^2 + j \omega/(Q\omega_0)} $$
+     <p><strong>Comportement :</strong></p>
+     <ul>
+        <li>BF ($\omega \ll \omega_0$) : $\underline{H} \approx j\omega/(Q\omega_0)$. Gain $G \approx \omega/(Q\omega_0) \to 0$. Pente <strong>+20 dB/décade</strong>.</li>
+        <li>HF ($\omega \gg \omega_0$) : $\underline{H} \approx \frac{j\omega/(Q\omega_0)}{-(\omega/\omega_0)^2} = \frac{j Q \omega_0}{\omega}$. Gain $G \approx Q\omega_0/\omega \to 0$. Pente <strong>-20 dB/décade</strong>.</li>
+        <li>Résonance ($\omega = \omega_0$) : Le dénominateur devient $1 - 1 + j\omega_0/(Q\omega_0) = j/Q$. $\underline{H}(j\omega_0) = \frac{j/Q}{j/Q} = 1$. Le gain est <strong>maximal</strong> et vaut <strong>1</strong> (0 dB) à $\omega=\omega_0$. Le déphasage est nul à la résonance.</li>
+    </ul>
+    <p>Ce circuit sélectionne une bande de fréquences autour de $\omega_0$. La largeur de cette bande est liée au facteur de qualité.</p>
+    </div>
+    
+    <!-- ============================================== -->
+    <h2>Chapitre 4 : Résonance en Intensité et en Tension</h2>
+    <!-- ============================================== -->
+
+    <h3>4.1 Phénomène de Résonance</h3>
+    <div class="definition">
+        La <strong>résonance</strong> dans un circuit RLC est le phénomène par lequel l'amplitude de la réponse du circuit (courant ou tension) devient maximale pour une certaine pulsation $\omega_{res}$ de la source, appelée <strong>pulsation de résonance</strong>. Ce phénomène est d'autant plus marqué (pic aigu) que l'amortissement est faible (facteur de qualité $Q$ élevé).
+    </div>
+
+    <h3>4.2 Résonance en Intensité (Circuit RLC Série)</h3>
+    <p>On étudie l'amplitude $I_m$ du courant $i(t)$ dans le circuit RLC série soumis à $e(t)=E_m \cos(\omega t)$.</p>
+    $$ I_m(\omega) = \frac{E_m}{|\underline{Z}_{eq}|} = \frac{E_m}{\sqrt{R^2 + (L\omega - \frac{1}{C\omega})^2}} $$
+    <p>L'amplitude $I_m$ est maximale lorsque le module de l'impédance $|\underline{Z}_{eq}|$ est minimal. Le minimum de $|\underline{Z}_{eq}|$ est atteint lorsque le terme réactif s'annule :</p>
+    $$ L\omega - \frac{1}{C\omega} = 0 \quad \implies \quad \omega_{res} = \frac{1}{\sqrt{LC}} = \omega_0 $$
+    <div class="important">
+        La <strong>pulsation de résonance en intensité</strong> du circuit RLC série est égale à la <strong>pulsation propre</strong> $\omega_0 = 1/\sqrt{LC}$.
+        <br>
+        À la résonance ($\omega=\omega_0$) :
+        <ul>
+            <li>L'impédance est minimale et vaut $\underline{Z}(\omega_0) = R$.</li>
+            <li>L'amplitude du courant est maximale : $I_{m, max} = E_m / R$.</li>
+            <li>Le courant est en phase avec la tension d'entrée $e(t)$.</li>
+        </ul>
+    </div>
+
+    <h3>4.3 Bande Passante et Facteur de Qualité</h3>
+    <div class="definition">
+        La <strong>bande passante à -3dB</strong> $\Delta \omega$ du circuit RLC série (pour le courant) est l'intervalle de pulsations $[\omega_1, \omega_2]$ autour de $\omega_0$ pour lesquelles l'amplitude du courant est supérieure ou égale à $I_{m, max} / \sqrt{2}$. (Ceci correspond aux pulsations où la puissance moyenne dissipée est supérieure ou égale à la moitié de la puissance maximale $P_{max}=RI_{m,max}^2/2$).
+        <br>
+        Les pulsations de coupure $\omega_1$ et $\omega_2$ sont les solutions de $I_m(\omega) = I_{m, max}/\sqrt{2}$, ce qui équivaut à $|\underline{Z}(\omega)| = \sqrt{2} |\underline{Z}(\omega_0)| = \sqrt{2} R$.
+        $$ \sqrt{R^2 + (L\omega - \frac{1}{C\omega})^2} = \sqrt{2} R \implies (L\omega - \frac{1}{C\omega})^2 = R^2 $$
+        $$ L\omega - \frac{1}{C\omega} = \pm R $$
+        On montre que les deux solutions positives $\omega_1$ et $\omega_2$ vérifient :
+        $$ \Delta \omega = \omega_2 - \omega_1 = \frac{R}{L} = \frac{\omega_0}{Q} $$
+    </div>
+     <div class="important">
+        Le <strong>facteur de qualité $Q$</strong> régit la sélectivité de la résonance :
+        $$ Q = \frac{\omega_0}{\Delta \omega} = \frac{L\omega_0}{R} = \frac{1}{RC\omega_0} = \frac{1}{R}\sqrt{\frac{L}{C}} $$
+        <ul>
+            <li>Un $Q$ <strong>élevé</strong> signifie une bande passante $\Delta \omega$ <strong>étroite</strong> et une résonance <strong>aiguë</strong> (forte sélectivité).</li>
+            <li>Un $Q$ <strong>faible</strong> signifie une bande passante $\Delta \omega$ <strong>large</strong> et une résonance <strong>floue</strong> (faible sélectivité).</li>
+        </ul>
+    </div>
+
+    <h3>4.4 Résonance en Tension (Surtension)</h3>
+    <p>Toujours dans le RLC série, étudions l'amplitude de la tension aux bornes du condensateur, $U_{C,m} = |\underline{Z}_C| I_m = \frac{1}{C\omega} I_m$, ou de la bobine, $U_{L,m} = |\underline{Z}_L| I_m = L\omega I_m$.</p>
+    <p>À la résonance ($\omega = \omega_0$) :</p>
+    $$ U_{C,m}(\omega_0) = \frac{1}{C\omega_0} I_{m, max} = \frac{1}{C\omega_0} \frac{E_m}{R} = \frac{\sqrt{LC}}{C R} E_m = \frac{1}{R}\sqrt{\frac{L}{C}} E_m = Q E_m $$
+    $$ U_{L,m}(\omega_0) = L\omega_0 I_{m, max} = L\omega_0 \frac{E_m}{R} = \frac{L}{R\sqrt{LC}} E_m = \frac{1}{R}\sqrt{\frac{L}{C}} E_m = Q E_m $$
+    <div class="warning">
+        À la résonance, les amplitudes des tensions aux bornes de la bobine et du condensateur sont égales et valent <strong>$Q$ fois l'amplitude de la tension d'entrée</strong> $E_m$.
+        $$ U_{C,m}(\omega_0) = U_{L,m}(\omega_0) = Q E_m $$
+        Si le facteur de qualité $Q$ est élevé ($Q \gg 1$), ces tensions peuvent être beaucoup plus grandes que la tension d'alimentation. C'est le phénomène de <strong>surtension</strong> à la résonance, qui peut être dangereux pour les composants. (Note : $u_L(t)$ et $u_C(t)$ sont en opposition de phase à la résonance, leur somme est $u_R(t)=e(t)$).
+        <br>
+        La résonance en tension (maximum de $U_{C,m}(\omega)$ ou $U_{L,m}(\omega)$) ne se produit pas exactement à $\omega_0$ mais à des pulsations légèrement différentes (sauf si $Q$ est très grand), mais le phénomène de surtension est maximal à $\omega_0$.
+    </div>
+
+    <h3>4.5 Cas du Circuit RLC Parallèle ("Bouchon")</h3>
+    <p>Considérons un circuit R, L, C en parallèle, alimenté par une source de courant $i_e(t) = I_{e,m} \cos(\omega t)$. La tension $u(t)$ aux bornes du groupement est sinusoïdale $u(t) = U_m \cos(\omega t + \phi)$.</p>
+    <p>Il est plus simple d'utiliser les admittances : $\underline{Y}_{eq} = \underline{Y}_R + \underline{Y}_L + \underline{Y}_C = \frac{1}{R} + \frac{1}{jL\omega} + jC\omega = \frac{1}{R} + j\left(C\omega - \frac{1}{L\omega}\right)$.
+    La tension complexe est $\underline{U} = \underline{I}_e / \underline{Y}_{eq}$.</p>
+    <p>L'amplitude de la tension $U_m = I_{e,m} / |\underline{Y}_{eq}|$ est maximale lorsque $|\underline{Y}_{eq}|$ est minimale.
+    $|\underline{Y}_{eq}| = \sqrt{\frac{1}{R^2} + \left(C\omega - \frac{1}{L\omega}\right)^2}$.
+    Le minimum est atteint lorsque le terme réactif s'annule :</p>
+    $$ C\omega - \frac{1}{L\omega} = 0 \quad \implies \quad \omega_{res} = \frac{1}{\sqrt{LC}} = \omega_0 $$
+    <p>À la résonance ($\omega=\omega_0$) :</p>
+    <ul>
+        <li>L'admittance est minimale et vaut $\underline{Y}(\omega_0) = 1/R$.</li>
+        <li>L'impédance équivalente est maximale et vaut $\underline{Z}(\omega_0) = R$.</li>
+        <li>L'amplitude de la tension est maximale : $U_{m, max} = I_{e,m} R$.</li>
+        <li>La tension est en phase avec le courant d'entrée $i_e(t)$.</li>
+        <li>Les courants dans L et C peuvent être $Q$ fois plus grands que $I_{e,m}$ (avec $Q = R\sqrt{C/L}$ pour ce circuit).</li>
+    </ul>
+    <p>On parle de <strong>résonance en tension</strong> (ou d'antirésonance pour le courant total si alimenté par une source de tension). Le circuit se comporte comme une forte impédance à la résonance, d'où son nom de "circuit bouchon".</p>
+
+    <hr>
+    <p><em>La compréhension des phénomènes de résonance et de filtrage est essentielle en électronique et dans de nombreux domaines de la physique (mécanique, acoustique...). L'outil des impédances complexes et l'analyse fréquentielle via la fonction de transfert et les diagrammes de Bode permettent de caractériser quantitativement ces comportements cruciaux. Le facteur de qualité Q apparaît comme le paramètre clé reliant l'acuité de la résonance à la sélectivité du filtrage.</em></p>
+
+</body>
+</html>
