@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions - Calcul Matriciel</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"  crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3; /* Bleu foncé */
+        }
+        .qa-block {
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            overflow: hidden; /* Pour que le border-radius fonctionne bien avec les enfants */
+        }
+        .question {
+            background-color: #f0f0f0; /* Gris clair */
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            border-bottom: 1px solid #ccc; /* Séparation visuelle avant que la réponse n'apparaisse */
+        }
+        .qa-block.open .question {
+             border-bottom: 1px solid #ccc; /* Garde la séparation quand ouvert */
+        }
+        .answer {
+            background-color: #e9f5ff; /* Bleu très clair */
+            padding: 10px 15px;
+            display: none; /* Caché par défaut */
+            border-top: 1px dashed #ccc; /* Légère séparation visuelle */
+        }
+        .qa-block.open .answer {
+            display: block; /* Affiché quand la classe 'open' est ajoutée */
+        }
+        code { /* Style pour le code inline si besoin, mais KaTeX s'en charge pour les maths */
+            background-color: #eee;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+        }
+        .definition, .theorem, .proposition, .remark, .corollary, .example, .proof, .algorithm, .method, .formula {
+            border-left: 3px solid #0056b3;
+            padding-left: 10px;
+            margin: 10px 0;
+            font-size: 0.95em; /* Légèrement plus petit pour les réponses */
+        }
+        .proof-title {
+            font-style: italic;
+            color: #555;
+        }
+        /* Styles spécifiques pour KaTeX si nécessaire */
+        .katex-display {
+            margin: 0.5em 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Questions : Calcul Matriciel</h1>
+
+<p>Cliquez sur une question pour afficher la réponse.</p>
+
+<div class="qa-block">
+    <div class="question">1. Qu'est-ce qu'une matrice $A$ de taille $n \times p$ ? Comment note-t-on son coefficient générique ?</div>
+    <div class="answer">
+        <div class="definition">
+            Une <strong>matrice</strong> à $n$ lignes et $p$ colonnes à coefficients dans $K$ est un tableau rectangulaire de nombres de $K$.
+            On note $A = (a_{i,j})_{\substack{1 \le i \le n \\ 1 \le j \le p}}$. Le nombre $a_{i,j} \in K$ est le coefficient situé à la $i$-ème ligne et à la $j$-ème colonne.
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">2. Que signifient les notations $\mathcal{M}_{n,p}(K)$ et $\mathcal{M}_n(K)$ ?</div>
+    <div class="answer">
+        <div class="definition">
+            <ul>
+                <li>$\mathcal{M}_{n,p}(K)$ est l'ensemble des matrices à $n$ lignes et $p$ colonnes à coefficients dans $K$.</li>
+                <li>$\mathcal{M}_n(K)$ est l'ensemble des matrices <strong>carrées</strong> d'ordre $n$ (i.e., $n$ lignes et $n$ colonnes) à coefficients dans $K$.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">3. Définir la matrice nulle $0_{n,p}$ et la matrice identité $I_n$.</div>
+    <div class="answer">
+        <div class="definition">
+            <ul>
+                <li>La <strong>matrice nulle</strong> $0_{n,p}$ (ou $0$) est la matrice de $\mathcal{M}_{n,p}(K)$ dont tous les coefficients sont nuls.</li>
+                <li>La <strong>matrice identité</strong> $I_n$ est la matrice carrée de $\mathcal{M}_n(K)$ dont les coefficients $(I_n)_{i,j}$ sont donnés par le symbole de Kronecker $\delta_{i,j}$ (1 si $i=j$, 0 sinon). Les coefficients diagonaux valent 1, les autres 0.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">4. Qu'est-ce que la matrice élémentaire $E_{i,j}$ de $\mathcal{M}_{n,p}(K)$ ? Quelle propriété possède la famille de toutes ces matrices ?</div>
+    <div class="answer">
+        <div class="definition">
+            La matrice élémentaire $E_{i,j}$ est la matrice de $\mathcal{M}_{n,p}(K)$ dont tous les coefficients sont nuls, sauf celui à la ligne $i$ et colonne $j$ qui vaut 1.
+            <br>Propriété : La famille $(E_{i,j})_{\substack{1 \le i \le n \\ 1 \le j \le p}}$ forme une <strong>base</strong> de l'espace vectoriel $\mathcal{M}_{n,p}(K)$. Sa dimension est $np$.
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">5. Comment sont définies l'addition de deux matrices $A, B \in \mathcal{M}_{n,p}(K)$ et la multiplication d'une matrice $A$ par un scalaire $\lambda$ ? Quelle structure possède $\mathcal{M}_{n,p}(K)$ avec ces opérations ?</div>
+    <div class="answer">
+        <div class="definition">
+            Soient $A = (a_{i,j})$ et $B = (b_{i,j})$ dans $\mathcal{M}_{n,p}(K)$, $\lambda \in K$.
+            <ul>
+                <li><strong>Somme :</strong> $A+B = (a_{i,j} + b_{i,j})$.</li>
+                <li><strong>Multiplication par un scalaire :</strong> $\lambda A = (\lambda a_{i,j})$.</li>
+            </ul>
+        </div>
+        <p>Muni de ces opérations, $(\mathcal{M}_{n,p}(K), +, \cdot)$ est un <strong>$K$-espace vectoriel</strong> de dimension $np$.</p>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">6. Définir la transposée $A^T$ d'une matrice $A \in \mathcal{M}_{n,p}(K)$. Quelle est sa taille ?</div>
+    <div class="answer">
+        <div class="definition">
+            La <strong>transposée</strong> de $A = (a_{i,j}) \in \mathcal{M}_{n,p}(K)$ est la matrice $A^T = (b_{k,l}) \in \mathcal{M}_{p,n}(K)$ définie par $b_{k,l} = a_{l,k}$.
+            <br>Les lignes de $A^T$ sont les colonnes de $A$ et vice-versa. Sa taille est $p \times n$.
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">7. Donner les propriétés de la transposition par rapport à l'addition, la multiplication par un scalaire, la double transposition et le produit matriciel.</div>
+    <div class="answer">
+        <div class="proposition">
+            Soient $A, B$ des matrices de tailles compatibles et $\lambda \in K$.
+            <ul>
+                <li>$(A^T)^T = A$.</li>
+                <li>$(A+B)^T = A^T + B^T$.</li>
+                <li>$(\lambda A)^T = \lambda A^T$.</li>
+                <li>$(AB)^T = B^T A^T$ (inversion de l'ordre).</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">8. Quand une matrice carrée $A$ est-elle dite symétrique ? Antisymétrique ? Comment toute matrice carrée $A$ se décompose-t-elle en une somme d'une matrice symétrique et d'une antisymétrique (si car(K) $\neq 2$) ?</div>
+    <div class="answer">
+        <div class="definition">
+            Une matrice <strong>carrée</strong> $A \in \mathcal{M}_n(K)$ est dite :
+            <ul>
+                <li><strong>symétrique</strong> si $A^T = A$.</li>
+                <li><strong>antisymétrique</strong> si $A^T = -A$.</li>
+            </ul>
+        </div>
+        <p>Décomposition : $A = S + N$ avec
+        $S = \frac{A+A^T}{2}$ (partie symétrique) et
+        $N = \frac{A-A^T}{2}$ (partie antisymétrique).
+        <br>L'espace des matrices carrées est la somme directe des sous-espaces des matrices symétriques et antisymétriques : $\mathcal{M}_n(K) = \mathcal{S}_n(K) \oplus \mathcal{A}_n(K)$.</p>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">9. Comment calcule-t-on le coefficient $c_{i,j}$ du produit $C=AB$ de deux matrices $A \in \mathcal{M}_{m,n}(K)$ et $B \in \mathcal{M}_{n,p}(K)$ ? Quelle est la taille de la matrice $C$ ?</div>
+    <div class="answer">
+        <div class="definition">
+            Le produit $C=AB$ est une matrice de taille $m \times p$. Son coefficient $c_{i,j}$ (ligne $i$, colonne $j$) est donné par :
+            $$ c_{i,j} = \sum_{k=1}^{n} a_{i,k} b_{k,j} $$
+            C'est le produit scalaire de la $i$-ème ligne de $A$ par la $j$-ème colonne de $B$. Le produit n'est défini que si le nombre de colonnes de $A$ (ici $n$) est égal au nombre de lignes de $B$ (ici $n$).
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">10. Citer les propriétés principales du produit matriciel (associativité, distributivité, commutativité ?, élément neutre).</div>
+    <div class="answer">
+        <div class="remark">
+            <ul>
+                <li><strong>Associatif :</strong> $(AB)C = A(BC)$.</li>
+                <li><strong>Distributif / Addition :</strong> $A(B+C) = AB + AC$ et $(A+B)C = AC + BC$.</li>
+                <li><strong>Non commutatif :</strong> En général, $AB \neq BA$, même si les deux produits sont définis.</li>
+                <li><strong>Élément neutre :</strong> La matrice identité $I_n$ vérifie $AI_n = I_n A = A$ pour $A \in \mathcal{M}_n(K)$.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">11. Calculer le produit $E_{i,j} E_{k,l}$ de deux matrices élémentaires (en précisant les tailles compatibles).</div>
+    <div class="answer">
+        <div class="proposition">
+            Soit $E_{i,j} \in \mathcal{M}_{m,n}(K)$ et $E_{k,l} \in \mathcal{M}_{n,p}(K)$. Le produit est bien défini.
+            $$ E_{i,j} E_{k,l} = \delta_{j,k} E_{i,l} $$
+            où $\delta_{j,k}$ est le symbole de Kronecker. Le produit est la matrice nulle si l'indice de colonne de la première ($j$) est différent de l'indice de ligne de la seconde ($k$). Sinon ($j=k$), le résultat est $E_{i,l} \in \mathcal{M}_{m,p}(K)$.
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">12. Qu'est-ce qu'une matrice diagonale ? Triangulaire supérieure ? Triangulaire inférieure ? Que peut-on dire du produit de deux matrices de même type ?</div>
+    <div class="answer">
+        <div class="definition">
+            Soit $A=(a_{i,j}) \in \mathcal{M}_n(K)$.
+            <ul>
+                <li><strong>Diagonale :</strong> $a_{i,j}=0$ pour tout $i \neq j$.</li>
+                <li><strong>Triangulaire supérieure :</strong> $a_{i,j}=0$ pour tout $i > j$.</li>
+                <li><strong>Triangulaire inférieure :</strong> $a_{i,j}=0$ pour tout $i < j$.</li>
+            </ul>
+        </div>
+        <div class="proposition">
+            L'ensemble des matrices diagonales, l'ensemble des matrices triangulaires supérieures, et l'ensemble des matrices triangulaires inférieures sont stables par produit matriciel.
+            <br>(Ex: Le produit de deux matrices triangulaires supérieures est triangulaire supérieure).
+            <br>De plus, les éléments diagonaux du produit sont les produits des éléments diagonaux correspondants.
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">13. Sous quelle condition la formule du binôme de Newton $(A+B)^p = \sum \binom{p}{k} A^k B^{p-k}$ est-elle valable pour des matrices carrées $A, B$ ?</div>
+    <div class="answer">
+        <div class="formula">
+            La formule du binôme de Newton pour les matrices $A, B \in \mathcal{M}_n(K)$ est valable si et seulement si $A$ et $B$ <strong>commutent</strong>, c'est-à-dire si $AB = BA$.
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">14. Quand dit-on qu'une matrice carrée $M \in \mathcal{M}_n(K)$ est inversible ? Comment note-t-on son inverse ? Quelle est la structure de l'ensemble des matrices inversibles $GL_n(K)$ ?</div>
+    <div class="answer">
+        <div class="definition">
+            Une matrice carrée $M \in \mathcal{M}_n(K)$ est dite <strong>inversible</strong> s'il existe une matrice $M' \in \mathcal{M}_n(K)$ telle que $MM' = M'M = I_n$.
+            <br>Si elle existe, cette matrice $M'$ est unique, est appelée l'<strong>inverse</strong> de $M$ et est notée $M^{-1}$.
+            <br>L'ensemble des matrices inversibles $GL_n(K)$ muni du produit matriciel est un <strong>groupe</strong> (le groupe linéaire d'ordre $n$).
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">15. Exprimer $(AB)^{-1}$ et $(A^T)^{-1}$ en fonction de $A^{-1}$ et $B^{-1}$ (si $A, B \in GL_n(K)$).</div>
+    <div class="answer">
+        <div class="proposition">
+            Soient $A, B \in GL_n(K)$.
+            <ul>
+                <li>$(AB)^{-1} = B^{-1} A^{-1}$ (inversion de l'ordre).</li>
+                <li>$(A^T)^{-1} = (A^{-1})^T$.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">16. À quelle condition une matrice triangulaire est-elle inversible ? Que peut-on dire de son inverse dans ce cas ?</div>
+    <div class="answer">
+        <div class="proposition">
+            Une matrice triangulaire $A \in \mathcal{M}_n(K)$ est inversible si et seulement si <strong>tous ses coefficients diagonaux sont non nuls</strong>.
+            <br>Dans ce cas, son inverse $A^{-1}$ est aussi une matrice triangulaire de même type (supérieure ou inférieure) et ses coefficients diagonaux sont les inverses $(a_{ii})^{-1}$ des coefficients diagonaux de $A$.
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">17. Quelles sont les trois types d'opérations élémentaires sur les lignes (OEL) ? Comment s'interprètent-elles en termes de produit matriciel ?</div>
+    <div class="answer">
+        <div class="definition">
+            Les OEL sont :
+            <ol>
+                <li>Échange de lignes $L_i \leftrightarrow L_j$.</li>
+                <li>Multiplication d'une ligne par un scalaire non nul $L_i \leftarrow \lambda L_i$ ($\lambda \neq 0$).</li>
+                <li>Ajout d'un multiple d'une ligne à une autre $L_i \leftarrow L_i + \lambda L_j$ ($i \neq j$).</li>
+            </ol>
+        </div>
+        <div class="proposition">
+            Effectuer une OEL sur une matrice $A$ revient à multiplier $A$ <strong>à gauche</strong> par une matrice inversible $E$ (matrice d'opération élémentaire).
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">18. Décrire l'algorithme de Gauss-Jordan pour calculer l'inverse d'une matrice carrée $A$ (si elle est inversible).</div>
+    <div class="answer">
+        <div class="method">
+            <strong>Algorithme de Gauss-Jordan :</strong>
+            <ol>
+                <li>Former la matrice augmentée $(A | I_n)$.</li>
+                <li>Appliquer des opérations élémentaires sur les lignes (OEL) à cette matrice augmentée jusqu'à transformer la partie gauche $A$ en la matrice identité $I_n$.</li>
+                <li>Si on y parvient, la matrice $A$ est inversible, et la matrice qui se trouve alors dans la partie droite est $A^{-1}$. On obtient $(I_n | A^{-1})$.</li>
+                <li>Si on aboutit à une ligne nulle dans la partie gauche durant le processus, $A$ n'est pas inversible.</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">19. Comment un système linéaire de $n$ équations à $p$ inconnues peut-il s'écrire sous forme matricielle ?</div>
+    <div class="answer">
+        <div class="definition">
+            Le système linéaire $(S) \quad \begin{cases} a_{1,1}x_1 + \dots + a_{1,p}x_p = b_1 \\ \vdots \\ a_{n,1}x_1 + \dots + a_{n,p}x_p = b_n \end{cases}$
+            s'écrit matriciellement :
+            $$ AX = B $$
+            où $A=(a_{i,j}) \in \mathcal{M}_{n,p}(K)$ est la matrice du système, $X = (x_j) \in \mathcal{M}_{p,1}(K)$ est la colonne des inconnues, et $B=(b_i) \in \mathcal{M}_{n,1}(K)$ est la colonne du second membre.
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">20. À quelle condition le système linéaire $AX=B$ est-il compatible (en termes des colonnes $C_1, \dots, C_p$ de $A$) ?</div>
+    <div class="answer">
+        <div class="proposition">
+            Le système $AX=B$ est compatible (admet au moins une solution) si et seulement si le vecteur colonne $B$ est une combinaison linéaire des colonnes $C_1, \dots, C_p$ de $A$.
+            $$ AX=B \text{ compatible} \iff B \in \text{Vect}(C_1, \dots, C_p) $$
+            (Autrement dit, $B$ appartient à l'espace vectoriel engendré par les colonnes de $A$).
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">21. Quelle est la structure de l'ensemble des solutions $\mathcal{S}$ d'un système linéaire compatible $AX=B$ ?</div>
+    <div class="answer">
+        <div class="proposition">
+            Si $X_0$ est une solution particulière ($AX_0=B$) et $\mathcal{S}_H = \{ Y \mid AY = 0 \}$ est l'espace vectoriel des solutions du système homogène associé, alors l'ensemble des solutions est un sous-espace affine :
+            $$ \mathcal{S} = X_0 + \mathcal{S}_H = \{ X_0 + Y \mid Y \in \mathcal{S}_H \} $$
+        </div>
+    </div>
+</div>
+
+<div class="qa-block">
+    <div class="question">22. Si $A \in \mathcal{M}_n(K)$ est une matrice carrée inversible, quelle est l'unique solution du système $AX=B$ ?</div>
+    <div class="answer">
+        <div class="proposition">
+            Si $A \in GL_n(K)$, le système $AX=B$ admet une <strong>unique solution</strong> pour tout $B$, donnée par :
+            $$ X = A^{-1} B $$
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Script pour la fonctionnalité de clic
+    document.querySelectorAll('.qa-block').forEach(block => {
+        const question = block.querySelector('.question');
+        question.addEventListener('click', () => {
+            block.classList.toggle('open');
+        });
+    });
+
+    // Script pour le rendu KaTeX
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            // customised options
+            // • auto-render specific keys, e.g.:
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            // • rendering keys, e.g.:
+            throwOnError : false
+        });
+    });
+</script>
+
+</body>
+</html>
