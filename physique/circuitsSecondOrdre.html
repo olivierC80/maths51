@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Circuits du Premier Ordre - Maths Sup</title>
+    
+    <!-- Intégration de KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"  crossorigin="anonymous"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ]
+        });"></script>
+
+    <style>
+        body { 
+            font-family: sans-serif; 
+            line-height: 1.6; 
+            margin: 20px; 
+            background-color: #fefefe; /* Very light background */
+            color: #333;
+        }
+        h1, h2, h3 { 
+            color: #d63384; /* Pink */
+            border-bottom: 1px solid #f1a0cb; /* Lighter pink border */
+            padding-bottom: 5px;
+        }
+        h1 { font-size: 2.2em; text-align: center; margin-bottom: 30px;}
+        h2 { font-size: 1.8em; margin-top: 35px; }
+        h3 { font-size: 1.4em; margin-top: 25px; }
+        .katex-display { 
+            display: block; 
+            margin: 1em 0; 
+            overflow-x: auto; 
+            background-color: #fcecf4; /* Very light pink for display math */
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #f1a0cb;
+        }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-left: 13px; margin-bottom: 1em; }
+        strong { color: #0d6efd; /* Blue for emphasis */ }
+        code { 
+            background-color: #e9ecef; 
+            padding: 2px 5px; 
+            border-radius: 3px; 
+            font-family: monospace;
+        }
+        .theorem {
+            border-left: 5px solid #198754; /* Green */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #d1e7dd;
+            border-radius: 5px;
+        }
+        .definition {
+            border-left: 5px solid #6f42c1; /* Indigo */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #e0cffc;
+            border-radius: 5px;
+        }
+        .important {
+            border: 2px solid #fd7e14; /* Orange */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #fff3cd; 
+            border-radius: 5px;
+        }
+         .warning {
+            border-left: 5px solid #dc3545; /* Red */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f8d7da;
+            border-radius: 5px;
+        }
+        .method {
+            border: 1px solid #0dcaf0; /* Cyan */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #cff4fc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Circuits Électriques Linéaires du Premier Ordre</h1>
+
+    <p>Ce cours se concentre sur l'analyse des circuits électriques linéaires contenant un seul élément de stockage d'énergie (soit un condensateur, soit une bobine) ou pouvant être réduits à un tel cas. Leur comportement dynamique est décrit par une <strong>équation différentielle linéaire du premier ordre</strong> à coefficients constants.</p>
+    <p>Nous travaillons dans le cadre de l'<strong>ARQS</strong>.</p>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 1 : Définition et Équation Caractéristique</h2>
+    <!-- ============================================== -->
+
+    <h3>1.1 Qu'est-ce qu'un Circuit du Premier Ordre ?</h3>
+    <div class="definition">
+        Un <strong>circuit du premier ordre</strong> est un circuit électrique linéaire dont l'état (par exemple une tension ou un courant) est régi par une équation différentielle linéaire du premier ordre à coefficients constants de la forme :
+        $$ a_1 \frac{dy(t)}{dt} + a_0 y(t) = f(t) $$
+        où $y(t)$ est la grandeur étudiée (souvent $u_C(t)$ ou $i_L(t)$), $a_1$ et $a_0$ sont des constantes dépendant des composants du circuit, et $f(t)$ représente l'excitation due aux sources indépendantes.
+        <br><br>
+        Physiquement, cela correspond aux circuits contenant :
+        <ul>
+            <li>Des sources (tension, courant).</li>
+            <li>Des résistances $R$.</li>
+            <li>Soit <strong>un seul condensateur $C$</strong> (ou plusieurs pouvant se réduire à un équivalent).</li>
+            <li>Soit <strong>une seule bobine $L$</strong> (ou plusieurs pouvant se réduire à une équivalente).</li>
+        </ul>
+        Les circuits <strong>RC</strong> et <strong>RL</strong> sont les archétypes des circuits du premier ordre.
+    </div>
+
+    <h3>1.2 Mise en Forme Canonique et Constante de Temps</h3>
+    <p>Il est très utile de réécrire l'équation différentielle sous forme <strong>canonique</strong> :</p>
+    $$ \tau \frac{dy(t)}{dt} + y(t) = K(t) $$
+    où :
+    <ul>
+        <li>$\tau = a_1 / a_0$ est la <strong>constante de temps</strong> du circuit (unité : seconde, s). Elle caractérise la "rapidité" de l'évolution du circuit lors d'un régime transitoire.</li>
+        <li>$K(t) = f(t) / a_0$ est le terme source, ayant la même dimension que $y(t)$. Si les sources sont constantes (échelon), $K$ est constant et représente souvent la <strong>valeur finale</strong> ($y(\infty)$) de la grandeur $y$ en régime permanent.</li>
+    </ul>
+    
+    <div class="important">
+        Identifier la constante de temps $\tau$ est crucial :
+        <ul>
+            <li>Pour un circuit RC (vu d'une source ou entre deux points), $\tau$ est souvent le produit de la capacité $C$ par la <strong>résistance équivalente $R_{th}$ vue par le condensateur</strong> (sources indépendantes éteintes). $\tau = R_{th} C$.</li>
+            <li>Pour un circuit RL, $\tau$ est souvent le rapport de l'inductance $L$ sur la <strong>résistance équivalente $R_{th}$ vue par la bobine</strong> (sources indépendantes éteintes). $\tau = L / R_{th}$.</li>
+        </ul>
+    </div>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 2 : Réponse à un Échelon (Régime Transitoire)</h2>
+    <!-- ============================================== -->
+    <p>On étudie la réponse du circuit lorsqu'il est soumis à un changement brusque des sources, typiquement la fermeture ou l'ouverture d'un interrupteur connectant une source constante. On s'intéresse à l'évolution de la grandeur $y(t)$ d'un état initial $y(0)$ vers un état final $y(\infty)$ (régime permanent).</p>
+
+    <h3>2.1 Résolution de l'Équation Différentielle</h3>
+    <p>Considérons l'équation $\tau \frac{dy(t)}{dt} + y(t) = K$, où $K$ est une constante (cas d'un échelon de source).
+    La solution générale de cette équation est la somme de la solution générale de l'équation homogène ($y_h$) et d'une solution particulière ($y_p$) : $y(t) = y_h(t) + y_p(t)$.</p>
+    <ul>
+        <li><strong>Solution particulière (Régime permanent) :</strong> On cherche une solution constante $y_p = A$. L'équation devient $\tau \cdot 0 + A = K$, donc $y_p = K$. C'est la valeur asymptotique $y(\infty)$.</li>
+        <li><strong>Solution de l'équation homogène associée ($\tau y_h' + y_h = 0$) :</strong> C'est une équation à variables séparables $\frac{dy_h}{y_h} = -\frac{dt}{\tau}$. En intégrant, $\ln|y_h| = -t/\tau + Cte$, soit $y_h(t) = A e^{-t/\tau}$, où $A$ est une constante d'intégration.</li>
+    </ul>
+    <p>La solution générale est donc de la forme :</p>
+    $$ y(t) = A e^{-t/\tau} + K = A e^{-t/\tau} + y(\infty) $$
+    La constante $A$ est déterminée par la <strong>condition initiale</strong> $y(t=0^+)$ (valeur juste après la commutation).
+    $y(0^+) = A e^0 + y(\infty) = A + y(\infty)$. Donc $A = y(0^+) - y(\infty)$.
+    
+    <div class="theorem">
+        <strong>Solution générale pour la réponse à un échelon ($K=y(\infty)$ = constante) :</strong>
+        La solution de $\tau \frac{dy(t)}{dt} + y(t) = K$ avec la condition initiale $y(0^+)$ est :
+        $$ y(t) = \left( y(0^+) - y(\infty) \right) e^{-t/\tau} + y(\infty) $$
+        Cette formule est très générale et puissante pour analyser les régimes transitoires du premier ordre.
+    </div>
+
+    <h3>2.2 Importance des Conditions Initiales et Continuité</h3>
+    <p>Pour utiliser la formule précédente, il faut connaître $y(0^+)$, la valeur de la grandeur juste après la commutation (à $t=0^+$).</p>
+    <div class="warning">
+        <strong>Règles de continuité (pour des commutations idéales et sources finies) :</strong>
+        <ul>
+            <li>La <strong>tension aux bornes d'un condensateur</strong> ne peut pas subir de discontinuité : $u_C(0^+) = u_C(0^-)$. (Une discontinuité impliquerait $du_C/dt \to \infty$, donc $i_C \to \infty$, ce qui n'est pas physique avec des sources finies).</li>
+            <li>Le <strong>courant traversant une bobine</strong> ne peut pas subir de discontinuité : $i_L(0^+) = i_L(0^-)$. (Une discontinuité impliquerait $di_L/dt \to \infty$, donc $u_L \to \infty$, ce qui n'est pas physique).</li>
+        </ul>
+        Les valeurs $u_C(0^-)$ et $i_L(0^-)$ sont déterminées par l'état du circuit en régime permanent <strong>avant</strong> la commutation ($t=0^-$).
+    </div>
+
+    <h3>2.3 Méthode Générale d'Analyse d'un Régime Transitoire</h3>
+    <div class="method">
+        Pour déterminer l'évolution $y(t)$ après une commutation à $t=0$ :
+        <ol>
+            <li><strong>Analyse pour $t<0$ (avant commutation) :</strong> Déterminer l'état du régime permanent initial. En particulier, trouver $u_C(0^-)$ si $y=u_C$ ou $i_L(0^-)$ si $y=i_L$ (ou d'autres grandeurs si nécessaire).
+                <ul>
+                    <li>En régime continu permanent, un condensateur est un circuit ouvert ($i_C=0$).</li>
+                    <li>En régime continu permanent, une bobine est un court-circuit ($u_L=0$).</li>
+                </ul>
+            </li>
+            <li><strong>Conditions initiales à $t=0^+$ :</strong> Utiliser les règles de continuité : $u_C(0^+) = u_C(0^-)$ et $i_L(0^+) = i_L(0^-)$. Déterminer la valeur $y(0^+)$ de la grandeur étudiée.</li>
+            <li><strong>Analyse pour $t \to \infty$ (régime permanent final) :</strong> Déterminer la valeur asymptotique $y(\infty)$ en considérant le circuit dans son état final (souvent un régime continu).</li>
+            <li><strong>Déterminer la constante de temps $\tau$ :</strong> Calculer la résistance équivalente $R_{th}$ vue par l'élément de stockage (C ou L) lorsque les sources indépendantes sont éteintes. $\tau = R_{th}C$ ou $\tau = L/R_{th}$.</li>
+            <li><strong>Écrire la solution :</strong> Appliquer la formule générale :
+            $$ y(t) = \left( y(0^+) - y(\infty) \right) e^{-t/\tau} + y(\infty) $$
+            </li>
+            <li><strong>Vérification (facultatif mais recommandé) :</strong> Établir l'équation différentielle régissant $y(t)$ pour $t>0$ et vérifier que la solution trouvée la satisfait, ainsi que la condition initiale.</li>
+        </ol>
+    </div>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 3 : Exemple du Circuit RC Série</h2>
+    <!-- ============================================== -->
+
+    <h3>3.1 Charge du Condensateur</h3>
+    <p>Circuit : Source $E$, interrupteur $K$, résistance $R$, condensateur $C$ en série. $K$ fermé à $t=0$. Condensateur initialement déchargé. On cherche $u_C(t)$.</p>
+    <ol>
+        <li><strong>$t<0$ :</strong> $K$ ouvert. $i=0$, $u_C(0^-)=0$.</li>
+        <li><strong>$t=0^+$ :</strong> Continuité de $u_C \implies u_C(0^+) = u_C(0^-) = 0$.</li>
+        <li><strong>$t \to \infty$ :</strong> Régime continu. $i_C(\infty) = 0$. Le condensateur est un circuit ouvert. KVL: $E = u_R(\infty) + u_C(\infty) = R \cdot 0 + u_C(\infty) \implies u_C(\infty) = E$.</li>
+        <li><strong>Constante de temps $\tau$ :</strong> On éteint la source $E$ (elle devient un fil). Le condensateur "voit" la résistance $R$. Donc $R_{th}=R$. $\tau = RC$.</li>
+        <li><strong>Solution :</strong> $y(t)=u_C(t)$, $y(0^+)=0$, $y(\infty)=E$, $\tau=RC$.
+        $$ u_C(t) = (0 - E) e^{-t/RC} + E = E (1 - e^{-t/RC}) $$</li>
+    </ol>
+    <p>Le courant est $i(t) = C \frac{du_C}{dt} = C \frac{E}{RC} e^{-t/RC} = \frac{E}{R} e^{-t/RC}$. Notez que $i(0^+) = E/R$ (le condensateur déchargé se comporte initialement comme un court-circuit pour la tension) et $i(\infty)=0$. Le courant $i(t)$ est discontinu à $t=0$.</p>
+
+    <div style="text-align:center; margin: 20px 0;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Rc_charge_curve.svg/400px-Rc_charge_curve.svg.png" alt="Courbes de charge RC" >
+        <br><em>Charge d'un condensateur : $u_C(t)$ (bleu) et $i(t)$ (rouge, normalisé).</em>
+    </div>
+
+    <h3>3.2 Décharge du Condensateur</h3>
+    <p>Circuit : Condensateur $C$ chargé à $U_0$, interrupteur $K$, résistance $R$. $K$ fermé à $t=0$, connectant $C$ à $R$. On cherche $u_C(t)$.</p>
+     <ol>
+        <li><strong>$t<0$ :</strong> $K$ ouvert. $u_C(0^-)=U_0$.</li>
+        <li><strong>$t=0^+$ :</strong> $u_C(0^+) = u_C(0^-) = U_0$.</li>
+        <li><strong>$t \to \infty$ :</strong> Le condensateur se décharge complètement dans $R$. $u_C(\infty) = 0$.</li>
+        <li><strong>Constante de temps $\tau$ :</strong> Le condensateur "voit" $R$. $\tau = RC$.</li>
+        <li><strong>Solution :</strong> $y(t)=u_C(t)$, $y(0^+)=U_0$, $y(\infty)=0$, $\tau=RC$.
+        $$ u_C(t) = (U_0 - 0) e^{-t/RC} + 0 = U_0 e^{-t/RC} $$</li>
+    </ol>
+    <p>Le courant est $i(t) = C \frac{du_C}{dt} = C (-\frac{U_0}{RC}) e^{-t/RC} = -\frac{U_0}{R} e^{-t/RC}$. Le signe moins indique que le courant sort de la borne positive de $u_C$ (convention générateur pour C). L'amplitude $|i(t)|$ décroît exponentiellement.</p>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 4 : Exemple du Circuit RL Série</h2>
+    <!-- ============================================== -->
+
+    <h3>4.1 Établissement du Courant</h3>
+    <p>Circuit : Source $E$, interrupteur $K$, résistance $R$, bobine $L$ en série. $K$ fermé à $t=0$. Courant initialement nul. On cherche $i(t)$.</p>
+    <ol>
+        <li><strong>$t<0$ :</strong> $K$ ouvert. $i(0^-)=0$.</li>
+        <li><strong>$t=0^+$ :</strong> Continuité de $i_L \implies i(0^+) = i_L(0^+) = i_L(0^-) = 0$.</li>
+        <li><strong>$t \to \infty$ :</strong> Régime continu. $u_L(\infty) = 0$. La bobine est un court-circuit. KVL: $E = u_R(\infty) + u_L(\infty) = R i(\infty) + 0 \implies i(\infty) = E/R$.</li>
+        <li><strong>Constante de temps $\tau$ :</strong> On éteint $E$ (devient un fil). La bobine "voit" $R$. $R_{th}=R$. $\tau = L/R$.</li>
+        <li><strong>Solution :</strong> $y(t)=i(t)$, $y(0^+)=0$, $y(\infty)=E/R$, $\tau=L/R$.
+        $$ i(t) = \left( 0 - \frac{E}{R} \right) e^{-t/(L/R)} + \frac{E}{R} = \frac{E}{R} (1 - e^{-Rt/L}) $$</li>
+    </ol>
+    <p>La tension aux bornes de la bobine est $u_L(t) = L \frac{di}{dt} = L \frac{E/R}{L/R} e^{-Rt/L} = E e^{-Rt/L}$. Notez que $u_L(0^+) = E$ (la bobine s'oppose à la variation du courant, toute la tension de la source est à ses bornes initialement) et $u_L(\infty)=0$. La tension $u_L(t)$ est discontinue à $t=0$.</p>
+    
+    <div style="text-align:center; margin: 20px 0;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Rl_charge_curve.svg/400px-Rl_charge_curve.svg.png" alt="Courbes établissement RL" >
+        <br><em>Établissement du courant RL : $i(t)$ (bleu, normalisé) et $u_L(t)$ (rouge, normalisé).</em>
+    </div>
+
+    <h3>4.2 Rupture du Courant</h3>
+    <p>Circuit : Bobine $L$ parcourue par $I_0$, interrupteur $K$ qui bascule à $t=0$ pour connecter $L$ à une résistance $R$ (éteignant la source initiale). On cherche $i(t)$.</p>
+    <ol>
+        <li><strong>$t<0$ :</strong> Courant permanent $i(0^-)=I_0$.</li>
+        <li><strong>$t=0^+$ :</strong> $i(0^+) = i_L(0^+) = i_L(0^-) = I_0$.</li>
+        <li><strong>$t \to \infty$ :</strong> Le courant finit par s'annuler. $i(\infty) = 0$.</li>
+        <li><strong>Constante de temps $\tau$ :</strong> La bobine "voit" $R$. $\tau = L/R$.</li>
+        <li><strong>Solution :</strong> $y(t)=i(t)$, $y(0^+)=I_0$, $y(\infty)=0$, $\tau=L/R$.
+        $$ i(t) = (I_0 - 0) e^{-t/(L/R)} + 0 = I_0 e^{-Rt/L} $$</li>
+    </ol>
+    <p>La tension aux bornes de la bobine est $u_L(t) = L \frac{di}{dt} = L (-\frac{R}{L}) I_0 e^{-Rt/L} = -R I_0 e^{-Rt/L} = -u_R(t)$. La tension est négative, s'opposant à la diminution du courant.</p>
+    <div class="warning">Ouvrir brutalement un circuit inductif parcouru par un courant ($R \to \infty$) conduit théoriquement à une tension $u_L = -Ri$ infinie (en pratique, très grande, provoquant des arcs électriques). Il faut prévoir un chemin de décharge (diode de roue libre, résistance...).</div>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 5 : Interprétation et Bilan Énergétique</h2>
+    <!-- ============================================== -->
+    
+    <h3>5.1 Signification de la Constante de Temps $\tau$</h3>
+    <p>La constante de temps $\tau$ donne l'échelle de temps caractéristique de l'évolution du circuit.</p>
+    <ul>
+        <li>À $t=\tau$, l'exponentielle $e^{-t/\tau}$ vaut $e^{-1} \approx 0.37$. La grandeur $y(t)$ a parcouru environ $1 - e^{-1} \approx 63\%$ du chemin entre sa valeur initiale et sa valeur finale.</li>
+        <li>À $t=3\tau$, $e^{-3} \approx 0.05$. La grandeur a parcouru 95% du chemin.</li>
+        <li>À $t=5\tau$, $e^{-5} \approx 0.007$. La grandeur a parcouru plus de 99% du chemin. On considère souvent que le régime permanent est atteint après $5\tau$.</li>
+    </ul>
+    <p>Un $\tau$ petit signifie une évolution rapide, un $\tau$ grand signifie une évolution lente.</p>
+    
+    <h3>5.2 Bilan Énergétique (Exemple RC Charge)</h3>
+    <p>Pendant la charge du RC série ($0 \le t < \infty$) :</p>
+    <ul>
+        <li>Énergie fournie par la source $E$ : $W_E = \int_0^\infty E i(t) dt = \int_0^\infty E (\frac{E}{R} e^{-t/RC}) dt = \frac{E^2}{R} [-RC e^{-t/RC}]_0^\infty = \frac{E^2}{R} (RC) = CE^2$.</li>
+        <li>Énergie stockée dans le condensateur à la fin : $E_C(\infty) = \frac{1}{2} C u_C(\infty)^2 = \frac{1}{2} C E^2$.</li>
+        <li>Énergie dissipée par effet Joule dans la résistance : $W_R = \int_0^\infty R i(t)^2 dt = \int_0^\infty R (\frac{E}{R} e^{-t/RC})^2 dt = R \frac{E^2}{R^2} \int_0^\infty e^{-2t/RC} dt = \frac{E^2}{R} [-\frac{RC}{2} e^{-2t/RC}]_0^\infty = \frac{E^2}{R} \frac{RC}{2} = \frac{1}{2} CE^2$.</li>
+    </ul>
+    <p>On vérifie bien $W_E = E_C(\infty) + W_R$. Fait remarquable : la moitié de l'énergie fournie par la source est dissipée dans la résistance, quelle que soit la valeur de $R$ !</p>
+
+    <hr>
+    <p><em>Ce cours a détaillé l'analyse des circuits du premier ordre RC et RL en réponse à un échelon. La compréhension de l'équation différentielle, de la constante de temps, des conditions initiales (continuité) et de la forme générale de la solution $y(t) = (y(0^+) - y(\infty)) e^{-t/\tau} + y(\infty)$ est essentielle pour maîtriser ces régimes transitoires fondamentaux.</em></p>
+
+</body>
+</html>
