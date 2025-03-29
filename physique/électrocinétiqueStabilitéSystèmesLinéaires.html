@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Stabilité des Systèmes Linéaires en Électrocinétique - Math Spé</title>
+    
+    <!-- Intégration de KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"  crossorigin="anonymous"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ]
+        });"></script>
+
+    <style>
+        body { 
+            font-family: sans-serif; 
+            line-height: 1.6; 
+            margin: 20px; 
+            background-color: #fdfdfe; 
+            color: #2c3e50; 
+        }
+        h1, h2, h3 { 
+            color: #2c3e50; /* Dark blue/gray */
+            border-bottom: 1px solid #bdc3c7; /* Gray border */
+            padding-bottom: 5px;
+        }
+        h1 { font-size: 2.2em; text-align: center; margin-bottom: 30px;}
+        h2 { font-size: 1.8em; margin-top: 35px; }
+        h3 { font-size: 1.4em; margin-top: 25px; }
+        .katex-display { 
+            display: block; 
+            margin: 1em 0; 
+            overflow-x: auto; 
+            background-color: #ecf0f1; /* Light gray */
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #bdc3c7;
+        }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-left: 13px; margin-bottom: 1em; }
+        strong { color: #c0392b; /* Red */ }
+        code { 
+            background-color: #dfe6e9; 
+            padding: 2px 5px; 
+            border-radius: 3px; 
+            font-family: monospace;
+        }
+        .theorem {
+            border-left: 5px solid #2980b9; /* Blue */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #d6eaf8; 
+            border-radius: 5px;
+        }
+        .definition {
+            border-left: 5px solid #f39c12; /* Orange */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #fef5e7; 
+            border-radius: 5px;
+        }
+        .criterion {
+            border: 1px solid #27ae60; /* Green */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #d4efdf; 
+            border-radius: 5px;
+        }
+        .warning {
+             border-left: 5px solid #e74c3c; /* Stronger Red */
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f9ebea; 
+            border-radius: 5px;
+        }
+        .complex-plane {
+            text-align: center;
+            font-style: italic;
+            color: #7f8c8d;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Stabilité des Systèmes Linéaires en Électrocinétique (Math Spé)</h1>
+
+    <p>L'étude de la <strong>stabilité</strong> est fondamentale pour les systèmes physiques, en particulier en électronique où les phénomènes d'amplification et de rétroaction peuvent conduire à des comportements divergents (oscillations croissantes, saturation). Ce cours présente les critères mathématiques permettant de déterminer si un circuit linéaire est stable.</p>
+    <p>Nous nous plaçons dans le cadre des systèmes <strong>Linéaires Temporellement Invariants (LTI)</strong> décrits par des équations différentielles linéaires à coefficients constants.</p>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 1 : Définition de la Stabilité et Modélisation</h2>
+    <!-- ============================================== -->
+
+    <h3>1.1 Notion Intuitive de Stabilité</h3>
+    <p>Intuitivement, un système est dit <strong>stable</strong> si sa réponse à une perturbation bornée (ou à des conditions initiales finies) reste bornée au cours du temps. Inversement, un système <strong>instable</strong> présente une réponse qui diverge (tend vers l'infini, en théorie linéaire) même pour une petite perturbation.</p>
+
+    <h3>1.2 Stabilité BIBO (Bounded Input, Bounded Output)</h3>
+    <div class="definition">
+        Un système LTI est dit <strong>stable au sens BIBO</strong> si, pour toute entrée $e(t)$ bornée ($|e(t)| \le M_e$ pour tout $t$), la sortie $s(t)$ correspondante est également bornée ($|s(t)| \le M_s$ pour tout $t$).
+        <br>C'est la définition la plus courante et la plus utile en pratique pour l'analyse des filtres et des systèmes bouclés.
+    </div>
+
+    <h3>1.3 Modélisation Mathématique</h3>
+    <p>Un circuit LTI peut être décrit par :</p>
+    <ol>
+        <li>Une <strong>équation différentielle</strong> linéaire à coefficients constants reliant la sortie $s(t)$ à l'entrée $e(t)$ :
+        $$ a_n \frac{d^n s}{dt^n} + ... + a_1 \frac{ds}{dt} + a_0 s(t) = b_m \frac{d^m e}{dt^m} + ... + b_1 \frac{de}{dt} + b_0 e(t) $$</li>
+        <li>Sa <strong>fonction de transfert</strong> $\underline{H}(p)$ (ou $H(p)$), obtenue par transformation de Laplace (où $p$ est la variable de Laplace, souvent notée $s$ en automatique). En supposant les conditions initiales nulles :
+        $$ \underline{H}(p) = \frac{S(p)}{E(p)} = \frac{b_m p^m + ... + b_1 p + b_0}{a_n p^n + ... + a_1 p + a_0} = \frac{N(p)}{D(p)} $$
+        où $S(p)$ et $E(p)$ sont les transformées de Laplace de $s(t)$ et $e(t)$. $N(p)$ est le polynôme numérateur et $D(p)$ est le polynôme dénominateur.</li>
+    </ol>
+
+    <div class="important">
+        Le polynôme dénominateur $D(p) = a_n p^n + ... + a_1 p + a_0$ de la fonction de transfert est identique (à un facteur multiplicatif près) au <strong>polynôme caractéristique</strong> de l'équation différentielle homogène associée.
+    </div>
+
+    <h3>1.4 Pôles de la Fonction de Transfert</h3>
+    <div class="definition">
+        Les <strong>pôles</strong> du système (ou de la fonction de transfert) sont les racines du polynôme dénominateur $D(p)$. Ce sont les valeurs $p_k$ (réelles ou complexes conjuguées) telles que $D(p_k) = 0$.
+        $$ \underline{H}(p) = K \frac{\prod_i (p - z_i)}{\prod_k (p - p_k)} $$
+        où les $z_i$ sont les zéros et les $p_k$ sont les pôles.
+    </div>
+    <p>Les pôles $p_k$ sont identiques aux racines $r_k$ de l'équation caractéristique de l'équation différentielle homogène. Ils déterminent la forme de la <strong>réponse libre</strong> du système (régime transitoire ou solution de l'équation homogène), qui est une combinaison linéaire de termes en $e^{p_k t}$ (ou $t^m e^{p_k t}$ si les pôles sont multiples).</p>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 2 : Critère de Stabilité Basé sur les Pôles</h2>
+    <!-- ============================================== -->
+
+    <h3>2.1 Lien entre Pôles et Comportement Temporel</h3>
+    <p>La stabilité du système est directement liée au comportement asymptotique ($t \to \infty$) de sa réponse libre. Ce comportement est dicté par la partie réelle des pôles $p_k = \sigma_k + j\omega_k$ :</p>
+    <ul>
+        <li>Si un pôle $p_k$ a une <strong>partie réelle strictement négative</strong> ($\sigma_k < 0$), le terme correspondant $e^{p_k t} = e^{\sigma_k t} e^{j\omega_k t}$ décroît exponentiellement vers zéro ($|e^{p_k t}| = e^{\sigma_k t} \to 0$).</li>
+        <li>Si un pôle $p_k$ a une <strong>partie réelle strictement positive</strong> ($\sigma_k > 0$), le terme correspondant $e^{p_k t}$ croît exponentiellement vers l'infini ($|e^{p_k t}| = e^{\sigma_k t} \to \infty$).</li>
+        <li>Si un pôle $p_k$ a une <strong>partie réelle nulle</strong> ($\sigma_k = 0$, pôle sur l'axe imaginaire $p_k = j\omega_k$) :
+            <ul>
+                <li>S'il est <strong>simple</strong> (non répété), le terme $e^{j\omega_k t}$ correspond à une oscillation entretenue de pulsation $\omega_k$. L'amplitude reste constante.</li>
+                <li>S'il est <strong>multiple</strong> (d'ordre $m>1$), la solution contient des termes comme $t e^{j\omega_k t}, ..., t^{m-1} e^{j\omega_k t}$ dont l'amplitude croît avec le temps. Un pôle à l'origine ($p_k=0$) simple correspond à une constante, un pôle à l'origine multiple à des termes $t, t^2...$.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>2.2 Critère Fondamental de Stabilité</h3>
+    <div class="theorem">
+        <strong>Critère de Stabilité BIBO :</strong>
+        Un système LTI est stable au sens BIBO si et seulement si <strong>tous les pôles</strong> de sa fonction de transfert $\underline{H}(p)$ ont une <strong>partie réelle strictement négative</strong>.
+        $$ \forall k, \quad \text{Re}(p_k) < 0 $$
+        Géométriquement, tous les pôles doivent se situer dans le <strong>demi-plan gauche ouvert</strong> du plan complexe de la variable $p$.
+    </div>
+
+    <div class="complex-plane">
+        [ Schéma conceptuel du plan complexe 'p' ]<br>
+        Axe imaginaire ($j\omega$) | Axe réel ($\sigma$) <br>
+        ------------------------|----------------------- <br>
+        <-- Zone Stable (Re(p)<0) | Zone Instable (Re(p)>0) --> <br>
+        <br>
+        Pôles acceptables: x | <br>
+                         x | <br>
+        Pôles inacceptables:  | x <br>
+                                   | x (sur axe imag.) <br>
+    </div>
+
+    <h3>2.3 Stabilité Marginale</h3>
+    <div class="warning">
+        <strong>Cas des pôles sur l'axe imaginaire :</strong>
+        <ul>
+            <li>Si un système possède des pôles <strong>simples</strong> sur l'axe imaginaire (y compris à l'origine) et tous les autres pôles dans le demi-plan gauche, il n'est <strong>pas stable au sens BIBO</strong>. Sa réponse libre ne tend pas vers zéro (oscillation entretenue ou constante). On parle parfois de système <strong>marginalement stable</strong> ou <strong>à la limite de stabilité</strong>. Une entrée sinusoïdale à la fréquence d'un pôle imaginaire provoquera une sortie qui croît linéairement avec le temps (résonance).</li>
+            <li>Si un système possède des pôles <strong>multiples</strong> sur l'axe imaginaire, il est <strong>instable</strong> (réponse non bornée même en régime libre).</li>
+        </ul>
+    </div>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 3 : Critères Algébriques de Stabilité (Routh-Hurwitz)</h2>
+    <!-- ============================================== -->
+
+    <p>Calculer explicitement les pôles (racines de $D(p)=0$) peut être difficile ou impossible analytiquement pour des polynômes de degré élevé ($n \ge 3$). Les critères algébriques permettent de déterminer si toutes les racines ont une partie réelle négative <strong>sans calculer ces racines</strong>, uniquement à partir des coefficients du polynôme caractéristique.</p>
+
+    <h3>3.1 Conditions Nécessaires</h3>
+    <p>Pour qu'un polynôme $D(p) = a_n p^n + a_{n-1} p^{n-1} + ... + a_1 p + a_0$ n'ait que des racines à partie réelle strictement négative, une condition <strong>nécessaire</strong> (mais non suffisante pour $n \ge 3$) est que <strong>tous ses coefficients $a_k$ soient strictement de même signe</strong> (et non nuls).
+    <br>En physique, les coefficients $a_k$ sont généralement positifs. Si l'un d'eux est nul ou négatif, le système est instable ou marginalement stable.</p>
+
+    <h3>3.2 Critère de Routh-Hurwitz</h3>
+    <div class="definition">
+        Le <strong>critère de Routh-Hurwitz</strong> fournit une condition <strong>nécessaire et suffisante</strong> pour que toutes les racines du polynôme caractéristique $D(p) = a_n p^n + ... + a_0$ (avec $a_n>0$) aient une partie réelle strictement négative. Il repose sur la construction d'un tableau (tableau de Routh) à partir des coefficients $a_k$.
+        <br>
+        Le critère stipule que le système est stable si et seulement si tous les éléments de la <strong>première colonne</strong> du tableau de Routh sont <strong>strictement positifs</strong>.
+    </div>
+
+    <h4>Construction du Tableau de Routh (Ordre $n$) :</h4>
+    On écrit les deux premières lignes avec les coefficients de $D(p)$ :
+    Ligne $p^n$: $a_n \quad a_{n-2} \quad a_{n-4} \quad ...$
+    Ligne $p^{n-1}$: $a_{n-1} \quad a_{n-3} \quad a_{n-5} \quad ...$
+    
+    Les éléments des lignes suivantes sont calculés par produits croisés. Pour la ligne $p^{n-2}$ :
+    $b_1 = \frac{a_{n-1}a_{n-2} - a_n a_{n-3}}{a_{n-1}}$
+    $b_2 = \frac{a_{n-1}a_{n-4} - a_n a_{n-5}}{a_{n-1}}$
+    ...
+
+    Ligne $p^{n-3}$ :
+    $c_1 = \frac{b_1 a_{n-3} - a_{n-1} b_2}{b_1}$
+    $c_2 = \frac{b_1 a_{n-5} - a_{n-1} b_3}{b_1}$
+    ...
+
+    On continue jusqu'à la ligne $p^0$.
+
+    <div class="criterion">
+    <strong>Critère de Stabilité de Routh-Hurwitz :</strong>
+    Le système est stable (tous les pôles sont à partie réelle strictement négative) si et seulement si tous les coefficients $a_k$ sont strictement positifs ET tous les termes de la <strong>première colonne</strong> du tableau de Routh ($a_n, a_{n-1}, b_1, c_1, ...$) sont <strong>strictement positifs</strong>.
+    <br>
+    Le nombre de changements de signe dans la première colonne est égal au nombre de pôles à partie réelle positive. Un zéro dans la première colonne indique des pôles sur l'axe imaginaire ou des pôles symétriques par rapport à l'origine (cas particuliers à traiter).
+    </div>
+
+    <h4>Cas Particuliers Simples :</h4>
+    <ul>
+        <li><strong>Ordre 1 :</strong> $a_1 p + a_0 = 0$. Pôle $p = -a_0/a_1$. Stable si $a_1$ et $a_0$ de même signe (positifs).</li>
+        <li><strong>Ordre 2 :</strong> $a_2 p^2 + a_1 p + a_0 = 0$. Équation $p^2 + (a_1/a_2) p + (a_0/a_2) = 0$.
+        Soit $p^2 + 2\alpha p + \omega_0^2 = 0$. Les racines sont $r_{1,2} = -\alpha \pm \sqrt{\alpha^2 - \omega_0^2}$.
+        La partie réelle est $-\alpha$. Stable si $\alpha > 0$.
+        Condition Routh-Hurwitz : $a_2 > 0, a_1 > 0, a_0 > 0$. Nécessaire et suffisant pour $n=2$.</li>
+        <li><strong>Ordre 3 :</strong> $a_3 p^3 + a_2 p^2 + a_1 p + a_0 = 0$.
+            Tableau :
+            $p^3 : a_3 \quad a_1$
+            $p^2 : a_2 \quad a_0$
+            $p^1 : b_1 = \frac{a_2 a_1 - a_3 a_0}{a_2}$
+            $p^0 : c_1 = \frac{b_1 a_0 - a_2 \cdot 0}{b_1} = a_0$
+            Condition de stabilité : $a_3, a_2, a_1, a_0 > 0$ ET $b_1 > 0 \iff a_2 a_1 - a_3 a_0 > 0 \iff \boxed{a_1 a_2 > a_3 a_0}$.</li>
+    </ul>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 4 : Application aux Circuits Électroniques</h2>
+    <!-- ============================================== -->
+
+    <h3>4.1 Stabilité des Circuits Passifs (RLC)</h3>
+    <p>Considérons le circuit RLC série. Son équation caractéristique est $LC p^2 + RC p + 1 = 0$ (en prenant $u_C$ comme variable, par exemple).
+    Les coefficients sont $a_2 = LC$, $a_1 = RC$, $a_0 = 1$.</p>
+    <p>Si $R, L, C$ sont strictement positifs (cas physique standard) :</p>
+    <ul>
+        <li>$a_2 > 0$, $a_1 > 0$, $a_0 > 0$.</li>
+        <li>Le critère pour $n=2$ est satisfait. Le système RLC série est donc toujours <strong>stable</strong>.</li>
+        <li>Les pôles sont $p_{1,2} = -\frac{R}{2L} \pm \sqrt{(\frac{R}{2L})^2 - \frac{1}{LC}} = -\alpha \pm \sqrt{\alpha^2 - \omega_0^2}$. La partie réelle $-\alpha = -R/(2L)$ est toujours strictement négative.</li>
+    </ul>
+    <div class="warning">
+        Cas limite $R=0$ (Circuit LC idéal) : $LC p^2 + 1 = 0 \implies p^2 = -1/(LC) \implies p = \pm j/\sqrt{LC} = \pm j\omega_0$. Les pôles sont simples et sur l'axe imaginaire. Le système est <strong>marginalement stable</strong> (oscillateur non amorti).
+    </div>
+    <p>En général, les circuits passifs composés uniquement de R (>0), L (>0), C (>0) sont stables.</p>
+
+    <h3>4.2 Instabilité dans les Circuits Actifs (avec Amplificateurs Opérationnels)</h3>
+    <p>L'instabilité apparaît le plus souvent dans les circuits contenant des éléments actifs (transistors, AOP) et une <strong>rétroaction (boucle fermée)</strong>.</p>
+    <div class="important">
+        Une <strong>rétroaction positive</strong> (où une partie du signal de sortie est réinjectée en phase avec l'entrée) peut facilement conduire à l'instabilité, créant des oscillateurs ou des systèmes qui saturent.
+        <br>
+        Même une <strong>rétroaction négative</strong> (utilisée pour stabiliser et contrôler le gain) peut devenir instable si le déphasage introduit par la boucle de retour atteint -180° à une fréquence où le gain de boucle est supérieur à 1 (critère de Barkhausen / analyse via Nyquist). Ceci est dû aux limitations en fréquence (pôles) de l'amplificateur lui-même.
+    </div>
+
+    <h4>Exemple Simple (Modèle simplifié) : Rétroaction positive</h4>
+    <p>Considérons un amplificateur de gain $A>0$ avec une rétroaction positive via un facteur $\beta > 0$. Tension d'entrée $e$, tension de sortie $s$. $s = A (\epsilon)$, où $\epsilon = e + \beta s$ est la tension à l'entrée de l'amplificateur.</p>
+    $$ s = A (e + \beta s) \implies s (1 - A\beta) = A e $$
+    La fonction de transfert en boucle fermée est $H = \frac{s}{e} = \frac{A}{1 - A\beta}$.
+    <p>Si l'amplificateur a un pôle simple (modèle du premier ordre) : $A(p) = \frac{A_0}{1 + p/\omega_c}$.</p>
+    $$ H(p) = \frac{\frac{A_0}{1 + p/\omega_c}}{1 - \beta \frac{A_0}{1 + p/\omega_c}} = \frac{A_0}{1 + p/\omega_c - \beta A_0} = \frac{A_0}{(1 - \beta A_0) + p/\omega_c} $$
+    Le dénominateur est $D(p) = (1 - \beta A_0) + p/\omega_c$. Le pôle est $p = -\omega_c (1 - \beta A_0)$.
+    Le système est stable si $\text{Re}(p) < 0$, soit $-\omega_c (1 - \beta A_0) < 0$. Comme $\omega_c > 0$, il faut :
+    $$ 1 - \beta A_0 > 0 \quad \implies \quad \beta A_0 < 1 $$
+    Si le gain de boucle $\beta A_0$ atteint ou dépasse 1, le système devient instable (le pôle passe dans le demi-plan droit ou sur l'axe imaginaire). Ceci est la base de nombreux oscillateurs.</p>
+
+    <hr>
+    <p><em>L'analyse de la stabilité est une étape essentielle dans la conception et la compréhension des circuits électroniques, en particulier ceux utilisant l'amplification et la rétroaction. Le critère fondamental relie la stabilité à la position des pôles de la fonction de transfert dans le plan complexe : tous les pôles doivent avoir une partie réelle strictement négative. Des outils comme le critère de Routh-Hurwitz permettent d'évaluer cette condition sans calculer explicitement les pôles.</em></p>
+
+</body>
+</html>
