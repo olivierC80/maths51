@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours d'Électromagnétisme : Champs Variables et ARQS (Maths Spé)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"  crossorigin="anonymous"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; padding: 25px; max-width: 950px; margin: auto; color: #333; }
+        h1, h2, h3, h4 { color: #003366; /* Dark Blue */ border-bottom: 2px solid #003366; padding-bottom: 8px; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 3px solid #002244; }
+        .katex-display { display: block; text-align: center; margin: 1.2em 0; overflow-x: auto; padding: 5px; background-color: #f8f8f8; border-radius: 4px;}
+        .katex { font-size: 1.15em; }
+        code { background-color: #e0e8f0; /* Light Blue */ padding: 3px 6px; border-radius: 4px; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; }
+        strong { color: #c00; }
+        blockquote { border-left: 4px solid #003366; padding-left: 20px; margin-left: 0; font-style: italic; color: #555; background-color: #f0f4f8; /* Lighter Blue */ }
+        .definition { border: 1px solid #99b3cc; background-color: #e0e8f0; padding: 18px; margin: 20px 0; border-radius: 8px; box-shadow: 2px 2px 5px #ddd; }
+        .theorem { border: 1px solid #a3c2e0; background-color: #e6f0fa; padding: 18px; margin: 20px 0; border-radius: 8px; box-shadow: 2px 2px 5px #ddd; }
+        .important { border: 1px solid #b3cce6; background-color: #f0f8ff; padding: 18px; margin: 20px 0; border-radius: 8px; box-shadow: 2px 2px 5px #ddd; }
+        .example { border: 1px solid #a3c2e0; background-color: #e6f0fa; padding: 18px; margin: 20px 0; border-radius: 8px; box-shadow: 2px 2px 5px #ddd; }
+        .schema-placeholder { text-align: center; margin: 20px; padding: 15px; border: 1px dashed #aaa; color: #777; font-style: italic; background-color: #fafafa; }
+        #toc { border: 1px solid #ccc; background-color: #fdfdfd; padding: 15px; margin-bottom: 25px; border-radius: 5px; }
+        #toc h2 { border-bottom: none; margin-top: 0; color: #003366; }
+        #toc ul { list-style: none; padding-left: 0; }
+        #toc ul li { margin-bottom: 8px; }
+        #toc ul li a { text-decoration: none; color: #003366; }
+        #toc ul li a:hover { text-decoration: underline; color: #002244; }
+        ul li { margin-bottom: 0.5em; }
+        .maxwell-equations { border: 2px solid #002244; padding: 20px; margin: 25px 0; background-color: #eaf2ff; border-radius: 10px; }
+        .maxwell-equations h3 { border-bottom: 1px dashed #003366; margin-top: 0; }
+        .arqs-section { border: 2px solid #ff6600; background-color: #fff4e6; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .arqs-section h3 { color: #cc5200; border-color: #ff6600; }
+    </style>
+</head>
+<body>
+
+    <h1>Électromagnétisme : Champs Variables et Approximation des Régimes Quasi-Stationnaires (ARQS)</h1>
+    <p><em>Niveau : Mathématiques Spéciales (MP, PC, PSI)</em></p>
+
+    <div id="toc">
+        <h2>Table des Matières</h2>
+        <ul>
+            <li><a href="#intro">1. Introduction : Au-delà du Statique</a></li>
+            <li><a href="#maxwell-dynamic">2. Les Équations de Maxwell en Régime Variable</a>
+                 <ul>
+                    <li><a href="#maxwell-rappel">2.1 Rappel des Équations Complètes</a></li>
+                    <li><a href="#induction-faraday">2.2 Induction Électromagnétique (Maxwell-Faraday)</a></li>
+                    <li><a href="#courant-deplacement">2.3 Courant de Déplacement (Maxwell-Ampère)</a></li>
+                    <li><a href="#conservation-charge-dyn">2.4 Conservation de la Charge</a></li>
+                </ul>
+            </li>
+            <li><a href="#potentiels-dyn">3. Potentiels Électromagnétiques en Régime Variable</a>
+                 <ul>
+                    <li><a href="#def-potentiels-dyn">3.1 Potentiels Scalaire (V) et Vecteur (A)</a></li>
+                    <li><a href="#jauge-lorentz">3.2 Jauge de Lorentz</a></li>
+                    <li><a href="#equations-potentiels">3.3 Équations de Propagation des Potentiels</a></li>
+                </ul>
+            </li>
+            <li><a href="#ondes-em">4. Ondes Électromagnétiques dans le Vide</a>
+                <ul>
+                    <li><a href="#equation-onde">4.1 Équation de Propagation de d'Alembert</a></li>
+                    <li><a href="#vitesse-lumiere">4.2 Vitesse de la Lumière</a></li>
+                    <li><a href="#oppm">4.3 Ondes Planes Progressives Monochromatiques (OPPM)</a></li>
+                    <li><a href="#structure-oppm">4.4 Structure des OPPM (Transversalité, Relation E-B)</a></li>
+                </ul>
+            </li>
+             <li><a href="#energie-em-dyn">5. Énergie Électromagnétique et Vecteur de Poynting</a>
+                 <ul>
+                    <li><a href="#theoreme-poynting">5.1 Théorème de Poynting Local</a></li>
+                    <li><a href="#densite-energie">5.2 Densité d'Énergie Électromagnétique</a></li>
+                    <li><a href="#vecteur-poynting">5.3 Vecteur de Poynting et Flux d'Énergie</a></li>
+                </ul>
+            </li>
+            <li><a href="#arqs">6. L'Approximation des Régimes Quasi-Stationnaires (ARQS)</a>
+                 <ul>
+                    <li><a href="#arqs-motivation">6.1 Motivation et Principe</a></li>
+                    <li><a href="#arqs-conditions">6.2 Conditions de Validité ($L \ll \lambda$)</a></li>
+                    <li><a href="#arqs-consequences">6.3 Conséquences Générales</a></li>
+                    <li><a href="#arqs-aeqs">6.4 Approximation Électrique Quasi-Stationnaire (AEQS)</a></li>
+                    <li><a href="#arqs-amqs">6.5 Approximation Magnétique Quasi-Stationnaire (AMQS)</a></li>
+                    <li><a href="#arqs-circuits">6.6 Application à la Théorie des Circuits (Lois de Kirchhoff)</a></li>
+                    <li><a href="#arqs-limites">6.7 Limites de l'ARQS et Effet de Peau</a></li>
+                 </ul>
+            </li>
+            <li><a href="#conclusion-arqs">7. Conclusion</a></li>
+        </ul>
+    </div>
+
+    <h2 id="intro">1. Introduction : Au-delà du Statique</h2>
+    <p>Après avoir étudié l'électrostatique (champs créés par des charges immobiles) et la magnétostatique (champs créés par des courants stationnaires), nous abordons maintenant l'<strong>électromagnétisme</strong> complet, qui décrit les phénomènes où les champs électrique $\vec{E}$ et magnétique $\vec{B}$ dépendent du temps et sont <strong>couplés</strong>.</p>
+    <p>Ce couplage, décrit par les <strong>équations de Maxwell</strong>, mène à des phénomènes nouveaux et fondamentaux comme l'<strong>induction électromagnétique</strong> et l'existence des <strong>ondes électromagnétiques</strong>.</p>
+    <p>Cependant, la résolution des équations de Maxwell complètes peut être complexe. Dans de nombreuses situations pratiques (basses fréquences, systèmes de petite taille), les phénomènes de propagation peuvent être négligés. C'est le domaine de l'<strong>Approximation des Régimes Quasi-Stationnaires (ARQS)</strong>, qui permet de simplifier l'étude et justifie notamment la théorie des circuits électriques.</p>
+
+    <h2 id="maxwell-dynamic">2. Les Équations de Maxwell en Régime Variable</h2>
+    <p>Les équations de Maxwell constituent le cadre fondamental de l'électromagnétisme classique.</p>
+
+    <h3 id="maxwell-rappel">2.1 Rappel des Équations Complètes</h3>
+    <p>Sous leur forme locale (dans le vide), elles s'écrivent :</p>
+    <div class="maxwell-equations">
+        <h3>Les Quatre Équations de Maxwell (Locales, Vide)</h3>
+        <div class="definition">
+            <ol>
+                <li><strong>Maxwell-Gauss (électrique) :</strong>
+                    $$ \vec{\nabla} \cdot \vec{E} = \frac{\rho}{\epsilon_0} $$
+                    Relie le champ $\vec{E}$ à ses sources, les charges $\rho$.
+                </li>
+                <li><strong>Maxwell-Flux (magnétique) :</strong>
+                    $$ \vec{\nabla} \cdot \vec{B} = 0 $$
+                    Exprime l'inexistence de monopôles magnétiques ($\vec{B}$ est à flux conservatif).
+                </li>
+                 <li><strong>Maxwell-Faraday (induction) :</strong>
+                    $$ \vec{\nabla} \times \vec{E} = - \frac{\partial \vec{B}}{\partial t} $$
+                    Décrit la création d'un champ $\vec{E}$ rotationnel par un champ $\vec{B}$ variable.
+                </li>
+                 <li><strong>Maxwell-Ampère (généralisé) :</strong>
+                    $$ \vec{\nabla} \times \vec{B} = \mu_0 \vec{j} + \mu_0 \epsilon_0 \frac{\partial \vec{E}}{\partial t} $$
+                    Décrit la création d'un champ $\vec{B}$ rotationnel par les courants $\vec{j}$ et par un champ $\vec{E}$ variable (courant de déplacement).
+                </li>
+            </ol>
+             Où $\epsilon_0$ est la permittivité du vide et $\mu_0$ la perméabilité du vide.
+        </div>
+    </div>
+    <p>Ces équations sont complétées par l'expression de la force de Lorentz : $\vec{F} = q(\vec{E} + \vec{v} \times \vec{B})$.</p>
+
+    <h3 id="induction-faraday">2.2 Induction Électromagnétique (Maxwell-Faraday)</h3>
+    <p>L'équation $\vec{\nabla} \times \vec{E} = - \frac{\partial \vec{B}}{\partial t}$ est cruciale.</p>
+    <ul>
+        <li>Elle montre qu'un champ magnétique variable dans le temps ($\partial \vec{B}/\partial t \neq 0$) est une source de champ électrique.</li>
+        <li>Ce champ électrique induit est <strong>rotationnel</strong> ($\vec{\nabla} \times \vec{E} \neq \vec{0}$), ce qui signifie qu'il ne dérive pas d'un potentiel scalaire $V$ seul. Sa circulation sur un contour fermé n'est pas nulle.</li>
+        <li>La forme intégrale (loi de Faraday) est $\oint_{\mathcal{C}} \vec{E} \cdot d\vec{l} = - \frac{d}{dt} \iint_{\mathcal{S}} \vec{B} \cdot d\vec{S} = - \frac{d\Phi_B}{dt}$. La circulation de $\vec{E}$ sur un contour fixe $\mathcal{C}$ (appelée force électromotrice induite, $e$) est égale à l'opposé de la dérivée du flux magnétique $\Phi_B$ à travers toute surface $\mathcal{S}$ s'appuyant sur $\mathcal{C}$.</li>
+    </ul>
+    <p>Ce phénomène est à la base du fonctionnement des générateurs électriques, transformateurs, etc.</p>
+
+    <h3 id="courant-deplacement">2.3 Courant de Déplacement (Maxwell-Ampère)</h3>
+    <p>Le terme $\epsilon_0 \frac{\partial \vec{E}}{\partial t}$ ajouté par Maxwell à la loi d'Ampère statique est le <strong>courant de déplacement</strong> (densité $\vec{j}_D = \epsilon_0 \partial \vec{E}/\partial t$).</p>
+    <ul>
+        <li>Il montre qu'un champ électrique variable dans le temps ($\partial \vec{E}/\partial t \neq 0$) est une source de champ magnétique, même en l'absence de courants de conduction ($\vec{j}=0$).</li>
+        <li>Ce terme assure la cohérence mathématique des équations, notamment la conservation de la charge (voir ci-dessous).</li>
+        <li>Il est essentiel pour l'existence des ondes électromagnétiques, où $\vec{E}$ et $\vec{B}$ s'engendrent mutuellement.</li>
+    </ul>
+    <p>Exemple : Chargement d'un condensateur. Entre les armatures, $\vec{j}=0$, mais $\vec{E}$ varie, créant un courant de déplacement $\vec{j}_D$ qui "prolonge" le courant de conduction dans les fils et crée un champ $\vec{B}$ autour du condensateur.</p>
+    <div class="schema-placeholder">[Schéma : Condensateur en charge, courant I, champ E variable, champ B induit]</div>
+
+    <h3 id="conservation-charge-dyn">2.4 Conservation de la Charge</h3>
+    <p>La structure des équations de Maxwell garantit la conservation de la charge électrique. En prenant la divergence de Maxwell-Ampère :</p>
+    $$ \vec{\nabla} \cdot (\vec{\nabla} \times \vec{B}) = \mu_0 \vec{\nabla} \cdot \vec{j} + \mu_0 \epsilon_0 \vec{\nabla} \cdot \left(\frac{\partial \vec{E}}{\partial t}\right) $$
+    <p>Comme $\vec{\nabla} \cdot (\vec{\nabla} \times \vec{B}) = 0$ et en utilisant Maxwell-Gauss $\vec{\nabla} \cdot \vec{E} = \rho/\epsilon_0$ :</p>
+    $$ 0 = \mu_0 \vec{\nabla} \cdot \vec{j} + \mu_0 \epsilon_0 \frac{\partial}{\partial t} (\vec{\nabla} \cdot \vec{E}) = \mu_0 \vec{\nabla} \cdot \vec{j} + \mu_0 \epsilon_0 \frac{\partial}{\partial t} \left(\frac{\rho}{\epsilon_0}\right) $$
+    <p>On retrouve l'<strong>équation de continuité</strong> :</p>
+    <div class="important">
+         $$ \vec{\nabla} \cdot \vec{j} + \frac{\partial \rho}{\partial t} = 0 $$
+         Cette équation est valable en régime statique et dynamique. Le courant de déplacement est nécessaire pour assurer cette conservation en régime variable.
+    </div>
+
+    <h2 id="potentiels-dyn">3. Potentiels Électromagnétiques en Régime Variable</h2>
+    <p>Comme en statique, il est utile d'introduire des potentiels pour simplifier la résolution des équations.</p>
+
+    <h3 id="def-potentiels-dyn">3.1 Potentiels Scalaire (V) et Vecteur (A)</h3>
+    <p>L'équation $\vec{\nabla} \cdot \vec{B} = 0$ reste valable, donc $\vec{B}$ dérive toujours d'un potentiel vecteur $\vec{A}$ :</p>
+    $$ \vec{B} = \vec{\nabla} \times \vec{A} $$
+    <p>En injectant ceci dans Maxwell-Faraday $\vec{\nabla} \times \vec{E} = - \partial \vec{B}/\partial t$ :</p>
+    $$ \vec{\nabla} \times \vec{E} = - \frac{\partial}{\partial t} (\vec{\nabla} \times \vec{A}) = - \vec{\nabla} \times \left(\frac{\partial \vec{A}}{\partial t}\right) $$
+    $$ \implies \vec{\nabla} \times \left(\vec{E} + \frac{\partial \vec{A}}{\partial t}\right) = \vec{0} $$
+    <p>Le champ $\vec{E} + \frac{\partial \vec{A}}{\partial t}$ a un rotationnel nul, il dérive donc d'un potentiel scalaire $V$. Attention, ce n'est plus $\vec{E}$ seul qui dérive de $V$ :</p>
+    <div class="important">
+        $$ \vec{E} + \frac{\partial \vec{A}}{\partial t} = - \vec{\nabla} V \implies \vec{E} = - \vec{\nabla} V - \frac{\partial \vec{A}}{\partial t} $$
+    </div>
+    <p>Les équations $\vec{\nabla} \cdot \vec{B} = 0$ et $\vec{\nabla} \times \vec{E} = - \partial \vec{B}/\partial t$ sont automatiquement satisfaites par ces définitions de $\vec{E}$ et $\vec{B}$ en fonction de $V$ et $\vec{A}$.</p>
+
+    <h3 id="jauge-lorentz">3.2 Jauge de Lorentz</h3>
+    <p>Les potentiels $(V, \vec{A})$ ne sont pas uniques (invariance de jauge). On peut choisir une condition supplémentaire (une "jauge") pour les fixer partiellement. En régime variable, la <strong>jauge de Lorentz</strong> est particulièrement utile :</p>
+    <div class="definition">
+        <p><strong>Condition de jauge de Lorentz :</strong></p>
+        $$ \vec{\nabla} \cdot \vec{A} + \mu_0 \epsilon_0 \frac{\partial V}{\partial t} = 0 \quad \text{ou} \quad \vec{\nabla} \cdot \vec{A} + \frac{1}{c^2} \frac{\partial V}{\partial t} = 0 $$
+        Où $c = 1/\sqrt{\mu_0 \epsilon_0}$ est la vitesse de la lumière dans le vide. Cette condition est compatible avec la relativité restreinte.
+    </div>
+
+    <h3 id="equations-potentiels">3.3 Équations de Propagation des Potentiels</h3>
+    <p>En substituant les expressions de $\vec{E}$ et $\vec{B}$ en fonction de $V$ et $\vec{A}$ dans les deux autres équations de Maxwell (Gauss et Ampère) et en utilisant la jauge de Lorentz, on obtient des équations découplées pour $V$ et $\vec{A}$ :</p>
+    <div class="theorem">
+        <p><strong>Équations de propagation des potentiels (jauge de Lorentz, vide) :</strong></p>
+        $$ \Delta V - \frac{1}{c^2} \frac{\partial^2 V}{\partial t^2} = - \frac{\rho}{\epsilon_0} $$
+        $$ \Delta \vec{A} - \frac{1}{c^2} \frac{\partial^2 \vec{A}}{\partial t^2} = - \mu_0 \vec{j} $$
+    </div>
+    <p>Ce sont des <strong>équations d'onde de d'Alembert avec sources</strong> ($\rho, \vec{j}$). Elles montrent que les potentiels (et donc les champs) se propagent à la vitesse $c$ à partir de leurs sources.</p>
+
+    <h2 id="ondes-em">4. Ondes Électromagnétiques dans le Vide</h2>
+    <p>Une des prédictions les plus spectaculaires des équations de Maxwell est l'existence d'ondes électromagnétiques se propageant dans le vide.</p>
+
+    <h3 id="equation-onde">4.1 Équation de Propagation de d'Alembert</h3>
+    <p>Dans une région vide de sources ($\rho = 0, \vec{j} = 0$), les équations de propagation des potentiels deviennent homogènes. On peut aussi dériver directement des équations pour $\vec{E}$ et $\vec{B}$ :</p>
+    <p>En prenant $\vec{\nabla} \times (\vec{\nabla} \times \vec{E})$ et en utilisant $\vec{\nabla} \cdot \vec{E} = 0$ (vide), Maxwell-Faraday et Maxwell-Ampère (vide), on obtient :</p>
+     <div class="important">
+        $$ \Delta \vec{E} - \frac{1}{c^2} \frac{\partial^2 \vec{E}}{\partial t^2} = \vec{0} $$
+        <p>De même pour $\vec{B}$ :</p>
+        $$ \Delta \vec{B} - \frac{1}{c^2} \frac{\partial^2 \vec{B}}{\partial t^2} = \vec{0} $$
+    </div>
+    <p>Ces équations montrent que $\vec{E}$ et $\vec{B}$ peuvent exister et se propager sous forme d'<strong>ondes</strong> dans le vide.</p>
+
+    <h3 id="vitesse-lumiere">4.2 Vitesse de la Lumière</h3>
+    <p>La vitesse de propagation de ces ondes est donnée par la constante $c$ apparaissant dans l'équation :</p>
+    $$ c = \frac{1}{\sqrt{\mu_0 \epsilon_0}} \approx 299 \, 792 \, 458 \, \text{m/s} $$
+    <p>La valeur calculée à partir des constantes $\mu_0$ (définie) et $\epsilon_0$ (mesurée en électrostatique) coïncide avec la vitesse de la lumière mesurée expérimentalement. Maxwell conclut donc que la <strong>lumière est une onde électromagnétique</strong>.</p>
+
+    <h3 id="oppm">4.3 Ondes Planes Progressives Monochromatiques (OPPM)</h3>
+    <p>Une solution particulière importante de l'équation d'onde est l'onde plane progressive monochromatique (OPPM). En notation complexe, elle s'écrit pour le champ $\vec{E}$ :</p>
+    $$ \underline{\vec{E}}(M, t) = \vec{\underline{E}}_0 e^{i(\omega t - \vec{k} \cdot \vec{r})} $$
+    Où :
+    <ul>
+        <li>$\vec{\underline{E}}_0$ est l'amplitude complexe (vecteur constant).</li>
+        <li>$\omega = 2\pi f$ est la pulsation (rad/s), $f$ la fréquence (Hz).</li>
+        <li>$\vec{k}$ est le <strong>vecteur d'onde</strong>, indiquant la direction de propagation. Sa norme $k = ||\vec{k}||$ est le nombre d'onde.</li>
+        <li>$\vec{r} = \vec{OM}$ est le vecteur position.</li>
+        <li>La phase de l'onde est $\phi = \omega t - \vec{k} \cdot \vec{r}$. Les surfaces d'onde ($\phi=cste$ à $t$ fixé) sont des plans perpendiculaires à $\vec{k}$.</li>
+    </ul>
+    <p>En injectant cette solution dans l'équation d'onde $\Delta \vec{E} - \frac{1}{c^2} \frac{\partial^2 \vec{E}}{\partial t^2} = \vec{0}$, on obtient la <strong>relation de dispersion</strong> dans le vide :</p>
+    $$ (-\vec{k} \cdot \vec{k}) \underline{\vec{E}} - \frac{1}{c^2} (i\omega)^2 \underline{\vec{E}} = 0 \implies (-k^2 + \frac{\omega^2}{c^2}) \underline{\vec{E}} = 0 $$
+    $$ \implies k^2 = \frac{\omega^2}{c^2} \implies k = \frac{\omega}{c} $$
+    <p>Comme $k = 2\pi/\lambda$ (où $\lambda$ est la longueur d'onde) et $\omega = 2\pi f$, on retrouve $\frac{2\pi}{\lambda} = \frac{2\pi f}{c} \implies \lambda f = c$.</p>
+
+    <h3 id="structure-oppm">4.4 Structure des OPPM (Transversalité, Relation E-B)</h3>
+    <p>En injectant la forme de l'OPPM dans les équations de Maxwell dans le vide ($\rho=0, \vec{j}=0$) :</p>
+    <ul>
+        <li>$\vec{\nabla} \cdot \vec{E} = 0 \implies (-i\vec{k}) \cdot \underline{\vec{E}} = 0 \implies \vec{k} \cdot \underline{\vec{E}} = 0$. Le champ $\vec{E}$ est <strong>perpendiculaire</strong> à la direction de propagation $\vec{k}$.</li>
+        <li>$\vec{\nabla} \cdot \vec{B} = 0 \implies (-i\vec{k}) \cdot \underline{\vec{B}} = 0 \implies \vec{k} \cdot \underline{\vec{B}} = 0$. Le champ $\vec{B}$ est <strong>perpendiculaire</strong> à la direction de propagation $\vec{k}$.
+        <br/>$\implies$ L'onde électromagnétique dans le vide est <strong>transverse</strong>.</li>
+        <li>$\vec{\nabla} \times \vec{E} = - \partial \vec{B}/\partial t \implies (-i\vec{k}) \times \underline{\vec{E}} = - (i\omega) \underline{\vec{B}} \implies \vec{k} \times \underline{\vec{E}} = \omega \underline{\vec{B}}$.</li>
+        <li>$\vec{\nabla} \times \vec{B} = \mu_0 \epsilon_0 \partial \vec{E}/\partial t \implies (-i\vec{k}) \times \underline{\vec{B}} = \mu_0 \epsilon_0 (i\omega) \underline{\vec{E}} \implies \vec{k} \times \underline{\vec{B}} = - \frac{\omega}{c^2} \underline{\vec{E}}$.</li>
+    </ul>
+    <p>De $\vec{k} \times \underline{\vec{E}} = \omega \underline{\vec{B}}$, on déduit que $\vec{B}$ est aussi <strong>perpendiculaire à $\vec{E}$</strong>.</p>
+    <p>Le triplet $(\vec{k}, \vec{E}, \vec{B})$ forme un <strong>trièdre direct</strong>.</p>
+    <p>En prenant la norme de $\vec{k} \times \underline{\vec{E}} = \omega \underline{\vec{B}}$ : $k E \sin(\pi/2) = \omega B \implies (\omega/c) E = \omega B$.</p>
+    <div class="important">
+        <p><strong>Relation entre les amplitudes E et B pour une OPPM dans le vide :</strong></p>
+        $$ E = c B $$
+    </div>
+    <div class="schema-placeholder">[Schéma : Structure d'une OPPM, vecteurs k, E, B orthogonaux formant un trièdre direct]</div>
+
+    <h2 id="energie-em-dyn">5. Énergie Électromagnétique et Vecteur de Poynting</h2>
+    <p>Les champs électromagnétiques transportent de l'énergie.</p>
+
+    <h3 id="theoreme-poynting">5.1 Théorème de Poynting Local</h3>
+    <p>En manipulant les équations de Maxwell, on établit une équation de bilan local pour l'énergie électromagnétique :</p>
+     <div class="theorem">
+        <p><strong>Théorème de Poynting (forme locale) :</strong></p>
+        $$ \frac{\partial u_{em}}{\partial t} + \vec{\nabla} \cdot \vec{\Pi} = - \vec{j} \cdot \vec{E} $$
+    </div>
+    <p>Cette équation exprime la conservation de l'énergie sous forme locale.</p>
+
+    <h3 id="densite-energie">5.2 Densité d'Énergie Électromagnétique</h3>
+    <div class="definition">
+        <p>Le terme $u_{em}$ représente la <strong>densité volumique d'énergie électromagnétique</strong> (J/m³) stockée dans les champs. Dans le vide :</p>
+        $$ u_{em} = u_e + u_m = \frac{1}{2} \epsilon_0 E^2 + \frac{1}{2 \mu_0} B^2 $$
+        <p>Dans une OPPM dans le vide ($E=cB$), $u_e = \frac{1}{2}\epsilon_0 (cB)^2 = \frac{1}{2}\epsilon_0 c^2 B^2 = \frac{1}{2}\epsilon_0 \frac{1}{\mu_0 \epsilon_0} B^2 = \frac{1}{2\mu_0} B^2 = u_m$. L'énergie est équipartie entre les formes électrique et magnétique.</p>
+    </div>
+
+     <h3 id="vecteur-poynting">5.3 Vecteur de Poynting et Flux d'Énergie</h3>
+     <div class="definition">
+        <p>Le terme $\vec{\Pi}$ est le <strong>vecteur de Poynting</strong> (W/m²). Dans le vide :</p>
+        $$ \vec{\Pi} = \frac{\vec{E} \times \vec{B}}{\mu_0} $$
+        <p>Le vecteur de Poynting représente la <strong>densité de flux d'énergie</strong> :</p>
+        <ul>
+            <li>Sa direction indique le sens de propagation de l'énergie électromagnétique.</li>
+            <li>Sa norme $|| \vec{\Pi} ||$ est la puissance électromagnétique qui traverse une surface unité perpendiculaire à $\vec{\Pi}$.</li>
+        </ul>
+        <p>Le terme $\vec{\nabla} \cdot \vec{\Pi}$ représente la puissance volumique qui quitte un volume élémentaire (flux sortant par unité de volume).</p>
+        <p>Le terme $-\vec{j} \cdot \vec{E}$ représente la puissance volumique cédée par les champs aux charges (par travail de la force électrique). C'est la puissance volumique dissipée par effet Joule si $\vec{j} = \sigma \vec{E}$ (loi d'Ohm locale).</p>
+    </div>
+    <p>Pour une OPPM dans le vide, $\vec{E} \perp \vec{B}$, donc $||\vec{E} \times \vec{B}|| = E B = c B^2$.</p>
+    $$ ||\vec{\Pi}|| = \frac{E B}{\mu_0} = \frac{c B^2}{\mu_0} $$
+    <p>La densité d'énergie est $u_{em} = u_e + u_m = \frac{B^2}{\mu_0}$. On a donc la relation :</p>
+    $$ ||\vec{\Pi}|| = c \, u_{em} $$
+    <p>L'énergie électromagnétique se propage à la vitesse $c$. La direction de $\vec{\Pi}$ est celle de $\vec{E} \times \vec{B}$, qui est colinéaire à $\vec{k}$ (direction de propagation de l'onde).</p>
+
+    <div class="arqs-section">
+    <h2 id="arqs">6. L'Approximation des Régimes Quasi-Stationnaires (ARQS)</h2>
+
+    <h3 id="arqs-motivation">6.1 Motivation et Principe</h3>
+    <p>Les équations de Maxwell complètes décrivent la propagation des champs à la vitesse finie $c$. Dans de nombreux systèmes (circuits électriques à basse fréquence, électroaimants...), les échelles de temps caractéristiques des variations des sources (période $T$) sont beaucoup plus grandes que les temps de propagation des signaux à travers le système ($\tau \approx L/c$, où $L$ est la taille caractéristique du système).</p>
+    <p>Dans ce cas, on peut considérer que l'information se propage "instantanément" à l'échelle du système. C'est le principe de l'<strong>Approximation des Régimes Quasi-Stationnaires (ARQS)</strong>.</p>
+    <blockquote>L'ARQS consiste à négliger les temps de propagation des signaux électromagnétiques devant les temps caractéristiques de variation des sources.</blockquote>
+
+    <h3 id="arqs-conditions">6.2 Conditions de Validité ($L \ll \lambda$)</h3>
+    <p>La condition fondamentale pour l'ARQS est que le temps de propagation $\tau = L/c$ soit très inférieur à la période $T = 1/f = 2\pi/\omega$ des variations :</p>
+    $$ \tau \ll T \implies \frac{L}{c} \ll \frac{1}{f} \implies L \ll \frac{c}{f} $$
+    <p>Or, $\lambda = c/f$ est la longueur d'onde associée à la fréquence $f$. La condition s'écrit donc :</p>
+    <div class="important">
+        <p><strong>Condition de validité de l'ARQS :</strong></p>
+        $$ L \ll \lambda $$
+        La taille caractéristique $L$ du système doit être petite devant la longueur d'onde $\lambda$ des champs électromagnétiques considérés.
+    </div>
+    <p>Exemple : Pour $f=50$ Hz (secteur), $\lambda = c/f \approx 3\times 10^8 / 50 = 6000$ km. L'ARQS est excellente pour tous les circuits usuels.</p>
+    <p>Pour $f=1$ GHz (micro-ondes), $\lambda = 0.3$ m = 30 cm. L'ARQS n'est valable que pour des circuits de taille centimétrique.</p>
+
+    <h3 id="arqs-consequences">6.3 Conséquences Générales</h3>
+    <p>Sous l'ARQS, on considère que le champ en un point M à l'instant $t$ est déterminé par l'état des sources $(\rho, \vec{j})$ au même instant $t$ (on néglige le retard dû à la propagation). Les équations de Maxwell sont simplifiées, mais de différentes manières selon les phénomènes dominants.</p>
+    <p>On distingue deux approximations principales, selon que l'on néglige les effets d'induction magnétique ou le courant de déplacement.</p>
+
+    <h3 id="arqs-aeqs">6.4 Approximation Électrique Quasi-Stationnaire (AEQS)</h3>
+    <p>L'AEQS (parfois appelée ARQS-E) est utilisée quand les phénomènes électriques (capacitifs, charges) dominent les phénomènes magnétiques (inductifs).</p>
+    <p><strong>Hypothèse :</strong> On néglige les effets d'induction créés par les variations temporelles des courants et des champs magnétiques. Mathématiquement, on suppose que le terme $\partial \vec{B}/\partial t$ dans Maxwell-Faraday a un effet négligeable sur $\vec{E}$.</p>
+    <p><strong>Équations AEQS :</strong></p>
+    <div class="definition">
+        $$ \vec{\nabla} \cdot \vec{E}(M, t) = \frac{\rho(M, t)}{\epsilon_0} \quad \text{(Maxwell-Gauss inchangée)} $$
+        $$ \vec{\nabla} \times \vec{E}(M, t) \approx \vec{0} \quad \text{(Maxwell-Faraday simplifiée)} $$
+        $$ \vec{\nabla} \cdot \vec{B}(M, t) = 0 \quad \text{(Maxwell-Flux inchangée)} $$
+        $$ \vec{\nabla} \times \vec{B}(M, t) = \mu_0 \vec{j}(M, t) + \mu_0 \epsilon_0 \frac{\partial \vec{E}(M, t)}{\partial t} \quad \text{(Maxwell-Ampère inchangée)} $$
+    </div>
+    <p><strong>Conséquences :</strong></p>
+    <ul>
+        <li>Puisque $\vec{\nabla} \times \vec{E} \approx \vec{0}$, le champ électrique dérive (approximativement) d'un potentiel scalaire : $\vec{E}(M, t) \approx - \vec{\nabla} V(M, t)$. C'est l'<strong>approximation électrostatique pour $\vec{E}$</strong>, mais appliquée à des champs et potentiels qui peuvent varier lentement dans le temps.</li>
+        <li>Le potentiel est donné (comme en statique) par $V(M, t) \approx \int \frac{\rho(P, t)}{4\pi\epsilon_0 r} dV_P$.</li>
+        <li>Le champ magnétique $\vec{B}$ est créé à la fois par les courants $\vec{j}$ et le courant de déplacement $\epsilon_0 \partial \vec{E}/\partial t$. Ce dernier est souvent crucial en AEQS (ex: condensateur).</li>
+        <li>L'équation de continuité $\vec{\nabla} \cdot \vec{j} + \partial \rho/\partial t = 0$ est toujours valable ; les courants ne sont pas forcément à divergence nulle ($\rho$ peut varier).</li>
+    </ul>
+    <p><strong>Domaine d'application :</strong> Étude des phénomènes capacitifs, circuits RC à basses fréquences, électrostatique des conducteurs en influence variable.</p>
+
+    <h3 id="arqs-amqs">6.5 Approximation Magnétique Quasi-Stationnaire (AMQS)</h3>
+     <p>L'AMQS (parfois appelée ARQS-M) est utilisée quand les phénomènes magnétiques (inductifs, courants) dominent les phénomènes électriques (capacitifs).</p>
+    <p><strong>Hypothèse :</strong> On néglige le <strong>courant de déplacement</strong> $\vec{j}_D = \epsilon_0 \partial \vec{E}/\partial t$ devant les courants de conduction $\vec{j}$ dans l'équation de Maxwell-Ampère.</p>
+    <p><strong>Équations AMQS :</strong></p>
+     <div class="definition">
+        $$ \vec{\nabla} \times \vec{B}(M, t) \approx \mu_0 \vec{j}(M, t) \quad \text{(Maxwell-Ampère simplifiée)} $$
+        $$ \vec{\nabla} \cdot \vec{B}(M, t) = 0 \quad \text{(Maxwell-Flux inchangée)} $$
+        $$ \vec{\nabla} \times \vec{E}(M, t) = - \frac{\partial \vec{B}(M, t)}{\partial t} \quad \text{(Maxwell-Faraday inchangée)} $$
+        $$ \vec{\nabla} \cdot \vec{E}(M, t) = \frac{\rho(M, t)}{\epsilon_0} \quad \text{(Maxwell-Gauss inchangée, mais souvent $\rho \approx 0$ dans les conducteurs)} $$
+    </div>
+    <p><strong>Conséquences :</strong></p>
+    <ul>
+        <li>L'équation de Maxwell-Ampère simplifiée $\vec{\nabla} \times \vec{B} \approx \mu_0 \vec{j}$ a la même forme qu'en magnétostatique. Le champ $\vec{B}$ à l'instant $t$ peut être calculé à partir des courants $\vec{j}$ au même instant $t$ par la loi de Biot et Savart ou le théorème d'Ampère statique.</li>
+        <li>La divergence de $\vec{\nabla} \times \vec{B} \approx \mu_0 \vec{j}$ donne $0 \approx \mu_0 \vec{\nabla} \cdot \vec{j}$. L'AMQS implique que les courants sont (approximativement) à <strong>flux conservatif</strong> : $\vec{\nabla} \cdot \vec{j} \approx 0$. Les lignes de courant se referment. Cela implique aussi $\partial \rho/\partial t \approx 0$ (pas d'accumulation locale de charge).</li>
+        <li>Le champ électrique $\vec{E}$ a deux composantes : une composante conservative (souvent liée aux générateurs) et une composante induite non conservative due à $\partial \vec{B}/\partial t$. L'induction électromagnétique est essentielle en AMQS.</li>
+    </ul>
+    <p><strong>Domaine d'application :</strong> Étude des phénomènes inductifs, courants de Foucault, circuits RL et RLC à basses fréquences, transformateurs, électroaimants en régime variable lent.</p>
+
+    <h3 id="arqs-circuits">6.6 Application à la Théorie des Circuits (Lois de Kirchhoff)</h3>
+    <p>La théorie des circuits électriques (lois de Kirchhoff, impédances) repose fondamentalement sur l'ARQS.</p>
+    <ul>
+        <li><strong>Loi des nœuds (Kirchhoff I) :</strong> $\sum I_{entrant} = \sum I_{sortant}$. Elle découle de $\vec{\nabla} \cdot \vec{j} \approx 0$ (conservation du courant en AMQS, ou conservation de la charge globale en AEQS).</li>
+        <li><strong>Loi des mailles (Kirchhoff II) :</strong> $\sum V_k = \sum e_k$. La somme des "tensions" aux bornes des dipôles passifs est égale à la somme des f.é.m des générateurs dans une maille. La notion de tension $U_{AB} = V_A - V_B = \int_A^B \vec{E} \cdot d\vec{l}$ n'a de sens strict que si $\vec{E}$ dérive d'un potentiel (AEQS). Cependant, la loi des mailles est généralement établie à partir de la loi de Faraday intégrale $\oint \vec{E} \cdot d\vec{l} = -d\Phi_B/dt$ en séparant les contributions des générateurs, des résistances ($RI$), des inductances (f.é.m induite $-L dI/dt$) et des condensateurs ($Q/C$). L'ARQS permet de définir ces composants localisés (R, L, C) et d'ignorer les temps de propagation entre eux.</li>
+    </ul>
+    <blockquote>L'ARQS permet de passer de la description continue des champs (Maxwell) à la description discrète des circuits (Kirchhoff).</blockquote>
+
+    <h3 id="arqs-limites">6.7 Limites de l'ARQS et Effet de Peau</h3>
+    <p>Lorsque la fréquence augmente ou la taille du système devient comparable à la longueur d'onde ($L \sim \lambda$), l'ARQS n'est plus valide. Il faut utiliser les équations de Maxwell complètes.</p>
+    <p>Un phénomène limite important, souvent étudié dans le cadre de l'AMQS mais qui montre ses limites, est l'<strong>effet de peau</strong> (ou effet pelliculaire) :</p>
+    <ul>
+        <li>Dans un conducteur soumis à un champ électromagnétique variable, les courants induits (courants de Foucault) tendent à s'opposer à la pénétration du champ.</li>
+        <li>Le courant de conduction $\vec{j}$ ne se répartit plus uniformément dans la section du conducteur, mais se concentre près de la surface.</li>
+        <li>La profondeur de pénétration du courant (et du champ), appelée <strong>épaisseur de peau $\delta$</strong>, diminue lorsque la fréquence $f$, la conductivité $\sigma$ ou la perméabilité $\mu$ augmentent :
+            $$ \delta = \sqrt{\frac{2}{\mu \sigma \omega}} = \sqrt{\frac{1}{\pi f \mu \sigma}} $$
+        </li>
+        <li>Lorsque $\delta$ devient petite devant les dimensions transversales du conducteur, l'AMQS ($\vec{\nabla} \times \vec{B} \approx \mu_0 \vec{j}$) est encore souvent utilisée pour décrire le phénomène, mais elle échoue à prédire correctement la propagation à l'intérieur si l'on ne tient pas compte du couplage complet. L'effet de peau augmente la résistance effective du conducteur en haute fréquence.</li>
+    </ul>
+    </div> <!-- Fin de la arqs-section -->
+
+    <h2 id="conclusion-arqs">7. Conclusion</h2>
+    <p>L'électromagnétisme en régime variable, régi par les équations de Maxwell, révèle le couplage fondamental entre les champs électrique et magnétique et prédit l'existence des ondes électromagnétiques se propageant à la vitesse $c$.</p>
+    <p>L'<strong>Approximation des Régimes Quasi-Stationnaires (ARQS)</strong> est un outil puissant et essentiel pour simplifier l'étude dans de nombreuses situations où les dimensions du système sont petites devant la longueur d'onde ($L \ll \lambda$). Elle se décline en deux versions principales :</p>
+    <ul>
+        <li>L'<strong>AEQS</strong>, où $\vec{E} \approx -\vec{\nabla} V$, utile pour les phénomènes capacitifs.</li>
+        <li>L'<strong>AMQS</strong>, où $\vec{\nabla} \times \vec{B} \approx \mu_0 \vec{j}$, utile pour les phénomènes inductifs et justifiant la conservation du courant $\vec{\nabla} \cdot \vec{j} \approx 0$.</li>
+    </ul>
+    <p>L'ARQS fonde la théorie des circuits électriques mais montre ses limites à haute fréquence ou pour des systèmes étendus, où une analyse complète basée sur les équations de Maxwell et la propagation d'onde devient nécessaire.</p>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+</html>
