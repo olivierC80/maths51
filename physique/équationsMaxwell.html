@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours d'Électromagnétisme - Relations de Maxwell (Maths Spé)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"  crossorigin="anonymous"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; padding: 25px; max-width: 950px; margin: auto; color: #333; }
+        h1, h2, h3, h4 { color: #005A9C; border-bottom: 2px solid #005A9C; padding-bottom: 8px; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 3px solid #004080; }
+        .katex-display { display: block; text-align: center; margin: 1.2em 0; overflow-x: auto; padding: 5px; }
+        .katex { font-size: 1.15em; } /* Slightly larger formulas */
+        code { background-color: #eef; padding: 3px 6px; border-radius: 4px; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; }
+        strong { color: #c00; }
+        blockquote { border-left: 4px solid #005A9C; padding-left: 20px; margin-left: 0; font-style: italic; color: #555; background-color: #f8f8ff; }
+        .definition { border: 1px solid #99c; background-color: #f0f0ff; padding: 18px; margin: 20px 0; border-radius: 8px; box-shadow: 2px 2px 5px #ddd; }
+        .theorem { border: 1px solid #a9a; background-color: #fcfff0; padding: 18px; margin: 20px 0; border-radius: 8px; box-shadow: 2px 2px 5px #ddd; }
+        .important { border: 1px solid #c99; background-color: #fff0f0; padding: 18px; margin: 20px 0; border-radius: 8px; box-shadow: 2px 2px 5px #ddd; }
+        #toc { border: 1px solid #ccc; background-color: #fdfdfd; padding: 15px; margin-bottom: 25px; border-radius: 5px; }
+        #toc h2 { border-bottom: none; margin-top: 0; }
+        #toc ul { list-style: none; padding-left: 0; }
+        #toc ul li { margin-bottom: 8px; }
+        #toc ul li a { text-decoration: none; color: #005A9C; }
+        #toc ul li a:hover { text-decoration: underline; color: #004080; }
+        /* Style for the Maxwell equations block */
+        .maxwell-equations { border: 2px solid #004080; padding: 20px; margin: 25px 0; background-color: #eaf2ff; border-radius: 10px; }
+        .maxwell-equations h3 { border-bottom: 1px dashed #005A9C; margin-top: 0; }
+    </style>
+</head>
+<body>
+
+    <h1>Électromagnétisme - Les Équations de Maxwell</h1>
+    <p><em>Niveau : Mathématiques Spéciales (MP, PC, PSI)</em></p>
+
+    <div id="toc">
+        <h2>Table des Matières</h2>
+        <ul>
+            <li><a href="#intro">1. Introduction et Contexte</a></li>
+            <li><a href="#prerequis">2. Prérequis Mathématiques : Analyse Vectorielle</a></li>
+            <li><a href="#equations-locales">3. Les Équations de Maxwell (Forme Locale)</a>
+                <ul>
+                    <li><a href="#maxwell-gauss-e">3.1 Équation de Maxwell-Gauss (Électrique)</a></li>
+                    <li><a href="#maxwell-gauss-b">3.2 Équation de Maxwell-Flux (Magnétique)</a></li>
+                    <li><a href="#maxwell-faraday">3.3 Équation de Maxwell-Faraday</a></li>
+                    <li><a href="#maxwell-ampere">3.4 Équation de Maxwell-Ampère</a></li>
+                    <li><a href="#synthese-locale">3.5 Synthèse des Équations Locales</a></li>
+                </ul>
+            </li>
+            <li><a href="#equations-media">4. Équations de Maxwell dans les Milieux Matériels</a>
+                 <ul>
+                    <li><a href="#champs-macroscopiques">4.1 Champs Macroscopiques $\vec{D}$ et $\vec{H}$</a></li>
+                    <li><a href="#equations-media-local">4.2 Forme Locale dans les Milieux</a></li>
+                    <li><a href="#relations-constitutives">4.3 Relations Constitutives (Milieux LHI)</a></li>
+                </ul>
+            </li>
+            <li><a href="#equations-integrales">5. Formes Intégrales des Équations de Maxwell</a>
+                 <ul>
+                    <li><a href="#theoreme-gauss-e">5.1 Théorème de Gauss (Électrique)</a></li>
+                    <li><a href="#flux-b">5.2 Conservation du Flux Magnétique</a></li>
+                    <li><a href="#loi-faraday">5.3 Loi de Faraday (Induction)</a></li>
+                    <li><a href="#theoreme-ampere">5.4 Théorème d'Ampère Généralisé</a></li>
+                     <li><a href="#lien-local-integral">5.5 Lien entre Formes Locale et Intégrale</a></li>
+                </ul>
+            </li>
+            <li><a href="#consequences">6. Conséquences Fondamentales ("Relations de Maxwell")</a>
+                 <ul>
+                    <li><a href="#conservation-charge">6.1 Conservation de la Charge Électrique</a></li>
+                    <li><a href="#potentiels">6.2 Potentiels Scalaire et Vecteur</a></li>
+                    <li><a href="#ondes-em">6.3 Propagation d'Ondes Électromagnétiques</a></li>
+                    <li><a href="#energie-em">6.4 Énergie Électromagnétique et Vecteur de Poynting</a></li>
+                </ul>
+            </li>
+            <li><a href="#conclusion">7. Conclusion : La Puissance Unificatrice de Maxwell</a></li>
+        </ul>
+    </div>
+
+    <h2 id="intro">1. Introduction et Contexte</h2>
+    <p>Les <strong>équations de Maxwell</strong> constituent le fondement de l'électromagnétisme classique. Publiées par James Clerk Maxwell entre 1861 et 1865, elles unifient l'électricité, le magnétisme et l'optique en décrivant le comportement des champs électrique ($\vec{E}$) et magnétique ($\vec{B}$), leurs sources (charges $\rho$ et courants $\vec{j}$) et leurs interdépendances.</p>
+    <p>Ces équations, sous leur forme locale (différentielle), décrivent les phénomènes électromagnétiques en tout point de l'espace et à tout instant. Elles prédisent notamment l'existence des <strong>ondes électromagnétiques</strong> (dont la lumière est un exemple) se propageant à une vitesse $c$ qui peut être calculée à partir des constantes fondamentales de l'électricité ($\epsilon_0$) et du magnétisme ($\mu_0$).</p>
+    <p>Ce cours présente les équations de Maxwell sous leurs formes locale et intégrale, dans le vide et dans les milieux matériels, et explore certaines de leurs conséquences majeures, souvent appelées collectivement (bien qu'improprement en thermodynamique) les "relations de Maxwell" dans le contexte de l'électromagnétisme.</p>
+    <blockquote>
+        "From a long view of the history of mankind — seen from, say, ten thousand years from now — there can be little doubt that the most significant event of the 19th century will be judged as Maxwell's discovery of the laws of electrodynamics." - Richard Feynman
+    </blockquote>
+
+    <h2 id="prerequis">2. Prérequis Mathématiques : Analyse Vectorielle</h2>
+    <p>La formulation locale des équations de Maxwell repose sur les opérateurs différentiels de l'analyse vectorielle :</p>
+    <ul>
+        <li><strong>Gradient d'un champ scalaire $f$ :</strong> $\vec{\nabla} f = \left( \frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \frac{\partial f}{\partial z} \right)$ (en coordonnées cartésiennes). Mesure la direction et le taux de variation maximal de $f$.</li>
+        <li><strong>Divergence d'un champ vectoriel $\vec{A}$ :</strong> $\vec{\nabla} \cdot \vec{A} = \frac{\partial A_x}{\partial x} + \frac{\partial A_y}{\partial y} + \frac{\partial A_z}{\partial z}$. Mesure le flux sortant infinitésimal par unité de volume (caractérise les sources/puits).</li>
+        <li><strong>Rotationnel d'un champ vectoriel $\vec{A}$ :</strong> $\vec{\nabla} \times \vec{A} = \begin{pmatrix} \partial_y A_z - \partial_z A_y \\ \partial_z A_x - \partial_x A_z \\ \partial_x A_y - \partial_y A_x \end{pmatrix}$. Mesure la tendance locale du champ à "tourner" (caractérise les tourbillons).</li>
+        <li><strong>Laplacien scalaire $\Delta f = \vec{\nabla} \cdot (\vec{\nabla} f)$ et Laplacien vectoriel $\Delta \vec{A} = \vec{\nabla}(\vec{\nabla} \cdot \vec{A}) - \vec{\nabla} \times (\vec{\nabla} \times \vec{A})$.</strong></li>
+    </ul>
+    <p>Les identités vectorielles suivantes sont cruciales :</p>
+    <ul>
+        <li>$\vec{\nabla} \cdot (\vec{\nabla} \times \vec{A}) = 0$ (La divergence d'un rotationnel est toujours nulle).</li>
+        <li>$\vec{\nabla} \times (\vec{\nabla} f) = \vec{0}$ (Le rotationnel d'un gradient est toujours nul).</li>
+    </ul>
+    <p>Les théorèmes intégraux reliant les formes locales et globales sont également fondamentaux :</p>
+    <ul>
+        <li><strong>Théorème de Stokes :</strong> Relie la circulation d'un champ vectoriel $\vec{A}$ sur un contour fermé $\mathcal{C}$ au flux de son rotationnel à travers toute surface $\mathcal{S}$ s'appuyant sur $\mathcal{C}$.
+            $$ \oint_{\mathcal{C}} \vec{A} \cdot d\vec{l} = \iint_{\mathcal{S}} (\vec{\nabla} \times \vec{A}) \cdot d\vec{S} $$
+        </li>
+        <li><strong>Théorème de la divergence (Ostrogradsky / Gauss) :</strong> Relie le flux d'un champ vectoriel $\vec{A}$ sortant d'une surface fermée $\Sigma$ à l'intégrale de sa divergence sur le volume $\mathcal{V}$ délimité par $\Sigma$.
+            $$ \oiint_{\Sigma} \vec{A} \cdot d\vec{S} = \iiint_{\mathcal{V}} (\vec{\nabla} \cdot \vec{A}) \, dV $$
+        </li>
+    </ul>
+
+    <h2 id="equations-locales">3. Les Équations de Maxwell (Forme Locale dans le Vide)</h2>
+    <p>Ces équations décrivent les relations entre le champ électrique $\vec{E}$, le champ magnétique $\vec{B}$, la densité volumique de charge $\rho$ et la densité de courant $\vec{j}$ en tout point $(x,y,z)$ à l'instant $t$.</p>
+
+    <div class="maxwell-equations">
+    <h3>Synthèse des Équations Locales dans le Vide</h3>
+
+    <h4 id="maxwell-gauss-e">3.1 Équation de Maxwell-Gauss (Électrique)</h4>
+    <div class="definition">
+        $$ \vec{\nabla} \cdot \vec{E} = \frac{\rho}{\epsilon_0} $$
+        <ul>
+            <li>$\vec{E}$ : Champ électrique (V/m)</li>
+            <li>$\rho$ : Densité volumique de charge (C/m³)</li>
+            <li>$\epsilon_0$ : Permittivité diélectrique du vide ($\approx 8.854 \times 10^{-12}$ F/m)</li>
+        </ul>
+        <strong>Signification :</strong> Les charges électriques sont les sources (ou puits) du champ électrique. La divergence de $\vec{E}$ en un point est proportionnelle à la densité de charge locale.
+    </div>
+
+    <h4 id="maxwell-gauss-b">3.2 Équation de Maxwell-Flux (Magnétique)</h4>
+     <div class="definition">
+        $$ \vec{\nabla} \cdot \vec{B} = 0 $$
+        <ul>
+            <li>$\vec{B}$ : Champ magnétique (ou induction magnétique) (Tesla, T)</li>
+        </ul>
+        <strong>Signification :</strong> Il n'existe pas de monopôles magnétiques (sources ou puits isolés de champ $\vec{B}$). Le champ magnétique est à flux conservatif ; les lignes de champ $\vec{B}$ se referment sur elles-mêmes.
+    </div>
+
+    <h4 id="maxwell-faraday">3.3 Équation de Maxwell-Faraday</h4>
+    <div class="definition">
+        $$ \vec{\nabla} \times \vec{E} = - \frac{\partial \vec{B}}{\partial t} $$
+        <strong>Signification :</strong> Un champ magnétique variable dans le temps ($\partial \vec{B}/\partial t$) induit un champ électrique rotationnel (non conservatif). C'est la loi de l'induction électromagnétique sous forme locale.
+    </div>
+
+    <h4 id="maxwell-ampere">3.4 Équation de Maxwell-Ampère</h4>
+    <div class="definition">
+        $$ \vec{\nabla} \times \vec{B} = \mu_0 \vec{j} + \mu_0 \epsilon_0 \frac{\partial \vec{E}}{\partial t} $$
+        <ul>
+            <li>$\vec{j}$ : Densité de courant volumique (A/m²)</li>
+            <li>$\mu_0$ : Perméabilité magnétique du vide ($= 4\pi \times 10^{-7}$ H/m)</li>
+            <li>$\mu_0 \epsilon_0 \frac{\partial \vec{E}}{\partial t}$ : Terme de <strong>courant de déplacement</strong> (introduit par Maxwell)</li>
+        </ul>
+        <strong>Signification :</strong> Un champ magnétique rotationnel est créé par :
+        <ol>
+            <li>Les courants électriques ($\vec{j}$).</li>
+            <li>Un champ électrique variable dans le temps ($\partial \vec{E}/\partial t$), même en l'absence de charges en mouvement (courant de déplacement). Ce terme est crucial pour l'existence des ondes électromagnétiques.</li>
+        </ol>
+    </div>
+
+    </div> <!-- Fin de la div maxwell-equations -->
+
+    <h4 id="synthese-locale">3.5 Synthèse des Équations Locales</h4>
+    <p>Ces quatre équations, complétées par l'expression de la <strong>force de Lorentz</strong> exercée sur une charge $q$ se déplaçant à la vitesse $\vec{v}$ :</p>
+    <div class="important">
+        $$ \vec{F} = q (\vec{E} + \vec{v} \times \vec{B}) $$
+    </div>
+    <p>forment un système complet décrivant l'interaction des charges, des courants et des champs électromagnétiques.</p>
+
+    <h2 id="equations-media">4. Équations de Maxwell dans les Milieux Matériels</h2>
+    <p>Lorsqu'on considère la propagation des champs dans des milieux matériels (conducteurs, diélectriques, magnétiques), il est commode d'introduire des champs auxiliaires qui tiennent compte de la réponse du milieu (polarisation $\vec{P}$, aimantation $\vec{M}$).</p>
+
+    <h3 id="champs-macroscopiques">4.1 Champs Macroscopiques $\vec{D}$ et $\vec{H}$</h3>
+    <p>On distingue les charges et courants <strong>libres</strong> ($\rho_{libre}, \vec{j}_{libre}$), qui correspondent aux porteurs pouvant se déplacer macroscopiquement (électrons de conduction, ions...), des charges et courants <strong>liés</strong> ($\rho_{lié}, \vec{j}_{lié}$), qui résultent de la déformation ou de l'orientation des atomes/molécules du matériau sous l'effet des champs $\vec{E}$ et $\vec{B}$.</p>
+    <ul>
+        <li>Densité de charge liée : $\rho_{lié} = - \vec{\nabla} \cdot \vec{P}$</li>
+        <li>Densité de courant lié : $\vec{j}_{lié} = \vec{\nabla} \times \vec{M} + \frac{\partial \vec{P}}{\partial t}$</li>
+    </ul>
+    <p>Où $\vec{P}$ est le vecteur polarisation électrique (moment dipolaire électrique par unité de volume) et $\vec{M}$ est le vecteur aimantation (moment dipolaire magnétique par unité de volume).</p>
+
+    <p>On introduit alors deux nouveaux champs :</p>
+    <ul>
+        <li><strong>Champ déplacement électrique $\vec{D}$ :</strong>
+            $$ \vec{D} = \epsilon_0 \vec{E} + \vec{P} $$
+        </li>
+        <li><strong>Champ magnétique $\vec{H}$ (ou excitation magnétique) :</strong>
+            $$ \vec{H} = \frac{1}{\mu_0} \vec{B} - \vec{M} $$
+        </li>
+    </ul>
+    <p>Ces champs ont l'avantage de ne dépendre (dans les équations de Maxwell modifiées) que des sources <strong>libres</strong>.</p>
+
+    <h3 id="equations-media-local">4.2 Forme Locale dans les Milieux</h3>
+    <p>En utilisant les définitions de $\vec{D}$ et $\vec{H}$, les équations de Maxwell deviennent :</p>
+    <div class="maxwell-equations">
+    <h3>Équations de Maxwell Locales dans les Milieux</h3>
+        <div class="definition">
+            $$ \vec{\nabla} \cdot \vec{D} = \rho_{libre} $$
+            $$ \vec{\nabla} \cdot \vec{B} = 0 $$
+            $$ \vec{\nabla} \times \vec{E} = - \frac{\partial \vec{B}}{\partial t} $$
+            $$ \vec{\nabla} \times \vec{H} = \vec{j}_{libre} + \frac{\partial \vec{D}}{\partial t} $$
+        </div>
+    </div>
+    <p>Notez que les deux équations impliquant des dérivées temporelles ($\vec{\nabla} \times \vec{E}$ et $\vec{\nabla} \cdot \vec{B}$) restent inchangées car elles ne dépendent pas des sources. Les deux autres équations font maintenant intervenir les sources libres via les champs $\vec{D}$ et $\vec{H}$.</p>
+
+    <h3 id="relations-constitutives">4.3 Relations Constitutives (Milieux LHI)</h3>
+    <p>Pour résoudre des problèmes concrets, il faut relier $\vec{D}$ et $\vec{H}$ aux champs "fondamentaux" $\vec{E}$ et $\vec{B}$. Ces relations dépendent des propriétés du matériau et sont appelées <strong>relations constitutives</strong>.</p>
+    <p>Pour de nombreux matériaux, en particulier en régime de champ faible, on peut considérer le milieu comme <strong>Linéaire, Homogène et Isotrope (LHI)</strong> :</p>
+    <ul>
+        <li><strong>Linéaire :</strong> La réponse du milieu ($\vec{P}, \vec{M}$) est proportionnelle aux champs appliqués.</li>
+        <li><strong>Homogène :</strong> Les propriétés du milieu sont les mêmes en tout point.</li>
+        <li><strong>Isotrope :</strong> Les propriétés du milieu sont les mêmes dans toutes les directions.</li>
+    </ul>
+    <p>Dans ce cas, les relations constitutives s'écrivent :</p>
+    <div class="definition">
+        $$ \vec{P} = \epsilon_0 \chi_e \vec{E} \implies \vec{D} = \epsilon_0 (1 + \chi_e) \vec{E} = \epsilon_0 \epsilon_r \vec{E} = \epsilon \vec{E} $$
+        $$ \vec{M} = \chi_m \vec{H} \implies \vec{B} = \mu_0 (1 + \chi_m) \vec{H} = \mu_0 \mu_r \vec{H} = \mu \vec{H} $$
+        <ul>
+            <li>$\chi_e$ : Susceptibilité électrique (sans dimension)</li>
+            <li>$\chi_m$ : Susceptibilité magnétique (sans dimension)</li>
+            <li>$\epsilon_r = 1 + \chi_e$ : Permittivité relative (ou constante diélectrique relative)</li>
+            <li>$\mu_r = 1 + \chi_m$ : Perméabilité relative</li>
+            <li>$\epsilon = \epsilon_0 \epsilon_r$ : Permittivité absolue du milieu (F/m)</li>
+            <li>$\mu = \mu_0 \mu_r$ : Perméabilité absolue du milieu (H/m)</li>
+        </ul>
+    </div>
+    <p>Pour les conducteurs ohmiques LHI, on a aussi la loi d'Ohm locale : $\vec{j}_{libre} = \sigma \vec{E}$, où $\sigma$ est la conductivité électrique (S/m).</p>
+
+    <h2 id="equations-integrales">5. Formes Intégrales des Équations de Maxwell</h2>
+    <p>Les formes intégrales sont souvent plus intuitives et utiles pour les problèmes présentant des symétries. Elles sont obtenues en intégrant les formes locales sur des volumes ou des surfaces appropriés et en utilisant les théorèmes de Stokes et de la divergence.</p>
+
+    <div class="maxwell-equations">
+    <h3>Équations de Maxwell Intégrales (dans le Vide)</h3>
+
+    <h3 id="theoreme-gauss-e">5.1 Théorème de Gauss (Électrique)</h3>
+     <p>Intégration de $\vec{\nabla} \cdot \vec{E} = \rho/\epsilon_0$ sur un volume $\mathcal{V}$ délimité par une surface fermée $\Sigma$ :</p>
+    <div class="theorem">
+        $$ \oiint_{\Sigma} \vec{E} \cdot d\vec{S} = \frac{1}{\epsilon_0} \iiint_{\mathcal{V}} \rho \, dV = \frac{Q_{int}}{\epsilon_0} $$
+        <ul>
+             <li>$d\vec{S}$ : Vecteur surface élémentaire sortant</li>
+             <li>$Q_{int}$ : Charge totale contenue dans le volume $\mathcal{V}$</li>
+        </ul>
+        <strong>Signification :</strong> Le flux du champ électrique sortant d'une surface fermée est proportionnel à la charge totale enfermée.
+    </div>
+
+    <h3 id="flux-b">5.2 Conservation du Flux Magnétique</h3>
+    <p>Intégration de $\vec{\nabla} \cdot \vec{B} = 0$ sur un volume $\mathcal{V}$ délimité par une surface fermée $\Sigma$ :</p>
+    <div class="theorem">
+        $$ \oiint_{\Sigma} \vec{B} \cdot d\vec{S} = 0 $$
+        <strong>Signification :</strong> Le flux du champ magnétique sortant de toute surface fermée est nul (pas de monopôles magnétiques).
+    </div>
+
+    <h3 id="loi-faraday">5.3 Loi de Faraday (Induction)</h3>
+    <p>Intégration de $\vec{\nabla} \times \vec{E} = -\partial \vec{B}/\partial t$ sur une surface ouverte $\mathcal{S}$ s'appuyant sur un contour fermé $\mathcal{C}$ :</p>
+    <div class="theorem">
+        $$ \oint_{\mathcal{C}} \vec{E} \cdot d\vec{l} = - \iint_{\mathcal{S}} \frac{\partial \vec{B}}{\partial t} \cdot d\vec{S} = - \frac{d}{dt} \iint_{\mathcal{S}} \vec{B} \cdot d\vec{S} = - \frac{d \Phi_B}{dt} $$
+        <ul>
+            <li>$d\vec{l}$ : Vecteur déplacement élémentaire le long de $\mathcal{C}$</li>
+            <li>$\Phi_B = \iint_{\mathcal{S}} \vec{B} \cdot d\vec{S}$ : Flux magnétique à travers la surface $\mathcal{S}$</li>
+        </ul>
+        <strong>Signification :</strong> La circulation du champ électrique sur un contour fermé (force électromotrice induite $e$) est égale à l'opposé de la dérivée temporelle du flux magnétique traversant ce contour.
+    </div>
+
+    <h3 id="theoreme-ampere">5.4 Théorème d'Ampère Généralisé</h3>
+    <p>Intégration de $\vec{\nabla} \times \vec{B} = \mu_0 \vec{j} + \mu_0 \epsilon_0 \partial \vec{E}/\partial t$ sur une surface ouverte $\mathcal{S}$ s'appuyant sur un contour fermé $\mathcal{C}$ :</p>
+    <div class="theorem">
+        $$ \oint_{\mathcal{C}} \vec{B} \cdot d\vec{l} = \mu_0 \iint_{\mathcal{S}} \vec{j} \cdot d\vec{S} + \mu_0 \epsilon_0 \iint_{\mathcal{S}} \frac{\partial \vec{E}}{\partial t} \cdot d\vec{S} $$
+        $$ \oint_{\mathcal{C}} \vec{B} \cdot d\vec{l} = \mu_0 I_{enlacée} + \mu_0 \epsilon_0 \frac{d \Phi_E}{dt} $$
+         <ul>
+            <li>$I_{enlacée} = \iint_{\mathcal{S}} \vec{j} \cdot d\vec{S}$ : Courant total traversant la surface $\mathcal{S}$ (enlacé par $\mathcal{C}$)</li>
+            <li>$\Phi_E = \iint_{\mathcal{S}} \vec{E} \cdot d\vec{S}$ : Flux électrique à travers la surface $\mathcal{S}$</li>
+        </ul>
+        <strong>Signification :</strong> La circulation du champ magnétique sur un contour fermé est proportionnelle à la somme du courant électrique et du courant de déplacement traversant ce contour.
+    </div>
+
+    </div> <!-- Fin de la div maxwell-equations intégrales -->
+
+    <h3 id="lien-local-integral">5.5 Lien entre Formes Locale et Intégrale</h3>
+    <p>Les formes locales sont plus fondamentales car elles sont valables en tout point, tandis que les formes intégrales représentent une moyenne sur une région de l'espace. Les théorèmes de Stokes et de la divergence assurent la stricte équivalence mathématique entre les deux formulations, pour des champs suffisamment réguliers.</p>
+
+    <h2 id="consequences">6. Conséquences Fondamentales ("Relations de Maxwell")</h2>
+    <p>Les équations de Maxwell ne sont pas seulement un résumé des lois expérimentales connues avant Maxwell ; leur structure mathématique cohérente entraîne des conséquences profondes et nouvelles.</p>
+
+    <h3 id="conservation-charge">6.1 Conservation de la Charge Électrique</h3>
+    <p>En prenant la divergence de l'équation de Maxwell-Ampère :</p>
+    $$ \vec{\nabla} \cdot (\vec{\nabla} \times \vec{B}) = \mu_0 \vec{\nabla} \cdot \vec{j} + \mu_0 \epsilon_0 \vec{\nabla} \cdot \left( \frac{\partial \vec{E}}{\partial t} \right) $$
+    <p>Sachant que $\vec{\nabla} \cdot (\vec{\nabla} \times \vec{B}) = 0$ (identité vectorielle) et en permutant les dérivées spatiales et temporelles :</p>
+    $$ 0 = \mu_0 \vec{\nabla} \cdot \vec{j} + \mu_0 \epsilon_0 \frac{\partial}{\partial t} (\vec{\nabla} \cdot \vec{E}) $$
+    <p>En utilisant l'équation de Maxwell-Gauss $\vec{\nabla} \cdot \vec{E} = \rho/\epsilon_0$ :</p>
+    $$ 0 = \mu_0 \vec{\nabla} \cdot \vec{j} + \mu_0 \epsilon_0 \frac{\partial}{\partial t} \left( \frac{\rho}{\epsilon_0} \right) = \mu_0 \left( \vec{\nabla} \cdot \vec{j} + \frac{\partial \rho}{\partial t} \right) $$
+    <p>On obtient l'<strong>équation de continuité</strong> (ou conservation de la charge) :</p>
+    <div class="important">
+        $$ \vec{\nabla} \cdot \vec{j} + \frac{\partial \rho}{\partial t} = 0 $$
+        <strong>Signification :</strong> La charge électrique est localement conservée. Toute variation de la densité de charge $\rho$ en un point s'accompagne nécessairement d'un flux de courant $\vec{j}$ entrant ou sortant de ce point. Cette équation est une conséquence directe de la structure des équations de Maxwell.
+    </div>
+
+    <h3 id="potentiels">6.2 Potentiels Scalaire et Vecteur</h3>
+    <p>L'équation $\vec{\nabla} \cdot \vec{B} = 0$ implique (d'après l'identité $\vec{\nabla} \cdot (\vec{\nabla} \times \vec{A}) = 0$) qu'il existe un champ vectoriel $\vec{A}$, appelé <strong>potentiel vecteur</strong>, tel que :</p>
+    <div class="definition">
+        $$ \vec{B} = \vec{\nabla} \times \vec{A} $$
+    </div>
+    <p>En substituant cela dans l'équation de Maxwell-Faraday $\vec{\nabla} \times \vec{E} = -\partial \vec{B}/\partial t$ :</p>
+    $$ \vec{\nabla} \times \vec{E} = - \frac{\partial}{\partial t} (\vec{\nabla} \times \vec{A}) = - \vec{\nabla} \times \left( \frac{\partial \vec{A}}{\partial t} \right) $$
+    $$ \implies \vec{\nabla} \times \left( \vec{E} + \frac{\partial \vec{A}}{\partial t} \right) = \vec{0} $$
+    <p>Puisque le rotationnel de ce champ combiné est nul, il dérive d'un gradient (d'après $\vec{\nabla} \times (\vec{\nabla} f) = \vec{0}$). Il existe donc un champ scalaire $V$, appelé <strong>potentiel scalaire</strong>, tel que :</p>
+    $$ \vec{E} + \frac{\partial \vec{A}}{\partial t} = - \vec{\nabla} V $$
+    <p>D'où l'expression des champs $\vec{E}$ et $\vec{B}$ en fonction des potentiels :</p>
+    <div class="definition">
+        $$ \vec{B} = \vec{\nabla} \times \vec{A} $$
+        $$ \vec{E} = - \vec{\nabla} V - \frac{\partial \vec{A}}{\partial t} $$
+    </div>
+    <p><strong>Avantages :</strong></p>
+    <ul>
+        <li>Réduit le nombre de composantes inconnues (4 potentiels $V, A_x, A_y, A_z$ au lieu de 6 pour $\vec{E}, \vec{B}$).</li>
+        <li>Les équations $\vec{\nabla} \cdot \vec{B} = 0$ et $\vec{\nabla} \times \vec{E} = -\partial \vec{B}/\partial t$ sont automatiquement satisfaites.</li>
+    </ul>
+    <p><strong>Invariance de jauge :</strong> Les potentiels ne sont pas uniques. On peut effectuer une transformation de jauge ($V \to V' = V - \partial f / \partial t$, $\vec{A} \to \vec{A}' = \vec{A} + \vec{\nabla} f$) sans changer les champs $\vec{E}$ et $\vec{B}$. On utilise cette liberté pour imposer une condition supplémentaire (la <strong>jauge</strong>), comme la jauge de Lorentz ($\vec{\nabla} \cdot \vec{A} + \frac{1}{c^2} \frac{\partial V}{\partial t} = 0$) ou la jauge de Coulomb ($\vec{\nabla} \cdot \vec{A} = 0$).</p>
+
+    <h3 id="ondes-em">6.3 Propagation d'Ondes Électromagnétiques</h3>
+    <p>Considérons les équations de Maxwell dans le vide ($\rho=0, \vec{j}=0$).</p>
+    <p>Prenons le rotationnel de Maxwell-Faraday :</p>
+    $$ \vec{\nabla} \times (\vec{\nabla} \times \vec{E}) = - \vec{\nabla} \times \left( \frac{\partial \vec{B}}{\partial t} \right) = - \frac{\partial}{\partial t} (\vec{\nabla} \times \vec{B}) $$
+    <p>Utilisons l'identité $\vec{\nabla} \times (\vec{\nabla} \times \vec{E}) = \vec{\nabla}(\vec{\nabla} \cdot \vec{E}) - \Delta \vec{E}$ et l'équation de Maxwell-Ampère dans le vide $\vec{\nabla} \times \vec{B} = \mu_0 \epsilon_0 \partial \vec{E}/\partial t$ :</p>
+    $$ \vec{\nabla}(\vec{\nabla} \cdot \vec{E}) - \Delta \vec{E} = - \frac{\partial}{\partial t} \left( \mu_0 \epsilon_0 \frac{\partial \vec{E}}{\partial t} \right) = - \mu_0 \epsilon_0 \frac{\partial^2 \vec{E}}{\partial t^2} $$
+    <p>Dans le vide, $\vec{\nabla} \cdot \vec{E} = 0$. Il reste :</p>
+    <div class="important">
+        $$ \Delta \vec{E} - \mu_0 \epsilon_0 \frac{\partial^2 \vec{E}}{\partial t^2} = \vec{0} $$
+    </div>
+    <p>De manière similaire, en partant du rotationnel de Maxwell-Ampère, on obtient pour $\vec{B}$ :</p>
+     <div class="important">
+        $$ \Delta \vec{B} - \mu_0 \epsilon_0 \frac{\partial^2 \vec{B}}{\partial t^2} = \vec{0} $$
+    </div>
+    <p>Ces deux équations sont des <strong>équations d'onde de d'Alembert</strong>. Elles montrent que les champs $\vec{E}$ et $\vec{B}$ peuvent se propager sous forme d'ondes dans le vide à la vitesse :</p>
+    $$ c = \frac{1}{\sqrt{\mu_0 \epsilon_0}} $$
+    <p>Le calcul numérique donne $c \approx 2.998 \times 10^8$ m/s, ce qui correspond à la vitesse de la lumière mesurée expérimentalement. C'est la grande découverte de Maxwell : <strong>la lumière est une onde électromagnétique</strong>.</p>
+    <p>Dans un milieu LHI sans charges ni courants libres, de permittivité $\epsilon$ et perméabilité $\mu$, la vitesse de propagation devient $v = 1/\sqrt{\mu \epsilon} = c / \sqrt{\mu_r \epsilon_r} = c/n$, où $n=\sqrt{\mu_r \epsilon_r}$ est l'indice de réfraction du milieu.</p>
+
+    <h3 id="energie-em">6.4 Énergie Électromagnétique et Vecteur de Poynting</h3>
+    <p>On peut établir un bilan d'énergie local à partir des équations de Maxwell. Considérons la puissance volumique fournie par le champ électromagnétique aux charges mobiles (travail de la force de Lorentz par unité de volume et de temps) : $\mathcal{P}_{fournie} = \vec{j} \cdot \vec{E}$.</p>
+    <p>En utilisant Maxwell-Ampère pour exprimer $\vec{j}$ et en manipulant les équations, on aboutit au <strong>théorème de Poynting</strong> (forme locale de la conservation de l'énergie électromagnétique) :</p>
+    <div class="theorem">
+        $$ \frac{\partial u_{em}}{\partial t} + \vec{\nabla} \cdot \vec{\Pi} = - \vec{j} \cdot \vec{E} $$
+        Où :
+        <ul>
+            <li>$u_{em} = \frac{1}{2} \epsilon_0 E^2 + \frac{1}{2 \mu_0} B^2$ est la <strong>densité volumique d'énergie électromagnétique</strong> (J/m³) stockée dans les champs $\vec{E}$ et $\vec{B}$ dans le vide. (Dans un milieu LHI : $u_{em} = \frac{1}{2} \vec{D} \cdot \vec{E} + \frac{1}{2} \vec{B} \cdot \vec{H}$)</li>
+            <li>$\vec{\Pi} = \frac{\vec{E} \times \vec{B}}{\mu_0}$ est le <strong>vecteur de Poynting</strong> (W/m²). Il représente la densité de flux d'énergie électromagnétique (puissance par unité de surface transportée par l'onde).</li>
+            <li>$-\vec{j} \cdot \vec{E}$ est la puissance volumique cédée par les champs aux charges (effet Joule si $\vec{j} = \sigma \vec{E}$, travail moteur si charges accélérées).</li>
+        </ul>
+        <strong>Signification :</strong> La variation locale de l'énergie stockée ($\partial u_{em}/\partial t$) plus le flux d'énergie sortant ($\vec{\nabla} \cdot \vec{\Pi}$) est égale à l'opposé de la puissance cédée localement aux charges. L'énergie électromagnétique se conserve, en tenant compte des échanges avec la matière et du transport d'énergie par le vecteur de Poynting.
+    </div>
+
+    <h2 id="conclusion">7. Conclusion : La Puissance Unificatrice de Maxwell</h2>
+    <p>Les équations de Maxwell représentent une des synthèses les plus remarquables de l'histoire de la physique. Elles :</p>
+    <ul>
+        <li><strong>Unifient</strong> l'électricité, le magnétisme et l'optique.</li>
+        <li>Décrivent de manière <strong>cohérente et complète</strong> l'ensemble des phénomènes électromagnétiques classiques.</li>
+        <li>Prédisent l'existence des <strong>ondes électromagnétiques</strong> et leur vitesse de propagation $c$.</li>
+        <li>Impliquent la <strong>conservation de la charge</strong> électrique.</li>
+        <li>Permettent d'établir un bilan d'<strong>énergie</strong> pour les champs et leurs interactions.</li>
+        <li>Constituent le point de départ pour des théories plus avancées comme l'<strong>électrodynamique quantique (QED)</strong> et sont compatibles avec la <strong>relativité restreinte</strong> (elles sont d'ailleurs à l'origine de cette dernière).</li>
+    </ul>
+    <p>La maîtrise des équations de Maxwell et de leurs conséquences est essentielle pour comprendre une vaste gamme de phénomènes physiques et d'applications technologiques, des circuits électriques aux antennes, des fibres optiques aux lasers, en passant par l'interaction lumière-matière.</p>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                // • auto-render specific keys, e.g.:
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+</html>
