@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions : Primitives et Calcul Intégral</title>
+    
+    <!-- Inclusion de KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"  crossorigin="anonymous"></script>
+    
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #005a9c; /* Bleu institutionnel */
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+        .question-container {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            padding: 15px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            transition: background-color 0.2s ease;
+        }
+        .question-container:hover {
+             background-color: #f0f0f0;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+         .question-text::after {
+            content: " (Cliquez pour voir la réponse)";
+            font-weight: normal;
+            font-style: italic;
+            color: #777;
+            font-size: 0.9em;
+        }
+        .answer {
+            display: none; /* Caché par défaut */
+            border-top: 1px dashed #ccc;
+            padding-top: 10px;
+            margin-top: 10px;
+            background-color: #e9f5ff; /* Fond légèrement bleuté pour la réponse */
+            padding: 10px;
+            border-radius: 4px;
+            color: #1a1a1a;
+        }
+        .answer.visible {
+            display: block; /* Rendu visible par JS */
+        }
+        .katex-display { /* Pour centrer les formules en display mode */
+           margin: 1em 0;
+           text-align: center;
+        }
+         code {
+           background-color: #eee;
+           padding: 2px 4px;
+           border-radius: 3px;
+           font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Questions : Primitives et Calcul Intégral</h1>
+    <p>Cliquez sur chaque question pour faire apparaître la réponse correspondante.</p>
+
+    <h2>Primitives et Théorème Fondamental</h2>
+
+    <div class="question-container">
+        <div class="question-text">
+            Donner l'ensemble des primitives sur $\mathbb{R}$ de la fonction $f(x) = 3e^{2x} - \sin(x)$.
+        </div>
+        <div class="answer">
+            On utilise la linéarité de la recherche de primitives et le tableau des primitives usuelles.
+            <ul>
+                <li>Une primitive de $e^{2x}$ est $\frac{1}{2}e^{2x}$ (forme $e^{\lambda x}$ avec $\lambda=2$).</li>
+                <li>Une primitive de $\sin(x)$ est $-\cos(x)$.</li>
+            </ul>
+            Donc, une primitive de $f(x) = 3e^{2x} - \sin(x)$ est :
+            $$ F_0(x) = 3 \times \left(\frac{1}{2}e^{2x}\right) - (-\cos(x)) = \frac{3}{2}e^{2x} + \cos(x) $$
+            L'ensemble de toutes les primitives de $f$ sur $\mathbb{R}$ est l'ensemble des fonctions de la forme $F(x) = F_0(x) + C$, où $C$ est une constante réelle (ou complexe, selon le contexte, ici réel).
+            $$ \int (3e^{2x} - \sin(x)) \, dx = \frac{3}{2}e^{2x} + \cos(x) + C, \quad C \in \mathbb{R} $$
+        </div>
+    </div>
+
+    <div class="question-container">
+        <div class="question-text">
+            Soit $F(x) = \int_0^x \sqrt{1+t^2} dt$. Que peut-on dire de $F$ grâce au Théorème Fondamental de l'Analyse ? Calculer $F'(x)$.
+        </div>
+        <div class="answer">
+            La fonction $f(t) = \sqrt{1+t^2}$ est définie et continue sur $I = \mathbb{R}$ (car $1+t^2 \ge 1 > 0$ et la fonction racine carrée est continue sur $\mathbb{R}_+$, et $t \mapsto 1+t^2$ est continue).
+            Le point $a=0$ appartient bien à $I$.
+            D'après le Théorème Fondamental de l'Analyse, la fonction $F(x) = \int_a^x f(t) dt$ est l'unique primitive de $f$ sur $I$ qui s'annule en $a$.
+            
+            Donc, on peut dire que :
+            <ol>
+                <li>$F$ est définie et dérivable sur $\mathbb{R}$.</li>
+                <li>La dérivée de $F$ est $f$.</li>
+                <li>$F(0) = \int_0^0 \sqrt{1+t^2} dt = 0$.</li>
+            </ol>
+            En particulier, pour tout $x \in \mathbb{R}$ :
+            $$ F'(x) = f(x) = \sqrt{1+x^2} $$
+        </div>
+    </div>
+
+    <h2>Intégration par Parties (IPP)</h2>
+
+    <div class="question-container">
+        <div class="question-text">
+            Calculer une primitive de $f(x) = x e^{-x}$ en utilisant l'intégration par parties.
+        </div>
+        <div class="answer">
+            On cherche $\int x e^{-x} dx$. On utilise la formule $\int u'(x)v(x)dx = u(x)v(x) - \int u(x)v'(x)dx$.
+            On veut simplifier l'intégrale. Le terme $x$ se simplifie par dérivation ($v(x)=x \implies v'(x)=1$). Le terme $e^{-x}$ s'intègre facilement ($u'(x)=e^{-x} \implies u(x)=-e^{-x}$).
+            Posons :
+            <ul>
+                <li>$v(x) = x \implies v'(x) = 1$</li>
+                <li>$u'(x) = e^{-x} \implies u(x) = -e^{-x}$ (on choisit la primitive la plus simple)</li>
+            </ul>
+            Les fonctions $u$ et $v$ sont bien $C^1$ sur $\mathbb{R}$.
+            $$ \int \underbrace{e^{-x}}_{u'(x)} \underbrace{x}_{v(x)} dx = \underbrace{(-e^{-x})}_{u(x)} \underbrace{x}_{v(x)} - \int \underbrace{(-e^{-x})}_{u(x)} \underbrace{1}_{v'(x)} dx $$
+            $$ \int x e^{-x} dx = -x e^{-x} - \int (-e^{-x}) dx $$
+            $$ \int x e^{-x} dx = -x e^{-x} + \int e^{-x} dx $$
+            On sait qu'une primitive de $e^{-x}$ est $-e^{-x}$.
+            $$ \int x e^{-x} dx = -x e^{-x} + (-e^{-x}) + C $$
+            $$ \int x e^{-x} dx = -e^{-x}(x+1) + C, \quad C \in \mathbb{R} $$
+            Une primitive est donc $F(x) = -(x+1)e^{-x}$.
+            (Vérification : $F'(x) = -(1)e^{-x} - (x+1)(-e^{-x}) = -e^{-x} + (x+1)e^{-x} = (-1+x+1)e^{-x} = x e^{-x} = f(x)$. Ok.)
+        </div>
+    </div>
+
+    <div class="question-container">
+        <div class="question-text">
+            Calculer l'intégrale $I = \int_1^e x^2 \ln(x) dx$.
+        </div>
+        <div class="answer">
+            On utilise l'intégration par parties : $\int_a^b u'(t) v(t) dt = [u(t) v(t)]_a^b - \int_a^b u(t) v'(t) dt$.
+            Le terme $\ln(x)$ se simplifie par dérivation ($v(x)=\ln x \implies v'(x)=1/x$). Le terme $x^2$ s'intègre facilement ($u'(x)=x^2 \implies u(x)=x^3/3$).
+            Posons :
+            <ul>
+                <li>$v(t) = \ln t \implies v'(t) = 1/t$</li>
+                <li>$u'(t) = t^2 \implies u(t) = t^3/3$</li>
+            </ul>
+            Les fonctions $u(t)=t^3/3$ et $v(t)=\ln t$ sont de classe $C^1$ sur $[1, e]$.
+            $$\begin{align*} I = \int_1^e \underbrace{t^2}_{u'(t)} \underbrace{\ln(t)}_{v(t)} dt &= [\underbrace{\frac{t^3}{3}}_{u(t)} \underbrace{\ln(t)}_{v(t)}]_1^e - \int_1^e \underbrace{\frac{t^3}{3}}_{u(t)} \underbrace{\frac{1}{t}}_{v'(t)} dt \\ &= \left( \frac{e^3}{3} \ln(e) - \frac{1^3}{3} \ln(1) \right) - \int_1^e \frac{t^2}{3} dt \\ &= \left( \frac{e^3}{3} \times 1 - \frac{1}{3} \times 0 \right) - \frac{1}{3} \int_1^e t^2 dt \\ &= \frac{e^3}{3} - \frac{1}{3} \left[ \frac{t^3}{3} \right]_1^e \\ &= \frac{e^3}{3} - \frac{1}{3} \left( \frac{e^3}{3} - \frac{1^3}{3} \right) \\ &= \frac{e^3}{3} - \frac{1}{3} \left( \frac{e^3 - 1}{3} \right) \\ &= \frac{e^3}{3} - \frac{e^3 - 1}{9} \\ &= \frac{3e^3 - (e^3 - 1)}{9} \\ &= \frac{2e^3 + 1}{9} \end{align*}$$
+        </div>
+    </div>
+
+    <h2>Changement de Variables</h2>
+
+    <div class="question-container">
+        <div class="question-text">
+            Calculer l'intégrale $J = \int_0^1 \frac{e^x}{1+e^x} dx$.
+        </div>
+        <div class="answer">
+            On remarque que l'intégrande est presque de la forme $\frac{u'(x)}{u(x)}$ avec $u(x) = 1+e^x$.
+            Calculons $u'(x)$: $u'(x) = (1+e^x)' = e^x$.
+            L'intégrande est exactement $\frac{u'(x)}{u(x)}$.
+            Une primitive est donc $\ln|u(x)| = \ln|1+e^x|$. Comme $1+e^x > 0$ pour tout $x$, on peut enlever la valeur absolue : $\ln(1+e^x)$.
+            Calculons l'intégrale définie :
+            $$ J = [\ln(1+e^x)]_0^1 = \ln(1+e^1) - \ln(1+e^0) = \ln(1+e) - \ln(1+1) = \ln(1+e) - \ln(2) $$
+            $$ J = \ln\left(\frac{1+e}{2}\right) $$
+
+            <strong>Autre méthode (Changement de variable explicite) :</strong>
+            On pose $u = 1+e^x$.
+            Dérivons par rapport à $x$: $du = e^x dx$.
+            Changeons les bornes :
+            - Si $x=0$, $u = 1+e^0 = 1+1 = 2$.
+            - Si $x=1$, $u = 1+e^1 = 1+e$.
+            L'intégrale devient :
+            $$ J = \int_{x=0}^{x=1} \frac{1}{1+e^x} (e^x dx) = \int_{u=2}^{u=1+e} \frac{1}{u} du $$
+            $$ J = [\ln|u|]_2^{1+e} = \ln(1+e) - \ln(2) = \ln\left(\frac{1+e}{2}\right) $$
+            Le résultat est le même. La première méthode (reconnaissance de forme) est plus rapide quand elle s'applique.
+        </div>
+    </div>
+
+    <div class="question-container">
+        <div class="question-text">
+            Calculer l'intégrale $K = \int_0^{\pi/2} \sin(x) \cos^4(x) dx$.
+        </div>
+        <div class="answer">
+            On reconnaît une forme $u'(x) [u(x)]^\alpha$, à un signe près.
+            Posons $u(x) = \cos(x)$. Alors $u'(x) = -\sin(x)$.
+            L'intégrande s'écrit $\sin(x) \cos^4(x) = - (-\sin(x)) (\cos(x))^4 = - u'(x) [u(x)]^4$.
+            Une primitive de $-u' u^4$ est $-\frac{u^5}{5}$.
+            Donc une primitive de $\sin(x) \cos^4(x)$ est $-\frac{\cos^5(x)}{5}$.
+            Calculons l'intégrale définie :
+            $$ K = \left[ -\frac{\cos^5(x)}{5} \right]_0^{\pi/2} $$
+            $$ K = \left( -\frac{\cos^5(\pi/2)}{5} \right) - \left( -\frac{\cos^5(0)}{5} \right) $$
+            $$ K = \left( -\frac{0^5}{5} \right) - \left( -\frac{1^5}{5} \right) = 0 - (-\frac{1}{5}) = \frac{1}{5} $$
+            
+            <strong>Autre méthode (Changement de variable explicite) :</strong>
+            Posons $u = \cos(x)$.
+            Alors $du = -\sin(x) dx$, donc $\sin(x) dx = -du$.
+            Changeons les bornes :
+            - Si $x=0$, $u = \cos(0) = 1$.
+            - Si $x=\pi/2$, $u = \cos(\pi/2) = 0$.
+            L'intégrale devient :
+            $$ K = \int_{x=0}^{x=\pi/2} (\cos x)^4 (\sin x dx) = \int_{u=1}^{u=0} u^4 (-du) $$
+            On utilise $-du$ pour inverser les bornes :
+            $$ K = \int_{u=0}^{u=1} u^4 du = \left[ \frac{u^5}{5} \right]_0^1 = \frac{1^5}{5} - \frac{0^5}{5} = \frac{1}{5} $$
+            Le résultat est le même.
+        </div>
+    </div>
+    
+     <div class="question-container">
+        <div class="question-text">
+            Calculer l'intégrale $L = \int_0^1 \frac{1}{\sqrt{4-x^2}} dx$.
+        </div>
+        <div class="answer">
+            L'intégrande ressemble à $\frac{1}{\sqrt{a^2-x^2}}$ dont une primitive est $\arcsin(x/a)$.
+            Ici, $4-x^2 = 2^2 - x^2$, donc $a=2$.
+            Une primitive de $\frac{1}{\sqrt{2^2-x^2}}$ est $\arcsin(\frac{x}{2})$.
+            La fonction $f(x) = \frac{1}{\sqrt{4-x^2}}$ est continue sur $[0, 1]$ (car $4-x^2 > 0$ sur cet intervalle).
+            Calculons l'intégrale définie :
+            $$ L = \left[ \arcsin\left(\frac{x}{2}\right) \right]_0^1 $$
+            $$ L = \arcsin\left(\frac{1}{2}\right) - \arcsin\left(\frac{0}{2}\right) $$
+            $$ L = \arcsin(1/2) - \arcsin(0) $$
+            On sait que $\sin(\pi/6) = 1/2$ et $\sin(0)=0$. Comme $\pi/6 \in [-\pi/2, \pi/2]$ (intervalle image de $\arcsin$), on a $\arcsin(1/2) = \pi/6$. De même $\arcsin(0)=0$.
+            $$ L = \frac{\pi}{6} - 0 = \frac{\pi}{6} $$
+            
+            <strong>Alternative par changement de variable trigonométrique :</strong>
+            Poser $x = 2 \sin t$. Alors $dx = 2 \cos t dt$.
+            $\sqrt{4-x^2} = \sqrt{4-4\sin^2 t} = \sqrt{4\cos^2 t} = 2|\cos t|$.
+            Bornes :
+            - Si $x=0$, $2\sin t = 0 \implies \sin t = 0 \implies t = 0$ (on choisit $t \in [-\pi/2, \pi/2]$).
+            - Si $x=1$, $2\sin t = 1 \implies \sin t = 1/2 \implies t = \pi/6$.
+            Sur $[0, \pi/6]$, $\cos t \ge 0$, donc $|\cos t| = \cos t$.
+            $$ L = \int_{t=0}^{t=\pi/6} \frac{1}{2\cos t} (2 \cos t dt) = \int_0^{\pi/6} 1 dt = [t]_0^{\pi/6} = \pi/6 $$
+        </div>
+    </div>
+
+    <!-- Script pour la fonctionnalité de clic et KaTeX -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration de KaTeX auto-render
+             renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false // Ne pas bloquer si une formule est invalide
+            });
+
+            // Gestion du clic pour afficher/cacher les réponses
+            const questionContainers = document.querySelectorAll('.question-container');
+
+            questionContainers.forEach(container => {
+                const answer = container.querySelector('.answer');
+                if (answer) {
+                    // On attache l'écouteur au conteneur entier
+                    container.addEventListener('click', () => {
+                        // Toggle la classe 'visible' sur l'élément réponse
+                        answer.classList.toggle('visible');
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
