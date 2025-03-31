@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz : Modèle de Lewis</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"  crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"  crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p, ul, li, table {
+            color: #444;
+        }
+        #toc {
+            background-color: #eef;
+            border: 1px solid #ccd;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        #toc ul { padding-left: 20px; }
+        .definition, .theorem, .important, .example {
+            background-color: #e9e9e9;
+            border-left: 5px solid #007bff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .theorem { border-left-color: #28a745; }
+        .important { border-left-color: #dc3545; }
+        .example { border-left-color: #fd7e14; background-color: #fff8e1; } /* Orange for examples */
+        .schema-placeholder {
+            text-align: center;
+            font-style: italic;
+            color: #888;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #fafafa;
+        }
+         table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+         }
+         th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+         }
+         th {
+            background-color: #f2f2f2;
+         }
+
+        /* Style for Lewis diagrams (very basic) */
+        .lewis-bond { display: inline-block; width: 1em; border-bottom: 1px solid black; vertical-align: middle; margin: 0 0.1em; }
+        .lewis-dot { font-size: 1.5em; line-height: 0; vertical-align: middle; }
+
+
+        /* Style pour les questions/réponses */
+        .qa-container {
+            margin-top: 30px;
+        }
+        .qa-pair {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            overflow: hidden; /* Pour les coins arrondis */
+        }
+        .question {
+            padding: 15px;
+            background-color: #f0f8ff; /* Bleu clair */
+            cursor: pointer;
+            font-weight: bold;
+            color: #0056b3;
+        }
+        .question:hover {
+            background-color: #e0f0ff;
+        }
+        .question .instruction {
+             font-weight: normal;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-left: 10px;
+        }
+        .answer {
+            padding: 15px;
+            border-top: 1px dashed #ccc;
+            display: none; /* Caché par défaut */
+            background-color: #fdfdfd;
+        }
+        .answer.visible {
+            display: block; /* Affiché quand la classe 'visible' est ajoutée */
+        }
+        /* KaTeX display style adjustments */
+         .katex-display {
+             overflow-x: auto;
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Avoid scrollbar overlap */
+         }
+
+    </style>
+</head>
+<body>
+
+    <h1>Architecture de la Matière : Modèle de Lewis</h1>
+    <p><em>Niveau : Mathématiques Supérieures (Maths Sup)</em></p>
+
+    <div id="toc">
+        <h2>Table des Matières</h2>
+        <ul>
+            <li><a href="#intro">1. Introduction : Visualiser les Liaisons Chimiques</a></li>
+            <li><a href="#valence-review">2. Rappel : Électrons de Valence</a></li>
+            <li><a href="#octet-rule">3. La Règle de l'Octet (et du Duet)</a></li>
+            <li><a href="#drawing-lewis">4. Méthode de Construction des Structures de Lewis</a>
+                 <ul>
+                    <li><a href="#steps">4.1 Les Étapes Clés</a></li>
+                    <li><a href="#examples-simple">4.2 Exemples Simples (H₂O, NH₃, CH₄)</a></li>
+                 </ul>
+            </li>
+            <li><a href="#multiple-bonds">5. Liaisons Multiples (Doubles et Triples)</a>
+                 <ul>
+                    <li><a href="#examples-multiple">5.1 Exemples (O₂, N₂, CO₂)</a></li>
+                 </ul>
+            </li>
+            <li><a href="#formal-charges">6. Charges Formelles</a>
+                <ul>
+                    <li><a href="#fc-definition">6.1 Définition et Calcul</a></li>
+                    <li><a href="#fc-use">6.2 Utilisation pour Choisir la Structure la Plus Probable</a></li>
+                    <li><a href="#fc-example">6.3 Exemple (Ion Cyanate NCO⁻)</a></li>
+                </ul>
+            </li>
+            <li><a href="#resonance">7. Résonance (Mésomérie)</a>
+                 <ul>
+                     <li><a href="#resonance-concept">7.1 Concept et Notation</a></li>
+                     <li><a href="#resonance-examples">7.2 Exemples (O₃, NO₃⁻)</a></li>
+                 </ul>
+            </li>
+             <li><a href="#exceptions">8. Exceptions à la Règle de l'Octet</a>
+                 <ul>
+                     <li><a href="#incomplete-octet">8.1 Octet Incomplet (Déficience Électronique)</a></li>
+                     <li><a href="#expanded-octet">8.2 Octet Étendu (Hypervalence)</a></li>
+                     <li><a href="#odd-electron">8.3 Molécules à Nombre Impair d'Électrons (Radicaux)</a></li>
+                 </ul>
+            </li>
+             <li><a href="#strengths-limits">9. Forces et Limites du Modèle de Lewis</a></li>
+            <li><a href="#conclusion-lewis">10. Conclusion</a></li>
+        </ul>
+    </div>
+
+    <h2 id="intro">1. Introduction : Visualiser les Liaisons Chimiques</h2>
+    <p>La structure électronique des atomes, notamment la configuration des électrons de valence, détermine comment les atomes interagissent pour former des molécules et des ions polyatomiques. Le <strong>modèle de Lewis</strong> (proposé par Gilbert N. Lewis vers 1916) est une méthode simple mais puissante pour représenter la distribution des électrons de valence dans ces édifices.</p>
+    <blockquote>
+        Une <strong>structure de Lewis</strong> (ou diagramme de Lewis, représentation de Lewis) utilise des points pour représenter les électrons de valence non liants (doublets libres) et des tirets pour représenter les paires d'électrons partagées dans les liaisons covalentes (doublets liants) entre atomes.
+    </blockquote>
+    <p>Ce modèle permet de :</p>
+    <ul>
+        <li>Visualiser la connectivité des atomes.</li>
+        <li>Comprendre le partage des électrons dans les liaisons.</li>
+        <li>Identifier les doublets non liants (importants pour la réactivité et la géométrie).</li>
+        <li>Prédire le type de liaisons (simples, doubles, triples).</li>
+        <li>Servir de base à des modèles plus avancés comme la théorie VSEPR (Valence Shell Electron Pair Repulsion) pour prédire la géométrie moléculaire.</li>
+    </ul>
+    <p>Ce cours présente la méthode de construction des structures de Lewis et ses concepts associés (règle de l'octet, charges formelles, résonance).</p>
+
+    <h2 id="valence-review">2. Rappel : Électrons de Valence</h2>
+    <p>Le modèle de Lewis ne s'intéresse qu'aux <strong>électrons de valence</strong>, car ce sont eux qui participent aux liaisons chimiques.</p>
+    <div class="definition">
+        Les <strong>électrons de valence</strong> d'un atome sont les électrons de la couche électronique externe (plus grande valeur de $n$) et, le cas échéant, ceux des sous-couches $d$ ou $f$ incomplètes.
+    </div>
+    <p>Pour les éléments des blocs $s$ et $p$ (éléments représentatifs), le nombre d'électrons de valence est égal au <strong>numéro du groupe</strong> (colonne) dans le tableau périodique (en numérotation 1 à 18, on prend le chiffre des unités pour les groupes 13 à 18).</p>
+    <p>Exemples courants :</p>
+    <table>
+        <tr><th>Élément</th><th>Symbole</th><th>Groupe</th><th>Configuration de Valence</th><th>Nb e⁻ de Valence</th></tr>
+        <tr><td>Hydrogène</td><td>H</td><td>1</td><td>$1s^1$</td><td>1</td></tr>
+        <tr><td>Carbone</td><td>C</td><td>14</td><td>$2s^2 2p^2$</td><td>4</td></tr>
+        <tr><td>Azote</td><td>N</td><td>15</td><td>$2s^2 2p^3$</td><td>5</td></tr>
+        <tr><td>Oxygène</td><td>O</td><td>16</td><td>$2s^2 2p^4$</td><td>6</td></tr>
+        <tr><td>Fluor</td><td>F</td><td>17</td><td>$2s^2 2p^5$</td><td>7</td></tr>
+        <tr><td>Chlore</td><td>Cl</td><td>17</td><td>$3s^2 3p^5$</td><td>7</td></tr>
+        <tr><td>Phosphore</td><td>P</td><td>15</td><td>$3s^2 3p^3$</td><td>5</td></tr>
+        <tr><td>Soufre</td><td>S</td><td>16</td><td>$3s^2 3p^4$</td><td>6</td></tr>
+         <tr><td>Sodium</td><td>Na</td><td>1</td><td>$3s^1$</td><td>1</td></tr>
+         <tr><td>Magnésium</td><td>Mg</td><td>2</td><td>$3s^2$</td><td>2</td></tr>
+    </table>
+
+    <h2 id="octet-rule">3. La Règle de l'Octet (et du Duet)</h2>
+    <p>Le modèle de Lewis est basé sur l'observation empirique que les atomes (en particulier ceux de la 2ème période : C, N, O, F) tendent à s'entourer de huit électrons de valence pour acquérir la configuration électronique stable du gaz noble le plus proche (comme Ne : $2s^2 2p^6$).</p>
+    <div class="important">
+        <p><strong>Règle de l'Octet :</strong> Dans les molécules et ions polyatomiques, les atomes des éléments représentatifs (blocs s et p) tendent à partager, gagner ou perdre des électrons de manière à être entourés de <strong>huit électrons de valence</strong> (un octet) dans leur couche externe.</p>
+        <p><strong>Règle du Duet :</strong> L'hydrogène (H) et le lithium (Li) tendent à s'entourer de <strong>deux électrons de valence</strong> (un duet), comme l'hélium (He : $1s^2$).</p>
+    </div>
+    <p>Cette règle est un guide précieux pour construire les structures de Lewis, mais elle connaît des exceptions importantes (voir section 8).</p>
+
+    <h2 id="drawing-lewis">4. Méthode de Construction des Structures de Lewis</h2>
+
+    <h3 id="steps">4.1 Les Étapes Clés</h3>
+    <p>Pour une molécule ou un ion donné :</p>
+    <ol>
+        <li><strong>Compter le nombre total d'électrons de valence ($N_{tot}$) :</strong> Additionner les électrons de valence de tous les atomes présents. Ajouter/soustraire des électrons pour les anions/cations.</li>
+        <li><strong>Déterminer l'atome central :</strong> Généralement le moins électronégatif (sauf H).</li>
+        <li><strong>Dessiner le squelette :</strong> Relier l'atome central aux terminaux par liaisons simples (- = 2 e⁻).</li>
+        <li><strong>Calculer les électrons restants :</strong> $N_{restants} = N_{tot} - 2 \times (\text{Nb liaisons simples})$.</li>
+        <li><strong>Distribuer les électrons restants en doublets non liants :</strong> D'abord sur les atomes terminaux (pour compléter leur octet/duet).</li>
+        <li><strong>Placer les électrons éventuellement restants sur l'atome central.</strong></li>
+        <li><strong>Vérifier l'octet de l'atome central :</strong> Si l'octet n'est pas atteint, former des liaisons multiples (doubles =, triples ≡) en utilisant des doublets non liants des atomes terminaux voisins.</li>
+        <li><strong>(Optionnel) Calculer les charges formelles.</strong></li>
+    </ol>
+
+    <h3 id="examples-simple">4.2 Exemples Simples (H₂O, NH₃, CH₄)</h3>
+
+    <div class="example">
+        <h4>Molécule d'Eau (H₂O)</h4>
+        <p>$N_{tot}$ = 1(O)x6 + 2(H)x1 = 8 e⁻. Central = O.</p>
+        <p>Squelette H–O–H (4 e⁻). Restants = 4 e⁻.</p>
+        <p>Distribuer sur H (duet OK). Placer les 4 e⁻ sur O (2 doublets).</p>
+        <p>Structure : H–O(2db)–H. Octets OK.</p>
+        <div class="schema-placeholder">
+         H <span class="lewis-bond"></span> <!-- H-O -->
+         <span style="position:relative; display:inline-block;">
+             O
+             <span class="lewis-dot" style="position:absolute; top:-0.6em; left:0.2em;">•</span>
+             <span class="lewis-dot" style="position:absolute; top:-0.6em; right:0.2em;">•</span>
+             <span class="lewis-dot" style="position:absolute; bottom:-0.6em; left:0.2em;">•</span>
+             <span class="lewis-dot" style="position:absolute; bottom:-0.6em; right:0.2em;">•</span>
+         </span>
+         <span class="lewis-bond"></span> <!-- O-H --> H
+        </div>
+    </div>
+
+    <div class="example">
+        <h4>Molécule d'Ammoniac (NH₃)</h4>
+        <p>$N_{tot}$ = 1(N)x5 + 3(H)x1 = 8 e⁻. Central = N.</p>
+        <p>Squelette N-H (x3) (6 e⁻). Restants = 2 e⁻.</p>
+        <p>Distribuer sur H (duet OK). Placer les 2 e⁻ sur N (1 doublet).</p>
+        <p>Structure : H–N(1db)–H (avec un 3e H lié à N). Octets OK.</p>
+        <div class="schema-placeholder"> H–N(:)–H avec un H aussi lié à N </div>
+    </div>
+
+     <div class="example">
+        <h4>Molécule de Méthane (CH₄)</h4>
+        <p>$N_{tot}$ = 1(C)x4 + 4(H)x1 = 8 e⁻. Central = C.</p>
+        <p>Squelette C-H (x4) (8 e⁻). Restants = 0 e⁻.</p>
+        <p>Octets OK.</p>
+        <div class="schema-placeholder"> H–C(H)(H)–H </div>
+    </div>
+
+    <h2 id="multiple-bonds">5. Liaisons Multiples (Doubles et Triples)</h2>
+    <p>Si l'atome central n'a pas son octet, utiliser des doublets non liants des voisins pour former des liaisons doubles (=) ou triples (≡).</p>
+
+    <h3 id="examples-multiple">5.1 Exemples (O₂, N₂, CO₂)</h3>
+
+    <div class="example">
+        <h4>Molécule de Dioxygène (O₂)</h4>
+        <p>$N_{tot}$ = 2(O)x6 = 12 e⁻.</p>
+        <p>O–O (2 e⁻). Restants = 10 e⁻. Mettre 5e⁻ sur chaque O?</p>
+        <p>Distribuer: :Ö̈–Ö: (6e⁻ + 4e⁻ = 10e⁻). Octet gauche OK, droite (6e⁻) PAS OK.</p>
+        <p>Former double liaison: :Ö=Ö: (4e⁻ + 4e⁻ = 8e⁻ liants et non liants). Octets OK pour les deux.</p>
+        <div class="schema-placeholder"> :Ö=Ö: </div>
+    </div>
+
+     <div class="example">
+        <h4>Molécule de Diazote (N₂)</h4>
+        <p>$N_{tot}$ = 2(N)x5 = 10 e⁻.</p>
+        <p>N–N (2 e⁻). Restants = 8 e⁻. :N̈–N̈: (4e⁻ + 4e⁻). Octets=6e⁻ PAS OK.</p>
+        <p>Former triple liaison: :N≡N: (2e⁻ + 6e⁻). Octets OK.</p>
+        <div class="schema-placeholder"> :N≡N: </div>
+    </div>
+
+    <div class="example">
+        <h4>Molécule de Dioxyde de Carbone (CO₂)</h4>
+        <p>$N_{tot}$ = 1(C)x4 + 2(O)x6 = 16 e⁻. Central = C.</p>
+        <p>O–C–O (4 e⁻). Restants = 12 e⁻. Distribuer sur O: :Ö̈–C–Ö̈: (6e⁻+6e⁻). Octet C=4e⁻ PAS OK.</p>
+        <p>Former deux doubles liaisons: :Ö=C=Ö:. Octets O=8, C=8 OK.</p>
+        <div class="schema-placeholder"> :Ö=C=Ö: </div>
+    </div>
+
+    <h2 id="formal-charges">6. Charges Formelles</h2>
+
+    <h3 id="fc-definition">6.1 Définition et Calcul</h3>
+    <div class="definition">
+        <p>La <strong>charge formelle (CF)</strong> d'un atome = (e⁻ valence isolé) - (e⁻ non liants) - 1/2 (e⁻ liants).</p>
+        <p>$\sum CF = charge totale$.</p>
+    </div>
+
+    <h3 id="fc-use">6.2 Utilisation pour Choisir la Structure la Plus Probable</h3>
+    <ol>
+        <li>Minimiser les valeurs absolues des CF (proches de zéro).</li>
+        <li>Placer les CF négatives sur les atomes les plus électronégatifs.</li>
+        <li>Éviter les CF de même signe sur atomes adjacents.</li>
+    </ol>
+
+    <h3 id="fc-example">6.3 Exemple (Ion Cyanate NCO⁻)</h3>
+    <p>$N_{tot}=16$. Squelette N–C–O.</p>
+    <ul>
+        <li>A: [:N≡C–Ö:]⁻ (CF N=0, C=0, O=-1)</li>
+        <li>B: [:N̈=C=Ö:]⁻ (CF N=-1, C=0, O=0)</li>
+        <li>C: [:N⃛–C≡O:]⁻ (CF N=-2, C=0, O=+1)</li>
+    </ul>
+    <p>C est défavorable (charges grandes, O⁺). A et B sont possibles. A est souvent préféré (charge négative sur O, plus électronégatif que N).</p>
+    <div class="schema-placeholder"> Structures A, B, C de NCO⁻ avec CF </div>
+
+    <h2 id="resonance">7. Résonance (Mésomérie)</h2>
+
+    <h3 id="resonance-concept">7.1 Concept et Notation</h3>
+    <div class="definition">
+        <p><strong>Résonance :</strong> Plusieurs structures de Lewis valides possibles, ne différant que par la position des électrons (liaisons $\pi$, doublets non liants).</p>
+        <p>Les structures individuelles sont des <strong>formes limites</strong>.</p>
+        <p>La structure réelle est l'<strong>hybride de résonance</strong> (moyenne).</p>
+        <p>Notation : Formes limites reliées par ↔.</p>
+    </div>
+    <p>Conséquences : Délocalisation électronique, ordres de liaison intermédiaires, stabilité accrue.</p>
+
+    <h3 id="resonance-examples">7.2 Exemples (O₃, NO₃⁻)</h3>
+    <div class="example">
+        <h4>Ozone (O₃)</h4>
+        <p>$N_{tot}=18$. O–O–O. Hybride entre [ :Ö=O⁺–Ö:⁻ ] ↔ [ :Ö:⁻–O⁺=Ö: ]. Liaisons O-O identiques intermédiaires.</p>
+         <div class="schema-placeholder"> Formes limites de O₃ (avec CF) </div>
+    </div>
+    <div class="example">
+        <h4>Ion Nitrate (NO₃⁻)</h4>
+        <p>$N_{tot}=24$. N central lié à 3 O. Hybride de 3 formes limites où la double liaison N=O change de position. Trois liaisons N-O identiques. Charge -1 délocalisée sur les 3 O.</p>
+         <div class="schema-placeholder"> Formes limites de NO₃⁻ (avec CF) </div>
+    </div>
+
+    <h2 id="exceptions">8. Exceptions à la Règle de l'Octet</h2>
+
+    <h3 id="incomplete-octet">8.1 Octet Incomplet (Déficience Électronique)</h3>
+    <ul>
+        <li>Concerne surtout <strong>Be, B</strong>.</li>
+        <li>Ex: BF₃ (B a 6e⁻), BeCl₂ (Be a 4e⁻).</li>
+        <li>Molécules souvent réactives (acides de Lewis).</li>
+    </ul>
+    <div class="schema-placeholder"> Lewis de BF₃ </div>
+
+    <h3 id="expanded-octet">8.2 Octet Étendu (Hypervalence)</h3>
+     <ul>
+        <li>Éléments de la <strong>période 3 et au-delà</strong> (P, S, Cl...).</li>
+        <li>Utilisation des orbitales <strong>d</strong> de valence.</li>
+        <li>Ex: PCl₅ (P a 10e⁻), SF₆ (S a 12e⁻).</li>
+    </ul>
+    <div class="schema-placeholder"> Lewis de PCl₅, SF₆ </div>
+
+    <h3 id="odd-electron">8.3 Molécules à Nombre Impair d'Électrons (Radicaux)</h3>
+    <ul>
+        <li>$N_{tot}$ impair $\implies$ électron célibataire.</li>
+        <li><strong>Radicaux libres</strong>, souvent très réactifs.</li>
+        <li>Ex: NO (11e⁻), NO₂ (17e⁻).</li>
+    </ul>
+    <div class="schema-placeholder"> Lewis de NO, NO₂ </div>
+
+    <h2 id="strengths-limits">9. Forces et Limites du Modèle de Lewis</h2>
+    <p><strong>Forces :</strong> Simple, connectivité, liaisons multiples, doublets non liants, base pour VSEPR.</p>
+    <p><strong>Limites :</strong> Pas de géométrie 3D, pas d'info quantitative (longueurs/énergies), résonance artificielle, ne prédit pas le magnétisme (O₂), pas adapté métaux/délocalisation étendue.</p>
+
+    <h2 id="conclusion-lewis">10. Conclusion</h2>
+    <p>Le modèle de Lewis est un outil clé pour visualiser la distribution des électrons de valence (liaisons, doublets non liants) via la règle de l'octet (et ses exceptions), les charges formelles et la résonance. Il est essentiel pour prédire la connectivité et sert de base à la prédiction de la géométrie (VSEPR).</p>
+    <hr>
+
+    <!-- Section Questions/Réponses -->
+    <h2>Questions de Cours</h2>
+    <div class="qa-container">
+
+        <div class="qa-pair">
+            <div class="question">
+                1. Quel est l'objectif principal d'une structure de Lewis ? Quels types d'électrons représente-t-elle et comment ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                L'objectif principal d'une structure de Lewis est de représenter la distribution des <strong>électrons de valence</strong> dans une molécule ou un ion polyatomique, afin de visualiser les liaisons chimiques.
+                <br>
+                Elle représente :
+                <ul>
+                    <li>Les <strong>électrons de valence non liants</strong> par des points (souvent groupés par paires : <strong>doublets non liants</strong>).</li>
+                    <li>Les <strong>paires d'électrons partagées</strong> dans les liaisons covalentes (<strong>doublets liants</strong>) par des tirets entre les atomes.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                2. Qu'est-ce qu'un électron de valence ? Combien d'électrons de valence possèdent les atomes N, Cl et Mg ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Les <strong>électrons de valence</strong> sont les électrons de la couche électronique externe (plus grand nombre quantique principal $n$) d'un atome, qui sont impliqués dans la formation des liaisons chimiques.
+                <ul>
+                    <li><strong>N (Azote) :</strong> Groupe 15 $\implies$ <strong>5</strong> électrons de valence ($2s^2 2p^3$).</li>
+                    <li><strong>Cl (Chlore) :</strong> Groupe 17 $\implies$ <strong>7</strong> électrons de valence ($3s^2 3p^5$).</li>
+                    <li><strong>Mg (Magnésium) :</strong> Groupe 2 $\implies$ <strong>2</strong> électrons de valence ($3s^2$).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                3. Énoncer la règle de l'octet et la règle du duet. Quels atomes suivent principalement la règle du duet ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                <ul>
+                    <li><strong>Règle de l'Octet :</strong> Les atomes des éléments représentatifs (blocs s et p), en particulier ceux de la 2ème période, tendent à s'entourer de <strong>huit</strong> électrons de valence dans les molécules/ions pour atteindre une configuration électronique stable (comme un gaz noble).</li>
+                    <li><strong>Règle du Duet :</strong> L'<strong>hydrogène (H)</strong> (et le lithium Li) tendent à s'entourer de <strong>deux</strong> électrons de valence (configuration de l'hélium).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                4. Citer les 3 premières étapes essentielles pour construire une structure de Lewis (jusqu'au calcul des électrons restants).
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Les 3 premières étapes sont :
+                <ol>
+                    <li><strong>Compter le nombre total d'électrons de valence ($N_{tot}$)</strong> de tous les atomes, en ajustant pour la charge si c'est un ion.</li>
+                    <li><strong>Déterminer l'atome central</strong> (souvent le moins électronégatif, sauf H).</li>
+                    <li><strong>Dessiner le squelette</strong> en reliant l'atome central aux atomes terminaux par des liaisons simples et soustraire $2 \times (\text{Nb liaisons simples})$ de $N_{tot}$ pour obtenir les électrons restants.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                5. Comment distribue-t-on les électrons restants une fois le squelette formé ? Que fait-on si l'atome central n'a pas son octet à la fin ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                On distribue les électrons restants sous forme de <strong>doublets non liants</strong> :
+                <ol>
+                    <li>D'abord sur les <strong>atomes terminaux</strong> jusqu'à compléter leur octet (ou duet pour H).</li>
+                    <li>Ensuite, s'il en reste, sur l'<strong>atome central</strong>.</li>
+                </ol>
+                Si, après cette distribution, l'atome central n'a toujours pas son octet, on forme des <strong>liaisons multiples</strong> (doubles ou triples) en déplaçant un ou plusieurs doublets non liants d'un atome terminal voisin pour former des doublets liants supplémentaires avec l'atome central, jusqu'à ce que l'octet de ce dernier soit satisfait.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                6. Donner la structure de Lewis de la molécule N₂. Quel type de liaison unit les deux atomes d'azote ? Combien de doublets non liants y a-t-il au total ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                $N_{tot}$ = 2 x 5 = 10 e⁻.
+                Squelette N–N (2 e⁻). Restants = 8 e⁻.
+                Distribuer : 4 e⁻ (2 doublets) sur chaque N $\rightarrow$ :N̈–N̈:. Octets non respectés (6e⁻/N).
+                Former liaison triple : Transformer 2 doublets non liants en doublets liants.
+                Structure : <strong>:N≡N:</strong>
+                <br>
+                Les deux atomes d'azote sont unis par une <strong>liaison triple</strong>.
+                Il y a <strong>2 doublets non liants</strong> au total (un sur chaque atome N).
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                7. Qu'est-ce qu'une charge formelle (CF) et comment la calcule-t-on pour un atome dans une structure de Lewis ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                La <strong>charge formelle (CF)</strong> d'un atome est la charge qu'il porterait si les électrons de liaison étaient partagés équitablement.
+                <br>
+                Elle se calcule par la formule :
+                $$ \text{CF} = (\text{e}^- \text{ valence isolé}) - (\text{e}^- \text{ non liants}) - \frac{1}{2}(\text{e}^- \text{ liants}) $$
+                où (e⁻ non liants) est le nombre d'électrons dans les doublets libres sur l'atome, et (e⁻ liants) est le nombre total d'électrons dans les liaisons que forme l'atome.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                8. Comment utilise-t-on les charges formelles pour choisir la structure de Lewis la plus plausible parmi plusieurs possibilités ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Pour choisir la structure la plus plausible :
+                <ol>
+                    <li>On privilégie la structure où les valeurs absolues des charges formelles sont les <strong>plus petites possibles</strong> (idéalement nulles).</li>
+                    <li>Si des charges formelles non nulles existent, on préfère la structure où les charges formelles <strong>négatives</strong> sont situées sur les atomes les <strong>plus électronégatifs</strong>, et les positives sur les moins électronégatifs.</li>
+                    <li>On évite les structures avec des charges formelles de même signe sur des atomes adjacents.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                9. Qu'appelle-t-on résonance (ou mésomérie) en théorie de Lewis ? Qu'est-ce qu'un hybride de résonance ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                La <strong>résonance</strong> se produit lorsqu'on peut écrire plusieurs structures de Lewis valides pour une molécule ou un ion, ne différant que par la position des électrons ($\pi$ et doublets non liants). Ces structures sont appelées <strong>formes limites de résonance</strong>.
+                <br>
+                La structure réelle n'est pas l'une des formes limites, mais une combinaison de celles-ci, appelée <strong>hybride de résonance</strong>. Cet hybride possède des caractéristiques (longueurs de liaison, charges) intermédiaires et est plus stable que les formes limites.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                10. Donner un exemple de molécule ou d'ion présentant de la résonance et dessiner au moins deux de ses formes limites.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Exemple : L'ion <strong>Nitrate (NO₃⁻)</strong>.
+                L'hybride de résonance est une combinaison des trois formes limites suivantes (N est central, une liaison est double, les deux autres sont simples avec une charge -1 sur les O correspondants) :
+                 <div class="schema-placeholder">
+                    [ O=N⁺(–O⁻)(–O⁻) ] ↔ [ (⁻O–)N⁺=O(–O⁻) ] ↔ [ (⁻O–)N⁺(–O⁻)=O ]
+                    (Il faut dessiner les doublets non liants sur les oxygènes pour que l'octet soit respecté).
+                 </div>
+                 Autre exemple : L'ozone (O₃) avec [ :Ö=O⁺–Ö:⁻ ] ↔ [ :Ö:⁻–O⁺=Ö: ].
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                11. Citer les trois principaux types d'exceptions à la règle de l'octet et donner un exemple pour chaque.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Les trois principaux types d'exceptions sont :
+                <ol>
+                    <li><strong>Octet incomplet (déficience électronique) :</strong> L'atome central a moins de 8 électrons. Exemple : <strong>BF₃</strong> (Bore a 6 e⁻), <strong>BeCl₂</strong> (Béryllium a 4 e⁻).</li>
+                    <li><strong>Octet étendu (hypervalence) :</strong> L'atome central (période 3 ou plus) a plus de 8 électrons. Exemple : <strong>PCl₅</strong> (Phosphore a 10 e⁻), <strong>SF₆</strong> (Soufre a 12 e⁻).</li>
+                    <li><strong>Molécules à nombre impair d'électrons (radicaux) :</strong> Le nombre total d'électrons de valence est impair, laissant un électron célibataire. Exemple : <strong>NO</strong> (11 e⁻), <strong>NO₂</strong> (17 e⁻).</li>
+                </ol>
+            </div>
+        </div>
+
+         <div class="qa-pair">
+            <div class="question">
+                12. Pourquoi les éléments de la 3ème période et au-delà peuvent-ils former des octets étendus, contrairement à ceux de la 2ème période ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Les éléments de la 3ème période et au-delà (n ≥ 3) possèdent des <strong>orbitales $d$</strong> dans leur couche de valence (par exemple, 3s, 3p et 3d). Ces orbitales $d$, même si elles sont initialement vides, sont énergétiquement accessibles et peuvent être utilisées pour former des liaisons ou accueillir des électrons supplémentaires, permettant ainsi à l'atome central de s'entourer de plus de 8 électrons.
+                <br>
+                Les éléments de la 2ème période (n = 2) n'ont que des orbitales $s$ et $p$ (2s, 2p) dans leur couche de valence et ne peuvent donc accueillir qu'un maximum de 8 électrons.
+            </div>
+        </div>
+
+         <div class="qa-pair">
+            <div class="question">
+                13. Citer une force et une limite importante du modèle de Lewis.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                <ul>
+                    <li><strong>Force :</strong> Le modèle de Lewis est simple à appliquer et permet de visualiser facilement la connectivité des atomes, le type de liaisons (simple, multiple) et la présence de doublets non liants. Il constitue une excellente base pour la théorie VSEPR qui prédit la géométrie.</li>
+                    <li><strong>Limite :</strong> Le modèle de Lewis ne fournit aucune information directe sur la <strong>géométrie tridimensionnelle</strong> réelle de la molécule (angles de liaison). Il échoue aussi à expliquer certaines propriétés comme le <strong>paramagnétisme</strong> de O₂.</li>
+                </ul>
+                 (D'autres forces/limites sont acceptables, voir section 9 du cours).
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fonction pour rendre les maths dans un élément spécifique
+            const renderMath = (element) => {
+                if (window.renderMathInElement) {
+                    try {
+                        window.renderMathInElement(element, {
+                            delimiters: [
+                                {left: "$$", right: "$$", display: true},
+                                {left: "$", right: "$", display: false},
+                                {left: "\\(", right: "\\)", display: false},
+                                {left: "\\[", right: "\\]", display: true}
+                            ],
+                            throwOnError: false // Ne pas bloquer si une formule est invalide
+                        });
+                    } catch (error) {
+                        console.error("Erreur KaTeX:", error);
+                    }
+                }
+            };
+
+            // Rendre les maths initialement présents dans le body
+            renderMath(document.body);
+
+            // Gérer le clic sur les questions
+            const questionElements = document.querySelectorAll('.question');
+
+            questionElements.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling; // L'élément suivant est la réponse
+                    if (answer && answer.classList.contains('answer')) {
+                        answer.classList.toggle('visible');
+                        // Re-rendre les maths dans la réponse si elle devient visible
+                        // et ne l'a pas déjà été
+                        if (answer.classList.contains('visible') && !answer.hasAttribute('data-math-rendered')) {
+                             renderMath(answer);
+                             answer.setAttribute('data-math-rendered', 'true');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
