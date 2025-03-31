@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz : Optique Ondulatoire - Division d'Amplitude</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p, ul, li, table {
+            color: #444;
+        }
+        #toc {
+            background-color: #eef;
+            border: 1px solid #ccd;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        #toc ul { padding-left: 20px; }
+        .definition, .theorem, .important {
+            background-color: #e9e9e9;
+            border-left: 5px solid #007bff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .theorem { border-left-color: #28a745; }
+        .important { border-left-color: #dc3545; }
+        .schema-placeholder {
+            text-align: center;
+            font-style: italic;
+            color: #888;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #fafafa;
+        }
+         table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+         }
+         th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+         }
+         th {
+            background-color: #f2f2f2;
+         }
+
+        /* Style pour les questions/réponses */
+        .qa-container {
+            margin-top: 30px;
+        }
+        .qa-pair {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            overflow: hidden; /* Pour les coins arrondis */
+        }
+        .question {
+            padding: 15px;
+            background-color: #f0f8ff; /* Bleu clair */
+            cursor: pointer;
+            font-weight: bold;
+            color: #0056b3;
+        }
+        .question:hover {
+            background-color: #e0f0ff;
+        }
+        .question .instruction {
+             font-weight: normal;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-left: 10px;
+        }
+        .answer {
+            padding: 15px;
+            border-top: 1px dashed #ccc;
+            display: none; /* Caché par défaut */
+            background-color: #fdfdfd;
+        }
+        .answer.visible {
+            display: block; /* Affiché quand la classe 'visible' est ajoutée */
+        }
+        /* KaTeX display style adjustments */
+         .katex-display {
+             overflow-x: auto;
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Avoid scrollbar overlap */
+         }
+
+    </style>
+</head>
+<body>
+
+  <h1>Optique Ondulatoire : Interférences par Division d'Amplitude</h1>
+    <p><em>Niveau : Mathématiques Spéciales (MP, PC, PSI)</em></p>
+
+    <div id="toc">
+        <h2>Table des Matières</h2>
+        <ul>
+            <li><a href="#intro">1. Introduction : Une Autre Façon de Créer la Cohérence</a></li>
+            <li><a href="#principle">2. Le Principe de la Division d'Amplitude</a></li>
+            <li><a href="#phase-shift">3. Déphasage à la Réflexion</a></li>
+            <li><a href="#thin-films">4. Interférences par Lames Minces à Faces Parallèles</a>
+                 <ul>
+                    <li><a href="#thin-film-setup">4.1 Description et Trajets des Rayons</a></li>
+                    <li><a href="#thin-film-reflection">4.2 Interférences par Réflexion</a></li>
+                    <li><a href="#thin-film-transmission">4.3 Interférences par Transmission</a></li>
+                    <li><a href="#complementarity">4.4 Complémentarité Réflexion/Transmission</a></li>
+                    <li><a href="#thin-film-localization">4.5 Localisation des Franges (à l'infini)</a></li>
+                    <li><a href="#equal-inclination">4.6 Franges d'Égale Inclinaison (Anneaux de Haidinger)</a></li>
+                 </ul>
+            </li>
+            <li><a href="#variable-thickness">5. Interférences par Lames d'Épaisseur Variable</a>
+                <ul>
+                    <li><a href="#wedge">5.1 Coin d'Air</a></li>
+                    <li><a href="#newton-rings">5.2 Anneaux de Newton</a></li>
+                    <li><a href="#variable-localization">5.3 Localisation des Franges (sur la lame)</a></li>
+                    <li><a href="#equal-thickness">5.4 Franges d'Égale Épaisseur (Lignes de Fizeau)</a></li>
+                </ul>
+            </li>
+            <li><a href="#michelson">6. L'Interféromètre de Michelson</a>
+                 <ul>
+                    <li><a href="#michelson-setup">6.1 Description et Principe</a></li>
+                    <li><a href="#path-diff-michelson">6.2 Différence de Marche</a></li>
+                    <li><a href="#config-parallel">6.3 Configuration en Lame à Faces Parallèles (Anneaux à l'infini)</a></li>
+                    <li><a href="#config-wedge">6.4 Configuration en Coin d'Air (Franges localisées)</a></li>
+                    <li><a href="#michelson-coherence">6.5 Étude de la Cohérence avec le Michelson</a></li>
+                    <li><a href="#michelson-apps">6.6 Applications</a></li>
+                 </ul>
+            </li>
+             <li><a href="#multiple-beam">7. Interférences à Ondes Multiples (Mention)</a>
+                 <ul>
+                     <li><a href="#fabry-perot">7.1 Interféromètre de Fabry-Pérot</a></li>
+                 </ul>
+             </li>
+            <li><a href="#conclusion-amplitude">8. Conclusion</a></li>
+        </ul>
+    </div>
+
+    <h2 id="intro">1. Introduction : Une Autre Façon de Créer la Cohérence</h2>
+    <p>Contrairement aux dispositifs par division du front d'onde (comme les fentes d'Young) qui sélectionnent spatialement des parties d'un même front d'onde, les dispositifs par <strong>division d'amplitude</strong> utilisent une surface <strong>partiellement réfléchissante</strong> (lame séparatrice, dioptre) pour séparer une onde incidente en (au moins) une onde réfléchie et une onde transmise.</p>
+    <p>Ces deux ondes, issues de la même onde incidente, sont initialement <strong>cohérentes</strong>. Si on les fait ensuite parcourir des chemins optiques différents avant de les recombiner, elles peuvent interférer.</p>
+    <p>Cette méthode est à la base du fonctionnement des interférences observées avec les <strong>lames minces</strong> (bulles de savon, couches d'huile, traitements antireflets) et des interféromètres comme celui de <strong>Michelson</strong> ou de Fabry-Pérot.</p>
+
+    <h2 id="principle">2. Le Principe de la Division d'Amplitude</h2>
+    <p>Une onde lumineuse incidente (amplitude $\underline{A}_i$) arrive sur une interface séparant deux milieux. Une partie de l'amplitude est réfléchie ($\underline{A}_r$) et une partie est transmise ($\underline{A}_t$).</p>
+    <p>Le dispositif interférentiel est conçu pour qu'une partie de l'onde initiale emprunte un chemin "1" (par exemple, une réflexion suivie d'une transmission) et une autre partie emprunte un chemin "2" (par exemple, une transmission suivie d'une réflexion).</p>
+    <p>Au point d'observation M, on superpose l'onde $\underline{A}_1$ ayant suivi le chemin 1 et l'onde $\underline{A}_2$ ayant suivi le chemin 2. Ces deux ondes sont issues de la même onde incidente et sont donc cohérentes.</p>
+    <p>L'intensité résultante $I(M)$ dépendra de la différence de phase $\Delta \phi$ entre $\underline{A}_1$ et $\underline{A}_2$, elle-même liée à la différence de chemin optique $\delta$ entre les trajets 1 et 2.</p>
+    <div class="schema-placeholder">[Schéma de principe : Onde incidente, interface, onde réfléchie, onde transmise, deux trajets possibles recombinés en M]</div>
+    <p>Un point crucial dans ces dispositifs est le possible déphasage introduit lors de la réflexion.</p>
+
+    <h2 id="phase-shift">3. Déphasage à la Réflexion</h2>
+    <p>L'analyse des équations de Maxwell (via les coefficients de Fresnel) montre que la réflexion d'une onde électromagnétique sur une interface peut introduire un déphasage supplémentaire.</p>
+    <div class="important">
+        <p><strong>Règle du déphasage à la réflexion :</strong></p>
+        <ul>
+            <li>Lors de la réflexion sur un milieu d'indice de réfraction <strong>plus élevé</strong> (milieu plus réfringent), l'onde réfléchie subit un déphasage de $\pi$ par rapport à l'onde incidente.</li>
+            <li>Lors de la réflexion sur un milieu d'indice de réfraction <strong>moins élevé</strong> (milieu moins réfringent), il n'y a <strong>pas</strong> de déphasage supplémentaire.</li>
+            <li>La transmission ne introduit pas de déphasage de $\pi$.</li>
+        </ul>
+        <p>Un déphasage de $\pi$ est équivalent à ajouter ou retrancher $\lambda_0/2$ à la différence de marche $\delta$.</p>
+    </div>
+    <p>Il est essentiel de tenir compte de ces éventuels déphasages lors du calcul de la différence de marche totale entre les ondes qui interfèrent.</p>
+
+    <h2 id="thin-films">4. Interférences par Lames Minces à Faces Parallèles</h2>
+
+    <h3 id="thin-film-setup">4.1 Description et Trajets des Rayons</h3>
+    <p>Une lame mince à faces parallèles est une couche d'un matériau transparent (indice $n$, épaisseur $e$) entourée par un autre milieu (souvent l'air, indice $n_0 \approx 1$).</p>
+    <p>Considérons une onde incidente arrivant sur la lame avec un angle d'incidence $i$. Une partie est réfléchie en A sur la face supérieure (rayon 1). Une partie est transmise en A, se réfracte (angle $r$ tel que $n_0 \sin i = n \sin r$), se réfléchit en B sur la face inférieure, est transmise en C vers l'extérieur (rayon 2).</p>
+    <p>Les rayons (1) et (2) sont parallèles entre eux et issus de la même onde incidente, ils sont donc cohérents et peuvent interférer.</p>
+    <div class="schema-placeholder">[Schéma : Lame mince à faces parallèles (indice n, épaisseur e) dans l'air (n0). Rayon incident (angle i), rayon (1) réfléchi en A, rayon réfracté AB (angle r), réfléchi en B, transmis en C (rayon 2) parallèle à (1). Points A, B, C, H projection de C sur (1).]</div>
+
+    <h3 id="thin-film-reflection">4.2 Interférences par Réflexion</h3>
+    <p>On calcule la différence de chemin optique $\delta$ entre le rayon (2) et le rayon (1) jusqu'à un plan d'onde perpendiculaire aux rayons sortants (passant par C).</p>
+    $$ \delta = (\text{chemin optique ABC})_{dans\,lame} - (\text{chemin optique AH})_{dans\,air} $$
+    Où H est la projection de C sur le rayon (1).
+    <p>Le calcul géométrique aboutit à la différence de marche géométrique $\delta_{geom} = 2ne \cos r$ (en supposant le milieu extérieur d'indice $n_0=1$).</p>
+    <p>Il faut ajouter les déphasages à la réflexion :</p>
+    <ul>
+        <li>Rayon (1) : Réflexion en A (air $\to$ lame). Si $n > n_0=1$, déphasage $\pi$ ($\implies +\lambda_0/2$ à $\delta$).</li>
+        <li>Rayon (2) : Réflexion en B (lame $\to$ air). Si $n > n_0=1$, pas de déphasage $\pi$. Transmission en C : pas de déphasage $\pi$.</li>
+    </ul>
+    <p>Différence de marche totale pour la réflexion (si $n>n_0=1$) :</p>
+    <div class="important">
+        $$ \delta_R = 2ne \cos r + \frac{\lambda_0}{2} $$
+    </div>
+    <p>Conditions d'interférence en réflexion :</p>
+    <ul>
+        <li><strong>Maximums (brillant) :</strong> $\delta_R = p \lambda_0 \implies 2ne \cos r = (p - 1/2) \lambda_0$ ($p \in \mathbb{Z}^*$).</li>
+        <li><strong>Minimums (sombre) :</strong> $\delta_R = (p + 1/2) \lambda_0 \implies 2ne \cos r = p \lambda_0$ ($p \in \mathbb{Z}$).</li>
+    </ul>
+
+    <h3 id="thin-film-transmission">4.3 Interférences par Transmission</h3>
+    <p>On considère l'onde transmise directement en A puis en B (rayon 1') et l'onde transmise en A, réfléchie deux fois en B et C, puis transmise en D (rayon 2').</p>
+    <div class="schema-placeholder">[Schéma : Lame mince, onde incidente, rayon transmis (1') et rayon transmis après 2 réflexions (2')]</div>
+    <p>Le calcul de la différence de chemin optique entre (2') et (1') donne $\delta_{geom} = 2ne \cos r$. Les deux réflexions en B et C (lame $\to$ air si $n>1$) n'introduisent pas de déphasage $\pi$.</p>
+    <p>La différence de marche totale pour la transmission est :</p>
+     <div class="important">
+        $$ \delta_T = 2ne \cos r $$
+    </div>
+     <p>Conditions d'interférence en transmission :</p>
+    <ul>
+        <li><strong>Maximums (brillant) :</strong> $\delta_T = p \lambda_0 \implies 2ne \cos r = p \lambda_0$ ($p \in \mathbb{Z}$).</li>
+        <li><strong>Minimums (sombre) :</strong> $\delta_T = (p + 1/2) \lambda_0 \implies 2ne \cos r = (p + 1/2) \lambda_0$ ($p \in \mathbb{Z}$).</li>
+    </ul>
+
+    <h3 id="complementarity">4.4 Complémentarité Réflexion/Transmission</h3>
+    <p>En comparant les conditions d'interférence, on observe que les conditions de maximums en transmission correspondent aux conditions de minimums en réflexion, et vice-versa.</p>
+    <blockquote>Les figures d'interférence par réflexion et par transmission sont <strong>complémentaires</strong>.</blockquote>
+    <p>Ceci est une conséquence de la conservation de l'énergie (en négligeant l'absorption par la lame). Si la lumière n'est pas réfléchie, elle doit être transmise.</p>
+
+    <h3 id="thin-film-localization">4.5 Localisation des Franges (à l'infini)</h3>
+    <p>Les rayons (1) et (2) qui interfèrent sont parallèles entre eux. Des rayons parallèles ne se croisent qu'<strong>à l'infini</strong>. Les interférences sont dites <strong>non localisées</strong> mais observables à l'infini.</p>
+    <p>Pour observer ces interférences, on utilise un système optique (lentille convergente + écran dans son plan focal image) qui fait converger les rayons parallèles en un même point du plan focal.</p>
+    <div class="schema-placeholder">[Schéma : Lame mince, rayons réfléchis parallèles (1) et (2), lentille convergente, écran dans le plan focal]</div>
+    <p>Tous les rayons incidents parallèles (même angle $i$) interfèrent en un même point du plan focal. La différence de marche $\delta$ ne dépend que de l'angle d'incidence $i$ (via $r$) pour une lame d'épaisseur $e$ et d'indice $n$ donnés.</p>
+
+    <h3 id="equal-inclination">4.6 Franges d'Égale Inclinaison (Anneaux de Haidinger)</h3>
+    <p>Comme la différence de marche $\delta$ dépend de l'angle d'incidence $i$ (via $\cos r$), les franges observées à l'infini sont des <strong>franges d'égale inclinaison</strong>.</p>
+    <p>Si la source est étendue et placée à l'infini, on observe des <strong>anneaux d'interférence</strong> appelés <strong>anneaux de Haidinger</strong>.</p>
+    <ul>
+        <li>Chaque anneau correspond à une valeur constante de l'angle d'incidence $i$.</li>
+        <li>L'ordre d'interférence $p$ est maximal au centre ($i=0$) et diminue vers les bords.</li>
+        <li>Les anneaux sont d'autant plus serrés que l'épaisseur $e$ de la lame est grande.</li>
+    </ul>
+    <div class="schema-placeholder">[Schéma : Observation des anneaux de Haidinger à l'infini]</div>
+
+    <h2 id="variable-thickness">5. Interférences par Lames d'Épaisseur Variable</h2>
+    <p>Si l'épaisseur $e$ de la lame varie, $\delta$ dépend de $i$ et de la position $(x,y)$ via $e(x,y)$.</p>
+
+    <h3 id="wedge">5.1 Coin d'Air</h3>
+    <ul>
+        <li>Description : Lame d'air ($n=1$) entre deux lames de verre, angle $\alpha$. $e(x) \approx x \alpha$.</li>
+        <li>Observation : Incidence quasi-normale ($i \approx 0 \implies r \approx 0 \implies \cos r \approx 1$).</li>
+        <li>Différence de marche (réflexion) : Réflexion (1) sur Verre $\to$ Air (pas de $\pi$), Réflexion (2) sur Air $\to$ Verre ($\pi$).
+        $$ \delta_R(x) \approx 2 n_{air} e(x) + \lambda_0/2 = 2 x \alpha + \frac{\lambda_0}{2} $$
+        </li>
+         <li>Figure d'interférence : Franges rectilignes, équidistantes, parallèles à l'arête. Interfrange :
+             <div class="important"> $i = \frac{\lambda_0}{2\alpha}$ </div>
+        </li>
+    </ul>
+     <div class="schema-placeholder">[Schéma : Coin d'air, épaisseur e(x), franges rectilignes]</div>
+
+    <h3 id="newton-rings">5.2 Anneaux de Newton</h3>
+     <ul>
+        <li>Description : Lame d'air entre lentille plan-convexe (rayon $R$) et lame plane. $e(r) \approx r^2/(2R)$.</li>
+        <li>Observation : Incidence quasi-normale ($i \approx 0$).</li>
+        <li>Différence de marche (réflexion) :
+             $$ \delta_R(r) \approx 2 e(r) + \frac{\lambda_0}{2} = \frac{r^2}{R} + \frac{\lambda_0}{2} $$
+        </li>
+        <li>Figure d'interférence : Anneaux circulaires.
+             <ul>
+                <li>Centre ($r=0$) : $\delta_R = \lambda_0/2 \implies$ minimum $\implies$ <strong>tache centrale sombre</strong>.</li>
+                <li>Rayons des anneaux sombres ($p \ge 0$) : $r_{p, dark} = \sqrt{p R \lambda_0}$.</li>
+             </ul>
+        </li>
+    </ul>
+    <div class="schema-placeholder">[Schéma : Anneaux de Newton (lentille sur lame), épaisseur e(r), franges circulaires]</div>
+
+    <h3 id="variable-localization">5.3 Localisation des Franges (sur la lame)</h3>
+    <p>Pour une lame d'épaisseur variable éclairée par une source étendue en incidence quasi-normale, les rayons interférant semblent provenir d'une zone proche de la lame.</p>
+    <div class="important">Les interférences produites par une lame d'épaisseur variable sont <strong>localisées au voisinage de la lame</strong>.</div>
+
+    <h3 id="equal-thickness">5.4 Franges d'Égale Épaisseur (Lignes de Fizeau)</h3>
+    <p>En incidence quasi-normale, $\delta_R \approx 2ne + \lambda_0/2$. Les franges correspondent aux lieux où l'épaisseur $e$ est constante (lignes de niveau).</p>
+    <p>Ces franges sont appelées <strong>franges d'égale épaisseur</strong> (lignes de Fizeau).</p>
+
+    <h2 id="michelson">6. L'Interféromètre de Michelson</h2>
+
+    <h3 id="michelson-setup">6.1 Description et Principe</h3>
+    <ul>
+        <li>Éléments clés : Source S, lame séparatrice G1, miroir fixe M1, miroir mobile M2, lame compensatrice G2 (optionnelle mais utile), Observateur O.</li>
+        <li>Principe : G1 divise l'amplitude. Les faisceaux parcourent les bras M1 et M2, reviennent sur G1 et sont recombinés vers O.</li>
+        <li>Équivalence : Le système est équivalent à une lame d'air (ou vide) d'épaisseur $e = |d_1-d_2|$ entre M1 et M'2 (image de M2 par G1).</li>
+    </ul>
+    <div class="schema-placeholder">[Schéma détaillé de l'interféromètre de Michelson]</div>
+    <div class="schema-placeholder">[Schéma équivalent du Michelson : M1 et M'2]</div>
+
+    <h3 id="michelson-path-diff">6.2 Différence de Marche</h3>
+    <p>La différence de marche entre les deux bras pour une incidence $i$ sur la lame d'air équivalente est :</p>
+    <div class="important">
+        $$ \delta = 2e \cos i $$
+        où $e = |d_1-d_2|$ est la différence de longueur des bras (ajustable via M2). La compensatrice G2 assure que cette formule est valable même si G1 est épaisse.
+    </div>
+
+    <h3 id="config-parallel">6.3 Configuration en Lame à Faces Parallèles (Anneaux à l'infini)</h3>
+    <ul>
+        <li>Réglage : M1 $\perp$ M2 (M1 || M'2).</li>
+        <li>Observation : Source étendue, observation à l'infini (avec lentille).</li>
+        <li>Figure : <strong>Anneaux d'égale inclinaison</strong> (anneaux de Haidinger) localisés à l'infini. $\delta = 2e \cos i$.</li>
+        <li>Défilement : Un déplacement $\Delta e$ de M2 fait défiler $N = 2\Delta e / \lambda_0$ anneaux au centre. Si $e \nearrow$, les anneaux rentrent ; si $e \searrow$, les anneaux sortent.</li>
+    </ul>
+    <div class="schema-placeholder">[Schéma : Michelson réglé en lame parallèle, anneaux à l'infini]</div>
+
+    <h3 id="config-wedge">6.4 Configuration en Coin d'Air (Franges localisées)</h3>
+     <ul>
+        <li>Réglage : M1 légèrement incliné par rapport à M2 (M1 et M'2 forment un coin d'air d'angle $\alpha$).</li>
+        <li>Observation : Source étendue, observation localisée au voisinage des miroirs.</li>
+        <li>Figure : <strong>Franges d'égale épaisseur</strong> (lignes de Fizeau) rectilignes, équidistantes. Interfrange $i = \lambda_0 / (2\alpha)$.</li>
+    </ul>
+    <div class="schema-placeholder">[Schéma : Michelson réglé en coin d'air, franges rectilignes localisées]</div>
+
+    <h3 id="michelson-coherence">6.5 Étude de la Cohérence avec le Michelson</h3>
+    <ul>
+        <li><strong>Cohérence temporelle :</strong> En lame parallèle, on fait varier $\delta = 2e$. Le contraste des anneaux diminue et s'annule quand $|\delta| > L_c$. Permet de mesurer $L_c$ et de faire de la <strong>spectroscopie par transformée de Fourier</strong>.</li>
+        <li><strong>Cohérence spatiale :</strong> Au contact optique ($e=0$), on peut étudier l'effet de la taille de la source sur le contraste.</li>
+    </ul>
+
+    <h3 id="michelson-apps">6.6 Applications</h3>
+    <ul>
+        <li>Métrologie : mesure de $\lambda_0$, $\Delta e$.</li>
+        <li>Mesure d'indice $n$.</li>
+        <li>Spectroscopie par Transformée de Fourier (FTIR).</li>
+        <li>Interférométrie laser (mesure de déplacements).</li>
+    </ul>
+
+    <h2 id="multiple-beam">7. Interférences à Ondes Multiples (Mention)</h2>
+
+    <h3 id="fabry-perot">7.1 Interféromètre de Fabry-Pérot</h3>
+    <ul>
+        <li>Description : Deux lames parallèles fortement réfléchissantes ($R \approx 1$) séparées par $e$.</li>
+        <li>Principe : Interférences à ondes multiples par transmission (ou réflexion).</li>
+        <li>Figure : Anneaux à l'infini très fins et lumineux (forte résolution spectrale).</li>
+    </ul>
+    <div class="schema-placeholder">[Schéma : Interféromètre de Fabry-Pérot, réflexions multiples, anneaux fins]</div>
+
+    <h2 id="conclusion-amplitude">8. Conclusion</h2>
+    <p>Points clés des interférences par division d'amplitude :</p>
+    <ul>
+        <li>Séparation par surface semi-réfléchissante.</li>
+        <li>Déphasage $\pi$ si réflexion sur milieu plus réfringent.</li>
+        <li>Lames parallèles $\implies$ franges d'égale inclinaison (localisées à $\infty$).</li>
+        <li>Lames épaisseur variable $\implies$ franges d'égale épaisseur (localisées sur la lame).</li>
+        <li>Michelson : polyvalent, $\delta = 2e \cos i$, config. lame parallèle ou coin d'air.</li>
+    </ul>
+    <hr>
+
+
+    <!-- Section Questions/Réponses -->
+    <h2>Questions de Cours</h2>
+    <div class="qa-container">
+
+        <div class="qa-pair">
+            <div class="question">
+                1. Quelle est la différence principale entre les interférences par division du front d'onde et par division d'amplitude ? Donner un exemple de dispositif pour chaque type.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                <ul>
+                    <li><strong>Division du front d'onde :</strong> On sélectionne spatialement des parties différentes d'un même front d'onde pour créer des sources secondaires cohérentes. Exemple : Fentes d'Young, miroirs de Fresnel.</li>
+                    <li><strong>Division d'amplitude :</strong> On utilise une surface partiellement réfléchissante pour séparer une onde incidente en (au moins) une onde réfléchie et une onde transmise, qui sont ensuite recombinées. Exemple : Lame mince, interféromètre de Michelson.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                2. Énoncer la règle concernant le déphasage supplémentaire introduit lors de la réflexion sur une interface entre deux milieux d'indices $n_1$ et $n_2$. Ce déphasage se produit-il lors de la transmission ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                La règle du déphasage à la réflexion est :
+                <ul>
+                    <li>Si l'onde incidente dans le milieu $n_1$ se réfléchit sur le milieu $n_2$ avec $n_2 > n_1$ (réflexion sur un milieu plus réfringent), l'onde réfléchie subit un déphasage supplémentaire de $\pi$ par rapport à l'onde incidente.</li>
+                    <li>Si $n_2 < n_1$ (réflexion sur un milieu moins réfringent), il n'y a pas de déphasage supplémentaire.</li>
+                </ul>
+                Non, la transmission à travers une interface n'introduit pas de déphasage de $\pi$. Un déphasage de $\pi$ équivaut à ajouter $\lambda_0/2$ à la différence de marche.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                3. Pour une lame mince à faces parallèles d'indice $n$ et d'épaisseur $e$, éclairée depuis l'air ($n_0=1$) avec un angle d'incidence $i$ (angle réfracté $r$), quelle est la différence de marche $\delta_R$ entre les deux premiers rayons réfléchis ? Quelle est la différence de marche $\delta_T$ entre les deux premiers rayons transmis ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                En supposant $n > n_0 = 1$ :
+                <ul>
+                    <li>Par réflexion : La première réflexion (air $\to$ lame) introduit un déphasage $\pi$. La deuxième réflexion (lame $\to$ air) n'en introduit pas. La différence de marche géométrique est $2ne \cos r$. Donc :
+                    $$ \delta_R = 2ne \cos r + \frac{\lambda_0}{2} $$
+                    </li>
+                    <li>Par transmission : Il n'y a pas de déphasage $\pi$ introduit par les réflexions internes (lame $\to$ air). La différence de marche est juste la différence de marche géométrique :
+                    $$ \delta_T = 2ne \cos r $$
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                4. Expliquer pourquoi les figures d'interférence par réflexion et par transmission d'une lame mince sont complémentaires.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Les conditions d'interférence sont :
+                <ul>
+                    <li>Réflexion : Max (brillant) si $2ne \cos r = (p-1/2)\lambda_0$, Min (sombre) si $2ne \cos r = p\lambda_0$.</li>
+                    <li>Transmission : Max (brillant) si $2ne \cos r = p\lambda_0$, Min (sombre) si $2ne \cos r = (p+1/2)\lambda_0$.</li>
+                </ul>
+                On voit que les conditions de maximum en transmission coïncident avec les conditions de minimum en réflexion, et vice-versa. Cela signifie que là où la lumière n'est pas réfléchie, elle est transmise (et inversement), ce qui découle de la conservation de l'énergie (si la lame n'absorbe pas).
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                5. Où sont localisées les franges d'interférence produites par une lame mince à faces parallèles ? Quel nom portent-elles et de quel paramètre dépend principalement la différence de marche ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Les franges produites par une lame à faces parallèles sont localisées <strong>à l'infini</strong>, car les rayons qui interfèrent sont parallèles.
+                <br>
+                Elles portent le nom de franges d'<strong>égale inclinaison</strong> (ou anneaux de Haidinger) car la différence de marche $\delta = 2ne \cos r$ dépend principalement de l'angle d'incidence $i$ (via $r$ et la loi de Snell-Descartes). Chaque frange correspond à une direction d'observation (une inclinaison $i$).
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                6. Où sont localisées les franges d'interférence produites par une lame d'épaisseur variable (comme un coin d'air ou les anneaux de Newton) observée en incidence quasi-normale ? Quel nom portent-elles et de quel paramètre dépend principalement la différence de marche ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Les franges produites par une lame d'épaisseur variable observée en incidence quasi-normale sont localisées <strong>au voisinage de la lame</strong>.
+                <br>
+                Elles portent le nom de franges d'<strong>égale épaisseur</strong> (ou lignes de Fizeau) car la différence de marche $\delta_R \approx 2ne + \lambda_0/2$ dépend principalement de l'épaisseur $e$ de la lame au point considéré. Chaque frange correspond à un lieu de points où l'épaisseur est constante.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                7. Pour un coin d'air d'angle $\alpha$ observé par réflexion en incidence quasi-normale, quelle est l'expression de l'interfrange $i$ ? De quoi dépend-il ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                La différence de marche est $\delta_R(x) \approx 2x\alpha + \lambda_0/2$. Les franges sombres correspondent à $2x\alpha = p\lambda_0$. L'écart $i = x_{p+1} - x_p$ entre deux franges sombres consécutives est donné par $2i\alpha = \lambda_0$.
+                <br>
+                L'interfrange est :
+                $$ i = \frac{\lambda_0}{2\alpha} $$
+                Il dépend de la longueur d'onde $\lambda_0$ et de l'angle $\alpha$ du coin (en radians). Il est indépendant de l'indice du verre formant le coin.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                8. Dans le dispositif des anneaux de Newton par réflexion (lentille plan-convexe de rayon $R$ sur lame plane), pourquoi la tache centrale est-elle sombre ? Donner l'expression du rayon $r_p$ du $p$-ième anneau sombre.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                La différence de marche est $\delta_R(r) \approx 2e(r) + \lambda_0/2 = r^2/R + \lambda_0/2$.
+                Au centre ($r=0$), l'épaisseur de l'air $e(0)=0$. La différence de marche est $\delta_R(0) = \lambda_0/2$. Ceci correspond à une interférence destructive (minimum d'intensité). La tache centrale est donc <strong>sombre</strong>.
+                <br>
+                Le $p$-ième anneau sombre ($p \in \mathbb{N}$) correspond à $\delta_R(r_p) = (p + 1/2)\lambda_0$.
+                $$ \frac{r_p^2}{R} + \frac{\lambda_0}{2} = (p + 1/2)\lambda_0 \implies \frac{r_p^2}{R} = p \lambda_0 $$
+                Le rayon du $p$-ième anneau sombre est donc $r_p = \sqrt{p R \lambda_0}$.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                9. Quel est le rôle de la lame séparatrice G1 et de la lame compensatrice G2 dans un interféromètre de Michelson ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                <ul>
+                    <li><strong>Lame séparatrice (G1) :</strong> C'est une lame semi-réfléchissante inclinée (souvent à 45°). Son rôle est de <strong>diviser l'amplitude</strong> de l'onde incidente en une onde réfléchie (vers M1) et une onde transmise (vers M2). Elle sert également à <strong>recombiner</strong> les ondes revenant de M1 (par transmission) et de M2 (par réflexion) vers l'observateur.</li>
+                    <li><strong>Lame compensatrice (G2) :</strong> C'est une lame identique à G1 (même épaisseur, même matériau) mais non traitée, placée sur le trajet du faisceau réfléchi (vers M1). Son rôle est d'<strong>égaliser les chemins optiques parcourus dans le verre</strong> par les deux faisceaux. Le faisceau vers M2 traverse G1 trois fois, tandis que le faisceau vers M1 ne traverse G1 qu'une fois. G2 est traversée deux fois par le faisceau vers M1. Avec G2, les deux faisceaux traversent la même épaisseur de verre, ce qui rend la différence de marche indépendante de la longueur d'onde (achromatisme au contact optique) et simplifie la formule de $\delta$ ($\delta=2e \cos i$ uniquement due au trajet dans l'air).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                10. Quelles sont les deux configurations de réglage principales de l'interféromètre de Michelson ? Décrire l'aspect de la figure d'interférence et sa localisation pour chaque cas.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Les deux configurations principales sont :
+                <ol>
+                    <li><strong>Configuration en lame à faces parallèles :</strong>
+                        <ul>
+                            <li>Réglage : Miroirs M1 et M2 rigoureusement perpendiculaires (M1 || M'2).</li>
+                            <li>Figure d'interférence : <strong>Anneaux d'égale inclinaison</strong> (anneaux de Haidinger) circulaires, centrés sur l'axe.</li>
+                            <li>Localisation : <strong>À l'infini</strong>.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Configuration en coin d'air :</strong>
+                        <ul>
+                            <li>Réglage : Miroirs M1 et M2 formant un léger angle (M1 et M'2 forment un coin d'air).</li>
+                            <li>Figure d'interférence : <strong>Franges d'égale épaisseur</strong> (lignes de Fizeau) rectilignes, équidistantes.</li>
+                            <li>Localisation : <strong>Au voisinage des miroirs</strong> (M1 et M'2).</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                11. Dans un Michelson réglé en lame à faces parallèles, on déplace le miroir mobile M2 d'une distance $\Delta e$. De combien de franges $N$ le système d'anneaux défile-t-il au centre de la figure ? Dans quel sens les anneaux se déplacent-ils si $e$ augmente (M2 s'éloigne) ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                La différence de marche au centre ($i=0$) est $\delta(0) = 2e$. L'ordre d'interférence au centre est $p_0 = \delta(0)/\lambda_0 = 2e/\lambda_0$.
+                <br>
+                Lorsque M2 se déplace de $\Delta e$, la variation de la différence de marche est $\Delta \delta = 2 \Delta e$. La variation de l'ordre au centre (qui correspond au nombre $N$ de franges qui défilent) est :
+                $$ N = \Delta p_0 = \frac{\Delta \delta}{\lambda_0} = \frac{2 \Delta e}{\lambda_0} $$
+                <br>
+                Si $e$ augmente, l'ordre $p = 2e \cos i / \lambda_0$ pour un anneau donné doit rester constant. Comme $e$ augmente, $\cos i$ doit diminuer, ce qui signifie que $i$ doit augmenter. Les anneaux correspondant à des angles $i$ plus grands se rapprochent du centre ($i=0$). Les anneaux <strong>rentrent vers le centre</strong> lorsque $e$ augmente.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                12. Citer deux applications importantes de l'interféromètre de Michelson.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Deux applications importantes du Michelson sont :
+                <ol>
+                    <li>La <strong>métrologie</strong> : mesure précise de longueurs d'onde ($\lambda_0$) ou de petits déplacements ($\Delta e$) grâce à la relation $\Delta e = N \lambda_0 / 2$.</li>
+                    <li>La <strong>spectroscopie par transformée de Fourier (FTIR)</strong> : en enregistrant le contraste des franges (interférogramme) en fonction de la différence de marche $\delta = 2e$ pour une source polychromatique, on peut obtenir le spectre de la source par calcul de la transformée de Fourier de l'interférogramme. Très utilisée en infrarouge.</li>
+                    <li>(Autres possibles : mesure d'indice de réfraction, étude de la cohérence temporelle et spatiale, expérience de Michelson-Morley...).</li>
+                </ol>
+                 (Deux réponses parmi celles-ci suffisent).
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fonction pour rendre les maths dans un élément spécifique
+            const renderMath = (element) => {
+                if (window.renderMathInElement) {
+                    try {
+                        window.renderMathInElement(element, {
+                            delimiters: [
+                                {left: "$$", right: "$$", display: true},
+                                {left: "$", right: "$", display: false},
+                                {left: "\\(", right: "\\)", display: false},
+                                {left: "\\[", right: "\\]", display: true}
+                            ],
+                            throwOnError: false // Ne pas bloquer si une formule est invalide
+                        });
+                    } catch (error) {
+                        console.error("Erreur KaTeX:", error);
+                    }
+                }
+            };
+
+            // Rendre les maths initialement présents dans le body
+            renderMath(document.body);
+
+            // Gérer le clic sur les questions
+            const questionElements = document.querySelectorAll('.question');
+
+            questionElements.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling; // L'élément suivant est la réponse
+                    if (answer && answer.classList.contains('answer')) {
+                        answer.classList.toggle('visible');
+                        // Re-rendre les maths dans la réponse si elle devient visible
+                        // et ne l'a pas déjà été
+                        if (answer.classList.contains('visible') && !answer.hasAttribute('data-math-rendered')) {
+                             renderMath(answer);
+                             answer.setAttribute('data-math-rendered', 'true');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
