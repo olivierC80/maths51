@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cours 1 - Introduction</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
+</head>
+<body>
+  <h1>Cours 1 : Introduction</h1>
+  <p>Bienvenue dans ce cours d’introduction...</p>
+
+  <label>
+    <input type="checkbox" id="luCheckbox">
+    J’ai lu ce cours
+  </label>
+
+  <div>
+    Difficulté :
+    <select id="difficulte">
+      <option value="">-- Sélectionner --</option>
+      <option value="facile">Facile</option>
+      <option value="moyen">Moyen</option>
+      <option value="difficile">Difficile</option>
+    </select>
+  </div>
+
+  <script type="module">
+    // 🔧 Configuration Firebase
+    const firebaseConfig = {
+      apiKey: "TA_CLE",
+      authDomain: "TON_PROJET.firebaseapp.com",
+      databaseURL: "https://TON_PROJET.firebaseio.com",
+      projectId: "TON_PROJET",
+      storageBucket: "TON_PROJET.appspot.com",
+      messagingSenderId: "...",
+      appId: "..."
+    };
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    const checkbox = document.getElementById('luCheckbox');
+    const select = document.getElementById('difficulte');
+    const courseId = "cours1";
+
+    // Auth Google
+    signInWithPopup(auth, new GoogleAuthProvider()).then((result) => {
+      const user = result.user;
+      const uid = user.uid;
+
+      // Charger l’état du cours
+      const userRef = ref(database, 'users/' + uid + '/' + courseId);
+      get(userRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          checkbox.checked = data.lu || false;
+          select.value = data.difficulte || "";
+        }
+      });
+
+      // Sauvegarde automatique
+      checkbox.addEventListener('change', () => {
+        set(userRef, {
+          lu: checkbox.checked,
+          difficulte: select.value
+        });
+      });
+
+      select.addEventListener('change', () => {
+        set(userRef, {
+          lu: checkbox.checked,
+          difficulte: select.value
+        });
+      });
+    });
+  </script>
+</body>
+</html>
