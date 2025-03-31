@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours de Physique : Le Filtrage</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #0056b3; }
+        .video-ref { font-style: italic; color: #555; font-size: 0.9em; margin-bottom: 15px; }
+        .formula { margin: 10px 0; padding: 10px; background-color: #f0f0f0; border-left: 3px solid #0056b3; overflow-x: auto;}
+        table { border-collapse: collapse; margin: 20px 0; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #e0e0e0; }
+        .important { font-weight: bold; color: #d9534f; }
+        .blackboard-diagram {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: #e8f5e9; /* Light green background like blackboard */
+            color: #333; /* Text color */
+            font-family: 'Courier New', Courier, monospace; /* Chalk-like font */
+            white-space: pre; /* Preserve spacing for ASCII art */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cours de Physique : Le Filtrage</h1>
+    <p class="video-ref">Basé sur la vidéo présentée par Thibault Lemonnier, professeur de physique Optimal Sup-Spé.</p>
+
+    <h2>Introduction (0:00 - 0:30)</h2>
+    <p>Ce cours portera sur l'étude des filtres en électronique. Nous aborderons les points suivants :</p>
+    <ul>
+        <li>I. Définition : Qu'est-ce qu'un filtre ?</li>
+        <li>II. Expressions normalisées : Pour caractériser rapidement les filtres.</li>
+        <li>III. Exemple d'étude : Analyse complète d'un filtre et ses conséquences.</li>
+    </ul>
+
+    <h2>I. Définition d'un Filtre (0:31 - 2:10)</h2>
+    <p>Un filtre est un composant ou un circuit électronique qui se comporte comme un <span class="important">quadripôle</span>. Un quadripôle est un "bloc" avec quatre bornes : deux bornes d'entrée et deux bornes de sortie.</p>
+
+    <div class="blackboard-diagram">
+    Entrée (E) ---> [ QUADRIPÔLE ] ---> Sortie (S)
+      |                 |                |
+      +-----------------+----------------+ (Masse commune souvent implicite)
+    </div>
+
+    <p>On applique une tension d'entrée $E$ entre les bornes d'entrée. Le filtre traite ce signal et fournit une tension de sortie $S$ entre les bornes de sortie.</p>
+    <p>Le comportement du filtre est caractérisé par sa <span class="important">fonction de transfert</span>, notée $H$. Elle est définie comme le rapport entre la tension de sortie et la tension d'entrée, généralement exprimées en notation complexe pour l'analyse fréquentielle :</p>
+    <div class="formula">
+        $$ \underline{H}(\omega) = \frac{\underline{S}(\omega)}{\underline{E}(\omega)} $$
+    </div>
+    <p class="video-ref">(Notation: $\omega$ est la pulsation du signal sinusoïdal, les grandeurs soulignées sont les amplitudes complexes).</p>
+    <p>Cette relation $ \underline{S} = \underline{H} \times \underline{E} $ est fondamentale pour toute l'étude des filtres.</p>
+    <p>Le quadripôle contient un réseau interne de composants (résistances, condensateurs, inductances...). Par exemple :</p>
+    <div class="blackboard-diagram">
+       +---[ R ]---+---o S
+       |           |
+    E o           ---
+       |           --- C
+       +-------------+---o Masse
+    </div>
+    <p>(Ceci est un exemple de filtre RC, qui sera étudié plus loin).</p>
+    <p>Le but principal du filtrage est la <span class="important">sélection de fréquences</span>. Un signal d'entrée est souvent composé d'une somme de signaux sinusoïdaux de différentes fréquences (analyse de Fourier). Le filtre va modifier différemment l'amplitude et la phase de ces composantes fréquentielles.</p>
+    <p>On distingue les fréquences qui sont laissées passer (fréquences <span class="important">passantes</span>) et celles qui sont atténuées ou bloquées (fréquences <span class="important">coupées</span>).</p>
+    <p>La fonction de transfert $H$ dépend donc de la fréquence (ou pulsation $\omega$) du signal appliqué.</p>
+
+    <h2>II. Expressions Normalisées (3:58 - 10:14)</h2>
+    <p>Pour simplifier l'étude et la classification des filtres, on utilise des expressions normalisées. On introduit une pulsation réduite (ou variable normalisée) $x$ :</p>
+    <div class="formula">
+        $$ x = \frac{\omega}{\omega_0} $$
+    </div>
+    <p>Où $\omega$ est la pulsation du signal et $\omega_0$ est une pulsation caractéristique du filtre, appelée <span class="important">pulsation propre</span> ou <span class="important">pulsation de coupure</span>.</p>
+    <p>Voici un tableau résumant les fonctions de transfert normalisées $H(x)$ pour les types de filtres courants et les ordres 1 et 2 :</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Type / $H(x)$</th>
+                <th>1er Ordre</th>
+                <th>2ème Ordre</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Passe-Bas</strong><br>(Low-Pass)</td>
+                <td>$ \frac{H_0}{1 + jx} $</td>
+                <td>$ \frac{H_0}{1 + j\frac{x}{Q} - x^2} $</td>
+            </tr>
+            <tr>
+                <td><strong>Passe-Bande</strong><br>(Band-Pass)</td>
+                <td><em>Impossible</em></td>
+                <td>$ \frac{j\frac{x}{Q} H_0}{1 + j\frac{x}{Q} - x^2} $</td>
+            </tr>
+            <tr>
+                <td><strong>Passe-Haut</strong><br>(High-Pass)</td>
+                <td>$ \frac{jx H_0}{1 + jx} $</td>
+                <td>$ \frac{-x^2 H_0}{1 + j\frac{x}{Q} - x^2} $</td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="video-ref">(Notes: $H_0$ est le gain statique ou à la résonance, $j$ est l'unité imaginaire $j^2 = -1$, $Q$ est le facteur de qualité pour les filtres du 2nd ordre).</p>
+
+    <p><strong>Interprétation :</strong></p>
+    <ul>
+        <li><strong>Passe-Bas :</strong> Laisse passer les basses fréquences ($x \to 0 \implies H \to H_0$) et coupe les hautes fréquences ($x \to \infty \implies H \to 0$).</li>
+        <li><strong>Passe-Haut :</strong> Coupe les basses fréquences ($x \to 0 \implies H \to 0$) et laisse passer les hautes fréquences ($x \to \infty \implies H \to H_0$).</li>
+        <li><strong>Passe-Bande (2nd ordre) :</strong> Laisse passer une bande de fréquences autour de $\omega_0$ (où $x=1$) et coupe les basses et hautes fréquences.</li>
+        <li>Un filtre Passe-Bande du 1er ordre n'existe pas sous cette forme simple.</li>
+    </ul>
+
+    <p><strong>Autres types de filtres mentionnés :</strong></p>
+    <ul>
+        <li><strong>Réjecteur de Bande (Notch Filter) :</strong> Supprime une bande de fréquence. Fonction de transfert type (2nd ordre) :
+            <div class="formula">$$ H(x) = \frac{(1-x^2) H_0}{1 + j\frac{x}{Q} - x^2} $$</div>
+        </li>
+        <li><strong>Déphaseur (Phase Shifter) :</strong> Change la phase du signal sans changer son amplitude (module constant). Fonction de transfert type (1er ordre) :
+            <div class="formula">$$ H(x) = \frac{1 - jx}{1 + jx} $$</div>
+            Ici, $|H(x)| = 1$ pour tout $x$. La phase varie de 0 à $-\pi$.
+        </li>
+    </ul>
+
+
+    <h2>III. Exemple d'Étude : Filtre RC Passe-Bas (1er Ordre) (12:07 - fin)</h2>
+    <p>Reprenons le circuit RC simple :</p>
+    <div class="blackboard-diagram">
+       +---[ R ]---+---o S
+       |           |
+    E o           ---
+       |           --- C
+       +-------------+---o Masse
+       --> i         i --> 0 (sortie haute impédance)
+    </div>
+
+    <p><strong>Méthode 1 : Lois de Kirchhoff / Équation Différentielle</strong></p>
+    <p>Loi des mailles : $E(t) = U_R(t) + S(t)$ <br>
+       Loi d'Ohm pour R : $U_R(t) = R \times i(t)$ <br>
+       Relation pour C : $i(t) = C \frac{dS(t)}{dt}$ (car le courant de sortie est nul) <br>
+       En combinant :</p>
+    <div class="formula">$$ E(t) = S(t) + RC \frac{dS(t)}{dt} $$</div>
+    <p>En passant en notation complexe ($\frac{d}{dt} \rightarrow j\omega$):</p>
+    <div class="formula">$$ \underline{E} = \underline{S} + RC (j\omega \underline{S}) = \underline{S} (1 + j\omega RC) $$</div>
+    <p>D'où la fonction de transfert :</p>
+    <div class="formula">$$ H(\omega) = \frac{\underline{S}}{\underline{E}} = \frac{1}{1 + j\omega RC} $$</div>
+
+    <p><strong>Méthode 2 : Pont Diviseur de Tension (Impédances Complexes)</strong></p>
+    <p>Impédance de R : $Z_R = R$ <br>
+       Impédance de C : $Z_C = \frac{1}{jC\omega}$ <br>
+       La tension de sortie $S$ est la tension aux bornes de C. Par le pont diviseur :</p>
+    <div class="formula">$$ \underline{S} = \underline{E} \frac{Z_C}{Z_R + Z_C} = \underline{E} \frac{\frac{1}{jC\omega}}{R + \frac{1}{jC\omega}} $$</div>
+    <p>En multipliant numérateur et dénominateur par $jC\omega$ :</p>
+    <div class="formula">$$ \underline{S} = \underline{E} \frac{1}{jRC\omega + 1} \implies H(\omega) = \frac{1}{1 + jRC\omega} $$</div>
+    <p>Les deux méthodes donnent le même résultat.</p>
+
+    <p><strong>Normalisation et Identification</strong></p>
+    <p>On pose la pulsation de coupure $\omega_0 = \frac{1}{RC}$. Alors $\omega RC = \frac{\omega}{\omega_0} = x$.</p>
+    <div class="formula">$$ H(x) = \frac{1}{1 + jx} $$</div>
+    <p>Cela correspond bien à l'expression normalisée d'un filtre passe-bas du 1er ordre avec un gain statique $H_0 = 1$.</p>
+
+    <p><strong>Analyse Asymptotique</strong></p>
+    <ul>
+        <li><strong>Basses Fréquences (BF) :</strong> $\omega \to 0 \implies x \to 0$.
+            $H \approx \frac{1}{1+0} = 1$. Le filtre est <span class="important">passant</span>.
+            <br><em>Comportement physique :</em> Le condensateur se comporte comme un interrupteur ouvert ($Z_C \to \infty$). Aucun courant ne passe, $U_R = 0$, donc $S = E$.
+        </li>
+        <li><strong>Hautes Fréquences (HF) :</strong> $\omega \to \infty \implies x \to \infty$.
+            $|H| \approx |\frac{1}{jx}| = \frac{1}{x} \to 0$. Le filtre est <span class="important">coupant</span>.
+            <br><em>Comportement physique :</em> Le condensateur se comporte comme un fil ($Z_C \to 0$). La sortie est court-circuitée à la masse, donc $S \to 0$.
+        </li>
+    </ul>
+    <p>Ces comportements confirment qu'il s'agit d'un filtre <span class="important">passe-bas</span>.</p>
+
+    <p><strong>Diagramme de Bode (Gain en module)</strong></p>
+    <p>Le diagramme de Bode trace le gain en décibels (dB) en fonction du logarithme de la fréquence (ou de $x$).</p>
+    <ul>
+        <li>Ordonnée : Gain $G_{dB} = 20 \log_{10} |H(x)|$</li>
+        <li>Abscisse : $\log_{10}(x)$ (ou $x$ sur une échelle logarithmique)</li>
+    </ul>
+    <p>Pour notre filtre : $ |H(x)| = \left| \frac{1}{1+jx} \right| = \frac{1}{\sqrt{1^2 + x^2}} = \frac{1}{\sqrt{1+x^2}} $</p>
+    <div class="formula">$$ G_{dB}(x) = 20 \log \left( \frac{1}{\sqrt{1+x^2}} \right) $$</div>
+
+    <p><strong>Asymptotes du diagramme de Bode :</strong></p>
+    <ul>
+        <li><strong>Hypothèse BF ($x \ll 1$) :</strong> $1+x^2 \approx 1$.
+            $G_{dB} \approx 20 \log(1) = 0 \text{ dB}$. (Asymptote horizontale à 0 dB).
+        </li>
+        <li><strong>Hypothèse HF ($x \gg 1$) :</strong> $1+x^2 \approx x^2$.
+            $G_{dB} \approx 20 \log\left(\frac{1}{\sqrt{x^2}}\right) = 20 \log\left(\frac{1}{x}\right) = -20 \log(x)$.
+            <br>(Asymptote oblique avec une pente de <span class="important">-20 dB par décade</span>. Une décade correspond à une multiplication par 10 de la fréquence $x$).
+        </li>
+    </ul>
+
+    <p><strong>Point particulier : Pulsation de coupure ($x=1$)</strong></p>
+    <p>À $x=1$ (c'est-à-dire $\omega = \omega_0 = 1/RC$), le gain vaut :</p>
+    <div class="formula">$$ G_{dB}(1) = 20 \log\left(\frac{1}{\sqrt{1+1^2}}\right) = 20 \log\left(\frac{1}{\sqrt{2}}\right) = -10 \log(2) \approx -3 \text{ dB} $$</div>
+    <p>C'est la <span class="important">fréquence de coupure à -3 dB</span>. C'est le point où les deux asymptotes se croisent (sur le diagramme asymptotique). La courbe réelle passe 3 dB en dessous de ce point d'intersection.</p>
+
+    <p><strong>Tracé du diagramme de Bode (Gain) :</strong></p>
+    <div class="blackboard-diagram">
+    G_dB ^
+         |         /------------------o x=1 asymptote BF (0 dB)
+         |        /                   |
+       0 +-------+--------------------*-----> log(x)
+         |        \                 / | -3dB
+         |         \               /  |
+     -20 +          \             /   .
+         |           \           /    Asymptote HF (-20dB/decade)
+     -40 +            .         /     .
+         |             `-.     /      .
+         |                `o--'       . Courbe réelle
+         +------------------------------------
+    </div>
+    <p>La courbe réelle suit l'asymptote horizontale à basses fréquences, s'incurve au voisinage de $x=1$ en passant par le point (1, -3dB), puis suit l'asymptote oblique à -20 dB/décade à hautes fréquences.</p>
+
+    <h2>Conclusion (29:11 - fin)</h2>
+    <p>L'étude des filtres, notamment via les expressions normalisées et les diagrammes de Bode, permet de comprendre et de prédire comment un circuit sélectionne les fréquences.</p>
+    <p>Les diagrammes de Bode, avec leurs asymptotes, sont un outil puissant pour visualiser rapidement le comportement fréquentiel d'un filtre.</p>
+    <p>La pente de -20 dB/décade est caractéristique d'un filtre du 1er ordre.</p>
+
+    <hr>
+    <p>Pour toute question : 01 40 26 78 78 / maths@optimalsupspe.fr</p>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
