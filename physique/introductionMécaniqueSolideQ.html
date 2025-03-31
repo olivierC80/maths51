@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz : Mécanique du Solide Indéformable</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"  crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p, ul, li, table {
+            color: #444;
+        }
+        .definition, .theorem, .important, .warning {
+            background-color: #e9e9e9;
+            border-left: 5px solid #007bff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .theorem { border-left-color: #28a745; }
+        .important { border-left-color: #dc3545; }
+        .warning { border-left-color: #ffc107; background-color: #fff3cd;}
+
+        /* Style pour les questions/réponses */
+        .qa-container {
+            margin-top: 30px;
+        }
+        .qa-pair {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            overflow: hidden; /* Pour les coins arrondis */
+        }
+        .question {
+            padding: 15px;
+            background-color: #f0f8ff; /* Bleu clair */
+            cursor: pointer;
+            font-weight: bold;
+            color: #0056b3;
+        }
+        .question:hover {
+            background-color: #e0f0ff;
+        }
+        .question .instruction {
+             font-weight: normal;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-left: 10px;
+        }
+        .answer {
+            padding: 15px;
+            border-top: 1px dashed #ccc;
+            display: none; /* Caché par défaut */
+            background-color: #fdfdfd;
+        }
+        .answer.visible {
+            display: block; /* Affiché quand la classe 'visible' est ajoutée */
+        }
+        /* KaTeX display style adjustments */
+         .katex-display {
+             overflow-x: auto;
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Avoid scrollbar overlap */
+         }
+
+    </style>
+</head>
+<body>
+
+ <h1>Introduction à la Mécanique du Solide Indéformable</h1>
+
+    <p>Jusqu'à présent, nous avons principalement étudié la mécanique du point matériel. Nous abordons maintenant la description du mouvement des <strong>solides indéformables</strong> (ou rigides). Un solide indéformable est un système matériel dont les distances mutuelles entre tous ses points restent constantes au cours du temps.</p>
+    <p>L'étude se fait dans un <strong>référentiel $\mathcal{R}$ supposé galiléen</strong>.</p>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 1 : Cinématique du Solide</h2>
+    <!-- ============================================== -->
+    <p>La cinématique vise à décrire le mouvement du solide sans se préoccuper des causes.</p>
+
+    <h3>1.1 Description du Solide et Repérage</h3>
+    <div class="definition">
+        Un <strong>solide (S)</strong> est un ensemble de points matériels $M_i$ de masses $m_i$ tels que la distance $||M_i M_j||$ est constante pour toute paire $(i, j)$ et à tout instant $t$.
+        <br>
+        Pour décrire le mouvement du solide, on lui attache un <strong>repère lié au solide $\mathcal{R}_S(A, \vec{e}_{x_S}, \vec{e}_{y_S}, \vec{e}_{z_S})$</strong>, où $A$ est un point du solide et la base orthonormée $(\vec{e}_{x_S}, \vec{e}_{y_S}, \vec{e}_{z_S})$ est fixe par rapport au solide.
+        <br>
+        La position du solide dans le référentiel d'étude $\mathcal{R}$ est entièrement déterminée par :
+        <ul>
+            <li>La position d'un point du solide (par exemple $A$) dans $\mathcal{R}$.</li>
+            <li>L'orientation de la base $\mathcal{R}_S$ par rapport à la base de $\mathcal{R}$.</li>
+        </ul>
+        Un solide possède <strong>6 degrés de liberté</strong> dans l'espace : 3 pour la translation (position de $A$) et 3 pour la rotation (orientation de $\mathcal{R}_S$).
+    </div>
+
+    <h3>1.2 Champ des Vitesses d'un Solide</h3>
+    <div class="important">
+        <strong>Relation fondamentale de la cinématique du solide :</strong> La vitesse $\vec{v}(M)_{/\mathcal{R}}$ d'un point quelconque $M$ du solide $(S)$ dans le référentiel $\mathcal{R}$ est reliée à la vitesse $\vec{v}(A)_{/\mathcal{R}}$ d'un autre point $A$ du solide par :
+        $$ \vec{v}(M)_{/\mathcal{R}} = \vec{v}(A)_{/\mathcal{R}} + \vec{\Omega}_{S/\mathcal{R}} \times \vec{AM} $$
+        où $\vec{\Omega}_{S/\mathcal{R}}$ est le <strong>vecteur instantané de rotation</strong> (ou vitesse angulaire) du solide $(S)$ par rapport au référentiel $\mathcal{R}$. Ce vecteur est <strong>uniforme</strong> pour tout le solide à un instant donné (il ne dépend pas du point $M$ choisi).
+    </div>
+    <p>Cette formule est parfois appelée "formule de Varignon" ou "champ des moments" pour les vitesses.</p>
+    <p>Le champ des vitesses $\vec{v}(M)_{/\mathcal{R}}$ d'un solide est un <strong>champ équiprojectif</strong>.</p>
+
+    <h3>1.3 Mouvements Simples</h3>
+    <ul>
+        <li><strong>Translation :</strong> Tous les points du solide ont le même vecteur vitesse à chaque instant. $\vec{v}(M)_{/\mathcal{R}} = \vec{v}(A)_{/\mathcal{R}} = \vec{v}_{trans}(t)$. Dans ce cas, $\vec{\Omega}_{S/\mathcal{R}} = \vec{0}$.</li>
+        <li><strong>Rotation autour d'un axe fixe $\Delta$ :</strong> Soit $\Delta$ un axe fixe dans $\mathcal{R}$. Si le solide tourne autour de cet axe, on peut choisir $A$ sur l'axe $\Delta$. Alors $\vec{v}(A)_{/\mathcal{R}} = \vec{0}$. Le vecteur rotation est porté par l'axe : $\vec{\Omega}_{S/\mathcal{R}} = \omega(t) \vec{u}_\Delta$, où $\vec{u}_\Delta$ est un vecteur unitaire de l'axe.
+        La vitesse d'un point $M$ est $\vec{v}(M)_{/\mathcal{R}} = (\omega(t) \vec{u}_\Delta) \times \vec{AM}$. Si $H$ est le projeté de $M$ sur $\Delta$, alors $\vec{v}(M)_{/\mathcal{R}} = \vec{\Omega}_{S/\mathcal{R}} \times \vec{HM}$. La trajectoire de $M$ est un cercle centré sur $H$ et de rayon $HM$. La vitesse est $v(M) = |\omega| HM$.</li>
+    </ul>
+
+    <h3>1.4 Composition des Vitesses Angulaires</h3>
+    <p>Si on a trois solides (ou référentiels) $S_1, S_2, S_3$, la relation de composition des vecteurs rotation est additive :</p>
+    $$ \vec{\Omega}_{S_3/S_1} = \vec{\Omega}_{S_3/S_2} + \vec{\Omega}_{S_2/S_1} $$
+    Et $\vec{\Omega}_{S_1/S_2} = -\vec{\Omega}_{S_2/S_1}$.
+
+    <!-- ============================================== -->
+    <h2>Chapitre 2 : Cinétique du Solide</h2>
+    <!-- ============================================== -->
+    <p>La cinétique s'intéresse aux grandeurs associées à la masse et au mouvement : centre de masse, moments d'inertie, quantité de mouvement, moment cinétique, énergie cinétique.</p>
+
+    <h3>2.1 Centre de Masse (ou d'Inertie) G</h3>
+    <div class="definition">
+        Pour un solide $(S)$ de masse totale $M = \int_{(S)} dm$, le <strong>centre de masse</strong> $G$ est défini par :
+        $$ \vec{OG} = \frac{1}{M} \int_{(S)} \vec{OM} dm $$
+        où l'intégrale porte sur tous les éléments de masse $dm$ du solide. Pour un système discret, $\vec{OG} = \frac{1}{M} \sum_i m_i \vec{OM}_i$.
+        <br> $G$ est un point géométrique dont la position dépend de la répartition des masses dans le solide.
+    </div>
+
+    <h3>2.2 Quantité de Mouvement</h3>
+    <div class="definition">
+        La <strong>quantité de mouvement</strong> $\vec{p}_{(S)/\mathcal{R}}$ du solide $(S)$ dans le référentiel $\mathcal{R}$ est la somme des quantités de mouvement de tous ses points :
+        $$ \vec{p}_{(S)/\mathcal{R}} = \int_{(S)} \vec{v}(M)_{/\mathcal{R}} dm $$
+        On démontre que cette quantité est égale à celle d'un point matériel de masse $M$ situé au centre de masse $G$ et animé de la vitesse du centre de masse $\vec{v}(G)_{/\mathcal{R}}$ :
+        $$ \vec{p}_{(S)/\mathcal{R}} = M \vec{v}(G)_{/\mathcal{R}} $$
+    </div>
+
+    <h3>2.3 Moment Cinétique</h3>
+    <div class="definition">
+        Le <strong>moment cinétique</strong> $\vec{L}_O(S)_{/\mathcal{R}}$ du solide $(S)$ par rapport à un point $O$ (fixe ou mobile) dans le référentiel $\mathcal{R}$ est la somme des moments cinétiques de tous ses points par rapport à $O$ :
+        $$ \vec{L}_O(S)_{/\mathcal{R}} = \int_{(S)} \vec{OM} \times \vec{v}(M)_{/\mathcal{R}} dm $$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorèmes de Koenig pour le Moment Cinétique :</strong>
+        <ol>
+            <li>Le moment cinétique par rapport à un point $O$ est la somme du moment cinétique d'un point matériel $M$ situé en $G$ (affecté de la masse totale $M$) par rapport à $O$, et du moment cinétique du solide dans le référentiel barycentrique $\mathcal{R}^*$ (référentiel lié à $G$ en translation par rapport à $\mathcal{R}$) calculé par rapport à $G$ :
+            $$ \vec{L}_O(S)_{/\mathcal{R}} = \vec{OG} \times M \vec{v}(G)_{/\mathcal{R}} + \vec{L}_G(S)_{/\mathcal{R}^*} $$
+            Le terme $\vec{L}_G(S)_{/\mathcal{R}^*}$ est appelé <strong>moment cinétique propre</strong>.</li>
+            <li>Le moment cinétique propre $\vec{L}_G(S)_{/\mathcal{R}^*}$ est lié au vecteur rotation $\vec{\Omega}_{S/\mathcal{R}} = \vec{\Omega}_{S/\mathcal{R}^*}$ par l'intermédiaire de l'<strong>opérateur d'inertie</strong> (ou tenseur d'inertie) $\bar{\bar{J}}_G$ du solide en $G$ :
+            $$ \vec{L}_G(S)_{/\mathcal{R}^*} = \bar{\bar{J}}_G \cdot \vec{\Omega}_{S/\mathcal{R}} $$
+            </li>
+        </ol>
+    </div>
+
+    <p>L'opérateur d'inertie $\bar{\bar{J}}_O$ en un point $O$ est un opérateur linéaire qui transforme le vecteur rotation $\vec{\Omega}$ en moment cinétique $\vec{L}_O = \bar{\bar{J}}_O \cdot \vec{\Omega}$. Dans une base $(\vec{e}_x, \vec{e}_y, \vec{e}_z)$, il est représenté par la <strong>matrice d'inertie</strong> en $O$ :</p>
+    $$ [J_O] = \begin{pmatrix} J_{xx} & J_{xy} & J_{xz} \\ J_{yx} & J_{yy} & J_{yz} \\ J_{zx} & J_{zy} & J_{zz} \end{pmatrix} $$
+    où les termes diagonaux $J_{xx} = \int (y^2+z^2)dm, ...$ sont les <strong>moments d'inertie</strong> par rapport aux axes, et les termes hors-diagonaux $J_{xy} = -\int xy dm, ...$ sont les <strong>produits d'inertie</strong>. (Les coordonnées $x,y,z$ sont celles du point courant $M$ par rapport à $O$).
+
+    <div class="important">
+        <strong>Cas particulier : Rotation autour d'un axe fixe $\Delta$ passant par $O$.</strong>
+        Si le solide tourne autour d'un axe fixe $\Delta$ (vecteur unitaire $\vec{u}_\Delta$) passant par $O$ avec une vitesse angulaire $\omega$, alors $\vec{\Omega}_{S/\mathcal{R}} = \omega \vec{u}_\Delta$. Le moment cinétique par rapport à l'axe $\Delta$ est :
+        $$ L_\Delta = \vec{L}_O(S)_{/\mathcal{R}} \cdot \vec{u}_\Delta = J_\Delta \omega $$
+        où $J_\Delta$ est le <strong>moment d'inertie scalaire</strong> du solide par rapport à l'axe $\Delta$.
+        $$ J_\Delta = \int_{(S)} r_\perp^2 dm $$
+        avec $r_\perp$ la distance de l'élément de masse $dm$ à l'axe $\Delta$.
+        Le vecteur moment cinétique n'est aligné avec $\vec{\Omega}$ que si $\Delta$ est un <strong>axe principal d'inertie</strong>.
+    </div>
+
+    <p><strong>Moments d'inertie usuels (par rapport à l'axe de symétrie passant par G):</strong></p>
+    <ul>
+        <li>Tige mince de longueur $L$, masse $M$ (axe $\perp$ à la tige) : $J_G = \frac{1}{12}ML^2$.</li>
+        <li>Cylindre plein de rayon $R$, masse $M$ (axe du cylindre) : $J_G = \frac{1}{2}MR^2$.</li>
+        <li>Sphère pleine de rayon $R$, masse $M$ (tout axe passant par G) : $J_G = \frac{2}{5}MR^2$.</li>
+        <li>Cylindre creux / anneau de rayon $R$, masse $M$ (axe du cylindre) : $J_G = MR^2$.</li>
+    </ul>
+    <p><strong>Théorème de Huygens :</strong> Le moment d'inertie $J_\Delta$ par rapport à un axe $\Delta$ est égal au moment d'inertie $J_G$ par rapport à un axe $\Delta_G$ parallèle à $\Delta$ passant par $G$, plus $Md^2$, où $d$ est la distance entre les deux axes : $J_\Delta = J_G + Md^2$.</p>
+
+    <h3>2.4 Énergie Cinétique</h3>
+     <div class="definition">
+        L'<strong>énergie cinétique</strong> $E_c(S)_{/\mathcal{R}}$ du solide $(S)$ dans le référentiel $\mathcal{R}$ est la somme des énergies cinétiques de tous ses points :
+        $$ E_c(S)_{/\mathcal{R}} = \int_{(S)} \frac{1}{2} [\vec{v}(M)_{/\mathcal{R}}]^2 dm $$
+    </div>
+
+    <div class="theorem">
+        <strong>Théorèmes de Koenig pour l'Énergie Cinétique :</strong>
+        L'énergie cinétique du solide dans $\mathcal{R}$ est la somme de l'énergie cinétique du centre de masse $G$ (affecté de la masse totale $M$) et de l'énergie cinétique du solide dans le référentiel barycentrique $\mathcal{R}^*$ :
+        $$ E_c(S)_{/\mathcal{R}} = \frac{1}{2} M [\vec{v}(G)_{/\mathcal{R}}]^2 + E_c(S)_{/\mathcal{R}^*} $$
+        L'énergie cinétique propre $E_c(S)_{/\mathcal{R}^*}$ est liée à la rotation :
+        $$ E_c(S)_{/\mathcal{R}^*} = \frac{1}{2} \vec{\Omega}_{S/\mathcal{R}} \cdot \vec{L}_G(S)_{/\mathcal{R}^*} = \frac{1}{2} \vec{\Omega}_{S/\mathcal{R}} \cdot (\bar{\bar{J}}_G \cdot \vec{\Omega}_{S/\mathcal{R}}) $$
+        Cette expression se simplifie dans une base principale d'inertie en G : $E_c^* = \frac{1}{2}(J_{G,xx}\omega_x^2 + J_{G,yy}\omega_y^2 + J_{G,zz}\omega_z^2)$.
+    </div>
+
+    <div class="important">
+        <strong>Cas particulier : Rotation autour d'un axe fixe $\Delta$.</strong>
+        L'énergie cinétique s'écrit simplement :
+        $$ E_c(S)_{/\mathcal{R}} = \frac{1}{2} J_\Delta \omega^2 $$
+        où $J_\Delta$ est le moment d'inertie par rapport à l'axe fixe $\Delta$ et $\omega$ est la vitesse angulaire.
+    </div>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 3 : Dynamique du Solide</h2>
+    <!-- ============================================== -->
+    <p>La dynamique relie les actions mécaniques (forces, couples) exercées sur le solide à son mouvement (accélération de G, accélération angulaire).</p>
+
+    <h3>3.1 Actions Mécaniques Extérieures</h3>
+    <p>Les actions du milieu extérieur sur le solide $(S)$ peuvent être modélisées par :</p>
+    <ul>
+        <li>La <strong>résultante</strong> des forces extérieures : $\vec{R}_{ext} = \sum \vec{F}_{ext}$.</li>
+        <li>Le <strong>moment résultant</strong> des forces extérieures par rapport à un point $O$ : $\vec{M}_O(\vec{R}_{ext}) = \sum \vec{OM}_i \times \vec{F}_{ext,i}$, où $\vec{F}_{ext,i}$ est appliquée au point $M_i$ du solide. On peut aussi avoir des couples $\vec{\Gamma}$ appliqués directement.</li>
+    </ul>
+
+    <h3>3.2 Théorèmes Fondamentaux de la Dynamique</h3>
+    <p>Ces théorèmes sont la généralisation des lois de Newton pour un solide, appliqués dans un <strong>référentiel galiléen $\mathcal{R}$</strong>.</p>
+
+    <div class="theorem">
+        <strong>Théorème de la Résultante Cinétique (TRC) :</strong>
+        La dérivée par rapport au temps de la quantité de mouvement du solide est égale à la résultante des forces extérieures appliquées au solide :
+        $$ \frac{d\vec{p}_{(S)/\mathcal{R}}}{dt} = \vec{R}_{ext} $$
+        Ce qui équivaut, puisque $\vec{p}_{(S)/\mathcal{R}} = M \vec{v}(G)_{/\mathcal{R}}$, à :
+        $$ M \vec{a}(G)_{/\mathcal{R}} = \vec{R}_{ext} $$
+        Le centre de masse se meut comme un point matériel de masse $M$ auquel serait appliquée la résultante des forces extérieures.
+    </div>
+
+    <div class="theorem">
+        <strong>Théorème du Moment Cinétique (TMC) :</strong>
+        Il existe deux points privilégiés $A$ pour lesquels ce théorème prend une forme simple :
+        <ul>
+            <li>Si $A$ est un point <strong>fixe</strong> dans le référentiel galiléen $\mathcal{R}$ (souvent l'origine $O$).</li>
+            <li>Si $A$ est le <strong>centre de masse</strong> $G$ du solide.</li>
+        </ul>
+        Alors, la dérivée par rapport au temps du moment cinétique du solide par rapport au point $A$ est égale au moment résultant des forces extérieures calculé au même point $A$ :
+        $$ \frac{d\vec{L}_A(S)_{/\mathcal{R}}}{dt} = \vec{M}_A(\vec{R}_{ext}) $$
+        <div class="warning">
+        Attention : Ce théorème n'est pas valable pour un point $A$ quelconque du solide mobile dans $\mathcal{R}$ (sauf cas très particuliers). Il faut utiliser $O$ fixe ou $G$.
+        </div>
+    </div>
+
+    <div class="important">
+        <strong>Cas particulier : Rotation autour d'un axe fixe $\Delta$.</strong>
+        Le TMC peut être projeté sur l'axe fixe $\Delta$. Si $A$ est un point de l'axe fixe $\Delta$ :
+        $$ \frac{d L_\Delta}{dt} = \frac{d (J_\Delta \omega)}{dt} = M_\Delta(\vec{R}_{ext}) $$
+        où $L_\Delta = \vec{L}_A \cdot \vec{u}_\Delta = J_\Delta \omega$ est le moment cinétique axial, et $M_\Delta(\vec{R}_{ext}) = \vec{M}_A(\vec{R}_{ext}) \cdot \vec{u}_\Delta$ est le moment résultant axial des forces extérieures.
+        Si le solide est indéformable ($J_\Delta$ constant) :
+        $$ J_\Delta \frac{d\omega}{dt} = J_\Delta \ddot{\theta} = M_\Delta(\vec{R}_{ext}) $$
+        Ceci est l'équivalent de $m\vec{a}=\vec{F}$ pour la rotation autour d'un axe fixe. $J_\Delta$ joue le rôle de la masse inertielle, $\ddot{\theta}$ est l'accélération angulaire, et $M_\Delta$ est le "moteur" de la rotation.
+    </div>
+
+    <!-- ============================================== -->
+    <h2>Chapitre 4 : Approche Énergétique</h2>
+    <!-- ============================================== -->
+
+    <h3>4.1 Puissance et Travail des Actions Extérieures</h3>
+    <div class="definition">
+        La <strong>puissance</strong> $P_{ext}$ des actions extérieures sur le solide $(S)$ dans son mouvement par rapport à $\mathcal{R}$ est la somme des puissances des forces extérieures :
+        $$ P_{ext} = \sum \vec{F}_{ext,i} \cdot \vec{v}(M_i)_{/\mathcal{R}} $$
+        On montre que cette puissance peut aussi s'exprimer à l'aide des éléments de réduction (résultante et moment en G) et des vitesses (vitesse de G et vitesse angulaire) :
+        $$ P_{ext} = \vec{R}_{ext} \cdot \vec{v}(G)_{/\mathcal{R}} + \vec{M}_G(\vec{R}_{ext}) \cdot \vec{\Omega}_{S/\mathcal{R}} $$
+        Le <strong>travail</strong> $W_{A \to B}(ext)$ des actions extérieures lors d'un déplacement du solide d'une configuration A à une configuration B est l'intégrale de la puissance sur le temps : $W_{A \to B}(ext) = \int_{t_A}^{t_B} P_{ext}(t) dt$.
+    </div>
+
+    <h3>4.2 Théorème de l'Énergie Cinétique (TEC)</h3>
+    <div class="theorem">
+        <strong>Théorème de l'Énergie Cinétique pour un Solide :</strong> Dans un référentiel galiléen $\mathcal{R}$, la dérivée de l'énergie cinétique du solide est égale à la puissance des actions extérieures :
+        $$ \frac{dE_c(S)_{/\mathcal{R}}}{dt} = P_{ext} $$
+        Forme intégrée : La variation d'énergie cinétique entre deux instants $t_A$ et $t_B$ est égale au travail total des actions extérieures entre ces instants :
+        $$ \Delta E_c = E_c(B) - E_c(A) = W_{A \to B}(ext) $$
+    </div>
+
+    <h3>4.3 Énergie Potentielle et Énergie Mécanique</h3>
+    <p>Si certaines forces extérieures dérivent d'une énergie potentielle (force conservative $\vec{F}_{cons}$ associée à $E_p$), on peut définir l'énergie potentielle totale $E_p = \sum E_{p,i}$.
+    Exemple : Énergie potentielle de pesanteur $E_{pp} = Mg z_G + Cte$, où $z_G$ est l'altitude du centre de masse G.</p>
+    <p>On définit l'<strong>énergie mécanique</strong> du solide :</p>
+    $$ E_m = E_c + E_p $$
+    Le théorème de l'énergie mécanique s'écrit alors :
+    $$ \frac{dE_m}{dt} = P_{nc} $$
+    où $P_{nc}$ est la puissance des actions extérieures <strong>non conservatives</strong> (ex: frottements, forces appliquées par un opérateur).
+    Forme intégrée :
+    $$ \Delta E_m = E_m(B) - E_m(A) = W_{A \to B}(nc) $$
+    Si les actions non conservatives ont un travail nul, l'énergie mécanique est conservée.
+
+    <!-- ============================================== -->
+    <h2>Chapitre 5 : Exemple Simple : Le Pendule Pesant Composé</h2>
+    <!-- ============================================== -->
+    <div class="definition">
+    Un <strong>pendule pesant composé</strong> est un solide $(S)$ de masse $M$, de centre de masse $G$, pouvant osciller dans un plan vertical autour d'un axe horizontal fixe $\Delta$ ne passant pas par $G$. Soit $O$ le point d'intersection de $\Delta$ et du plan vertical contenant $G$. Notons $OG = d$. L'angle $\theta$ repère l'orientation du pendule par rapport à la verticale descendante. $J_\Delta$ est le moment d'inertie par rapport à $\Delta$.
+    </div>
+    <p><strong>Forces extérieures :</strong></p>
+    <ul>
+        <li>Poids $\vec{P} = M\vec{g}$, appliqué en $G$.</li>
+        <li>Réaction de l'axe $\vec{R}_\Delta$, appliquée sur l'axe (moment nul par rapport à $\Delta$).</li>
+    </ul>
+    <p><strong>Dynamique (TMC projeté sur $\Delta$) :</strong></p>
+    $J_\Delta \ddot{\theta} = M_\Delta(\vec{P}) + M_\Delta(\vec{R}_\Delta)$.
+    $M_\Delta(\vec{R}_\Delta) = 0$.
+    $M_\Delta(\vec{P}) = (\vec{OG} \times M\vec{g}) \cdot \vec{u}_\Delta$.
+    En prenant $\vec{u}_\Delta$ sortant, $\vec{OG} = d(\cos\theta \vec{e}_z + \sin\theta \vec{e}_x)$ et $M\vec{g} = -Mg \vec{e}_z$ (avec $\vec{e}_z$ vertical ascendant, $\theta$ angle avec verticale descendante). Ou plus simplement, le bras de levier du poids est $d \sin\theta$, et le moment tend à ramener $\theta$ vers 0.
+    $M_\Delta(\vec{P}) = -Mg d \sin\theta$.
+    L'équation du mouvement est :
+    $$ J_\Delta \ddot{\theta} = -Mg d \sin\theta $$
+    $$ \ddot{\theta} + \frac{Mgd}{J_\Delta} \sin\theta = 0 $$
+    C'est l'équation d'un oscillateur non linéaire. Pour de petites oscillations ($\sin\theta \approx \theta$) :
+    $$ \ddot{\theta} + \omega_0^2 \theta = 0 \quad \text{avec} \quad \omega_0 = \sqrt{\frac{Mgd}{J_\Delta}} $$
+    Le pendule oscille avec une période $T_0 = 2\pi / \omega_0 = 2\pi \sqrt{J_\Delta / (Mgd)}$.
+
+    <p><strong>Approche Énergétique :</strong></p>
+    Forces conservatives : Poids ($E_{pp} = Mg z_G + Cte$). Forces non conservatives : $\vec{R}_\Delta$ (puissance nulle car point d'application fixe).
+    L'énergie mécanique se conserve.
+    $E_c = \frac{1}{2} J_\Delta \dot{\theta}^2$.
+    $z_G = -d \cos\theta$ (si origine en O, $z$ ascendant). $E_{pp} = -Mgd\cos\theta + Cte$.
+    $E_m = \frac{1}{2} J_\Delta \dot{\theta}^2 - Mgd\cos\theta = \text{Constante}$.
+    En dérivant par rapport au temps : $J_\Delta \dot{\theta} \ddot{\theta} + Mgd \sin\theta \dot{\theta} = 0$.
+    Si $\dot{\theta} \neq 0$, on retrouve $J_\Delta \ddot{\theta} + Mgd \sin\theta = 0$.
+
+    <hr>
+    <p><em>Cette introduction a posé les bases de la mécanique du solide : description cinématique par le vecteur rotation, grandeurs cinétiques (moment d'inertie, moment cinétique, énergie cinétique via Koenig), et théorèmes fondamentaux (TRC, TMC, TEC). Ces outils permettent d'aborder des problèmes plus complexes impliquant des rotations et des translations combinées.</em></p>
+    <hr>
+
+
+    <!-- Section Questions/Réponses -->
+    <h2>Questions de Cours</h2>
+    <div class="qa-container">
+
+        <div class="qa-pair">
+            <div class="question">
+                1. Qu'est-ce qu'un solide indéformable ? Combien de degrés de liberté possède un solide libre dans l'espace ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Un <strong>solide indéformable</strong> (ou rigide) est un système matériel tel que les distances mutuelles entre tous ses points restent constantes au cours du temps.
+                <br>
+                Un solide libre possède <strong>6 degrés de liberté</strong> dans l'espace : 3 pour décrire la translation (position d'un point, e.g., le centre de masse) et 3 pour décrire la rotation (orientation du solide).
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                2. Énoncer la relation fondamentale de la cinématique du solide liant les vitesses de deux points A et M du solide. Quel est le nom et la propriété essentielle du vecteur $\vec{\Omega}_{S/\mathcal{R}}$ ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                La relation fondamentale (parfois appelée formule de Varignon pour les vitesses) est :
+                $$ \vec{v}(M)_{/\mathcal{R}} = \vec{v}(A)_{/\mathcal{R}} + \vec{\Omega}_{S/\mathcal{R}} \times \vec{AM} $$
+                Le vecteur $\vec{\Omega}_{S/\mathcal{R}}$ est le <strong>vecteur instantané de rotation</strong> (ou vitesse angulaire) du solide S par rapport au référentiel $\mathcal{R}$. Sa propriété essentielle est d'être <strong>uniforme</strong> pour tout le solide à un instant donné (il ne dépend que du solide et du référentiel, pas du point A ou M choisi).
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                3. Comment se caractérise un mouvement de translation pure d'un solide ? Et un mouvement de rotation pure autour d'un axe fixe $\Delta$ (donner $\vec{\Omega}$ et la forme de $\vec{v}(M)$) ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                <ul>
+                    <li><strong>Translation pure :</strong> Le vecteur rotation est nul ($\vec{\Omega}_{S/\mathcal{R}} = \vec{0}$). Tous les points du solide ont le même vecteur vitesse à chaque instant : $\vec{v}(M)_{/\mathcal{R}} = \vec{v}(A)_{/\mathcal{R}}$.</li>
+                    <li><strong>Rotation pure autour d'un axe fixe $\Delta$ :</strong> Le vecteur rotation est porté par l'axe $\Delta$ : $\vec{\Omega}_{S/\mathcal{R}} = \omega(t) \vec{u}_\Delta$. Si on choisit un point A sur l'axe fixe $\Delta$, sa vitesse est nulle $\vec{v}(A)_{/\mathcal{R}} = \vec{0}$. La vitesse d'un point M quelconque est alors $\vec{v}(M)_{/\mathcal{R}} = \vec{\Omega}_{S/\mathcal{R}} \times \vec{AM}$.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                4. Comment s'exprime la quantité de mouvement totale $\vec{p}_{(S)/\mathcal{R}}$ d'un solide (S) de masse M en fonction de la vitesse de son centre de masse G ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                La quantité de mouvement totale du solide est égale à la masse totale $M$ multipliée par la vitesse du centre de masse $\vec{v}(G)_{/\mathcal{R}}$ :
+                $$ \vec{p}_{(S)/\mathcal{R}} = M \vec{v}(G)_{/\mathcal{R}} $$
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                5. Énoncer le premier théorème de Koenig pour le moment cinétique $\vec{L}_O(S)_{/\mathcal{R}}$. Identifier le terme appelé moment cinétique propre.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Le premier théorème de Koenig pour le moment cinétique par rapport à un point O s'écrit :
+                $$ \vec{L}_O(S)_{/\mathcal{R}} = \vec{OG} \times M \vec{v}(G)_{/\mathcal{R}} + \vec{L}_G(S)_{/\mathcal{R}^*} $$
+                Ce théorème décompose le moment cinétique total en deux termes :
+                <ul>
+                    <li>$\vec{OG} \times M \vec{v}(G)_{/\mathcal{R}}$ : le moment cinétique par rapport à O du centre de masse G affecté de la masse totale M.</li>
+                    <li>$\vec{L}_G(S)_{/\mathcal{R}^*}$ : le moment cinétique du solide calculé dans le référentiel barycentrique $\mathcal{R}^*$ par rapport à G. Ce terme est appelé <strong>moment cinétique propre</strong>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                6. Comment le moment cinétique propre $\vec{L}_G(S)_{/\mathcal{R}^*}$ est-il relié au vecteur rotation $\vec{\Omega}_{S/\mathcal{R}}$ ? Quel est le nom de l'objet mathématique $\bar{\bar{J}}_G$ qui intervient dans cette relation ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Le moment cinétique propre est relié au vecteur rotation par l'<strong>opérateur d'inertie</strong> (ou tenseur d'inertie) $\bar{\bar{J}}_G$ calculé en G :
+                $$ \vec{L}_G(S)_{/\mathcal{R}^*} = \bar{\bar{J}}_G \cdot \vec{\Omega}_{S/\mathcal{R}} $$
+                L'opérateur $\bar{\bar{J}}_G$ est un tenseur (représenté par la matrice d'inertie en G dans une base donnée) qui caractérise la répartition de la masse du solide autour du point G et transforme le vecteur rotation en vecteur moment cinétique propre.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                7. Qu'est-ce que le moment d'inertie scalaire $J_\Delta$ d'un solide par rapport à un axe $\Delta$ ? Dans le cas d'une rotation pure autour de cet axe fixe $\Delta$ à la vitesse angulaire $\omega$, comment s'exprime le moment cinétique axial $L_\Delta$ ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Le <strong>moment d'inertie scalaire $J_\Delta$</strong> d'un solide par rapport à un axe $\Delta$ est défini par l'intégrale :
+                $$ J_\Delta = \int_{(S)} r_\perp^2 dm $$
+                où $r_\perp$ est la distance de l'élément de masse $dm$ à l'axe $\Delta$. Il quantifie l'inertie du solide vis-à-vis de la rotation autour de cet axe.
+                <br>
+                Dans le cas d'une rotation pure autour de l'axe fixe $\Delta$ ($\vec{\Omega} = \omega \vec{u}_\Delta$), le moment cinétique axial $L_\Delta = \vec{L}_A \cdot \vec{u}_\Delta$ (où A est sur $\Delta$) est simplement :
+                $$ L_\Delta = J_\Delta \omega $$
+            </div>
+        </div>
+
+         <div class="qa-pair">
+            <div class="question">
+                8. Énoncer le théorème de Huygens pour les moments d'inertie.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Le théorème de Huygens relie le moment d'inertie $J_\Delta$ par rapport à un axe $\Delta$ au moment d'inertie $J_G$ par rapport à un axe $\Delta_G$ parallèle à $\Delta$ et passant par le centre de masse G :
+                $$ J_\Delta = J_G + Md^2 $$
+                où $M$ est la masse totale du solide et $d$ est la distance orthogonale entre les deux axes $\Delta$ et $\Delta_G$. Ce théorème est très utile pour calculer des moments d'inertie par rapport à des axes ne passant pas par G.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                9. Énoncer le premier théorème de Koenig pour l'énergie cinétique $E_c(S)_{/\mathcal{R}}$. Identifier l'énergie cinétique propre.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                 Le premier théorème de Koenig pour l'énergie cinétique s'écrit :
+                $$ E_c(S)_{/\mathcal{R}} = \frac{1}{2} M [\vec{v}(G)_{/\mathcal{R}}]^2 + E_c(S)_{/\mathcal{R}^*} $$
+                Il décompose l'énergie cinétique totale en deux termes :
+                <ul>
+                    <li>$\frac{1}{2} M [\vec{v}(G)_{/\mathcal{R}}]^2$ : l'énergie cinétique du centre de masse G affecté de la masse totale M (énergie cinétique de translation).</li>
+                    <li>$E_c(S)_{/\mathcal{R}^*}$ : l'énergie cinétique du solide dans le référentiel barycentrique $\mathcal{R}^*$. Ce terme est appelé <strong>énergie cinétique propre</strong> et est lié à la rotation du solide autour de G.</li>
+                </ul>
+                 L'énergie cinétique propre s'exprime comme $E_c^* = \frac{1}{2} \vec{\Omega}_{S/\mathcal{R}} \cdot \vec{L}_G(S)_{/\mathcal{R}^*}$.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                10. Quelle est l'expression simplifiée de l'énergie cinétique d'un solide en rotation pure autour d'un axe fixe $\Delta$ avec une vitesse angulaire $\omega$ ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Pour une rotation pure autour d'un axe fixe $\Delta$, l'énergie cinétique du solide est :
+                $$ E_c(S)_{/\mathcal{R}} = \frac{1}{2} J_\Delta \omega^2 $$
+                où $J_\Delta$ est le moment d'inertie par rapport à l'axe fixe $\Delta$. C'est l'analogue de $E_c = \frac{1}{2}mv^2$ pour la translation.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                11. Énoncer le Théorème de la Résultante Cinétique (TRC) pour un solide dans un référentiel galiléen.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Le Théorème de la Résultante Cinétique (TRC) stipule que dans un référentiel galiléen $\mathcal{R}$, la dérivée temporelle de la quantité de mouvement $\vec{p}_{(S)/\mathcal{R}}$ du solide (S) est égale à la résultante $\vec{R}_{ext}$ des forces extérieures appliquées au solide :
+                $$ \frac{d\vec{p}_{(S)/\mathcal{R}}}{dt} = \vec{R}_{ext} $$
+                En utilisant $\vec{p}_{(S)/\mathcal{R}} = M \vec{v}(G)_{/\mathcal{R}}$, cela s'écrit aussi :
+                $$ M \vec{a}(G)_{/\mathcal{R}} = \vec{R}_{ext} $$
+                Cela signifie que le centre de masse G se déplace comme un point matériel de masse M soumis à la résultante des forces extérieures.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                12. Énoncer le Théorème du Moment Cinétique (TMC) pour un solide dans un référentiel galiléen. Pour quels points A ce théorème prend-il une forme simple ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Le Théorème du Moment Cinétique (TMC) stipule que dans un référentiel galiléen $\mathcal{R}$, la dérivée temporelle du moment cinétique $\vec{L}_A(S)_{/\mathcal{R}}$ du solide par rapport à un point A est égale au moment résultant $\vec{M}_A(\vec{R}_{ext})$ des forces extérieures calculé au même point A, <strong>à condition que le point A soit</strong> :
+                <ul>
+                    <li>soit un point <strong>fixe</strong> dans $\mathcal{R}$ (souvent l'origine O).</li>
+                    <li>soit le <strong>centre de masse G</strong> du solide.</li>
+                </ul>
+                 Sous ces conditions, l'équation est :
+                 $$ \frac{d\vec{L}_A(S)_{/\mathcal{R}}}{dt} = \vec{M}_A(\vec{R}_{ext}) $$
+                 Attention, la forme simple n'est généralement pas valide pour un point A mobile quelconque autre que G.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                13. Dans le cas d'une rotation autour d'un axe fixe $\Delta$, comment s'écrit l'équation du mouvement obtenue par projection du TMC sur l'axe $\Delta$ ? Interpréter les termes.
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                Pour une rotation autour d'un axe fixe $\Delta$ (passant par un point fixe A), la projection du TMC sur cet axe donne :
+                $$ \frac{d L_\Delta}{dt} = M_\Delta(\vec{R}_{ext}) $$
+                où $L_\Delta = J_\Delta \omega$ est le moment cinétique axial et $M_\Delta = \vec{M}_A(\vec{R}_{ext}) \cdot \vec{u}_\Delta$ est le moment résultant axial des forces extérieures.
+                Si le solide est indéformable, $J_\Delta$ est constant, et $\omega = \dot{\theta}$ où $\theta$ est l'angle de rotation. L'équation devient :
+                $$ J_\Delta \frac{d\omega}{dt} = J_\Delta \ddot{\theta} = M_\Delta(\vec{R}_{ext}) $$
+                Interprétation : C'est l'analogue de la deuxième loi de Newton ($m a = F$) pour la rotation.
+                <ul>
+                    <li>$J_\Delta$ : Moment d'inertie (inertie de rotation).</li>
+                    <li>$\ddot{\theta}$ : Accélération angulaire.</li>
+                    <li>$M_\Delta(\vec{R}_{ext})$ : Moment résultant des forces extérieures par rapport à l'axe (cause de la variation de la rotation).</li>
+                </ul>
+            </div>
+        </div>
+
+         <div class="qa-pair">
+            <div class="question">
+                14. Énoncer le Théorème de l'Énergie Cinétique (TEC) pour un solide dans un référentiel galiléen (forme différentielle).
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                 Le Théorème de l'Énergie Cinétique (TEC) pour un solide (S) dans un référentiel galiléen $\mathcal{R}$ stipule que la dérivée par rapport au temps de l'énergie cinétique $E_c(S)_{/\mathcal{R}}$ du solide est égale à la puissance totale $P_{ext}$ des actions mécaniques extérieures appliquées au solide :
+                 $$ \frac{dE_c(S)_{/\mathcal{R}}}{dt} = P_{ext} $$
+                 Où $P_{ext} = \sum \vec{F}_{ext,i} \cdot \vec{v}(M_i)_{/\mathcal{R}} = \vec{R}_{ext} \cdot \vec{v}(G)_{/\mathcal{R}} + \vec{M}_G(\vec{R}_{ext}) \cdot \vec{\Omega}_{S/\mathcal{R}}$.
+            </div>
+        </div>
+
+        <div class="qa-pair">
+            <div class="question">
+                15. Pour un pendule pesant composé (masse M, distance $OG=d$, moment d'inertie $J_\Delta$ par rapport à l'axe fixe $\Delta$), quelle est l'équation différentielle du mouvement en $\theta$ ? Quelle est l'expression de la pulsation $\omega_0$ des petites oscillations ?
+                <span class="instruction">(Cliquez pour voir la réponse)</span>
+            </div>
+            <div class="answer">
+                L'équation différentielle du mouvement du pendule pesant composé, obtenue via le TMC projeté sur l'axe $\Delta$, est :
+                $$ J_\Delta \ddot{\theta} + Mgd \sin\theta = 0 $$
+                où $\theta$ est l'angle avec la verticale descendante.
+                <br>
+                Pour de petites oscillations autour de la position d'équilibre stable ($\theta \approx 0$), on a $\sin\theta \approx \theta$, et l'équation devient celle d'un oscillateur harmonique :
+                $$ \ddot{\theta} + \frac{Mgd}{J_\Delta} \theta = 0 $$
+                La pulsation propre $\omega_0$ des petites oscillations est donc :
+                $$ \omega_0 = \sqrt{\frac{Mgd}{J_\Delta}} $$
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fonction pour rendre les maths dans un élément spécifique
+            const renderMath = (element) => {
+                if (window.renderMathInElement) {
+                    try {
+                        window.renderMathInElement(element, {
+                            delimiters: [
+                                {left: "$$", right: "$$", display: true},
+                                {left: "$", right: "$", display: false},
+                                {left: "\\(", right: "\\)", display: false},
+                                {left: "\\[", right: "\\]", display: true}
+                            ],
+                            throwOnError: false // Ne pas bloquer si une formule est invalide
+                        });
+                    } catch (error) {
+                        console.error("Erreur KaTeX:", error);
+                    }
+                }
+            };
+
+            // Rendre les maths initialement présents dans le body
+            renderMath(document.body);
+
+            // Gérer le clic sur les questions
+            const questionElements = document.querySelectorAll('.question');
+
+            questionElements.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling; // L'élément suivant est la réponse
+                    if (answer && answer.classList.contains('answer')) {
+                        answer.classList.toggle('visible');
+                        // Re-rendre les maths dans la réponse si elle devient visible
+                        // et ne l'a pas déjà été
+                        if (answer.classList.contains('visible') && !answer.hasAttribute('data-math-rendered')) {
+                             renderMath(answer);
+                             answer.setAttribute('data-math-rendered', 'true');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
