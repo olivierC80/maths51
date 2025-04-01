@@ -1,1 +1,2 @@
-- https://www.youtube.com/c/OptimalsupspeFr_LeNo1EnSupSp%C3%A9
+- https://www.youtube.com/watch?v=F65rxuNhN-Q&list=PLL4x3EuL92DV22XAysYo2u_kZbSVGGj6M&index=19
+- https://www.youtube.com/c/OptimalsupspeFr_LeNo1EnSupSp%C3%A9 non fait car trop long
