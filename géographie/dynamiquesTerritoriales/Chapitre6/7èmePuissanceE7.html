@@ -259,35 +259,30 @@
 
         // Function for fill-in-the-blank questions
         function revealFillInBlank(questionId, correctWordsArray) {
-             const questionBlock = document.getElementById(questionId);
-             if (!questionBlock) return;
+   const questionBlock = document.getElementById(questionId);
+     if (!questionBlock) return;
 
-             const answerDiv = document.getElementById('answer-' + questionId);
-             const button = questionBlock.querySelector('.reveal-button');
+     const answerDiv = document.getElementById('answer-' + questionId); // Find the answer div
+     const button = questionBlock.querySelector('.reveal-button');
 
-             if (answerDiv) {
-                 // Make the answer div visible first
-                 answerDiv.classList.add('visible');
+     if (!answerDiv || !button) { // Check if elements exist
+         console.error("Could not find answer div or button for", questionId);
+         return;
+     }
 
-                 // Highlight each correct word in the revealed text
-                 let currentHTML = answerDiv.innerHTML;
-                 correctWordsArray.forEach(word => {
-                    const regex = new RegExp(`\\b${word}\\b`, 'gi');
-                    currentHTML = currentHTML.replace(regex, `<span class="correct-word">${word}</span>`);
-                 });
-                 answerDiv.innerHTML = currentHTML; // Update HTML with highlighted words
+     // Check if the answer div is currently visible
+     const isVisible = answerDiv.classList.contains('visible');
 
-                 // Ensure explanation within the answer div is also visible
-                 const explanation = answerDiv.querySelector('.explanation');
-                 if (explanation) {
-                     explanation.style.display = 'block';
-                 }
-
-             }
-
-             if (button) {
-                 button.disabled = true;
-             }
+     if (isVisible) {
+         // --- HIDE ANSWER ---
+         answerDiv.classList.remove('visible');
+         button.textContent = 'Voir la réponse';
+     } else {
+         // --- SHOW ANSWER ---
+         answerDiv.classList.add('visible');
+         button.textContent = 'Cacher la réponse';
+         // Highlighting is assumed to be already in the answerDiv's HTML structure
+     }
         }
     </script>
 
