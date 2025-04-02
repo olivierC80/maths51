@@ -226,24 +226,30 @@
 
     <script>
         function revealAnswerWithOptions(questionId) {
-            const questionBlock = document.getElementById(questionId);
+const questionBlock = document.getElementById(questionId);
             if (!questionBlock) return;
 
-            const options = questionBlock.querySelectorAll('.option');
+            // No need to select options here initially
             const button = questionBlock.querySelector('.reveal-button');
 
-            options.forEach(option => {
-                // Check the data-correct attribute
-                if (option.dataset.correct === 'true') {
-                    option.classList.add('correct');
-                } else {
-                    option.classList.add('incorrect');
-                }
-            });
+            // Check if the answers are currently visible by checking the class on the block
+            if (questionBlock.classList.contains('answers-visible')) {
+                // --- HIDE ANSWERS ---
+                // Remove the indicator class from the block
+                questionBlock.classList.remove('answers-visible');
+                // Change button text
+                button.textContent = 'Voir la réponse';
+                // Note: The CSS rule `.answers-visible .option.correct` etc. will no longer apply,
+                // effectively removing the highlighting without needing to iterate options.
 
-            // Disable the button after revealing
-            if (button) {
-                button.disabled = true;
+            } else {
+                // --- SHOW ANSWERS ---
+                // Add the indicator class to the block
+                questionBlock.classList.add('answers-visible');
+                // Change button text
+                button.textContent = 'Cacher la réponse';
+                // Note: The CSS rules will now apply based on the existing `data-correct` attributes
+                // and the new `answers-visible` class on the parent. No iteration needed here either.
             }
         }
     </script>
