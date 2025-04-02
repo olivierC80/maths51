@@ -208,24 +208,30 @@
             const questionBlock = document.getElementById(questionId);
             if (!questionBlock) return;
 
-            const options = questionBlock.querySelectorAll('.option');
+            const options = questionBlock.querySelectorAll('.option'); // Select options inside the block
             const button = questionBlock.querySelector('.reveal-button');
-            const explanationDiv = document.getElementById('explanation-' + questionId); // Find explanation div
+            // Use a data attribute on the block itself to track visibility state
+            const isVisible = questionBlock.dataset.answersVisible === 'true';
 
-            options.forEach(option => {
-                if (option.dataset.correct === 'true') {
-                    option.classList.add('correct');
-                    // If there's an explanation div, make it visible
-                    if (explanationDiv) {
-                        explanationDiv.classList.add('visible');
+            if (isVisible) {
+                // --- HIDE ANSWERS ---
+                options.forEach(option => {
+                    option.classList.remove('correct', 'incorrect'); // Remove specific classes
+                });
+                button.textContent = 'Voir la réponse';
+                questionBlock.dataset.answersVisible = 'false'; // Update state tracking
+            } else {
+                // --- SHOW ANSWERS ---
+                options.forEach(option => {
+                    // Add correct/incorrect classes based on data-correct attribute
+                    if (option.dataset.correct === 'true') {
+                        option.classList.add('correct');
+                    } else {
+                        option.classList.add('incorrect');
                     }
-                } else {
-                    option.classList.add('incorrect');
-                }
-            });
-
-            if (button) {
-                button.disabled = true;
+                });
+                button.textContent = 'Cacher la réponse';
+                questionBlock.dataset.answersVisible = 'true'; // Update state tracking
             }
         }
 
