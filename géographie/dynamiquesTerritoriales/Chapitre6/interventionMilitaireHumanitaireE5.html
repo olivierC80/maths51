@@ -173,33 +173,7 @@
 
     <script>
         function revealAnswerWithOptions(questionId) {
-            const questionBlock = document.getElementById(questionId);
-            if (!questionBlock) return;
-
-            const options = questionBlock.querySelectorAll('.option');
-            const button = questionBlock.querySelector('.reveal-button');
-            const explanationDiv = document.getElementById('explanation-' + questionId); // Find explanation div
-
-            options.forEach(option => {
-                if (option.dataset.correct === 'true') {
-                    option.classList.add('correct');
-                    // If there's an explanation div, make it visible
-                    if (explanationDiv) {
-                        explanationDiv.classList.add('visible');
-                    }
-                } else {
-                    option.classList.add('incorrect');
-                }
-            });
-
-            if (button) {
-                button.disabled = true;
-            }
-        }
-
-        // Function for fill-in-the-blank questions
-        function revealFillInBlank(questionId, correctWordsArray) {
-               const questionBlock = document.getElementById(questionId);
+             const questionBlock = document.getElementById(questionId);
             if (!questionBlock) return;
 
             const options = questionBlock.querySelectorAll('.option'); // Select options inside the block
@@ -227,6 +201,39 @@
                 button.textContent = 'Cacher la réponse';
                 questionBlock.dataset.answersVisible = 'true'; // Update state tracking
             }
+        }
+
+        // Function for fill-in-the-blank questions
+     function revealFillInBlank(questionId, correctWordsArray) {
+             const questionBlock = document.getElementById(questionId);
+             if (!questionBlock) return;
+
+             const answerDiv = document.getElementById('answer-' + questionId);
+             const button = questionBlock.querySelector('.reveal-button');
+
+             if (answerDiv) {
+                 // Make the answer div visible first
+                 answerDiv.classList.add('visible');
+
+                 // Highlight each correct word in the revealed text
+                 let currentHTML = answerDiv.innerHTML;
+                 correctWordsArray.forEach(word => {
+                    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+                    currentHTML = currentHTML.replace(regex, `<span class="correct-word">${word}</span>`);
+                 });
+                 answerDiv.innerHTML = currentHTML; // Update HTML with highlighted words
+
+                 // Ensure explanation within the answer div is also visible
+                 const explanation = answerDiv.querySelector('.explanation');
+                 if (explanation) {
+                     explanation.style.display = 'block';
+                 }
+
+             }
+
+             if (button) {
+                 button.disabled = true;
+             }
         }
     </script>
 
