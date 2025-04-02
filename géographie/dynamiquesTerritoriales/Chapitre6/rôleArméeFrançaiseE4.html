@@ -247,37 +247,34 @@
 
         // Function for fill-in-the-blank questions
         function revealFillInBlank(questionId, correctWordsArray) {
-             const questionBlock = document.getElementById(questionId);
-             if (!questionBlock) return;
+   const questionBlock = document.getElementById(questionId);
+            if (!questionBlock) return;
 
-             const answerDiv = document.getElementById('answer-' + questionId);
-             const button = questionBlock.querySelector('.reveal-button');
+            const options = questionBlock.querySelectorAll('.option'); // Select options inside the block
+            const button = questionBlock.querySelector('.reveal-button');
+            // Use a data attribute on the block itself to track visibility state
+            const isVisible = questionBlock.dataset.answersVisible === 'true';
 
-             if (answerDiv) {
-                 // Make the answer div visible first
-                 answerDiv.classList.add('visible');
-
-                 // Highlight each correct word in the revealed text
-                 let currentHTML = answerDiv.innerHTML;
-                 correctWordsArray.forEach(word => {
-                    const regex = new RegExp(`\\b${word}\\b`, 'gi');
-                    // Use replace with a function to maintain original casing for highlighting if needed,
-                    // but here we just use the word from correctWordsArray.
-                    currentHTML = currentHTML.replace(regex, `<span class="correct-word">${word}</span>`);
-                 });
-                 answerDiv.innerHTML = currentHTML; // Update HTML with highlighted words
-
-                 // Ensure explanation within the answer div is also visible (if structured this way)
-                 const explanation = answerDiv.querySelector('.explanation');
-                 if (explanation) {
-                     explanation.style.display = 'block'; // Or adjust styling as needed
-                 }
-
-             }
-
-             if (button) {
-                 button.disabled = true;
-             }
+            if (isVisible) {
+                // --- HIDE ANSWERS ---
+                options.forEach(option => {
+                    option.classList.remove('correct', 'incorrect'); // Remove specific classes
+                });
+                button.textContent = 'Voir la réponse';
+                questionBlock.dataset.answersVisible = 'false'; // Update state tracking
+            } else {
+                // --- SHOW ANSWERS ---
+                options.forEach(option => {
+                    // Add correct/incorrect classes based on data-correct attribute
+                    if (option.dataset.correct === 'true') {
+                        option.classList.add('correct');
+                    } else {
+                        option.classList.add('incorrect');
+                    }
+                });
+                button.textContent = 'Cacher la réponse';
+                questionBlock.dataset.answersVisible = 'true'; // Update state tracking
+            }
         }
     </script>
 
