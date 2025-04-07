@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatique 1 et 2 - Asservissements Linéaires Continus</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false} ] });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4 { color: #333; }
+        h1 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        figure { text-align: center; margin: 20px 0; border: 1px solid #ddd; padding: 10px; }
+        figcaption { font-style: italic; margin-top: 5px; color: #555; }
+        img { max-width: 100%; height: auto; border: 1px solid #ccc; }
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 20px;
+            text-align: center;
+            color: #888;
+            background-color: #f9f9f9;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        table { border-collapse: collapse; width: 80%; margin: 20px auto; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .definition-term { font-weight: bold; }
+        .katex-display { overflow-x: auto; overflow-y: hidden; } /* Handle wide equations */
+        .biblio-item { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <header style="text-align: center; margin-bottom: 30px;">
+        <p>République Algérienne Démocratique et Populaire</p>
+        <p>Ministère de l'Enseignement Supérieur et de la Recherche Scientifique</p>
+        <figure style="max-width: 150px; margin: 10px auto; border: none; padding: 0;">
+            <img src="placeholder_logo_udl.png" alt="Logo Université Djillali Liabès">
+            <!-- Placeholder for University Logo -->
+            <!-- <div class="placeholder">Logo UDL</div> -->
+        </figure>
+        <p>Université Djillali Liabès - Sidi Bel-Abbès</p>
+        <p>Faculté de Technologie</p>
+        <p>Département d'Electrotechnique</p>
+    </header>
+
+    <main>
+
+        <h1>Partie 1<br>Automatique 1 et 2</h1>
+        <h2>(Asservissements Linéaires Continus)</h2>
+
+        <section>
+            <h3>Informations sur le cours</h3>
+            <p><strong>Niveau :</strong> 3<sup>ème</sup> Année Licence, 1<sup>ère</sup> Année Master</p>
+            <p><strong>Parcours :</strong> Automatisme industriel</p>
+            <p><strong>Dernière mise à jour :</strong> Novembre 2013</p>
+        </section>
+
+        <section style="margin-top: 40px; text-align: right;">
+            <p>Préparé et enseigné par :</p>
+            <p><strong>Prof. Mohammed-Karim FELLAH</strong></p>
+            <p>Professeur de l'enseignement Supérieur</p>
+            <p><a href="mailto:mkfellah@yahoo.fr">mkfellah@yahoo.fr</a></p>
+        </section>
+
+        <hr style="margin: 40px 0;">
+
+        <article>
+            <h2>AVANT-PROPOS</h2>
+            <p>Ce document s'adresse aux étudiants de la formation d'ingénieur, de Licence et de Master dans le cadre des programmes officiels. Mais bien entendu il peut être étudié par tous ceux en 1er cycle, en 2ème cycle, ou même en post-graduation, qui désirent approfondir leurs connaissances ou avoir un document de base en matière d'asservissement.</p>
+            <p>La commande et l'interprétation du comportement de procédés industriels ou de phénomènes physiques naturels font partie des tâches qui incombent à l'ingénieur. Ce dernier est confronté à une réalité qu'il lui faudra domestiquer et/ou comprendre pour en tirer le meilleur parti. Au centre de cette connaissance se trouve le concept de <em>système</em>, concept que l'on retrouve dans un grand nombre de disciplines et techniques : contrôle de procédé, techniques d'optimisation, traitement du signal, filtrage, mathématique des équations différentielles, etc.</p>
+            <p>Dans le cadre de ce cours, nous nous intéressons principalement à l'étude des "systèmes" à la fois <em>continus</em> et <em>linéaires</em>, qui sont représentés sous forme de <em>fonction de transfert</em> (représentation externe, dite encore de la "boîte noire") ; ces trois conditions volontairement limitatives permettent d'introduire de façon simple les principaux concepts de l'automatique.</p>
+            <p>Ce texte constitue la transcription fidèle d'un cours oral magistral traité au département d'Electrotechnique, à l'université de Sidi Bel-Abbès pour les étudiants en formation de Licence et Master (différents parcours). Le but recherché n'est donc pas d'épuiser le sujet, mais d'essayer d'en dégager les idées essentielles, simplifiées, quand cela est nécessaire, dans un but didactique. En conséquence, l'accent est mis sur les explications physiques et les exemples, plutôt que sur les démonstrations, mais celles-ci sont également traitées en détail surtout lorsqu'elles sont indispensables à la bonne compréhension du résultat.</p>
+            <p style="text-align: right; margin-top: 30px;">Pr. FELLAH Mohammed-Karim</p>
+        </article>
+
+        <hr style="margin: 40px 0;">
+
+        <article>
+            <h1>Chapitre 1 : INTRODUCTION AUX ASSERVISSEMENTS</h1>
+
+            <section>
+                <h2>1- 1 - Introduction à l'automatique</h2>
+                <p>L'automatique est généralement définie comme la science qui traite des ensembles qui se suffisent à eux-mêmes et où l'intervention humaine est limitée à l'alimentation en énergie et en matière première.</p>
+                <p>L'objectif de l'automatique est de remplacer l'homme dans la plupart des tâches (tâches répétitives, pénibles, dangereuses, trop précises, trop rapides) qu'il réalise dans tous les domaines sans intervention humaine.</p>
+                <p>Les systèmes automatiques permettent donc :</p>
+                <ul>
+                    <li>de réaliser des opérations trop complexes ou délicates ne pouvant être confiés à l'homme,</li>
+                    <li>de se substituer à l'opérateur pour des tâches répétitives,</li>
+                    <li>d'accroître la précision,</li>
+                    <li>d'améliorer la stabilité d'un système et sa rapidité.</li>
+                </ul>
+                <p>De tels dispositifs se rencontrent fréquemment dans la vie courante, depuis les mécanismes biologiques du corps humain jusqu'aux usines entièrement automatisées.</p>
+                <p>Une telle science englobe un grand nombre de disciplines et, par conséquent, un automaticien devrait être à la fois :</p>
+                <ul>
+                    <li>Mathématicien</li>
+                    <li>Electricien</li>
+                    <li>Mécanicien</li>
+                    <li>Economiste</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>1- 1.1 - Exemple</h3>
+                <p>Nous sommes entourés d'un grand nombre de systèmes automatiques, machine à laver, ascenseur, distributeur de boisson, robot, suivi de trajectoire d’un missile.</p>
+            </section>
+
+            <section>
+                <h3>1- 1.2 - Classification</h3>
+                <p>Le domaine des applications de l'automatique est très vaste et varié, mais l'observation de l'industrie contemporaine conduit à une certaine classification qui se résume en deux grandes familles selon les données que traitent ces systèmes :</p>
+                <ul>
+                    <li>Les <strong>automatismes séquentiels</strong></li>
+                    <li>Les <strong>asservissements</strong></li>
+                </ul>
+                <p>Ces deux parties de l'automatique sont nettement différentes, elles s'appuient sur des notions théoriques qui n'ont que de lointains rapports entre elles et les techniques qui permettent de les réaliser sont, aussi, très différentes.</p>
+
+                <h4>1- 1.2.a - Les automatismes séquentiels</h4>
+                <p>C'est la branche de l'automatique qui organise le déroulement des différentes opérations relatives au fonctionnement d'un ensemble complexe.</p>
+                <p>Un automatisme à séquence impose l'ordre dans lequel les opérations se déroulent, s'assure que chaque opération est bien terminée avant d'aborder la suivante, décide de la marche à suivre en cas d'incidents.</p>
+                <p>Bien entendu, un automatisme séquentiel peut avoir à contrôler des asservissements et des régulateurs (voir § 1- 1.2.b) parmi les ensembles qu'il gère.</p>
+                <p>Ce type d'automatisme est utilisé par exemple dans la mise en route et l'arrêt d'installations complexes (centrales automatiques), sur les machines outils et, en général, dans presque toutes unités de production automatisées.</p>
+                <p>Il faut noter également que toutes les séquences d'alarme et de sécurité industrielle font partie des applications de ce type d'automatisme.</p>
+                <p>Les automatismes sont des systèmes logiques qui ne traitent que des données logiques (0/1, vrai/faux, marche/arrêt,...). Ils utilisent les moyens de commutation offerts par l'électronique (circuit logique) et la mécanique (logique pneumatique). Le calcul de ces automatismes impose de connaître l'algèbre de Boole et la théorie des circuits séquentiels.</p>
+                <p>Ils sont classés en 2 branches :</p>
+                <ul>
+                    <li><strong>Systèmes combinatoires :</strong> les sorties du système ne dépendent que des variables d’entrées.</li>
+                    <li><strong>Systèmes séquentiels :</strong> les sorties dépendent bien sûr de l’évolution des entrées mais aussi de l’état précédent des sorties.</li>
+                </ul>
+                <p>Exemple : Machine à laver, manipulateur pneumatique, ascenseur, distributeur de boissons.</p>
+
+                <h4>1- 1.2.b - Les asservissements</h4>
+                <p>Un système asservi est un système qui prend en compte, durant son fonctionnement, l'évolution de ses sorties pour les modifier et les maintenir conforme à une consigne.</p>
+                <p>Cette branche de l’automatique se décompose en deux autres sous branches (séparées artificiellement par l'usage) :</p>
+                <ul>
+                    <li><strong>Régulation :</strong> maintenir une variable déterminée, constante et égale à une valeur, dite de consigne, sans intervention humaine. Exemple : Régulation de température d'une pièce.</li>
+                    <li><strong>Systèmes asservis :</strong> faire varier une grandeur déterminée suivant une loi imposée par un élément de comparaison. Exemple : Régulation de la vitesse d'un moteur, Suivi de trajectoire d'un missile.</li>
+                </ul>
+                <p>L’asservissement est essentiellement analogique et utilise la partie analogique des trois moyens de base dont on dispose : mécanique, électrotechnique et électronique. La théorie des asservissements nécessite une bonne base mathématique classique.</p>
+            </section>
+
+            <section>
+                <h3>1- 1.3 - Systèmes continus et invariants</h3>
+                <ul>
+                    <li><strong>Système continu :</strong> un système est dit continu lorsque les variations des grandeurs physiques le caractérisant sont des fonctions du type $f(t)$, avec $t$ une variable continue, le temps en général. On oppose les systèmes continus aux systèmes discrets (ou échantillonnés), par exemple les systèmes informatiques.</li>
+                    <li><strong>Système invariant :</strong> On dit qu’un système est invariant lorsque les caractéristiques de comportement ne se modifient pas avec le temps.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>1- 1.4 - Evolution de l'automatique</h3>
+                <p>Ces dernières années, l’automatique s’est considérablement modernisée, surtout depuis l’avènement des calculateurs numériques. Les systèmes automatiques conduits par calculateurs assurent la quasi-totalité des tâches :</p>
+                <ul>
+                    <li>ils collectent et traitent les informations issues des capteurs qui fournissent l'ensemble des variables d'entrée.</li>
+                    <li>ces variables d'entrée constituent les données sur lesquelles des calculs numériques seront effectués. Ils correspondent à la résolution numérique de systèmes d'équations qui constituent le "modèle mathématique".</li>
+                    <li>le résultat de ce traitement fourni en binaire est converti en variables continues et est injecté dans le processus, afin de modifier son évolution dans un sens désiré.</li>
+                </ul>
+                <p>En plus de ces tâches qui sont classiques en automatique, le calculateur joue un rôle optimalisateur. C'est-à-dire qu'il exécute le travail à faire aux meilleures conditions économiques en minimisant les déchets, en tenant compte du carnet de commande, etc. Cet aspect, lui, est nouveau. Ce genre de problème était traité séparément. Ce procédé permet de tenir compte d'un nombre considérable de variables, donc de traiter des problèmes jusqu'alors impossibles. En plus, il fait intervenir directement les variables économiques au niveau de chaque organe (moteur, pompe, etc ...). Or, jusqu'à présent, les variables économiques n'intervenaient que globalement. Il permet donc de traiter ce problème de façon beaucoup plus rationnelle.</p>
+                <p>Les systèmes automatiques conduits par calculateurs nécessitent une bonne connaissance de la programmation en langage machine, de fortes connaissances mathématiques (pour élaborer le modèle) et surtout une connaissance parfaite du processus à réguler, ce qui est le plus délicat. Ceci nécessite encore de bonnes connaissances en théorie de l'information, en statistique et en recherche opérationnelle.</p>
+            </section>
+
+             <section>
+                <h2>1- 2 - Boucle de régulation</h2>
+                <h3>1- 2.1 - Notion d'asservissement</h3>
+                <p>L'objectif d'un système automatisé est de remplacer l'homme dans une tâche donnée. Nous allons, pour établir la structure d'un système automatisé, commencer par étudier le fonctionnement d'un système dans lequel l'homme est la " partie commande ".</p>
+                <p><strong>Exemple :</strong> conducteur au volant d'un véhicule</p>
+                <blockquote>Le conducteur doit suivre la route. Pour cela, Il observe la route et son environnement et évalue la distance qui sépare son véhicule du bord de la route. Il détermine, en fonction du contexte, l'angle qu'il doit donner au volant pour suivre la route. Il agit sur le volant (donc sur le système) ; puis de nouveau, il recommence son observation pendant toute la durée du déplacement. Si un coup de vent dévie le véhicule, après avoir observé et mesuré l'écart, il agit pour s'opposer à cette perturbation.</blockquote>
+                <p>Si l’on veut qu’un asservissement remplace l'homme dans diverses tâches, il devra avoir un comportement et des organes analogues à ceux d'un être humain. C'est-à-dire qu'il devra être capable d'<em>apprécier</em>, de <em>comparer</em> et d'<em>agir</em>.</p>
+                <p><strong>Exemple :</strong> ouverture de porte pour accès à une maison.</p>
+                <blockquote>Un autre exemple d'asservissement très simple est celui d'un homme qui veut entrer dans une maison : à chaque instant, ses yeux "mesurent" l'écart qui existe entre sa position et la porte. Son cerveau commande alors aux jambes d'agir, en sorte que cet écart diminue, puis s'annule.</blockquote>
+                <p>Les yeux jouent alors le rôle d'organes de <strong>mesure</strong> (ou de capteurs), le cerveau celui de <strong>comparateur</strong> et les jambes celui d'<strong>organe de puissance</strong>.</p>
+                <p>Tout asservissement comportera ces trois catégories d'éléments qui remplissent les 3 grandes fonctions nécessaires à sa bonne marche (fig. 1–1) :</p>
+                <ul>
+                    <li>Mesure (ou observation)</li>
+                    <li>Comparaison entre le but à atteindre et la position actuelle (Réflexion)</li>
+                    <li>Action de puissance</li>
+                </ul>
+
+                <figure>
+                     <img src="placeholder_fig1-1.png" alt="Concept général d’un asservissement">
+                     <!-- Placeholder for Figure 1-1 -->
+                     <!-- <div class="placeholder">Schéma: Tâche -> Réflexion -> Action -> Observation -> Réflexion ...</div> -->
+                     <figcaption>Fig. 1–1 : Concept général d’un asservissement</figcaption>
+                 </figure>
+            </section>
+
+            <section>
+                <h3>1- 2.2 - Systèmes bouclés et non bouclés</h3>
+                <h4>1- 2.2.a - Exemple 1 : Tir au canon</h4>
+                <p>Pour mieux saisir la notion de système bouclé, prenons un exemple avec 2 cas. Dans le premier, nous considérons un système non bouclé et nous mettrons en évidence ses faiblesses. Dans le second, nous montrerons les avantages qu'apporte le <strong>bouclage</strong>.</p>
+                <p><strong>Premier cas :</strong> tir au canon sur une cible.</p>
+                <blockquote>On considère une cible à détruire et un canon. Pour atteindre le but que l'on s'est proposé, on règle l'angle de tir du canon et la charge de poudre de l'obus en fonction des coordonnées de la cible et d'autres paramètres connus à l'instant du tir. Une fois l'obus parti, si ces paramètres extérieurs viennent à changer, par exemple si la cible se déplace, on ne peut plus agir sur sa direction : l'obus est abandonné à lui-même.</blockquote>
+                <p><strong>Deuxième cas :</strong> tir au canon sur une cible avec une fusée téléguidée et un radar.</p>
+                <blockquote>Considérons la même cible et une fusée téléguidée. Dans ce cas, même si la cible se déplace ou un vent latéral fait dévier la fusée de sa trajectoire initiale, elle atteindra quand même son but. En effet, à chaque instant, un radar donnera les positions respectives de la fusée et de la cible. Il suffira de les comparer pour en déduire l'erreur de trajectoire et agir sur les gouvernes de la fusée pour rectifier cette erreur. Dans ce cas, le système n'est plus abandonné à lui-même car il comporte une boucle de retour qui est constituée par le radar, qui "mesure" la position de la fusée et qui en informe l'opérateur, et par une télétransmission qui permet de modifier la trajectoire par action sur les gouvernes.</blockquote>
+                <p>La boucle de retour apporte donc, au prix d'une complication certaine, un gain de précision énorme.</p>
+
+                <h4>1- 2.2.b - Exemple 2 : Asservissement de vitesse d'une voiture</h4>
+                 <p>Supposons que l'on veuille maintenir constante la vitesse (V) d'une voiture. A la valeur (V) de la vitesse correspond une valeur (e) de la course de l'accélérateur. Il suffirait donc, en principe, de maintenir (e) constant pour que (V) le soit. Chacun sait que la réalité est différente.</p>
+                 <p>En effet, le vent, les variations de pente et le mauvais état de la route modifient (V). Ces paramètres extérieurs qui influent sur la vitesse sont appelés <strong>grandeurs perturbatrices</strong> ou <strong>perturbations</strong>. Si elles n'existaient pas, la boucle de régulation serait inutile.</p>
+                 <p>Pour que la vitesse reste constante, il faut utiliser un tachymètre qui mesure la vitesse réelle. Le chauffeur compare à tout instant cette vitesse réelle et la vitesse prescrite; Il en déduit un écart plus ou moins grand et enfonce plus ou moins l'accélérateur en fonction de cet écart.</p>
+                 <p>Si on appelle grandeur de sortie (ou sortie) la vitesse réelle et grandeur d'entrée (ou entrée) la vitesse imposée, le chauffeur et le tachymètre assurent une liaison entre l'entrée et la sortie, ils constituent donc une chaîne de retour.</p>
+                 <p>On peut donner un schéma très simple pour illustrer cet exemple (fig. 1–2) :</p>
+                 <figure>
+                     <img src="placeholder_fig1-2.png" alt="Exemple d’asservissement de vitesse d’un véhicule">
+                     <!-- Placeholder for Figure 1-2 -->
+                     <!-- <div class="placeholder">Schéma: Entrée -> Chauffeur -> Accélérateur -> Moteur -> Voiture (Sortie) -> Tachymètre -> Chauffeur. Perturbations agissant sur Voiture.</div> -->
+                     <figcaption>Fig. 1–2 : Exemple d’asservissement de vitesse d’un véhicule</figcaption>
+                 </figure>
+            </section>
+
+            <section>
+                <h3>1- 2.3 - Définitions – Constitutions élémentaires</h3>
+                 <p>On peut donc définir un asservissement comme un <strong>système bouclé</strong> ou <strong>à boucle fermée</strong> comportant une <strong>amplification de puissance</strong>, une <strong>mesure</strong> et une <strong>comparaison</strong>.</p>
+                 <p>A partir de ces 3 notions, on peut définir un schéma fonctionnel valable pour tous les systèmes présentant ces caractéristiques (fig. 1–3) :</p>
+                 <ul>
+                     <li>Le triangle : représente la fonction amplification de puissance.</li>
+                     <li>Le cercle : représente la fonction comparaison (qui s'effectue en faisant une différence).</li>
+                     <li>Le rectangle : représente la fonction mesure et transformation.</li>
+                 </ul>
+                 <figure>
+                     <img src="placeholder_fig1-3.png" alt="Schéma fonctionnel d’un asservissement">
+                     <!-- Placeholder for Figure 1-3 -->
+                     <!-- <div class="placeholder">Schéma fonctionnel: E -> (+) -> Epsilon -> [A] -> S -> [B] -> S' -> (-) -> Epsilon. A = Amplification, B = Mesure/Transformation, Cercle = Comparaison</div> -->
+                     <figcaption>Fig. 1–3 : Schéma fonctionnel d’un asservissement</figcaption>
+                 </figure>
+
+                 <dl>
+                     <dt class="definition-term">S (Grandeur de sortie)</dt>
+                     <dd>La sortie régulée représente le phénomène physique que doit régler le système, c’est la raison d’être du système. Il peut s'agir d'une tension, d'un déplacement, d'un angle de rotation, d'un niveau, d'une vitesse, etc...</dd>
+                     <dt class="definition-term">E (Grandeur d'entrée ou référence ou consigne)</dt>
+                     <dd>La consigne, est l’entrée d’action, c’est la grandeur réglante du système. Sa nature peut être différente de celle de (S). Seule importe sa valeur numérique. Si (E) et (S) sont de natures différentes, il suffit de définir une correspondance numérique entre ces deux grandeurs. Par exemple, on dira qu'un volt à l'entrée représente 100 tours/mn.</dd>
+                     <dt class="definition-term">$\epsilon$ (erreur ou écart entrée - sortie)</dt>
+                     <dd>On appelle écart ou erreur, la différence entre la consigne et la sortie. Cette mesure ne peut être réalisée que sur des grandeurs comparables, on la réalisera donc en général entre la consigne et la mesure de la sortie. Elle est fournie par le comparateur et est proportionnelle à la différence $( E–S' )$. Elle peut être de nature différente. Par exemple, E et S' étant des tensions, on pourra avoir $\epsilon$ sous forme de courant tel que $\epsilon = ( E–S' ) / R$ (R est une résistance).</dd>
+                     <dt class="definition-term">S' (Mesure de la sortie)</dt>
+                     <dd>Elle est fournie par la chaîne de retour, généralement après transformation. S' doit obligatoirement avoir même nature physique que E. Ce qui est évident si on veut donner un sens à la différence $( E - S' )$. Un des rôles de la chaîne de retour est donc d'assurer la conversion de la mesure de S dans la grandeur physique de E.</dd>
+                 </dl>
+
+                 <p>D'une manière générale, le système comprend (fig. 1–4) :</p>
+                 <figure>
+                     <img src="placeholder_fig1-4.png" alt="Organisation fonctionnelle d'un système asservi (schéma fonctionnel)">
+                     <!-- Placeholder for Figure 1-4 -->
+                     <!-- <div class="placeholder">Schéma fonctionnel plus détaillé: Entrée -> Comparateur (+) -> Régulateur (Correcteur) -> Actionneur -> Processus -> Sortie -> Capteur -> (-) -> Comparateur. Perturbations -> Processus.</div> -->
+                     <figcaption>Fig. 1–4 : Organisation fonctionnelle d'un système asservi (schéma fonctionnel)</figcaption>
+                 </figure>
+
+                 <dl>
+                     <dt class="definition-term">Chaîne directe ou d'action</dt>
+                     <dd>
+                         <ul>
+                             <li>Englobe tous les organes de puissance (nécessitant un apport extérieur d'énergie) et qui exécute le travail.</li>
+                             <li>Comporte généralement nombreux éléments, notamment des amplificateurs.</li>
+                             <li>La nature de ces éléments n'est pas spécifiée sur le schéma, il peut s'agir aussi bien d'engins électriques, mécaniques, pneumatiques, etc…</li>
+                         </ul>
+                     </dd>
+                     <dt class="definition-term">Chaîne de retour ou de réaction</dt>
+                     <dd>
+                         <ul>
+                             <li>Analyse et mesure le travail effectué et transmet au comparateur une grandeur physique proportionnelle à ce travail.</li>
+                             <li>Elle comprend généralement un capteur qui donne une mesure de la grandeur S, qui est ensuite amplifiée et transformée avant d'être utilisée.</li>
+                         </ul>
+                     </dd>
+                     <dt class="definition-term">Comparateur ou détecteur d'écart</dt>
+                     <dd>
+                         <ul>
+                             <li>Compare le travail effectué à celui qui était à faire et délivre un signal d'erreur $\epsilon$ proportionnel à la différence entre une grandeur de référence (E) et la grandeur physique issue de la chaîne de retour.</li>
+                             <li>Ce signal d'erreur, après amplification, agira sur les organes de puissance dans un sens tel que l'erreur tendra à s'annuler.</li>
+                         </ul>
+                     </dd>
+                     <dt class="definition-term">Régulateur</dt>
+                     <dd>Le régulateur se compose d'un comparateur qui détermine l'écart entre la consigne et la mesure et d'un correcteur qui élabore à partir du signal d'erreur l'ordre de commande.</dd>
+                     <dt class="definition-term">Actionneur</dt>
+                     <dd>C'est l'organe d'action qui apporte l'énergie au système pour produire l'effet souhaité.</dd>
+                     <dt class="definition-term">Capteur</dt>
+                     <dd>Le capteur prélève sur le système la grandeur réglée (information physique) et la transforme en un signal compréhensible par le régulateur. La précision et la rapidité sont deux caractéristiques importantes du capteur.</dd>
+                     <dt class="definition-term">Perturbation</dt>
+                     <dd>On appelle perturbation tout phénomène physique intervenant sur le système qui modifie l’état de la sortie. Un système asservi doit pouvoir maintenir la sortie à son niveau indépendamment des perturbations.</dd>
+                 </dl>
+            </section>
+
+             <section>
+                <h3>1- 2.4 - Régulation et systèmes asservis</h3>
+                <p>Nous avons fait la distinction dans l'introduction entre régulation et asservissement. Nous pouvons maintenant préciser de façon nette cette différence :</p>
+                <ul>
+                    <li>Un <strong>régulateur</strong> : maintient l'erreur $\epsilon$ entre l'entrée E et la sortie S nulle, <em>quelles que soient les perturbations</em>, la grandeur d'entrée E restant constante ou variant par palier. E est alors appelée consigne ou référence.</li>
+                    <li>Un <strong>système asservi</strong> : maintient l'erreur $\epsilon$ nulle ou minimale <em>quelles que soient les variations de E</em>. Généralement, E est une fonction du temps qui peut être périodique, mais qui doit toujours rester continue et finie.</li>
+                </ul>
+                <p>Il faut remarquer que les contraintes sont plus grandes pour un système asservi que pour un régulateur, puisque aucune contrainte de vitesse de variation n'est imposée pour E.</p>
+            </section>
+
+            <section>
+                <h3>1- 2.5 - Propriétés des systèmes linéaires</h3>
+                <p>Quand un système est linéaire, il jouit de propriétés importantes qui permettent une étude plus commode, en particulier le « <strong>principe de superposition linéaire</strong> » qui se traduit par les relations :</p>
+                <p><strong>Additivité :</strong> Si une entrée $e_1(t)$ produit une sortie $s_1(t)$ et une entrée $e_2(t)$ produit une sortie $s_2(t)$, alors une entrée $e_1(t) + e_2(t)$ produira une sortie $s_1(t) + s_2(t)$.</p>
+                $$ \begin{cases} e_1(t) \implies s_1(t) \\ e_2(t) \implies s_2(t) \end{cases} \implies e_1(t) + e_2(t) \implies s_1(t) + s_2(t) $$
+                <p><strong>Homogénéité :</strong> Si une entrée $e(t)$ produit une sortie $s(t)$, alors une entrée $\lambda e(t)$ (où $\lambda$ est une constante) produira une sortie $\lambda s(t)$.</p>
+                $$ e(t) \implies s(t) \implies \lambda e(t) \implies \lambda s(t) $$
+                <p>(où $e(t)$ et $s(t)$ sont les grandeurs d'entrée et de sortie)</p>
+                <p>Ce principe traduit le fait que les effets sont proportionnels aux causes et que les causes ajoutent leurs effets.</p>
+            </section>
+
+             <section>
+                <h2>1- 3 - Régimes transitoires des asservissements</h2>
+                <h3>1- 3.1 - Définitions</h3>
+                 <dl>
+                    <dt class="definition-term">Entrée Permanente</dt>
+                    <dd>Entrée d'un système dont l'expression, en fonction du temps, est du type constante, linéaire, parabolique ou périodique.</dd>
+                    <dt class="definition-term">Régime Permanent</dt>
+                    <dd>Il est atteint par un système quand, soumis à une entrée permanente, sa sortie est du même type que l'entrée c'est-à-dire constante, linéaire, parabolique ou périodique. Ce régime est aussi appelé régime forcé.</dd>
+                    <dt class="definition-term">Régime Transitoire</dt>
+                    <dd>Il correspond au fonctionnement du système quand il passe d'un type de régime permanent à un autre.</dd>
+                 </dl>
+                 <p>Pratiquement, un asservissement travaille toujours en régime transitoire ; en effet, même un régulateur dont l'entrée est constante doit constamment revenir au régime permanent, car des perturbations qui constituent des entrées secondaires l'en écartent. Il en est de même pour les asservissements.</p>
+                 <p>L'aptitude du servomécanisme à revenir au régime permanent sera caractérisée par ses performances dynamiques.</p>
+            </section>
+
+             <section>
+                 <h3>1- 3.2 - Performances d'un système asservi</h3>
+                <ul>
+                    <li><strong>En régime permanent :</strong> la grandeur de sortie doit être aussi voisine que possible de la valeur désirée. En réalité, il subsiste toujours une légère erreur. Cette erreur est appelée :
+                        <ul>
+                             <li><strong>erreur statique</strong> ou <strong>écart permanent</strong> quand la grandeur d'entrée est une constante ; pour un système idéal, elle doit être nulle.</li>
+                             <li><strong>erreur de traînage</strong> quand la grandeur d'entrée est une fonction linéaire du temps.</li>
+                        </ul>
+                    </li>
+                    <li><strong>En régime transitoire :</strong> le système évoluant entre deux régimes permanents, le temps mis par le système pour aller de l'un à l'autre et la façon dont il parvient à l'état final, sont très importants.
+                        <ul>
+                            <li>Le <strong>temps de réponse</strong> est le temps au bout duquel la sortie du système a atteint, à ± 5 % (ou ± 2 % selon la précision voulue), sa valeur de régime permanent et y reste (Fig. 1–5).</li>
+                            <li>L'<strong>amortissement</strong> : la sortie du système dépasse généralement la valeur qu'elle doit avoir dans le régime permanent final et elle oscille quelques instants autour de cette valeur. Les oscillations doivent être amorties, le plus rapidement possible. L'amortissement est mesuré par le coefficient $\lambda$ de l'exponentielle enveloppe (Fig. 1–6).</li>
+                        </ul>
+                    </li>
+                 </ul>
+                 <figure>
+                    <img src="placeholder_fig1-5.png" alt="Temps de réponse">
+                    <!-- Placeholder for Figure 1-5 -->
+                    <!-- <div class="placeholder">Graphique: Sortie oscillante atteignant une bande de +/- 5% autour de la valeur finale. Axe X = temps, Axe Y = sortie.</div> -->
+                    <figcaption>Fig. 1–5 : Temps de réponse</figcaption>
+                 </figure>
+                 <figure>
+                     <img src="placeholder_fig1-6.png" alt="Amortissement">
+                     <!-- Placeholder for Figure 1-6 -->
+                     <!-- <div class="placeholder">Graphique: Sortie oscillante amortie avec une enveloppe exponentielle décroissante e^(-lambda*t).</div> -->
+                     <figcaption>Fig. 1–6 : Amortissement</figcaption>
+                 </figure>
+            </section>
+
+            <section>
+                <h2>1- 4 - Mise en équation d'un système - Résolution</h2>
+                <h3>1- 4.1 - Mise en équation</h3>
+                <p>Nous avons dit précédemment que nous nous bornions à l'étude des systèmes linéaires. Donc, les équations rencontrées seront des équations différentielles linéaires à coefficients constants.</p>
+                <p>Considérons un système quelconque A, le plus général possible, possédant une entrée $e(t)$ et une sortie $s(t)$ (fig. 1–7).</p>
+                <figure>
+                    <img src="placeholder_fig1-7.png" alt="Représentation d’un système quelconque à 1 entrée – 1 sortie">
+                    <!-- Placeholder for Figure 1-7 -->
+                    <!-- <div class="placeholder">Schéma simple: e(t) -> [Bloc A] -> s(t)</div> -->
+                    <figcaption>Fig. 1–7 : Représentation d’un système quelconque à 1 entrée – 1 sortie</figcaption>
+                </figure>
+                <p>Si on applique un signal à l'entrée, on recueillera, à la sortie, un signal qui sera liée au signal d'entrée par une équation différentielle de type :</p>
+                $$ a_n \frac{d^n s}{dt^n} + \dots + a_1 \frac{ds}{dt} + a_0 s = b_k \frac{d^k e}{dt^k} + \dots + b_1 \frac{de}{dt} + b_0 e $$
+                <ul>
+                    <li>Les coefficients $a_i$ et $b_j$ sont les paramètres du système et ils sont sensés être connus, ce qui est le cas dans la pratique pour la plupart des systèmes courants. Ils représentent diverses constantes de temps et divers coefficients de proportionnalité accessibles à la mesure.</li>
+                    <li>La difficulté de la mise en équation réside surtout au niveau de la connaissance du processus lui-même. En réalité, l'équation différentielle à laquelle on arrive n'est souvent qu'une approximation qui consiste à négliger des termes d'ordre plus élevé. Cette précision suffit dans la plupart des cas, bien qu'une étude plus poussée soit quelque fois nécessaire.</li>
+                    <li>Une fois l'équation du système établie, il faut exprimer la valeur de la sortie en fonction du temps pour connaître les régimes permanents et transitoires. Pour cela, il existe 2 méthodes (voir fig. 1–8) :</li>
+                </ul>
+                 <dl>
+                    <dt class="definition-term">Méthode Classique</dt>
+                    <dd>Consiste à résoudre l'équation différentielle décrivant ce système, c'est–à–dire trouver une réponse forcée et une réponse libre pour le système. Mais cette méthode ne permet pas toujours de trouver une solution et peut amener à une difficulté de résolution dès que l'ordre de l'équation différentielle dépasse 2.</dd>
+                    <dt class="definition-term">Méthode Opérationnelle</dt>
+                    <dd>Basée sur le calcul opérationnel ou, essentiellement, sur la transformée de Laplace qui mettra en relation, une fonction de la variable du temps $f(t)$ avec une fonction de la variable complexe $F(p)$ dépendant de la pulsation. Notation : $L [ f(t) ] = F(p)$ avec $p = \sigma + j\omega$ (nombre complexe).</dd>
+                 </dl>
+
+                 <figure>
+                    <img src="placeholder_fig1-8.png" alt="Détermination de la sortie du système">
+                    <!-- Placeholder for Figure 1-8 -->
+                    <!-- <div class="placeholder">Schéma comparant Méthode Classique (e(t) -> équa diff -> s(t)) et Méthode Opérationnelle (e(t) -> TL -> E(p) -> Calcul Op -> S(p) -> TLI -> s(t)).</div> -->
+                    <figcaption>Fig. 1–8 : Détermination de la sortie du système par la méthode classique et par le calcul opérationnel</figcaption>
+                 </figure>
+                 <p><em>Pour un rappel sur l’utilisation de la transformée de Laplace, voir l’annexe A.</em></p>
+            </section>
+
+             <section>
+                <h3>1- 4.2 - Utilisation de la transformée de Laplace</h3>
+                <p>En appelant $S(p)$ et $E(p)$ les transformées de $s(t)$ et de $e(t)$, si on prend la Transformée de Laplace des deux membres de l'équation différentielle (en supposant les conditions initiales nulles) :</p>
+                 $$ a_n \frac{d^n s}{dt^n} + \dots + a_1 \frac{ds}{dt} + a_0 s = b_k \frac{d^k e}{dt^k} + \dots + b_1 \frac{de}{dt} + b_0 e $$
+                 <p>On aura :</p>
+                 $$ a_n p^n S(p) + \dots + a_1 p S(p) + a_0 S(p) = b_k p^k E(p) + \dots + b_1 pE(p) + b_0 E(p) $$
+                 <p>d'où :</p>
+                 $$ S(p) = \frac{b_k p^k + \dots + b_1 p + b_0}{a_n p^n + \dots + a_1 p + a_0} \cdot E(p) $$
+                <p>Si l'on connaît l'image $E(p)$ de $e(t)$, il est facile, grâce aux tables de transformées de Laplace, de revenir à l'original de $S(p)$.</p>
+                <p>D'une manière générale, cette notation n'est valable que si :</p>
+                <ul>
+                    <li>le système est linéaire à coefficients constants,</li>
+                    <li>toutes les variables et leurs dérivées sont nulles pour $t < 0$ (le système part du repos absolu),</li>
+                    <li>le système est dissipatif, donc sa réponse tend, plus ou moins, vers un régime permanent indépendant des conditions initiales.</li>
+                </ul>
+            </section>
+
+        </article>
+
+        <hr style="margin: 40px 0;">
+
+        <!-- Chapter 2 and onwards would follow the same pattern -->
+        <article>
+            <h1>Chapitre 2 : NOTION DE FONCTION DE TRANSFERT</h1>
+            <!-- Content for Chapter 2 -->
+             <section>
+                 <h2>2- 1 - Introduction</h2>
+                 <p>Rappelons que :</p>
+                 <ul>
+                     <li>SI nous considérons un système quelconque A, le plus général possible, possédant une entrée $e(t)$ et une sortie $s(t)$ (fig. 2–1) :
+                         <figure>
+                            <img src="placeholder_fig2-1.png" alt="Représentation d’un système quelconque à 1 entrée – 1 sortie">
+                            <!-- Placeholder for Figure 2-1 -->
+                            <!-- <div class="placeholder">Schéma: e(t) -> [Bloc A] -> s(t)</div> -->
+                             <figcaption>Fig. 2–1 : Représentation d’un système quelconque à 1 entrée – 1 sortie</figcaption>
+                         </figure>
+                     </li>
+                     <li>ALORS, Si on applique un signal à l'entrée, on recueillera, à la sortie, un signal qui sera liée au signal d'entrée par une équation différentielle de type :
+                         $$ a_n \frac{d^n s}{dt^n} + \dots + a_1 \frac{ds}{dt} + a_0 s = b_k \frac{d^k e}{dt^k} + \dots + b_1 \frac{de}{dt} + b_0 e(t) $$
+                     </li>
+                 </ul>
+                 <p>En appelant $S(p)$ et $E(p)$ les transformées Laplace de $s(t)$ et de $e(t)$, si on prend la Transformée de Laplace des deux membres de l'équation différentielle (conditions initiales nulles), on aura :</p>
+                 $$ a_n p^n S(p) + \dots + a_1 p S(p) + a_0 S(p) = b_k p^k E(p) + \dots + b_1 pE(p) + b_0 E(p) $$
+                 <p>d'où :</p>
+                 $$ S(p) = \frac{b_k p^k + \dots + b_1 p + b_0}{a_n p^n + \dots + a_1 p + a_0} \cdot E(p) $$
+                 <p>Par définition, la <strong>FONCTION DE TRANSFERT</strong> du système de la figure (2–1) est le quotient :</p>
+                 $$ F(p) = \frac{S(p)}{E(p)} = \frac{b_k p^k + \dots + b_1 p + b_0}{a_n p^n + \dots + a_1 p + a_0} $$
+                 <p>C'est aussi le rapport de la transformée de Laplace de la sortie à la transformée de Laplace de l'entrée quand toutes les conditions initiales sont nulles. Dans ce cas, on a :</p>
+                 $$ S(p) = F(p) \cdot E(p) $$
+                 <p>La Fonction de Transfert caractérise la dynamique du système. Elle ne dépend que de ses caractéristiques physiques. Ainsi, dorénavant, un système sera décrit par sa fonction de transfert et non par l'équation différentielle qui le régit.</p>
+                 <p>Notons enfin, que cette fonction de transfert est aussi appelée <strong>transmittance</strong> par analogie avec l'impédance dans les systèmes électriques.</p>
+            </section>
+            <!-- ... rest of chapter 2 content ... -->
+             <section>
+                <h2>2- 2 - Fonction de transfert d'un ensemble d'éléments</h2>
+                <h3>2- 2.1 - Eléments en série (ou cascade)</h3>
+                <p>Soit n éléments de fonction de transfert $G_1(p), \dots, G_n(p)$ mis en série (la sortie du premier est reliée à l'entrée du second, etc...) (fig. 2–2).</p>
+                 <figure>
+                    <img src="placeholder_fig2-2.png" alt="Connexion en série (ou cascade) de fonctions de transfert">
+                     <!-- Placeholder for Figure 2-2 -->
+                     <!-- <div class="placeholder">Schéma: E1 -> [G1] -> E2 -> [G2] -> ... -> En -> [Gn] -> S. Équivalent: E1 -> [H(p)] -> S</div> -->
+                    <figcaption>Fig. 2–2 : Connexion en série (ou cascade) de fonctions de transfert</figcaption>
+                </figure>
+                <p>La fonction de transfert de l'ensemble est égale au produit des fonctions de transfert de chaque élément :</p>
+                $$ H(p) = \frac{S(p)}{E_1(p)} = G_1(p) \cdot G_2(p) \cdot \dots \cdot G_n(p) $$
+                <p>Ceci est évident puisque, par définition, on a :</p>
+                $$ G_1(p) = \frac{E_2(p)}{E_1(p)}, \dots, G_n(p) = \frac{S(p)}{E_n(p)} \quad \text{et que} \quad H(p) = \frac{S(p)}{E_1(p)} $$
+
+                <h3>2- 2.2 - Eléments en parallèle</h3>
+                <p>Soient n éléments de fonction de transfert $G_1(p), \dots, G_n(p)$ mis en parallèle (fig. 2–3).</p>
+                <figure>
+                    <img src="placeholder_fig2-3.png" alt="Connexion en parallèle de fonctions de transfert">
+                     <!-- Placeholder for Figure 2-3 -->
+                     <!-- <div class="placeholder">Schéma: E -> [G1] -> + -> S. E -> ... -> + -> S. E -> [Gn] -> + -> S. Équivalent: E -> [H(p)] -> S</div> -->
+                    <figcaption>Fig. 2–3 : Connexion en parallèle de fonctions de transfert</figcaption>
+                </figure>
+                <p>La fonction de transfert équivalente $H(p)$ a pour expression :</p>
+                $$ H(p) = \frac{S(p)}{E(p)} = G_1(p) + G_2(p) + \dots + G_n(p) $$
+                <p>On peut considérer que $S(p)$ est le résultat de la superposition des n sorties des n éléments, c'est-à-dire que :</p>
+                $$ S(p) = S_1(p) + S_2(p) + \dots + S_n(p) \quad \text{(en vertu de la linéarité du système, les effets s'ajoutent)} $$
+                <p>Chaque élément pris, indépendamment, donnera une sortie $S_i(p)$ quand on lui applique l'entrée $E(p)$. Donc : $S_i(p) = G_i(p) E(p)$</p>
+                 $$ S(p) = \sum_i S_i(p) = G_1(p)E(p) + G_2(p)E(p) + \dots + G_n(p)E(p) $$
+                 $$ S(p) = [ G_1(p) + G_2(p) + \dots + G_n(p) ] \cdot E(p) $$
+                 <p>d'où : $H(p) = G_1(p) + G_2(p) + \dots + G_n(p)$</p>
+            </section>
+
+            <section>
+                 <h3>2- 2.3 - Cas d'un système à n entrées indépendantes</h3>
+                 <figure>
+                    <img src="placeholder_fig2-4.png" alt="Système à n entrées indépendantes">
+                     <!-- Placeholder for Figure 2-4 -->
+                     <!-- <div class="placeholder">Schéma: E1..En -> [Système] -> S. Équivalent: E1 -> [G1] -> + -> S. ... En -> [Gn] -> + -> S.</div> -->
+                    <figcaption>Fig. 2–4 : Système à n entrées indépendantes</figcaption>
+                </figure>
+                <p>La fonction de transfert n'a de sens qu'entre la sortie et une entrée. Le système de la fig. 2–4 pourra donc se décomposer en n constituants ayant la sortie en commun et pour entrée chacune des n entrées.</p>
+                <p>On calculera les fonctions de transfert $G_i(p)$ de chaque élément en supposant nulles les entrées autres que $E_i(p)$. Ceci n'est possible que si les différentes équations du système ne sont pas couplées entre elles.</p>
+                <p>Dans ce cas, on peut écrire (par superposition) :</p>
+                $$ S(p) = \sum_i G_i(p) \cdot E_i(p) $$
+                <p>Il n'y a pas de fonction de transfert globale pour le système.</p>
+            </section>
+
+             <section>
+                <h2>2- 3 - Fonction de Transfert en Boucle Fermée ( FTBF )</h2>
+                <p>Soit un système asservi, le plus général, représenté par le schéma de la fig. 2–5.</p>
+                <figure>
+                    <img src="placeholder_fig2-5.png" alt="Schéma fonctionnel d’un système asservi (Boucle Fermée)">
+                     <!-- Placeholder for Figure 2-5 -->
+                     <!-- <div class="placeholder">Schéma: E -> (+) -> Epsilon -> [A(p)] -> S -> [B(p)] -> S' -> (-) -> Epsilon.</div> -->
+                     <figcaption>Fig. 2–5 : Schéma fonctionnel d’un système asservi (Boucle Fermée)</figcaption>
+                </figure>
+                <p>Soit $A(p)$ et $B(p)$, respectivement, les fonctions de transfert des chaînes directe et de retour.</p>
+                <p>Cherchons la fonction de transfert du système complet : $ H(p) = \frac{S(p)}{E(p)} $</p>
+                <p>Nous avons les relations suivantes :</p>
+                $$ S(p) = A(p) \cdot \epsilon(p) $$
+                $$ S'(p) = B(p) \cdot S(p) $$
+                $$ \epsilon(p) = E(p) - S'(p) $$
+                <p>En substituant :</p>
+                $$ S(p) = A(p) \cdot [ E(p) - S'(p) ] = A(p) \cdot [ E(p) - B(p) \cdot S(p) ] $$
+                $$ S(p) = A(p)E(p) - A(p)B(p)S(p) $$
+                $$ S(p) [1 + A(p)B(p)] = A(p)E(p) $$
+                <p>d'où la Fonction de Transfert en Boucle Fermée (FTBF) :</p>
+                $$ H(p) = \frac{S(p)}{E(p)} = \frac{A(p)}{1 + A(p)B(p)} $$
+                <p>La fonction de transfert d'un système bouclé ou en Boucle Fermée (FTBF) est donc le rapport de la fonction de transfert de sa chaîne directe $A(p)$ à $1 + A(p)B(p)$.</p>
+            </section>
+
+             <section>
+                <h2>2- 4 - Fonction de transfert en boucle ouverte ( FTBO )</h2>
+                 <p>La Fonction de Transfert en Boucle Ouverte (également appelée F.T.B.O.) est la fonction de transfert qui lie les transformées de Laplace de la sortie de la chaîne de retour $S'(p)$ à l'erreur $\epsilon(p)$. Elle correspond à l'ouverture de la boucle (Fig. 2–6 ):</p>
+                 <figure>
+                    <img src="placeholder_fig2-6.png" alt="Schéma fonctionnel d'un système asservi en Boucle Ouverte">
+                     <!-- Placeholder for Figure 2-6 -->
+                     <!-- <div class="placeholder">Schéma: E (=Epsilon) -> [A(p)] -> S -> [B(p)] -> S'. Boucle ouverte.</div> -->
+                    <figcaption>Fig. 2–6 : Schéma fonctionnel d'un système asservi en Boucle Ouverte</figcaption>
+                </figure>
+                <p>Dans ce cas, $\epsilon = E$ puisque le comparateur ne reçoit plus qu'une seule information (la boucle est ouverte en amont du comparateur).</p>
+                <p>On a donc :</p>
+                $$ S'(p) = B(p) \cdot S(p) $$
+                 $$ S(p) = A(p) \cdot \epsilon(p) $$
+                 $$ S'(p) = B(p) \cdot A(p) \cdot \epsilon(p) $$
+                 <p>d'où la FTBO, notée K(p) ici :</p>
+                 $$ K(p) = \frac{S'(p)}{\epsilon(p)} = A(p) \cdot B(p) $$
+                 <p>La Fonction de Transfert en Boucle Ouverte (ou FTBO) d'un asservissement est le produit des fonctions de transfert de la chaîne directe par la chaîne de retour.</p>
+                 <p>La fonction de transfert en boucle ouverte a une grande importance dans l'étude de la stabilité des systèmes ; de plus, elle est directement accessible à la mesure.</p>
+            </section>
+
+             <section>
+                <h2>2- 5 - Fonction de transfert d'un système à boucles multiples</h2>
+                <p>Il existe des systèmes complexes où l'on rencontre, non seulement une chaîne de retour principale, mais un grand nombre de chaînes de retour secondaires. Dans ces asservissements, il y a plusieurs régulateurs ou servomécanismes dans une chaîne. La figure 2–8 en donne un exemple.</p>
+                <figure>
+                    <img src="placeholder_fig2-8.png" alt="Exemple de système asservi à boucles multiples">
+                     <!-- Placeholder for Figure 2-8 -->
+                     <!-- <div class="placeholder">Schéma complexe avec plusieurs boucles internes (A1..A5, B2, B4, B5, B6).</div> -->
+                    <figcaption>Fig. 2–8 : Exemple de système asservi à boucles multiples</figcaption>
+                 </figure>
+                 <p>Le calcul de la fonction de transfert d'un tel système peut paraître compliqué. Pour mener à bien ce calcul, il faut utiliser l'artifice suivant : au lieu de considérer la fonction de transfert globale $Y(p)$, on considère son inverse $1 / Y(p)$.</p>
+                 <p>Rappelons que $ Y(p) = \frac{A(p)}{1 + A(p)B(p)} $, donc $ \frac{1}{Y(p)} = \frac{1 + A(p)B(p)}{A(p)} = \frac{1}{A(p)} + B(p) $.</p>
+                 <p>Dans notre cas (Figure 2-8) :</p>
+                 <ul>
+                     <li>$B(p) = B_6(p)$ : transmittance de la chaîne de retour principale.</li>
+                     <li>$A(p)$ : transmittance de la chaîne directe globale, incluant les boucles internes. $A(p) = A_1(p) \cdot Y_1(p) \cdot Y_2(p)$, où $Y_1$ et $Y_2$ sont les transmittances des blocs internes avec leurs propres boucles.</li>
+                 </ul>
+                 <p>En appliquant la même procédure aux boucles internes ($Y_1, Y_2, Y_3$) :</p>
+                 $$ \frac{1}{Y_1} = B_2 + \frac{1}{A_2} $$
+                 $$ \frac{1}{Y_2} = B_5 + \frac{1}{A_3 Y_3 A_5} $$
+                 $$ \frac{1}{Y_3} = B_4 + \frac{1}{A_4} $$
+                 <p>En substituant récursivement, on obtient l'inverse de la transmittance $A(p)$ de la chaîne directe globale:</p>
+                 $$ \frac{1}{A} = \frac{1}{A_1 Y_1 Y_2} = \frac{1}{A_1} \left( B_2 + \frac{1}{A_2} \right) \left( B_5 + \frac{1}{A_3 A_5} \left( B_4 + \frac{1}{A_4} \right) \right) $$
+                 <p>Soit, pour la transmittance globale du système $Y(p) = S(p)/E(p)$ :</p>
+                 $$ \frac{1}{Y(p)} = B_6 + \frac{1}{A} = B_6 + \frac{1}{A_1} \left( B_2 + \frac{1}{A_2} \right) \left( B_5 + \frac{B_4}{A_3 A_5} + \frac{1}{A_3 A_4 A_5} \right) $$
+                 <p>Cette expression, bien que complexe, montre la méthode de réduction par inversion.</p>
+            </section>
+
+             <section>
+                <h2>2- 6 - Formes générales de la Fonction de Transfert d'un système linéaire</h2>
+                <p>Soit un système asservi représenté par sa fonction de transfert de forme générale suivante :</p>
+                $$ F(p) = \frac{N(p)}{D(p)} = \frac{B_m p^m + \dots + B_1 p + B_0}{A_n p^n + \dots + A_1 p + A_0} $$
+                 <p>Si $N(p)$ et $D(p)$ ont des racines (zéros et pôles respectivement) alors :</p>
+                 <p>$N(p)$ (Numérateur) a $m$ racines $z_1, z_2, \dots, z_m$ (les <strong>zéros</strong> de la fonction de transfert) :</p>
+                 $$ N(p) = B_m (p - z_1)(p - z_2)\dots(p - z_m) = B_m \prod_{i=1}^{m} (p - z_i) $$
+                 <p>$D(p)$ (Dénominateur) a $n$ racines $p_1, p_2, \dots, p_n$ (les <strong>pôles</strong> de la fonction de transfert) :</p>
+                 $$ D(p) = A_n (p - p_1)(p - p_2)\dots(p - p_n) = A_n \prod_{j=1}^{n} (p - p_j) $$
+                 <p>La fonction de transfert s'écrit alors :</p>
+                 $$ F(p) = \frac{B_m}{A_n} \frac{\prod_{i=1}^{m} (p - z_i)}{\prod_{j=1}^{n} (p - p_j)} $$
+                 <p>Avec : $m < n$ pour un système physique réel (la fonction de transfert doit tendre vers 0 lorsque $p \to \infty$).</p>
+                 <ul>
+                     <li>les racines du numérateur ($z_i$) sont appelées " <strong>zéros</strong> de la fonction de transfert ".</li>
+                     <li>les racines du dénominateur ($p_j$) sont appelées " <strong>pôles</strong> de la fonction de transfert ".</li>
+                 </ul>
+            </section>
+
+             <section>
+                <h2>2- 7 - Règles de transformation des schémas fonctionnels</h2>
+                <p>D'une manière générale, pour simplifier un bloc fonctionnel il est souvent plus judicieux de déplacer les points de connexion et les comparateurs (ou additionneurs), d'inter-changer ces derniers, puis de réduire les boucles internes.</p>
+                <p>Voici quelques règles de transformation courantes (les schémas sont représentés par des placeholders):</p>
+                 <table>
+                     <caption>Tableau des transformations de schémas fonctionnels</caption>
+                     <thead>
+                         <tr>
+                             <th>N°</th>
+                             <th>Schéma fonctionnel original</th>
+                             <th>Schéma fonctionnel équivalent</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <tr>
+                             <td>1.</td>
+                             <td><img src="placeholder_transfo_1_orig.png" alt="Original 1"></td>
+                             <td><img src="placeholder_transfo_1_equiv.png" alt="Equivalent 1"></td>
+                             <!-- Placeholder for Transformation 1 -->
+                             <!-- <td colspan="2"><div class="placeholder">1. Déplacement point de sommation après bloc / avant bloc</div></td> -->
+                          </tr>
+                         <tr>
+                             <td>2.</td>
+                              <td><img src="placeholder_transfo_2_orig.png" alt="Original 2"></td>
+                             <td><img src="placeholder_transfo_2_equiv.png" alt="Equivalent 2"></td>
+                             <!-- Placeholder for Transformation 2 -->
+                             <!-- <td colspan="2"><div class="placeholder">2. Déplacement point de prélèvement après bloc / avant bloc</div></td> -->
+                         </tr>
+                         <!-- ... Add rows for all 14 transformations shown in the document ... -->
+                          <tr><td>3.</td><td><img src="placeholder_transfo_3_orig.png" alt="Original 3"></td><td><img src="placeholder_transfo_3_equiv.png" alt="Equivalent 3"></td></tr>
+                          <tr><td>4.</td><td><img src="placeholder_transfo_4_orig.png" alt="Original 4"></td><td><img src="placeholder_transfo_4_equiv.png" alt="Equivalent 4"></td></tr>
+                          <tr><td>5.</td><td><img src="placeholder_transfo_5_orig.png" alt="Original 5"></td><td><img src="placeholder_transfo_5_equiv.png" alt="Equivalent 5"></td></tr>
+                          <tr><td>6.</td><td><img src="placeholder_transfo_6_orig.png" alt="Original 6"></td><td><img src="placeholder_transfo_6_equiv.png" alt="Equivalent 6"></td></tr>
+                          <tr><td>7.</td><td><img src="placeholder_transfo_7_orig.png" alt="Original 7"></td><td><img src="placeholder_transfo_7_equiv.png" alt="Equivalent 7"></td></tr>
+                          <tr><td>8.</td><td><img src="placeholder_transfo_8_orig.png" alt="Original 8"></td><td><img src="placeholder_transfo_8_equiv.png" alt="Equivalent 8"></td></tr>
+                          <tr><td>9.</td><td><img src="placeholder_transfo_9_orig.png" alt="Original 9"></td><td><img src="placeholder_transfo_9_equiv.png" alt="Equivalent 9"></td></tr>
+                          <tr><td>10.</td><td><img src="placeholder_transfo_10_orig.png" alt="Original 10"></td><td><img src="placeholder_transfo_10_equiv.png" alt="Equivalent 10"></td></tr>
+                          <tr><td>11.</td><td><img src="placeholder_transfo_11_orig.png" alt="Original 11"></td><td><img src="placeholder_transfo_11_equiv.png" alt="Equivalent 11"></td></tr>
+                          <tr><td>12.</td><td><img src="placeholder_transfo_12_orig.png" alt="Original 12"></td><td><img src="placeholder_transfo_12_equiv.png" alt="Equivalent 12"></td></tr>
+                          <tr><td>13.</td><td><img src="placeholder_transfo_13_orig.png" alt="Original 13"></td><td><img src="placeholder_transfo_13_equiv.png" alt="Equivalent 13"></td></tr>
+                          <tr><td>14.</td><td><img src="placeholder_transfo_14_orig.png" alt="Original 14"></td><td><img src="placeholder_transfo_14_equiv.png" alt="Equivalent 14"></td></tr>
+                     </tbody>
+                 </table>
+
+                 <h4>2- 7.1.a - Exemple de réduction successive d'un schéma fonctionnel</h4>
+                 <p>Soit à réduire le schéma fonctionnel suivant :</p>
+                 <figure>
+                     <img src="placeholder_fig2-9_orig.png" alt="Schéma fonctionnel initial à réduire">
+                     <!-- Placeholder for Figure 2-9 original -->
+                     <!-- <div class="placeholder">Schéma complexe initial avec G1, G2, G3, H1, H2</div> -->
+                     <figcaption>Schéma fonctionnel initial</figcaption>
+                 </figure>
+                 <p>En appliquant la règle n° 6 (déplacement d'un sommateur), puis la règle n° 1 (association de blocs en série), on obtient :</p>
+                 <figure>
+                     <img src="placeholder_fig2-9_step1.png" alt="Étape 1 de réduction">
+                     <!-- Placeholder for Figure 2-9 step 1 -->
+                     <!-- <div class="placeholder">Schéma après application règle 6 et 1</div> -->
+                      <figcaption>Étape 1</figcaption>
+                 </figure>
+                 <p>En appliquant la règle n° 14 (réduction de boucle interne) :</p>
+                 <figure>
+                     <img src="placeholder_fig2-9_step2.png" alt="Étape 2 de réduction">
+                      <!-- Placeholder for Figure 2-9 step 2 -->
+                     <!-- <div class="placeholder">Schéma après application règle 14</div> -->
+                      <figcaption>Étape 2 (Règle n°14)</figcaption>
+                 </figure>
+                 <p>En appliquant la règle n° 13 (association série) :</p>
+                 <figure>
+                     <img src="placeholder_fig2-9_step3.png" alt="Étape 3 de réduction">
+                     <!-- Placeholder for Figure 2-9 step 3 -->
+                     <!-- <div class="placeholder">Schéma après application règle 13</div> -->
+                      <figcaption>Étape 3 (Règle n°13)</figcaption>
+                 </figure>
+                 <p>Enfin, en appliquant à nouveau la règle n° 13 (réduction de la boucle principale) :</p>
+                  <figure>
+                    <img src="placeholder_fig2-9_final.png" alt="Schéma fonctionnel réduit final">
+                    <!-- Placeholder for Figure 2-9 final -->
+                    <!-- <div class="placeholder">Schéma final réduit à un seul bloc</div> -->
+                     <figcaption>Étape 4 (Règle n°13)</figcaption>
+                 </figure>
+            </section>
+
+        </article>
+
+        <!-- Chapters 3, 4, 5, 6, 7 -->
+        <article><h1>Chapitre 3 : METHODES D'ETUDES DES ASSERVISSEMENTS</h1>...</article>
+        <article><h1>Chapitre 4 : STABILITE DES SYSTEMES ASSERVIS LINEAIRES</h1>...</article>
+        <article><h1>Chapitre 5 : PERFORMANCES DES ASSERVISSEMENTS</h1>...</article>
+        <article><h1>Chapitre 6 : LIEU D'EVANS (Lieu des racines ou Lieu des pôles)</h1>...</article>
+        <article><h1>Chapitre 7 : Correction des systèmes asservis linéaires</h1>...</article>
+
+        <!-- Annexe A -->
+        <article><h1>Annexe A : TRANSFORMEES DE LAPLACE</h1>...</article>
+
+        <!-- Bibliographie -->
+         <article>
+            <h1>BIBLIOGRAPHIE</h1>
+             <ol>
+                <li class="biblio-item">Asservissements linéaires. Tome 1 et Tome 2. F. Milsant. Editions Eyrolles. 4ème Edition. 1981.</li>
+                <li class="biblio-item">Cours d’Asservissements linéaires. Ecole Nationale d’Electricité et de Mécanique. Institut National Polytechnique de Lorraine. 1987.</li>
+                <li class="biblio-item">Régulation et asservissement. P. Guyenot, T. Hans. Editions Eyrolles. 2ème Edition. 1989.</li>
+                <li class="biblio-item">Automatique de base. P. Siarry. Editions Ellipses. 1989.</li>
+                <li class="biblio-item">Modern control system. Theory and application. S. M. Shinners. Addison-Wesley Publishing Company. 1971.</li>
+                <li class="biblio-item">Théorie et calcul des asservissements linéaires. J. Ch. Gille, P. Decaulne, M. Pélegrin. Editions Dunod. 1987.</li>
+                <li class="biblio-item">Cours d'automatique. Tome 2 (asservissement – régulation, commande analogique). M. Rivoire, J-L. Ferrier. Editions Eyrolles. 1990.</li>
+                <li class="biblio-item">Modern Control Engineering. K. Ogata. Third Edition. Prentice-Hall inc. 1997.</li>
+                <li class="biblio-item">Feedback Control Systems. Ch. L. Phillips, R. D. Harbor. Fourth Edition, Prentice Hall inc. 2000.</li>
+                <li class="biblio-item">Feedback Control Systems. J. Van De Vegte. Third Edition, Prentice Hall inc. 1994</li>
+                <li class="biblio-item">Automatic Control Systems. B. C. Kuo. Seventh Edition, Prentice Hall inc. 1995</li>
+                <li class="biblio-item">System Dynamics. K. Ogata. Second Edition, Prentice Hall inc. 1992</li>
+                <li class="biblio-item">Modeling and Analysis of Dynamic Systems. Ch. M. Close, D. K. Frederick, J. C. Newell. Third Edition, John Wiley & Sons inc. 2002</li>
+                <li class="biblio-item">Advanced Modern Control System. Theory and Design. S. M. Shinners. A Wiley-Interscience Publication. 1998</li>
+                <li class="biblio-item">Modeling, Analysis and Control of Dynamic Systems. W. J. Palm III. Second Edition, John Wiley & Sons inc. 1999</li>
+            </ol>
+         </article>
+
+    </main>
+
+    <footer style="text-align: center; margin-top: 40px; font-size: 0.9em; color: #555;">
+        <p>Cours d'asservissements linéaires continus (2013-2014) Licence et Master « Automatisme Industriel » (Prof. FELLAH M.K.)</p>
+    </footer>
+
+</body>
+</html>
