@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Amplificateurs Opérationnels (AOP)</title>
+    <!-- Intégration de KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            margin: 2em;
+            max-width: 850px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #fdfdfd;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #0056b3;
+            margin-top: 1.8em;
+            padding-bottom: 0.4em;
+            border-bottom: 1px solid #ddd;
+        }
+
+        h1 {
+            color: #c0392b; /* Reddish color */
+            text-align: center;
+            border-bottom: 3px solid #c0392b;
+            padding-bottom: 0.6em;
+            margin-bottom: 1.5em;
+            font-size: 2.2em;
+        }
+
+        h2 {
+            color: #2980b9; /* Stronger Blue */
+            border-bottom: 2px solid #2980b9;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #16a085; /* Teal/Greenish */
+            border-bottom: none;
+            margin-top: 1.5em;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #7f8c8d; /* Grayish */
+            font-style: italic;
+            border-bottom: none;
+            margin-top: 1.2em;
+            font-size: 1.1em;
+        }
+
+        .placeholder {
+            display: block;
+            margin: 1.5em auto;
+            max-width: 95%;
+            height: auto;
+            border: 1px dashed #bdc3c7; /* Light Gray border */
+            text-align: center;
+            padding: 2.5em 1.5em;
+            background-color: #ecf0f1; /* Very Light Gray background */
+            font-style: italic;
+            color: #7f8c8d;
+            box-sizing: border-box;
+            border-radius: 4px;
+        }
+
+        figcaption {
+            text-align: center;
+            font-style: italic;
+            margin-top: 0.6em;
+            margin-bottom: 1.8em;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        figure {
+            margin: 2em auto;
+            padding: 0;
+            border: none;
+            text-align: center;
+        }
+
+        .note, .objectives-box, .rem-box {
+            border-left: 5px solid #f39c12; /* Orange border */
+            background-color: #fef9e7; /* Light Yellowish background */
+            padding: 1.2em;
+            margin: 1.2em 0;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .important-note {
+            border-left: 5px solid #3498db; /* Bright Blue border */
+            background-color: #eaf5fc; /* Light Blue background */
+            padding: 1.2em;
+            margin: 1.2em 0;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+        .conclusion-box {
+             border: 1px solid #16a085; /* Teal border */
+             background-color: #e8f6f3; /* Light Teal background */
+             padding: 1em;
+             margin: 1em 0;
+             border-radius: 4px;
+         }
+
+        .summary-box {
+            border: 2px solid #2980b9;
+            padding: 1em 1.5em;
+            margin: 1.5em 0;
+            border-radius: 6px;
+            background-color: #eaf5fc; /* Light Blue */
+        }
+        .summary-box ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+
+        .header-info {
+             border: 1px solid #ccc;
+             padding: 10px;
+             margin-bottom: 20px;
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             background-color: #f9f9f9;
+             border-radius: 5px;
+         }
+         .header-info .logo-area, .header-info .title-area, .header-info .file-info {
+             padding: 5px 10px;
+         }
+         .header-info .logo-area { font-weight: bold; font-size: 1.2em; }
+         .header-info .title-area { text-align: center; flex-grow: 1; font-weight: bold;}
+         .header-info .file-info { text-align: right; font-size: 0.9em; }
+
+        /* Style for KaTeX display math */
+        .katex-display {
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.6em 0;
+        }
+
+        /* Allow inline math to wrap if needed */
+        .katex {
+            white-space: normal;
+        }
+        p, li {
+            text-align: justify;
+            margin-bottom: 0.8em;
+        }
+        code, var {
+            background-color: #ecf0f1;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 0.95em;
+        }
+        table {
+            width: 80%;
+            margin: 1.5em auto;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+        }
+        th {
+            background-color: #eaf5fc;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3em;
+            padding-top: 1.5em;
+            border-top: 1px solid #ccc;
+            font-size: 0.85em;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header-info">
+        <div class="logo-area">SI<br>Sciences de l'Ingénieur</div>
+        <div class="title-area">B - FONCTION DU PRODUIT<br>B 32 - CONDITIONNEMENT DU SIGNAL</div>
+        <div class="file-info">Fichier: Cours sur les AOP.doc<br>T<sup>ale</sup><br><span id="page-number">Page: 1/9</span></div>
+    </header>
+
+    <h1>LES AMPLIFICATEURS OPÉRATIONNELS</h1>
+
+    <div class="objectives-box">
+        <strong>Objectifs du COURS :</strong>
+        <p>Ce cours traitera essentiellement les points suivants :</p>
+        <ul>
+            <li>Définitions des principales caractéristiques d'un AOP</li>
+            <li>Notions de fonctionnement en Boucle Ouverte, Contre Réaction, Boucle Fermée</li>
+            <li>Les différents types d'alimentation d'un AOP</li>
+            <li>Étude des différents montages de base</li>
+            <li>Compléments : Déformation des signaux de sortie, notion de gain et de bande passante</li>
+        </ul>
+    </div>
+
+    <section id="principales-caracteristiques">
+        <h2>PRINCIPALES CARACTÉRISTIQUES</h2>
+
+        <section id="role-symbole">
+            <h3>RÔLE ET SYMBOLE D'UN AOP</h3>
+            <p>
+                Un Amplificateur Opérationnel (ou un Amplificateur Linéaire Intégré : ALI) permet d'amplifier la différence de potentiel $e$ entre les 2 tensions d'entrées ($V_{e+}$ et $V_{e-}$).
+            </p>
+            <p>
+                Les symboles normalisés utilisés pour sa représentation en schéma sont les suivants :
+            </p>
+            <figure>
+                 <div class="placeholder">[Placeholder: Comparaison Symbole Norme US (triangle simple) et Norme EU (triangle avec symbole infini et alims +V/-V)]</div>
+                 <figcaption>Symboles normalisés US et EU de l'AOP.</figcaption>
+             </figure>
+
+            <div class="note">
+                <strong>Remarques :</strong>
+                <ul>
+                    <li>AOP signifie souvent Amplificateur Opérationnel <strong>Parfait</strong> (on dit également amplificateur opérationnel idéal).</li>
+                    <li>Ne pas confondre $+V$ et $-V$ (ou $+V_{cc}$ et $-V_{cc}$) qui sont les tensions d'<strong>alimentation</strong> du Circuit Intégré (CI) avec $V_{e+}$ et $V_{e-}$ qui sont les tensions d'<strong>entrée</strong> de l'AOP.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="caracteristiques-aop">
+            <h3>CARACTÉRISTIQUES D'UN AOP</h3>
+            <p>
+                Soit $e$ la tension différentielle d'entrée du montage avec : $e = V_{e+} - V_{e-}$
+            </p>
+            <h4>Schéma équivalent :</h4>
+             <p>(Voir page suivante pour le schéma équivalent détaillé)</p>
+
+            <figure>
+                <div class="placeholder">[Placeholder: Schéma équivalent simplifié AOP idéal: e = V+ - V-, RE infinie, i+=i-=0, source de tension Vs = Ao.e, Rs=0]</div>
+                <figcaption>Modèle simplifié de l'AOP idéal.</figcaption>
+            </figure>
+
+             <p>On adopte pour un AOP dit « <strong>idéal</strong> » les caractéristiques suivantes :</p>
+            <ul>
+                <li>$R_E = \infty$ : Résistance d'entrée (différentielle) de l'AOP est infinie.</li>
+                <li>Conséquence: $i_{e+} = i_{e-} = 0$ : Les courants d'entrée sont nuls.</li>
+                <li>Conséquence: $e = R_E \cdot i_e = 0$ : On admet alors la tension différentielle nulle ($V_{e+} = V_{e-}$). <em>(Attention: ceci n'est vrai qu'en régime linéaire avec contre-réaction).</em></li>
+                <li>$R_s = 0$ : Résistance de sortie de l'AOP est nulle.</li>
+                <li>Conséquence: $R_s \cdot I_s = 0$.</li>
+                <li>Relation Sortie/Entrée (théorique): $V_s = A_o \cdot e - R_s \cdot I_s$. Pour l'AOP idéal, cela devient $V_s = A_o \cdot e$.</li>
+                <li>$A_o = \infty$ : Le gain en boucle ouverte de l'AOP est infini.</li>
+            </ul>
+             <p>Pour que $V_s$ reste finie avec $A_o = \infty$, il faut que $e = V_{e+} - V_{e-} = 0$ lorsque l'AOP fonctionne en régime linéaire (non saturé).</p>
+             <div class="summary-box">
+                 <strong>Caractéristiques de l'AOP Idéal (en régime linéaire):</strong>
+                 <ul>
+                     <li>$i_{e+} = i_{e-} = 0$ (Courants d'entrée nuls)</li>
+                     <li>$V_{e+} = V_{e-}$ (Tension différentielle nulle - court-circuit virtuel)</li>
+                     <li>$R_s = 0$ (Résistance de sortie nulle)</li>
+                     <li>$A_o = \infty$ (Gain en boucle ouverte infini)</li>
+                 </ul>
+             </div>
+        </section>
+
+        <section id="caracteristiques-reelles">
+            <h2>CARACTÉRISTIQUES D'UN AOP RÉEL</h2>
+            <p>Les caractéristiques réelles d'un AOP données par les constructeurs sont les suivantes :</p>
+            <p><strong>Exemple: Circuit Intégré LM741CN</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Paramètre</th>
+                        <th>MINI</th>
+                        <th>TYPIQUE</th>
+                        <th>MAXI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Re (Résistance d'entrée)</td>
+                        <td>200 k$\Omega$</td>
+                        <td></td>
+                        <td>2 M$\Omega$</td>
+                    </tr>
+                    <tr>
+                        <td>Rs (Résistance de sortie)</td>
+                        <td></td>
+                        <td>$\approx$ 75-200 $\Omega$ (*)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Ao (Gain en boucle ouverte DC)</td>
+                        <td>15000</td>
+                        <td>200000</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>(*) La valeur typique de Rs n'est souvent pas spécifiée de la même manière, 200$\Omega$ est un ordre de grandeur possible mais peut varier.</p>
+
+             <h4>Brochage du LM741CN (Boîtier DIP-8) :</h4>
+            <figure>
+                 <div class="placeholder">[Placeholder: Image du circuit LM741CN et schéma de son brochage DIP-8]</div>
+                 <figcaption>Brochage du LM741CN.</figcaption>
+            </figure>
+            <ol>
+                <li>Réglage Offset (Offset Null)</li>
+                <li>Entrée inverseuse ($V_{e-}$)</li>
+                <li>Entrée non inverseuse ($V_{e+}$)</li>
+                <li>Alimentation négative ($-V_{cc}$ ou Vee)</li>
+                <li>Réglage Offset (Offset Null)</li>
+                <li>Sortie ($V_s$)</li>
+                <li>Alimentation positive ($+V_{cc}$ ou Vcc)</li>
+                <li>Non Connecté (NC)</li>
+            </ol>
+        </section>
+    </section>
+
+     <hr style="margin: 2em 0;">
+     <script>document.getElementById('page-number').innerText = 'Page: 2/9';</script>
+
+     <section id="notions-boucle">
+        <h2>NOTIONS DE BOUCLE</h2>
+
+        <section id="boucle-ouverte">
+            <h3>FONCTIONNEMENT EN BOUCLE OUVERTE (BO)</h3>
+            <p>C'est le fonctionnement de l'AOP sans aucune connexion entre la sortie et l'une des entrées.</p>
+            <p>Caractéristique de transfert $V_s = f(e)$</p>
+            <p>Avec $V_s = A_o \cdot e = A_o \cdot (V_{e+} - V_{e-})$</p>
+
+             <figure>
+                 <div class="placeholder">[Placeholder: Graphe de transfert Vs = f(e) pour AOP réel: pente Ao, saturation à +Vsat et -Vsat]</div>
+                 <figcaption>Caractéristique de transfert en boucle ouverte.</figcaption>
+             </figure>
+
+            <p>
+                 Zone AB : domaine linéaire de fonctionnement, très étroit car $A_o$ est très grand.
+                 Hors de cette zone, la sortie est en saturation (positive ou négative). $V_{sat}$ est généralement 1 à 2 Volts en dessous de la tension d'alimentation $V_{cc}$.
+            </p>
+            <p>
+                 Calculons la tension différentielle d'entrée $e$ entraînant la saturation de la tension de sortie $V_s$ du montage.
+                 Prenons $V_{cc} = \pm 15$ volts et $A_o = 200 \, 000$ (valeur typique pour un 741). $V_{sat} \approx 13$ à $14$ V. Prenons $V_{sat} = 15$ V comme dans l'exemple.
+            </p>
+             \[ e_{sat} = \frac{V_{sat}}{A_o} = \frac{15 \, \text{V}}{200 \, 000} = 0,000075 \, \text{V} = 75 \, \mu\text{V} \]
+
+             <div class="conclusion-box">
+                <strong>Conclusion :</strong>
+                Un tel montage (en boucle ouverte) est souvent incontrôlable car une très faible tension différentielle d'entrée (quelques dizaines de microvolts) suffit à saturer la sortie. Il est donc trop sensible pour être utilisé comme amplificateur linéaire.
+                L'AOP sera toujours (ou presque*) utilisé avec une <strong>contre-réaction</strong> (réaction négative) donc en <strong>boucle fermée</strong> pour un fonctionnement linéaire.
+                <br>(*Exception : utilisation en comparateur de tension, voir section IV).
+             </div>
+        </section>
+
+        <section id="boucle-fermee">
+            <h3>FONCTIONNEMENT EN BOUCLE FERMÉE (BF)</h3>
+            <p>
+                On réalise une connexion (généralement via un réseau passif comme des résistances) entre la sortie et l'entrée <strong>inverseuse</strong>. C'est la <strong>contre-réaction</strong> (CR) ou réaction négative.
+            </p>
+            <figure>
+                 <div class="placeholder">[Placeholder: Schéma de principe de la contre-réaction (sortie Vs reliée via un bloc K à l'entrée V-)]</div>
+                 <figcaption>Schéma équivalent du montage avec Contre Réaction (CR).</figcaption>
+             </figure>
+
+            <div class="note">
+                <strong>Remarques :</strong>
+                On réalise une contre réaction en ramenant (une partie de) la sortie sur une entrée. On travaille ainsi en boucle fermée.
+                On peut alors écrire les relations suivantes (en supposant $V_{e+}$ est l'entrée globale $V_e$ et que la sortie $V_s$ est ramenée via un facteur $K$ à l'entrée $V_{e-}$):
+                <ul>
+                    <li>$e = V_{e+} - V_{e-} = V_e - K V_s$</li>
+                    <li>$V_s = A_o \cdot e$ (relation de l'AOP)</li>
+                </ul>
+                En substituant $e$ :
+                $V_s = A_o \cdot (V_e - K V_s) = A_o V_e - A_o K V_s$
+                $V_s (1 + A_o K) = A_o V_e$
+                Le gain en boucle fermée $A_v = V_s / V_e$ est donc :
+                \[ A_v = \frac{V_s}{V_e} = \frac{A_o}{1 + A_o K} \]
+                Si le gain de boucle $A_o K \gg 1$ (ce qui est généralement le cas car $A_o$ est très grand), on peut écrire :
+                \[ A_v \approx \frac{A_o}{A_o K} = \frac{1}{K} \]
+             </div>
+             <div class="conclusion-box">
+                 <strong>Conclusion :</strong>
+                 On pose $A_v = V_s / V_e$ le gain en tension du montage en boucle fermée.
+                 Si $A_o K \gg 1$, le gain $A_v$ ne dépend (presque) plus du gain en boucle ouverte $A_o$ (qui peut varier avec la température, la fréquence...) mais uniquement du facteur de contre-réaction $K$. $K$ est souvent un rapport de résistances, donc parfaitement contrôlable et stable. C'est le grand avantage de la contre-réaction.
+             </div>
+        </section>
+    </section>
+
+     <hr style="margin: 2em 0;">
+     <script>document.getElementById('page-number').innerText = 'Page: 4/9';</script>
+
+     <section id="alimentation">
+        <h2>DIFFÉRENTS TYPES D'ALIMENTATION D'UN AOP</h2>
+        <p>Elle va dépendre de l'utilisation du montage. Elle peut-être de 2 types :</p>
+
+        <section id="alim-symetrique">
+            <h3>ALIMENTATION SYMÉTRIQUE</h3>
+            <figure>
+                <div class="placeholder">[Placeholder: Schéma AOP avec alim +Vcc (+15V) et -Vcc (-15V), et Masse (0V)]</div>
+                <figcaption>Alimentation symétrique.</figcaption>
+            </figure>
+            <p><strong>Analyse du fonctionnement (en boucle ouverte / comparateur) :</strong></p>
+            <ul>
+                <li>Si $e = V_{e+} - V_{e-} > 0$, on a $V_s \approx +V_{sat} \approx +V_{cc}$</li>
+                <li>Si $e = V_{e+} - V_{e-} < 0$, on a $V_s \approx -V_{sat} \approx -V_{cc}$</li>
+                <li>Si $e = 0$, on a $V_s = 0$ (pour un AOP idéal parfait). Mais en réalité, $V_s$ sera égal à la tension d'offset de sortie (non nulle). Même en boucle ouverte, si $e$ est très proche de 0, $V_s$ peut théoriquement être $V_{sat}$ à cause du moindre offset.</li>
+            </ul>
+             <div class="conclusion-box">
+                 <strong>Conclusion :</strong>
+                 Ce type d'alimentation sera utilisé si la sortie doit évoluer en valeur <strong>positive et négative</strong> (par exemple lors de l'amplification d'un signal alternatif centré sur 0V).
+             </div>
+        </section>
+
+        <section id="alim-asymetrique">
+             <h3>ALIMENTATION ASYMÉTRIQUE</h3>
+             <figure>
+                 <div class="placeholder">[Placeholder: Schéma AOP avec alim +Vcc et 0V (masse)]</div>
+                 <figcaption>Alimentation asymétrique (ou simple).</figcaption>
+             </figure>
+             <p><strong>Analyse du fonctionnement (en boucle ouverte / comparateur) :</strong></p>
+             <ul>
+                 <li>Si $e = V_{e+} - V_{e-} > 0$, on a $V_s \approx +V_{sat} \approx +V_{cc}$</li>
+                 <li>Si $e = V_{e+} - V_{e-} < 0$, on a $V_s \approx 0$ V (la sortie ne peut pas devenir négative).</li>
+                 <li>Si $e = 0$, on a $V_s = 0$ (ou proche de 0, tension d'offset de sortie, mais toujours positive ou nulle).</li>
+             </ul>
+              <div class="conclusion-box">
+                  <strong>Conclusion :</strong>
+                  Dans ce cas, la sortie ne peut évoluer qu'entre $\approx 0$ V et $+V_{sat} \approx +V_{cc}$.
+                  Ce type d'alimentation est en général réservé à la commande TOR (Tout Ou Rien), aux comparateurs dont la sortie doit être compatible avec la logique 0/5V, ou à l'amplification de tension continue positive (zone linéaire de fonctionnement possible si les tensions d'entrée et de sortie restent dans la plage autorisée).
+              </div>
+
+            <div class="note">
+                 <h4>Remarques :</h4>
+                 <ul>
+                     <li><strong>Tension d'offset :</strong> C'est une tension de décalage de la sortie (par rapport à 0V ou à la tension de mode commun de sortie attendue) due à la constitution interne (désappariements) de l'AOP, présente même si $e=0$.</li>
+                     <li><strong>Réglage de la tension d'offset :</strong> Il permet, grâce à un potentiomètre externe (voir section 3.1), de régler $V_s = 0$ lorsque $e = 0$ (ajustement du zéro en sortie), crucial pour les mesures DC précises.
+                        <figure>
+                            <div class="placeholder">[Placeholder: Schéma du potentiomètre 10k pour offset sur LM741, curseur vers -Vcc]</div>
+                            <figcaption>Raccordement typique du potentiomètre d'offset.</figcaption>
+                        </figure>
+                     </li>
+                 </ul>
+            </div>
+        </section>
+    </section>
+
+     <hr style="margin: 2em 0;">
+     <script>document.getElementById('page-number').innerText = 'Page: 6/9';</script>
+
+     <section id="etude-montages">
+        <h2>ÉTUDE DES DIFFÉRENTS MONTAGES</h2>
+        <p>(Utilisation de l'AOP idéal en régime linéaire, sauf indication contraire)</p>
+
+        <section id="montage-inverseur">
+            <h3>MONTAGE AMPLIFICATEUR INVERSEUR</h3>
+            <p>Soit le montage ci-dessous (régime linéaire) :</p>
+            <figure>
+                 <div class="placeholder">[Placeholder: Schéma Amplificateur Inverseur (Ve via R1 vers V-, V+ à la masse via R3, feedback R2)]</div>
+                 <figcaption>Amplificateur inverseur.</figcaption>
+            </figure>
+            <div class="rem-box">
+                <strong>REM :</strong> En général, on adopte pour la valeur de $R_3$ (compensation des courants de polarisation) :
+                \[ R_3 = R_1 \| R_2 = \frac{R_1 \times R_2}{R_1 + R_2} \]
+            </div>
+
+            <h4>Analyse du montage :</h4>
+            <p><strong>Hypothèses de départ :</strong> On admet l'AOP idéal $\implies R_E = \infty$, donc $i_{e+} = i_{e-} = 0$ et $e = V_{e+} - V_{e-} = 0$.</p>
+            <ul>
+                <li>Comme $V_{e+}$ est relié à la masse (via R3), $V_{e+} = 0$.</li>
+                <li>Puisque $e=0$, on a $V_{e-} = V_{e+} = 0$. (Masse virtuelle sur l'entrée $V_{e-}$).</li>
+                <li><strong>Maille d'entrée (bleu) :</strong> $V_e - R_1 \cdot I_1 + e - R_3 \cdot i_{e+} = 0$. Avec $e = 0$ et $i_{e+} = 0$, il reste $V_e - R_1 \cdot I_1 = 0$, donc $V_e = R_1 \cdot I_1$.</li>
+                <li><strong>Maille de sortie (vert) :</strong> En partant de $V_s$, on a $V_s + R_2 \cdot I_2 + e - R_3 \cdot i_{e+} = 0$. Avec $e = 0$ et $i_{e+} = 0$, il reste $V_s + R_2 \cdot I_2 = 0$, donc $V_s = -R_2 \cdot I_2$.</li>
+                <li><strong>Relation des courants :</strong> Au nœud $V_{e-}$, le courant $I_1$ arrive, le courant $I_2$ repart vers la sortie, et le courant $i_{e-}$ entre dans l'AOP. Par KCL : $I_1 = I_2 + i_{e-}$. Comme $i_{e-} = 0$, on a $I_1 = I_2$.</li>
+            </ul>
+             <p>En combinant les équations :</p>
+             <p>$V_e = R_1 \cdot I_1$ et $V_s = -R_2 \cdot I_1$.</p>
+             <p>Le gain $A_v = V_s / V_e$ est :</p>
+             \[ A_v = \frac{-R_2 \cdot I_1}{R_1 \cdot I_1} = -\frac{R_2}{R_1} \]
+
+            <div class="conclusion-box">
+                <strong>Conclusion :</strong>
+                On peut encore écrire : $V_s = -\frac{R_2}{R_1} \times V_e$ ou $V_s = A_v \times V_e$.
+                Le signal de sortie est donc au gain près ($|A_v| = R_2/R_1$) l'inverse du signal d'entrée (déphasage de 180°).
+            </div>
+        </section>
+
+        <section id="montage-non-inverseur">
+             <h3>MONTAGE AMPLIFICATEUR NON INVERSEUR</h3>
+             <p>Soit le montage ci-dessous (régime linéaire) :</p>
+             <figure>
+                 <div class="placeholder">[Placeholder: Schéma Amplificateur Non-Inverseur (Ve via R3 vers V+, V- relié à la jonction R1/R2, R2 vers Vs, R1 vers masse)]</div>
+                 <figcaption>Amplificateur non inverseur.</figcaption>
+                 <!-- Note: Le schéma page 7 semble différer légèrement de l'analyse. L'analyse semble correspondre à Ve sur V+, V- connecté au pont diviseur R1/R2 (R2 feedback, R1 masse). -->
+             </figure>
+
+             <h4>Analyse du montage :</h4>
+             <p>On a toujours (AOP idéal en régime linéaire) : $i_{e+} = i_{e-} = 0$ et $e = V_{e+} - V_{e-} = 0$.</p>
+             <ul>
+                <li><strong>Maille d'entrée (bleu) :</strong> $V_e - R_3 \cdot i_{e+} - e - R_1 \cdot I_1 = 0$. (Le schéma est ambigu, supposons que R3 est juste une résistance en série sur V+, ou absente). Si $V_e$ est appliqué directement à $V_{e+}$, alors $V_{e+} = V_e$. (L'analyse du texte semble suivre un chemin différent).
+                Reprenons l'analyse standard: $V_{e+} = V_e$. $V_{e-} = V_{e+}$.
+                Le courant $I_1$ traverse R1 et R2 (car $i_{e-}=0$). $V_{e-}$ est la tension aux bornes de R1: $V_{e-} = R_1 \cdot I_1$.
+                La tension de sortie est $V_s = (R_1+R_2) \cdot I_1$.
+                Donc $I_1 = V_s / (R_1+R_2)$.
+                $V_{e-} = R_1 \frac{V_s}{R_1+R_2}$.
+                Comme $V_e = V_{e-}$:
+                \[ V_e = V_s \frac{R_1}{R_1+R_2} \]
+                </li>
+                 <li>Le gain $A_v = V_s / V_e$ est :
+                     \[ A_v = \frac{R_1+R_2}{R_1} = 1 + \frac{R_2}{R_1} \]
+                 </li>
+             </ul>
+             <div class="conclusion-box">
+                 <strong>Conclusion :</strong>
+                 Le gain est $A_v = 1 + R_2 / R_1$.
+                 Si $R_2/R_1 \gg 1$, on retrouve (approximativement) $A_v \approx R_2/R_1$.
+                 Alors $V_s \approx \frac{R_2}{R_1} \times V_e$.
+             </div>
+
+             <h4>Cas particulier : Montage suiveur</h4>
+             <p>Si $R_2 = 0$ (court-circuit entre sortie et V-) et/ou $R_1 \rightarrow \infty$ (circuit ouvert vers la masse depuis V-), alors $A_v = 1 + 0/R_1 = 1$ (ou $1+R_2/\infty = 1$).</p>
+             <p>On a donc $V_s = V_e$. C'est un <strong>montage suiveur</strong> de tension.</p>
+             <p><strong>Son rôle est d'adapter les impédances :</strong></p>
+             <ul>
+                 <li>Entrée à très haute impédance ($R_e \rightarrow \infty$ car $i_{e+}=0$).</li>
+                 <li>Sortie à très faible impédance ($R_s = 0$ pour AOP idéal).</li>
+             </ul>
+             <p>Montage idéal pour réaliser un adaptateur d'impédance, et particulièrement apprécié quand il s'agit de prélever un signal sur une source dont l'impédance de sortie est très élevée (pour ne pas la "charger" et faire chuter sa tension). Comme la contre-réaction est totale (la totalité du signal de sortie $V_s$ est réinjecté sur l'entrée inverseuse $V_{e-}$), le gain est minimal (égal à 1) mais la stabilité et les performances (impédances) sont optimales.</p>
+        </section>
+    </section>
+
+     <hr style="margin: 2em 0;">
+     <script>document.getElementById('page-number').innerText = 'Page: 8/9';</script>
+
+     <section id="montage-difference">
+        <h3>MONTAGE AMPLIFICATEUR DE DIFFÉRENCE (Comparateur ?)</h3>
+        <!-- Le titre est trompeur, le schéma est un comparateur -->
+        <p>Soit le montage ci-dessous : comparateur de tension (régime non linéaire)</p>
+        <figure>
+             <div class="placeholder">[Placeholder: Schéma Comparateur (VEP sur V+, VEN sur V-)]</div>
+             <figcaption>Comparateur de tension.</figcaption>
+        </figure>
+        <p>L'AOP idéal fonctionne ici en boucle ouverte ($i^+=i^-=0$ mais $V^+ \neq V^-$).</p>
+        <p><strong>Formules :</strong></p>
+        <ul>
+            <li>Si $V_{EP} > V_{EN} \implies e > 0 \implies V_s = +V_{SATP}$ (Saturation Positive)</li>
+            <li>Si $V_{EP} < V_{EN} \implies e < 0 \implies V_s = -V_{SATN}$ (Saturation Négative)</li>
+        </ul>
+         <p>Ce montage compare les deux tensions d'entrée et sature sa sortie selon le signe de la différence.</p>
+    </section>
+
+    <section id="montage-additionneur">
+        <h3>MONTAGE ADDITIONNEUR DE TENSION (Sommateur Inverseur)</h3>
+        <!-- Le titre est générique, le schéma est un sommateur INVERSEUR -->
+        <p>Soit le montage ci-dessous : sommateur de tension (régime linéaire)</p>
+        <figure>
+            <div class="placeholder">[Placeholder: Schéma Sommateur Inverseur (V1 via R1, V2 via R2 vers V-; V+ à la masse; feedback R3)]</div>
+            <figcaption>Sommateur inverseur.</figcaption>
+        </figure>
+        <p>L'AOP idéal fonctionne en régime linéaire ($V^+=V^-=0$, $i^+=i^-=0$).</p>
+        <p><strong>Formule :</strong> (dérivée en section 4.1)</p>
+        \[ V_s = -R_3 \times \left( \frac{V_1}{R_1} + \frac{V_2}{R_2} \right) \]
+
+        <div class="note">
+            <strong>Remarque :</strong>
+            Si $R_1 = R_2 = R_3$, alors $V_s = -(V_1 + V_2)$.
+        </div>
+    </section>
+
+     <hr style="margin: 2em 0;">
+     <script>document.getElementById('page-number').innerText = 'Page: 9/9';</script>
+
+     <section id="complements">
+        <h2>COMPLÉMENTS SUR L'AOP</h2>
+
+        <section id="freq-max">
+            <h3>FRÉQUENCE MAXI DE FONCTIONNEMENT (Slew Rate)</h3>
+            <p>
+                Il existe une vitesse maxi de croissance (et de décroissance) de $V_s$ (due aux capacités internes de l'AOP).
+                Cette vitesse va donc imposer une vitesse maxi (donc une fréquence maxi) pour la tension d'entrée $V_e$ si l'on veut que $V_s$ suive correctement.
+            </p>
+            <p>
+                Dans le cas d'une tension sinusoïdale en sortie $V_s(t) = V_{s,peak} \sin(\omega t)$, la vitesse (pente) est $dV_s/dt = \omega V_{s,peak} \cos(\omega t)$. La vitesse est maximale lorsque $\cos(\omega t) = \pm 1$, valant $\pm \omega V_{s,peak}$.
+                Cette vitesse maximale $dV_s/dt|_{max} = \omega V_{s,peak} = 2\pi f V_{s,peak}$ est appelée Slew Rate (vitesse de balayage), notée $S_R$.
+            </p>
+             <p>Pour éviter la distorsion, il faut que $2\pi f V_{s,peak} \le S_R$.</p>
+            <p><strong>Formule :</strong> La fréquence maximale sans distorsion est</p>
+            \[ F_{max} = \frac{S_R}{2\pi V_{s,peak}} \]
+             <!-- Correction: Vs au lieu de Ve -->
+
+             <div class="note">
+                 <strong>Remarque :</strong>
+                 $S_R$ est une caractéristique de l'AOP lui-même, elle n'est pas fixée par le gain $A_v$ du montage. Cependant, pour un signal d'entrée $V_e$ donné, la tension de sortie $V_s = A_v V_e$ sera d'autant plus grande que le gain $A_v$ est élevé. Pour un $V_e$ d'amplitude fixée, si on augmente le gain $A_v$, $V_{s,peak}$ augmente, et la fréquence maximale $F_{max}$ diminue. Donc, pour un gain $A_v$ donné, si on veut atteindre une fréquence élevée, il faut réduire l'amplitude du signal de sortie $V_{s,peak}$ (et donc $V_e$).
+             </div>
+        </section>
+
+        <section id="gain-bande-passante">
+            <h3>NOTION DE GAIN ET BANDE PASSANTE</h3>
+            <p>Le gain en tension $A_v$ est souvent exprimé en décibels (dB) par la formule :</p>
+            \[ G \text{ (dB)} = 20 \log_{10} |A_v| = 20 \log_{10} \left| \frac{V_s}{V_e} \right| \]
+
+            <figure>
+                 <div class="placeholder">[Placeholder: Diagramme de Bode simplifié (Gain dB vs log Fréquence) montrant gain constant puis chute -3dB à Fc]</div>
+                 <figcaption>Gain en fonction de la fréquence et bande passante.</figcaption>
+            </figure>
+
+             <div class="rem-box">
+                 <p>Avec $A_v$ le coefficient d'amplification en tension (rapport numérique).</p>
+                 <p><em>Exemple :</em> Si $A_v = 100$, on a $G \text{ (dB)} = 20 \log_{10}(100) = 20 \times 2 = 40 \, \text{dB}$.</p>
+             </div>
+
+            <div class="note">
+                <strong>Remarques :</strong>
+                <ul>
+                    <li>La <strong>bande passante</strong> est définie (souvent) comme la plage de fréquences pour laquelle le gain est supérieur ou égal au gain maximal moins 3 dB. La fréquence haute pour laquelle le gain est réduit de 3 dB est appelée <strong>fréquence de coupure</strong> ($F_c$).</li>
+                    <li>Plus le coefficient d'amplification $A_v$ du montage est élevé (donc le gain $G$ en dB), et plus la fréquence de coupure $F_c$ (donc la bande passante) est faible. (Voir la notion de Produit Gain-Bande Passante en section 3.5).</li>
+                </ul>
+            </div>
+        </section>
+    </section>
+
+    <footer>
+        Cours sur les AOP - Adaptation du document AOP.doc
+    </footer>
+
+    <script>
+        // Ensure KaTeX renders correctly after page load
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+            });
+            // Update final page number (optional)
+            // document.getElementById('page-number').innerText = 'Page: 9/9';
+        });
+    </script>
+
+</body>
+</html>
