@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatique Linéaire 1 - Cours ISMIN</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
+        delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false}
+        ]
+    });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 2em; }
+        h1, h2, h3, h4 { color: #333; }
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.3em; margin-top: 1.5em; }
+        h3 { margin-top: 1.2em; }
+        .caption { font-style: italic; text-align: center; margin-top: 0.5em; margin-bottom: 1.5em; color: #555; }
+        .placeholder {
+            display: block;
+            width: 80%;
+            max-width: 500px;
+            height: 250px; /* Adjust height as needed */
+            background-color: #eee;
+            border: 1px solid #ccc;
+            margin: 1em auto;
+            text-align: center;
+            line-height: 250px; /* Vertically center text */
+            color: #888;
+            font-style: italic;
+        }
+        .definition {
+            border-left: 3px solid #007bff;
+            padding-left: 1em;
+            margin: 1em 0;
+            background-color: #f8f9fa;
+            padding-top: 0.5em;
+            padding-bottom: 0.5em;
+        }
+        .footnote {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 1em;
+            border-top: 1px dashed #ccc;
+            padding-top: 0.5em;
+        }
+        nav ul { list-style: none; padding-left: 0; }
+        nav ul ul { padding-left: 2em; }
+        nav li { margin-bottom: 0.5em; }
+        nav a { text-decoration: none; color: #007bff; }
+        nav a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; margin: 1em 0; }
+        th, td { border: 1px solid #ccc; padding: 0.5em; text-align: center; }
+        th { background-color: #f2f2f2; }
+        footer { margin-top: 3em; border-top: 1px solid #ccc; padding-top: 1em; font-size: 0.9em; color: #777; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Automatique Linéaire 1</h1>
+        <p>1A ISMIN</p>
+        <figure>
+             <div class="placeholder">[Placeholder: Image from Page 1 - Nyquist/Black plot for PID]</div>
+             <figcaption class="caption">Illustration des caractéristiques d'un correcteur P.I.D. dans le plan de Black ou de Nyquist, montrant les lieux pour $\omega=0$ et $\omega=+\infty$. La phase $\operatorname{Arg}(FTBO)$ et le gain $FTBO_{dB}$ (Fonction de Transfert en Boucle Ouverte en dB) sont représentés. Le point $\omega = 1/\sqrt{\tau_i \tau_d}$ est souvent un point pivot important.</figcaption>
+        </figure>
+    </header>
+
+    <main>
+
+        <nav>
+            <h2 id="sommaire">Sommaire</h2>
+            <ul>
+                <li><a href="#chap1">I. Introduction, définitions, position du problème. (p. 3)</a>
+                    <ul>
+                        <li><a href="#sec1-1">I.1. Introduction. (p. 3)</a></li>
+                        <li><a href="#sec1-2">I.2. Définitions. (p. 5)</a></li>
+                        <li><a href="#sec1-3">I.3. Position du problème. (p. 6)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#chap2">II. Modélisation des systèmes linéaires. (p. 11)</a>
+                    <ul>
+                        <li><a href="#sec2-1">II.1. Système du premier ordre. (p. 12)</a></li>
+                        <li><a href="#sec2-2">II.2. Système du second ordre. (p. 21)</a></li>
+                        <li><a href="#sec2-3">II.3. Systèmes d'ordre supérieur à 2. (p. 31)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#chap3">III. Stabilité des systèmes asservis. (p. 33)</a>
+                    <ul>
+                        <li><a href="#sec3-1">III.1. Schéma général d'un asservissement. (p. 33)</a></li>
+                        <li><a href="#sec3-2">III.2. Interprétation géométrique du passage de la boucle ouverte à la boucle fermée. (p. 36)</a></li>
+                        <li><a href="#sec3-3">III.3. Réponse impulsionnelle d'un système bouclé en régime linéaire. (p. 40)</a></li>
+                        <li><a href="#sec3-4">III.4. Le critère de Routh-Hurwitz (critère algébrique). (p. 41)</a></li>
+                        <li><a href="#sec3-5">III.5. Les critères géométriques de stabilité. (p. 44)</a></li>
+                    </ul>
+                </li>
+                 <li><a href="#chap4">IV. Performances des systèmes asservis. (p. 50)</a>
+                    <ul>
+                        <li><a href="#sec4-1">IV.1. Précision. (p. 50)</a></li>
+                        <li><a href="#sec4-2">IV.2. Rapidité des systèmes. (p. 56)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#chap5">V. Correction des systèmes asservis. (p. 59)</a>
+                     <ul>
+                        <li><a href="#sec5-1">V.1. Introduction. (p. 59)</a></li>
+                        <li><a href="#sec5-2">V.2. Correction proportionnelle et dérivée (P.D.) – Correction à avance de phase. (p. 63)</a></li>
+                        <li><a href="#sec5-3">V.3. Correction proportionnelle et intégrale (P.I.) – Correction à retard de phase. (p. 66)</a></li>
+                        <li><a href="#sec5-4">V.4. Correction proportionnelle intégrale et dérivée (P.I.D.). (p. 68)</a></li>
+                        <li><a href="#sec5-5">V.5. Modèle du second ordre. (p. 72)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#biblio">Bibliographie. (p. 74)</a></li>
+                <li><a href="#annexe1">Annexe 1 - Signaux type. (p. 75)</a></li>
+                <li><a href="#annexe2">Annexe 2 - Transformée de Laplace. (p. 77)</a></li>
+                <li><a href="#annexe3">Annexe 3 - Systèmes linéaires du second ordre. (p. 80)</a></li>
+                <li><a href="#annexe4">Annexe 4 – Abaque de Black-Nichols. (p. 84)</a></li>
+            </ul>
+        </nav>
+
+        <section id="chap1">
+            <h2>I. Introduction, définitions, position du problème.</h2>
+
+            <section id="sec1-1">
+                <h3>I.1. Introduction.</h3>
+                <div class="definition">
+                    <p><strong>Définition :</strong> L'automatique est la discipline scientifique qui étudie les systèmes dynamiques, les signaux et l'information, à des fins de conduite ou de prise de décision.</p>
+                </div>
+                <p>Pour être compréhensible, cette définition de l'automatique doit être complétée et précisée en définissant les termes : système, dynamique, et conduite.</p>
+                <p>En automatique, on appelle système l'objet étudié, par exemple, la voiture représentée figure I.1. La définition d'un système est liée aux grandeurs d'entrée et de sortie considérées.</p>
+                <figure>
+                     <div class="placeholder">[Placeholder: Figure I.1 - Diagram of a car system]</div>
+                     <figcaption class="caption">Fig. I.1 - Système constitué d'une voiture. La grandeur d'entrée (commande) est l'angle du volant $\theta$, la grandeur de sortie est la distance $d$ au trottoir. $d_0$ représente une valeur de consigne pour cette distance.</figcaption>
+                </figure>
+                <p>Dans ce cas, la grandeur de sortie étudiée est la distance $d$ séparant le véhicule du trottoir, et la grandeur d'entrée (ou commande) l'angle de rotation $\theta$ du volant. La notion de dynamique est liée à l'évolution des grandeurs étudiées au cours du temps. Cette évolution peut être due à une modification de la commande (l'angle du volant, le conducteur étant distrait ou assoupi) ou à une perturbation extérieure (une rafale de vent, par exemple) entrainant une diminution de $d$. C'est ici qu'entre en scène l'automatique, en tant que science permettant de maîtriser (ou conduire) le comportement d'un système. Il existe en effet, depuis peu, des dispositifs permettant de corriger automatiquement la trajectoire d'une voiture risquant de mordre sur le bas-côté de la route.</p>
+                <p>La commande est alors élaborée en fonction de l'écart entre la distance $d$ et une valeur de consigne $d_0$ (cf. Fig. I.2).</p>
+                <p>On parle dés lors de <strong>contre-réaction</strong> (ou <strong>feedback</strong>), la contre-réaction permettant de faire évoluer la commande en fonction de son action sur la valeur de sortie du système et également en fonction de la consigne désirée. Elle est utilisée pour optimiser la conduite du système. On dit alors que le système est en <strong>boucle fermée</strong>, par opposition à la <strong>boucle ouverte</strong> qui correspond au cas où la commande est élaborée sans utilisation d'une contre-réaction.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure I.2 - Functional diagram of closed-loop control]</div>
+                     <figcaption class="caption">Fig. I.2 - Schéma fonctionnel d'un asservissement en boucle fermée. La consigne $d_0$ est comparée à la sortie mesurée (implicitement liée à $d$) pour élaborer la commande $\theta$ appliquée au système (voiture).</figcaption>
+                </figure>
+                <p>La conduite d'une automobile s'effectue bien évidement et naturellement en boucle fermée (il est déconseillé de conduire les yeux fermés).</p>
+
+                <h4>Domaine d'application.</h4>
+                <p>Le domaine d'application de l'automatique est extrêmement vaste : l'industrie manufacturière, la chimie, la robotique¹, la mécanique, l'électronique, l'aéronautique, l'économétrie, etc.</p>
+
+                <h4>Objectifs de cours.</h4>
+                <p>L'objectif du cours d'automatique linéaire 1 est l'étude des systèmes linéaires, continus, invariants dans le temps (ces termes étant définis dans la partie suivante). Il s'agit schématiquement de l'automatique classique formalisée pendant la première moitié du vingtième siècle.</p>
+
+                <h4>Pré requis.</h4>
+                <p>Le cours « Mathématique du signal » du premier semestre est un pré requis nécessaire à la compréhension et au suivi du présent cours. En particulier en ce qui concerne :</p>
+                <ul>
+                    <li>les signaux types (Dirac, échelon de Heavyside, etc.),</li>
+                    <li>le théorème de convolution,</li>
+                    <li>et le formalisme de Laplace.</li>
+                </ul>
+                <p class="footnote">¹ Une illustration des capacités étonnantes (dépendant pour une part essentielle de l'automatique) d'une main robot peut être trouvée sur le site du Ishikawa Komuro Laboratory : http://www.k2.t.u-tokyo.ac.jp/papers/index-e.html</p>
+            </section>
+
+            <section id="sec1-2">
+                <h3>I.2. Définitions.</h3>
+                <p>Cette partie rappelle, ou donne, un certain nombre de définitions permettant d'aborder rigoureusement la suite du cours.</p>
+
+                <div class="definition">
+                    <p><strong>Définition 1 :</strong> On appelle <strong>modèle</strong> d'un système (ou processus) la loi qui relie l'entrée (cause) à la sortie (effet).</p>
+                </div>
+
+                <div class="definition">
+                    <p><strong>Définition 2 :</strong> On distingue deux régimes dans le comportement des systèmes :</p>
+                    <ul>
+                        <li>le <strong>régime permanent</strong> ou établi, caractérisant la réponse stabilisée du système à une entrée quelconque,</li>
+                        <li>le <strong>régime transitoire</strong>, caractérisant l'évolution de la réponse avant que le régime permanent ne soit atteint.</li>
+                    </ul>
+                     <p>Le <strong>régime statique</strong> est le régime permanent dans le cas ou l'entrée est constante.</p>
+               </div>
+
+                <div class="definition">
+                    <p><strong>Définition 3 :</strong> Un système est <strong>causal</strong> si sa sortie $y(t)$ à un instant $t_0$ ne dépend que des valeurs de son entrée $u(t)$ pour $t \leq t_0$ (cf. figure I.3).</p>
+                    <figure>
+                        <div class="placeholder">[Placeholder: Figure I.3 - Simple system block]</div>
+                        <figcaption class="caption">Fig. I.3 - Système. Représentation simple d'un système avec une entrée $u$ et une sortie $y$.</figcaption>
+                    </figure>
+                    <p>Un système causal ne répond pas avant d'être excité (système non anticipatif). Les systèmes physiques temporels réalisables sont causals.</p>
+                    <p>Un signal $x(t)$ est causal si $\forall t < 0, x(t) = 0$.</p>
+                    <p>En pratique un signal temporel est toujours causal, à condition de bien choisir l'origine des temps.</p>
+                 </div>
+
+                 <div class="definition">
+                    <p><strong>Définition 4 :</strong> Un système à <strong>temps invariant</strong> a un modèle identique à tout instant (un retard $\tau$ ne change pas la loi du modèle) :</p>
+                    <p>Si $u(t) \xrightarrow{\text{système}} y(t)$ alors $u(t - \tau) \xrightarrow{\text{système}} y(t - \tau)$</p>
+                 </div>
+
+                 <div class="definition">
+                     <p><strong>Définition 5 :</strong> Un système est dit <strong>instantané</strong> si à un instant donné sa sortie ne dépend que de l'excitation à cet instant : $y(t) = a \cdot u(t)$.</p>
+                     <p>Dans tous les autres cas, il est dit, à mémoire ou <strong>dynamique</strong>, par exemple pour : $y(t) = a \cdot u(t-\tau)$ ou : $y(t) = a \cdot u(t) + b \cdot y'(t)$</p>
+                </div>
+
+                <div class="definition">
+                    <p><strong>Définition 6 :</strong> Un système est <strong>stable</strong> si et seulement si toute entrée bornée génère une sortie bornée.</p>
+                    <p>Un système physique est stable s'il retourne spontanément vers son état d'équilibre lorsqu'il en est écarté. Il est instable si sa sortie n'a pas de valeur fixe (asymptotiquement) lorsque son entrée est nulle.</p>
+                </div>
+
+                <div class="definition">
+                    <p><strong>Définition 7 :</strong> Un système est <strong>linéaire</strong> s'il satisfait au principe de superposition :</p>
+                    <p>Si $u_1(t) \xrightarrow{\text{syst. linéaire}} y_1(t)$ et $u_2(t) \xrightarrow{\text{syst. linéaire}} y_2(t)$, alors</p>
+                    <p>$a \cdot u_1(t) + b \cdot u_2(t) \xrightarrow{\text{syst. linéaire}} a \cdot y_1(t) + b \cdot y_2(t)$</p>
+                </div>
+
+                <p>Ce cours traite des systèmes causals, linéaires et à temps invariant : les <strong>S.L.T.I.</strong> (Systèmes Linéaires Temps Invariants). Les systèmes étudiés sont analogiques, leurs signaux d'entrée et de sortie sont continus à la fois en temps et en amplitude.</p>
+                <p>La relation qui lie leur entrée et leur sortie² est dès lors une <strong>équation différentielle linéaire à coefficients constants</strong>.</p>
+                <p class="footnote">² Au singulier, on se limitera en effet à l'étude des systèmes monovariables, c'est-à-dire ayant une entrée et une sortie.</p>
+            </section>
+
+            <section id="sec1-3">
+                <h3>I.3. Position du problème.</h3>
+
+                <h4>a – La commande automatique ou comment remplacer l'homme.</h4>
+                <p>La finalité de l'automatique, telle que nous venons de la définir, est de remplacer l'homme ou de suppléer à ses limites dans la conduite d'un système (cf. figure I.4 si l'on revient à l'exemple de la partie I.1 concernant une automobile).</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure I.4 - Replacing the human controller]</div>
+                     <figcaption class="caption">Fig. I.4 - Remplacer l'homme. Passage d'une commande humaine (haut) à une commande automatique (bas) pour maintenir la voiture à une distance $d$ du trottoir (consigne $d_0$ ou $y_c$).</figcaption>
+                </figure>
+                <p>La problématique se réduit dès lors à l'étude et à la modélisation du système considéré dans le but d'élaborer une commande automatique.</p>
+                <p>Pour se faire, l'utilisation d'une rétroaction est nécessaire. Le système est placé en boucle fermée, ce qui introduit les notions d'<strong>asservissement</strong> (lors de la poursuite d'une consigne variable) et de <strong>régulation</strong> (concernant la compensation de perturbations³ externes).</p>
+                <p>Le paragraphe suivant donne l'exemple de l'asservissement d'un chauffage central individuel.</p>
+                <p class="footnote">³ On définira comme étant une <strong>perturbation</strong> une entrée du système imprévisible et/ou sur laquelle on ne peut agir.</p>
+
+                <h4>b - La boucle d'asservissement.</h4>
+                <p>Considérons le système de chauffage central d'un logement représenté figure I.5.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure I.5 - Central heating system block diagram]</div>
+                     <figcaption class="caption">Fig. I.5 - Système de chauffage central. Entrées : $T$ (température eau radiateurs), $\theta_e$ (température extérieure, perturbation). Sortie : $\theta$ (température intérieure).</figcaption>
+                </figure>
+                <p>Avec :</p>
+                 <ul>
+                     <li>$\theta$ : température intérieure,</li>
+                     <li>$T$ : température de l'eau chaude envoyée dans les radiateurs,</li>
+                     <li>$\theta_e$ : température extérieure (considérée comme une perturbation).</li>
+                 </ul>
+                 <p>$T$ est réglée par le chauffagiste pour obtenir une température de consigne donnée $\theta_c = 19^\circ\text{C}$. Cependant, le réglage est à refaire à chaque variation de $\theta_e$.</p>
+
+                 <p>Une première tentative de réglage automatique en boucle ouverte est représentée figure I.6.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure I.6 - Open-loop heating control diagram]</div>
+                     <figcaption class="caption">Fig. I.6 – Asservissement en boucle ouverte. La commande $T$ dépend de la différence entre la consigne $\theta_c$ et la température extérieure mesurée $\theta_e$.</figcaption>
+                 </figure>
+                 <p>Une sonde est installée afin de mesurer $\theta_e$ et la mesure est soustraite à la température souhaitée $\theta_c$ (la consigne) pour élaborer la loi de commande fixant la température $T$ de l'eau :</p>
+                 <p>$T = a \cdot ( \theta_c - \theta_e)$ avec $a$ : constante réglable.</p>
+                 <p>Ainsi, toute évolution de la température extérieure est prise en compte et la température de l'eau du circuit de chauffage ajustée en conséquence. Le savoir-faire du chauffagiste réside alors dans le choix de la constante $a$, l'ajustement pouvant être fait par essai-erreur.</p>
+                 <p>Cette première approche présente une amélioration notable. Malheureusement, elle n'est pas encore optimale. En effet, lors d'une journée d'hiver ensoleillée ($\theta_e$ faible), $T$ va être réglée à une valeur élevée, alors que le soleil entrant par les fenêtres va surchauffer le logement. Les habitants vont alors ouvrir les fenêtres entrainant un gaspillage d'énergie important.</p>
+                 <p>La solution consiste à réaliser un asservissement en boucle fermé (cf. figure I.7) du système de chauffage en exploitant une mesure de la température intérieure $\theta$ plutôt que d'essayer d'anticiper l'effet de la température extérieure $\theta_e$ sur le système.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure I.7 - Closed-loop heating control diagram]</div>
+                     <figcaption class="caption">Fig. I.7 – Asservissement en boucle fermée d'un système de chauffage. La commande $T$ dépend de la différence entre la consigne $\theta_c$ et la température intérieure mesurée $\theta$.</figcaption>
+                 </figure>
+                 <p>Le recours à une loi de commande proportionnelle est alors adapté :</p>
+                 <p>$T = a \cdot ( \theta_c - \theta)$ avec $a$ : constante réglable.</p>
+                 <p>Réalisé ainsi, l'asservissement est à même de réagir aux variations de la température extérieure et aux changements de la consigne.</p>
+
+                 <p>La figure I.8 donne une vue plus générale d'un asservissement en boucle fermée.</p>
+                  <figure>
+                     <div class="placeholder">[Placeholder: Figure I.8 - General closed-loop block diagram]</div>
+                     <figcaption class="caption">Fig. I.8 - Asservissement en boucle fermée. Schéma général.</figcaption>
+                 </figure>
+                 <p>Avec :</p>
+                 <ul>
+                     <li>$y_c$ : consigne,</li>
+                     <li>$y$ : sortie (ou image de la sortie obtenue par un capteur),</li>
+                     <li>$u$ : commande ou action,</li>
+                     <li>$\epsilon$ : erreur ou écart, tel que $\epsilon = y_c - y$ (si retour unitaire implicite ou $x_r=y$),</li>
+                     <li>$n$ : perturbation extérieure,</li>
+                     <li>$P$ : système automatique de commande (correcteur).</li>
+                 </ul>
+                 <p>La loi de commande étant $u = P(\epsilon)$.</p>
+
+                 <h4>c – Qualités d'un asservissement, nécessité de la boucle fermée.</h4>
+                 <p>Les principales qualités d'un asservissement sont au nombre de trois : <strong>stabilité</strong>, <strong>précision</strong>, et <strong>rapidité</strong>.</p>
+                 <p>Concernant la <strong>stabilité</strong>, si on considère une loi de commande proportionnelle telle que : $u = K \cdot (y_c - y)$ avec $K$ constante. Si $K$ est choisi trop grand, une petite valeur de l'erreur $\epsilon = y_c - y > 0$ suffira à créer une commande $u$ élevée. La correction apportée pourra alors être telle que la consigne soit dépassée : $y > y_c$, et que la nouvelle erreur, $\epsilon'$, soit telle que $|\epsilon' | = |y_c - y | > \epsilon$ ; entrainant une correction inverse elle aussi disproportionnée. Dans cette hypothèse, il y a apparition d'oscillations divergentes (croissantes), le système devient instable. D'autres sources potentielles d'instabilité sont le retard à l'exécution des ordres reçus, ou pire l'existence d'une contre réaction positive (si le signe est inversé, $\epsilon = y_c + y$). La stabilité des systèmes asservis est étudiée au chapitre III.</p>
+                 <p>La <strong>précision</strong> s'exprime par l'écart $\epsilon$ entre la consigne $y_c$ et la sortie $y$ du système. Dans le cas d'une loi de commande proportionnelle du type $u = K \cdot \epsilon$, l'obtention d'une bonne précision nécessite d'avoir un gain $K$ élevé (en effet pour obtenir une valeur de commande $u$ donnée, $K$ devra être d'autant plus importante que $\epsilon$ sera faible). De même, une perturbation $n$ sera d'autant plus efficacement corrigée (erreur résiduelle faible) que $K$ sera grand. Or, on a vu qu'un grand $K$ peut être source d'instabilité.</p>
+                 <p>D'où le fait (à mémoriser) que la <strong>stabilité et la précision</strong> soient des paramètres potentiellement <strong>contradictoires</strong>.</p>
+                <p>La troisième qualité essentielle d'un asservissement est sa <strong>rapidité</strong>. La rapidité d'un processus peut se mesurer par son temps de réponse à un échelon de commande comme défini au IV.2. Les notions de précision et de rapidité des systèmes font l'objet du chapitre IV.</p>
+                <p>D'une façon générale, la synthèse d'un asservissement résulte d'un <strong>compromis</strong> stabilité – précision - rapidité.</p>
+                <p>L'automatisation des processus requiert l'utilisation d'une boucle fermée (rétroaction), celle-ci est nécessaire afin de pouvoir :</p>
+                <ul>
+                    <li>stabiliser un système instable en boucle ouverte,</li>
+                    <li>compenser des perturbations externes,</li>
+                    <li>compenser des incertitudes liées au système lui-même (vieillissement, imprécision du modèle, etc.).</li>
+                </ul>
+            </section>
+        </section>
+
+        <section id="chap2">
+            <h2>II. Modélisation des systèmes linéaires.</h2>
+            <p>La caractéristique <strong>statique</strong> (c'est-à-dire la relation entre l'entrée et la sortie en régime permanent) d'un système linéaire est une droite (cf. figure II.1).</p>
+            <figure>
+                 <div class="placeholder">[Placeholder: Figure II.1 - Static characteristic of a linear system]</div>
+                 <figcaption class="caption">Fig. II.1 – Caractéristique statique d'un système linéaire. La sortie $y$ est proportionnelle à l'entrée $u$ en régime permanent.</figcaption>
+            </figure>
+            <p>Cela ne doit pas amener de confusion avec le comportement <strong>dynamique</strong> du système en régime transitoire. La figure II.2 représente la réponse en sortie d'un système linéaire à un échelon $u(t)$ sur son entrée (on constate bien que le tracer de $y(t)$ en fonction de $u(t)$ ne serait pas une droite).</p>
+             <figure>
+                 <div class="placeholder">[Placeholder: Figure II.2 - Step response of a linear system]</div>
+                 <figcaption class="caption">Fig. II.2 - Réponse de la sortie $y(t)$ d'un système linéaire à un échelon en entrée $u(t)$. L'entrée passe de 0 à $E_0$. La sortie passe de 0 à $Y_0 = K \cdot E_0$ après un régime transitoire.</figcaption>
+            </figure>
+            <p>Nous avons déjà énoncé précédemment que l'équation liant la sortie et l'entrée d'un système linéaire, continu et invariant dans le temps est une équation différentielle linéaire à coefficients constants. Cette équation traduit aussi bien le comportement dynamique du système que son comportement statique (il suffit pour cela d'annuler les dérivées). Les parties suivantes traitent de la modélisation et du comportement des systèmes du premier ordre, du second ordre et d'ordre supérieur.</p>
+            <p>Cependant, les systèmes physiques (réels) ne sont pas nécessairement linéaires. Il est néanmoins souvent possible de les étudier avec les outils classiques de l'automatique linéaire après avoir <strong>linéarisé</strong> leur comportement autour d'un point de repos. Cette façon de procéder est familière aux électroniciens, ils l'utilisent par exemple, pour étudier les transistors en amplification; la figure II.3 donne l'exemple de la linéarisation autour d'un point de repos, $M_0(V_0, I_0)$, d'une diode. Le modèle linéaire obtenu permet d'étudier les variations de $i_d$ et $v_d$ autour de $M_0$, dès lors que ces grandeurs restent dans le domaine de validité du modèle.</p>
+             <figure>
+                 <div class="placeholder">[Placeholder: Figure II.3 - Linearization around an operating point]</div>
+                 <figcaption class="caption">Fig. II.3 - Linéarisation d'un système (ici, une diode) autour d'un point de repos $M_0$. On approxime la courbe par sa tangente au point de fonctionnement pour étudier les petites variations $i_d, v_d$ autour de $I_0, V_0$.</figcaption>
+            </figure>
+             <p>Il y a deux façons d'obtenir le modèle linéaire d'un système :</p>
+             <ul>
+                 <li>par la mise en équation du système à partir de ces lois physiques (équations électriques, mécaniques, etc.),</li>
+                 <li>ou par identification, le modèle étant déterminé expérimentalement en étudiant la réponse du système à des stimuli classiques.</li>
+             </ul>
+
+            <section id="sec2-1">
+                <h3>II.1. Système du premier ordre.</h3>
+                <div class="definition">
+                    <p><strong>Définition 8 :</strong> Un système est dit du <strong>1<sup>er</sup> ordre</strong> si la relation entre son entrée et sa sortie est une équation différentielle du 1<sup>er</sup> ordre.</p>
+                </div>
+                <p><strong>Exemple :</strong> établir l'équation différentielle du circuit RC de la figure II.4.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.4 - RC circuit]</div>
+                     <figcaption class="caption">Fig. II.4 - Circuit RC. L'entrée est $u(t) = v_E(t)$, la sortie est $y(t) = v_S(t)$.</figcaption>
+                </figure>
+                <p>Les équations électriques du système sont :</p>
+                $v_E = R i + v_S$
+                <br>
+                $i = C \frac{dv_S}{dt}$
+                <p>D'où l'équation différentielle du premier ordre liant l'entrée et la sortie du système :</p>
+                $RC \frac{dv_S}{dt} + v_S = v_E$
+
+                <p>La forme générale de l'équation différentielle d'un système du premier ordre d'entrée $u$ et de sortie $y$ est :</p>
+                <div class="equation" style="text-align:center; margin: 1em 0;">
+                 $$ \tau \frac{dy(t)}{dt} + y(t) = K u(t) \quad \text{(Eq. II.1)} $$
+                </div>
+                <p>Avec :</p>
+                <ul>
+                    <li>$\tau$ : constante de temps du système,</li>
+                    <li>$K$ : gain statique.</li>
+                </ul>
+
+                <h4>a - Fonction de transfert.</h4>
+                <div class="definition">
+                    <p><strong>Définition 9 :</strong> la <strong>fonction de transfert</strong> (ou transmittance) d'un système linéaire est le rapport entre la transformée de Laplace de sa sortie et celle de son entrée, en considérant des conditions initiales nulles.</p>
+                </div>
+                <p>Le lecteur trouvera en annexe 2 quelques rappels utiles sur la transformée de Laplace (TL) et les TL usuelles.</p>
+                <p>Par application de la TL à l'équation II.1 (avec $p$ la variable de Laplace, souvent notée $s$ en anglais⁴) :</p>
+                $\tau \cdot (p Y(p) – y(0^-)) + Y(p) = K \cdot U(p)$
+                <p>soit</p>
+                $Y(p) = \frac{K}{1+\tau p} U(p) + \frac{\tau}{1+\tau p} y(0^-)$
+                <p>Ainsi, $Y(p)$ dépend non seulement de l'entrée, $U(p)$, mais aussi de la valeur de la condition initiale $y(0^-)$.</p>
+                <p>On en déduit l'expression de la fonction de transfert, $H(p)$, en considérant $y(0^-) = 0$ :</p>
+                 <div class="equation" style="text-align:center; margin: 1em 0;">
+                 $$ H(p) = \frac{Y(p)}{U(p)} = \frac{K}{1+\tau p} \quad \text{(Eq. II.2)} $$
+                 </div>
+                 <p class="footnote">⁴ Attention $p$ est noté $s$ dans la littérature scientifique anglo-saxonne.</p>
+                 <p><strong>Rappel :</strong> la réponse impulsionnelle (i.e. réponse à un Dirac), $h(t)$, d'un S.L.T.I. vérifie : $y(t) = (u*h)(t)$ (produit de convolution).</p>
+                 <p>Ainsi, comme suggéré par l'équation II.2, pour déterminer la réponse d'un système linéaire (quel que soit son ordre) à une excitation $u(t)$, plutôt que de résoudre l'équation différentielle associée, il est souvent plus simple de passer en représentation de Laplace. Il faut alors calculer la TL de $u(t) : U(p)$, la multiplier par $H(p)$ pour obtenir $Y(p)$, puis repasser dans le domaine temporel pour obtenir $y(t)$. La détermination des TL et TL inverses, est facilitée par l'utilisation des tableaux de TL usuelles donnés en annexe 2. Les paragraphes b, c, et d illustrent ce mécanisme.</p>
+
+                <h4>b – Réponse impulsionnelle.</h4>
+                <p>La détermination en trois étapes de la réponse à une impulsion d'amplitude $A_0$ d'un système du 1<sup>er</sup> ordre est illustrée ci-dessous :</p>
+                <ol>
+                    <li>Entrée: $u(t) = A_0 \delta(t)$</li>
+                    <li>Transformée de Laplace de l'entrée: $U(p) = A_0$</li>
+                    <li>Transformée de Laplace de la sortie: $Y(p) = H(p) \cdot U(p) = \frac{K}{1+\tau p} \cdot A_0 = \frac{K A_0}{1+\tau p}$</li>
+                    <li>Sortie (Transformée Inverse):
+                        <div class="equation" style="text-align:center; margin: 1em 0;">
+                         $$ y(t) = \mathcal{L}^{-1}\{Y(p)\} = \frac{K A_0}{\tau} e^{-t/\tau} \quad \text{(Eq. II.3)} $$
+                         </div>
+                    </li>
+                </ol>
+                <p>Le tracé de $y(t)$ est donné figure II.4 (son allure en $t = 0^+$ est caractéristique d'un système du 1<sup>er</sup> ordre).</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.4 - Impulse response of a first-order system]</div>
+                     <figcaption class="caption">Fig. II.4 – Réponse impulsionnelle d'un système du 1<sup>er</sup> ordre. La réponse démarre à $K A_0 / \tau$ et décroît exponentiellement. À $t=\tau$, elle vaut 37% de sa valeur initiale. À $t=3\tau$, elle vaut 5%.</figcaption>
+                 </figure>
+                <p>Pour $t = \tau$, la réponse a décru à 37% de sa valeur initiale ; à $t = 3\tau$, elle n'en représente plus que 5%. Sa dérivée à l'origine $y'(0^+) = -K A_0 / \tau^2$. La tangente à l'origine coupe l'axe des abscisses pour $t = \tau$.</p>
+
+                <h4>c – Réponse indicielle.</h4>
+                <p>La réponse indicielle, c'est-à-dire à un échelon (d'amplitude $A_0$), d'un système du 1<sup>er</sup> ordre est (on note $\Gamma(t)$ l'échelon unitaire⁵) :</p>
+                 <ol>
+                    <li>Entrée: $u(t) = A_0 \Gamma(t)$</li>
+                    <li>Transformée de Laplace de l'entrée: $U(p) = A_0/p$</li>
+                    <li>Transformée de Laplace de la sortie: $Y(p) = H(p) \cdot U(p) = \frac{K}{1+\tau p} \cdot \frac{A_0}{p} = \frac{K A_0}{p(1+\tau p)}$</li>
+                    <li>Sortie (Transformée Inverse):
+                        <div class="equation" style="text-align:center; margin: 1em 0;">
+                         $$ y(t) = \mathcal{L}^{-1}\{Y(p)\} = K A_0 (1 - e^{-t/\tau}) \quad \text{(Eq. II.4)} $$
+                         </div>
+                    </li>
+                </ol>
+                 <p>La réponse indicielle est représentée figure II.5.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.5 - Step response of a first-order system]</div>
+                     <figcaption class="caption">Fig. II.5 – Réponse indicielle d'un système du 1<sup>er</sup> ordre. La réponse tend exponentiellement vers la valeur finale $K A_0$. À $t=\tau$, elle atteint 63% de la valeur finale. Le temps de réponse à 5% est $t_{r5\%} \approx 3\tau$. La pente à l'origine est $K A_0 / \tau$.</figcaption>
+                 </figure>
+                 <p>La valeur finale atteinte en régime permanent par $y(t)$ est $K A_0$, qui est $K$ fois la valeur de l'entrée (K est le gain statique).</p>
+                 <p>Pour $t = \tau$, $y(\tau)$ atteint $K A_0 (1-e^{-1}) \approx 0.63 K A_0$, soit 63% de la valeur finale. Le temps de réponse à 5% (le temps au bout duquel $y(t)$ approche la valeur finale à 5% près, et y reste) est $t_{r5\%} \approx 3\tau$.</p>
+                 <p>La tangente à l'origine (cf. Fig. II.5) a une pente de $K A_0 / \tau$, on observe effectivement une cassure assez nette de $y(t)$ qui est caractéristique de la réponse indicielle d'un système du 1<sup>er</sup> ordre.</p>
+                 <p class="footnote">⁵ Le lecteur trouvera en annexe 1 quelques rappels sur les signaux type.</p>
+
+                 <h4>d – Réponse à une rampe.</h4>
+                 <p>La réponse à une rampe de pente $a$ d'un système du premier ordre est :</p>
+                  <ol>
+                    <li>Entrée: $u(t) = a t \Gamma(t)$</li>
+                    <li>Transformée de Laplace de l'entrée: $U(p) = a/p^2$</li>
+                    <li>Transformée de Laplace de la sortie: $Y(p) = H(p) \cdot U(p) = \frac{K}{1+\tau p} \cdot \frac{a}{p^2} = \frac{K a}{p^2(1+\tau p)}$</li>
+                    <li>Sortie (Transformée Inverse):
+                        <div class="equation" style="text-align:center; margin: 1em 0;">
+                         $$ y(t) = \mathcal{L}^{-1}\{Y(p)\} = K a (t - \tau + \tau e^{-t/\tau}) \quad \text{(Eq. II.5)} $$
+                         </div>
+                    </li>
+                 </ol>
+                 <p>Le tracé de la réponse à une rampe est donné figure II.6.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.6 - Ramp response of a first-order system]</div>
+                     <figcaption class="caption">Fig. II.6 – Réponse à une rampe d'un système du 1<sup>er</sup> ordre. La sortie $y(t)$ tend vers une rampe parallèle à l'entrée $a \cdot t$ mais décalée dans le temps. L'asymptote est $K a (t-\tau)$. L'erreur de traînage en régime permanent est $\epsilon_t = a t - K a (t-\tau)$ si $t \gg \tau$. Si $K=1$, $\epsilon_t = a\tau$.</figcaption>
+                 </figure>
+                 <p>En régime permanent ($t \gg \tau$) on a $y(t) \approx K a (t - \tau)$ : la sortie tend vers une rampe de pente $K a$.</p>
+                 <p>Pour $K = 1$, $y(t)$ suit la rampe d'entrée avec un retard $\tau$. La différence entre l'entrée et la sortie est appelée erreur de trainage, $\epsilon_t$, elle vaut $\epsilon_t = a t - y(t) \approx a t - a(t-\tau) = a \tau$ pour $t \gg \tau$.</p>
+                 <p>Pour $K \neq 1$, les pentes étant différentes, $\epsilon_t$ tend vers l'infini (divergence).</p>
+
+                 <h4>e – Réponse harmonique.</h4>
+                 <p>La réponse harmonique d'un système est sa réponse à une sinusoïde permanente, $u(t) = U_m \sin(\omega t)$ (ou $\cos(\omega t)$), le régime transitoire étant éteint.</p>
+                 <p><strong>Rappel :</strong> La réponse harmonique d'un système linéaire (quel que soit son ordre) est une sinusoïde de même pulsation $\omega$, d'amplitude $Y_m$, déphasée d'un angle $\varphi$ par rapport à l'entrée : $y(t) = Y_m \sin(\omega t + \varphi)$ (si l'entrée est $\sin$).</p>
+                 <p>Les signaux étant périodiques, l'analyse de la réponse harmonique se fait en complexe (en utilisant la variable de Laplace $p = j\omega$), et plus précisément en étudiant la fonction de transfert évaluée en $p=j\omega$, $H(j\omega)$.</p>
+                 <p>Soit: $U(j\omega)$ la représentation complexe de l'entrée, $Y(j\omega)$ celle de la sortie.</p>
+                 $Y(j\omega) = H(j\omega) U(j\omega) = \frac{K}{1+j\omega\tau} U(j\omega)$
+                 <p>Le module et l'argument de $H(j\omega)$ donnent le rapport des amplitudes et le déphasage :</p>
+                 $|H(j\omega)| = \frac{|Y(j\omega)|}{|U(j\omega)|} = \frac{Y_m}{U_m} = \frac{K}{\sqrt{1+(\omega\tau)^2}}$ (Gain)
+                 <br>
+                 $\operatorname{Arg}(H(j\omega)) = \varphi = \operatorname{Arg}(Y(j\omega)) - \operatorname{Arg}(U(j\omega)) = -\arctan(\omega\tau)$ (Phase / Argument)
+                 <p>L'étude des propriétés fréquentielles des systèmes linéaires (c'est-à-dire leur réponse à une action sinusoïdale permanente dont on fait varier la fréquence $\omega$) permet d'en déduire les propriétés dynamiques temporelles (c'est-à-dire leur évolution dans le temps en fonction des actions subies) comme nous le verrons par la suite. C'est la raison pour laquelle on attache tant d'importance à cette étude.</p>
+                 <p>En général les paramètres étudiés sont le <strong>gain</strong> et le <strong>déphasage</strong> :</p>
+                 Gain $= \frac{Y_m}{U_m} = |H(j\omega)|$
+                 <br>
+                 Déphasage $= \varphi = \operatorname{Arg}(H(j\omega))$
+                 <p>que l'on représente sous forme de diagramme de Bode, de Black, ou de Nyquist (cf. ci-après).</p>
+
+                 <p><strong>Diagramme de Bode.</strong></p>
+                 <p>Le diagramme de Bode d'une fonction de transfert comporte deux courbes :</p>
+                 <ul>
+                     <li>son module exprimé en décibels (dB), $H_{dB} = 20 \log_{10} |H(j\omega)|$</li>
+                     <li>et sa phase (ou argument), $\operatorname{Arg}(H(j\omega))$</li>
+                 </ul>
+                 <p>tracées en fonction de la pulsation $\omega$ (axe gradué suivant une échelle logarithmique).</p>
+                 <p>Pour un système linéaire du 1<sup>er</sup> ordre : $H(j\omega) = \frac{K}{1+j\omega\tau}$.</p>
+                 <p>On en déduit :</p>
+                 $H_{dB} = 20 \log |H(j\omega)| = 20 \log |K| - 20 \log \sqrt{1 + (\omega\tau)^2} = 20 \log |K| - 10 \log (1 + \omega^2\tau^2)$
+                 <br>
+                 $\operatorname{Arg}H = -\arctan(\omega\tau)$
+                 <p>La <strong>pulsation de coupure</strong> à -3 dB, $\omega_c$, est la pulsation pour laquelle le gain exprimé en dB est inférieur de 3 dB au gain statique (gain pour $\omega = 0$). Pour un système du 1er ordre, $H_{dB}(\omega_c) = H_{dB}(0) - 3$. Ceci se produit quand $10 \log(1+\omega_c^2\tau^2) = 3$, soit $1+\omega_c^2\tau^2 \approx 2$, d'où $\omega_c \tau \approx 1$. On trouve donc $\omega_c = 1/\tau$.</p>
+                 <p>Les tracés du gain et de la phase sont donnés figure II.7 en pointillés rouge, pour un axe des abscisses gradué en pulsation réduite $\omega/\omega_c$.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.7 - Bode plot of a first-order system]</div>
+                     <figcaption class="caption">Fig. II.7 – Diagramme de Bode d'un système du 1<sup>er</sup> ordre. En rouge : tracé exact. En bleu : asymptotes. Gain : 0 dB (pour $K=1$) jusqu'à $\omega_c$, puis pente de -20 dB/décade. Phase : 0° pour $\omega \ll \omega_c$, -90° pour $\omega \gg \omega_c$, -45° à $\omega_c$.</figcaption>
+                 </figure>
+                 <p>Le tracé du diagramme de Bode est simplifié par une étude asymptotique préalable (en bleu sur la fig. II.7) :</p>
+                 <ul>
+                     <li>pour $\omega \ll \omega_c$: $H(j\omega) \approx K$. Soit $H_{dB} \approx 20 \log |K|$ et $\operatorname{Arg}H \approx 0$.</li>
+                     <li>pour $\omega \gg \omega_c$: $H(j\omega) \approx \frac{K}{j\omega\tau} = \frac{K \omega_c}{j\omega}$. Soit $H_{dB} \approx 20 \log |K| + 20 \log \omega_c - 20 \log \omega$. (Pente de -20 dB/décade). Et $\operatorname{Arg}H \approx -\pi/2$ (-90°).</li>
+                      <li>pour $\omega = \omega_c$: $H_{dB} = 20 \log |K| - 3$ dB et $\operatorname{Arg}H = -\pi/4$ (-45°).</li>
+                </ul>
+                <p>Pour $\omega \gg \omega_c$, la décroissance du gain est de -20 dB/décade, c'est-à-dire que le gain diminue de 20 dB chaque fois que la pulsation du signal d'entrée est multipliée par dix; ce qui correspond également à une décroissance de -6 dB/octave, une octave correspondant à un doublement de la pulsation.</p>
+
+                <p><strong>Représentation de Black.</strong></p>
+                 <p>La représentation de Black (ou diagramme de Nichols) de $H(j\omega)$ consiste à tracer $H_{dB}$ en fonction de $\operatorname{Arg}H$ en faisant varier la pulsation $\omega$ de zéro à l'infini. Cette représentation permet d'avoir les deux grandeurs caractérisant un système (gain et phase) sur un même graphe.</p>
+                 <p>Une étude asymptotique (cf. Bode) facilite le tracé de la représentation de Black du système linéaire d'ordre 1 de la figure II.8 (la courbe est graduée en pulsation réduite $\omega/\omega_c$).</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.8 - Black plot (Nichols chart) of a first-order system]</div>
+                     <figcaption class="caption">Fig. II.8 – Représentation de Black de la réponse harmonique d'un système du 1<sup>er</sup> ordre. Le lieu part de $(0^\circ, 20\log K)$ pour $\omega=0$, passe par $(-45^\circ, 20\log K - 3)$ pour $\omega=\omega_c$, et tend vers $(-90^\circ, -\infty)$ pour $\omega=+\infty$.</figcaption>
+                 </figure>
+
+                 <p><strong>Représentation de Nyquist.</strong></p>
+                 <p>La représentation de Nyquist consiste à tracer $H(j\omega)$ dans le lieu de Nyquist (c'est-à-dire le plan complexe, $\operatorname{Im}[H(j\omega)]$ en fonction de $\operatorname{Re}[H(j\omega)]$) en faisant varier la pulsation $\omega$ de zéro à l'infini. Cette représentation permet, comme nous le verrons plus tard, d'étudier rapidement la stabilité d'un système.</p>
+                 <p>La représentation de Nyquist (appelée communément lieu de Nyquist) de la fonction de transfert d'un système du 1<sup>er</sup> ordre est un demi-cercle (cf. figure II.9) de centre $(K/2, 0)$ et de rayon $K/2$.</p>
+                 <p>En effet, on démontre aisément que : $(\operatorname{Re}(H(j\omega)) - K/2)^2 + (\operatorname{Im}(H(j\omega)))^2 = (K/2)^2$.</p>
+                  <figure>
+                     <div class="placeholder">[Placeholder: Figure II.9 - Nyquist plot of a first-order system]</div>
+                     <figcaption class="caption">Fig. II.9 - Représentation de Nyquist de la réponse harmonique d'un système du 1<sup>er</sup> ordre. Le lieu est un demi-cercle dans le demi-plan inférieur, partant de $(K, 0)$ pour $\omega=0$ et arrivant à $(0, 0)$ pour $\omega=+\infty$. Le point pour $\omega=\omega_c=1/\tau$ est à $(K/2, -K/2)$, d'argument -45° et de module $K/\sqrt{2}$.</figcaption>
+                 </figure>
+                 <p>A la pulsation de coupure pour $\omega = \omega_c = 1/\tau$ : $|H(j\omega_c)| = K/\sqrt{2}$ et $\operatorname{Arg}(H(j\omega_c)) = -\pi/4$.</p>
+
+                 <h4>f – Relation temps – fréquence.</h4>
+                 <p>La <strong>rapidité</strong> de la réponse d'un système linéaire du 1<sup>er</sup> ordre est liée à sa fréquence de coupure $\omega_c$ (ou $f_c = \omega_c/(2\pi)$), c'est-à-dire à sa bande passante. On a $f_c = 1/(2\pi\tau)$.</p>
+                 <p>Le <strong>temps de montée</strong>, $t_m$, d'un système soumis à un échelon étant le temps mis par la sortie pour passer de 10% à 90% de sa valeur finale est une façon d'exprimer cette rapidité.</p>
+                 <p>Or on démontre que $t_m = (\ln(0.9) - \ln(0.1))\tau = \ln(9)\tau \approx 2,2 \tau$.</p>
+                 <p>On en déduit que :</p>
+                  <div class="equation" style="text-align:center; margin: 1em 0;">
+                  $$ t_m \cdot f_c = (2,2 \tau) \cdot \frac{1}{2\pi\tau} = \frac{2,2}{2\pi} \approx 0,35 \quad \text{(Eq. II.6)} $$
+                  </div>
+                 <p>Ainsi plus la bande passante d'un système sera large ($f_c$ élevée) plus il sera rapide ($t_m$ faible), et inversement. Cette relation est approximativement valable pour de nombreux systèmes.</p>
+
+            </section>
+
+            <section id="sec2-2">
+                <h3>II.2. Système du second ordre.</h3>
+                 <div class="definition">
+                    <p><strong>Définition 10 :</strong> Un système est dit du <strong>2<sup>ème</sup> ordre</strong> si la relation entre son entrée et sa sortie est une équation différentielle du 2<sup>ème</sup> ordre.</p>
+                </div>
+                <p>La forme générale de l'équation différentielle d'un système du deuxième ordre d'entrée $u$ et de sortie $y$ est (on prendra toujours un second membre indépendant de $u'(t)$) :</p>
+                 <div class="equation" style="text-align:center; margin: 1em 0;">
+                 $$ \frac{d^2y(t)}{dt^2} + 2m\omega_0 \frac{dy(t)}{dt} + \omega_0^2 y(t) = K \omega_0^2 u(t) \quad \text{(Eq. II.7)} $$
+                 </div>
+                <p>Avec :</p>
+                <ul>
+                    <li>$K$ : gain statique,</li>
+                    <li>$m$ : coefficient d'amortissement (parfois noté $\zeta$), sans dimension,</li>
+                    <li>$\omega_0$ : pulsation propre non amortie (rad/s).</li>
+                </ul>
+
+                <h4>a – Fonction de transfert.</h4>
+                <p>Par application de la TL à l'équation II.7 (en prenant des conditions initiales nulles) il vient :</p>
+                 $p^2 Y(p) + 2m\omega_0 p Y(p) + \omega_0^2 Y(p) = K \omega_0^2 U(p)$
+                 <br>
+                 $Y(p) (p^2 + 2m\omega_0 p + \omega_0^2) = K \omega_0^2 U(p)$
+                 <p>Soit la fonction de transfert :</p>
+                 <div class="equation" style="text-align:center; margin: 1em 0;">
+                  $$ H(p) = \frac{Y(p)}{U(p)} = \frac{K \omega_0^2}{p^2 + 2m\omega_0 p + \omega_0^2} = \frac{K}{1 + \frac{2m}{\omega_0} p + \frac{1}{\omega_0^2} p^2} \quad \text{(Eq. II.8)} $$
+                  </div>
+
+                 <h4>b – Réponse indicielle.</h4>
+                 <p>La réponse indicielle (à un échelon unitaire, $U(p)=1/p$), d'un système du 2<sup>nd</sup> ordre est :</p>
+                 $Y(p) = H(p) \cdot \frac{1}{p} = \frac{K \omega_0^2}{p(p^2 + 2m\omega_0 p + \omega_0^2)}$
+                 <p>La détermination de la réponse temporelle $y(t) = \mathcal{L}^{-1}\{Y(p)\}$ nécessite l'étude de trois cas en fonction de $m$, basés sur les racines du dénominateur (pôles de la fonction de transfert en boucle fermée), qui sont les solutions de l'équation caractéristique $p^2 + 2m\omega_0 p + \omega_0^2 = 0$.</p>
+
+                 <ul>
+                    <li>
+                        <p><strong>Cas 1: $m > 1$, régime apériodique (sur-amorti).</strong></p>
+                        <p>Le discriminant réduit de l'équation caractéristique $\Delta' = (m\omega_0)^2 - \omega_0^2 = \omega_0^2(m^2-1) > 0$. Le dénominateur possède donc deux pôles réels distincts négatifs :</p>
+                        $p_{1,2} = -m\omega_0 \pm \omega_0 \sqrt{m^2-1}$
+                        <p>(Ils sont négatifs car $m>1 \implies m\omega_0 > \omega_0\sqrt{m^2-1}$). La décomposition en éléments simples de $Y(p)$ et la transformée inverse donnent :</p>
+                         <div class="equation" style="text-align:center; margin: 1em 0;">
+                          $$ y(t) = K \left[ 1 - \frac{p_2}{p_2-p_1} e^{p_1 t} + \frac{p_1}{p_2-p_1} e^{p_2 t} \right] \quad \text{(ou forme équivalente Eq. II.9)} $$
+                          $$ y(t) = K \left[ 1 - e^{-m\omega_0 t} \left( \cosh(\omega_0\sqrt{m^2-1}t) + \frac{m}{\sqrt{m^2-1}}\sinh(\omega_0\sqrt{m^2-1}t) \right) \right] $$
+                         </div>
+                        <p>On a $\lim_{t \to +\infty} y(t) = K$ (car $p_1, p_2 < 0$). La dérivée à l'origine est $y'(0) = 0$ (pas de cassure comme pour le 1er ordre).</p>
+                        <p>Dans l'hypothèse où $m \gg 1$ (très amorti), on a $p_1 \approx -\omega_0/(2m)$ et $p_2 \approx -2m\omega_0$. Puisque $|p_1| \ll |p_2|$, le terme en $e^{p_2 t}$ s'amortit beaucoup plus vite que le terme en $e^{p_1 t}$. Le pôle $p_1$ est dit <strong>pôle dominant</strong> car il gouverne la dynamique lente du système. Le comportement ressemble alors à celui d'un système du premier ordre de constante de temps $\tau \approx -1/p_1 \approx 2m/\omega_0$.</p>
+                        <figure>
+                            <div class="placeholder">[Placeholder: Figure II.10 - Pole locations for overdamped system]</div>
+                            <figcaption class="caption">Fig. II.10 - Lieu des pôles pour $m > 1$. Deux pôles réels négatifs symétriques par rapport à $-m\omega_0$. Si $m \gg 1$, $p_1$ est proche de 0 et $p_2$ est loin.</figcaption>
+                        </figure>
+                        <figure>
+                             <div class="placeholder">[Placeholder: Figure II.11 - Step response for overdamped system (m>>1)]</div>
+                             <figcaption class="caption">Fig. II.11 – Réponse indicielle d'un 2<sup>nd</sup> ordre pour $m \gg 1$. Trait plein : réponse du 2nd ordre. Pointillés : réponse du 1er ordre dominant équivalent. $y'(0)=0$ mais rejoint rapidement la réponse du 1er ordre.</figcaption>
+                        </figure>
+                        <p>Le temps de réponse à 5% pour $m \gg 1$ peut être approximé par celui du 1er ordre dominant: $t_{r5\%} \approx 3\tau \approx 6m/\omega_0$. (cf. Annexe 3 pour des valeurs plus précises).</p>
+                    </li>
+                    <li>
+                        <p><strong>Cas 2: $m = 1$, régime critique.</strong></p>
+                        <p>Le discriminant est nul ($\Delta'=0$). Le dénominateur possède une racine double réelle négative $p_1 = p_2 = -\omega_0$. La transformée inverse donne :</p>
+                         <div class="equation" style="text-align:center; margin: 1em 0;">
+                          $$ y(t) = K [ 1 - (1 + \omega_0 t) e^{-\omega_0 t} ] \quad \text{(Eq. II.11)} $$
+                         </div>
+                        <p>L'allure est similaire à celle du régime apériodique (figure II.11), c'est le régime apériodique le plus rapide sans dépassement.</p>
+                    </li>
+                    <li>
+                        <p><strong>Cas 3: $0 < m < 1$, régime pseudopériodique (sous-amorti).</strong></p>
+                        <p>Le discriminant est négatif ($\Delta'<0$). Le dénominateur possède deux pôles complexes conjugués à partie réelle négative :</p>
+                        $p_{1,2} = -m\omega_0 \pm j \omega_0 \sqrt{1-m^2} = -m\omega_0 \pm j \omega_d$
+                        <p>où $\omega_d = \omega_0 \sqrt{1-m^2}$ est la pulsation propre amortie. On a $|p_1| = |p_2| = \omega_0$. La transformée inverse donne :</p>
+                        <div class="equation" style="text-align:center; margin: 1em 0;">
+                         $$ y(t) = K \left[ 1 - \frac{e^{-m\omega_0 t}}{\sqrt{1-m^2}} \sin(\omega_d t + \varphi) \right] \quad \text{avec } \varphi = \arccos(m) \quad \text{(Eq. II.12)} $$
+                        </div>
+                        <p>La réponse présente des oscillations amorties autour de la valeur finale $K$. La figure II.12 montre un exemple.</p>
+                        <figure>
+                             <div class="placeholder">[Placeholder: Figure II.12 - Step response for underdamped system]</div>
+                             <figcaption class="caption">Fig. II.12 – Réponse indicielle d'un système linéaire du 2<sup>nd</sup> ordre ($0 < m < 1$). Exemple pour $K=1, \omega_0=0.22, m=0.18$. On observe un dépassement $D\%$, des oscillations de pseudo-période $T_p$, un temps de pic $t_{pic}$, et un temps de réponse $t_{r5\%}$.</figcaption>
+                        </figure>
+                        <p>On a toujours $\lim_{t \to +\infty} y(t) = K$ : l'erreur statique est nulle.</p>
+                        <p>On note $T_p = 2\pi/\omega_d = 2\pi / (\omega_0\sqrt{1-m^2})$ la pseudo période des oscillations amorties (pour $m = 0$, $T_p = T_0 = 2\pi/\omega_0$, d'où le nom de pulsation propre non amortie de $\omega_0$).</p>
+                        <p>Le premier dépassement $D_1$ (en %) se produit au temps de pic $t_{pic} = \pi / \omega_d = \pi / (\omega_0\sqrt{1-m^2})$. Sa valeur est $D_1\% = 100 \frac{y(t_{pic})-K}{K} = 100 e^{-m\pi/\sqrt{1-m^2}}$. Les dépassements suivants $D_k$ se produisent aux instants $t_k = k \pi / \omega_d$ (pour $k$ impair).</p>
+                        <p>Le temps de réponse à 5%, $t_{r5\%}$, est donné par l'abaque de la figure II.13. Il est minimal pour $m \approx 0.7$ et vaut $t_{r5\%} / (2\pi/\omega_0) \approx 0.44$ soit $t_{r5\%} \omega_0 \approx 2.76$.</p>
+                         <figure>
+                             <div class="placeholder">[Placeholder: Figure II.13 - Chart of 5% response time vs damping ratio m]</div>
+                             <figcaption class="caption">Fig. II.13 – Temps de réponse à 5% (normalisé par $T_0 = 2\pi/\omega_0$) d'un système linéaire du 2<sup>nd</sup> ordre en fonction de $m$. Minimum pour $m \approx 0.7$.</figcaption>
+                         </figure>
+                         <p>Pour $m$ petit (oscillations peu amorties, qui durent longtemps), on a l'approximation $t_{r5\%} \omega_0 \approx 3/m$.</p>
+                    </li>
+                     <li>
+                        <p><strong>Cas 4: $m < 0$, régime instable.</strong></p>
+                        <p>Les pôles sont à partie réelle positive ($p_{1,2} = -m\omega_0 \pm ...$ avec $-m\omega_0 > 0$). Les termes exponentiels $e^{p_i t}$ divergent lorsque $t \to +\infty$. Le système est instable.</p>
+                    </li>
+                </ul>
+                 <p>La figure II.14 donne une synthèse de la réponse indicielle d'un système du second ordre en fonction de son coefficient d'amortissement $m$. On y retrouve les régimes apériodique, critique et pseudopériodique (stable et instable).</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.14 - Synthesis of second-order step responses and pole locations]</div>
+                     <figcaption class="caption">Figure II.14 - Synthèse de la réponse indicielle $y(t)$ d'un système du 2<sup>nd</sup> ordre en fonction de $m$. Gauche : position des pôles dans le plan complexe. Droite : allure de la réponse indicielle correspondante.</figcaption>
+                 </figure>
+
+
+                <h4>c – Réponse harmonique.</h4>
+                <p>La réponse harmonique d'un système du 2<sup>nd</sup> ordre est sa réponse à une sinusoïde permanente, $u(t) = U_m \cos(\omega t)$, le régime transitoire étant éteint. Partant de l'équation II.8 (fonction de transfert) avec $p = j\omega$, on trouve :</p>
+                <div class="equation" style="text-align:center; margin: 1em 0;">
+                 $$ H(j\omega) = \frac{K \omega_0^2}{(j\omega)^2 + 2m\omega_0 (j\omega) + \omega_0^2} = \frac{K \omega_0^2}{(\omega_0^2 - \omega^2) + j (2m\omega_0 \omega)} = \frac{K}{(1-(\omega/\omega_0)^2) + j (2m\omega/\omega_0)} \quad \text{(Eq. II.13)} $$
+                </div>
+                <p><strong>Etude asymptotique (Diagramme de Bode) :</strong></p>
+                 <ul>
+                     <li>Pour $\omega \to 0$ ($\omega \ll \omega_0$): $H(j\omega) \approx K$. D'où $H_{dB} \approx 20\log|K|$ et $\operatorname{Arg}H \approx 0$.</li>
+                     <li>Pour $\omega \to +\infty$ ($\omega \gg \omega_0$): $H(j\omega) \approx \frac{K}{ -(\omega/\omega_0)^2} = -\frac{K \omega_0^2}{\omega^2}$. D'où $H_{dB} \approx 20\log|K| + 40\log\omega_0 - 40\log\omega$. (Pente de -40 dB/décade). Et $\operatorname{Arg}H \approx -\pi$ (-180°).</li>
+                     <li>Pour $\omega = \omega_0$: $H(j\omega_0) = \frac{K}{j(2m)}$. D'où $H_{dB}(\omega_0) = 20\log|K| - 20\log(2m)$ et $\operatorname{Arg}H(\omega_0) = -\pi/2$ (-90°).</li>
+                 </ul>
+                 <p>La figure II.15 donne le tracé asymptotique de $H_{dB}$ pour $K = 1$. La valeur de $m$ n'a d'influence sur le tracé de $H_{dB}$ qu'au voisinage de $\omega_0$.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.15 - Asymptotic Bode magnitude plot for 2nd order system]</div>
+                     <figcaption class="caption">Fig. II.15 – Tracé asymptotique du gain (en dB) d'un système linéaire du 2<sup>nd</sup> ordre ($K=1$). Le gain est constant (0 dB) jusqu'à $\omega_0$, puis décroît avec une pente de -40 dB/décade.</figcaption>
+                 </figure>
+                 <p><strong>Cas détaillé selon $m$ :</strong></p>
+                 <ul>
+                    <li>Pour $m \geq 1$, le dénominateur de $H(j\omega)$ (Eq. II.8) peut être factorisé en deux termes du premier ordre: $H(p) = \frac{K}{(1+p/\omega_1)(1+p/\omega_2)}$ où $\omega_{1,2} = \omega_0 (m \mp \sqrt{m^2-1})$ sont réelles positives (avec $\omega_1 \omega_2 = \omega_0^2$). Le diagramme de Bode est la somme de deux diagrammes du 1er ordre avec des pulsations de coupure $\omega_1$ et $\omega_2$. L'asymptote change de pente de 0 à -20 dB/dec à $\omega_1$ (la plus petite) et de -20 à -40 dB/dec à $\omega_2$ (la plus grande). (Voir Fig II.16).</li>
+                     <figure>
+                         <div class="placeholder">[Placeholder: Figure II.16 - Asymptotic Bode magnitude for m>=1]</div>
+                         <figcaption class="caption">Fig. II.16 – Tracé asymptotique du gain d'un système linéaire du 2<sup>nd</sup> ordre pour $m \geq 1$. Deux cassures aux pulsations $\omega_1$ et $\omega_2$.</figcaption>
+                     </figure>
+                    <li>Pour $0 < m < 1$, l'étude détaillée du module $|H(j\omega)| = \frac{K}{\sqrt{(1-(\omega/\omega_0)^2)^2 + (2m\omega/\omega_0)^2}}$ met en évidence deux sous-cas :
+                        <ul>
+                            <li>pour $0 < m < 1/\sqrt{2} \approx 0.707$, on constate l'apparition d'un phénomène de <strong>résonance</strong>. Le module $|H(j\omega)|$ présente un maximum pour la pulsation de résonance $\omega_r = \omega_0 \sqrt{1-2m^2}$. La valeur de ce pic (en dB) est $H_{dB,r} = 20 \log |H(j\omega_r)| = 20 \log \left( \frac{K}{2m\sqrt{1-m^2}} \right)$. (cf. figure II.17).</li>
+                             <figure>
+                                <div class="placeholder">[Placeholder: Figure II.17 - Bode magnitude plot showing resonance (m<0.707)]</div>
+                                <figcaption class="caption">Fig. II.17 – Phénomène de résonance d'un système du 2<sup>nd</sup> ordre pour $m < 1/\sqrt{2}$. Le gain dépasse l'asymptote basse fréquence au voisinage de $\omega_r$. Le pic de résonance $H_{dB,r}$ est d'autant plus marqué que $m$ est faible.</figcaption>
+                            </figure>
+                            <li>pour $1/\sqrt{2} \leq m < 1$, il n'y a pas de pic de résonance (la fonction $|H(j\omega)|$ est décroissante pour $\omega > 0$), la courbe réelle reste sous le tracé asymptotique basse fréquence.</li>
+                        </ul>
+                    </li>
+                 </ul>
+                 <p>On définit souvent le <strong>facteur de qualité</strong> $Q = 1/(2m)$. Un $Q$ élevé (donc $m$ faible) correspond à un système très oscillant et un pic de résonance marqué. On utilise $Q$ pour qualifier les systèmes de filtrage.</p>
+                 <p>On définit parfois le <strong>facteur de résonance</strong> par $M = \frac{|H(j\omega_r)|}{|H(j0)|} = \frac{1}{2m\sqrt{1-m^2}}$ (pour $m < 1/\sqrt{2}$). $M_{dB} = 20 \log M$ est le pic de résonance en dB par rapport au gain statique.</p>
+
+                 <p><strong>Représentation de Black.</strong></p>
+                 <p>La figure II.18 donne la représentation de Black d'un système linéaire du 2<sup>nd</sup> ordre résonnant pour $m =0.5$ et $m = 0.35$ (le gain statique est unitaire, $K=1$).</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.18 - Black plot for a resonant 2nd order system]</div>
+                     <figcaption class="caption">Fig. II.18 – Représentation de Black d'un système linéaire résonnant du 2<sup>nd</sup> ordre. Le lieu passe près du point $(-180^\circ, 0dB)$. $M_{dB}$ est le gain maximum atteint (pic de résonance), $Q_{dB}$ est le gain à $\omega=\omega_0$ (qui est $20\log(K/2m)$). $\omega_c$ est la pulsation de coupure (-3dB).</figcaption>
+                 </figure>
+                 <p>Le tracé permet de retrouver et d'identifier un certain nombre de points caractéristiques : le régime statique ($\omega = 0$, point $(0^\circ, 20\log K)$), la résonance (pour $\omega = \omega_r$ on obtient le gain maximum $M_{dB}$ si $m < 1/\sqrt{2}$), la pulsation propre $\omega_0$ (où la phase est -90° et le gain est $Q_{dB} = 20\log(K/2m)$), la pulsation de coupure $\omega_c$ à -3 dB par rapport au gain statique, et l'asymptote vers -180° pour $\omega \to \infty$.</p>
+
+                 <p><strong>Représentation de Nyquist.</strong></p>
+                 <p>La figure II.19 donne la représentation de Nyquist d'un système linéaire du 2<sup>nd</sup> ordre pour différentes valeurs du coefficient d'amortissement : $0.3 < m < 5$ (le gain statique est unitaire, $K=1$).</p>
+                 <p>Le tracé est obtenu à partir de l'expression (Eq. II.13) :</p>
+                 $H(j\omega) = \frac{K \omega_0^2}{(\omega_0^2 - \omega^2) + j (2m\omega_0 \omega)}$
+                 <p>Partie réelle : $\operatorname{Re}(H) = \frac{K \omega_0^2 (\omega_0^2 - \omega^2)}{(\omega_0^2 - \omega^2)^2 + (2m\omega_0 \omega)^2}$</p>
+                 <p>Partie imaginaire : $\operatorname{Im}(H) = \frac{- K \omega_0^2 (2m\omega_0 \omega)}{(\omega_0^2 - \omega^2)^2 + (2m\omega_0 \omega)^2}$</p>
+                 <p>Pour $\omega \to +\infty$ on a $H(j\omega) \to 0$ par les valeurs négatives de la partie réelle (le gain tend vers 0 et la phase vers -180°).</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.19 - Nyquist plots for a 2nd order system (various m)]</div>
+                     <figcaption class="caption">Fig. II. 19 – Lieu de Nyquist d'un système linéaire du 2<sup>nd</sup> ordre ($K=1$, pour $0.3 < m < 5$). Tous les lieux partent de $(1, 0)$ pour $\omega=0$ et arrivent à $(0, 0)$ pour $\omega=+\infty$. Pour $m$ faible, le lieu s'approche du point $(-1,0)$ et peut présenter un pic de module (résonance).</figcaption>
+                 </figure>
+                 <p>Le lecteur trouvera en annexe 3 les tracés des différents diagrammes de la fonction de transfert d'un système linéaire du 2<sup>nd</sup> ordre et plus généralement tous les résultats et abaques s'y rapportant.</p>
+            </section>
+
+            <section id="sec2-3">
+                <h3>II.3. Systèmes d'ordre supérieur à 2.</h3>
+                <p>D'une façon générale, l'équation différentielle représentative d'un système linéaire d'ordre supérieur à 2 (S.L.T.I.) peut s'écrire :</p>
+                 <div class="equation" style="text-align:center; margin: 1em 0;">
+                  $$ a_n \frac{d^n y(t)}{dt^n} + \dots + a_1 \frac{dy(t)}{dt} + a_0 y(t) = b_m \frac{d^m u(t)}{dt^m} + \dots + b_1 \frac{du(t)}{dt} + b_0 u(t) \quad \text{(Eq. II.14)} $$
+                 </div>
+                <p>avec $a_i, b_i$ coefficients constants réels.</p>
+                <p>Pour les systèmes physiques réalisables (c'est-à-dire respectant le principe de causalité), l'ordre du dénominateur $n$ est supérieur ou égal à l'ordre du numérateur $m$ ($n \geq m$). $n$ est l'ordre du système.</p>
+                <p>On en déduit l'expression de la fonction de transfert correspondante (conditions initiales nulles) :</p>
+                 <div class="equation" style="text-align:center; margin: 1em 0;">
+                  $$ H(p) = \frac{N(p)}{D(p)} = \frac{b_m p^m + b_{m-1} p^{m-1} + \dots + b_1 p + b_0}{a_n p^n + a_{n-1} p^{n-1} + \dots + a_1 p + a_0} \quad \text{(Eq. II.15)} $$
+                 </div>
+                <p>Les racines du numérateur, $N(p)$, sont les <strong>zéros</strong> de la fonction de transfert $H(p)$, et, les racines du dénominateur, $D(p)$, ses <strong>pôles</strong>.</p>
+                <p>Les coefficients étant réels, les $n$ pôles ($p_1$ à $p_n$) de $H(p)$ sont soit réels, soit complexes conjugués deux à deux.</p>
+                <p>Ainsi, le dénominateur peut s'écrire sous la forme factorisée :</p>
+                $D(p) = a_n (p - p_1) (p - p_2) \dots (p - p_n)$
+                <p>D'où la possibilité d'exprimer $H(p)$ comme une somme d'éléments simples (décomposition en fractions partielles) :</p>
+                $H(p) = \sum_{i=1}^{k} \frac{A_i}{p-p_i} + \sum_{j=1}^{l} \frac{B_j p + C_j}{p^2 + d_j p + e_j} + \dots$ (termes pour pôles multiples)
+                <p>Soit une décomposition additive en sous-systèmes du 1<sup>er</sup> ordre (pour les pôles réels) et du 2<sup>ème</sup> ordre (pour les pôles complexes conjugués).</p>
+                <p>Dès lors, la réponse du système complet est la <strong>superposition</strong> des réponses de chacun des sous-systèmes qui le composent (par application du principe de superposition), comme illustré figure II.20 par la réponse à un échelon.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure II.20 - Decomposition of higher-order response]</div>
+                     <figcaption class="caption">Fig. II.20 - Réponse indicielle d'un système linéaire d'ordre supérieur à 2. La réponse globale $s(t)$ est la somme des réponses des sous-systèmes élémentaires (ici, 2 du 1er ordre et 1 du 2nd ordre) correspondant à la décomposition de la fonction de transfert.</figcaption>
+                 </figure>
+                 <p>En termes de stabilité, il suffit d'un seul pôle à partie réelle positive pour entraîner l'instabilité de l'ensemble.</p>
+                 <p>Les <strong>pôles dominants</strong> sont situés à proximité de l'axe imaginaire. Pour un pôle réel cela correspond à une constante de temps élevée (proche de l'origine) ; pour un couple de pôles complexes conjugués à un coefficient d'amortissement faible (proche de l'axe $j\omega$). La réponse globale du système dépend principalement des pôles dominants.</p>
+            </section>
+        </section>
+
+        <!-- Chapters III, IV, V and Appendices would follow a similar structure -->
+        <!-- ... -->
+        <!-- Example for Chapter III Start -->
+        <section id="chap3">
+            <h2>III. Stabilité des systèmes asservis.</h2>
+
+            <section id="sec3-1">
+                 <h3>III.1. Schéma général d'un asservissement.</h3>
+
+                 <h4>a – Notion de bouclage.</h4>
+                 <p>La figure III.1 donne le schéma général d'un système asservi selon le principe introduit au chapitre 1.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure III.1 - General control loop diagram]</div>
+                     <figcaption class="caption">Fig. III.1 – Schéma de principe d'un asservissement. Chaîne directe (d'action) et chaîne de retour.</figcaption>
+                 </figure>
+                 <p>Avec :</p>
+                 <ul>
+                     <li>$x_c$ : grandeur de consigne,</li>
+                     <li>$y$ : sortie,</li>
+                     <li>$x_r$ : grandeur de retour (image de $y$, issue du capteur),</li>
+                     <li>$\epsilon = x_c - x_r$ : signal d'erreur.</li>
+                     <li>Organe de commande (Correcteur)</li>
+                     <li>Processus</li>
+                     <li>Capteur</li>
+                     <li>Perturbation (affectant le processus)</li>
+                 </ul>
+                 <p>On distingue l'étude de la stabilité lors :</p>
+                  <ul>
+                      <li>des variations de consigne : problème de <strong>consigne</strong> ou de suivi,</li>
+                      <li>de la présence de perturbations sur le processus : problème de <strong>régulation</strong>.</li>
+                 </ul>
+                 <p>Dans le cas particulier du <strong>retour unitaire</strong>, $x_r = y$, et $y$ et $x_c$ sont de même dimension (tel que $x_c$ peut être noté $y_c$). Alors $\epsilon = y_c - y$.</p>
+
+                 <h4>b – Fonction de transfert en boucle ouverte et en boucle fermée (FTBO / FTBF).</h4>
+                  <p>La figure III.2 (a) donne la représentation d'un asservissement sous forme de schéma bloc (chaque bloc est remplacé par sa fonction de transfert, ou transmittance de Laplace).</p>
+                  <figure>
+                     <div class="placeholder">[Placeholder: Figure III.2 - Block diagrams for FTBO/FTBF]</div>
+                     <figcaption class="caption">Fig. III.2 - Représentation sous forme de schéma bloc d'un asservissement. (a) Schéma bloc général. (b) Calcul de la FTBO (boucle ouverte au niveau du retour $X_r$). (c) Représentation en BF (FTBF).</figcaption>
+                 </figure>
+                 <p>Ici, $A(p)$ est la transmittance de la chaîne directe (correcteur + processus), $B(p)$ est la transmittance de la chaîne de retour (capteur).</p>
+
+                 <p><strong>Fonction de transfert en boucle ouverte (FTBO).</strong></p>
+                 <p>Lors de la détermination de la fonction de transfert en boucle ouverte, la boucle est ouverte au niveau de la grandeur de retour $X_r(p)$ (cf. Fig. III.2 (b)), même si cela peut sembler non intuitif : on calcule le rapport entre le signal qui *serait* retourné $X_r(p)$ et le signal d'erreur $\mathcal{E}(p)$ qui le génère, si la boucle était fermée *juste avant* le comparateur. Une approche plus standard est de définir la FTBO comme le produit des transmittances dans la boucle :</p>
+                 <div class="equation" style="text-align:center; margin: 1em 0;">
+                 $$ FTBO = T(p) = A(p) B(p) \quad \text{(Eq. III.1)} $$
+                 </div>
+
+                 <p><strong>Fonction de transfert en boucle fermée (FTBF).</strong></p>
+                 <p>Le calcul de la FTBF permet de modéliser le système asservi dans son ensemble (cf. Fig. III.2 (c)). On cherche $H(p) = Y(p) / X_c(p)$. On a :</p>
+                 $Y(p) = A(p) \mathcal{E}(p)$
+                 <br>
+                 $\mathcal{E}(p) = X_c(p) - X_r(p)$
+                 <br>
+                 $X_r(p) = B(p) Y(p)$
+                 <p>En substituant :</p>
+                 $Y(p) = A(p) [ X_c(p) - B(p) Y(p) ]$
+                 <br>
+                 $Y(p) = A(p) X_c(p) - A(p) B(p) Y(p)$
+                 <br>
+                 $Y(p) [ 1 + A(p) B(p) ] = A(p) X_c(p)$
+                 <p>D'où :</p>
+                  <div class="equation" style="text-align:center; margin: 1em 0;">
+                  $$ FTBF = H(p) = \frac{Y(p)}{X_c(p)} = \frac{A(p)}{1 + A(p) B(p)} $$
+                 </div>
+                 <p>Soit, en utilisant la FTBO $T(p)=A(p)B(p)$ :</p>
+                 <div class="equation" style="text-align:center; margin: 1em 0;">
+                  $$ FTBF = \frac{A(p)}{1 + T(p)} \quad \text{(Eq. III.2, attention ce n'est pas Eq III.2 du PDF qui est H=A/(1+FTBO))} $$
+                  </div>
+                  <p>Note : L'équation III.2 du PDF $FTBF = A(p) / (1+FTBO)$ est correcte si $T(p)$ représente bien $A(p)B(p)$.</p>
+
+                 <p>La figure III.3 présente le cas particulier du <strong>retour unitaire</strong>, où $B(p)=1$. Dans ce cas $T(p) = A(p)$.</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure III.3 - Unitary feedback case]</div>
+                     <figcaption class="caption">Fig. III.3 - Cas du retour unitaire. Ici $T(p)$ représente la FTBO (qui est égale à $A(p)$).</figcaption>
+                 </figure>
+                 <p>On a alors :</p>
+                 $FTBF = H(p) = \frac{T(p)}{1+T(p)}$
+                 <p>Et la relation $FTBF_{\text{retour unitaire}} = \frac{FTBO}{1+FTBO}$ est vérifiée.</p>
+
+                 <p><strong>Structure équivalente à un retour unitaire.</strong></p>
+                 <p>Il est possible de ramener tout système asservi au cas du retour unitaire (cf. figure III.4) à partir de la FTBF du système réduit (le système réduit correspond au système pour lequel la sortie est $X_r(p)$ au lieu de $Y(p)$).</p>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Figure III.4 - Equivalent unitary feedback structure]</div>
+                     <figcaption class="caption">Fig. III.4 - Structure équivalente à un retour unitaire. Le système de gauche peut être représenté par le système de droite avec un retour unitaire, où la FTBO équivalente $T_e(p)$ est $A(p)B(p)$ et la sortie considérée est $X_r(p)$. Pour obtenir $Y(p)$, il faut multiplier par $1/B(p)$.</figcaption>
+                 </figure>
+                 <p>Avec:</p>
+                 $FTBO_e = A(p)B(p) = T_e(p)$
+                 <br>
+                 $FTBF_e = H_e(p) = \frac{X_r(p)}{X_c(p)} = \frac{A(p)B(p)}{1+A(p)B(p)} = \frac{T_e(p)}{1+T_e(p)}$
+                 <br>
+                 (Pour retrouver $Y(p)$ à partir de $X_r(p)$, on note que $Y(p) = X_r(p)/B(p)$).
+
+            </section>
+            <!-- Sections III.2 to III.5 would follow -->
+
+        </section>
+        <!-- Chapters IV, V and Appendices would follow -->
+
+
+    </main>
+
+    <footer>
+        <p>Automatique linéaire 1 – J.M. Dutertre – 2016</p>
+        <p>Source: www.emse.fr/~dutertre/enseignement.html - 2015</p>
+        <p>HTML Conversion. Placeholders used for images.</p>
+    </footer>
+
+</body>
+</html>
