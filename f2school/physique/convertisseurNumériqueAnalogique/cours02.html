@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversions Analogique-Numérique et Numérique-Analogique</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <!-- Basic Styling -->
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 2em;
+            padding: 1em;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-top: 1.8em;
+            margin-bottom: 0.8em;
+            padding-bottom: 0.3em;
+        }
+        h1 {
+            font-size: 1.8em;
+            text-align: center;
+            border-bottom: 2px solid #666;
+            margin-bottom: 1.5em;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #444;
+            border-bottom: 1px solid #ccc;
+             margin-top: 2.5em;
+        }
+        h3 {
+            font-size: 1.3em;
+            color: #555;
+            margin-top: 2em;
+        }
+         h4 {
+            font-size: 1.1em;
+            color: #666;
+            margin-top: 1.5em;
+        }
+        .placeholder {
+            border: 1px dashed grey;
+            padding: 1em;
+            text-align: center;
+            margin: 1.5em auto;
+            background-color: #f0f0f0;
+            display: block;
+            max-width: 90%;
+            min-height: 100px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .placeholder-caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: 0.5em;
+            color: #555;
+            font-size: 0.9em;
+        }
+        .katex-display {
+            display: block;
+            margin: 1em 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.5em 0;
+            text-align: center;
+        }
+        .katex { font-size: 1.1em; }
+        ul, ol {
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+        li { margin-bottom: 0.5em; }
+        table {
+            border-collapse: collapse;
+            margin: 1.5em auto;
+            width: auto;
+            max-width: 95%;
+            border: 1px solid #ccc;
+            font-size: 0.95em;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.6em;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #eee;
+            font-weight: bold;
+        }
+        .definition-block, .principle-block, .note-block, .concept-block {
+            background-color: #f9f9f9;
+            padding: 0.8em 1.2em;
+            border-left: 4px solid #77aaff; /* Blueish border */
+            margin-bottom: 1.2em;
+            margin-top: 1em;
+        }
+        .warning-block {
+             background-color: #fff8e1;
+             border-left: 4px solid #ffc107; /* Amber border */
+             padding: 0.8em 1.2em; margin-top: 1em; margin-bottom: 1em;
+        }
+        .document-header, .document-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1em;
+            padding-bottom: 0.5em;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+            color: #777;
+        }
+         .document-footer {
+             margin-top: 2em; padding-top: 1em; border-bottom: none; border-top: 1px solid #eee;
+         }
+        .footnote {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 1.5em;
+            border-top: 1px dashed #ccc;
+            padding-top: 0.5em;
+        }
+        strong { color: #444; }
+    </style>
+</head>
+<body>
+
+    <header class="document-header">
+        <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+        <span class="page-number">Page 1</span>
+    </header>
+
+    <h1>Conversions analogique - numérique et numérique - analogique</h1>
+
+    <main>
+        <section id="intro">
+            <h2>I. Introduction</h2>
+
+            <p>Le monde physique est par nature analogique (dans la quasi-totalité des cas). Il est perçu via des signaux analogiques (son, ondes visuelles, etc.) qui peuvent être traités par des systèmes analogiques (cf. Fig. I.1).</p>
+
+            <div class="placeholder">[Placeholder for Fig. I.1 - Traitement analogique]</div>
+            <p class="placeholder-caption">Fig. I.1 – Traitement analogique : Signal d'entrée analogique x(t) -> Bloc "Traitement analogique" -> Signal de sortie analogique y(t).</p>
+
+            <p>Depuis une vingtaine d’années, le traitement numérique des données prend le pas sur les approches purement analogiques. Le recours au numérique permet en effet :</p>
+            <ul>
+                <li>un stockage aisé de l’information,</li>
+                <li>une excellente reproductibilité des traitements,</li>
+                <li>la possibilité de développer relativement aisément des fonctionnalités complexes,</li>
+                <li>une réduction des coûts de production, etc.</li>
+            </ul>
+
+            <p>L’interface nécessaire entre le monde analogique et un traitement numérique donné est réalisé par des <strong>convertisseurs analogique – numérique</strong> (CAN, ou ADC pour <em>Analog to Digital Converter</em> en anglais<sup id="fnref:1"><a href="#fn:1">1</a></sup>) et <strong>numérique – analogique</strong> (CNA, ou DAC pour <em>Digital to Analog Converter</em>). Le rôle d’un CAN est de convertir un signal analogique en un signal numérique pouvant être traité par une logique numérique, et le rôle d’un CNA est de reconvertir le signal numérique une fois traité en un signal analogique (cf. Fig. I.2).</p>
+
+            <div class="placeholder">[Placeholder for Fig. I.2 – Conversions et traitement numérique]</div>
+            <p class="placeholder-caption">Fig. I.2 – Conversions et traitement numérique des données : Signal analogique x(t) -> Bloc CAN (sortie N bits x[k]) -> Bloc "Traitement numérique" (sortie N bits y[k]) -> Bloc CNA -> Signal analogique y(t).</p>
+
+            <p>Les parties suivantes décrivent les principes de conversion et les architectures des CAN (partie II) et des CNA (partie III).</p>
+        </section>
+
+        <hr style="margin: 2em 0;">
+
+        <section id="can-principles">
+            <header class="document-header">
+                <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                <span class="page-number">Page 2</span>
+            </header>
+            <h2>II. Conversion analogique numérique (CAN / ADC)</h2>
+
+            <h3>II.1. Principe de la conversion analogique numérique</h3>
+
+            <div class="definition-block">
+                <p><strong>Définition :</strong> Un convertisseur analogique – numérique (CAN) est un dispositif électronique permettant la conversion d’un signal analogique en un signal numérique.</p>
+            </div>
+
+            <p>Cette première définition pour être complète en appelle deux autres, celles des signaux analogiques et numériques :</p>
+            <ul>
+                <li><strong>Signal analogique :</strong> signal continu en temps et en amplitude.</li>
+                <li><strong>Signal numérique :</strong> signal échantillonné et quantifié, discret en temps et en amplitude.</li>
+            </ul>
+
+            <div class="concept-block">
+                <p>Conceptuellement, la conversion analogique – numérique peut être divisée en trois étapes :</p>
+                <ol>
+                    <li><strong>L’échantillonnage temporel :</strong> Prélèvement de la valeur du signal analogique à des instants discrets réguliers.</li>
+                    <li><strong>La quantification :</strong> Attribution d'une valeur discrète (parmi un nombre fini de niveaux) à chaque échantillon.</li>
+                    <li><strong>Le codage :</strong> Association d'un code numérique (généralement binaire) à chaque niveau de quantification.</li>
+                </ol>
+            </div>
+
+            <p>La figure II.1 présente successivement ces trois étapes pour un CAN dont la sortie du signal numérique est sur 3 bits :</p>
+            <div class="placeholder">[Placeholder for Fig. II.1 – Étapes de la conversion A/N]</div>
+            <p class="placeholder-caption">Fig. II.1 – (i) signal analogique $v_a(t)$ (continu temps/amplitude), (ii) signal échantillonné $v_{ech}(k \cdot T_{ech})$ (discret temps, continu amplitude), (iii) puis quantifié et codé $v_q[k]$ (discret temps/amplitude, avec codes binaires associés : 011, 101, ...).</p>
+
+            <p>Un signal analogique, $v_a(t)$ continu en temps et en amplitude (i) est échantillonné à une période d’échantillonnage constante $T_{ech}$. On obtient alors un signal échantillonné $v_{ech}(k \cdot T_{ech})$ discret en temps et continu en amplitude (ii). Ce dernier est ensuite quantifié, on obtient alors un signal numérique $v_q[k]$ discret en temps et en amplitude (iii). La quantification est liée à la <strong>résolution</strong> du CAN (son nombre de bits $N$) ; dans l’exemple précédent $v_q[k]$ peut prendre huit amplitudes différentes (soit $2^3$, 3 étant le nombre de bits du CAN). La figure II.1.iii présente également le code numérique sur trois bits (en code binaire naturel) associé à $v_q[k]$ en fonction du temps $k$.</p>
+            <p>Les notions précédentes seront approfondies dans les parties suivantes.</p>
+
+             <p>La figure II.2 présente le symbole d’un CAN à N bits qui sera utilisé dans la suite de ce cours.</p>
+            <div class="placeholder">[Placeholder for Fig. II.2 – Symbole CAN]</div>
+            <p class="placeholder-caption">Fig. II.2 – Convertisseur analogique numérique. Entrée analogique $v_a(t)$, Sorties numériques $b_1..b_N$ représentant la valeur quantifiée $v_q[k]$.</p>
+        </section>
+
+        <section id="sampling">
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 3</span>
+             </header>
+             <h3>II.2. Aspects temporels et fréquentiels de l’échantillonnage</h3>
+
+            <p>L’obtention d’un signal échantillonné $x_{ech}(k \cdot T_{ech})$ à partir d’un signal analogique $x(t)$ peut être modélisée mathématiquement dans le domaine temporel par la multiplication de $x(t)$ par un peigne de Dirac de période $T_{ech}$ (noté $\delta_{T_{ech}} (t)$ ):</p>
+            $$ x_{ech}(k \cdot T_{ech}) = x(t) \cdot \delta_{T_{ech}}(t) = x(t) \cdot \sum_{k=-\infty}^{+\infty} \delta(t - k \cdot T_{ech}) $$
+            <p><em>Note : Rigoureusement, le signal échantillonné $x_{ech}$ n'est défini qu'aux instants $k \cdot T_{ech}$.</em></p>
+
+            <p>L’échantillonnage est illustré graphiquement dans le domaine temporel et fréquentiel aux points (i) à (vi) de la figure II.3.</p>
+            <div class="placeholder">[Placeholder for Fig. II.3 – Echantillonnage temporel et fréquentiel]</div>
+            <p class="placeholder-caption">Fig. II.3 – Echantillonnage d’un signal analogique. (i) Signal $x(t)$, (ii) Peigne de Dirac $\delta_{T_{ech}}(t)$, (iii) Signal échantillonné $x_{ech}(k \cdot T_{ech})$. (iv) Spectre $X(f)$, (v) Spectre du peigne $\delta_{f_{ech}}(f)$, (vi) Spectre du signal échantillonné $X_{ech}(f)$ (répétition périodique de $X(f)$).</p>
+
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 4</span>
+             </header>
+             <p>Au signal analogique $x(t)$, est associé dans le domaine fréquentiel le spectre $X(f)$ (cf. Fig. II.3.iv) s’étendant sur une bande de fréquence de $-f_{max}$ à $f_{max}$.</p>
+             <p>L’on rappelle un certain nombre de résultats démontrés en cours d’analyse de Fourier :</p>
+             <ul>
+                 <li>Une multiplication dans le domaine temporel correspond à un produit de convolution dans le domaine spectral (et inversement).</li>
+                 <li>La transformée de Fourier d’un peigne de Dirac temporel, de période $T_{ech}$, et d’amplitude 1, est un peigne de Dirac dans le domaine fréquentiel, de période $f_{ech} = 1 / T_{ech}$ et d’amplitude $1 / T_{ech}$. Notons ce peigne fréquentiel $\delta_{f_{ech}}(f)$.</li>
+             </ul>
+             <p>Ainsi, à la multiplication temporelle $x(t) \cdot \delta_{T_{ech}}(t)$ on fait correspondre dans le domaine fréquentiel le produit de convolution $X(f) * \delta_{f_{ech}}(f)$ (cf. point (v) de la Fig. II.3). Le résultat de ce produit de convolution (Fig. II.3.vi) est la transformée de Fourier du signal échantillonné $x_{ech}(k \cdot T_{ech})$. On obtient le spectre $X(f)$ répété à toutes les fréquences multiples de la fréquence d’échantillonnage (spectres centrés sur les $k \cdot f_{ech}$, k entier), avec une amplitude mise à l'échelle par $1/T_{ech}$.</p>
+
+            <p>Une approche graphique dans le domaine spectrale permet d’illustrer la récupération de l’information contenue dans un signal échantillonné par un filtrage passe bas (cf. Fig. II.4). En supposant un filtrage passe bas parfait (un tel filtre est impossible à réaliser) coupant aux fréquences $-f_{ech}/2$ et $f_{ech}/2$ (cette bande $[-f_{ech}/2, f_{ech}/2]$ est appelée <strong>bande de Nyquist</strong>, et la fréquence $f_{ech}/2$ est appelée <strong>fréquence de Nyquist</strong>), on retrouve le spectre $X(f)$ original et donc le signal temporel qui y correspond $x(t)$.</p>
+            <div class="placeholder">[Placeholder for Fig. II.4 – Récupération par filtrage passe-bas]</div>
+            <p class="placeholder-caption">Fig. II.4 – Récupération de l’information par filtrage passe bas.</p>
+
+            <header class="document-header">
+                <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                <span class="page-number">Page 5</span>
+            </header>
+            <h4>Notion de repliement de spectre (aliasing)</h4>
+            <p>Les illustrations graphiques précédentes correspondent au cas où la condition de Nyquist est respectée : $f_{ech}/2 > f_{max}$. Dans le cas où on augmente la période d’échantillonnage $T_{ech}$ (on a alors $f_{ech}$ qui diminue), il apparaît un phénomène de recouvrement spectral illustré figure II.5, qui se produit lorsque $f_{ech}/2 < f_{max}$.</p>
+            <div class="placeholder">[Placeholder for Fig. II.5 – Repliement de spectre (aliasing)]</div>
+            <p class="placeholder-caption">Fig. II.5 – Repliement de spectre (aliasing).</p>
+
+            <p>Ce phénomène apparaît dès lors que $f_{max}$, la plus grande fréquence de la partie du spectre centré sur 0, devient supérieure à $f_{ech} - f_{max}$, la plus basse fréquence de la partie du spectre centrée sur $f_{ech}$. Les parties du spectre qui se superposent s’ajoutent, et on obtient le spectre replié de la figure précédente. Il n’est plus possible de récupérer le signal analogique de départ par filtrage passe bas, car les hautes fréquences repliées se mélangent aux basses fréquences originales.</p>
+            <p>La contrainte qui en découle sur la fréquence d’échantillonnage pour éviter le repliement s’écrit mathématiquement :</p>
+            $$ f_{ech} > 2 f_{max} $$
+            <p>Elle s’énonce sous la forme du <strong>théorème de Shannon</strong>, ou <strong>théorème de l’échantillonnage</strong> :</p>
+            <div class="principle-block">
+                <p>"Un signal $x(t)$ peut être représenté de manière univoque par une suite de valeurs échantillonnées si la fréquence d’échantillonnage, $f_{ech}$, est au moins deux fois plus élevée que la plus grande des fréquences, $f_{max}$, contenues dans le spectre."</p>
+            </div>
+
+            <p>A titre d’exemple, la plage de fréquences audio que nous percevons s’étend de 20 Hz à 20 kHz ($f_{max}=20$ kHz), ce qui explique le choix de la fréquence d’échantillonnage des CD audio qui a été fixée à 44,1 kHz ($f_{ech} = 44.1$ kHz $> 2 \times 20$ kHz = 40 kHz). La légère marge est, entre autres, liée à la difficulté de réaliser des filtres réels (non parfaits) abruptes.</p>
+
+             <div class="warning-block">
+                <p>Le spectre réel d'un signal est généralement de largeur infinie (à cause du bruit, ou de signaux interférents non désirés). Il y a donc toujours un phénomène de repliement spectral susceptible de ramener dans la bande de Nyquist, du bruit ou un signal d’interférence haute fréquence. D’où la nécessité de toujours inclure un <strong>filtre passe bas anti-repliement</strong> (anti-aliasing filter) ayant une fréquence de coupure proche de $f_{ech}/2$ (ou légèrement inférieure) devant un CAN.</p>
+             </div>
+        </section>
+
+        <section id="can-characteristics">
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 6</span>
+             </header>
+             <h3>II.3. Caractéristiques des convertisseurs analogique - numérique idéaux</h3>
+
+            <p>On ne s’intéressera dans le cadre de ce cours qu’aux seuls CAN à quantification uniforme.</p>
+
+            <h4>Caractéristique de transfert</h4>
+            <p>Le pas de quantification et la précision d’un CAN dépendent du nombre de bits en sortie, $N$, appelé <strong>résolution</strong>. Pour un CAN à N bits, le nombre d’états possibles en sortie est $2^N$, ce qui permet d’exprimer des signaux numériques de 0 à $2^N-1$ en code binaire naturel (pour un CAN unipolaire).</p>
+            <p>Un CAN est caractérisé également par la plage de variation acceptable de la tension analogique d’entrée, appelée <strong>Pleine Echelle</strong> (FS pour <em>Full Scale</em> en anglais) et que nous noterons $V_{PE}$.</p>
+            <p>La pleine échelle est divisée en autant de plages d’égale dimension (cas de la quantification uniforme) qu’il y a d’états possibles ($2^N$) de la sortie numérique. Chaque plage est associée à un code numérique représentant la tension analogique d’entrée.</p>
+            <p>La figure II.6 représente la caractéristique de transfert idéale (sans défaut) en escalier d’un CAN unipolaire à 3 bits ($N=3$, $2^N=8$ niveaux).</p>
+            <div class="placeholder">[Placeholder for Fig. II.6 – Caractéristique de transfert idéale (quantification linéaire par défaut)]</div>
+            <p class="placeholder-caption">Fig. II.6 – Caractéristique de transfert idéale d’un CAN à quantification linéaire par défaut.</p>
+
+             <p>On définit le <strong>quantum</strong>, ou <strong>LSB</strong> (pour <em>Least Significant Bit</em>, valeur analogique du bit de poids faible) comme étant la dimension (largeur) de ces plages. On le note $q$ et l’obtient par :</p>
+            <header class="document-header">
+                <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                <span class="page-number">Page 7</span>
+            </header>
+             $$ q = LSB = \frac{V_{PE}}{2^N} $$
+             <p>(Il y a bien $2^N$ "marches" ou intervalles de largeur $q$ dans la pleine échelle $V_{PE}$).</p>
+
+            <p>Les tensions de seuil $V_{Sk}$, correspondant aux transitions entre les codes de sortie (par exemple, entre le code $k-1$ et le code $k$), sont telles que :</p>
+            $$ V_{Sk} = k \cdot q \quad \text{pour } k \in \{1, \dots, 2^N-1\} $$
+            <p>(pour la quantification linéaire par défaut illustrée Fig II.6 et II.7). La première transition (000 à 001) a lieu à $V_{S1}=q$, la dernière (110 à 111) a lieu à $V_{S7}=(2^N-1)q$.</p>
+            <p>Sur la figure II.6 est également portée en pointillé la droite de transfert idéale $V_{num} = V_a / q$; elle correspond à un CAN de résolution infinie (un tel CAN n’existe pas).</p>
+
+            <p>Plus la résolution $N$ d’un CAN est élevée, plus le quantum $q$ est petit, et plus la sortie numérique est une image précise du signal analogique d’entrée, comme l’illustre le tableau II.1 pour une tension de pleine échelle de 5V.</p>
+             <table>
+                <caption>Tab. II.1 – Quantum d’un CAN en fonction de sa résolution (V<sub>PE</sub>=5V)</caption>
+                <thead><tr><th>N (bits)</th><th>quantum (q)</th></tr></thead>
+                <tbody>
+                    <tr><td>8</td><td>19,5 mV</td></tr>
+                    <tr><td>10</td><td>4,8 mV</td></tr>
+                    <tr><td>12</td><td>1,22 mV</td></tr>
+                    <tr><td>14</td><td>305 µV</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Erreur de quantification (ou de codage)</h4>
+            <p>C'est la différence entre la valeur du signal échantillonné $v_{ech}$ et la valeur analogique d'entrée qui correspondrait idéalement au code de sortie $N_S$ (cette correspondance est donnée par la droite de transfert idéale $v_{ideal} = N_S \cdot q$).</p>
+             <p>L'erreur de quantification $E_q = v_{ech} - v_{ideal}$ est inhérente au processus de quantification.</p>
+             <p>La figure II.7 donne l’erreur de codage d’un CAN à 3 bits pour une quantification linéaire par défaut. L’erreur est comprise entre 0 et 1 LSB. Ainsi, tous les signaux analogiques compris entre $V_{S2} = 2q$ et $V_{S3} = 3q$, par exemple, sont représentés par le même code binaire 010.</p>
+            <div class="placeholder">[Placeholder for Fig. II.7 – Erreur de codage (quantification par défaut)]</div>
+            <p class="placeholder-caption">Fig. II.7 – Erreur de codage de la quantification linéaire par défaut.</p>
+
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 8</span>
+             </header>
+             <p>Ce type d’erreur est inhérent aux CAN, il est lié à l’étape de quantification. Plus la résolution (le nombre de bits $N$) d’un CAN est élevée plus l’erreur de quantification (la valeur de $q$) est réduite.</p>
+
+            <h4>Quantification linéaire centrée</h4>
+            <p>Un simple changement de convention, dans la fixation des tensions de seuil, permet de réduire l’erreur de quantification en valeur absolue. Ainsi, on utilisera plutôt la <strong>quantification linéaire centrée</strong>, pour laquelle la droite de transfert idéale passe par le centre des "marches" de la caractéristique (cf. Fig. II.8).</p>
+             <p>Les tensions de seuil $V_{Sk}$ sont décalées de $q/2$ par rapport à la quantification par défaut :</p>
+             $$ V_{Sk} = (k - 1/2) \cdot q \quad \text{pour } k \in \{1, \dots, 2^N-1\} $$
+             <p>La première transition se fait à $q/2$, la dernière à $(2^N-1 - 1/2)q$. Le premier palier (code 000) va de 0 à $q/2$, le dernier palier (code 111) va de $(2^N-1 - 1/2)q$ à $V_{PE} = 2^N q$.</p>
+            <div class="placeholder">[Placeholder for Fig. II.8 – Caractéristique de transfert (quantification centrée)]</div>
+            <p class="placeholder-caption">Fig. II.8 – Caractéristique de transfert d’un CAN à quantification linéaire centrée.</p>
+            <p>La droite de transfert idéale coupe la caractéristique aux points $v_a = (N_S + 1/2)q$ où $N_S$ est la valeur numérique du code.</p>
+
+            <p>La figure II.9 donne l’erreur de codage pour une quantification linéaire centrée. Elle varie entre <strong>- ½ LSB</strong> et <strong>+ ½ LSB</strong> (sauf pour le dernier palier où elle peut atteindre +1 LSB si l'entrée atteint $V_{PE}$). C'est la convention la plus utilisée car elle minimise l'erreur absolue.</p>
+            <header class="document-header">
+                <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                <span class="page-number">Page 9</span>
+            </header>
+            <div class="placeholder">[Placeholder for Fig. II.9 – Erreur de codage (quantification centrée)]</div>
+            <p class="placeholder-caption">Fig. II.9 – Erreur de codage de la quantification linéaire centrée.</p>
+
+            <h4>CAN bipolaire</h4>
+            <p>Les caractéristiques précédentes sont celles de CAN <strong>unipolaires</strong> dont la tension analogique d’entrée est positive. Bien souvent, un même CAN peut être configuré également en mode <strong>bipolaire</strong> de façon à accepter une tension analogique d’entrée négative ou positive (la plage de variation est alors symétrique, par exemple entre $-V_{PE}/2$ et $+V_{PE}/2$). La figure II.10 présente la caractéristique de transfert correspondante pour un CAN 3 bits.</p>
+            <div class="placeholder">[Placeholder for Fig. II.10 – Caractéristique de transfert CAN bipolaire]</div>
+            <p class="placeholder-caption">Fig. II.10 – Caractéristique de transfert d’un CAN bipolaire.</p>
+            <p><em>Note : Différents codages binaires peuvent être utilisés pour représenter les nombres signés (signe+magnitude, complément à 1, complément à 2, décalé/offset binaire). Voir tableau Tab. II.3 page 12.</em></p>
+
+            <h4>Bruit de quantification</h4>
+            <p>Considérons un signal analogique d’entrée triangulaire d’amplitude crête-à-crête $V_{PE} - q$ et de pente $\alpha$. L’erreur de quantification correspondante $E_q(t)$ est reportée avec le signal sur la figure II.11. On note $E_q(t)$ l’erreur de quantification ; pour une quantification centrée, c’est un motif en dents de scies variant entre - ½ LSB (-q/2) et + ½ LSB (+q/2) et de pente également $\alpha$ (ou $-\alpha$).</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 10</span>
+             </header>
+            <div class="placeholder">[Placeholder for Fig. II.11 – Erreur de quantification (signal triangulaire)]</div>
+            <p class="placeholder-caption">Fig. II.11 – Erreur de quantification d’un signal triangulaire.</p>
+
+            <p>On assimile l’erreur de quantification $E_q(t)$ à un bruit aléatoire, supposé uniformément distribué entre $-q/2$ et $+q/2$. On peut calculer sa puissance moyenne $P_{bruit}$ (pour une résistance normalisée de 1Ω) :</p>
+             $$ P_{bruit} = \frac{1}{T_{tri}} \int_{0}^{T_{tri}} E_q^2(t) dt $$
+             <p>Comme $E_q(t) = \alpha t$ sur l'intervalle $[-\Delta t/2, +\Delta t/2]$ où $\Delta t = q/\alpha$ est la durée d'un segment de la dent de scie, la puissance moyenne sur un segment est :</p>
+             $$ P_{bruit, segment} = \frac{1}{\Delta t} \int_{-\Delta t/2}^{+\Delta t/2} (\alpha t)^2 dt = \frac{\alpha^2}{\Delta t} \left[ \frac{t^3}{3} \right]_{-\Delta t/2}^{+\Delta t/2} = \frac{\alpha^2}{\Delta t} \frac{2 (\Delta t/2)^3}{3} = \frac{\alpha^2 (\Delta t)^2}{12} $$
+             <p>En remplaçant $\Delta t = q/\alpha$, on obtient :</p>
+             $$ P_{bruit} = \frac{\alpha^2 (q/\alpha)^2}{12} = \frac{q^2}{12} $$
+             <p>On admettra que ce résultat est valide<sup id="fnref:2"><a href="#fn:2">2</a></sup> pour un signal pleine échelle triangulaire ou sinusoïdal dès que la résolution $N$ est supérieure à 6 bits.</p>
+
+             <h4>Rapport signal sur bruit (SNR)</h4>
+             <p>Le rapport signal sur bruit (SNR pour <em>Signal to Noise Ratio</em>) d’un CAN idéal est défini pour une entrée sinusoïdale pleine échelle. C’est le quotient entre la puissance efficace du signal $P_{signal} = V_{eff, sinus}^2$ et celle du bruit $P_{bruit} = V_{eff, bruit}^2$ (s’agissant d’un CAN idéal, le bruit se réduit au bruit de quantification).</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 11</span>
+             </header>
+             <p>Avec une sinusoïde pleine échelle, son amplitude est $V_{PE}/2$, sa valeur efficace est $V_{eff, sinus} = \frac{V_{PE}/2}{\sqrt{2}} = \frac{V_{PE}}{2\sqrt{2}}$. Comme $V_{PE} = 2^N q$, on a $V_{eff, sinus} = \frac{2^N q}{2\sqrt{2}} = \frac{2^{N-1} q}{\sqrt{2}}$.</p>
+             <p>La valeur efficace du bruit de quantification est $V_{eff, bruit} = \sqrt{P_{bruit}} = \sqrt{q^2/12} = \frac{q}{\sqrt{12}} = \frac{q}{2\sqrt{3}}$.</p>
+             <p>D’où le rapport des puissances ($SNR = P_{signal}/P_{bruit} = (V_{eff, sinus}/V_{eff, bruit})^2$):</p>
+             $$ SNR = \left( \frac{2^{N-1} q / \sqrt{2}}{q / \sqrt{12}} \right)^2 = \left( \frac{2^{N-1}}{\sqrt{2}} \times \sqrt{12} \right)^2 = \left( 2^{N-1} \times \sqrt{6} \right)^2 = 2^{2N-2} \times 6 = \frac{3}{2} 2^{2N} $$
+             <p>En décibels (dB) :</p>
+             $$ SNR_{dB} = 10 \log_{10}(SNR) = 10 \log_{10}(\frac{3}{2} 2^{2N}) = 10 \log_{10}(1.5) + 10 \log_{10}(2^{2N}) $$
+             $$ SNR_{dB} = 1.76 + 10 \times (2N) \log_{10}(2) = 1.76 + 20N \times 0.301 $$
+             $$ SNR_{dB} \approx 6.02 N + 1.76 \text{ dB} $$
+             <p>Le SNR d’un CAN idéal augmente avec sa résolution (gain d'environ 6 dB par bit supplémentaire).</p>
+             <p>Ce résultat représente le SNR maximal atteignable pour un convertisseur (il n’est valable que pour un signal sinusoïdal pleine échelle).</p>
+
+             <h4>Codage</h4>
+             <p>En mode <strong>unipolaire</strong> le codage le plus couramment utilisé est le <strong>code binaire naturel</strong>. Un mot binaire s’écrit : $b_1 b_2 \dots b_{N-1} b_N$, avec $b_1$ le bit de poids fort (PF, ou MSB <em>Most Significant Bit</em>) et $b_N$ le bit de poids faible (pf, ou LSB <em>Less Significant Bit</em>). Le nombre décimal correspondant est : $D = b_1 \cdot 2^{N-1} + b_2 \cdot 2^{N-2} + \dots + b_{N-1} \cdot 2^1 + b_N \cdot 2^0$.</p>
+             <p>A un code $D$ donné correspond la tension (pour quantification centrée): $V \approx (D+1/2) \cdot q = (D+1/2) \cdot \frac{V_{PE}}{2^N}$. Ou encore $V = V_{PE} \cdot \left( \frac{b_1}{2} + \frac{b_2}{2^2} + \dots + \frac{b_N}{2^N} \right)$ (si on prend le centre du palier comme référence).</p>
+
+             <p>En fonction de l’architecture du CAN considéré on peut être amené à manipuler un <strong>code thermomètre</strong>. Par comparaison avec un code binaire classique sur N bits, il s’écrit avec $2^N - 1$ bits (cf. Tab. II.2). Dans ce code, tous les bits jusqu'à un certain rang sont à 1, les autres au-dessus sont à 0. Il représente directement le niveau atteint sur une échelle graduée.</p>
+             <table>
+                 <caption>Tab. II.2 – Code thermomètre (pour N=3 bits)</caption>
+                 <thead><tr><th>D (Décimal)</th><th>Binaire</th><th>Code Thermomètre ($2^3-1=7$ bits)</th></tr></thead>
+                 <tbody>
+                     <tr><td>0</td><td>000</td><td>0000000</td></tr>
+                     <tr><td>1</td><td>001</td><td>0000001</td></tr>
+                     <tr><td>2</td><td>010</td><td>0000011</td></tr>
+                     <tr><td>3</td><td>011</td><td>0000111</td></tr>
+                     <tr><td>4</td><td>100</td><td>0001111</td></tr>
+                     <tr><td>5</td><td>101</td><td>0011111</td></tr>
+                     <tr><td>6</td><td>110</td><td>0111111</td></tr>
+                     <tr><td>7</td><td>111</td><td>1111111</td></tr>
+                 </tbody>
+             </table>
+
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 12</span>
+             </header>
+             <p>En mode <strong>bipolaire</strong>, on peut utiliser plusieurs codes courants présentés table II.3.</p>
+             <ul>
+                 <li>Le <strong>code binaire signé</strong> (signe + magnitude) est obtenu en rajoutant un bit de signe devant le MSB au code binaire naturel (pour la valeur absolue). Pour un bit de signe nul, le nombre est positif, il est négatif pour un bit égal à un. Ce code est peu propice aux opérations arithmétiques (il a deux représentations pour zéro).</li>
+                 <li>Le <strong>code binaire décalé</strong> (offset binary) consiste, comme son nom l’indique, à décaler le code binaire naturel. Il permet de compter de $-2^{N-1}$ à $2^{N-1}-1$. $b_1$ (MSB) fait office de bit de signe (0 pour négatif, 1 pour positif). C’est un code fréquemment utilisé dans les CANs.</li>
+                 <li>Le <strong>code complément à 2</strong> correspond au code binaire décalé avec complémentation (inversion) du bit de signe $b_1$. Pour les nombres positifs on retrouve le code binaire naturel. Ce code doit son succès à sa facilité d’implémentation au niveau des opérateurs logiques (addition, soustraction).</li>
+             </ul>
+              <table>
+                  <caption>Tab. II.3 – Codes bipolaires (Exemple pour N=3 bits de magnitude + 1 bit signe = 4 bits total?) <em>Note: Le tableau semble utiliser 3 bits totaux pour [-4, +3], typique du complément à 2 sur 3 bits.</em></caption>
+                  <thead><tr><th>D (Décimal)</th><th>Signé (Signe+Mag)</th><th>Binaire décalé</th><th>Complément à 2</th></tr></thead>
+                  <tbody>
+                      <tr><td>3</td><td>011</td><td>111</td><td>011</td></tr>
+                      <tr><td>2</td><td>010</td><td>110</td><td>010</td></tr>
+                      <tr><td>1</td><td>001</td><td>101</td><td>001</td></tr>
+                      <tr><td>0</td><td>000 / 100</td><td>100</td><td>000</td></tr>
+                      <tr><td>-1</td><td>101</td><td>011</td><td>111</td></tr>
+                      <tr><td>-2</td><td>110</td><td>010</td><td>110</td></tr>
+                      <tr><td>-3</td><td>111</td><td>001</td><td>101</td></tr>
+                      <tr><td>-4</td><td>-</td><td>000</td><td>100</td></tr>
+                  </tbody>
+              </table>
+         </section>
+
+        <section id="can-real">
+             <h3>II.4. Caractéristiques des convertisseurs analogiques – numériques réels</h3>
+
+            <p>En plus de l’erreur systématique de quantification, les CANs réels présentent des défauts que l’on classe en paramètres statiques et dynamiques.</p>
+
+            <h4>Paramètres statiques</h4>
+            <ul>
+                <li><strong>Erreur d’offset (erreur de décalage) :</strong> On appelle offset un décalage horizontal de la caractéristique de transfert d’un CAN (cf. Fig. II.12). L’erreur d’offset est exprimée usuellement en LSB. Une mesure de l’offset peut être faite en retranchant ½ LSB (pour quantification centrée) à la tension de la première transition de seuil $V_{S1}$.</li>
+                <li><strong>Erreur de gain :</strong> L’erreur de gain permet de mesurer l’écart entre la pente de la caractéristique idéale de transfert et la pente de la caractéristique réelle (cf. Fig. II.12). Elle est souvent déterminée par régression linéaire des centres des paliers.</li>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 13</span>
+             </header>
+                 <div class="placeholder">[Placeholder for Fig. II.12 – Erreurs d’offset et de gain CAN]</div>
+                 <p class="placeholder-caption">Fig. II.12 – Erreurs d’offset et de gain.</p>
+
+                <li><strong>Non linéarités :</strong> Les erreurs de non linéarité caractérisent les variations locales des tensions de seuil $V_{Sk}$. On distingue non linéarités différentielles (<strong>DNL</strong> pour <em>Differential Non Linearity</em>) et intégrales (<strong>INL</strong> pour <em>Integral Non Linearity</em>). Elles sont mesurées après annulation (compensation) des erreurs d’offset et de gain. Elles sont exprimées en LSB.
+                    <ul>
+                        <li>La <strong>DNL</strong> représente l’écart entre la largeur réelle d’un palier ( $V_{S,k+1} - V_{Sk}$ ) et la largeur idéale (1 LSB = q).
+                            $$ DNL(k) = \frac{(V_{S,k+1} - V_{Sk}) - q}{q} $$
+                        </li>
+                         <li>L’<strong>INL</strong> est une représentation cumulative des DNL, elle matérialise l’écart entre le centre réel d'un palier $k$ ( $(V_{Sk} + V_{S,k+1})/2$ ) et sa position idéale ( $(k + 1/2)q$ pour centré).
+                            $$ INL(k) = \frac{(V_{Sk} + V_{S,k+1})/2 - (k+1/2)q}{q} = \sum_{j=0}^{k} DNL(j) $$
+                             (Formule approximative, la définition exacte peut varier).
+                         </li>
+                     </ul>
+                    <div class="placeholder">[Placeholder for Fig. II.13 – Non linéarités DNL et INL]</div>
+                    <p class="placeholder-caption">Fig. II.13 – Non linéarités différentielles et intégrales.</p>
+                </li>
+                <header class="document-header">
+                    <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                    <span class="page-number">Page 14</span>
+                </header>
+                <li><strong>Erreur de code manquant :</strong> On parle d’erreur de code manquant quand un des codes de sortie n’apparaît jamais quelle que soit la valeur de la tension analogique d’entrée (cf. Fig. II.14, où le code 010 est manquant). Si les DNL d’un CAN sont strictement comprises entre -1 LSB et +1 LSB (soit $|DNL| < 1$ LSB), il ne peut pas y avoir de code manquant.</li>
+                <li><strong>Monotonicité :</strong> Il y a erreur de monotonicité lorsque les codes numériques en sortie ne se succèdent pas de façon croissante pour un signal d’entrée croissant (cf. Fig. II.14). Un CAN est garanti monotone si sa DNL est toujours supérieure à -1 LSB ($DNL > -1$ LSB).</li>
+                 <div class="placeholder">[Placeholder for Fig. II.14 – Code manquant et non monotonicité]</div>
+                 <p class="placeholder-caption">Fig. II.14 – Code manquant et non monotonicité.</p>
+            </ul>
+
+            <h4>Paramètres dynamiques</h4>
+            <p>Les paramètres dynamiques permettent de mesurer la dégradation du signal numérique en sortie d’un CAN par rapport au signal analogique d’entrée, notamment en présence de bruit et de distorsion.</p>
+            <p>Ils sont mesurés par analyse spectrale. Le CAN caractérisé est soumis en entrée à un signal analogique sinusoïdal pleine échelle (généralement). Les défauts du CAN réel (non-linéarités, bruit des composants, gigue d'horloge...) entraînent la présence de <strong>bruit</strong> et d’<strong>harmoniques</strong> du signal d’entrée dans le spectre du signal numérique de sortie. La figure II.15 donne le spectre typique correspondant en sortie, calculé par FFT (<em>Fast Fourier Transform</em>).</p>
+            <p>On retrouve le fondamental d’amplitude $a_1$ à la fréquence $f_{sin}$, ainsi que :</p>
+            <ul>
+                <li>Une composante continue (DC offset) $a_{DC}$.</li>
+                <li>Des harmoniques d’amplitudes $a_k$ aux fréquences $k \cdot f_{sin}$.</li>
+                <li>Du bruit (le bruit de quantification bien évidemment mais aussi le bruit créé par les différents défauts du CAN).</li>
+                <li>Parfois également des raies spectrales (<em>spurious</em>) qui émergent du niveau de bruit moyen à des fréquences non harmoniques de la sinusoïde d’entrée (amplitude $s$ sur la figure).</li>
+            </ul>
+            <header class="document-header">
+                <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                <span class="page-number">Page 15</span>
+            </header>
+            <div class="placeholder">[Placeholder for Fig. II.15 – Spectre en sortie pour mesure dynamique]</div>
+            <p class="placeholder-caption">Fig. II.15 – Spectre en sortie pour la mesure des paramètres dynamiques.</p>
+            <p>La suite de ce paragraphe décrit les principaux paramètres dynamiques.</p>
+            <ul>
+                <li><strong>SNR (Signal to Noise Ratio)</strong>, rapport signal sur bruit hors distorsion : Il représente le rapport entre la puissance du signal (le fondamental $P_{signal} = a_1^2/2$) et la puissance du bruit $P_{bruit}$ (calculée en intégrant le spectre sur toute la bande sauf la composante continue, le fondamental et les harmoniques).
+                    $$ SNR_{dB} = 10 \log_{10} \left( \frac{P_{signal}}{P_{bruit}} \right) $$
+                    Le SNR mesuré dans un cas pratique sera nécessairement inférieur au SNR théorique ($6.02N + 1.76$ dB) calculé au II.3.
+                </li>
+                 <li><strong>SINAD (Signal to Noise ratio And Distorsion)</strong>, rapport signal sur bruit avec distorsion : Il représente le rapport entre la puissance du signal (fondamental) et la puissance totale du bruit ET de la distorsion (harmoniques et éventuels spurious).
+                     $$ SINAD_{dB} = 10 \log_{10} \left( \frac{P_{signal}}{P_{bruit + distorsion}} \right) $$
+                 </li>
+                  <li><strong>ENOB (Effective Number Of Bits)</strong>, nombre de bits effectif : Sa définition est liée à celle du SINAD. L’ENOB est le nombre de bits $N_{eff}$ d'un CAN idéal qui donnerait le même SINAD que le CAN réel.
+                      <header class="document-header">
+                          <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                          <span class="page-number">Page 16</span>
+                      </header>
+                       $$ SINAD_{dB} = 6.02 \cdot ENOB + 1.76 $$
+                       $$ ENOB = \frac{SINAD_{dB} - 1.76}{6.02} $$
+                       L'ENOB est toujours inférieur à la résolution nominale N du CAN.
+                  </li>
+                   <li><strong>SFDR (Spurious Free Dynamic Range)</strong> : Le SFDR donne la plage dynamique sans parasite. C'est la distance (en dB) séparant l’amplitude du fondamental $a_1$ et l’harmonique ou le spurious d’amplitude la plus élevée ($max(a_k, s)$ pour $k \ge 2$) sur la bande de fréquence considérée (généralement du continu à $f_{ech}/2$).
+                       $$ SFDR_{dB} = 20 \log_{10} \left( \frac{a_1}{max(a_k, s)_{k \ge 2}} \right) $$
+                       Le SFDR est illustré figure II.15. Il s’exprime souvent relativement à l’amplitude du signal (fondamental), l’unité utilisée est alors le dBc (dB below carrier).
+                   </li>
+                    <li><strong>THD (Total Harmonic Distorsion)</strong>, taux de distorsion harmonique : Il permet de caractériser la distorsion introduite par un CAN. Le THD est le rapport entre la puissance RMS des harmoniques et la puissance RMS du fondamental.
+                        $$ THD = \sqrt{\frac{P_{harmoniques}}{P_{signal}}} = \sqrt{\frac{a_2^2 + a_3^2 + \dots + a_k^2 + \dots}{a_1^2}} $$
+                        En dB :
+                        $$ THD_{dB} = 10 \log_{10} \left( \frac{P_{harmoniques}}{P_{signal}} \right) $$
+                        (Parfois défini avec $P_{signal}+P_{harmoniques}$ au dénominateur).
+                    </li>
+             </ul>
+        </section>
+
+         <section id="can-architectures">
+            <h3>II.5. Architectures des convertisseurs analogique – numérique</h3>
+
+             <p>On distingue deux grandes familles de CAN basées sur deux approches différentes de l’échantillonnage :</p>
+             <ul>
+                 <li>Les <strong>CAN classiques</strong> (<em>Nyquist Rate ADC</em>) dont la fréquence d’échantillonnage $f_{ech}$ est telle que le spectre du signal converti occupe quasiment toute la bande de Nyquist ($[-f_{ech}/2, f_{ech}/2]$). $f_{ech}$ est typiquement juste au-dessus de $2f_{max}$.</li>
+                 <li>Les <strong>CAN à sur-échantillonnage</strong> (<em>Oversampling ADC</em>) dont la fréquence d'échantillonnage $K \cdot f_{ech}$ est beaucoup plus élevée que $2f_{max}$. Seule une partie réduite de la bande de Nyquist élargie est utilisée par le signal, ce qui permet de rejeter une grande partie du bruit de quantification par filtrage numérique.</li>
+             </ul>
+
+            <h4>CAN classiques</h4>
+             <p>Ils sont basés sur deux principes de conversion, <strong>série</strong> ou <strong>parallèle</strong> ; et se subdivisent en trois sous-familles : les CAN série, les CAN parallèle et les CAN série - parallèle.</p>
+             <ul>
+                 <li>La conversion dans un <strong>CAN série</strong> est effectuée pas à pas (séquentiellement). Il en est ainsi des CAN à intégration (comme le double rampe), à approximations successives (SAR), et à redistribution de charges. Ils sont généralement précis mais pas les plus rapides.</li>
+                 <li>La conversion <strong>parallèle</strong> consiste à comparer simultanément la valeur à convertir à tous les seuils de quantification. Le nom donné à ces convertisseurs est <strong>CAN Flash</strong>. Ils sont très rapides mais complexes et limités en résolution.</li>
+                  <li>Les <strong>CAN série – parallèle</strong> combinent les deux approches afin de tirer partie de leurs avantages respectifs tout en limitant les effets de leurs défauts. Exemples : pipeline, multi-step/sous-gamme.</li>
+             </ul>
+
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 17</span>
+             </header>
+             <h5>Convertisseur par intégration (Ex: Double Rampe)</h5>
+             <p>Il existe plusieurs sortes de convertisseurs à intégration basés sur un principe similaire : le décompte du temps écoulé lors de la charge/décharge d’une capacité. La figure II.16 donne l’architecture d’un CAN double rampe (<em>dual slope ADC</em>) qui est la variété la plus répandue (utilisée dans les multimètres, panel meters).</p>
+            <div class="placeholder">[Placeholder for Fig. II.16 – Convertisseur double rampe]</div>
+            <p class="placeholder-caption">Fig. II.16 – Convertisseur double rampe.</p>
+            <p>La conversion d’une tension analogique d’entrée $v_a$ (négative par exemple) se décompose en deux phases (cf. section III.b page 10 pour le détail) :</p>
+            <ol>
+                <li><strong>Phase 1 (Intégration de $v_a$) :</strong> L'interrupteur S2 est ouvert, S1 connecte $v_a$ à l'intégrateur (R, C, A.Op.). La sortie $v_{N1}$ croît linéairement avec une pente $|v_a| / RC$ pendant une durée <strong>fixe</strong> $T_1$ (souvent $2^N$ cycles d'horloge $f_{clk}$). Simultanément, un compteur est activé (mais sa valeur n'est pas utilisée directement). On atteint une tension $V_{pic} = (|v_a|/RC) T_1$. Le compteur est remis à zéro.</li>
+                <li><strong>Phase 2 (Intégration de $V_{ref}$) :</strong> S1 connecte $V_{ref}$ (positive) à l'intégrateur. La sortie $v_{N1}$ décroît linéairement avec une pente <strong>fixe</strong> $-V_{ref} / RC$. Simultanément, le compteur est activé et compte les cycles d'horloge $f_{clk}$ pendant une durée $T_2$, jusqu'à ce que $v_{N1}$ revienne à zéro (détecté par le comparateur).</li>
+             </ol>
+              <header class="document-header">
+                  <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                  <span class="page-number">Page 18</span>
+              </header>
+             <div class="placeholder">[Placeholder for Fig. II.17 – Détail des phases de conversion double rampe]</div>
+             <p class="placeholder-caption">Fig. II.17 – Détail des phases de conversion.</p>
+             <p>Pendant la décroissance, $V_{pic} = (V_{ref}/RC) T_2$. En égalant les expressions de $V_{pic}$ :</p>
+             $$ \frac{|v_a|}{RC} T_1 = \frac{V_{ref}}{RC} T_2 \implies |v_a| T_1 = V_{ref} T_2 $$
+             <p>La durée $T_1$ est fixe ($T_1 = 2^N / f_{clk}$) et la durée $T_2$ est mesurée par le nombre de coups d'horloge $n$ ($T_2 = n / f_{clk}$).</p>
+             $$ |v_a| \frac{2^N}{f_{clk}} = V_{ref} \frac{n}{f_{clk}} \implies n = 2^N \frac{|v_a|}{V_{ref}} $$
+             <p>La sortie du compteur $n$ représente l’équivalent analogique de $v_a$. Les CAN double rampe permettent d’obtenir une très bonne précision (jusqu’à 18 bits) et une bonne réjection du bruit (si $T_1$ est un multiple de la période du 50/60Hz). Leur principale force réside dans l’indépendance du résultat de conversion vis-à-vis des valeurs exactes de R et de C, ce qui relâche la contrainte concernant la précision de ces éléments et leurs éventuelles dérives. Le temps de conversion est cependant relativement important, il peut atteindre $2 \times 2^N T_{clk}$ (ou $2^{N+1} T_{clk}$) pour une tension proche de $V_{ref}$ en valeur absolue.</p>
+
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 19</span>
+             </header>
+             <h5>Convertisseur à approximations successives (SAR converter)</h5>
+            <p>La figure II.18 donne la topologie d’un convertisseur à approximations successives (SAR converter, pour <em>Successive Approximation Register</em>). C'est l'architecture la plus répandue pour les résolutions moyennes (8-16 bits) et vitesses moyennes (kSPS à quelques MSPS).</p>
+            <div class="placeholder">[Placeholder for Fig. II.18 – Convertisseur SAR]</div>
+            <p class="placeholder-caption">Fig. II.18 – Convertisseur à approximations successives.</p>
+            <p>Le signal analogique à convertir $v_a$ passe par un filtre anti-repliement puis est échantillonné et bloqué (par un S/H, Sample and Hold) pendant toute la phase de conversion.</p>
+            <p>Le CAN possède une boucle de rétroaction, constituée d’un CNA de même résolution $N$ et d’un comparateur qui commande un Registre à Approximation Successive (RAS, qui donne son nom à cette architecture).</p>
+            <p>Le principe de conversion est basé sur une recherche du code de sortie par <strong>dichotomie</strong> (cf. Fig. II.19). A chaque coup d’horloge $f_{clk}$, l’intervalle de recherche est divisé par 2.</p>
+            <ol>
+                <li>En début de conversion (cycle 1), tous les bits de sortie (dans le RAS et donc à l'entrée du CNA) sont positionnés à zéro à l’exception du MSB, $b_1$, qui est fixé à un (code $100\dots0$).</li>
+                <li>Le CNA délivre en sortie une tension $V_{CNA}$ (environ $V_{ref}/2$).</li>
+                <li>Cette dernière est comparée à $v_a$ (la tension bloquée).</li>
+                <li>Si $v_a$ est inférieure à $V_{CNA}$, alors $b_1$ passe à zéro, dans le cas contraire il reste à un. C'est la valeur finale du bit $b_1$.</li>
+                <li>Au cycle suivant (cycle 2), on teste le bit $b_2$ : on le met à 1 (les autres bits $b_3..b_N$ sont à 0, $b_1$ a sa valeur finale). Le CNA sort la tension correspondante, on la compare à $v_a$, et on fixe la valeur finale de $b_2$.</li>
+                <li>Tous les bits de sortie jusqu’au LSB ($b_N$) sont testés successivement sur le même principe. C’est le RAS, commandé par la sortie du comparateur, qui gère les valeurs données aux bits.</li>
+            </ol>
+            <p>La conversion prend $N$ cycles d'horloge $f_{clk}$ (plus un cycle initial et éventuellement un cycle final). C'est beaucoup plus rapide que le double rampe.</p>
+            <header class="document-header">
+                <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                <span class="page-number">Page 20</span>
+            </header>
+            <div class="placeholder">[Placeholder for Fig. II.19 – Illustration conversion SAR]</div>
+            <p class="placeholder-caption">Fig. II.19 – Illustration de la conversion SAR (3 bits) pour $v_a$ correspondant au code 101.</p>
+            <p>La précision du comparateur doit être supérieure au LSB ($q$). En première approximation, le temps de conversion est $N \cdot T_{clk}$ (à noter cependant que la durée des phases élémentaires peut s'accroître pour les bits de poids le plus faible afin de laisser le temps au signal issu du CNA de se stabiliser avant la comparaison).</p>
+            <p>C’est une architecture de conception ancienne, mais encore très répandue. On trouve des CAN SAR jusqu’à 18 bits et quelques MHz (MSPS).</p>
+
+             <h5>Convertisseur à redistribution de charges (Charge Redistribution ADC)</h5>
+             <p>Les convertisseurs à redistribution de charge (cf. Fig. II.20 pour un exemple sur 4 bits) sont particulièrement bien adaptés aux technologies CMOS (les transistors MOS permettent de réaliser de bien meilleurs interrupteurs analogiques que les transistors bipolaires).</p>
+             <p>L’exemple présenté comporte quatre capacités pondérées de façon binaire (C, C/2, C/4 et C/8) et une cinquième capacité de terminaison $C_T=C/8$ de façon à avoir une capacité totale $C_{tot} = C + C/2 + C/4 + C/8 + C/8 = 2C$ (le nombre total de capacités est N + 1). Il comprend aussi un comparateur de tension, plusieurs switches analogiques (interrupteurs commandés) et une logique de contrôle des switches commandée par la sortie du comparateur.</p>
+            <p>Un cycle de conversion se divise en trois phases successives distinctes :</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 21</span>
+             </header>
+             <div class="placeholder">[Placeholder for Fig. II.20 – CAN à capacités commutées (redistribution)]</div>
+             <p class="placeholder-caption">Fig. II.20 – CAN à capacités commutées : (i) échantillonnage, (ii) maintien, (iii) redistribution de la charge.</p>
+             <ol type="i">
+                 <li><strong>Phase d’échantillonnage :</strong> L’interrupteur $S_B$ est fermé, ce qui met l'entrée + du comparateur (nœud commun des armatures supérieures) à un potentiel de référence (ici 0V). Les switches $S_i$ ($i=1,\dots,4$) et $S_T$ connectent les armatures inférieures des capacités à la tension d'entrée $v_a$ via le switch $S_A$. Il apparaît donc une tension $v_a$ aux bornes de la capacité totale $2C$, qui stocke une charge totale $Q_{tot} = 2C \cdot v_a$. Cette phase correspond à un échantillonnage de $v_a$.</li>
+                 <li><strong>Phase de maintien :</strong> L’interrupteur $S_B$ est ouvert (le nœud + devient flottant) et les switches $S_1$ à $S_T$ sont basculés vers la masse (0V). Il n’existe dès lors aucun chemin de décharge pour les capacités qui gardent stockée la même charge $Q_{tot}$. La tension aux bornes des capacités reste identique. Comme l'armature inférieure est maintenant à 0V, l'armature supérieure (nœud +) passe au potentiel $v_+ = -v_a$ (par rapport à la masse). Dans le même temps, $S_A$ bascule vers $V_{ref}$ en préparation de la phase suivante.</li>
+                 <li><strong>Phase de redistribution de la charge :</strong> Cette phase, pendant laquelle se déroule à proprement parler la conversion, s’apparente dans son principe à la recherche par dichotomie déjà décrite pour les CAN SAR. Les switches $S_1$ à $S_4$ (correspondant aux bits $b_1$ à $b_4$) sont testés successivement, du MSB ($S_1$, capacité C) au LSB ($S_4$, capacité C/8).
+                    <p>Lorsqu’un switch $S_i$ est basculé de la masse vers $V_{ref}$, il se produit une redistribution de la charge stockée au niveau des armatures supérieures des capacités (qui forment un nœud isolé). Par le principe du diviseur capacitif, le potentiel $v_+$ augmente de $V_{ref} \times (C/2^{i-1}) / C_{tot} = V_{ref} \times (C/2^{i-1}) / (2C) = V_{ref} / 2^i$. Si le switch est rebasculé vers la masse, la charge reprend sa répartition initiale et $v_+$ retrouve son potentiel initial (-$v_a$ + contributions des bits déjà fixés).</p>
+                    <p>Lors du test du bit $b_i$, on bascule $S_i$ vers $V_{ref}$. On observe la sortie du comparateur : si le potentiel $v_+$ reste négatif (ou nul), cela signifie que $v_a$ est plus grande que la contribution apportée par ce bit (et les précédents); le switch $S_i$ reste donc positionné vers $V_{ref}$ (bit $b_i=1$). Si le potentiel $v_+$ devient positif, cela signifie que la contribution de ce bit est trop grande; le switch $S_i$ est alors rebasculé vers la masse (bit $b_i=0$).</p>
+                    <p>On teste ainsi successivement $S_1, S_2, S_3, S_4$. Lors de cette phase, la tension de l’armature supérieure $v_+$ passe progressivement vers zéro (à un LSB près). Sa valeur finale est :</p>
+                     <header class="document-header">
+                         <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                         <span class="page-number">Page 22</span>
+                     </header>
+                     $$ v_{+} = -v_a + V_{ref} \left( b_1 \cdot \frac{C}{2C} + b_2 \cdot \frac{C/2}{2C} + \dots + b_N \cdot \frac{C/2^{N-1}}{2C} \right) \approx 0 $$
+                     $$ v_{+} = -v_a + V_{ref} \left( \frac{b_1}{2} + \frac{b_2}{4} + \dots + \frac{b_N}{2^N} \right) \approx 0 $$
+                     <p>On en déduit le mot de sortie numérique $b_1 b_2 \dots b_N$ qui représente $v_a$ par rapport à $V_{ref}$. La sortie du CAN de la figure II.20 (pour 4 bits, si le processus s'arrête comme montré en (iii)) est 0110.</p>
+                 </li>
+             </ol>
+
+             <h5>Convertisseur Flash (Parallèle)</h5>
+             <p>Le convertisseur flash est un convertisseur parallèle. L’entrée analogique à convertir $v_a$ est comparée <strong>simultanément</strong> aux $2^N - 1$ tensions de seuils (pour un CAN N bit).</p>
+             <p>Ces tensions de seuil sont obtenues par un pont diviseur comportant $2^N$ résistances connectées en série entre $V_{ref}$ et la masse (ou entre $V_{ref+}$ et $V_{ref-}$). Si toutes les résistances intermédiaires sont identiques (R) et celles aux extrémités adaptées (R/2 et 3R/2 pour centré), on obtient des tensions de seuil correspondant à une quantification linéaire centrée (voir II.3).</p>
+             <p>Un CAN flash à N bits comporte donc :</p>
+             <ul>
+                 <li>$2^N - 1$ comparateurs (un pour chaque seuil à comparer).</li>
+                 <li>$2^N - 1$ bascules d’échantillonnage (pour mémoriser la sortie des comparateurs à un instant donné).</li>
+                 <li>Une logique de conversion (décodeur prioritaire) pour transformer le code thermomètre en sortie des comparateurs/bascules en un code binaire classique N bits.</li>
+             </ul>
+              <header class="document-header">
+                  <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                  <span class="page-number">Page 23</span>
+              </header>
+            <div class="placeholder">[Placeholder for Fig. II.21 – Convertisseur Flash]</div>
+            <p class="placeholder-caption">Fig. II.21 – Convertisseur Flash (Exemple 3 bits).</p>
+            <p>Chacun des comparateurs délivre en sortie le résultat de la comparaison entre la tension de seuil correspondante $V_{Rk}$ et le signal analogique $v_a$. Le résultat est stocké dans une bascule d’échantillonnage. Pour une valeur donnée de $v_a$, tous les comparateurs $C_k$ tels que $V_{Rk} < v_a$ sortiront un 1 logique, les autres un 0 logique. On obtient, en sortie des bascules, un <strong>code thermomètre</strong> sur $2^N - 1$ bits. La logique de conversion transforme ce code thermomètre en code binaire classique $N$ bits.</p>
+            <p>La conversion est réalisée en un seul cycle d’horloge (temps de comparaison + temps de décodage). Ce type de convertisseur est donc par essence extrêmement rapide (GSPS possible).</p>
+            <p>Cependant leur complexité croît exponentiellement avec N le nombre de bits (en $O(2^N)$). Le coût résultant en terme de surface de silicium ($2^N-1$ comparateurs, $2^N-1$ bascules) et de consommation, ainsi que la capacité d'entrée élevée, limitent leur emploi à une résolution typiquement inférieure à 8 ou 10 bits (on gardera à l’esprit $2^{10} = 1024$, $2^{12} = 4096$).</p>
+
+            <h5>Convertisseur pas à pas (multi-step / subranging / pipeline)</h5>
+             <p>Les convertisseurs série – parallèles marient et tempèrent les avantages et les inconvénients des approches précédentes (série et parallèle).</p>
+             <p>Un exemple de convertisseur pas à pas (<strong>multi-step</strong> ou <strong>subranging</strong>) à 8 bits est présenté figure II.22.</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 24</span>
+             </header>
+            <div class="placeholder">[Placeholder for Fig. II.22 – Convertisseur multi-step]</div>
+            <p class="placeholder-caption">Fig. II.22 – Convertisseur multi-step (Exemple 8 bits = 4 bits MSB + 4 bits LSB).</p>
+             <p>Un premier convertisseur parallèle (CAN 4 bits MSB, type Flash) détermine les bits de poids fort ($b_1..b_4$) correspondant au signal analogique $v_a$. Le résultat de cette conversion partielle (grossière) est stocké dans un registre de bascule en attendant la fin de la conversion. Un CNA, sur 4 bits également<sup id="fnref:4"><a href="#fn:4">4</a></sup>, reconvertit le mot MSB obtenu ($b_1..b_4$) en un signal analogique $V_{CNA,MSB}$ qui est soustrait à $v_a$. La différence $v_a - V_{CNA,MSB}$ représente l'erreur de quantification de la première étape (le résidu).</p>
+             <p>Ce résidu est ensuite amplifié avec un gain égal à la résolution du premier étage ($2^4 = 16$), afin d’être recalé en pleine échelle ($0..V_{ref}$). Un second CAN parallèle sur 4 bits (CAN 4 bits LSB) permet de déterminer les 4 bits de poids faible ($b_5..b_8$) à partir de ce résidu amplifié.</p>
+             <p>Les deux CAN utilisés sont des CAN Flash, ainsi une conversion complète (8 bits) est réalisée en deux coups d’horloge (un pour les MSB, un pour les LSB). Cette durée, $2T_{clk}$, correspond à un retard (latence) entre l’instant où le signal analogique est présenté en entrée du CAN et l’instant où le résultat de la conversion est terminée.</p>
+            <p>Cependant, lors du calcul des LSB par le second CAN, le premier CAN est de nouveau disponible. Il peut donc être utilisé pour calculer les MSB d’une nouvelle valeur échantillonnée de $v_a$. On obtient alors un résultat de conversion (8 bits) tous les coups d’horloge, avec un retard (latence) de deux coups d’horloge sur le signal analogique.</p>
+             <p>La dégradation du temps de conversion (latence de 2Tclk au lieu de 1Tclk pour un flash 8 bits) s’accompagne d’un gain en surface et consommation très important. Chaque CAN Flash 4 bits possède $2^4-1 = 15$ comparateurs, ce qui donne un total de 30 comparateurs (+ CNA + soustracteur + ampli) à comparer aux $2^8-1 = 255$ comparateurs d’un CAN flash classique à 8 bits.</p>
+
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 25</span>
+             </header>
+             <h5>Convertisseur Pipeline</h5>
+            <p>Les convertisseurs Pipeline sont l’application du principe multi-step précédent poussé à l’extrême : un CAN N bits étant réalisé avec N étages de 1 bit (ou parfois 1.5 bits pour la correction d'erreur). La figure II.23 donne la topologie de l’étage élémentaire d’un CAN pipeline.</p>
+            <div class="placeholder">[Placeholder for Fig. II.23 – Etage élémentaire d’un convertisseur Pipeline]</div>
+            <p class="placeholder-caption">Fig. II.23 – Etage élémentaire d’un convertisseur Pipeline (1 bit).</p>
+            <p>La conversion A/N sur un bit ($b_i$) est réalisée par comparaison de la tension d'entrée de l'étage $v_{a,i}$, après échantillonnage et blocage, avec $V_{ref} / 2$. La sortie $b_i$ du comparateur (0 ou 1) est le bit de sortie de l'étage.</p>
+            <p>La conversion N/A sur un bit est faîte par un switch (ou un multiplexeur), commandé par la sortie $b_i$ du comparateur, connectant l’entrée moins (-) du soustracteur à $V_{ref} / 2$ (si $b_i=1$) ou à la masse (si $b_i=0$). La sortie du soustracteur est $v_{a,i} - V_{CNA,i}$.</p>
+             <p>Ce signal résidu en sortie du soustracteur est recalé en pleine échelle par une multiplication par $2^1 = 2$ (amplificateur de gain 2). Le signal $v_{sa} = 2 \times (v_{a,i} - V_{CNA,i})$ est la tension d'entrée de l'étage suivant ($v_{a, i+1}$).</p>
+
+            <p>La figure II.24 donne la topologie d’un CAN Pipeline à N bits basés sur N étages élémentaires à 1 bit.</p>
+             <div class="placeholder">[Placeholder for Fig. II.24 – Topologie d’un convertisseur Pipeline]</div>
+             <p class="placeholder-caption">Fig. II.24 – Topologie d’un convertisseur Pipeline.</p>
+              <header class="document-header">
+                  <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                  <span class="page-number">Page 26</span>
+              </header>
+             <p>N conversions en parallèle sur 1 bit sont effectuées à chaque coup d’horloge $f_{ech}$. Les résultats $b_i$ de chaque étage sont stockés dans des registres (bascules D) à décalage de longueur variable. Il y a un temps de latence de $N \cdot T_{ech}$ entre l’instant où $v_a$ est échantillonné par le premier étage et l’instant où le résultat complet de la conversion ($b_1..b_N$) est présenté en sortie (après recombinaison des bits issus des différents étages via les registres).</p>
+             <p>Ce temps de latence rend difficile l’utilisation des CAN Pipeline pour réaliser des asservissements rapides. En régime établi, un résultat de conversion (N bits) différent est présenté en sortie à chaque coup d’horloge $f_{ech}$.</p>
+            <p>Le nombre de comparateurs est limité à N dans cette architecture (contre $2^N-1$ pour Flash), ce qui permet d'atteindre de hautes résolutions (12-16 bits) à de hautes fréquences (dizaines/centaines de MSPS). C'est une architecture très populaire pour les communications, l'imagerie médicale, etc.</p>
+
+            <h4>Convertisseur à sur-échantillonnage, convertisseur Sigma – Delta (ΣΔ)</h4>
+             <h5>Principe du sur-échantillonnage</h5>
+            <p>Les convertisseurs A/N dont nous venons d’étudier le principe dans ce qui précède sont dits à <strong>échantillonnage de Nyquist</strong> (<em>Nyquist Rate Converters</em>). Leur fréquence d’échantillonnage $f_{ech}$ est choisie du même ordre de grandeur que le double de la fréquence maximale $f_{max}$ contenue dans le signal échantillonné (et bien évidemment supérieure à $2f_{max}$). La représentation spectrale associée correspond à la partie gauche de la figure II.25.</p>
+            <p>Le recours à une fréquence d’échantillonnage $K \cdot f_{ech}$ (où $K \gg 1$ est le facteur de sur-échantillonnage) supérieure de plusieurs ordres de grandeur à $2f_{max}$ permet d’accroître le rapport signal sur bruit (SNR) d’un convertisseur (cf. partie droite de la figure II.25).</p>
+            <div class="placeholder">[Placeholder for Fig. II.25 – Effet du sur-échantillonnage sur le bruit]</div>
+            <p class="placeholder-caption">Fig. II.25 – Effet du sur échantillonnage sur le bruit de quantification.</p>
+            <p>La densité spectrale de puissance (DSP) du bruit de quantification (supposée uniforme) est en effet répartie sur la bande de Nyquist (de $-f_{ech}/2$ à $+f_{ech}/2$) et est telle que sa puissance totale est $P_{bruit}=q^2/12$. La DSP est donc :</p>
+             $$ DSP_{bruit} = \frac{P_{bruit}}{f_{ech}} = \frac{q^2}{12 \cdot f_{ech}} $$
+            <p>Le fait d’échantillonner à une fréquence $K$ fois plus élevée ($K f_{ech}$) permet de répartir la même puissance totale de bruit $q^2/12$ sur une bande $K$ fois plus large (de $-Kf_{ech}/2$ à $+Kf_{ech}/2$). La nouvelle DSP est :</p>
+             $$ DSP'_{bruit} = \frac{q^2}{12 \cdot K f_{ech}} = \frac{DSP_{bruit}}{K} $$
+            <p>Si on filtre ensuite le signal numériquement pour ne garder que la bande utile (par exemple $[-f_{ech}/2, f_{ech}/2]$), la puissance de bruit dans cette bande sera réduite d'un facteur K. Le SNR est donc amélioré.</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 27</span>
+             </header>
+             <p>Le rapport signal sur bruit amélioré s'exprime par :</p>
+             $$ SNR'_{dB} = SNR_{dB} + 10 \log_{10}(K) = (6.02 N + 1.76) + 10 \log_{10}(K) $$
+             <p>Ainsi, le fait de multiplier la fréquence d’échantillonnage par $K=4$ permet d’augmenter le rapport signal sur bruit de $10 \log_{10}(4) = 6.02$ dB (ce qui correspond également au gain du SNR lorsque l’on augmente le nombre de bits N de 1).</p>
+             <p>On notera également que le sur-échantillonnage permet de relâcher les contraintes sur le design du filtre anti-repliement (qui doit couper autour de $K f_{ech} / 2$, loin des fréquences utiles du signal).</p>
+
+            <h5>Convertisseur Sigma – Delta (ΣΔ)</h5>
+             <p>Les convertisseurs qui utilisent ce principe sont appelés convertisseurs à sur-échantillonnage (<em>oversampling converters</em>). C’est le cas du convertisseur A/N sigma – delta présenté ci-dessous.</p>
+            <p>La figure II.26 présente l’architecture d’un convertisseur A/N Sigma – Delta (ΣΔ).</p>
+            <div class="placeholder">[Placeholder for Fig. II.26 – Topologie Sigma-Delta]</div>
+            <p class="placeholder-caption">Fig. II.26 – Topologie d’un convertisseur sigma – delta.</p>
+             <p>Le système comprend une boucle de rétroaction rapide fonctionnant à la fréquence de sur-échantillonnage $K f_{ech}$. Cette boucle contient :</p>
+             <ul>
+                 <li>Un soustracteur qui calcule l'erreur $v_{\epsilon} = v_a - v_r$.</li>
+                 <li>Un intégrateur (filtre passe-bas).</li>
+                 <li>Un comparateur 1 bit (quantificateur grossier).</li>
+                 <li>Un convertisseur N/A (DAC) 1 bit dans la boucle de retour, qui génère $v_r$ (+Vref ou -Vref) selon la sortie du comparateur.</li>
+             </ul>
+             <p>Le signal analogique d’entrée $v_a$ est ainsi converti en un flot de bits série $v_{comp}$ à la fréquence $K f_{ech}$. Ce flot de bits contient l'information sur $v_a$ mais avec un bruit de quantification important réparti sur une large bande.</p>
+              <p>La caractéristique clé est que l'intégrateur dans la boucle agit comme un filtre qui "met en forme" le bruit de quantification (<strong>noise shaping</strong>): il atténue le bruit aux basses fréquences (dans la bande utile du signal $v_a$) et le repousse vers les hautes fréquences (autour de $K f_{ech} / 2$).</p>
+              <p>En sortie de la boucle ΣΔ, le flot de bits $v_{comp}$ passe dans un <strong>filtre numérique de décimation</strong>. Ce filtre est un filtre passe-bas numérique (qui supprime le bruit haute fréquence) suivi d'un sous-échantillonneur qui réduit la fréquence d'échantillonnage à la fréquence de Nyquist souhaitée $f_{ech}$. La sortie est alors un mot numérique de N bits représentant $v_a$ avec une haute résolution et un bon SNR.</p>
+              <header class="document-header">
+                  <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                  <span class="page-number">Page 28</span>
+              </header>
+              <p>On peut modéliser le ΣΔ par le schéma de la figure II.27 en considérant que le comparateur (CAN 1 bit) introduit un bruit de quantification $b$. $v_r$ est alors l'image bruitée de $v_{int}$, soit $v_r = v_{int} + b$.</p>
+            <div class="placeholder">[Placeholder for Fig. II.27 – Mise en équation Sigma-Delta]</div>
+            <p class="placeholder-caption">Fig. II.27 – Mise en équation du sigma – delta.</p>
+              <p>Analyse simplifiée (en considérant les signaux comme continus et en utilisant la transformée de Laplace ou de Fourier) :</p>
+              $v_{\epsilon} = v_a - v_r$
+              <br>$v_{int} = H(p) \cdot v_{\epsilon}$ (où $H(p)$ est la fonction de transfert de l'intégrateur)
+              <br>$v_r = v_{int} + b = H(p)(v_a - v_r) + b$
+              <br>$v_r (1 + H(p)) = H(p)v_a + b$
+              <br>$$ v_r = \frac{H(p)}{1+H(p)} v_a + \frac{1}{1+H(p)} b $$
+              <p>Pour un intégrateur du 1er ordre, $H(p) = \alpha / p$.</p>
+               $$ v_r = \frac{\alpha/p}{1+\alpha/p} v_a + \frac{1}{1+\alpha/p} b = \frac{\alpha}{p+\alpha} v_a + \frac{p}{p+\alpha} b $$
+               <p>Le premier terme correspond à un filtrage <strong>passe bas</strong> du signal d’entrée $v_a$. Le deuxième terme correspond à un filtrage <strong>passe haut</strong> du bruit de quantification $b$. Ainsi le bruit est réduit à basse fréquence (où se trouve le signal utile) et rejeté vers les hautes fréquences. Ce phénomène est appelé <strong>noise shaping</strong>. Il permet d’accroître encore le SNR sur la bande de fréquence utile.</p>
+               <header class="document-header">
+                   <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                   <span class="page-number">Page 29</span>
+               </header>
+                <p>La figure II.28 illustre graphiquement les trois étapes de conversion : sur-échantillonnage, noise shaping et filtrage/décimation, qui permettent d’obtenir un SNR important.</p>
+               <div class="placeholder">[Placeholder for Fig. II.28 – Propriétés fréquentielles Sigma-Delta]</div>
+               <p class="placeholder-caption">Fig. II.28 – Propriétés fréquentielles d’un convertisseur sigma – delta.</p>
+
+                <p>Un exemple simplifié du fonctionnement est donné Figure II.29 et II.30, montrant comment la boucle stabilise la valeur moyenne de $v_r$ (l'image du flot de bits $v_{comp}$) sur la valeur de $v_a$.</p>
+               <header class="document-header">
+                   <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                   <span class="page-number">Page 30</span>
+               </header>
+                 <table>
+                    <caption>Fig. II.29 – Illustration du fonctionnement (tableau) pour $v_a = V_{ref}/2$</caption>
+                    <thead><tr><th>État</th><th>$V_{int}$</th><th>$V_{comp}$</th><th>$V_r$</th><th>$V_{\epsilon} = v_a - V_r$</th></tr></thead>
+                    <tbody>
+                       <tr><td>Initial (après clk)</td><td>0</td><td>1</td><td>$V_{ref}$</td><td>$-V_{ref}/2$</td></tr>
+                       <tr><td>Fin intégration (avant clk)</td><td>$-V_{ref}/2$</td><td>0</td><td></td><td></td></tr>
+                       <tr><td>Après front clk</td><td>$-V_{ref}/2$</td><td>0</td><td>$-V_{ref}$</td><td>$3V_{ref}/2$</td></tr>
+                       <tr><td>Fin intégration</td><td>$V_{ref}$</td><td>1</td><td></td><td></td></tr>
+                       <tr><td>Après front clk</td><td>$V_{ref}$</td><td>1</td><td>$V_{ref}$</td><td>$-V_{ref}/2$</td></tr>
+                       <tr><td>Fin intégration</td><td>$V_{ref}/2$</td><td>1</td><td></td><td></td></tr>
+                       <tr><td>Après front clk</td><td>$V_{ref}/2$</td><td>1</td><td>$V_{ref}$</td><td>$-V_{ref}/2$</td></tr>
+                       <tr><td>Fin intégration</td><td>0</td><td>1</td><td></td><td></td></tr>
+                       <tr><td>Après front clk</td><td>0</td><td>1</td><td>$V_{ref}$</td><td>$-V_{ref}/2$</td></tr>
+                       <!-- Cycle périodique de 4 horloges : 1011 -->
+                    </tbody>
+                </table>
+               <div class="placeholder">[Placeholder for Fig. II.30 – Illustration graphique Sigma-Delta]</div>
+               <p class="placeholder-caption">Fig. II.30 – Illustration graphique pour $v_a = V_{ref}/2$ et $v_a = 0$.</p>
+                <p>On constate qu'il s'établit un fonctionnement périodique. La valeur moyenne de $v_r$ (et donc du flot de bits $v_{comp}$) correspond bien à $v_a$.</p>
+
+                <header class="document-header">
+                    <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                    <span class="page-number">Page 31</span>
+                </header>
+                <p>La topologie présentée correspond à un Sigma – Delta d’ordre 1 (une seule boucle de rétroaction / un seul intégrateur). Dans la pratique, les CAN commercialisés sont d’ordre supérieur (plusieurs intégrateurs) pour améliorer le noise shaping.</p>
+                <p>Cette architecture se caractérise par sa très bonne linéarité et par la résolution importante atteignable (jusqu’à 24 bits), mais est généralement limitée à des fréquences plus basses que les SAR ou Pipeline. Cependant le filtre numérique (décimation) introduit un retard (latence) important.</p>
+
+               <h4>Conclusion sur les architectures CAN</h4>
+               <p>En guise de conclusion concernant les convertisseurs A/N, la figure II.31 donne leurs gammes d’utilisation typiques en termes de résolution (bits) et de fréquence d’échantillonnage (samples/s).</p>
+                <div class="placeholder">[Placeholder for Fig. II.31 – Choix de topologies CAN]</div>
+                <p class="placeholder-caption">Fig. II.31 – Choix de topologies en fonction de la résolution et de la vitesse (Source: www.reed-electronics.com) - Flash: haute vitesse, basse résolution. Sigma-Delta: haute résolution, basse vitesse. SAR: milieu de gamme. Pipeline: haute vitesse, moyenne/haute résolution. Integrating (Dual slope): très haute résolution, très basse vitesse.</p>
+
+                <p>Quelques exemples de convertisseurs A/N commercialisés par Analog Devices sont donnés dans les pages suivantes du document original (non reproduites ici).</p>
+                <header class="document-header">
+                    <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                    <span class="page-number">Pages 32-34</span>
+                </header>
+                 <div class="placeholder">[Placeholder for ADC examples tables - Pages 32-34]</div>
+                 <p class="placeholder-caption">Exemples de CAN commerciaux (Analog Devices) - SAR, Pipeline, Sigma-Delta.</p>
+
+        </section>
+
+        <!-- Note: Partie III sur les CNA commence à la page 35 du PDF -->
+         <!-- Sections pour CNA (III.1, III.2, III.3, III.4) à ajouter ici si nécessaire, en suivant la structure des pages 35 à 52 -->
+         <!-- ... -->
+
+
+    </main>
+
+    <footer class="document-footer">
+        <span>www.emse.fr/~dutertre/enseignement.html - 2009</span>
+        <span>Page Actuelle (approx.)</span> <!-- Mettre à jour manuellement si besoin -->
+    </footer>
+
+    <!-- Footnotes Section -->
+    <section class="footnotes">
+      <hr>
+      <p class="footnote" id="fn:1"><a href="#fnref:1">1.</a> Ce cours utilise fréquemment des termes et abréviations en langue anglaise, on les retrouve dans la documentation technique, les livres de références et les publications scientifiques.</p>
+      <p class="footnote" id="fn:2"><a href="#fnref:2">2.</a> Pour une quantification linéaire par défaut on a $P_{bruit} = q^2 / 3$.</p>
+       <p class="footnote" id="fn:4"><a href="#fnref:4">4.</a> La précision du CNA doit correspondre à 8 bits sous peine de fausser la détermination des LSB.</p>
+       <!-- Ajouter d'autres footnotes si nécessaire -->
+    </section>
+
+</body>
+</html>
