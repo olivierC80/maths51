@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Diode - Cours de Première SI</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossOrigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossOrigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossOrigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                // • auto-render specific keys, e.g.:
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        h1 {
+            text-align: center;
+            color: #a00;
+        }
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+            background-color: #f9f9f9;
+            color: #666;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .code {
+            font-family: monospace;
+            background-color: #eee;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .warning {
+            color: red;
+            font-weight: bold;
+        }
+        .class-info {
+            text-align: right;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        nav#toc ol {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        nav#toc ol li {
+            margin-bottom: 5px;
+        }
+        nav#toc ol ol li {
+           margin-left: 20px;
+        }
+        nav#toc a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        nav#toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="class-info">Classe de première SI</div>
+
+    <h1>LA DIODE</h1>
+
+    <nav id="toc">
+        <h2>Table des matières</h2>
+        <ol>
+            <li><a href="#presentation">1. Présentation</a></li>
+            <li><a href="#fonctionnement">2. Fonctionnement</a></li>
+            <li><a href="#caracteristiques">3. Caractéristiques</a>
+                <ol>
+                    <li><a href="#zone-claquage">3.1. Zone de claquage</a></li>
+                    <li><a href="#techniques">3.2. Techniques</a></li>
+                </ol>
+            </li>
+            <li><a href="#exemples-utilisation">4. Exemples d'utilisation</a>
+                <ol>
+                    <li><a href="#redresseur-simple">4.1. Montage redresseur simple alternance</a></li>
+                    <li><a href="#redresseur-double">4.2. Montage redresseur double alternance</a></li>
+                    <li><a href="#diode-schottky">4.3. La diode Schottky</a></li>
+                    <li><a href="#diode-zener">4.4. La diode Zener</a></li>
+                    <li><a href="#del">4.5. La DEL</a></li>
+                    <li><a href="#caracteristiques-comparees">4.6. Caractéristiques des différentes diodes</a></li>
+                </ol>
+            </li>
+            <li><a href="#diode-roue-libre">5. La diode de roue libre</a></li>
+            <li><a href="#exercices">6. Exercices d'application</a>
+                <ol>
+                    <li><a href="#ex1">6.1. EXERCICE N°1</a></li>
+                    <li><a href="#ex2">6.2. EXERCICE N°2</a></li>
+                    <li><a href="#ex3">6.3. EXERCICE N°3</a></li>
+                    <li><a href="#ex4">6.4. EXERCICE N°4</a></li>
+                    <li><a href="#ex5">6.5. EXERCICE N°5</a></li>
+                    <li><a href="#ex6">6.6. EXERCICE N°6</a></li>
+                    <li><a href="#ex7">6.7. EXERCICE N°7</a></li>
+                </ol>
+            </li>
+            <li><a href="#test-diodes">7. Test des diodes</a></li>
+        </ol>
+    </nav>
+
+    <hr>
+
+    <section id="intro">
+        <h2>Introduction</h2>
+        <p>
+            La diode (du grec <i>di</i> deux, double ; <i>odos</i> voie, chemin) est un composant électronique <strong>non-linéaire</strong> (sa caractéristique courant-tension n'est pas une droite) et <strong>polarisé</strong> (ou non-symétrique, c'est-à-dire que son comportement dépend du sens dans lequel il est branché). Le sens de branchement de la diode a donc une importance capitale sur le fonctionnement du circuit électronique.
+        </p>
+        <p>
+            C'est un <strong>dipôle</strong> (composant à deux bornes) qui ne laisse passer le courant électrique que dans <strong>un seul sens</strong>. Ce dipôle est appelé <strong>diode de redressement</strong> lorsqu'il est utilisé pour réaliser des circuits redresseurs, qui permettent de transformer un courant alternatif (qui change de sens périodiquement) en un courant unidirectionnel (qui circule toujours dans le même sens).
+        </p>
+         <div class="placeholder">[Placeholder: Image d'une diode physique type 1N5408 ou similaire, montrant le corps cylindrique et les deux pattes.]</div>
+    </section>
+
+    <section id="presentation">
+        <h2>1. Présentation</h2>
+        <p>
+            La diode est un dipôle à semi-conducteur basé sur une <strong>jonction PN</strong>. C'est la zone de contact entre un semi-conducteur dopé de type P (excès de "trous", porteurs de charge positive) et un semi-conducteur dopé de type N (excès d'électrons libres, porteurs de charge négative).
+        </p>
+        <p>
+            Les 2 bornes sont repérées :
+        </p>
+        <ul>
+            <li><strong>Anode (A)</strong> : Connectée à la région P.</li>
+            <li><strong>Cathode (K)</strong> : Connectée à la région N.</li>
+        </ul>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;">
+             <div class="placeholder" style="flex-basis: 45%;">[Placeholder: Diagramme structure PN d'une diode avec Anode (P) et Cathode (K)]</div>
+             <div class="placeholder" style="flex-basis: 45%;">[Placeholder: Image d'une diode physique avec une bague colorée indiquant la borne Cathode (K)] <br> La bague indique la cathode.</div>
+        </div>
+
+        <p>
+            Une diode est donc un élément ayant la propriété d'être <strong>conducteur</strong> pour un certain sens du courant (du sens Anode vers Cathode, dit "sens direct" ou "passant") et <strong>non conducteur</strong> (isolant ou bloqué) pour l'autre sens (sens Cathode vers Anode, dit "sens inverse" ou "bloqué").
+        </p>
+        <p>
+            La surface de séparation des régions de type P et N s'appelle une <strong>jonction PN</strong>.
+        </p>
+
+        <p><strong>Symbole électrique :</strong></p>
+        <div class="placeholder">[Placeholder: Symbole électrique standard de la diode montrant la flèche (sens passant du courant) pointant vers la barre. Bornes A (Anode) et K (Cathode) indiquées. Courant direct \(I_D\) et Tension directe \(V_D\) ou \(V_{AK}\) fléchées.]</div>
+        <p>La tension aux bornes de la diode est notée \(V_D\) ou \(V_{AK}\) (tension Anode - tension Cathode) : \( V_{AK} = V_D \). Le courant qui la traverse dans le sens direct est noté \(I_D\).</p>
+
+        <p><strong>Exemples de diodes :</strong></p>
+        <div class="placeholder">[Placeholder: Images de différents types de diodes : 1N4004 (redressement), Zener, Schottky, DEL (LED).]</div>
+        <p>Il existe différents types de diodes, chacune avec des caractéristiques et usages spécifiques (diode de redressement standard, diode Zener, diode Schottky, Diode Électro-Luminescente - DEL/LED...).</p>
+
+    </section>
+
+    <section id="fonctionnement">
+        <h2>2. Fonctionnement</h2>
+        <p>
+            La diode est un composant dit de <strong>commutation</strong> qui possède 2 régimes de fonctionnement principaux :
+        </p>
+        <ul>
+            <li><strong>Diode à l'état Passant :</strong> Elle laisse passer le courant (se comporte presque comme un interrupteur fermé). Cela se produit lorsqu'elle est polarisée en direct (tension positive sur l'Anode par rapport à la Cathode).</li>
+            <li><strong>Diode à l'état Bloqué :</strong> Elle ne laisse pas passer le courant (se comporte presque comme un interrupteur ouvert). Cela se produit lorsqu'elle est polarisée en inverse (tension négative sur l'Anode par rapport à la Cathode).</li>
+        </ul>
+        <p>
+            La diode peut ainsi commuter (passer rapidement) de l'état passant à l'état bloqué et vice-versa, en fonction de la tension appliquée à ses bornes.
+        </p>
+    </section>
+
+    <section id="caracteristiques">
+        <h2>3. Caractéristiques</h2>
+        <p>
+            Le comportement de la diode est décrit par sa caractéristique courant-tension, qui représente le courant \(I_D\) qui la traverse en fonction de la tension \(V_D\) à ses bornes : \(I_D = f(V_D)\). Cette caractéristique n'est pas linéaire.
+        </p>
+        <p>On distingue plusieurs modèles pour décrire cette caractéristique, du plus précis au plus simplifié :</p>
+        <ul>
+            <li><strong>Caractéristique Réelle :</strong> Décrit le comportement physique exact (exponentiel en direct, faible courant de fuite en inverse). Utilisée pour des simulations précises.</li>
+            <li><strong>Caractéristique Semi-réelle :</strong> Modèle simplifié qui inclut une tension de seuil et une résistance interne. Utile pour l'étude dynamique.</li>
+            <li><strong>Caractéristique Classique :</strong> Modèle le plus courant pour les calculs manuels. Comprend une tension de seuil constante et une résistance interne nulle en direct.</li>
+            <li><strong>Caractéristique Idéale :</strong> Le modèle le plus simple. La diode est un interrupteur parfait (résistance nulle en direct, infinie en inverse), avec une tension de seuil nulle. Utile pour une analyse rapide du fonctionnement d'un circuit.</li>
+        </ul>
+        <p><strong>Remarques :</strong> Suivant l'étude que l'on veut mener, on prendra l'une ou l'autre de ces caractéristiques. En règle générale, la <strong>caractéristique Classique</strong> est la plus souvent utilisée pour effectuer des calculs simples. La <strong>caractéristique Idéale</strong> s'utilise plutôt pour analyser rapidement un fonctionnement.</p>
+
+        <h3>Polarisation de la diode</h3>
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+            <div style="text-align: center; margin: 10px; flex-basis: 45%;">
+                <strong>Polarisation en sens direct</strong>
+                <div class="placeholder">[Placeholder: Circuit simple : source de tension Valim, diode D, résistance R en série. Flèches indiquant le courant I, la tension diode VD et la tension résistance VR.]</div>
+                <p>Diode <strong>Passante</strong> (si \(V_{alim}\) est suffisante)</p>
+                <p>Loi des mailles : \( V_{alim} - V_D - V_R = 0 \)</p>
+                <p>Donc : \( V_R = V_{alim} - V_D \)</p>
+                <p>Comme \( V_R = R \cdot I \), on a : \( R \cdot I = V_{alim} - V_D \)</p>
+                <p>Le courant est : \( I = \frac{V_{alim} - V_D}{R} \)</p>
+            </div>
+            <div style="text-align: center; margin: 10px; flex-basis: 45%;">
+                <strong>Polarisation en sens indirect (inverse)</strong>
+                <div class="placeholder">[Placeholder: Circuit simple : source de tension Valim, diode D (orientée en sens inverse), résistance R en série. Flèches indiquant VD et VR.]</div>
+                <p>Diode <strong>Bloquée</strong></p>
+                <p>Aucun courant (ou presque) ne circule : \( I \approx 0 \)</p>
+                <p>Dans ce cas, \(V_R = R \cdot I \approx 0\), et la tension inverse aux bornes de la diode est \(V_D \approx -V_{alim}\).</p>
+            </div>
+        </div>
+
+        <h3>Modèles de caractéristiques</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Modèle</th>
+                    <th>Caractéristiques ( \(I_D\) vs \(V_D\) )</th>
+                    <th>Schéma équivalent</th>
+                    <th>Utilisation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Réel</strong></td>
+                    <td>
+                        <div class="placeholder">[Placeholder: Caractéristique réelle ID vs VD : courbe exponentielle en direct, très faible courant de fuite en inverse, puis claquage.]</div>
+                        <ul>
+                            <li>État bloqué : \(I_D\) pratiquement nul (quelques nA à µA - courant de fuite).</li>
+                            <li>État passant : Le courant augmente exponentiellement avec \(V_D\) au-delà d'un certain seuil.</li>
+                        </ul>
+                    </td>
+                    <td>La diode elle-même (pas de schéma simplifié simple).</td>
+                    <td>Ne s'utilise que pour déterminer précisément le point de fonctionnement d'un montage (souvent par simulation ou méthode graphique).</td>
+                </tr>
+                <tr>
+                    <td><strong>Semi-réel</strong></td>
+                    <td>
+                        <div class="placeholder">[Placeholder: Caractéristique semi-réelle ID vs VD : droite de pente 1/RD partant de Vseuil en direct, I=0 en inverse.]</div>
+                        <ul>
+                            <li>État bloqué : \(I_D = 0\).</li>
+                            <li>État passant (pour \(V_D \ge V_{seuil}\)) : La diode se comporte comme une source de tension \(V_{seuil}\) en série avec une résistance \(R_D\).</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <p><strong>D passante</strong> (\(V_D \ge V_{seuil}\)):</p>
+                        <div class="placeholder">[Placeholder: Schéma équivalent semi-réel : source de tension Vseuil en série avec une résistance RD. Bornes A et K.]</div>
+                        <p>\( V_D = V_{seuil} + R_D \cdot I_D \)</p>
+                    </td>
+                    <td>Pour l'étude dynamique des petits signaux (variation autour d'un point de fonctionnement).</td>
+                </tr>
+                <tr>
+                    <td><strong>Classique</strong></td>
+                    <td>
+                        <div class="placeholder">[Placeholder: Caractéristique classique ID vs VD : droite verticale à Vseuil en direct (I > 0), I=0 pour V < Vseuil.]</div>
+                        <ul>
+                            <li>État bloqué : \(I_D = 0\) pour \(V_D < V_{seuil}\).</li>
+                            <li>État passant : \(V_D = V_{seuil}\) dès que \(I_D > 0\).</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <p><strong>D passante</strong> (\(I_D > 0\)):</p>
+                        <div class="placeholder">[Placeholder: Schéma équivalent classique : source de tension Vseuil seule. Bornes A et K.]</div>
+                        <p>\( V_D = V_{seuil} \)</p>
+                        <p>Typiquement, \( V_{seuil} \approx 0,6V \text{ à } 0,7V \) pour une diode au Silicium.</p>
+                    </td>
+                    <td>Pour calculer simplement les courants et tensions dans une maille (modèle le plus utilisé en exercice).</td>
+                </tr>
+                 <tr>
+                    <td><strong>Idéal</strong></td>
+                    <td>
+                        <div class="placeholder">[Placeholder: Caractéristique idéale ID vs VD : I=0 pour V < 0, V=0 pour I > 0. Axe vertical pour I>0, axe horizontal pour V<0.]</div>
+                        <ul>
+                             <li>Si \(V_D \le 0\): Diode <strong>Bloquée</strong> \(\Rightarrow I_D = 0\) (Interrupteur ouvert).</li>
+                             <li>Si \(I_D > 0\): Diode <strong>Passante</strong> \(\Rightarrow V_D = 0\) (Interrupteur fermé).</li>
+                        </ul>
+                        <p>La transition est à \(V_D = 0\).</p>
+                    </td>
+                    <td>
+                        <p><strong>D bloquée</strong> (\(V_D \le 0\)):</p>
+                         <div class="placeholder">[Placeholder: Schéma équivalent idéal bloqué : Interrupteur ouvert entre A et K.]</div>
+                         <p>\(I_D = 0\)</p>
+                        <p><strong>D passante</strong> (\(I_D > 0\)):</p>
+                         <div class="placeholder">[Placeholder: Schéma équivalent idéal passant : Interrupteur fermé (fil) entre A et K.]</div>
+                         <p>\(V_D = 0\)</p>
+                    </td>
+                    <td>Modèle le plus simple à utiliser pour comprendre le fonctionnement global d'un circuit (redressement, etc.).</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 id="zone-claquage">3.1. Zone de claquage</h3>
+        <p>
+            Si la tension inverse (\(-V_D\), c'est-à-dire la tension positive sur la Cathode par rapport à l'Anode) aux bornes de la diode devient trop importante, un phénomène de <strong>claquage</strong> peut se produire. Le courant inverse augmente alors brutalement, ce qui provoque un échauffement important de la jonction PN et peut entraîner la <strong>destruction</strong> de la diode.
+        </p>
+        <p>
+            Les constructeurs précisent la <strong>tension de claquage inverse</strong> (souvent notée \(V_{BR}\) pour Breakdown Voltage, ou \(V_{RRM}\) pour Repetitive Reverse Maximum Voltage). Elle correspond à la tension inverse maximum que peut supporter la diode sans être détruite. Il est crucial de choisir une diode dont la tension de claquage est supérieure à la tension inverse maximale attendue dans le circuit.
+        </p>
+        <div class="placeholder">[Placeholder: Caractéristique complète ID vs VD montrant la zone de fonctionnement normal en direct, la zone bloquée en inverse, et la zone de claquage (V < -Vbr) où le courant inverse augmente fortement.]</div>
+        <p>La zone de fonctionnement utile en inverse se situe entre 0V et \(-V_{BR}\).</p>
+
+        <h3 id="techniques">3.2. Techniques</h3>
+        <p>Les fiches techniques (datasheets) des diodes fournissent plusieurs paramètres importants :</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Dénomination</th>
+                    <th>Notation constructeur</th>
+                    <th>Description</th>
+                    <th>Valeur typique / Ordre de grandeur</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tension de seuil</td>
+                    <td>\(V_F\) (Forward Voltage)</td>
+                    <td>Tension directe aux bornes de la diode lorsqu'elle conduit un courant spécifié (souvent le courant nominal \(I_F\)). Correspond à \(V_{seuil}\) dans les modèles simplifiés.</td>
+                    <td>\( \approx 0.6V - 0.7V \) (Silicium), \( \approx 0.2V - 0.3V \) (Germanium), \( \approx 0.2V - 0.5V \) (Schottky), \( \approx 1.5V - 3.5V \) (LED)</td>
+                </tr>
+                 <tr>
+                    <td>Courant direct maximum</td>
+                    <td>
+                        \(I_F\) (Forward Current) <br>
+                        \(I_{F(AV)}\) (Average Forward Current) <br>
+                        \(I_{FM}\) (Peak Forward Current) <br>
+                        \(I_{FRM}\) (Repetitive Peak Forward Current) <br>
+                        \(I_{FSM}\) (Non-Repetitive Peak Forward Surge Current)
+                    </td>
+                    <td>
+                         Valeur maximale du courant direct que la diode peut supporter :
+                        <ul>
+                            <li>\(I_F\) ou \(I_{F(AV)}\): Courant moyen ou continu maximum.</li>
+                            <li>\(I_{FM}\) / \(I_{FRM}\): Courant crête maximal répétitif (pendant de courts instants qui se répètent).</li>
+                             <li>\(I_{FSM}\): Courant crête maximal non répétitif (surcharge accidentelle très brève).</li>
+                        </ul>
+                    </td>
+                     <td>mA à kA selon la diode</td>
+                </tr>
+                <tr>
+                    <td>Tension inverse maximale</td>
+                     <td>
+                        \(V_R\) (Reverse Voltage) <br>
+                        \(V_{RRM}\) (Repetitive Peak Reverse Voltage) <br>
+                        \(V_{RSM}\) (Non-Repetitive Peak Reverse Voltage)
+                    </td>
+                     <td>
+                         Valeur maximale de la tension inverse (\(V_{KA} = -V_D\)) que la diode peut supporter sans claquer :
+                        <ul>
+                            <li>\(V_R\): Tension inverse continue maximale.</li>
+                            <li>\(V_{RRM}\): Tension inverse crête maximale répétitive. C'est la valeur la plus couramment utilisée pour le dimensionnement (\(> V_{BR}\)).</li>
+                             <li>\(V_{RSM}\): Tension inverse crête maximale non répétitive (surcharge).</li>
+                        </ul>
+                    </td>
+                    <td>Volts à Kilovolts (kV)</td>
+                </tr>
+                <tr>
+                    <td>Temps de recouvrement inverse</td>
+                    <td>\(t_{rr}\) (Reverse Recovery Time)</td>
+                    <td>Temps nécessaire à la diode pour passer de l'état passant à l'état bloqué après inversion de la tension. Pendant ce temps, un bref courant inverse circule. Important pour les applications haute fréquence.</td>
+                    <td>ns à µs</td>
+                </tr>
+                 <tr>
+                    <td>Temps de recouvrement direct</td>
+                    <td>\(t_{dr}\) ou \(t_{fr}\) (Forward Recovery Time)</td>
+                    <td>Temps nécessaire à la diode pour passer de l'état bloqué à l'état passant (tension directe établie) après application d'un courant direct. Généralement plus court que \(t_{rr}\).</td>
+                    <td>ns</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="exemples-utilisation">
+        <h2>4. Exemples d'utilisation</h2>
+
+        <h3 id="redresseur-simple">4.1. Montage redresseur simple alternance</h3>
+        <p>Ce montage utilise une seule diode pour ne laisser passer que les alternances positives (ou négatives, selon le sens de la diode) d'une tension alternative.</p>
+        <div class="placeholder">[Placeholder: Schéma redresseur simple alternance : source de tension alternative Ve(t) (symbole G dans un cercle), diode D (Vd aux bornes), résistance de charge R (Vs aux bornes).]</div>
+        <p>Utilisation de la caractéristique « classique » de la diode (seuil \(V_{seuil}\)).</p>
+        <div class="placeholder">[Placeholder: Chronogrammes pour redresseur simple alternance :
+            1. Ve(t) : sinusoïde complète centrée sur 0, avec Vmax et -Vmax.
+            2. Vd(t) : Tension aux bornes de la diode. Nulle lorsque Ve > Vseuil, suit -Ve lorsque Ve < Vseuil.
+            3. Vs(t) : Tension de sortie aux bornes de R. Suit Ve - Vseuil lorsque Ve > Vseuil, nulle sinon. Montre uniquement les alternances positives écrêtées à Vmax - Vseuil.]
+        </div>
+        <p>La tension de sortie \(V_s\) est unidirectionnelle mais pas continue. Seule une moitié de l'onde d'entrée est utilisée.</p>
+
+        <h3 id="redresseur-double">4.2. Montage redresseur double alternance (Pont de Graetz)</h3>
+        <p>Ce montage utilise quatre diodes (pont de diodes) pour redresser les deux alternances de la tension d'entrée. Il est beaucoup plus efficace que le redressement simple alternance.</p>
+        <div class="placeholder">[Placeholder: Schéma redresseur double alternance (pont de Graetz) : source Ve(t) connectée entre deux points du pont. La charge R (avec Vs) est connectée entre les deux autres points. Diodes D1, D2, D3, D4 formant le pont.]</div>
+        <p>Les diodes sont considérées idéales (\(V_{seuil} = 0\)) pour simplifier l'analyse du fonctionnement.</p>
+        <div class="placeholder">[Placeholder: Chronogrammes pour redresseur double alternance (diodes idéales) :
+            1. Ve(t) : sinusoïde complète centrée sur 0, avec Vmax et -Vmax.
+            2. Vs(t) : Tension de sortie. Suit |Ve(t)|. Les alternances négatives sont "retournées" en alternances positives. La sortie est toujours positive ou nulle, avec une valeur crête Vmax.]
+        </div>
+        <p>La tension de sortie \(V_s\) est unidirectionnelle et utilise les deux alternances d'entrée. Elle est plus facile à filtrer pour obtenir une tension continue.</p>
+
+        <h3 id="diode-schottky">4.3. La diode Schottky</h3>
+        <p>La diode Schottky utilise une jonction métal-semi-conducteur au lieu d'une jonction PN.
+           <strong>Avantages :</strong>
+        </p>
+        <ul>
+            <li><strong>Tension de seuil (\(V_F\)) plus faible</strong> que les diodes au silicium (typiquement 0.2V à 0.5V), ce qui réduit les pertes de puissance.</li>
+            <li><strong>Temps de commutation (\(t_{rr}\)) très rapide</strong> (pratiquement nul pour \(t_{rr}\), \(t_{dr}\) très court), car elle fonctionne avec des porteurs majoritaires et stocke peu de charges.</li>
+        </ul>
+        <p>Ces diodes sont donc particulièrement adaptées aux applications en <strong>haute fréquence</strong> (alimentations à découpage, détection RF) et lorsque les pertes de tension doivent être minimisées.</p>
+        <p><strong>Symbole :</strong></p>
+        <div class="placeholder">[Placeholder: Symbole électrique de la diode Schottky. Similaire au symbole standard, mais avec des 'crochets' ou un 'S' stylisé au niveau de la barre de la cathode.]</div>
+        <p>\( V_{AK} = V_D \)</p>
+
+        <h3 id="diode-zener">4.4. La diode Zener</h3>
+        <p>
+            Dans le sens direct (polarisation directe, \(V_D > 0\), \(I_D > 0\)), une diode Zener se comporte comme une diode classique (avec une tension de seuil \(V_F \approx 0.7V\)).
+        </p>
+        <p>
+            Son utilisation spécifique se fait en <strong>polarisation inverse</strong>. Les notations changent souvent dans ce mode : la tension inverse est notée \(V_{KA} = -V_D\) et le courant inverse \(I_Z = -I_D\).
+        </p>
+        <p>
+             Contrairement aux diodes de redressement, la diode Zener est conçue pour fonctionner de manière stable et non destructive dans sa zone de claquage inverse, appelée <strong>zone Zener</strong>.
+        </p>
+         <p>Dans ce sens inverse :</p>
+        <ul>
+            <li>Si la tension inverse \(V_{KA}\) est inférieure à une tension spécifique \(V_Z\) (tension Zener), alors le courant inverse \(I_Z\) est quasiment nul (\(I_Z \approx 0\)). La diode est bloquée (comme un interrupteur ouvert).</li>
+            <li>Lorsque \(V_{KA}\) atteint \(V_Z\), la diode entre en conduction inverse (effet Zener ou effet d'avalanche). La tension à ses bornes reste alors très stable et égale à \(V_Z\), quel que soit le courant \(I_Z\) qui la traverse (dans les limites admissibles).</li>
+        </ul>
+
+        <div style="display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: wrap;">
+            <div style="text-align: center; margin: 10px;">
+                 <strong>Symbole :</strong>
+                 <div class="placeholder">[Placeholder: Symbole électrique de la diode Zener. Similaire au symbole standard, mais avec des petits 'flags' sur la barre de la cathode, formant un 'Z'. Bornes A, K. Tension inverse VKA et courant inverse Iz fléchés.]</div>
+             </div>
+             <div style="text-align: center; margin: 10px;">
+                 <strong>Caractéristique \(I_D = f(V_D)\) :</strong>
+                 <div class="placeholder">[Placeholder: Caractéristique ID vs VD pour une diode Zener. Comportement normal en direct (+0.7V). En inverse (VD<0), I est nul jusqu'à VD = -Vz, puis le courant devient fortement négatif (Iz positif) tandis que la tension reste stable à -Vz.]</div>
+             </div>
+              <div style="text-align: center; margin: 10px;">
+                 <strong>Utilisation en zone Zener :</strong>
+                 <div class="placeholder">[Placeholder: Schéma montrant une diode Zener polarisée en inverse par une source et une résistance. La tension aux bornes de la Zener est VKA = Vz.]</div>
+             </div>
+        </div>
+
+        <p>
+            La tension \(V_Z\) est appelée <strong>tension ZENER</strong>. Les constructeurs précisent sa valeur, qui peut varier de 0,78 V à plus de 200 V selon le modèle.
+        </p>
+        <p>
+            D'autres caractéristiques importantes sont le courant Zener maximal admissible \(I_{Zmax}\) et la puissance maximale dissipable \(P_{Zmax} = V_Z \cdot I_{Zmax}\). Le courant doit rester dans une plage \(I_{Zmin} < I_Z < I_{Zmax}\) pour assurer une régulation correcte.
+        </p>
+        <p><strong>Remarques :</strong> La tension Zener \(V_Z\) est dépendante de la température. Ce coefficient de température (\(\Delta V_Z\), exprimé en %/°C ou mV/°C) est spécifié par le constructeur. Il existe des techniques pour compenser cette dérive thermique.</p>
+        <p><strong>Utilisations :</strong> Les diodes ZENER sont très utilisées pour :</p>
+        <ul>
+            <li>Créer une <strong>tension de référence stable</strong>.</li>
+            <li>Réaliser l'<strong>écrêtage</strong> d'une tension (limiter sa valeur maximale).</li>
+            <li>Constituer des <strong>alimentations continues stabilisées</strong> de petite puissance.</li>
+        </ul>
+
+        <h3 id="del">4.5. La DEL (Diode Électro-Luminescent / LED)</h3>
+        <p>
+            La DEL (ou LED en anglais pour Light Emitting Diode) est un dipôle à jonction PN particulier qui, lorsqu'il est polarisé en <strong>direct</strong>, émet de la <strong>lumière</strong>. La couleur de la lumière émise (rouge, vert, jaune, bleu, blanc, infrarouge, ultraviolet...) dépend des matériaux semi-conducteurs utilisés.
+        </p>
+         <p><strong>Symbole et vues :</strong></p>
+         <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;">
+            <div class="placeholder" style="flex-basis: 30%;">[Placeholder: Symbole électrique de la DEL : symbole de diode avec deux petites flèches partant de la diode pour indiquer l'émission de lumière. Bornes A, K. Courant IF et tension VF fléchés.]</div>
+            <div class="placeholder" style="flex-basis: 30%;">[Placeholder: Vue de profil d'une DEL standard (boîtier plastique rond). Indication que la patte la plus courte est la cathode (K).]</div>
+            <div class="placeholder" style="flex-basis: 30%;">[Placeholder: Vue de face (du dessus) d'une DEL standard. Indication qu'un méplat sur le côté du boîtier correspond à la cathode (K).]</div>
+        </div>
+
+        <p><strong>Valeurs caractéristiques :</strong></p>
+        <ul>
+            <li><strong>\(I_F\) : Courant de polarisation direct.</strong> C'est le courant qui doit traverser la DEL pour qu'elle émette une lumière d'intensité nominale (typiquement 5 mA à 30 mA pour les DELs de signalisation).</li>
+            <li><strong>\(V_F\) : Tension de polarisation directe.</strong> C'est la tension aux bornes de la DEL lorsqu'elle est traversée par le courant \(I_F\). Elle dépend de la couleur (ex: ~1.6V pour rouge, ~2.1V pour vert, ~3.3V pour bleu/blanc).</li>
+        </ul>
+        <p class="warning">
+            Attention : Les DELs sont très sensibles à la polarisation inverse. Elles ne supportent généralement pas une tension inverse supérieure à 5V. Une tension inverse trop élevée les détruit rapidement.
+        </p>
+
+        <h3 id="caracteristiques-comparees">4.6. Caractéristiques comparées des différentes diodes</h3>
+        <p>Le graphique suivant compare les caractéristiques \(I_D = f(V_D)\) typiques pour différents types de diodes :</p>
+        <div class="placeholder">[Placeholder: Graphique superposant les caractéristiques ID vs VD :
+            - Diode Classique (Silicium) : Seuil vers 0.7V en direct.
+            - Diode Zener : Idem en direct, mais avec la zone de claquage contrôlée à -Vz en inverse.
+            - Diode LED : Seuil plus élevé en direct (ex: 1.4V à 3V selon couleur), faible tenue en inverse.
+            - (Optionnel) Diode Schottky : Seuil plus bas en direct (ex: 0.3V).
+            Annotations indiquant Vseuil=0.7V, Vled=1.4V (exemple), -Vz, plage de fonctionnement Zener (Izmin à Izmax). Axes ID (ou IF/IA) et VD (ou VAK/-VKA).]
+        </div>
+        <p>On voit clairement les différences de tension de seuil en direct et le comportement spécifique de la Zener en inverse.</p>
+
+    </section>
+
+     <section id="diode-roue-libre">
+        <h2>5. La diode de roue libre</h2>
+        <p>
+            Le courant dans une inductance (composant bobiné comme un relais, une électrovanne, un moteur) ne peut pas être interrompu instantanément. Si on coupe brutalement le circuit d'alimentation d'une bobine, l'inductance va générer une <strong>surtension</strong> très élevée ( \(V = -L \frac{dI}{dt}\) ) à ses bornes pour tenter de maintenir le courant, ce qui peut détruire le composant de commande (transistor, interrupteur...).
+        </p>
+        <p>
+            Pour y remédier, on place une diode, dite <strong>diode de roue libre</strong> (flyback diode), en <strong>parallèle</strong> avec l'inductance, mais branchée en sens inverse par rapport à la tension d'alimentation normale.
+        </p>
+
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+            <div style="text-align: center; margin: 10px; flex-basis: 45%;">
+                <strong>Interrupteur K fermé</strong>
+                 <div class="placeholder">[Placeholder: Circuit avec source DC (+/-), interrupteur K fermé, inductance L en série avec sa résistance interne r. Diode de roue libre D en parallèle sur L+r, orientée pour être bloquée par la source DC.]</div>
+                 <p>L'interrupteur K est fermé. Le courant \(I\) s'établit dans l'inductance L et est limité par la résistance totale (ici \(r\)) en régime établi.
+                 <br>Exemple : Bobine de relais 12V standard, résistance \(r \approx 350 \Omega\). Le courant établi est \(I = 12V / 350\Omega \approx 35mA\).
+                 <br>Pendant ce temps, la diode de roue libre D est polarisée en inverse par la tension d'alimentation. Elle est <strong>bloquée</strong> et aucun courant ne la traverse.</p>
+            </div>
+            <div style="text-align: center; margin: 10px; flex-basis: 45%;">
+                <strong>Interrupteur K vient de s'ouvrir</strong>
+                 <div class="placeholder">[Placeholder: Circuit avec interrupteur K ouvert. La source DC est déconnectée. Le courant qui circulait dans L trouve un chemin fermé à travers la diode D (maintenant passante) et la résistance r.]</div>
+                 <p>L'interrupteur K vient de s'ouvrir. Le courant qui circulait dans L ne peut pas s'arrêter instantanément. Il trouve un chemin pour continuer à circuler à travers la diode D, qui devient alors <strong>passante</strong> (polarisée en direct par la tension auto-induite par L).
+                 <br>La tension aux bornes de l'inductance change brutalement de signe mais sa valeur reste limitée (à environ \(-V_{seuil}\) de la diode, soit -0.7V). Le courant diminue alors exponentiellement avec une constante de temps \( \tau = L/r \), en dissipant son énergie dans la résistance r et la diode D.
+                 <br>Ce changement de tension est spontané et assure la continuité du courant dans L, évitant la surtension destructrice.</p>
+            </div>
+        </div>
+
+        <p><strong>Dimensionnement de la diode de roue libre :</strong></p>
+        <ul>
+            <li><strong>Tension :</strong> La diode doit supporter en inverse la tension d'alimentation du circuit lorsqu'elle est bloquée (interrupteur fermé). Il faut donc choisir une diode avec \(V_{RRM}\) supérieure à la tension d'alimentation (prendre une marge de sécurité, ex: 50V ou 100V pour un circuit 12V ou 24V).</li>
+            <li><strong>Courant :</strong> Juste à l'ouverture de l'interrupteur, la diode doit pouvoir supporter 100% du courant qui circulait dans l'inductance. Il faut donc choisir une diode avec \(I_F\) (ou \(I_{F(AV)}\)) supérieur au courant maximal dans la bobine.</li>
+        </ul>
+        <p>Pour la commande de petits relais, la diode <strong>1N4148</strong> (rapide, 100V, 200mA continu) est souvent utilisée. Pour des charges plus importantes (moteurs), on utilisera des diodes de redressement plus puissantes (ex: 1N400x, diodes Schottky...).</p>
+
+        <h4>Exemple : commande d'un relais 12V par transistor NPN</h4>
+         <p>On souhaite commander un relais 12V avec un transistor NPN.</p>
+         <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+            <div style="text-align: center; margin: 10px; flex-basis: 45%;">
+                <strong>Transistor passant (saturé) - Relais ON</strong>
+                 <div class="placeholder">[Placeholder: Schéma : Alimentation 12V, relais (L+r) connecté entre +12V et le collecteur d'un NPN. Emetteur du NPN à la masse. Base commandée (ex: via résistance). Diode de roue libre D en parallèle sur le relais, cathode au +12V. Indication des tensions : Vce ≈ 0.1V, Vdiode ≈ -12V (bloquée), Vrelais ≈ 11.9V.]</div>
+                 <p>Lorsque le transistor est saturé (commande ON), il se comporte presque comme un fil. Sa tension Vce(sat) est faible (ex: 0.1V). Le relais est alimenté sous environ 12V - 0.1V = 11.9V. La diode D est polarisée en inverse par 12V et est bloquée.</p>
+            </div>
+            <div style="text-align: center; margin: 10px; flex-basis: 45%;">
+                <strong>Transistor bloqué - Relais OFF (juste après coupure)</strong>
+                 <div class="placeholder">[Placeholder: Schéma : Transistor bloqué (circuit base ouvert). Le courant du relais circule maintenant via la diode D. Indication des tensions : Vdiode ≈ +0.6V (passante), Vcollecteur ≈ 12V + 0.6V = 12.6V (momentanément).]</div>
+                 <p>Quand on bloque le transistor (commande OFF), le courant du relais est dévié vers la diode D qui devient passante. La tension à ses bornes est \(V_D \approx 0.6V \text{ à } 0.7V\). Le potentiel du collecteur monte alors à \(12V + V_D \approx 12.6V\) pendant que le courant diminue. Une fois le courant annulé, la diode se bloque et le potentiel du collecteur revient à 12V.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="exercices">
+        <h2>6. Exercices d'application</h2>
+        <p><em>Remarque : Pour les exercices ci-après, sauf indication contraire, on considérera que les diodes suivent le modèle <strong>Classique</strong> (seuil de tension non nul \(V_{seuil}\), résistance directe nulle). Si le seuil n'est pas donné, on prendra \(V_{seuil} = 0.7V\) pour le Silicium.</em></p>
+
+        <h3 id="ex1">6.1. EXERCICE N°1</h3>
+        <p>Soit le schéma ci-contre.</p>
+        <div class="placeholder">[Placeholder: Schéma Exercice 1 : Source de tension continue Ve, Résistance Rp, Diode D (1N4148) en série. Tension Vd aux bornes de la diode. Courant Id traversant le circuit.]</div>
+        <p>On donne \(Ve = +5V\), \(Rp = 1k\Omega\) et \(V_{seuil} = 0,6V\) pour cette diode.</p>
+        <p>Déterminer la valeur du courant \(Id\).</p>
+        <p><strong>Solution :</strong></p>
+        <p>On suppose la diode passante car \(Ve = 5V > V_{seuil} = 0.6V\).</p>
+        <p>Si elle est passante, la tension à ses bornes est \(Vd = V_{seuil} = 0.6V\).</p>
+        <p>Appliquons la loi des mailles : \( Ve - U_{Rp} - Vd = 0 \)</p>
+        <p>La tension aux bornes de la résistance Rp est : \( U_{Rp} = Ve - Vd = 5.0V - 0.6V = 4.4V \)</p>
+        <p>Le courant Id est donné par la loi d'Ohm aux bornes de Rp : \( U_{Rp} = Rp \times Id \)</p>
+        <p>Donc : \( Id = \frac{U_{Rp}}{Rp} = \frac{4.4V}{1k\Omega} = \frac{4.4V}{1000\Omega} = 0.0044 A \)</p>
+        <p>\( Id = 4.4 mA \)</p>
+        <p>Notre hypothèse (diode passante) est correcte car nous avons trouvé un courant \(Id > 0\).</p>
+
+        <h3 id="ex2">6.2. EXERCICE N°2</h3>
+        <p>Soit le schéma ci-contre permettant de polariser une DEL.</p>
+        <div class="placeholder">[Placeholder: Schéma Exercice 2 : Source de tension continue Ve, Résistance Rp, DEL en série. Courant If et tension Vf indiqués pour la DEL.]</div>
+        <p>Sachant que les valeurs \(If\) et \(Vf\) standards pour des DELs rouges Ø 5 mm sont :</p>
+        <ul>
+            <li>\(If = 10 mA\)</li>
+            <li>\(Vf = 1,6 V\)</li>
+        </ul>
+        <p>Et que la source de tension est \(Ve = +5V\).</p>
+        <p>Déterminer la valeur de la résistance \(Rp\) permettant de polariser correctement la DEL.</p>
+        <p><strong>Solution :</strong></p>
+        <p>Pour polariser correctement la DEL, le courant qui la traverse doit être \(If = 10mA\) et la tension à ses bornes sera alors \(Vf = 1.6V\).</p>
+        <p>Appliquons la loi des mailles : \( Ve - U_{Rp} - Vf = 0 \)</p>
+        <p>La tension aux bornes de la résistance Rp doit être : \( U_{Rp} = Ve - Vf = 5.0V - 1.6V = 3.4V \)</p>
+        <p>Le courant qui traverse Rp est le même que celui qui traverse la DEL, soit \(If = 10mA\).</p>
+        <p>La loi d'Ohm aux bornes de Rp donne : \( U_{Rp} = Rp \times If \)</p>
+        <p>Donc : \( Rp = \frac{U_{Rp}}{If} = \frac{3.4V}{10mA} = \frac{3.4V}{10 \times 10^{-3}A} = 340 \Omega \)</p>
+
+        <h3 id="ex3">6.3. EXERCICE N°3</h3>
+        <p>Soit le schéma ci-contre.</p>
+        <div class="placeholder">[Placeholder: Schéma Exercice 3 : Deux entrées VE3 et VE4, chacune connectée à l'anode d'une diode (D3 et D4 respectivement). Les cathodes des deux diodes sont reliées ensemble en un point VS2. Une résistance de rappel (pull-down) est connectée entre VS2 et la masse (0V).]</div>
+        <p>On fournit les chronogrammes des tensions d'entrée VE3 et VE4 ci-dessous.</p>
+         <div class="placeholder">[Placeholder: Chronogrammes pour Exercice 3 :
+            1. VE3(t) : Signal carré variant entre 0V et Vcc.
+            2. VE4(t) : Signal carré variant entre 0V et Vcc, déphasé par rapport à VE3.
+            3. VS2(t) : À compléter.]
+        </div>
+        <p>1. Compléter le chronogramme de la tension de sortie (VS2) ci-dessus.</p>
+        <p>2. Donner le nom de la fonction logique réalisée par ce montage.</p>
+        <p><em>Remarque : On suppose \(Vcc \ge V_{D3seuil}\) et \(Vcc \ge V_{D4seuil}\). On utilisera le modèle classique avec \(V_{seuil} \approx 0.7V\).</em></p>
+        <p><strong>Solution :</strong></p>
+        <p>1. Analyse du fonctionnement :</p>
+        <ul>
+            <li>Si VE3 est à Vcc (niveau haut) ET VE4 est à 0V (niveau bas) : D3 est passante (polarisée par Vcc via R_charge_implicite - VE3). VS2 monte à environ Vcc - Vseuil. D4 est bloquée (cathode à Vcc-Vseuil, anode à 0V).</li>
+            <li>Si VE4 est à Vcc ET VE3 est à 0V : D4 est passante. VS2 monte à environ Vcc - Vseuil. D3 est bloquée.</li>
+            <li>Si VE3 ET VE4 sont à Vcc : Les deux diodes sont potentiellement passantes. VS2 monte à Vcc - Vseuil.</li>
+            <li>Si VE3 ET VE4 sont à 0V : Les deux diodes sont bloquées (anodes à 0V). La résistance de rappel tire VS2 à 0V.</li>
+        </ul>
+        <p>Donc, VS2 est au niveau haut (Vcc - Vseuil) si VE3 OU VE4 (ou les deux) est/sont au niveau haut. Sinon, VS2 est au niveau bas (0V).</p>
+         <div class="placeholder">[Placeholder: Chronogramme VS2(t) complété : VS2 est au niveau haut (proche de Vcc) lorsque VE3 OU VE4 est haut. VS2 est à 0V lorsque VE3 ET VE4 sont bas.]</div>
+        <p>2. Fonction logique : Le montage réalise la fonction <strong>OU (OR)</strong> logique.</p>
+
+       <h3 id="ex4">6.4. EXERCICE N°4</h3>
+        <p>Soit le schéma ci-contre.</p>
+        <div class="placeholder">[Placeholder: Schéma Exercice 4 : Source de tension VE, Diode D1 (1N4148), Résistance R1 (1k) en série vers la masse. Courant I et tension VR1 aux bornes de R1 à flécher. Tension VD1 aux bornes de la diode.]</div>
+        <p>1. Flécher sur le schéma, la tension \(VR1\) (aux bornes de R1) et le courant \(I\) (dans le sens positif lorsqu'il existe).</p>
+        <p>2. Sachant que \(V_{D1seuil} = 0,7 V\) : Quelle est la condition sur \(VE\) pour que la diode soit bloquée ?</p>
+        <p>3. Pour \(VE = -5 V\) et \(R1 = 1k\Omega\) : Calculer la valeur de \(I\).</p>
+        <p>4. Pour \(VE = 1 V\) et \(R1 = 1k\Omega\) : Calculer les valeurs de \(I\) et \(VR1\).</p>
+        <p><strong>Solution :</strong></p>
+        <p>1. Fléchage :</p>
+         <div class="placeholder">[Placeholder: Schéma Exercice 4 avec flèches : Courant I circulant de VE vers la masse à travers D1 et R1. Tension VR1 aux bornes de R1, positive du côté de la diode. Tension VD1 aux bornes de D1, positive à l'anode.]</div>
+        <p>2. Condition de blocage : La diode D1 est bloquée si la tension à ses bornes \(VD1 = V_A - V_K\) est inférieure à sa tension de seuil. Ici, \(V_A = VE\) et \(V_K\) est la tension au point entre D1 et R1.
+        Plus simplement, en considérant le circuit, la diode sera bloquée si la tension d'entrée VE n'est pas suffisante pour la rendre passante. La condition est \( VE < V_{D1seuil} \), soit \( VE < 0,7 V \).</p>
+        <p>3. Pour \(VE = -5 V\) :<br>
+        Comme \( -5V < 0,7V \), la diode D1 est <strong>bloquée</strong>.<br>
+        Si la diode est bloquée, le circuit est ouvert, donc le courant \(I\) est nul : \( I = 0 A \).</p>
+        <p>4. Pour \(VE = 1 V\) :<br>
+        Comme \( 1V \ge 0,7V \), on suppose que la diode D1 est <strong>passante</strong>.<br>
+        Si elle est passante, la tension à ses bornes est \( VD1 = V_{D1seuil} = 0,7 V \).<br>
+        Appliquons la loi des mailles : \( VE - VD1 - VR1 = 0 \)<br>
+        Donc, la tension aux bornes de R1 est : \( VR1 = VE - VD1 = 1.0V - 0.7V = 0.3 V \).<br>
+        Le courant \(I\) est donné par la loi d'Ohm aux bornes de R1 : \( I = \frac{VR1}{R1} = \frac{0.3V}{1k\Omega} = \frac{0.3V}{1000\Omega} = 0.0003 A \)<br>
+        \( I = 0.3 mA \).<br>
+        Comme nous avons trouvé un courant \(I > 0\), notre hypothèse (diode passante) est correcte.
+        Les valeurs sont donc : \( I = 0.3 mA \) et \( VR1 = 0.3 V \).</p>
+
+        <h3 id="ex5">6.5. EXERCICE N°5</h3>
+        <p>Soit le schéma d'un chargeur de batterie ci-contre et les caractéristiques suivantes :</p>
+        <div class="placeholder">[Placeholder: Schéma Exercice 5 : Transformateur T1 (Primaire 220V, Secondaire 12V avec point milieu OV). Une moitié du secondaire (ex: borne 5) connectée à l'anode de D1. Cathode de D1 connectée au pôle + d'une batterie (Bat 12V). Pôle - de la batterie connecté au point milieu OV (borne 4).]</div>
+        <ul>
+            <li>\(V_{D1seuil} = 0,7 V\)</li>
+            <li>\(V_{Bat}\) (tension nominale de la batterie) = 12 V</li>
+            <li>Le secondaire délivre une tension de 12V (on supposera que c'est la valeur crête \(VE_{crête} = 12V\) pour simplifier, bien que 12V soit souvent RMS).</li>
+        </ul>
+        <p>La batterie étant déchargée, sa tension réelle est \(V_{Bat} = 10 V\).</p>
+        <p>Calculer la tension \(VD1\) aux bornes de la diode lorsque celle-ci conduit (pendant l'alternance positive du secondaire).</p>
+        <p><strong>Solution :</strong></p>
+        <p>Pendant l'alternance positive, la tension fournie par le secondaire est \(VE(t)\). La diode D1 conduit si \(VE(t)\) est supérieure à la tension de la batterie plus le seuil de la diode (\(V_{Bat} + V_{D1seuil}\)).</p>
+        <p>Au moment où la tension du secondaire atteint sa valeur crête \(VE_{crête} = 12V\), appliquons la loi des mailles (si D1 conduit) :
+        \( VE_{crête} - VD1 - V_{Bat} = 0 \)</p>
+        <p>La tension aux bornes de la diode est alors : \( VD1 = VE_{crête} - V_{Bat} \)</p>
+        <p>Avec \(VE_{crête} = 12V\) and \(V_{Bat} = 10V\) (batterie déchargée) :
+        \( VD1 = 12V - 10V = 2 V \)</p>
+        <p>Vérifions si la diode conduit : Pour qu'elle conduise, il faut que \(VE(t) > V_{Bat} + V_{D1seuil}\). Ici, on a \(VE_{crête} = 12V\) et \(V_{Bat} + V_{D1seuil} = 10V + 0.7V = 10.7V\). Comme \(12V > 10.7V\), la diode conduit bien au moment de la crête.
+        <br>Cependant, la question demande la tension VD1 *lorsque la diode conduit*. Selon le modèle classique, si la diode conduit, la tension à ses bornes devrait être \(V_{D1seuil} = 0.7V\). La tension \(VE_{crête} - V_{Bat} = 2V\) représente en fait la tension disponible pour "forcer" le courant dans la résistance interne (du transfo, de la diode, de la batterie) qui n'est pas modélisée ici.
+        <br>Si l'on applique strictement le modèle classique où VD=0.7V dès que I>0 :
+        \( VE_{crête} - V_{D1seuil} - V_{Bat} = \text{Tension aux bornes des résistances internes} \)
+        \( 12V - 0.7V - 10V = 1.3V \) (Cette tension provoque le courant de charge).
+        <br>La tension aux bornes de la diode, lorsqu'elle conduit dans ce modèle, est <strong>\( VD1 = V_{D1seuil} = 0.7 V \)</strong>.
+        <em>(Note: La formulation de la solution originale Vd1=2V semble ignorer le modèle Vseuil=0.7V posé dans l'énoncé et calculer la tension 'motrice' disponible).</em>
+        Adoptons la réponse basée sur le modèle classique : \(VD1 = 0.7V\).
+        </p>
+
+
+        <h3 id="ex6">6.6. EXERCICE N°6</h3>
+        <p>Soit le schéma ci-contre :</p>
+        <div class="placeholder">[Placeholder: Schéma Exercice 6 : Source de tension E, Résistance R1 (1k) en série. Puis, en parallèle : une diode D (orientée vers la masse) et une résistance R2 (1k). La tension VR2 est aux bornes de R2.]</div>
+        <p>Calculer \(VR2\) si \(E = +5 V\) et \(R1 = R2 = 1 k\Omega\).</p>
+        <p><strong>Solution (selon l'original, potentiellement discutable) :</strong></p>
+        <p>L'énoncé original indique "Pour E = +5 V : La diode n'est pas passante."
+        <!-- Commentaire HTML: Cette affirmation est surprenante. Avec E=+5V, le courant via R1 tend à élever le potentiel au noeud Diode/R2. Si ce potentiel dépasse ~0.7V, la diode devrait conduire vers la masse. Si elle ne conduit pas, c'est qu'elle est inversée ou que E<0.7V, ce qui n'est pas le cas. Procédons comme si elle était bloquée pour suivre la logique originale. -->
+        </p>
+        <p>Si la diode est considérée comme non passante (bloquée), elle se comporte comme un circuit ouvert.</p>
+        <p>Le circuit se réduit alors à R1 et R2 en série, alimentées par E. C'est un diviseur de tension.</p>
+        <p>La tension \(VR2\) est donnée par : \( VR2 = E \times \frac{R2}{R1 + R2} \)</p>
+        <p>\( VR2 = 5V \times \frac{1k\Omega}{1k\Omega + 1k\Omega} = 5V \times \frac{1}{2} = 2.5 V \)</p>
+        <p><em>Remarque: Le texte original du PDF calcule I = 5/2000 = 2.5mA puis VR2 = 1000 * 0.0025 = 2.5V, confirmant le calcul du diviseur de tension mais en justifiant par "diode non passante", ce qui reste contradictoire avec la physique pour E=+5V et une diode vers la masse. Si la diode était passante (ce qui est plus probable), Vd=0.7V et VR2=0.7V.</em></p>
+        <p>Suivant la conclusion originale : \( VR2 = 2.5 V \)</p>
+
+        <h3 id="ex7">6.7. EXERCICE N°7</h3>
+        <p>Soit le schéma ci-contre :</p>
+        <div class="placeholder">[Placeholder: Schéma Exercice 7 : Source E, R1 en série. Puis, en parallèle : une branche avec D1 et D2 en série (D1->D2-> vers R2 ? Ou D1/D2 en // avec R2 ? Le diagramme PDF est ambigu. Supposons D1 et D2 en série, puis R2 en série vers la masse, comme semble l'impliquer le calcul Vdseuil=0.7V sur D2?). L'annotation Vdseuil=0.7V est sur D2.]</div>
+        <p>Calculer \(VR2\) dans les cas suivants :</p>
+        <ul>
+            <li>Cas 1 : \(E = +5V\)</li>
+            <li>Cas 2 : \(E = -5V\)</li>
+        </ul>
+        <p>Avec \(R1 = R2 = 1 k\Omega\). On prendra \(V_{seuil} = 0,7 V\) pour les diodes.</p>
+        <p><strong>Solution (basée sur l'interprétation du PDF où VR2=0 dans les deux cas) :</strong></p>
+        <p>Interprétons le schéma comme E -> R1 -> Noeud A -> (Branche D1->D2 vers Noeud B) // (Branche vide ?) -> Noeud B -> R2 -> Masse. Cette topologie semble la seule à pouvoir donner VR2=0 facilement si le courant dans R2 est nul.
+        <!-- Commentaire HTML: L'interprétation la plus probable du circuit du PDF pour obtenir les réponses données est E -> R1 -> (Point Milieu) -> R2 -> Masse, ET D1 & D2 sont en série entre le Point Milieu et la Masse (D1 Anode au Point Milieu, D2 Cathode à la Masse). Dans ce cas Vdseuil=0.7V ne s'appliquerait qu'à D2. -->
+        </p>
+        <p>Cas 1 : \(E = +5V\)
+        Le courant tente de circuler de E vers la masse. Il passe par R1. Au noeud A, il peut aller vers la branche D1->D2 ou vers R2 (si R2 est en parallèle).
+        Si D1 et D2 sont en série vers la masse depuis le noeud A : Il faut \(V_{noeudA} > V_{seuilD1} + V_{seuilD2} \approx 1.4V\) pour que le courant passe par les diodes. Si R2 est aussi connectée entre le noeud A et la masse, elle forme un diviseur avec R1. \(V_{noeudA} = E \times R_{eq} / (R1+R_{eq})\) où Req est R2 // (D1+D2).
+        Si l'on suit la réponse du PDF (VR2=0) : Cela implique qu'aucun courant ne traverse R2. Ce serait le cas si D2 était montée en sens inverse (cathode vers le noeud A).
+        Texte PDF: "Pour E = +5 V : La diode D2 n'est pas passante. VR2 = 0".
+        Si D2 n'est pas passante (par exemple, montée en inverse), aucun courant ne peut circuler dans la branche D1-D2. Si R2 est en série après cette branche, alors VR2=0. Adoptons cette conclusion.
+        \( VR2 = 0 V \).
+        </p>
+        <p>Cas 2 : \(E = -5V\)
+        Le courant tente de circuler de la masse vers E (qui est à -5V). Il remonterait par R2, puis R1. Concernant les diodes (si elles sont entre le noeud A et la masse), la tension au noeud A serait négative par rapport à la masse. Les diodes D1 et D2 seraient bloquées.
+        Texte PDF: "Pour E = -5 V : La diode D1 n'est pas passante. VR2 = 0".
+        Si D1 est bloquée (ce qui est le cas si le courant tente de remonter de la masse vers A), aucun courant ne passe par la branche D1-D2. Si R2 est en série après cette branche, ou si R2 est en parallèle mais que le courant principal ne la traverse pas pour une autre raison, on pourrait avoir VR2=0.
+        Suivons la conclusion du PDF.
+        \( VR2 = 0 V \).
+        </p>
+        <!-- Commentaire HTML: Les exercices 6 et 7 semblent avoir des solutions dans le PDF qui sont soit basées sur des schémas ambigus, soit physiquement incohérentes avec les hypothèses standards. Les solutions fournies ici suivent celles du PDF. -->
+    </section>
+
+    <section id="test-diodes">
+        <h2>7. Test des diodes</h2>
+        <p>
+            Pour tester une diode (vérifier si elle fonctionne correctement), il vous faut un multimètre disposant d'une position "test de diode" (souvent indiquée par le symbole de la diode). Ce test vérifie la propriété fondamentale de la diode : elle ne "laisse passer" le courant que dans un seul sens.
+        </p>
+        <p><strong>Procédure :</strong></p>
+        <ol>
+            <li>Régler le multimètre sur la position "test de diode".</li>
+            <li>Identifier l'anode (A) et la cathode (K) de la diode. Sur la plupart des diodes, la cathode est repérée par une bague ou un trait de couleur.
+             <div class="placeholder">[Placeholder: Illustration simple montrant une diode physique avec la bague repérant la CATHODE et l'autre borne étant l'ANODE.]</div>
+            </li>
+            <li><strong>Test en sens direct :</strong> Connecter le cordon rouge (+) du multimètre à l'anode (A) et le cordon noir (-) à la cathode (K).</li>
+            <li><strong>Lecture en sens direct :</strong> Si la diode est bonne, le multimètre doit afficher une valeur de tension faible, correspondant à la tension de seuil de la diode.
+                 <div class="placeholder">[Placeholder: Image d'un multimètre en mode diode, connecté en direct à une diode. Affichage d'une valeur type : 0.560 V.]</div>
+                 La valeur lue varie suivant le type de diode et l'appareil de mesure, mais elle est souvent aux alentours de <strong>0,5V à 0,8V</strong> pour une diode au silicium (ex: 0,560V comme sur l'image). Pour une diode au germanium, elle serait plus basse (~0,2V à 0,3V), et plus haute pour une LED (~1.5V à 3.5V). Cette lecture indique que la diode est passante dans ce sens.
+            </li>
+             <li><strong>Test en sens inverse :</strong> Inverser les connexions. Connecter le cordon rouge (+) à la cathode (K) et le cordon noir (-) à l'anode (A).</li>
+             <li><strong>Lecture en sens inverse :</strong> Si la diode est bonne, elle doit être bloquée dans ce sens. Le multimètre doit indiquer une condition de circuit ouvert.
+                  <div class="placeholder">[Placeholder: Image d'un multimètre en mode diode, connecté en inverse à une diode. Affichage "OL" ou "1" ou "---".]</div>
+                  L'affichage peut être "<strong>OL</strong>" (Over Limit ou Open Loop), "<strong>1</strong>" (sur certains modèles, indique une valeur infinie), ou parfois "<strong>---</strong>" (tirets). Dans tous les cas, cet affichage correspond à un "dépassement de capacité", c'est-à-dire que la résistance mesurée (ou la tension) est trop grande pour être affichée sur le calibre utilisé, ce qui signifie que la diode est bien bloquée (très haute résistance).
+            </li>
+        </ol>
+        <p><strong>Conclusion du test :</strong></p>
+        <ul>
+            <li>Une diode est considérée comme <strong>bonne</strong> si elle affiche une faible tension dans le sens direct et "OL" (ou équivalent) dans le sens inverse.</li>
+            <li>Si elle affiche "OL" dans les deux sens, elle est <strong>coupée</strong> (circuit ouvert).</li>
+            <li>Si elle affiche une tension très faible (proche de 0V) dans les deux sens, ou si le multimètre bippe en continu (test de continuité), elle est en <strong>court-circuit</strong>.</li>
+            <li>Si elle affiche une tension dans le sens inverse, elle a "fui" et est défectueuse.</li>
+        </ul>
+         <p>
+            <em>Note finale : L'affichage "OL" ou "1" signifie simplement que la valeur à mesurer est plus grande que la valeur maximale que le calibre (ou la gamme de mesure) du multimètre peut afficher dans cette configuration. Pour le test de diode en inverse, cela correspond bien à une résistance quasi-infinie attendue.</em>
+        </p>
+    </section>
+
+</body>
+
+</html>
