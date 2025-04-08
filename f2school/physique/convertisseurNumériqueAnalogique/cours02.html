@@ -775,7 +775,312 @@
 
 
     </main>
+        <!-- ========================== SECTION III: CONVERSION NUMERIQUE-ANALOGIQUE (CNA / DAC) ========================== -->
+        <section id="cna-details">
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 35</span>
+             </header>
+            <h2>III. Conversion numérique analogique (CNA / DAC)</h2>
 
+            <h3>III.1. Convertisseurs N/A idéaux</h3>
+            <p>La figure III.1 donne le symbole d’un convertisseur numérique analogique (DAC, <em>Digital to Analog Converter</em>) à N bits ; il peut être suivi, ou non, d’un filtre de lissage (passe bas) pour atténuer les transitions abruptes entre les niveaux de sortie.</p>
+            <div class="placeholder">[Placeholder for Fig. III.1 – Conversion numérique analogique (DAC symbol)]</div>
+            <p class="placeholder-caption">Fig. III.1 – Conversion numérique analogique : Entrées N bits ($b_1..b_N$) -> Bloc CNA -> Sortie quantifiée $v_{sa}(t)$ -> Bloc Filtre (optionnel) -> Sortie lissée $v(t)$.</p>
+
+            <p>Chacun des $2^N$ mots binaires ($b_1 b_2 \dots b_N$, avec $b_1$ le MSB) pouvant être appliqué en entrée est associé à une tension analogique de sortie $v_{sa}(t)$ (il peut s’agir également d’un courant<sup id="fnref:5"><a href="#fn:5">5</a></sup>) telle que :</p>
+            $$ v_{sa} = \left( b_1 \cdot 2^{N-1} + b_2 \cdot 2^{N-2} + \dots + b_N \cdot 2^0 \right) \cdot \frac{V_{PE}}{2^N - 1} $$
+            <p>Où $V_{PE}$ est la tension (ou courant) de pleine échelle.
+            <br>Alternativement, en définissant le LSB (quantum) comme $q = V_{ref} / 2^N$ (où $V_{ref}$ est une tension de référence, souvent $V_{ref} \approx V_{PE}$), on a :</p>
+             $$ v_{sa} = V_{ref} \left( \frac{b_1}{2} + \frac{b_2}{4} + \dots + \frac{b_N}{2^N} \right) $$
+             <p>Cette formule est souvent plus pratique.</p>
+
+            <p>La figure III.2 présente la caractéristique de transfert idéale pour une entrée sur 3 bits ($N=3$).</p>
+            <div class="placeholder">[Placeholder for Fig. III.2 – Caractéristique de transfert idéale CNA 3 bits]</div>
+            <p class="placeholder-caption">Fig. III.2 – Caractéristique de transfert idéale d’un CNA 3 bits.</p>
+
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 36</span>
+             </header>
+            <p>On définit le <strong>LSB</strong>, ou <strong>quantum</strong>, comme étant la plus petite variation possible de la tension de sortie, correspondant à un changement du bit de poids faible (passage de $N_E$ à $N_E+1$).</p>
+             $$ 1 \text{ LSB} = q = \frac{V_{PE}}{2^N - 1} \approx \frac{V_{ref}}{2^N} $$
+
+            <p>La figure III.3 illustre la conversion N/A d’une série de mots binaires (i) pour N = 3. La sortie analogique (ii) $v_{sa}(t)$ est quantifiée (en escalier). On ajoute parfois en sortie du CNA un filtre analogique passe-bas ou filtre de lissage (iii) pour obtenir un signal plus lisse $v(t)$.</p>
+            <div class="placeholder">[Placeholder for Fig. III.3 – Exemple de conversion CNA 3 bits]</div>
+            <p class="placeholder-caption">Fig. III.3 – Exemple de conversion pour un CNA 3 bits : (i) Codes d'entrée, (ii) Sortie $v_{sa}(t)$ quantifiée, (iii) Sortie $v(t)$ après lissage.</p>
+
+            <h3>III.2. Caractéristiques des convertisseurs N/A réels</h3>
+            <p>Les CNA sont caractérisés par leurs paramètres statiques et dynamiques, similaires à ceux des CAN.</p>
+            <h4>Paramètres statiques</h4>
+            <p>Les paramètres statiques expriment les défauts liés aux déviations de la caractéristique de transfert réelle par rapport à la droite de transfert idéale.</p>
+            <ul>
+                <li><strong>Erreur d’offset (de décalage) :</strong> C'est la tension de sortie lorsque l'entrée numérique est zéro. Elle correspond à un décalage vertical de la caractéristique de transfert réelle (figure III.4).</li>
+                <li><strong>Erreur de gain :</strong> C’est la différence entre la pente (gain) de la caractéristique de transfert réelle et celle de la caractéristique idéale (figure III.4). Elle est généralement exprimée en pourcentage de la tension pleine échelle idéale.</li>
+                <li><strong>Non linéarité différentielle (DNL) :</strong> C'est l'écart entre la hauteur réelle d'une marche (variation de $V_s$ pour une variation de 1 LSB en entrée) et la hauteur idéale (1 LSB = q).
+                     $$ DNL(k) = \frac{(V_{s,k} - V_{s,k-1}) - q}{q} $$
+                     Où $V_{s,k}$ est la tension de sortie pour le code d'entrée $k$. Une DNL < -1 LSB implique une non-monotonicité.
+                 </li>
+                  <header class="document-header">
+                      <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                      <span class="page-number">Page 37</span>
+                  </header>
+                  <div class="placeholder">[Placeholder for Fig. III.4 – Erreurs d’offset et de gain CNA]</div>
+                  <p class="placeholder-caption">Fig. III.4 – Erreurs d’offset et de gain.</p>
+
+                 <li><strong>Non linéarité intégrale (INL) :</strong> Elle correspond, pour un code donné $k$, à l’écart entre la sortie analogique réelle $V_{s,k}$ et la valeur idéale $k \cdot q$ associée au code (après correction de l'offset et du gain). C'est une mesure cumulative de la DNL.
+                     $$ INL(k) = \frac{V_{s,k} - (k \cdot q)}{q} = \sum_{j=1}^{k} DNL(j) $$
+                     (Définitions exactes peuvent varier). Une INL et DNL typiquement inférieures à $\pm 0.5$ LSB sont souhaitées.
+                 </li>
+                 <li><strong>Monotonicité :</strong> Un CNA est monotone si sa sortie augmente (ou reste stable) lorsque le code d'entrée augmente. Garanti si DNL > -1 LSB.</li>
+            </ul>
+
+            <h4>Paramètres dynamiques</h4>
+             <p>Les paramètres dynamiques mesurent la distorsion subie et le bruit ajouté à un signal de test numérique sinusoïdal pleine échelle lors de sa conversion. Pour un sinus de test numérique à la fréquence $f_{sin}$, on considère le spectre du signal analogique de sortie $v_{sa}$ donné figure III.5.</p>
+            <div class="placeholder">[Placeholder for Fig. III.5 – Spectre en sortie CNA (test sinusoïdal)]</div>
+            <p class="placeholder-caption">Fig. III.5 – Spectre en sortie pour un signal de test sinusoïdal numérique.</p>
+            <p>Les définitions des paramètres dynamiques des CNA (SNR, SINAD, ENOB, THD, SFDR) sont similaires à celles données pour les CAN au II.4.</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 38</span>
+             </header>
+             $$ SNR_{dB} = 10 \log_{10} \left( \frac{P_{signal}}{P_{noise}} \right) $$
+             $$ THD_{dB} = 10 \log_{10} \left( \frac{P_{harmoniques}}{P_{signal}} \right) = 10 \log_{10} \left( \frac{a_2^2 + a_3^2 + \dots}{a_1^2} \right) $$
+             $$ SINAD_{dB} = 10 \log_{10} \left( \frac{P_{signal}}{P_{noise + distorsion}} \right) $$
+             $$ SINAD_{dB} = 6.02 \cdot ENOB + 1.76 $$
+             $$ SFDR_{dB} = 20 \log_{10} \left( \frac{a_1}{max(a_k, s)_{k \ge 2}} \right) $$
+             <p>D'autres paramètres dynamiques importants pour les CNA incluent le <strong>temps d'établissement</strong> (settling time) et l'énergie des <strong>glitchs</strong> de commutation.</p>
+
+            <h3>III.3. Architecture des CNA parallèles</h3>
+            <p>Les convertisseurs N/A sont dits <strong>parallèles</strong> lorsque la valeur analogique de sortie est obtenue directement à partir des bits d'entrée (contrairement aux CNA série, non abordés ici). On les subdivise en deux sous catégories : les CNA <strong>uniformes</strong> et les CNA <strong>pondérés</strong> (pondération binaire).</p>
+
+            <h4>CNA uniformes (à code pondéré / String DAC)</h4>
+            <p>Dans un convertisseur N/A uniforme, il y a autant de sources de tension (ou de courant) qu’il y a de codes numériques d’entrée ($2^N$). La figure III.6 en donne un exemple utilisant une chaîne de $2^N$ résistances identiques pour générer les $2^N$ tensions de sortie possibles. Un seul des interrupteurs $S_1$ à $S_{2^N}$ (réalisé dans l’exemple avec un simple NMOS) est passant à la fois, sélectionné par un décodeur logique en fonction du code d'entrée $b_1..b_N$. Un buffer est intercalé avant la sortie analogique $v_{Sa}$.</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 39</span>
+             </header>
+            <div class="placeholder">[Placeholder for Fig. III.6 – CNA uniforme (String DAC)]</div>
+            <p class="placeholder-caption">Fig. III.6 – CNA uniforme (String DAC).</p>
+            <p><em>Avantage: Garanti monotone par construction. Inconvénients: Nécessite $2^N$ résistances et un décodeur complexe, surface et consommation importantes pour N élevé.</em></p>
+
+            <h4>CNA pondérés (stacked DAC / binary weighted)</h4>
+            <p>Pour ce type de CNA il y a autant de sources (de tension ou courant) qu’il y a de bits ($N$) ; la valeur de ces sources est pondérée de façon binaire ($I, I/2, I/4, ...$ ou $V, V/2, V/4, ...$). Elles sont combinées entre elles (sommées) en fonction du code numérique d’entrée $b_1..b_N$ de façon à obtenir la sortie analogique correspondante.</p>
+
+            <h5>CNA à réseau de résistances pondérées</h5>
+            <p>Le circuit de la figure III.7 utilise un AOP sommateur et des résistances pondérées $R, 2R, 4R, ..., 2^{N-1}R$. Les switches $S_k$ (commandés par les bits $b_k$) connectent la résistance $2^{k-1}R$ soit à la masse (si $b_k=0$) soit à l'entrée virtuelle de l'AOP (si $b_k=1$).</p>
+            <div class="placeholder">[Placeholder for Fig. III.7 - CNA avec réseau de résistances pondérées]</div>
+            <p class="placeholder-caption">Fig. III.7 - CNA avec réseau de résistances pondérées.</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 40</span>
+             </header>
+            <p>Le courant total $i_{Sa}$ entrant dans l'AOP est la somme des courants issus des branches connectées via les switches où $b_k=1$ :</p>
+             $$ i_{Sa} = \frac{V_{ref}}{R} b_1 + \frac{V_{ref}}{2R} b_2 + \dots + \frac{V_{ref}}{2^{N-1}R} b_N = \frac{V_{ref}}{R} \left( \frac{b_1}{1} + \frac{b_2}{2} + \dots + \frac{b_N}{2^{N-1}} \right) $$
+            <p>Si on utilise une résistance de feedback $R'$, la tension de sortie est $v_{Sa} = - i_{Sa} R'$. Si $R'=R/2$ :</p>
+             $$ v_{Sa} = - \frac{V_{ref}}{2} \left( \frac{b_1}{1} + \frac{b_2}{2} + \dots + \frac{b_N}{2^{N-1}} \right) $$
+             <p>(Ceci correspond à $v_{Sa} \propto N_E$). La précision de ce type de CNA est liée à la précision de $V_{ref}$, aux imperfections des switches, et surtout à la précision de la réalisation des résistances pondérées. Ce dernier point devient vite rédhibitoire pour N grand, car il est difficile de réaliser des résistances avec un rapport précis sur une large gamme (ex: 1 à $2^{N-1}$).</p>
+
+            <h5>CNA à échelle (ou réseau) R – 2R</h5>
+            <p>La figure III.8 présente le principe d’une échelle de résistances R – 2R afin d’obtenir des courants ($I_1..I_N$) pondérés binairement dans les différentes branches verticales. Son intérêt est lié à l’utilisation de seulement deux types de résistance R et 2R (soit deux résistances R en série), ce qui permet de réaliser des layouts d’une grande précision (bon matching relatif).</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 41</span>
+             </header>
+            <div class="placeholder">[Placeholder for Fig. III.8 – CNA à réseau R-2R (principe courant)]</div>
+            <p class="placeholder-caption">Fig. III.8 – CNA à réseau R - 2R.</p>
+            <p>Le raisonnement qui permet de trouver les valeurs des courants $I_1$ à $I_N$ se fait de la droite vers la gauche. La résistance équivalente vue vers la droite depuis n'importe quel nœud horizontal (ex: point X) est toujours $2R$. Ainsi, le courant arrivant à un nœud se divise exactement en deux : une moitié va vers le bas (dans la branche $2R$), l'autre moitié continue vers la droite.</p>
+            <p>D’où, on en déduit : $I_1 = 2I_2 = 4I_3 = \dots = 2^{N-1}I_N$. Avec en outre $I_1 = V_{ref} / (2R)$ (résistance équivalente totale vue par $V_{ref}$ est $R$).</p>
+            <p>Les courants $I_k$ (pondérés binairement) sont ensuite aiguillés par les switches $S_k$ (commandés par $b_k$) soit vers la masse, soit vers la sortie (entrée de l'AOP sommateur/convertisseur courant-tension). Le courant total de sortie $i_{Sa}$ est :</p>
+             $$ i_{Sa} = \sum_{k=1}^{N} b_k I_k = \sum_{k=1}^{N} b_k \frac{I_1}{2^{k-1}} = \frac{V_{ref}}{2R} \sum_{k=1}^{N} \frac{b_k}{2^{k-1}} = \frac{V_{ref}}{R} \left( \frac{b_1}{2} + \frac{b_2}{4} + \dots + \frac{b_N}{2^N} \right) $$
+             <p>La tension de sortie $v_{Sa}$ (si AOP inverseur avec feedback $R$) est $v_{Sa} = - i_{Sa} R$, ce qui donne la même expression que précédemment.</p>
+
+            <p><u>Exemple pratique d’implémentation (Bipolaire) :</u> La figure III.9 présente un exemple pour une technologie bipolaire, utilisant des sources de courant ($I_k$) et des paires différentielles comme switches.</p>
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 42</span>
+             </header>
+            <div class="placeholder">[Placeholder for Fig. III.9 – Implémentation bipolaire R-2R]</div>
+            <p class="placeholder-caption">Fig. III.9 – Exemple pratique d’implémentation en technologie bipolaire.</p>
+             <p>Les courants d'émetteur des transistors $Q_1..Q_N$ et $Q_T$ (terminaison) sont pondérés binairement ($I_1=2I_2=...=2^{N-1}I_N$) grâce au réseau R-2R et au fait que $V_{BE}$ est supposée constante. Le courant $I_1$ est égal au courant de référence $I_{ref} = V_{ref}/R_{ref}$ (si $Q_1$ et $Q_{ref}$ sont identiques). Les switches $S_k$ (non montrés, mais contrôlant les bases des paires différentielles associées à chaque $Q_k$) dirigent le courant $I_k$ soit vers la sortie $i_{Sa}$, soit vers une autre branche.</p>
+
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 43</span>
+             </header>
+             <h5>CNA à redistribution de charge (charge scaling DAC)</h5>
+             <p>Les convertisseurs numérique-analogique à redistribution de charge sont basés sur le principe de la division binaire d’une charge grâce à un réseau de capacités pondérées, en fonction d’un mot binaire numérique d’entrée. Ils sont très adaptés à la technologie CMOS.</p>
+             <p>La figure III.10 en donne l’architecture et permet d’illustrer le principe de conversion.</p>
+             <div class="placeholder">[Placeholder for Fig. III.10 – CNA à redistribution de charge]</div>
+             <p class="placeholder-caption">Fig. III.10 – CNA à redistribution de charge (i) Phase de reset, (ii) Phase de conversion.</p>
+              <p>Un tel CNA, de résolution N, possède un réseau de N capacités pondérées en binaire (de C à C/2<sup>N-1</sup>) et une capacité de terminaison (valant C/2<sup>N-1</sup>) afin que la capacité totale soit 2C. L’armature supérieure des capacités est connectée à l’entrée (+) d’un buffer suiveur et à un interrupteur vers la masse (commandé par $\Phi_1$). L’armature inférieure de chaque capacité pondérée ($C/2^{k-1}$) peut être connectée, soit à la masse, soit à la tension de référence $V_{ref}$, via un switch commandé par une horloge $\Phi_2$ et le bit correspondant $b_k$. L’armature inférieure de la capacité de terminaison est connectée à la masse.</p>
+              <p>La conversion est effectuée en deux étapes :</p>
+              <ol>
+                  <li><strong>1<sup>ère</sup> étape (Reset) :</strong> $\Phi_1$ commande la fermeture de l’interrupteur (nœud + à la masse) et $\Phi_2$ positionne les switches des capacités vers la masse. Les capacités sont déchargées ($v_{Sa}=0$).</li>
+                  <li><strong>2<sup>ème</sup> étape (Conversion) :</strong> $\Phi_1$ commande l’ouverture de l’interrupteur (le nœud + est flottant). $\Phi_2$ donne la main sur chacun des switches $S_k$ au bit d'indice $k$ correspondant ($b_k$). Si $b_k = 1$ le switch $S_k$ assure une connexion à $V_{ref}$, et pour $b_k = 0$ à la masse.</li>
+              </ol>
+              <p>Les deux horloges $\Phi_1$ et $\Phi_2$ sont non recouvrantes.</p>
+              <header class="document-header">
+                  <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                  <span class="page-number">Page 44</span>
+              </header>
+              <p>La détermination de $v_{Sa}$ peut se faire en ramenant le CNA à un diviseur capacitif équivalent (cf. Fig. III.11). $C_D$ est la capacité équivalente résultant de la mise en parallèle de toutes les capacités dont l’armature inférieure est connectée à $V_{ref}$ (celles où $b_k=1$).</p>
+               $$ C_D = b_1 C + b_2 \frac{C}{2} + \dots + b_N \frac{C}{2^{N-1}} $$
+              <div class="placeholder">[Placeholder for Fig. III.11 – Diviseur capacitif équivalent]</div>
+              <p class="placeholder-caption">Fig. III.11 – Diviseur capacitif.</p>
+               <p>Par conservation de la charge (ou analyse du diviseur capacitif), la tension au nœud $v^+$ (et donc en sortie $v_{Sa}$ du buffer) est :</p>
+               $$ v^+ = v_{Sa} = V_{ref} \cdot \frac{C_D}{C_{tot}} = V_{ref} \cdot \frac{C_D}{2C} $$
+               $$ v_{Sa} = V_{ref} \frac{1}{2C} \left( b_1 C + b_2 \frac{C}{2} + \dots + b_N \frac{C}{2^{N-1}} \right) = V_{ref} \left( \frac{b_1}{2} + \frac{b_2}{4} + \dots + \frac{b_N}{2^N} \right) $$
+               <p>On retrouve bien la sortie attendue.</p>
+               <p>Ce type de CNA peut avoir un fonctionnement bipolaire (cad une sortie positive ou négative) si on connecte $v^+$ à $V_{ref}$ pendant la première phase et si les switches sont basculés vers la masse pour $b_i= 1$ et vers $V_{ref}$ pour $b_i= 0$ lors de la deuxième phase.</p>
+
+                <p><u>Précision :</u> La précision d’un CNA à redistribution de charge est liée, entre autre, à la précision de réalisation des capacités (matching). Calculons, par exemple, les INL et DNL si on considère qu’une capacité donnée de valeur nominale C peut, du fait des variations de process, prendre une valeur comprise entre $C + \Delta C$ et $C - \Delta C$ (soit une tolérance de $\pm \Delta C / C$).</p>
+                <header class="document-header">
+                    <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                    <span class="page-number">Page 45</span>
+                </header>
+                <p><u>Calcul de l’INL(k) :</u> C'est la différence entre la sortie idéale et la sortie dans le pire cas (variation max), exprimée en LSB. Considérons le cas où seule la capacité d'indice $k$ (valeur nominale $C/2^{k-1}$) est connectée à $V_{ref}$ (code $0...010...0$ avec 1 en position $k$).</p>
+                 $$ v_{Sa}(idéale) = V_{ref} \frac{C/2^{k-1}}{2C} = V_{ref} \frac{1}{2^k} $$
+                 <p>En LSB (sachant que $V_{ref} = 2^N \cdot LSB$) : $v_{Sa}(idéale) = 2^{N-k}$ LSB.</p>
+                 <p>Dans le pire cas, la capacité vaut $C/2^{k-1} \pm \Delta C / 2^{k-1}$ (en supposant $\Delta C$ relatif). La capacité totale reste proche de 2C.</p>
+                 $$ v_{Sa}(pire \ cas) \approx V_{ref} \frac{C/2^{k-1} \pm \Delta C / 2^{k-1}}{2C} = V_{ref} \frac{1}{2^k} \pm V_{ref} \frac{\Delta C}{C} \frac{1}{2^k} $$
+                 $$ v_{Sa}(pire \ cas) \approx 2^{N-k} LSB \pm (2^N LSB) \frac{\Delta C}{C} \frac{1}{2^k} = 2^{N-k} LSB \pm 2^{N-k} \frac{\Delta C}{C} LSB $$
+                 <p>L'écart (INL) est :</p>
+                 $$ INL(k) = \pm 2^{N-k} \frac{\Delta C}{C} \quad [LSB] $$
+                 <p>Le pire cas est pour $k=1$ (MSB) :</p>
+                 $$ INL_{max} = \pm 2^{N-1} \frac{\Delta C}{C} \quad [LSB] $$
+
+                <p><u>Calcul de la DNL :</u> Le pire cas pour la DNL est obtenu pour un changement du MSB (code $01...1 \to 10...0$).</p>
+                <header class="document-header">
+                    <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                    <span class="page-number">Page 46</span>
+                </header>
+                 $$ DNL = \frac{(v_{Sa}(10...0) - v_{Sa}(01...1)) - LSB}{LSB} $$
+                 <p>Après calcul (complexe, incluant les variations $\Delta C$ sur toutes les capacités), on trouve que la DNL est principalement liée à l'erreur sur le MSB :</p>
+                  $$ DNL \approx \pm 2^N \frac{\Delta C}{C} \quad [LSB] $$
+                  <p>(Le facteur $2^N$ au lieu de $2^{N-1}$ vient de la transition majeure).</p>
+
+                <p><u>Application :</u> déterminer la tolérance acceptable ($\Delta C/C$) d’une technologie donnée pour qu’il soit possible de réaliser un CNA 10 bits dont l’INL et la DNL soient inférieures à $\pm 0.5$ LSB (erreur de quantification).</p>
+                 <p>Pour l’INL : $ |INL_{max}| = 2^{10-1} \frac{\Delta C}{C} \le 0.5 \implies 512 \frac{\Delta C}{C} \le 0.5 \implies \frac{\Delta C}{C} \le \frac{0.5}{512} \approx 0.00097 $ soit 0,097%.</p>
+                 <p>Pour la DNL : $ |DNL| = 2^{10} \frac{\Delta C}{C} \le 0.5 \implies 1024 \frac{\Delta C}{C} \le 0.5 \implies \frac{\Delta C}{C} \le \frac{0.5}{1024} \approx 0.00048 $ soit 0,048%.</p>
+                 <p>La contrainte la plus forte vient de la DNL. Une tolérance de 0,048% est nécessaire pour garantir INL et DNL < 0.5 LSB.</p>
+
+            <h4>Augmentation de la résolution des CNA parallèles (Segmented DACs)</h4>
+             <p>Au fur et à mesure que l’on augmente la résolution $N$ d’un CNA parallèle (R-2R, capacités...), sa surface augmente ainsi que le ratio entre les éléments passifs associés au bit de poids fort et au bit de poids faible. Ce dernier point en particulier limite la résolution pour une technologie donnée du fait des problèmes de <strong>matching</strong> (précision relative des composants).</p>
+            <p>Deux approches sont proposées dans cette partie pour contourner ces problèmes. Elles sont basées sur l’association de deux (ou plusieurs) CNA en parallèle.</p>
+
+            <ol>
+                <li><strong>Décomposition N = M + K (Fig III.12) :</strong> On décompose un CNA de résolution N en une combinaison de deux CNA de même type, l’un de résolution M (pour les bits MSB $b_1..b_M$) et l’autre de résolution K (pour les bits LSB $b_{M+1}..b_{M+K}$), avec $N=M+K$. Le premier CNA (MSB) fonctionne avec la référence $V_{ref}$. Le second CNA (LSB) fonctionne aussi avec $V_{ref}$, mais sa sortie est divisée par $2^M$ avant d’être sommée (par un sommateur analogique) à la sortie du premier pour donner la sortie analogique globale $v_{Sa}$.
+                    <header class="document-header">
+                        <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                        <span class="page-number">Page 47</span>
+                    </header>
+                   <div class="placeholder">[Placeholder for Fig. III.12 – Combinaison de CNA (division tension)]</div>
+                   <p class="placeholder-caption">Fig. III.12 – Combinaison de CNA afin d’augmenter la résolution.</p>
+                    <p>Si chaque CNA a la relation $V_{out} = V_{ref} \sum_{i=1}^{Res} b_i / 2^i$, alors :</p>
+                    $ V_{MSB} = V_{ref} \left( \frac{b_1}{2} + \dots + \frac{b_M}{2^M} \right) $
+                    <br>$ V_{LSB} = V_{ref} \left( \frac{b_{M+1}}{2} + \dots + \frac{b_{M+K}}{2^K} \right) $
+                    <br>$$ v_{Sa} = V_{MSB} + \frac{1}{2^M} V_{LSB} $$
+                     $$ v_{Sa} = V_{ref} \left[ \left( \frac{b_1}{2} + \dots + \frac{b_M}{2^M} \right) + \frac{1}{2^M} \left( \frac{b_{M+1}}{2} + \dots + \frac{b_{M+K}}{2^K} \right) \right] $$
+                     $$ v_{Sa} = V_{ref} \left( \frac{b_1}{2} + \dots + \frac{b_M}{2^M} + \frac{b_{M+1}}{2^{M+1}} + \dots + \frac{b_{M+K}}{2^{M+K}} \right) $$
+                     <p>La fonction de transfert obtenue est bien celle d’un CNA à N bits (N = M + K).</p>
+                    <p>La figure III.13 donne un exemple pour un CNA à sources de courant pondérées de résolution N = 6, décomposé en M=3 (MSB) et K=3 (LSB). Le courant $i_{LSB}$ est divisé par $2^M=8$ par un diviseur de courant (R et 7R).</p>
+                    <div class="placeholder">[Placeholder for Fig. III.13 – Association CNA à sources de courant]</div>
+                    <p class="placeholder-caption">Fig. III.13 – Association de CNA à sources de courant pondérées.</p>
+                </li>
+                 <li><strong>Subranging DAC (Fig III.14) :</strong> Une variante consiste à utiliser deux DAC identiques (M et K bits, N=M+K), mais en alimentant le DAC LSB avec une tension de référence $V_{ref} / 2^M$.
+                     <header class="document-header">
+                         <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                         <span class="page-number">Page 48</span>
+                     </header>
+                     <div class="placeholder">[Placeholder for Fig. III.14 – Association type subranging]</div>
+                     <p class="placeholder-caption">Fig. III.14 – Association de type subranging.</p>
+                      La mise en équation est quasi identique et conduit au même résultat final pour $v_{Sa}$.
+                 </li>
+                  <li><strong>Voltage Scaling + Charge Scaling (Fig III.15) :</strong> Une approche mixte combine un CNA "uniforme" (type String DAC ou échelle R) pour les M bits MSB et un CNA à redistribution de charge pour les K bits LSB. Le CNA MSB génère deux tensions $v_{borne \ inf}$ et $v_{borne \ sup}$ correspondant aux extrémités de l'intervalle défini par les bits MSB. Ces deux tensions servent de référence au CNA LSB (qui interpole finement dans cet intervalle).
+                       <header class="document-header">
+                           <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                           <span class="page-number">Page 49</span>
+                       </header>
+                      <div class="placeholder">[Placeholder for Fig. III.15 – Association CNA tension (MSB) et charge (LSB)]</div>
+                      <p class="placeholder-caption">Fig. III.15 – Association de CNA en tension (MSB) et en charge (LSB).</p>
+                      <p>Le CNA MSB (par ex, échelle R) génère $v_{borne \ inf} = V_{ref} (\sum_{i=1}^M b_i/2^i)$ et $v_{borne \ sup} = v_{borne \ inf} + V_{ref}/2^M$. Le CNA LSB (capacitif) fonctionne entre ces deux bornes. Son schéma équivalent est donné Fig III.16 et III.17.</p>
+                       <div class="placeholder">[Placeholder for Fig. III.16 & III.17 – Schéma équivalent CNA MSB + LSB]</div>
+                       <p class="placeholder-caption">Fig. III.16 & III.17 – Schéma équivalent complet.</p>
+                       <header class="document-header">
+                           <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                           <span class="page-number">Page 50</span>
+                       </header>
+                      <p>L'expression de la tension analogique de sortie est : $v_{Sa} = v_{MSB} + v_{LSB}$. Où $v_{MSB} = v_{borne \ inf}$ et $v_{LSB}$ est la sortie du CNA LSB qui interpole entre 0 et $(v_{borne \ sup} - v_{borne \ inf}) = V_{ref}/2^M$.</p>
+                       $$ v_{LSB} = (v_{borne \ sup} - v_{borne \ inf}) \left( \frac{b_{M+1}}{2} + \dots + \frac{b_{M+K}}{2^K} \right) = \frac{V_{ref}}{2^M} \left( \sum_{j=1}^{K} \frac{b_{M+j}}{2^j} \right) $$
+                      <p>Au final, on retrouve bien l'expression d'un CNA N bits.</p>
+                       $$ v_{Sa} = V_{ref} \left[ \left( \sum_{i=1}^{M} \frac{b_i}{2^i} \right) + \frac{1}{2^M} \left( \sum_{j=1}^{K} \frac{b_{M+j}}{2^j} \right) \right] = V_{ref} \sum_{l=1}^{N=M+K} \frac{b_l}{2^l} $$
+                      <p>L’intérêt de ce cas particulier est d’associer un CNA MSB monotone (propriété des CNA uniformes) à un CNA LSB à redistribution de charge qui permet une bonne précision (supérieure à ce qu’elle serait pour un deuxième CNA uniforme réalisé avec des résistances).</p>
+                  </li>
+            </ol>
+
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 51</span>
+             </header>
+             <h3>III.4. CNA à sur échantillonnage – Sigma Delta</h3>
+             <p>L’architecture d’un convertisseur N/A Sigma – Delta à sur échantillonnage est présentée figure III.18.</p>
+             <div class="placeholder">[Placeholder for Fig. III.18 – Architecture CNA Sigma-Delta]</div>
+             <p class="placeholder-caption">Fig. III.18 – Architecture d’un CNA Sigma – Delta.</p>
+             <p>Le signal d’entrée numérique sur N bits à la fréquence $f_s$ traverse en premier lieu un filtre de <strong>sur-échantillonnage</strong> (ou à interpolation) qui fait passer sa fréquence d’échantillonnage à $Kf_s$ (K est appelé le facteur de sur-échantillonnage).</p>
+             <p>Il est suivi d’un étage de traitement du bruit (<strong>noise shaping</strong>) et d’arrondi qui transfère le bruit de quantification vers les hautes fréquences en faisant passer le signal sur 1 bit (ou quelques bits, i bits). Cet étage est un modulateur Sigma-Delta numérique.</p>
+             <p>Le signal numérique 1 bit (ou i bits) à haute fréquence ($Kf_s$) est ensuite converti en analogique par un <strong>CNA 1 bit</strong> (ou i bits). La sortie de ce CNA contient le signal utile basse fréquence et beaucoup de bruit haute fréquence.</p>
+             <p>Le signal analogique de sortie est finalement obtenu après passage par un <strong>filtre passe bas analogique</strong> qui élimine le bruit haute fréquence.</p>
+
+             <p>La figure III.19 illustre l'évolution spectrale dans un CNA Sigma-Delta, par exemple pour l'audio CD (16 bits, 44.1 kHz).</p>
+             <div class="placeholder">[Placeholder for Fig. III.19 – Illustration spectrale CNA Sigma-Delta]</div>
+             <p class="placeholder-caption">Fig. III.19 – Illustration spectrale. (Signal initial, après sur-échantillonnage, après noise shaping, après filtrage analogique).</p>
+              <header class="document-header">
+                  <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                  <span class="page-number">Page 52</span>
+              </header>
+             <p>La figure III.11 (identique à II.31) donne l’illustration spectrale dans le cas du traitement du signal numérique d’un CD audio.</p>
+             <p>Les convertisseurs N/A Sigma – Delta sont bien adaptés au traitement de flux de données, ils trouvent un terrain d’application très favorable dans le traitement des flux audio.</p>
+
+         </section>
+
+        <section id="bibliography">
+             <header class="document-header">
+                 <span>Conception avancées des circuits intégrés analogiques. Convertisseurs A/N et N/A</span>
+                 <span class="page-number">Page 53</span>
+             </header>
+            <h2>Bibliographie</h2>
+             <div class="bibliography">
+                <ul>
+                    <li>"Principles of data conversion system design", Behzad Razavi.</li>
+                    <li>"Microelectronic circuits", A.S. Sedra, K.C. Smith.</li>
+                    <li>"CMOS Data Converters for Communication", M. Gustavsson, J.J. Wilkner, N.N. Tan.</li>
+                    <li>"Integrated AD and DA converters", R. van de Plassche.</li>
+                    <li>"CMOS Analog Circuit Design", Phillip E. Allen, Douglas R. Holberg.</li>
+                    <li>Articles E370, E371 et E372 des Techniques de l’Ingénieur, Traité d’Electronique, Claude Prévot.</li>
+                    <li>http://perso.wanadoo.fr/xcotton/electron/coursetdocs.htm (Lien potentiellement obsolète)</li>
+                </ul>
+             </div>
+        </section>
+
+        <!-- ========================== FOOTER ========================== -->
+         <footer class="document-footer">
+             <span>www.emse.fr/~dutertre/enseignement.html - 2009</span>
+             <span>Fin du document</span>
+         </footer>
+
+         <!-- Footnotes Section -->
+         <section class="footnotes">
+           <hr>
+           <p class="footnote" id="fn:1"><a href="#fnref:1">1.</a> Ce cours utilise fréquemment des termes et abréviations en langue anglaise, on les retrouve dans la documentation technique, les livres de références et les publications scientifiques.</p>
+           <p class="footnote" id="fn:2"><a href="#fnref:2">2.</a> Pour une quantification linéaire par défaut on a $P_{bruit} = q^2 / 3$.</p>
+            <p class="footnote" id="fn:4"><a href="#fnref:4">4.</a> La précision du CNA doit correspondre à 8 bits (N bits) sous peine de fausser la détermination des LSB.</p>
+            <p class="footnote" id="fn:5"><a href="#fnref:5">5.</a> Pour les hautes fréquences, à partir de quelques dizaines de MHz, la sortie d’un CNA sera généralement en courant.</p>
+         </section>
+    </main>
+
+</body>
+</html>
     <footer class="document-footer">
         <span>www.emse.fr/~dutertre/enseignement.html - 2009</span>
         <span>Page Actuelle (approx.)</span> <!-- Mettre à jour manuellement si besoin -->
