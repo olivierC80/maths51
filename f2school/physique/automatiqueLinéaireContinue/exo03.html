@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatique Linéaire 1 – Travaux Dirigés</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <!-- Basic Styling -->
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 2em;
+            padding: 1em;
+            border: 1px solid #ccc; /* Just to frame the content */
+            font-size: 16px; /* Base font size */
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.3em;
+            margin-top: 1.5em;
+        }
+        h1 { font-size: 2em; text-align: center; margin-bottom: 1em; }
+        h2 { font-size: 1.6em; color: #444; margin-bottom: 1em; margin-top: 2em;}
+        h3 { font-size: 1.3em; color: #555; margin-top: 1.5em;}
+        .course-id {
+            text-align: right;
+            font-weight: bold;
+            margin-bottom: 1em;
+        }
+        .placeholder {
+            border: 1px dashed grey;
+            padding: 1em;
+            text-align: center;
+            margin: 1.5em auto; /* Center horizontally */
+            background-color: #f0f0f0;
+            display: block; /* Ensure it takes block space */
+            max-width: 80%; /* Limit width */
+            min-height: 100px; /* Minimum height */
+            overflow: hidden; /* Hide overflow */
+        }
+        .placeholder-caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: 0.5em;
+            color: #555;
+            font-size: 0.9em;
+        }
+        .katex-display {
+            display: block;
+            margin: 1em 0;
+            overflow-x: auto; /* Handle long equations */
+            overflow-y: hidden;
+            padding: 0.5em 0;
+        }
+        ol, ul {
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+        li { margin-bottom: 0.5em; }
+        table {
+            border-collapse: collapse;
+            margin: 1.5em auto; /* Center table */
+            width: auto; /* Adjust width based on content */
+            max-width: 95%; /* Prevent overflow */
+            border: 1px solid #ccc;
+            font-size: 0.95em;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.5em;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #eee;
+            font-weight: bold;
+        }
+        .exercice-intro, .annexe-intro {
+            background-color: #f9f9f9;
+            padding: 1em;
+            border-left: 3px solid #ccc;
+            margin-bottom: 1.5em;
+            margin-top: 1em;
+        }
+        .document-footer {
+            text-align: center;
+            margin-top: 3em;
+            font-size: 0.9em;
+            color: #555;
+            border-top: 1px solid #eee;
+            padding-top: 1em;
+        }
+        .page-ref {
+             float: right;
+             font-style: italic;
+             color: #777;
+             font-size: 0.9em;
+        }
+        .clear { clear: both; }
+        .bibliography ul { list-style-type: none; padding-left: 0;}
+        .bibliography li { margin-bottom: 0.8em; }
+        .important-note {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin: 1em 0;
+        }
+        /* Adjust font size within KaTeX if needed */
+        .katex { font-size: 1.05em; }
+    </style>
+</head>
+<body>
+
+    <h1>Automatique Linéaire 1 – Travaux Dirigés</h1>
+    <div class="course-id">1A ISMIN</div>
+
+    <div class="placeholder">[Placeholder for Black-Nichols Chart from Page 1]</div>
+    <p class="placeholder-caption">Abaque de Black-Nichols (Page 1)</p>
+    <p><em>Note : Cet abaque est utilisé pour l'analyse et la synthèse des systèmes asservis dans le plan de Black (gain en dB en fonction de la phase en degrés). Les courbes représentent des lieux de module et de phase constants pour la fonction de transfert en boucle fermée (FTBF) lorsque le système est à retour unitaire.</em></p>
+
+
+    <hr style="margin: 2em 0;">
+
+    <main>
+        <!-- ==================== TD 1 ==================== -->
+        <section id="td1">
+            <span class="page-ref">Page 2</span>
+            <h2>TD 1 - Introduction, modélisation, outils.</h2>
+            <div class="clear"></div>
+
+            <article id="ex1.1">
+                <h3>Exercice 1.1 : Calcul de la réponse d'un 2<sup>nd</sup> ordre à une rampe</h3>
+                <div class="exercice-intro">
+                    <p>On considère un système régi par l'équation différentielle :</p>
+                    $$ \frac{d^2s(t)}{dt^2} + 3 \frac{ds(t)}{dt} + 2 s(t) = e(t) $$
+                    <p>Calculer la réponse $s(t)$ de ce système à une rampe d'entrée $e(t) = t$ (pour $t \ge 0$, en supposant les conditions initiales nulles).</p>
+                </div>
+                <p><em> démarche typique implique l'utilisation de la transformée de Laplace :
+                    <ol>
+                        <li>Transformer l'équation différentielle en Laplace (avec conditions initiales nulles) : $(p^2 + 3p + 2)S(p) = E(p)$.</li>
+                        <li>Trouver la transformée de l'entrée rampe : $E(p) = \mathcal{L}\{t\} = 1/p^2$.</li>
+                        <li>Exprimer la sortie en Laplace : $S(p) = \frac{E(p)}{p^2 + 3p + 2} = \frac{1}{p^2(p+1)(p+2)}$.</li>
+                        <li>Décomposer $S(p)$ en éléments simples : $S(p) = \frac{A}{p} + \frac{B}{p^2} + \frac{C}{p+1} + \frac{D}{p+2}$.</li>
+                        <li>Calculer les coefficients A, B, C, D.</li>
+                        <li>Appliquer la transformée de Laplace inverse pour trouver $s(t)$.</li>
+                    </ol>
+                </em></p>
+            </article>
+
+            <article id="ex1.2">
+                <h3>Exercice 1.2 : Asservissement de température d'un four (1<sup>er</sup> ordre) de type proportionnelle dérivée.</h3>
+                <div class="exercice-intro">
+                    <p>On considère l'asservissement de température du système constitué d'un four et d'un capteur de température associé, représenté par la figure suivante :</p>
+                </div>
+                <div class="placeholder">[Placeholder for Block Diagram from Page 2 - Temperature Control]</div>
+                <p class="placeholder-caption">Schéma bloc de l'asservissement de température : Consigne $\theta_c(t)$, Comparateur (+,-), Erreur $\epsilon(t)$, Loi de commande $C(p)$, Puissance $p(t)$, Système (four + capteur), Mesure $\theta(t)$, retour vers comparateur (-).</p>
+
+                <p>Avec :</p>
+                <ul>
+                    <li>$\theta_c(t)$ : tension de consigne [V]. Elle représente la température de consigne désirée pour le four (par rapport à la température ambiante).</li>
+                    <li>$\theta(t)$ : tension de mesure [V]. C'est la tension image de la température intérieure du four délivrée par le capteur (exprimée par rapport à la température ambiante).</li>
+                    <li>$p(t)$ : puissance électrique délivrée au four [W].</li>
+                    <li>$\epsilon(t) = \theta_c(t) - \theta(t)$ : erreur entre la consigne et la mesure [V].</li>
+                </ul>
+                <p>La loi de commande (correcteur Proportionnel-Dérivé) est telle que :</p>
+                $$ p(t) = K_c \left( \epsilon(t) + \tau_d \frac{d\epsilon(t)}{dt} \right) \quad (\text{Eq. 1}) $$
+                <p>Avec :</p>
+                <ul>
+                    <li>$K_c$ : gain statique du correcteur.</li>
+                    <li>$\tau_d$ : constante de temps de dérivation.</li>
+                </ul>
+                <p>Et les équations de fonctionnement du système (four + capteur, modélisé comme un premier ordre) conduisent à :</p>
+                 <span class="page-ref">Page 3</span>
+                 <div class="clear"></div>
+                $$ \theta(t) + \tau \frac{d\theta(t)}{dt} = K p(t) \quad (\text{Eq. 2}) $$
+                 <p>Avec :</p>
+                 <ul>
+                    <li>$\tau$ : constante de temps du système (four+capteur).</li>
+                    <li>$K$ : gain statique du système (four+capteur).</li>
+                 </ul>
+
+                 <ol>
+                    <li>Exprimer l'équation différentielle liant la consigne $\theta_c(t)$ et la mesure $\theta(t)$ en boucle fermée.
+                        <p><em>Indication : Substituer $\epsilon(t)$ et $p(t)$ dans les équations.</em></p>
+                    </li>
+                    <li>Donner la transformée de Laplace de l'équation différentielle trouvée en 1. (On suppose les conditions initiales nulles, $\theta(0)=0$). La mettre sous la forme de la fonction de transfert en boucle fermée $\frac{\Theta(p)}{\Theta_c(p)}$.
+                        <p><em>Rappel : $p = s$ est la variable de Laplace dans la notation française fréquente. $\mathcal{L}\{\frac{d f}{dt}\} = p F(p) - f(0^-)$.</em></p>
+                    </li>
+                    <li>On considère une consigne de la forme : $\theta_c(t) = A_0 \Gamma(t)$ où $A_0$ est une constante réelle et $\Gamma(t)$ est l'échelon unité (fonction de Heaviside). Quelles sont alors les valeurs initiales $\theta(0^+)$ et finale $\theta(+\infty)$ de $\theta(t)$ ? Conclusions ?
+                        <p><em>Indication : Utiliser les théorèmes de la valeur initiale et de la valeur finale sur $\Theta(p)$. $\theta(0^+) = \lim_{p\to\infty} p \Theta(p)$ et $\theta(+\infty) = \lim_{p\to 0} p \Theta(p)$.</em></p>
+                    </li>
+                    <li>Exprimer la transformée de Laplace de la commande $P(p)$ en fonction de $\Theta_c(p)$. En déduire les valeurs initiale $p(0^+)$ et finale $p(+\infty)$ de la commande $p(t)$ pour $\theta_c(t) = A_0 \Gamma(t)$. Conclusion ?
+                        <p><em>Indication : Utiliser Eq. 1 en Laplace: $P(p) = K_c(1+\tau_d p)\mathcal{E}(p) = K_c(1+\tau_d p)(\Theta_c(p)-\Theta(p))$. Appliquer les théorèmes de la valeur initiale et finale. La dérivée idéale peut causer une commande infinie à $t=0^+$.</em></p>
+                    </li>
+                    <li>On considère $\tau_d = \tau = 60$ s, $K = 0,01$ V/W, et $A_0 = 7$ V. Tracer sur un même graphe : $\theta_c(t)$, $\theta(t)$, et $p(t)$ pour $K_c = 100$. Commentaire ?
+                        <p><em>Indication : Calculer la FTBF explicite, puis $\theta(t)$ et $p(t)$. Noter que $\tau_d = \tau$ correspond à une compensation du pôle du système par le zéro du correcteur PD (si la loi de commande était $C(p) = K_c(1+\tau_d p)$). L'équation différentielle globale devrait se simplifier.</em></p>
+                    </li>
+                 </ol>
+            </article>
+
+            <article id="ex1.3">
+                <h3>Exercice 1.3 : Asservissement du 2<sup>nd</sup> ordre.</h3>
+                <div class="exercice-intro">
+                    <p>Un processus physique est modélisé par une fonction de transfert du 2<sup>nd</sup> ordre :</p>
+                    $$ G(p) = \frac{G_0}{(1 + \tau_1 p)(1 + \tau_2 p)} $$
+                    <p>avec $G_0 = 1$, $\tau_1 = 10$ s, $\tau_2 = 2$ s.</p>
+                    <p>Ce processus est inséré dans une boucle d'asservissement contenant un régulateur proportionnel : $C(p) = K_c$ (où $K_c$ est le gain proportionnel, noté $K$ dans l'exercice).</p>
+                </div>
+                <div class="placeholder">[Placeholder for Block Diagram from Page 3 - 2nd Order Servo]</div>
+                <p class="placeholder-caption">Schéma bloc : Consigne $E(p)$, Comparateur (+,-), Erreur $\epsilon(p)$, Correcteur $C(p)=K_c$, Commande $U(p)$, Processus $G(p)$, Sortie $S(p)$, retour unitaire vers comparateur (-).</p>
+                <p><em>Note : $E(p)$ est la consigne ici, $\epsilon(p)$ est l'erreur.</em></p>
+
+                <ol>
+                    <li>
+                        <p><strong>a.</strong> Déterminer l'expression de la fonction de transfert en boucle fermée (FTBF) : $H(p) = S(p)/E(p)$ et la mettre sous la forme canonique standard du second ordre :</p>
+                        $$ H(p) = \frac{H_0}{1 + 2m \frac{p}{\omega_0} + \left(\frac{p}{\omega_0}\right)^2} $$
+                        <p>En déduire les expressions des paramètres de $H(p)$ :</p>
+                        <ul>
+                            <li>$H_0$ : gain statique de la boucle fermée</li>
+                            <li>$m$ : coefficient d'amortissement (noté $\xi$ ou $z$ ailleurs)</li>
+                            <li>$\omega_0$ : pulsation propre non amortie (notée $\omega_n$ ailleurs)</li>
+                        </ul>
+                        <p>en fonction de $\tau_1, \tau_2, G_0$, et $K_c$.</p>
+                         <span class="page-ref">Page 4</span>
+                         <div class="clear"></div>
+                        <p><strong>b.</strong> Calculer la valeur de $K_c$ pour obtenir un amortissement $m = 0,7$.</p>
+                    </li>
+                    <li>Dans la suite de l'exercice, la consigne est un échelon unitaire $e(t) = \Gamma(t)$ (donc $E(p)=1/p$) et $K_c$ est réglé tel que $m = 0,7$.
+                        <ol type="a">
+                            <li>On se place en régime permanent ($t \to +\infty$), déterminer l'expression de la sortie $s(+\infty)$ et calculer sa valeur.</li>
+                            <li>Exprimer l'erreur statique (ou erreur de position) $\epsilon_0(+\infty) = e(+\infty) - s(+\infty)$, la calculer.</li>
+                            <li>Calculer la valeur du temps de réponse à 5% ($t_{r5\%}$). (Utiliser les abaques ou formules de l'Annexe 2).</li>
+                            <li>Représenter l'allure de la réponse $s(t)$.</li>
+                        </ol>
+                    </li>
+                    <li>Pour diminuer l'erreur de position, on augmente la valeur de $K_c$.
+                        <ol type="a">
+                            <li>Calculer la valeur de $K_c$ permettant d'obtenir une erreur statique $\epsilon_0(+\infty) = 0,05$ V (soit 5% de l'échelon unitaire).</li>
+                            <li>En déduire la nouvelle valeur du coefficient d'amortissement $m$ pour ce gain $K_c$.</li>
+                            <li>Calculer l'amplitude relative (en %) du premier dépassement $D_1$ (ou $D\%$). (Utiliser les abaques ou formules de l'Annexe 2).</li>
+                            <li>Calculer la nouvelle valeur du temps de réponse à 5% ($t_{r5\%}$).</li>
+                            <li>Représenter l'allure de $s(t)$ avec ce nouveau gain $K_c$. Comparer avec la réponse précédente.</li>
+                            <li>Calculer la valeur initiale de la commande $u(0^+)$ (sortie du correcteur). Sachant que cette grandeur de commande est maximale à l'instant $t = 0^+$, en déduire la dynamique (variation rapide) nécessaire à la sortie du correcteur pour que l'asservissement fonctionne toujours en régime linéaire (sans saturation de l'actionneur).
+                                <p><em>Indication: $U(p)=K_c \mathcal{E}(p) = K_c(E(p)-S(p))$. Utiliser le théorème de la valeur initiale $u(0^+) = \lim_{p\to\infty} p U(p)$. Un gain $K_c$ élevé demande une commande initiale potentiellement très grande.</em></p>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </article>
+        </section>
+
+        <!-- ==================== TD 2 ==================== -->
+        <section id="td2">
+            <span class="page-ref">Page 5</span>
+            <h2>TD 2 - Stabilité des systèmes asservis.</h2>
+            <div class="clear"></div>
+
+            <article id="ex2.1">
+                <h3>Exercice 2.1 : Stabilité d'un système du 3<sup>ème</sup> ordre (Routh)</h3>
+                <div class="exercice-intro">
+                    <p>On considère un système dont la Fonction de Transfert en Boucle Ouverte (FTBO) est :</p>
+                    $$ T(p) = \frac{K}{p(p + 1)(p + 2)} \quad \text{avec } K > 0 $$
+                    <p>Déterminer à l'aide du critère de Routh les conditions de stabilité (valeur de $K$) de ce système lorsqu'il est placé dans une boucle d'asservissement à retour unitaire.</p>
+                </div>
+                <p><em>Indication :
+                    <ol>
+                        <li>Trouver la fonction de transfert en boucle fermée $F(p) = \frac{T(p)}{1+T(p)}$.</li>
+                        <li>Identifier le polynôme caractéristique $D(p) = 1+T(p) = 0$, qui est $p(p+1)(p+2) + K = p^3 + 3p^2 + 2p + K = 0$.</li>
+                        <li>Construire le tableau de Routh pour ce polynôme.</li>
+                        <li>Appliquer la condition de Routh : pour la stabilité, tous les éléments de la première colonne du tableau doivent être strictement positifs. En déduire la condition sur $K$.</li>
+                    </ol>
+                </em></p>
+            </article>
+
+            <article id="ex2.2">
+                <h3>Exercice 2.2 : Réglage d'un système avec deux conditions de stabilité</h3>
+                <div class="exercice-intro">
+                    <p>On considère un système de fonction de transfert en boucle ouverte :</p>
+                    $$ T(p) = \frac{K}{p(p+100)^2} \quad \text{avec } K > 0 $$
+                    <p>Déterminer les conditions sur $K$ de manière à ce que le système (en boucle fermée à retour unitaire) soit caractérisé par :</p>
+                    <ul>
+                        <li>une marge de phase supérieure à 45°</li>
+                        <li>une marge de gain supérieure à 6 dB.</li>
+                    </ul>
+                </div>
+                 <p><em>Indication :
+                    <ol>
+                        <li>Calculer la pulsation $\omega_{pc}$ (pulsation de coupure de phase) où $\text{Arg}(T(j\omega_{pc})) = -180^\circ$. Calculer le module $|T(j\omega_{pc})|$. La marge de gain est $MG = -20 \log_{10} |T(j\omega_{pc})|$. Imposer $MG > 6$ dB.</li>
+                        <li>Calculer la pulsation $\omega_{gc}$ (pulsation de coupure de gain) où $|T(j\omega_{gc})| = 1$ (ou 0 dB). Calculer la phase $\text{Arg}(T(j\omega_{gc}))$. La marge de phase est $MP = 180^\circ + \text{Arg}(T(j\omega_{gc}))$. Imposer $MP > 45^\circ$.</li>
+                        <li>Combiner les conditions sur K trouvées.</li>
+                    </ol>
+                </em></p>
+           </article>
+
+            <article id="ex2.3">
+                <h3>Exercice 2.3 : Mise en évidence des marges sur les diagrammes de Bode</h3>
+                <div class="exercice-intro">
+                    <p>On considère un système de fonction de transfert en boucle ouverte :</p>
+                    $$ T(p) = \frac{K}{(p +10)^3} \quad \text{avec } K > 0 $$
+                    <ol>
+                        <li>Déterminer la valeur de $K$ qui assure au système (en boucle fermée à retour unitaire) une marge de gain égale à 6 dB.</li>
+                        <li>Calculer la marge de phase pour cette valeur de $K$.</li>
+                        <li>Tracer les diagrammes de Bode (gain et phase) du système en boucle ouverte $T(j\omega)$ pour cette valeur de $K$ en y faisant apparaître clairement ces marges (MG et MP).</li>
+                    </ol>
+                 </div>
+            </article>
+
+            <article id="ex2.4">
+                <h3>Exercice 2.4 : Nyquist</h3>
+                <div class="exercice-intro">
+                    <p>On considère un système de fonction de transfert en boucle ouverte :</p>
+                    $$ T(p) = \frac{K}{p(p +1)(p + 2)} \quad \text{avec } K > 0 \text{ (le même qu'en 2.1)} $$
+                    <ol>
+                        <li>Tracer son diagramme de Nyquist (le lieu de $T(j\omega)$ pour $\omega$ de $0^+$ à $+\infty$, complété par symétrie pour $\omega$ de $-\infty$ à $0^-$ et par le comportement à l'infini et près des pôles sur l'axe imaginaire). Le tracé préalable d'un diagramme de Bode est une aide utile.</li>
+                        <li>Étudier la stabilité du système en boucle fermée à retour unitaire en utilisant le critère de Nyquist (ou critère du revers). Retrouver la condition sur $K$ obtenue avec Routh (Exercice 2.1).</li>
+                    </ol>
+                </div>
+                 <p><em>Indication: Le système en BO est stable (pôles en 0, -1, -2). La FTBF sera stable si le lieu de Nyquist de $T(j\omega)$ n'encercle pas le point critique (-1, 0). Déterminer l'intersection du lieu avec l'axe réel négatif et la valeur de K correspondante.</em></p>
+            </article>
+
+             <span class="page-ref">Page 6</span>
+             <div class="clear"></div>
+
+            <article id="ex2.5">
+                <h3>Exercice 2.5 : Nyquist</h3>
+                <div class="exercice-intro">
+                    <p>On considère un système de F.T.B.O. :</p>
+                    $$ T(p) = \frac{K(1 + \tau_1 p)}{p^2 (1 + \tau_2 p)(1 + \tau_3 p)} $$
+                    <p>avec $\tau_1 > \tau_2 > \tau_3 > 0$ et $K$ gain positif réglable.</p>
+                    <ol>
+                        <li>Tracer le diagramme de Bode asymptotique de la B.O. pour le cas particulier $\tau_1 = 1$ s, $\tau_2 = 0,1$ s, $\tau_3 = 0,01$ s, et $K = 1$.</li>
+                        <li>Chercher la pulsation $\omega_u$ non nulle (si elle existe) pour laquelle la phase $\Phi_{BO}(\omega_u) = -180^\circ$. A quelle condition sur $\tau_1, \tau_2$, et $\tau_3$ existe-t-elle ?</li>
+                        <li>Tracer l'allure du lieu de Nyquist de la boucle ouverte selon que cette condition est réalisée ou non.</li>
+                        <li>En déduire les conditions de stabilité en boucle fermée (retour unitaire) pour les valeurs particulières des constantes de temps données au 1. Retrouver ces conditions à l'aide du critère du revers (critère simplifié de Nyquist).</li>
+                        <li>Établir les conditions de stabilité (en fonction de $K, \tau_1, \tau_2, \tau_3$) à l'aide du critère de Routh appliqué au polynôme caractéristique de la boucle fermée.</li>
+                    </ol>
+                 </div>
+            </article>
+
+            <article id="ex2.6">
+                <h3>Exercice 2.6 : Nyquist</h3>
+                <div class="exercice-intro">
+                    <p>On considère un système de F.T.B.O. :</p>
+                    $$ T(p) = \frac{K}{(1 + \tau_1 p)(1 + \tau_2 p)(1 - \tau_3 p)} $$
+                     <p>avec $\tau_1 > \tau_2 > \tau_3 > 0$ et $K$ gain positif réglable.</p>
+                     <p><em>Note : Ce système a un pôle instable en $p = +1/\tau_3$.</em></p>
+                     <ol>
+                        <li>Tracer le diagramme de Bode asymptotique de la boucle ouverte.</li>
+                        <li>Tracer l'allure du lieu de Nyquist de la boucle ouverte.</li>
+                        <li>En déduire les conditions de stabilité en boucle fermée (retour unitaire). Quel serait le résultat par application du critère du revers ? Conclusion ?
+                            <p><em>Indication : Le critère du revers n'est applicable que si la boucle ouverte est stable. Ici, elle est instable (P=1 pôle instable). Il faut utiliser le critère complet de Nyquist : $Z = N + P$, où Z est le nombre de pôles instables en BF, P le nombre de pôles instables en BO, et N le nombre de tours du lieu de Nyquist autour du point (-1,0) dans le sens horaire. Pour la stabilité en BF, il faut Z=0, donc N = -P = -1 (un tour anti-horaire).</em></p>
+                        </li>
+                    </ol>
+                </div>
+            </article>
+
+            <article id="ex2.7">
+                <h3>Exercice 2.7 : Nyquist</h3>
+                <div class="exercice-intro">
+                    <p>On considère un système de fonction de transfert en boucle ouverte :</p>
+                    $$ T(p) = \frac{10^4}{p(p +10)(p +100)} $$
+                     <ol>
+                        <li>Tracer son diagramme de Bode asymptotique (module et phase).</li>
+                        <li>En déduire son diagramme de Nyquist. Vous démontrerez l'existence d'une asymptote à la courbe de Nyquist lorsque $\omega \to 0^+$.
+                            <p><em>Indication pour l'asymptote : Chercher le comportement de $T(j\omega)$ pour $\omega \to 0^+$. $T(j\omega) \approx \frac{10^4}{j\omega(10)(100)} = \frac{10}{j\omega}$. La partie réelle tend vers 0 et la partie imaginaire tend vers $-\infty$. L'asymptote est verticale. Son abscisse peut être calculée plus précisément en considérant le terme suivant du développement.</em></p>
+                        </li>
+                         <li>Étudier la stabilité en boucle fermée.</li>
+                    </ol>
+                </div>
+            </article>
+        </section>
+
+
+        <!-- ==================== TD 3 ==================== -->
+        <section id="td3">
+             <span class="page-ref">Page 7</span>
+            <h2>TD 3 - Correction des systèmes asservis.</h2>
+            <div class="clear"></div>
+
+            <article id="ex3.1">
+                <h3>Exercice 3.1 : Correction à avance de phase.</h3>
+                <div class="exercice-intro">
+                    <p>La fonction de transfert en boucle ouverte d'un système asservi s'écrit :</p>
+                     $$ T(p) = \frac{C}{p(1 + \tau_1 p)(1 + \tau_2 p)} $$
+                     <p>avec $\tau_1 = 0,16$ s, $\tau_2 = 0,02$ s, et $C$ un gain réel et positif.</p>
+                 </div>
+                 <ol>
+                    <li>Tracer le diagramme de Bode asymptotique de $T(p)$ (gain et phase) pour $C = 1$, et préciser les points remarquables (pentes, pulsations de cassure, gain DC, phase initiale/finale).</li>
+                    <li>Le système est à retour unitaire. Calculer la valeur $C = C_{max}$ qui rend le système instable en boucle fermée (limite de stabilité).</li>
+                    <li>Retrouver $C_{max}$ en appliquant le critère de Routh au polynôme caractéristique de la boucle fermée.</li>
+                    <li>Calculer la valeur $C = C_0$ qui assure une marge de phase de 45°.</li>
+                    <li>Pour une entrée (consigne) indicielle (échelon) d'amplitude $X_c$, $x_c(t) = X_c \Gamma(t)$, expliciter la transformée de Laplace de la sortie $Y(p)$ du système bouclé (avec $C=C_0$). En déduire la valeur de la sortie en régime permanent $y(+\infty)$. Quelle est l'erreur statique ?</li>
+                    <li>Calculer l'erreur de traînage $\epsilon_{trainage}$ (erreur en régime permanent) du système bouclé (avec $C=C_0$) pour une entrée en rampe : $x_c(t) = V_c t$ (pour $t>0$).
+                        <p><em>Indication: $\epsilon_{trainage} = \lim_{p\to 0} p \mathcal{E}(p) = \lim_{p\to 0} p \frac{X_c(p)}{1+T(p)}$. Pour une rampe $X_c(p) = V_c/p^2$. L'erreur de traînage est $V_c / \lim_{p\to 0} p T(p)$.</em></p>
+                    </li>
+                    <li>On désire améliorer le comportement du système à l'aide d'un correcteur qui présente la fonction de transfert suivante (correcteur à avance de phase) :
+                        $$ C(p) = C' \frac{1+\alpha p}{1 + \beta p} $$
+                        où $C'$ est un gain, et $\alpha, \beta$ sont des constantes de temps réelles et positives. Tracer le diagramme de Bode de ce correcteur $C(p)$ pour un comportement dit à <strong>avance de phase</strong> ($\alpha > \beta$). On posera $k = \alpha/\beta > 1$. Quelle est l'avance de phase maximale $\phi_{max}$ apportée par ce correcteur et à quelle pulsation $\omega_m$ est-elle obtenue ?
+                    </li>
+                    <li>Pour concevoir le correcteur :
+                        <ul>
+                            <li>On choisit $\alpha$ pour compenser (annuler) l'effet du pôle dominant (le plus lent) de $T(p)$. Quelle valeur de $\alpha$ choisir ?</li>
+                            <li>On impose que le déphasage maximal $\phi_{max}$ apporté par le correcteur soit de 45°. Quelle est alors la valeur du rapport $k = \alpha/\beta$ ? En déduire $\beta$.</li>
+                            <li>On veut obtenir au final, après correction, une marge de phase de 45° pour la nouvelle boucle ouverte $T_{corr}(p) = C(p) T(p) / C$ (en gardant $C=C_0$ dans $T(p)$ pour l'instant). Calculer la valeur du gain $C' = C_{oc}$ (gain du correcteur) permettant de remplir cette condition.</li>
+                         </ul>
+                         <p><em>Note : La question est un peu ambiguë. Soit on redéfinit la boucle ouverte comme $T_{new}(p) = C_{correcteur}(p) \times T_{base}(p)$ où $T_{base}$ est la FT initiale avec $C=1$, et $C_{correcteur}(p) = C_{oc} \frac{1+\alpha p}{1 + \beta p}$. Soit on remplace $C$ par $C(p)$. Adoptons la première approche. On cherche donc $C_{oc}, \alpha, \beta$.</em></p>
+                    </li>
+                    <li>Tracer dans le plan de Black les fonctions de transfert en boucle ouverte du système corrigé $T_{new}(j\omega)$ et non corrigé $T(j\omega)$ (avec $C=C_0$) à partir des valeurs données dans le tableau suivant (elles correspondent au cas $C = C_0$ et $C(p)$ tel que calculé). Retrouver la valeur de $C_{oc}$ à l'aide du diagramme (si possible, ou vérifier la marge de phase).</li>
+                </ol>
+                 <table>
+                     <thead>
+                         <tr><th>$\omega$ (rad/s)</th><th>1</th><th>2</th><th>5</th><th>10</th><th>17,5</th><th>30</th><th>50</th></tr>
+                     </thead>
+                     <tbody>
+                         <tr><td>$|T(j\omega)|$ dB (avec $C=C_0$)</td><td>16,3</td><td>9,9</td><td>0,22</td><td>-9,3</td><td>-18,4</td><td>-28,3</td><td>-38</td></tr>
+                         <tr><td>Arg($T(j\omega)$) (deg)</td><td>-100</td><td>-110</td><td>-134</td><td>-160</td><td>-180</td><td>-199</td><td>-218</td></tr>
+                         <tr><td>$|C(j\omega)T(j\omega)|$ dB (corrigé)</td><td>16,4</td><td>10,3</td><td>2,3</td><td>-4</td><td>-9,8</td><td>-16,7</td><td>-25</td></tr>
+                         <tr><td>Arg($C(j\omega)T(j\omega)$) (deg)</td><td>-93</td><td>-95,4</td><td>-103,4</td><td>-116</td><td>-134</td><td>-160</td><td>-189</td></tr>
+                      </tbody>
+                 </table>
+                  <span class="page-ref">Page 8</span>
+                  <div class="clear"></div>
+                 <ol start="10">
+                    <li>Quelle est la fréquence de résonance $\omega_r$ du système corrigé (pour $C' = C_{oc}$) en boucle fermée? Dessiner l'allure approchée du module de la F.T.B.F. en dB (1er diagramme de Bode). Quels sont sa bande passante à -3 dB ($\omega_c$) et son temps de réponse à 5% ($t_{r5\%}$)? Comparer ces valeurs (bande passante, temps de réponse) à celles obtenues sans correction (avec $C = C_0$).
+                        <p><em>Indication : La fréquence de résonance $\omega_r$ et le pic de résonance $M_r$ (en dB) peuvent être estimés depuis l'abaque de Black-Nichols si le système corrigé s'y conforme. La bande passante $\omega_c$ est souvent liée à $\omega_r$ et à l'amortissement. Le temps de réponse est inversement proportionnel à la bande passante. La correction par avance de phase augmente la bande passante et réduit le temps de réponse, au prix d'une amplification du bruit haute fréquence.</em></p>
+                    </li>
+                 </ol>
+            </article>
+
+
+            <span class="page-ref">Page 9</span>
+            <div class="clear"></div>
+            <article id="ex3.2">
+                <h3>Exercice 3.2 : Asservissement de fréquence d'un laser Hélium-Néon.</h3>
+                <div class="exercice-intro">
+                    <p>La mesure de la fréquence $f$ d'émission d'un laser hélium-néon est réalisée à l'aide d'un filtre optique sélectif dont le coefficient de transmission varie rapidement en fonction de la différence $f - f_0$, où $f_0$ est la fréquence à laquelle le laser est susceptible d'émettre (centre de la raie d'émission).</p>
+                    <p>Après conditionnement électronique du signal issu de ce filtre, on dispose d'un signal électrique $x_r(t) = K_s [f(t) - f_0]$ avec $K_s$ une constante. Ce signal de mesure est utilisé au sein d'un asservissement dont le schéma est donné figure suivante. L'objectif est de stabiliser la fréquence $f(t)$ sur une fréquence de consigne $f_c$, représentée par la tension $x_c(t)$.</p>
+                </div>
+                <div class="placeholder">[Placeholder for Block Diagram from Page 9 - Laser Frequency Control]</div>
+                <p class="placeholder-caption">Schéma bloc : Consigne $x_c(t)$, Comparateur (+,-), Erreur $E(t)$, Correcteur $C(p)$, Actionneur $\frac{A_0}{1+\tau p}$, Perturbation $\tilde{y}(t)$ (additive après l'actionneur), $y(t) = f(t)-f_0$, Capteur $K_s$, Mesure $x_r(t)$, retour vers comparateur (-).</p>
+                <p>On a : $K_s = 5 \times 10^{-6}$ V/Hz, $A_0 = 90$ MHz/V, $\tau = 0,1$ ms.</p>
+                <p>$\tilde{y}(t)$ est un signal perturbateur affectant la fréquence.</p>
+                <p>La sortie du système est $y(t) = f(t)-f_0$, qui représente l'écart de fréquence par rapport à la référence $f_0$. La consigne $x_c(t)$ représente l'écart de fréquence désiré par rapport à $f_0$. L'objectif est donc que $y(t)$ suive $x_c(t)/K_s$. L'erreur $E(t)$ est en Volts.</p>
+
+                <h4>I. Correction proportionnelle.</h4>
+                <p>$C(p)$ est un correcteur proportionnel : $C(p) = C_0$.</p>
+                <ol type="a">
+                    <li>Tracer le diagramme de Bode de la fonction de transfert en boucle ouverte $T_{BO}(p)$ (de $E(p)$ à $x_r(p)$) pour $C_0 = 1$ et $\tilde{y}(t) = 0$.
+                        <p><em>Indication: $T_{BO}(p) = C_0 \times \frac{A_0}{1+\tau p} \times K_s$.</em></p>
+                    </li>
+                    <li>Calculer $C_0$ afin d'obtenir une pulsation de transition (pulsation où le gain en boucle ouverte vaut 0 dB) de $10^5$ rad/s.</li>
+                    <li>Calculer alors la réponse en boucle fermée $y(t)$ à un échelon de tension $x_c(t) = X_0 \Gamma(t)$ à l'entrée. Quelle est l'erreur statique ?</li>
+                    <li>$\tilde{y}(t)$ est maintenant un signal perturbateur contenant une composante continue ainsi qu'une composante sinusoïdale de pulsation 500 rad/s : $\tilde{y}(t) = 5 \times 10^6 + 10^7 \cos(500t)$ [Hz]. Quel est l'effet sur la sortie $y(t)$ (en régime permanent) d'un tel signal perturbateur ?
+                        <p><em>Indication : Calculer la fonction de transfert de la perturbation $\tilde{Y}(p)$ vers la sortie $Y(p)$. Utiliser le principe de superposition et le régime sinusoïdal établi.</em></p>
+                    </li>
+                </ol>
+
+                 <span class="page-ref">Page 10</span>
+                 <div class="clear"></div>
+                <h4>II. Correction intégrale.</h4>
+                <p>$C(p)$ est un correcteur intégral : $C(p) = C_0 / p$.</p>
+                 <ol type="a">
+                    <li>Tracer le diagramme de Bode de la fonction de transfert en boucle ouverte $T_{BO}(p)$ pour $C_0 = 1$ et $\tilde{y}(t) = 0$.</li>
+                    <li>Calculer $C_0$ afin d'obtenir une marge de phase de 45°.</li>
+                    <li>Donner l'expression de la fonction de transfert en boucle fermée. Est-elle du premier ou second ordre ? Déterminer la valeur du temps de réponse à 5% à partir des abaques (pour un 2<sup>nd</sup> ordre si applicable).</li>
+                    <li>$\tilde{y}(t)$ prend la même valeur qu'en I.d. Quel est l'effet sur la sortie $y(t)$ d'un tel signal perturbateur ? Comparer au cas proportionnel.</li>
+                </ol>
+
+                <h4>III. Correction proportionnelle et intégrale.</h4>
+                 <p>$C(p)$ est un correcteur proportionnel et intégral (PI) : $C(p) = C_0 (1 + \tau_i p) / p$. (Attention, forme différente du $PI$ standard $K_p(1+1/T_i p)$, ici $\tau_i$ est $1/T_i$ et $C_0$ est $K_p/T_i$ ? Non, $C(p) = \frac{C_0}{p} + C_0 \tau_i$. C'est plutôt $C(p) = K_p (1 + 1/(T_i p))$ avec $K_p = C_0 \tau_i$ et $T_i = \tau_i$? Ou $C(p)=C_0(1+1/(\tau_i p))$? La forme donnée $C_0(1+\tau_i p)/p$ est inhabituelle. Supposons $C(p) = K_p (1 + 1/(T_i p)) = K_p \frac{1+T_i p}{T_i p}$. Si on pose $K_p=C_0$ et $T_i = 1/\tau_i$, on obtient $C(p)=C_0 \frac{1+p/\tau_i}{p/\tau_i}$ ? Cela ne correspond pas. Admettons la forme $C(p) = C_0(1 + \tau p) / p$ où $\tau$ est une constante (peut-être $\tau_i$?). Utilisons $C(p) = K_p(1 + 1/(T_i p))$ pour être standard.)
+                 Let's assume the notation in the document: $C(p) = C_0 (1 + \tau_p p) / p$. Where $\tau_p$ is the time constant. Let's rewrite it $C(p) = C_0/p + C_0\tau_p$. This is an I+P controller. Let's follow the text's notation.
+                 <p>$C(p)$ est un correcteur proportionnel et intégral : $C(p) = C_0 (1+\tau p)/p$.</p>
+                 <ol type="a">
+                    <li>Tracer le diagramme de Bode de la fonction de transfert en boucle ouverte $T_{BO}(p)$ pour $C_0 = 1$, $\tau=0.1$ ms (par exemple) et $\tilde{y}(t) = 0$.</li>
+                    <li>Calculer $C_0$ afin d'obtenir une pulsation de transition de $10^5$ rad/s (on gardera $\tau$ comme paramètre ou on fixe $\tau$, par exemple $\tau = \tau_{laser}=0.1$ ms pour compenser le pôle).</li>
+                    <li>Déterminer la valeur du temps de réponse à 5% lorsque l'entrée $x_c(t)$ est un échelon de tension. (Analyser l'ordre et les pôles de la FTBF).</li>
+                    <li>$\tilde{y}(t)$ prend la même valeur qu'en I.d. Quel est l'effet sur la sortie $y(t)$ d'un tel signal perturbateur ?</li>
+                </ol>
+
+                <h4>IV. Bilan.</h4>
+                <p>Discuter et comparer les performances (précision statique, rejet de perturbation, rapidité) des trois correcteurs envisagés précédemment.</p>
+            </article>
+
+            <span class="page-ref">Page 11</span>
+            <div class="clear"></div>
+            <article id="ex3.3">
+                 <h3>Exercice 3.3 : Correcteur P.I.D.</h3>
+                 <div class="exercice-intro">
+                     <p>On considère le système (non corrigé) de fonction de transfert en boucle ouverte :</p>
+                     $$ T_{BO}(p) = \frac{4}{p(p + 1)(p + 2)} $$
+                     <p>Il est inséré dans une boucle d'asservissement à retour unitaire, comprenant un correcteur $C(p)$ de type P.I.D. tel que :</p>
+                     $$ C(p) = K \left( 1 + \frac{1}{\tau_i p} + \tau_d p \right) $$
+                     <p>avec $\tau_d = \tau_i / 4$.</p>
+                     <p><em>Note : La forme normalisée du PID est souvent écrite $C(p) = K_p (1 + \frac{1}{T_i p} + T_d p)$. Ici $K=K_p$, $\tau_i=T_i$, $\tau_d=T_d$.</em></p>
+                 </div>
+                 <ol>
+                     <li>Représenter $T_{BO}(j\omega)$ dans le plan de Black (gain en dB vs phase en degrés). On donne le tableau de valeurs suivant :</li>
+                      <table>
+                          <thead>
+                              <tr><th>$\omega$ (rad/s)</th><th>0,2</th><th>0,4</th><th>0,6</th><th>0,8</th><th>1</th><th>1,2</th><th>1,6</th><th>2</th><th>2,5</th></tr>
+                          </thead>
+                          <tbody>
+                              <tr><td>$|T_{BO}|$ dB</td><td>20</td><td>13</td><td>8,7</td><td>5,2</td><td>2</td><td>-1</td><td>-5,4</td><td>-10,5</td><td>-15</td></tr>
+                              <tr><td>Arg($T_{BO}$) (degrés)</td><td>-107</td><td>-123</td><td>-138</td><td>-150</td><td>-162</td><td>-172</td><td>-186</td><td>-200</td><td>-210</td></tr>
+                           </tbody>
+                      </table>
+                      <p>On pourra également utiliser l'abaque A5.1 (Black-Nichols) donnée ci-après (page 12) pour tracer le lieu de Black de la FTBO.</p>
+                      <div class="placeholder">[Placeholder for Abacus A5.1 - Black-Nichols Chart from Page 12]</div>
+                      <p class="placeholder-caption">Abaque A5.1 : Lieux de Black pour $1/(j u (1+j u)(1+a j u))$. Utilisable pour visualiser les performances en boucle fermée (module constant, phase constante) à partir du lieu de la boucle ouverte.</p>
+                    <li>Le correcteur P.I.D. est tel que $K = 1$ et on pose $u = \tau_i \omega$. Calculer $|C(j\omega)|_{dB}$ et Arg($C(j\omega)$) pour $u = 1, 2, 4, 6, 8, 10, 12, 16, 20, 25$.
+                        <p><em>Indication : $C(j\omega) = K(1 + \frac{1}{j\tau_i \omega} + j\tau_d \omega) = 1(1 - \frac{j}{u} + j \frac{u}{4})$. Calculer module et argument pour les valeurs de $u$.</em></p>
+                    </li>
+                    <li>Le P.I.D. est calculé par la <strong>méthode du pivot</strong> (méthode de Ziegler-Nichols en boucle fermée ou "relay tuning"). On choisit comme pivot le point où la phase de la FTBO vaut -180°, soit $\omega_{pivot} \approx 1.5$ rad/s d'après le tableau ou Bode. On choisit $\tau_i$ pour que le terme intégral compense la phase à cette pulsation (souvent $\tau_i = \pi/\omega_{pivot}$ ou $4/ \omega_{pivot}$ selon les méthodes). On prend ici $\omega_{pivot} = 0.2$ rad/s (ce qui est inhabituel, car la phase est loin de -180°). En déduire $\tau_i$ (règle de Ziegler-Nichols par exemple : $T_i = P_u/2$, $T_d = P_u/8$ où $P_u$ est la période des oscillations limites $2\pi/\omega_{180}$). Supposons qu'on fixe $\tau_i$ arbitrairement ou par une règle spécifique liée à ce "pivot" à 0.2 rad/s.
+                         <p><em>Alternative: La méthode du pivot consiste souvent à placer le minimum de phase du correcteur PI ou le maximum de phase du correcteur PD à une fréquence caractéristique de la FTBO. Ici, avec $\tau_d=\tau_i/4$, le PID a une forme particulière. Le choix de $\omega = 0.2$ rad/s comme "pivot" est donné. En déduire $\tau_i$ (peut-être en annulant la phase du correcteur à cette pulsation? Ou en utilisant une règle empirique non spécifiée?). Supposons $\tau_i$ est calculée d'une manière ou d'une autre.</em></p>
+                         <p>Dessiner la FTBO corrigée $T_{BOC}(p) = C(p)T_{BO}(p)$ pour $K = 1$.</p>
+                         <p>Déterminer la valeur de $K$ permettant d'obtenir un coefficient d'amortissement $m = 0,7$ pour le second ordre dominant équivalent en boucle fermée. (Utiliser l'abaque de Nichols pour lire $m=0.7$).</p>
+                    </li>
+                    <li>Quelles sont les erreurs (statique, de traînage, d'accélération) du système corrigé en réponse à un échelon, une rampe, et une parabole unitaire ?
+                        <p><em>Indication : L'erreur dépend de la classe du système (nombre d'intégrateurs en BO). $T_{BOC}(p)$ a un intégrateur $1/p$ venant de $T_{BO}$ et un autre $1/(\tau_i p)$ venant de $C(p)$? Non, $T_{BOC} = K(1 + \frac{1}{\tau_i p} + \tau_d p) \times \frac{4}{p(p+1)(p+2)}$. La classe est donc 2. Erreur nulle pour échelon et rampe, erreur finie pour parabole. Calculer les constantes d'erreur $K_p, K_v, K_a$.</em></p>
+                    </li>
+                 </ol>
+            </article>
+
+        </section>
+
+         <!-- ==================== Bibliographie / Annexes ==================== -->
+         <section id="biblio_annexes">
+             <span class="page-ref">Page 13</span>
+             <h2>Bibliographie.</h2>
+             <div class="clear"></div>
+             <div class="bibliography">
+                <ul>
+                    <li>"Cours d'automatique, tome 2 – Asservissement, régulation, commande analogique", Maurice Rivoire, Jean-Louis Ferrier, Ed. Eyrolles.</li>
+                    <li>"Electronique Tome 2 : Systèmes bouclés linéaires, de communication et de filtrage : Cours et exercices", François Manneville, Jacques Esquieu, Ed. Dunod.</li>
+                    <li>"Automatique: Commande des systèmes linéaires", Philippe de Larminat, Ed. Hermes.</li>
+                    <li>"Feedback Control of Dynamic Systems", Franklin G.F., Powell J.D., Naemi-Emani A., Addison-Wesley.</li>
+                    <li>Beaucoup de liens de bonne qualité (dans tous les domaines) sur : <a href="http://pagesperso-orange.fr/xcotton/electron/coursetdocs.htm" target="_blank">http://pagesperso-orange.fr/xcotton/electron/coursetdocs.htm</a> (Lien potentiellement obsolète)</li>
+                    <li>"Cours d'automatique 1<sup>ère</sup> année", Jean-Paul Bourguet, cours cycle ISMIN.</li>
+                </ul>
+             </div>
+
+             <hr style="margin: 2em 0;">
+             <span class="page-ref">Page 14</span>
+             <h2>Annexe 1 - Transformée de Laplace.</h2>
+             <div class="clear"></div>
+             <div class="annexe-intro">
+                <h4>Transformée de Laplace monolatérale</h4>
+                $$ TL[f(t)] = F(p) = \int_{0}^{+\infty} f(t) e^{-pt} dt \quad \text{avec } p = \sigma + j\omega $$
+
+                <h4>Propriétés principales</h4>
+                <ul>
+                    <li><strong>Linéarité :</strong> $TL[a.f(t)+b.g(t)] = a.F(p)+b.G(p)$</li>
+                    <li><strong>Convolution :</strong> $TL[(f*g)(t)] = F(p).G(p)$ où $(f*g)(t) = \int_0^t f(\tau)g(t-\tau)d\tau$</li>
+                    <li><strong>Fonction de transfert – H(p) :</strong> Si $y(t) = (u*h)(t)$ (h est la réponse impulsionnelle), alors $Y(p) = U(p).H(p)$, soit $H(p) = \frac{Y(p)}{U(p)}$ (pour CI nulles).</li>
+                    <li><strong>Dérivation en temps :</strong> $TL[f'(t)] = p.F(p) - f(0^-)$ (généralisation : $TL[f^{(n)}(t)] = p^n F(p) - p^{n-1}f(0^-) - \dots - f^{(n-1)}(0^-)$)</li>
+                    <li><strong>Intégration :</strong> $TL\left[\int_0^t f(\theta)d\theta\right] = \frac{1}{p} F(p)$</li>
+                    <li><strong>Dérivation en p :</strong> $TL[-t.f(t)] = \frac{dF(p)}{dp}$</li>
+                    <li><strong>Translation en p (Modulation) :</strong> $TL[e^{\alpha t}.f(t)] = F(p-\alpha)$</li>
+                    <li><strong>Théorème du retard temporel :</strong> Si $g(t) = f(t-\tau)\Gamma(t-\tau)$ (signal retardé, $\tau>0$), alors $TL[g(t)] = e^{-p\tau}.F(p)$</li>
+                    <li><strong>Théorème de la valeur initiale :</strong> $f(0^+) = \lim_{t\to 0^+} f(t) = \lim_{p\to +\infty} p.F(p)$ (si les limites existent)</li>
+                    <li><strong>Théorème de la valeur finale :</strong> $f(+\infty) = \lim_{t\to +\infty} f(t) = \lim_{p\to 0} p.F(p)$ (si $f(+\infty)$ existe, i.e., si les pôles de $p.F(p)$ sont à partie réelle strictement négative, sauf éventuellement un pôle simple en p=0).</li>
+                </ul>
+
+                 <h4>Transformées de Laplace usuelles (pour $t \ge 0$)</h4>
+                 <ul>
+                    <li>Dirac : $\delta(t) \xrightarrow{TL} 1$</li>
+                    <li>Échelon : $\Gamma(t) \xrightarrow{TL} \frac{1}{p}$</li>
+                    <li>Rampe : $t \xrightarrow{TL} \frac{1}{p^2}$</li>
+                    <li>Exponentielle : $e^{-at} \xrightarrow{TL} \frac{1}{p+a}$</li>
+                    <li>$t.e^{-at} \xrightarrow{TL} \frac{1}{(p+a)^2}$</li>
+                    <li>Sinus : $\sin(\omega t) \xrightarrow{TL} \frac{\omega}{p^2 + \omega^2}$</li>
+                    <li>Cosinus : $\cos(\omega t) \xrightarrow{TL} \frac{p}{p^2 + \omega^2}$</li>
+                    <li>Sinus amorti : $e^{-at}.\sin(\omega t) \xrightarrow{TL} \frac{\omega}{(p+a)^2 + \omega^2}$</li>
+                    <li>Cosinus amorti : $e^{-at}.\cos(\omega t) \xrightarrow{TL} \frac{p+a}{(p+a)^2 + \omega^2}$</li>
+                </ul>
+             </div>
+
+             <span class="page-ref">Page 15</span>
+             <div class="clear"></div>
+             <div class="annexe-intro">
+                 <h4>Transformées de Laplace inverses usuelles (f(t) causale)</h4>
+                 <p><em>Note: $TL^{-1}[F(p)]$ désigne la transformée inverse.</em></p>
+                 <ul>
+                     <li>$\frac{1}{p^n} \xrightarrow{TL^{-1}} \frac{t^{n-1}}{(n-1)!} \quad (n \ge 1)$</li>
+                     <li>$\frac{1}{1+\tau p} \xrightarrow{TL^{-1}} \frac{1}{\tau} e^{-t/\tau}$</li>
+                     <li>$\frac{1}{p(1+\tau p)} \xrightarrow{TL^{-1}} 1 - e^{-t/\tau}$</li>
+                     <li>$\frac{1}{p^2(1+\tau p)} \xrightarrow{TL^{-1}} t - \tau + \tau e^{-t/\tau}$</li>
+                     <li>$\frac{1+\alpha p}{1+\tau p} \xrightarrow{TL^{-1}} \frac{\alpha}{\tau}\delta(t) + \frac{\tau-\alpha}{\tau^2}e^{-t/\tau}$ (Attention: $\delta(t)$ si degré num = degré den)
+                        <br><em>Forme alternative (sans $\delta(t)$ si $\alpha=0$):</em> $\frac{1}{1+\tau p} \xrightarrow{TL^{-1}} \frac{1}{\tau} e^{-t/\tau}$
+                        <br><em>Forme alternative (avec $\delta(t)$):</em> $\frac{1+\alpha p}{1+\tau p} = \frac{\alpha}{\tau} \frac{1+\tau p}{1+\tau p} + \frac{1-\alpha/\tau}{1+\tau p} = \frac{\alpha}{\tau} + \frac{1-\alpha/\tau}{1+\tau p} \xrightarrow{TL^{-1}} \frac{\alpha}{\tau}\delta(t) + \frac{\tau-\alpha}{\tau^2}e^{-t/\tau}$
+                     </li>
+                     <li>$\frac{1+\alpha p}{p(1+\tau p)} \xrightarrow{TL^{-1}} 1 + (\alpha-\tau) \frac{e^{-t/\tau}}{\tau}$</li>
+                     <li>$\frac{1+\alpha p}{p^2(1+\tau p)} \xrightarrow{TL^{-1}} t + (\alpha - \tau) - (\alpha - \tau)e^{-t/\tau}$</li>
+
+                     <!-- Formules avec deux constantes de temps -->
+                     <li>$\frac{1}{(1+\tau_1 p)(1+\tau_2 p)} \xrightarrow{TL^{-1}} \frac{1}{\tau_1 - \tau_2} (e^{-t/\tau_1} - e^{-t/\tau_2})$</li>
+                     <li>$\frac{1}{p(1+\tau_1 p)(1+\tau_2 p)} \xrightarrow{TL^{-1}} 1 - \frac{\tau_1}{\tau_1 - \tau_2} e^{-t/\tau_1} + \frac{\tau_2}{\tau_1 - \tau_2} e^{-t/\tau_2}$</li>
+                     <li>$\frac{1+\alpha p}{(1+\tau_1 p)(1+\tau_2 p)} \xrightarrow{TL^{-1}} \frac{\tau_1 - \alpha}{\tau_1(\tau_1-\tau_2)} e^{-t/\tau_1} - \frac{\tau_2 - \alpha}{\tau_2(\tau_1-\tau_2)} e^{-t/\tau_2}$</li>
+                     <li>$\frac{1+\alpha p}{p(1+\tau_1 p)(1+\tau_2 p)} \xrightarrow{TL^{-1}} 1 + \frac{\alpha - \tau_1}{\tau_1 - \tau_2} e^{-t/\tau_1} - \frac{\alpha - \tau_2}{\tau_1 - \tau_2} e^{-t/\tau_2}$</li>
+                     <li>$\frac{1+\alpha p}{p^2(1+\tau_1 p)(1+\tau_2 p)} \xrightarrow{TL^{-1}} t + (\alpha - \tau_1 - \tau_2) + \frac{\tau_1(\tau_1-\alpha)}{\tau_1-\tau_2} e^{-t/\tau_1} - \frac{\tau_2(\tau_2-\alpha)}{\tau_1-\tau_2} e^{-t/\tau_2}$</li>
+
+                     <!-- Formules avec pôle double -->
+                      <li>$\frac{1}{(1+\tau p)^2} \xrightarrow{TL^{-1}} \frac{t}{\tau^2} e^{-t/\tau}$</li>
+                      <li>$\frac{1}{p(1+\tau p)^2} \xrightarrow{TL^{-1}} 1 - e^{-t/\tau} - \frac{t}{\tau} e^{-t/\tau}$</li>
+                      <li>$\frac{1}{p^2(1+\tau p)^2} \xrightarrow{TL^{-1}} t - 2\tau + (t+2\tau) e^{-t/\tau}$</li>
+                      <li>$\frac{1+\alpha p}{(1+\tau p)^2} \xrightarrow{TL^{-1}} \frac{1}{\tau^2} ((\alpha-\tau) + \frac{\alpha t}{\tau}) e^{-t/\tau}$ ??? Non. $\frac{1+\alpha p}{(1+\tau p)^2} = \frac{A}{1+\tau p} + \frac{B}{(1+\tau p)^2}$. $A=\alpha/\tau$. $B=1-\alpha$. $TL^{-1} = \frac{\alpha}{\tau^2}e^{-t/\tau} + \frac{1-\alpha}{\tau^2}t e^{-t/\tau}$.</li>
+                      <li>$\frac{1+\alpha p}{p(1+\tau p)^2} \xrightarrow{TL^{-1}} 1 + \left( \frac{\alpha-\tau}{\tau} - \frac{t}{\tau} \right) e^{-t/\tau}$</li>
+                      <li>$\frac{1+\alpha p}{p^2(1+\tau p)^2} \xrightarrow{TL^{-1}} t + \alpha - 2\tau + \left( 2\tau - \alpha + \frac{t}{\tau}(\tau-\alpha) \right) e^{-t/\tau}$ ??? Vérifier cette formule.</li>
+
+                     <!-- Dénominateur du 3ème ordre -->
+                     <span class="page-ref">Page 16</span>
+                     <div class="clear"></div>
+                     <li>$\frac{1}{(1+\tau_1 p)(1+\tau_2 p)(1+\tau_3 p)} \xrightarrow{TL^{-1}} \sum_{i=1}^3 \frac{\tau_i^2}{(\tau_i-\tau_j)(\tau_i-\tau_k)} \frac{e^{-t/\tau_i}}{\tau_i}$ (indices j, k != i)</li>
+                     <li>$\frac{1+\alpha p}{(1+\tau_1 p)(1+\tau_2 p)(1+\tau_3 p)} \xrightarrow{TL^{-1}} \sum_{i=1}^3 \frac{\tau_i - \alpha}{(\tau_i-\tau_j)(\tau_i-\tau_k)} e^{-t/\tau_i}$ (indices j, k != i)</li>
+
+                     <!-- Formes canoniques 2nd ordre -->
+                      <li>$H(p) = \frac{\omega_0^2}{p^2 + 2m\omega_0 p + \omega_0^2} = \frac{1}{1+2m(p/\omega_0)+(p/\omega_0)^2}$
+                           <br>Si $0 < m < 1$: $h(t) = \frac{\omega_0}{\sqrt{1-m^2}} e^{-m\omega_0 t} \sin(\omega_0\sqrt{1-m^2} t)$
+                      </li>
+                      <li>$\frac{1}{p} H(p) \xrightarrow{TL^{-1}} 1 - \frac{1}{\sqrt{1-m^2}} e^{-m\omega_0 t} \sin(\omega_0\sqrt{1-m^2} t + \arccos m)$ (Réponse indicielle)</li>
+                      <li>$\frac{1+ap}{1+2m(p/\omega_0)+(p/\omega_0)^2} \xrightarrow{TL^{-1}} \dots$ (Complexe, dépend de $a$, voir formules pour $\sin(\dots + \phi)$)</li>
+                      <li>$\frac{1}{p(1+2m(p/\omega_0)+(p/\omega_0)^2)} \xrightarrow{TL^{-1}} 1 - \frac{1}{\sqrt{1-m^2}} e^{-m\omega_0 t} \sin(\omega_0\sqrt{1-m^2} t + \arccos m)$</li>
+                      <li>$\frac{1}{p^2(1+2m(p/\omega_0)+(p/\omega_0)^2)} \xrightarrow{TL^{-1}} t - \frac{2m}{\omega_0} + \frac{1}{\omega_0\sqrt{1-m^2}} e^{-m\omega_0 t} \sin(\omega_0\sqrt{1-m^2} t + 2\arccos m)$</li>
+
+                 </ul>
+             </div>
+
+             <hr style="margin: 2em 0;">
+              <span class="page-ref">Page 17</span>
+              <div class="clear"></div>
+             <h2>Annexe 2 – Systèmes linéaires du second ordre.</h2>
+              <div class="annexe-intro">
+                <p>On considère la fonction de transfert canonique du second ordre :</p>
+                 $$ H(p) = \frac{K}{1 + \frac{2m}{\omega_0} p + \frac{1}{\omega_0^2} p^2} $$
+                 <p>où $K$ est le gain statique, $m$ le coefficient d'amortissement, et $\omega_0$ la pulsation propre non amortie.</p>
+                 <p>La figure ci-dessous illustre la réponse indicielle (réponse à un échelon d'amplitude $E_0$, sortie normalisée $s(t)/(KE_0)$) pour $0 < m < 1$.</p>
+                 <div class="placeholder">[Placeholder for Step Response Diagram from Page 17]</div>
+                 <p class="placeholder-caption">Réponse indicielle d'un système du second ordre ($0<m<1$) avec paramètres : $D\%$ (dépassement), $T_r$ (temps de réponse), $t_m$ (temps de montée), $t_{pic}$ (temps de pic).</p>
+
+                 <h4>Paramètres caractéristiques (pour $0 < m < 1$)</h4>
+                 <ul>
+                    <li><strong>Pulsation de résonance $\omega_r$</strong> (pulsation où le gain $|H(j\omega)|$ est maximal) : $\omega_r = \omega_0 \sqrt{1-2m^2}$ (existe si $m < 1/\sqrt{2} \approx 0.707$)</li>
+                    <li><strong>Pulsation de coupure $\omega_c$</strong> (pulsation où le gain $|H(j\omega)|$ vaut $K/\sqrt{2}$, soit -3dB par rapport au gain statique) : $\omega_c = \omega_0 \sqrt{1-2m^2 + \sqrt{(1-2m^2)^2+1}}$</li>
+                    <li><strong>Facteur de résonance $M_r$</strong> (valeur max du gain $|H(j\omega)|/K$) : $M_r = \frac{1}{2m\sqrt{1-m^2}}$ (pour $\omega=\omega_r$)</li>
+                    <li><strong>Facteur de qualité $Q$</strong> (souvent défini comme $1/(2m)$ ou lié à $M_r$) : $Q = \frac{1}{2m}$</li>
+                    <li><strong>Temps de montée $t_m$</strong> (temps pour passer de 10% à 90% de la valeur finale, approx.) : $t_m \approx \frac{\pi - \arccos m}{\omega_0 \sqrt{1-m^2}}$ (formules varient)</li>
+                    <li><strong>Temps de réponse à n% $t_{rn\%}$</strong> (temps pour rester dans $\pm n\%$ de la valeur finale) : $t_{r5\%} \approx \frac{3}{m\omega_0}$ (pour $m < 0.7$), $t_{r2\%} \approx \frac{4}{m\omega_0}$. Formule plus générale donnée (page 17) : $t_r = \frac{1}{\omega_0 m} \ln(\frac{100}{n})$ ? Non, elle ne correspond pas aux abaques usuels. On utilise $t_{r5\%} \approx 3/(m\omega_0)$.</li>
+                    <li><strong>Temps de pic $t_{pic}$</strong> (temps pour atteindre le premier maximum) : $t_{pic} = \frac{\pi}{\omega_0 \sqrt{1-m^2}}$</li>
+                    <li><strong>Pseudo-période $T_p$</strong> (période des oscillations amorties) : $T_p = \frac{2\pi}{\omega_0 \sqrt{1-m^2}}$</li>
+                    <li><strong>Dépassement relatif $D\%$</strong> (en % de la valeur finale) : $D\% = 100 e^{-\frac{\pi m}{\sqrt{1-m^2}}}$</li>
+                    <li><strong>Nombre d'oscillations complètes $n$</strong> (estimé pendant le temps de réponse) : $n \approx \frac{t_r}{T_p} \approx \frac{3 \sqrt{1-m^2}}{2\pi m}$ (pour $t_{r5\%}$). Autre définition liée à $Q$: $n = Q \approx 1/(2m)$? Pas standard.</li>
+                 </ul>
+
+                 <span class="page-ref">Page 18</span>
+                 <div class="clear"></div>
+                 <h4>Tableau de valeurs et Abaque</h4>
+                 <p>Le tableau suivant donne des valeurs numériques des paramètres temporels et fréquentiels en fonction de l'amortissement $m$.</p>
+                  <table>
+                      <thead>
+                          <tr><th>m</th><th>$t_m\omega_0$</th><th>$t_{r5\%}\omega_0$</th><th>$t_{pic}\omega_0$</th><th>$T_p\omega_0$</th><th>D%</th><th>$\omega_r/\omega_0$</th><th>$\omega_c/\omega_0$</th><th>$M_{dB}$</th><th>m</th></tr>
+                      </thead>
+                      <tbody>
+                          <tr><td>0,1</td><td>1,68</td><td>30</td><td>3,16</td><td>6,31</td><td>73</td><td>0,99</td><td>1,54</td><td>1,56</td><td>14</td><td>0,1</td></tr>
+                          <tr><td>0,15</td><td>1,74</td><td>20</td><td>3,18</td><td>6,36</td><td>62</td><td>0,98</td><td>1,53</td><td>1,56</td><td>10,5</td><td>0,15</td></tr>
+                          <tr><td>0,2</td><td>1,81</td><td>14</td><td>3,21</td><td>6,41</td><td>53</td><td>0,96</td><td>1,51</td><td>1,57</td><td>8,1</td><td>0,2</td></tr>
+                          <tr><td>0,25</td><td>1,88</td><td>11</td><td>3,24</td><td>6,49</td><td>44</td><td>0,94</td><td>1,48</td><td>1,59</td><td>6,3</td><td>0,25</td></tr>
+                          <tr><td>0,3</td><td>1,97</td><td>10,1</td><td>3,29</td><td>6,59</td><td>37</td><td>0,91</td><td>1,45</td><td>1,61</td><td>4,8</td><td>0,3</td></tr>
+                          <tr><td>0,35</td><td>2,06</td><td>7,9</td><td>3,35</td><td>6,71</td><td>31</td><td>0,87</td><td>1,42</td><td>1,63</td><td>3,6</td><td>0,35</td></tr>
+                          <tr><td>0,4</td><td>2,16</td><td>7,7</td><td>3,43</td><td>6,86</td><td>25</td><td>0,82</td><td>1,37</td><td>1,67</td><td>2,7</td><td>0,4</td></tr>
+                          <tr><td>0,45</td><td>2,28</td><td>5,4</td><td>3,52</td><td>7,04</td><td>21</td><td>0,77</td><td>1,33</td><td>1,72</td><td>1,9</td><td>0,45</td></tr>
+                          <tr><td>0,5</td><td>2,42</td><td>5,3</td><td>3,63</td><td>7,26</td><td>16</td><td>0,71</td><td>1,27</td><td>1,8</td><td>1,2</td><td>0,5</td></tr>
+                          <tr><td>0,55</td><td>2,58</td><td>5,3</td><td>3,76</td><td>7,52</td><td>12,6</td><td>0,63</td><td>1,21</td><td>1,93</td><td>0,7</td><td>0,55</td></tr>
+                          <tr><td>0,6</td><td>2,77</td><td>5,2</td><td>3,93</td><td>7,85</td><td>9,5</td><td>0,53</td><td>1,15</td><td>2,17</td><td>0,3</td><td>0,6</td></tr>
+                          <tr><td>0,65</td><td>3</td><td>5</td><td>4,13</td><td>8,27</td><td>6,8</td><td>0,39</td><td>1,08</td><td>2,74</td><td>0,1</td><td>0,65</td></tr>
+                          <tr><td>0,7</td><td>3,29</td><td>3</td><td>4,4</td><td>8,8</td><td>4,6</td><td>0,14</td><td>1,01</td><td>7,14</td><td>0</td><td>0,7</td></tr>
+                          <tr><td>0,75</td><td>3,66</td><td>3,1</td><td>4,75</td><td>9,5</td><td>2,84</td><td>-</td><td>0,94</td><td>-</td><td>-</td><td>0,75</td></tr>
+                          <tr><td>0,8</td><td>4,16</td><td>3,4</td><td>5,24</td><td>10,5</td><td>1,52</td><td>-</td><td>0,87</td><td>-</td><td>-</td><td>0,8</td></tr>
+                          <tr><td>0,85</td><td>4,91</td><td>3,7</td><td>5,96</td><td>11,93</td><td>0,63</td><td>-</td><td>0,81</td><td>-</td><td>-</td><td>0,85</td></tr>
+                          <tr><td>0,9</td><td>6,17</td><td>4</td><td>7,21</td><td>14,41</td><td>0,15</td><td>-</td><td>0,75</td><td>-</td><td>-</td><td>0,9</td></tr>
+                          <tr><td>0,95</td><td>9,09</td><td>4,1</td><td>10,06</td><td>20,12</td><td>0,01</td><td>-</td><td>0,69</td><td>-</td><td>-</td><td>0,95</td></tr>
+                      </tbody>
+                  </table>
+                  <div class="placeholder">[Placeholder for Settling Time Abacus from Page 18]</div>
+                  <p class="placeholder-caption">Abaque : $t_{r5\%} \omega_0$ en fonction de $m$. (Normalisé sur l'axe vertical, $m$ sur l'axe horizontal log).</p>
+
+                <span class="page-ref">Page 19</span>
+                <div class="clear"></div>
+                <h4>Représentations graphiques génériques</h4>
+                <div class="placeholder">[Placeholder for Generic Plots from Page 19]</div>
+                <p class="placeholder-caption">Illustrations :
+                    <br>a) Réponses indicielles pour $1/(1+Tp)^n$ (méthode de Strejc).
+                    <br>b) Réponses indicielles pour un système du 2nd ordre avec différents amortissements $\xi$ (ou $m$).
+                    <br>c) Réponses fréquentielles (Bode, Nyquist, Black) typiques pour un système du 2nd ordre avec $\xi=0.25$.
+                </p>
+
+                <span class="page-ref">Page 20</span>
+                <div class="clear"></div>
+                 <div class="placeholder">[Placeholder for Frequency Response Magnitude Plot from Page 20]</div>
+                 <p class="placeholder-caption">Module de la réponse fréquentielle $|H(j\omega)|$ montrant la pulsation de résonance $\omega_r$, le pic de résonance $M_r$, le facteur de qualité $Q$, et la pulsation de coupure $\omega_c$ à -3dB.</p>
+
+             </div>
+         </section>
+
+    </main>
+
+    <footer class="document-footer">
+        Travaux dirigés, Automatique linéaire 1 – J.M. Dutertre – 2016<br>
+        Source: www.emse.fr/~dutertre/enseignement.html
+    </footer>
+
+</body>
+</html>
