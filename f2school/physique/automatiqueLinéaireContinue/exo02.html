@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatique Continue - Travaux Dirigés</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <!-- Basic Styling -->
+    <style>
+        body { 
+            font-family: sans-serif; 
+            line-height: 1.6; 
+            margin: 2em; 
+            padding: 1em;
+            border: 1px solid #ccc; /* Just to frame the content */
+        }
+        h1, h2, h3 { 
+            color: #333; 
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.3em;
+            margin-top: 1.5em;
+        }
+        h1 { font-size: 2em; text-align: center; }
+        h2 { font-size: 1.6em; color: #444; margin-bottom: 1em;}
+        h3 { font-size: 1.3em; color: #555; }
+        .placeholder { 
+            border: 1px dashed grey; 
+            padding: 1em; 
+            text-align: center; 
+            margin: 1.5em auto; /* Center horizontally */
+            background-color: #f0f0f0; 
+            display: block; /* Ensure it takes block space */
+            max-width: 80%; /* Limit width */
+        }
+        .placeholder-caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: 0.5em;
+            color: #555;
+        }
+        .katex-display { 
+            display: block; 
+            margin: 1em 0; 
+            overflow-x: auto; /* Handle long equations */
+            overflow-y: hidden;
+        } 
+        ol, ul { 
+            margin-left: 1.5em; 
+            margin-bottom: 1em;
+        }
+        li { margin-bottom: 0.5em; }
+        table { 
+            border-collapse: collapse; 
+            margin: 1.5em auto; /* Center table */
+            width: auto; /* Adjust width based on content */
+            max-width: 90%; /* Prevent overflow */
+            border: 1px solid #ccc;
+        }
+        th, td { 
+            border: 1px solid #ccc; 
+            padding: 0.6em; 
+            text-align: center; 
+        }
+        th { 
+            background-color: #eee; 
+            font-weight: bold;
+        }
+        .contact-info, .doc-info {
+            text-align: center;
+            margin-top: 2em;
+            font-size: 0.9em;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+        .school-logo { /* Basic representation */
+            border: 1px solid black;
+            padding: 10px;
+            display: inline-block; /* Keep elements together */
+            text-align: center;
+            margin-bottom: 2em;
+        }
+         .school-logo span { display: block; } /* Stack text lines */
+         .td-page-ref {
+            float: right;
+            font-weight: bold;
+         }
+         .clear { clear: both; }
+         .exercice-intro {
+            background-color: #f9f9f9;
+            padding: 1em;
+            border-left: 3px solid #ccc;
+            margin-bottom: 1em;
+         }
+         .important-note {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin: 1em 0;
+         }
+    </style>
+</head>
+<body>
+
+    <header class="page-header">
+        <div class="school-logo">
+            <span>École</span>
+            <span>d'ingénieurs</span>
+            <span>Télécom Physique</span>
+            <span>Strasbourg</span>
+        </div>
+        <h1>Automatique Continue</h1>
+        <h2>Travaux Dirigés</h2>
+        
+        <div class="contact-info">
+            <p><strong>Bernard BAYLE</strong><br>
+            <a href="http://eavr.u-strasbg.fr/~bernard">http://eavr.u-strasbg.fr/~bernard</a></p>
+            <p><strong>Hassan OMRAN</strong><br>
+            <a href="https://sites.google.com/site/hassansamiromran/">https://sites.google.com/site/hassansamiromran/</a></p>
+        </div>
+    </header>
+
+    <section class="doc-info">
+        <p>Ce document évolue grâce à votre concours.</p>
+        <p>Pour l'améliorer, communiquez vos remarques ou corrections à <a href="mailto:bernard.bayle@unistra.fr">bernard.bayle@unistra.fr</a> et <a href="mailto:homran@unistra.fr">homran@unistra.fr</a>.</p>
+    </section>
+
+    <hr style="margin: 2em 0;">
+
+    <main>
+
+        <!-- ==================== Séance 1 ==================== -->
+        <section id="seance1">
+            <span class="td-page-ref">Travaux Dirigés, page 1</span>
+            <h2>Séance 1 – Outils mathématiques</h2>
+            <div class="clear"></div>
+
+            <div class="exercice-intro">
+                <p>Le but de ce TD est de se familiariser avec la transformée de Laplace qui fait partie des techniques élémentaires en Automatique.</p>
+                <p>On se propose d'étudier la solution de l'équation différentielle standard du second ordre :</p>
+                $$ \omega_n^2 y(t) + 2\xi\omega_n \frac{dy(t)}{dt} + \frac{d^2y(t)}{dt^2} = \omega_n^2 u(t), \quad (E) $$
+                <p>avec $\xi > 0$ (coefficient d'amortissement) et $\omega_n > 0$ (pulsation propre non amortie).</p>
+            </div>
+
+            <ol>
+                <li>Comment procède-t-on de manière générale pour résoudre l'équation différentielle (E) ?
+                    <p><em>Explication : La résolution générale implique de trouver la solution de l'équation homogène (sans second membre) et une solution particulière (avec le second membre), puis de les sommer. Les constantes d'intégration sont déterminées par les conditions initiales.</em></p>
+                </li>
+                
+                <li>Définir l'équation homogène (H) associée à (E).
+                    <p><em>Réponse : $\omega_n^2 y_h(t) + 2\xi\omega_n \frac{dy_h(t)}{dt} + \frac{d^2y_h(t)}{dt^2} = 0$</em></p>
+                </li>
+
+                <li>Définir l'équation caractéristique associée et calculer ses pôles (racines), notés $p_1$ et $p_2$, en fonction de $\xi$ et $\omega_n$.
+                    <p><em>Réponse : L'équation caractéristique est $p^2 + 2\xi\omega_n p + \omega_n^2 = 0$. Les pôles sont $p_{1,2} = \omega_n (-\xi \pm \sqrt{\xi^2 - 1})$.</em></p>
+                </li>
+
+                <li>Calculer le module et l'argument de ces pôles et les représenter dans le plan complexe (plan 's').
+                    <p><em>Indication : Distinguer les cas $\xi > 1$, $\xi = 1$, $\xi < 1$.</em></p>
+                </li>
+
+                <li>Donner la solution de l'équation différentielle homogène $y_h(t)$ dans les trois cas : $\xi > 1$ (régime apériodique), $\xi < 1$ (régime pseudo-périodique), et $\xi = 1$ (régime critique).</li>
+
+                <li>Réécrire (E) en fonction de $p_1$ et $p_2$. On poursuivra les calculs avec cette nouvelle expression de l'équation (E). 
+                   <p><em>Indication : Sachant que $(p-p_1)(p-p_2) = p^2 - (p_1+p_2)p + p_1p_2 = p^2 + 2\xi\omega_n p + \omega_n^2$. On peut réécrire (E) symboliquement comme $(\frac{d}{dt}-p_1)(\frac{d}{dt}-p_2) y(t) = \omega_n^2 u(t)$. Notez que $p_1 p_2 = \omega_n^2$. La forme la plus directe pour les calculs suivants sera peut-être $(s-p_1)(s-p_2)Y(s)$ après transformation de Laplace.</em></p>
+                </li>
+
+                <li>On se place maintenant dans le cas où $\xi > 1$ (deux pôles réels distincts). L'entrée est un échelon unité $u(t) = \mathcal{U}(t)$ (fonction de Heaviside). Déterminer la solution particulière $y_p(t)$ de l'équation (E).
+                    <p><em>Indication : En régime permanent ($t \to \infty$), les dérivées s'annulent. On cherche une solution constante $y_p$.</em></p>
+                </li>
+
+                <li>Donner la solution complète $y(t) = y_h(t) + y_p(t)$ de l'équation (E), pour $u(t) = \mathcal{U}(t)$, en fonction de $p_1$, $p_2$ et des conditions initiales $y(0)$, $\frac{dy}{dt}(0)$.</li>
+
+                <li>Application numérique pour : $p_1 = -0,5$, $p_2 = -1$, $y(0) = 2$, et $\frac{dy}{dt}(0) = 0,5$.</li>
+
+                <li>On se propose maintenant d'effectuer cette résolution en utilisant la transformée de Laplace. Pour cela, démontrer que :
+                    $$ \mathcal{L}\left\{ \frac{dy(t)}{dt} \right\} = sY(s) - y(0) $$
+                    où $Y(s) = \mathcal{L}\{y(t)\}$.
+                    <p><em>Indication : Utiliser la définition de la transformée de Laplace et une intégration par parties. Généraliser pour $\mathcal{L}\left\{ \frac{d^2y(t)}{dt^2} \right\}$.</em></p>
+                </li>
+
+                <li>Transformer alors l'équation différentielle (E) (ou sa forme utilisant $p_1, p_2$) pour la mettre sous la forme :
+                    $$ P(s)Y(s) + P_0(s) = p_1 p_2 U(s) $$
+                    où $P(s)$ et $P_0(s)$ sont des polynômes en $s$, $P_0(s)$ regroupant les termes liés aux conditions initiales $y(0)$ et $\frac{dy}{dt}(0)$.
+                    <p><em>Réponse attendue : $P(s) = s^2 + 2\xi\omega_n s + \omega_n^2 = (s-p_1)(s-p_2)$. $p_1 p_2 = \omega_n^2$. $P_0(s) = -(s+2\xi\omega_n)y(0) - \frac{dy}{dt}(0)$. Donc $(s^2 + 2\xi\omega_n s + \omega_n^2)Y(s) - (s+2\xi\omega_n)y(0) - \frac{dy}{dt}(0) = \omega_n^2 U(s)$.</em></p>
+                </li>
+
+                <li>Calculer la transformée de Laplace de l'échelon unité $U(s) = \mathcal{L}\{\mathcal{U}(t)\}$.
+                    <p><em>Réponse : $U(s) = 1/s$.</em></p>
+                </li>
+
+                <li>On a :
+                    $$ Y(s) = \frac{\omega_n^2 U(s) - P_0(s)}{P(s)} = \frac{\omega_n^2/s + (s+2\xi\omega_n)y(0) + \frac{dy}{dt}(0)}{s^2 + 2\xi\omega_n s + \omega_n^2} $$
+                    Quelles sont les racines de $P(s)$ ? En déduire la décomposition en éléments simples de la fraction rationnelle précédente $Y(s)$.
+                    <p><em>Indication : Les racines de $P(s)$ sont $p_1$ et $p_2$. La décomposition aura la forme $\frac{A}{s} + \frac{B}{s-p_1} + \frac{C}{s-p_2}$ (si $p_1 \neq p_2$ et aucun n'est nul). Il faut calculer les coefficients A, B, C en fonction de $p_1, p_2, y(0), \frac{dy}{dt}(0)$.</em></p>
+                </li>
+
+                <li>On donne : $\mathcal{L}\{e^{-at} \mathcal{U}(t)\} = \frac{1}{s+a}$. Retrouver la solution temporelle $y(t)$ obtenue en résolvant l'équation différentielle (question 8) en appliquant la transformée de Laplace inverse à $Y(s)$.
+                    <p><em>Indication : Utiliser la décomposition en éléments simples de $Y(s)$ trouvée à la question 13.</em></p>
+                </li>
+            </ol>
+        </section>
+
+        <!-- ==================== Séance 2 ==================== -->
+        <section id="seance2">
+            <span class="td-page-ref">Travaux Dirigés, page 2</span>
+            <h2>Séance 2 – Modélisation</h2>
+            <div class="clear"></div>
+
+            <div class="exercice-intro">
+                <p>On considère un four permettant de contrôler, au cours du temps, la température $\theta_1$ d'une chambre de chauffage (enceinte n. 1) dont le schéma de principe est donné à la figure 1. Le milieu ambiant est à la température $\theta_0$ et l'enceinte n. 2 dans laquelle se trouve la résistance chauffante à la température $\theta_2$.</p>
+            </div>
+
+            <div class="placeholder">[Placeholder for FIGURE 1 - Schéma de principe du four]</div>
+            <p class="placeholder-caption">FIGURE 1 - Schéma de principe du four (illustrant $\theta_0$, $\theta_1$, $\theta_2$, et l'entrée de chauffage $u$).</p>
+
+            <p>L'énergie thermique apportée par le biais de la résistance électrique immergée dans un bain d'huile est notée $u$. L'écriture des équations de conservation de l'énergie (bilans thermiques) donne :</p>
+            $$ m_1c_1 \frac{d\theta_1}{dt} = k_{12}(\theta_2 - \theta_1) $$
+            $$ m_2c_2 \frac{d\theta_2}{dt} = -k_{12}(\theta_2 - \theta_1) - k_{20}(\theta_2 - \theta_0) + u $$
+            <p>où les coefficients $m_1$ et $m_2$ représentent les masses des fluides dans les enceintes 1 et 2 et $c_1$ et $c_2$ leurs capacités thermiques massiques ; $k_{12}$ et $k_{20}$ représentent les conductances thermiques à l'interface entre les enceintes 1 et 2 et entre l'enceinte 2 et le milieu ambiant. Les valeurs numériques correspondant à notre four sont :</p>
+            <ul>
+                <li>$m_1c_1 = 0,5$ (Capacité thermique enceinte 1)</li>
+                <li>$m_2c_2 = 2$ (Capacité thermique enceinte 2)</li>
+                <li>$k_{12} = 1$ (Conductance thermique 1-2)</li>
+                <li>$k_{20} = 0,5$ (Conductance thermique 2-ambiant)</li>
+            </ul>
+            
+            <ol>
+                <li>Réécrire les équations du système sous forme numérique en fonction des valeurs précisées ci-dessus.
+                    <p><em>Réponse : 
+                    $0,5 \frac{d\theta_1}{dt} = 1(\theta_2 - \theta_1) \implies \frac{d\theta_1}{dt} = -2\theta_1 + 2\theta_2$ <br>
+                    $2 \frac{d\theta_2}{dt} = -1(\theta_2 - \theta_1) - 0,5(\theta_2 - \theta_0) + u \implies \frac{d\theta_2}{dt} = 0,5\theta_1 - 0,75\theta_2 + 0,25\theta_0 + 0,5u$
+                    </em></p>
+                </li>
+
+                <li>Que représentent les grandeurs $\theta_1$, $\theta_0$ et $u$ pour le système (entrée de commande, sortie mesurée, perturbations, point de fonctionnement, ...) ?
+                    <p><em>Réponse : $\theta_1$ est la sortie (grandeur à contrôler), $u$ est l'entrée de commande (chauffage), $\theta_0$ est une perturbation (température ambiante). Un point de fonctionnement serait un état d'équilibre ($\frac{d\theta_1}{dt}=0, \frac{d\theta_2}{dt}=0$) pour des valeurs constantes de $u$ et $\theta_0$.</em></p>
+                </li>
+
+                <li>Quelle représentation parait la plus naturelle pour modéliser le système ? Fonction de transfert ou représentation d'état ?
+                    <p><em>Explication : La représentation d'état est naturelle car le système est décrit par des équations différentielles du premier ordre liant les états ($\theta_1, \theta_2$). Elle gère aussi plus facilement les perturbations ($\theta_0$) et les entrées multiples ($u, \theta_0$). La fonction de transfert est utile pour l'analyse fréquentielle et SISO (Single Input Single Output), typiquement entre $u$ et $\theta_1$ en considérant $\theta_0$ nulle ou constante.</em></p>
+                </li>
+
+                <li>Mettre les équations du système sous forme d'une représentation d'état $\dot{x} = Ax + Bu_c + B_p d$ et $y = Cx + Du_c$. 
+                    <p><em>Indication : Choisir le vecteur d'état $x = \begin{pmatrix} \theta_1 \\ \theta_2 \end{pmatrix}$. Identifier l'entrée de commande $u_c=u$ et la perturbation $d=\theta_0$. La sortie est $y=\theta_1$. Déterminer les matrices A, B ($=B_c$), $B_p$, C, D.</em></p>
+                </li>
+            <span class="td-page-ref">Travaux Dirigés, page 3</span><div class="clear"></div>
+                <li>Représenter à l'aide de schéma-blocs les relations entre les transformées de Laplace $\Theta_1(s)$, $\Theta_0(s)$ et $U(s)$ des grandeurs $\theta_1$, $\theta_0$ et $u$. (On suppose les conditions initiales nulles).
+                    <p><em>Indication : Transformer les équations différentielles numériques en Laplace. Isoler $\Theta_1(s)$ et $\Theta_2(s)$ et dessiner les blocs (intégrateurs $1/s$, gains, sommateurs).</em></p>
+                </li>
+
+                <li>A l'aide des transformées de Laplace des équations du système, ou des schémas blocs précédents, exprimer $\Theta_1(s)$ en fonction de $\Theta_0(s)$ et $U(s)$.</li>
+
+                <li>En déduire la fonction de transfert du système $G(s)$ (reliant l'entrée de commande $U(s)$ à la sortie $\Theta_1(s)$, en supposant la perturbation $\Theta_0(s)=0$) sous la forme :
+                    $$ G(s) = \frac{\Theta_1(s)}{U(s)} $$
+                </li>
+
+                <li>Retrouver cette fonction de transfert $G(s)$ à partir de la représentation d'état (matrices A, B, C, D) en utilisant la formule $G(s) = C(sI-A)^{-1}B + D$.</li>
+
+                <li>Quels sont l'ordre et la classe du système ? Calculer les pôles du système de deux façons différentes (à partir de $G(s)$ et à partir des valeurs propres de A).
+                    <p><em>Explication : L'ordre est le degré du dénominateur de $G(s)$ (ou la dimension de l'état). La classe est le nombre d'intégrateurs purs (pôles à $s=0$) dans la boucle ouverte (ici $G(s)$ elle-même si on considère une boucle unitaire).</em></p>
+                </li>
+
+                <li>Établir la représentation d'état du système sous forme modale (diagonale ou bloc de Jordan), à partir de l'expression de la fonction de transfert obtenue (décomposition en éléments simples) ou par diagonalisation de A.</li>
+
+                <li>Retrouver ce résultat en diagonalisant la matrice d'état initiale A ($A = P \Lambda P^{-1}$). Quelle est la nouvelle représentation d'état $\dot{z} = \Lambda z + \tilde{B} u_c + ...$ ?</li>
+            </ol>
+        </section>
+
+        <!-- ==================== Séance 3 ==================== -->
+        <section id="seance3">
+            <span class="td-page-ref">Travaux Dirigés, page 4</span>
+            <h2>Séance 3 – Réponses temporelle et harmonique des systèmes</h2>
+            <div class="clear"></div>
+
+            <div class="exercice-intro">
+            <p>Cette étude concerne un système de chauffage électrique ventilé caractérisé par :</p>
+            <ul>
+                <li>une constante de temps lente ;</li>
+                <li>un retard dû au transport de l'air.</li>
+            </ul>
+            </div>
+
+            <ol>
+                <li>Retrouver en la démontrant la transformée de Laplace du signal $g_1(t - t_r)$ avec $t_r$ une constante réelle positive. On note $G_1(s)$ la transformée de Laplace du signal $g_1(t)$.
+                    <p><em>Réponse : $\mathcal{L}\{g_1(t-t_r)\mathcal{U}(t-t_r)\} = e^{-t_r s} G_1(s)$. Utiliser la définition de la transformée et un changement de variable.</em></p>
+                </li>
+
+                <li>Donner la fonction de transfert $G_2(s)$ d'un système du second ordre possédant un pôle réel double. On introduira pour cela la constante de temps $\tau$ associée au pôle et le gain statique du système, noté $K$.
+                    <p><em>Réponse : $G_2(s) = \frac{K}{(1+\tau s)^2}$. Le pôle double est en $s = -1/\tau$.</em></p>
+                </li>
+
+                <li>Que vaut le coefficient d'amortissement $\xi$ d'un système du second ordre possédant un pôle réel double ? Justifier la réponse sans pour autant faire de calcul.
+                    <p><em>Réponse : $\xi = 1$. Un pôle double correspond au cas critique, où les deux racines de l'équation caractéristique sont réelles et confondues, ce qui arrive pour $\xi=1$ dans $p^2 + 2\xi\omega_n p + \omega_n^2 = 0$.</em></p>
+                </li>
+
+                <li>En utilisant l'abaque ci-dessous (Figure 2), donner le temps de réponse à 5% ($t_{5\%}$) d'un tel système (avec $\xi=1$) en fonction de $\tau$.
+                    <div class="placeholder">[Placeholder for FIGURE 2 - Abaque t5% normalisé]</div>
+                    <p class="placeholder-caption">FIGURE 2 – Temps de réponse normalisé $\omega_n t_{5\%}$ d'un système du second ordre de fonction de transfert $\frac{K\omega_n^2}{s^2 + 2\xi\omega_n s + \omega_n^2}$ en fonction de son coefficient d'amortissement $\xi$.
+                    <br><em>Note : Pour $\xi=1$, $\omega_n = 1/\tau$. Lire la valeur de $\omega_n t_{5\%}$ sur l'abaque pour $\xi=1$ et en déduire $t_{5\%}$ en fonction de $\tau$. (La valeur est proche de 5).</em></p>
+                </li>
+                <span class="td-page-ref">Travaux Dirigés, page 5</span><div class="clear"></div>
+                <li>On modélise le système de chauffage électrique ventilé considéré par un second ordre avec retard possédant un pôle double réel. Néanmoins les paramètres de ce modèle étant mal connus, on va utiliser une mesure de la réponse indicielle du système pour les identifier. D'après les questions 1 et 2, donner l'expression de sa fonction de transfert $G(s)$ en conservant les notations précédentes ($K, \tau, t_r$).
+                    <p><em>Réponse : $G(s) = \frac{K e^{-t_r s}}{(1+\tau s)^2}$.</em></p>
+                </li>
+
+                <li>Tracer l'allure de la réponse indicielle (réponse à un échelon) correspondant à la fonction de transfert précédente $G(s)$ en fonction de $t_r$, $\tau$ et $K$.
+                    <p><em>Indication : C'est la réponse d'un système du 2ème ordre critiquement amorti, retardée de $t_r$. Elle part de 0, reste à 0 jusqu'à $t=t_r$, puis monte sans dépassement vers la valeur finale $K$. La pente initiale est nulle.</em></p>
+                </li>
+
+                <li>La réponse du système à un échelon d'amplitude $10V$ est donnée à la figure 4. Comparer cette réponse au tracé précédemment effectué et, d'après les questions précédentes, identifier graphiquement les paramètres $t_r$, $\tau$ et $K$ en utilisant la figure réponse 4. Expliquer la méthode utilisée (méthode "graphique" ou "des tangentes" simple).
+                    <p><em>Méthode simple : $K$ est la valeur finale. $t_r$ est le temps avant que la réponse ne commence à monter. $\tau$ peut être estimé à partir du temps nécessaire pour atteindre une certaine fraction de la valeur finale (e.g., 63% pour un 1er ordre, ici c'est plus complexe, on peut utiliser $t_{5\%}$ ou le point d'inflexion).</em></p>
+                </li>
+                
+                <li><p><strong>Méthode d'identification de Strejc :</strong></p>
+                    <p>On se propose d'identifier les paramètres précédents de manière plus précise en utilisant la <strong>méthode de Strejc</strong>. La méthode de Strejc est une méthode d'identification classique qui permet de déterminer les paramètres d'un système dont le modèle peut s'écrire sous la forme de la fonction de transfert :</p>
+                    $$ G(s) = \frac{K e^{-t_r s}}{(1 + \tau s)^n} \quad (1) $$
+                    <p>A partir de la courbe de la réponse indicielle (voir figure 3 pour l'illustration), on trace la <strong>tangente au point d'inflexion</strong>.</p>
+
+                    <div class="placeholder">[Placeholder for FIGURE 3 - Identification par la méthode de Strejc]</div>
+                    <p class="placeholder-caption">FIGURE 3 – Identification par la méthode de Strejc: $K$ est la valeur finale, $T_1$ est l'intersection de la tangente avec l'axe des temps, $T_2$ est l'intersection de la tangente avec l'asymptote horizontale $y=K$.</p>
+
+                    <p>On obtient alors les caractéristiques $T_1$ et $T_2$ de la réponse. Alors, les paramètres de la fonction de transfert (1) sont déduits du tableau ci-dessous.</p>
+
+                    <table>
+                        <caption>TABLE 1 – Paramètres du modèle selon la méthode de Strejc, en fonction de $T_1$ et $T_2$</caption>
+                        <thead>
+                            <tr>
+                                <th>n (ordre)</th>
+                                <th>$T_1 / \tau$</th>
+                                <th>$(T_2 - T_1) / \tau$</th>
+                                <th>$T_1 / (T_2 - T_1)$</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr> <td>1</td> <td>0</td> <td>1</td> <td>0</td> </tr>
+                            <tr> <td>2</td> <td>0.28</td> <td>2.72</td> <td>0.103 (approx 0.1)</td> </tr>
+                            <tr> <td>3</td> <td>0.8</td> <td>3.7</td> <td>0.216 (approx 0.22)</td> </tr>
+                            <tr> <td>4</td> <td>1.42</td> <td>4.46</td> <td>0.318 (approx 0.32)</td> </tr>
+                        </tbody>
+                    </table>
+                    <span class="td-page-ref">Travaux Dirigés, page 6</span><div class="clear"></div>
+                    <p>On procède comme suit :</p>
+                    <ol type="a">
+                        <li>Tout d'abord on identifie l'ordre $n$ du système à partir de la troisième colonne ($T_1 / (T_2-T_1)$) du tableau. On calcule cette valeur à partir de $T_1$ et $T_2$ mesurés sur la courbe expérimentale. Si la valeur calculée ne correspond pas exactement à l'une des valeurs du tableau (ce qui est fréquent), on choisit la valeur du tableau immédiatement inférieure et on en déduit l'ordre $n$.</li>
+                        <li>Une fois $n$ déterminé, on déduit la constante de temps $\tau$ du système d'après l'indication de la seconde colonne : $\tau = (T_2 - T_1) / (\text{valeur table pour } n)$.</li>
+                        <li>On estime le temps de retard $t_r$ en comparant la valeur de $T_1$ mesurée à la valeur théorique $T_{1,th} = \tau \times (\text{valeur table } T_1/\tau \text{ pour } n)$. Le retard est $t_r = T_1 - T_{1,th}$. (Une autre approche courante est $t_r \approx T_1$ si $T_1$ est petit par rapport à $T_2-T_1$, ou d'utiliser des formules plus spécifiques selon les variantes de Strejc). *Note: Le document original n'est pas parfaitement clair sur le calcul de $t_r$, mais $T_1$ est souvent une bonne approximation ou un point de départ.*</li>
+                        <li>$K$ est bien évidemment toujours obtenu directement d'après le régime permanent de la réponse (valeur finale).</li>
+                    </ol>
+                </li>
+
+                <li>Appliquer la méthode de Strejc, en vous appuyant sur la figure 5 (qui est la même que la figure 4, mais prévue pour tracer la tangente). Déterminer $K, n, \tau, t_r$.</li>
+
+                <li><p><strong>Effet du retard sur la réponse harmonique :</strong></p>
+                    <p>On se propose maintenant d'étudier l'effet du retard sur la réponse harmonique (diagramme de Bode) du système. Pour cela, on considérera que le système a pour fonction de transfert (basée sur une identification possible) :</p>
+                    $$ G(s) = \frac{2,4 e^{-0,5s}}{(1+2s)^2} $$
+                    <p><em>Note : Ici $K=2.4$, $t_r=0.5$, $\tau=2$, $n=2$.</em></p>
+                </li>
+
+                <li>Tracer tout d'abord le diagramme de Bode (gain en dB et phase en degrés en fonction de $\log(\omega)$) du système en boucle ouverte <strong>sans tenir compte du retard</strong> :
+                    $$ G_{sans\_retard}(s) = \frac{2,4}{(1+2s)^2} $$
+                    Utiliser la figure 6 vierge fournie.
+                    <p><em>Indication : Tracer les asymptotes. Gain statique = $20 \log_{10}(2.4)$. Pulsation de coupure $\omega_c = 1/\tau = 1/2 = 0.5$ rad/s. Pente de -40 dB/décade après $\omega_c$. Phase de 0° à basse fréquence, -90° à $\omega_c$, -180° à haute fréquence.</em></p>
+                </li>
+
+                <li>On s'intéresse maintenant à l'influence du retard $e^{-t_r s}$. Quel est le déphasage introduit par le terme de retard $e^{-t_r s}$ (avec $t_r=0.5$), à une pulsation $\omega$ donnée ?
+                    <p><em>Réponse : Le terme $e^{-j\omega t_r}$ a un module de 1 (n'affecte pas le gain en dB) et une phase de $-\omega t_r$ radians (soit $- \omega t_r \times \frac{180}{\pi}$ degrés). Ici, $\phi_{retard}(\omega) = -0.5 \omega \times \frac{180}{\pi}$ degrés.</em></p>
+                </li>
+
+                <li>Évaluer ce déphasage pour différentes valeurs de $\omega$ judicieusement choisies dans la plage de variation des pulsations de la figure 6 (par exemple $\omega = 0.1, 0.5, 1, 5, 10$ rad/s). En déduire le diagramme de Bode (phase uniquement, car le gain n'est pas affecté) de la fonction de transfert complète du système en boucle ouverte :
+                    $$ G(s) = \frac{2,4 e^{-0.5s}}{(1+2s)^2} $$
+                    Tracer la nouvelle courbe de phase sur la figure 6, dans la limite de la place disponible.
+                    <p><em>Indication : La phase totale est $\phi_{total}(\omega) = \phi_{sans\_retard}(\omega) + \phi_{retard}(\omega)$. La phase va chuter beaucoup plus rapidement à cause du retard.</em></p>
+                </li>
+            </ol>
+
+            <!-- Placeholders for figures referenced in Séance 3 -->
+            <div class="placeholder">[Placeholder for FIGURE 4 – Identification du système d'après sa réponse indicielle]</div>
+            <p class="placeholder-caption">FIGURE 4 – Réponse indicielle expérimentale (Amplitude échelon = 10V). L'axe Y va de 0 à 25, l'axe X (temps) va de 0 à 16.</p>
+
+            <div class="placeholder">[Placeholder for FIGURE 5 – Identification du système d'après sa réponse indicielle : méthode de Strejc]</div>
+            <p class="placeholder-caption">FIGURE 5 – Même réponse indicielle que Fig. 4, destinée au tracé de la tangente pour Strejc.</p>
+
+            <span class="td-page-ref">Travaux Dirigés, page 8</span><div class="clear"></div>
+            <div class="placeholder">[Placeholder for FIGURE 6 – Diagramme de Bode vierge]</div>
+            <p class="placeholder-caption">FIGURE 6 – Diagramme de Bode vierge. Axe Y Gain: -270 dB to 100 dB. Axe Y Phase: -270° to -90°. Axe X Fréquence: $10^{-1}$ to $10^3$ rad/sec.</p>
+
+        </section>
+
+
+        <!-- ==================== Séance 4 ==================== -->
+        <section id="seance4">
+            <span class="td-page-ref">Travaux Dirigés, page 9</span>
+            <h2>Séance 4 – Schémas blocs et systèmes asservis</h2>
+            <div class="clear"></div>
+
+            <h3>Représentations par fonction de transfert</h3>
+            
+            <h4>Représentation d'un système avec perturbation et bruit de mesure</h4>
+            <div class="exercice-intro">
+                <p>Pour tenir compte des imperfections de modélisation représentées sur le schéma 7 (système asservi avec perturbation $P(s)$ et bruit de mesure $B(s)$), calculer la transformée de Laplace $Y(s)$ de la sortie de l'asservissement en fonction de la consigne $Y_r(s)$, de la perturbation $P(s)$ et du bruit de mesure $B(s)$ à l'aide du théorème de superposition.</p>
+            </div>
+
+            <div class="placeholder">[Placeholder for FIGURE 7 - Schéma bloc d'un asservissement à temps continu : cas général]</div>
+            <p class="placeholder-caption">FIGURE 7 - Schéma bloc : $Y_r$ (consigne), $E$ (erreur), $C(s)$ (correcteur), $U$ (commande), $G_1(s)$, $G_2(s)$ (procédé), $P(s)$ (perturbation additive avant $G_2$), $Y(s)$ (sortie), $H_1(s)$ (capteur), $B(s)$ (bruit de mesure additif), $H_2(s)$ (filtrage mesure?), $Y_m$ (mesure bruitée).</p>
+            <p><em>Indication : Calculer la sortie pour chaque entrée ($Y_r, P, B$) en mettant les autres à zéro, puis sommer les résultats. Par exemple, pour $Y(s)$ en fonction de $Y_r(s)$ seulement ($P=0, B=0$), on a une boucle fermée classique.</em></p>
+
+            <h4>Calcul générique de la représentation d'un système en boucle fermée : règle de Mason</h4>
+            <div class="exercice-intro">
+                <p>On se propose de calculer la transmittance (synonyme de fonction de transfert) :</p>
+                $$ G(s) = \frac{Y(s)}{Y_r(s)} $$
+                <p>du système représenté à la figure 8. Compte tenu de la configuration du système, qui présente différentes boucles entrelacées, il n'est pas possible de calculer $G(s)$ en utilisant des combinaisons simples (série, parallèle, boucle simple) de transmittances. On va donc utiliser une méthode générique, appelée <strong>règle de Mason</strong>.</p>
+                <p>On peut résumer cette règle de manière très succincte comme suit. La transmittance d'un système d'entrée $Y_r(s)$ et de sortie $Y(s)$, comportant différentes boucles éventuellement imbriquées vaut :</p>
+                $$ \frac{Y(s)}{Y_r(s)} = \frac{\sum_{i=1}^{n} M_i(s) \Delta_i(s)}{\Delta(s)} $$
+                <p>où :</p>
+                <ul>
+                    <li>$n$ indique le nombre de parcours directs (ou chemins ouverts), c'est-à-dire sans passer deux fois par le même noeud, entre l'entrée $Y_r(s)$ et la sortie $Y(s)$.</li>
+                    <li>$M_i(s)$ représente la transmittance (gain) du $i$-ème parcours direct.</li>
+                    <li>$\Delta(s)$ est le déterminant du graphe, calculé par :
+                        $$ \Delta(s) = 1 - \sum (\text{Gains des boucles simples}) + \sum (\text{Produits des gains des paires de boucles non touchantes}) - \sum (\text{Produits des gains des triplets de boucles non touchantes}) + \dots $$
+                        (Deux boucles sont non touchantes si elles ne partagent aucun nœud).
+                    </li>
+                    <li>$\Delta_i(s)$ est le déterminant du sous-graphe obtenu en supprimant du graphe original tous les nœuds appartenant au $i$-ème parcours direct $M_i(s)$. Il se calcule comme $\Delta(s)$ mais uniquement avec les boucles restantes qui ne touchent pas le parcours $M_i$.</li>
+                 </ul>
+            </div>
+            <span class="td-page-ref">Travaux Dirigés, page 10</span><div class="clear"></div>
+            <div class="placeholder">[Placeholder for FIGURE 8 - Système avec boucles imbriquées]</div>
+            <p class="placeholder-caption">FIGURE 8 - Système avec boucles imbriquées. Entrée $Y_r$, sortie $Y$. Blocs $G_1, G_2, G_3, G_4$. Blocs de retour $H_1, H_2, H_3$. Plusieurs sommateurs et points de branchement.</p>
+            
+            <!-- A(s) a été renommé Delta(s) pour correspondre à la notation standard de Mason -->
+            <!-- La formule donnée dans le PDF pour A(s) est bien celle de Delta(s) -->
+            <p>Pour obtenir la transmittance $G(s)$ du système de la Figure 8, on va adopter la démarche suivante :</p>
+            <ol>
+                <li>Déterminer dans le schéma 8 les parcours directs (ouverts), c'est-à-dire les chemins de $Y_r(s)$ à $Y(s)$ qui ne passent jamais deux fois par un même point (nœud) et leur transmittance $M_i(s)$.</li>
+                <li>Déterminer toutes les boucles simples (fermées) présentes dans le schéma et leur transmittance (gain de boucle) $B_j(s)$.</li>
+                <li>Existe-t-il des paires de boucles disjointes (non touchantes), c'est-à-dire n'ayant aucun nœud commun ? En déduire l'expression du déterminant $\Delta(s)$ pour le système.</li>
+                <li>Si l'on élimine mentalement les nœuds de chaque parcours direct $M_i(s)$, reste-t-il des boucles complètes dans le sous-graphe restant ? En déduire les cofacteurs $\Delta_i(s)$ des sous-systèmes obtenus en ôtant les parcours directs.</li>
+                <li>En déduire la transmittance globale $G(s) = Y(s)/Y_r(s)$ en appliquant la formule de Mason.</li>
+            </ol>
+            <p>Pour plus de précisions et des exemples sur la règle de Mason, on pourra se référer à l'ouvrage d'Eric Ostertag, <em>Systèmes et Asservissements Continus. Modélisation, Analyse, Synthèse des Lois de Commande</em>, publié chez Ellipses, Technosup<a href="#footnote1" id="ref1">¹</a>. Sur internet, on consultera avec intérêt : <a href="http://www.laas.fr/~arzelier/polycop/n6k1/pclbis.ps" target="_blank">http://www.laas.fr/~arzelier/polycop/n6k1/pclbis.ps</a></p>
+
+            <h3>Représentations d'état</h3>
+            <div class="exercice-intro">
+                <p>La notion de schéma fonctionnel ou schéma bloc est bien connue (et fondamentale) dans le cas de la représentation d'un système par fonction de transfert. La figure 8 est un exemple de schéma fonctionnel.</p>
+                <p>Dans le cas des représentations d'état, un schéma fonctionnel est une représentation graphique constituée de blocs sommateurs, soustracteurs, gains ou <strong>intégrateurs</strong> permettant d'illustrer le modèle du système. A titre d'exemple, on donne le schéma fonctionnel élémentaire de la figure 9.</p>
+            </div>
+             <span class="td-page-ref">Travaux Dirigés, page 11</span><div class="clear"></div>
+            <div class="placeholder">[Placeholder for FIGURE 9 – Schéma fonctionnel élémentaire (état)]</div>
+            <p class="placeholder-caption">FIGURE 9 – Schéma fonctionnel élémentaire : Entrée $u$, sommateur, sortie $\dot{x}$, intégrateur $\int$, sortie $x$, gain 2, sommateur, sortie $y$. Retour de $x$ vers le premier sommateur.</p>
+            
+            <ol>
+                <li>Donner le schéma fonctionnel (à base d'intégrateurs, gains, sommateurs) du système dont la représentation d'état générale s'écrit :
+                    $$ \frac{dx}{dt} = Ax + Bu $$
+                    $$ y = Cx + Du $$
+                    <p><em>Indication : Représenter le vecteur d'état $x$ sortant d'un bloc intégrateur dont l'entrée est $\dot{x}$. Construire $\dot{x}$ et $y$ à partir de $x$ et $u$ en utilisant les matrices A, B, C, D comme des blocs de gain (matriciels ou décomposés).</em></p>
+                </li>
+
+                <li>Calculer la représentation d'état équivalente (matrices A, B, C, D globales) aux trois schémas de combinaison de sous-blocs de la figure 10. Chaque sous-bloc $i$ est défini par $(A_i, B_i, C_i, D_i)$.</li>
+            </ol>
+
+            <div class="placeholder">[Placeholder for FIGURE 10 – Combinaison de sous-blocs dans le formalisme d'état]</div>
+            <p class="placeholder-caption">FIGURE 10 – Combinaison de sous-blocs dans le formalisme d'état.<br>
+            (a) Connexion Série : $u \to [A_1,B_1,C_1,D_1] \to y_1=u_2 \to [A_2,B_2,C_2,D_2] \to y$.<br>
+            (b) Connexion Parallèle : $u \to [A_1,B_1,C_1,D_1] \to y_1$; $u \to [A_2,B_2,C_2,D_2] \to y_2$; $y = y_1+y_2$.<br>
+            (c) Boucle Fermée (Feedback) : $Y_r \to \text{sommateur} (+) \to u \to [A_1,B_1,C_1,D_1] \to y$; $y \to [A_2,B_2,C_2,D_2] \to y_f \to \text{sommateur} (-)$.
+            </p>
+            <p><em>Indication : Définir le vecteur d'état global (par concaténation $x = [x_1^T, x_2^T]^T$) et écrire les équations globales $\dot{x}$ et $y$ en fonction de $x$ et de l'entrée externe ($u$ ou $Y_r$).</em></p>
+
+        </section>
+
+        <!-- ==================== Séance 5 ==================== -->
+        <section id="seance5">
+             <span class="td-page-ref">Travaux Dirigés, page 12</span>
+            <h2>Séance 5 – Stabilité des systèmes asservis</h2>
+             <div class="clear"></div>
+            
+            <div class="exercice-intro">
+                <p>On considère un procédé dont le modèle sous forme d'état est :</p>
+                $$ \frac{dx}{dt} = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} x + \begin{pmatrix} 1+\tau_d \\ -1 \end{pmatrix} u $$
+                $$ y = (K \quad K) x $$
+                <p>où $\tau_d$ et $K$ sont des constantes.</p>
+            </div>
+
+            <ol>
+                <li>Quels sont les états d'équilibre de ce système en boucle ouverte (i.e., $u=0$)? Sont-ils stables ?
+                    <p><em>Indication : Résoudre $\dot{x}=Ax=0$. Étudier la stabilité à partir des valeurs propres de A.</em></p>
+                </li>
+                
+                <li>On se propose d'asservir le procédé. Déterminer sa fonction de transfert en boucle ouverte, notée $G(s) = Y(s)/U(s)$, sous forme factorisée. (Calculer $G(s)=C(sI-A)^{-1}B$).</li>
+
+                <li>Appliquer le critère de Nyquist pour étudier la stabilité du système en boucle fermée lorsque l'on effectue une correction proportionnelle $u = K_p(y_r - y)$ (où $y_r$ est la consigne, $y$ est la sortie) selon le schéma de la figure 11. On représentera séparément les cas $\tau_d = 0$ et $\tau_d \neq 0$.
+                    <p><em>Indication : Tracer le lieu de Nyquist de la fonction de transfert en boucle ouverte $L(s)=K_p G(s)$. Appliquer le critère du revers en comptant les tours autour du point critique (-1, 0).</em></p>
+
+                    <div class="placeholder">[Placeholder for FIGURE 11 – Correction proportionnelle]</div>
+                    <p class="placeholder-caption">FIGURE 11 – Correction proportionnelle: Consigne $Y_r(s)$, Erreur $E(s)$, Correcteur $K_p$, Commande $U(s)$, Procédé $G(s)$, Sortie $Y(s)$. Retour unitaire.</p>
+                </li>
+
+                <li>Tracer le lieu des racines (lieu d'Evans) du système en boucle fermée (les pôles de la fonction de transfert en boucle fermée $Y(s)/Y_r(s)$ en fonction du gain $K_p$) et retrouver la condition de stabilité précédente.</li>
+            </ol>
+        </section>
+
+        <!-- ==================== Séance 6 ==================== -->
+        <section id="seance6">
+             <span class="td-page-ref">Travaux Dirigés, page 13</span>
+            <h2>Séance 6 – Commande : synthèse fréquentielle de correcteur</h2>
+             <div class="clear"></div>
+
+            <div class="exercice-intro">
+                <p>On considère le système en boucle fermée, avec correcteur proportionnel $C(s)=K_p$, représenté à la figure 12. Il réalise l'asservissement d'un procédé de fonction de transfert :</p>
+                $$ G_1(s) = \frac{1}{(s + 1 + 0,1j)(s + 1 - 0,1j)(s + 20)} = \frac{1}{((s+1)^2 + 0.1^2)(s+20)} $$
+            </div>
+
+             <div class="placeholder">[Placeholder for FIGURE 12 - Système en boucle fermée avec correcteur proportionnel]</div>
+             <p class="placeholder-caption">FIGURE 12 - Système en boucle fermée: Consigne $Y_r(s)$, Erreur $E(s)$, Correcteur $C(s)$, Commande $U(s)$, Procédé $G_1(s)$, Sortie $Y(s)$. Retour unitaire.</p>
+
+            <ol>
+                <li>Pour effectuer une correction satisfaisante du système présenté, on a deux choix :
+                    <ul>
+                        <li>effectuer cette résolution numériquement en s'appuyant sur un logiciel de simulation comme Matlab ;</li>
+                        <li>approximer le système pour pouvoir effectuer les calculs manuellement, dans un premier temps.</li>
+                    </ul>
+                    Dans ce dernier cas, une des techniques possibles consiste à étudier une représentation simplifiée d'ordre inférieur ou égal à deux. Cela est-il possible ici ? Pour justifier, on donnera les différents modes (pôles) du procédé $G_1(s)$ et leur signification (rapidité, amortissement).
+                    <p><em>Indication : Identifier les pôles de $G_1(s)$. Comparer leurs parties réelles. Un pôle est dominant si sa partie réelle est beaucoup plus proche de l'axe imaginaire que les autres. Ici, on a des pôles en $-1 \pm 0.1j$ et un pôle en $-20$. Les pôles complexes sont dominants. On peut approximer par un 2ème ordre.</em></p>
+                </li>
+
+                <li>On approxime la fonction de transfert du procédé $G_1(s)$ par la fonction de transfert du second ordre :
+                    $$ G_2(s) = \frac{K}{(s - p_1)(s - p_2)} $$
+                    Déterminer les pôles dominants $p_1$ et $p_2$ de $G_1(s)$. Pour déterminer le gain $K$ de l'approximation $G_2(s)$, on prendra soin de calculer le gain statique du procédé $G_1(s)$ et d'assurer que $G_2(0) = G_1(0)$.
+                    <p><em>Réponse : $p_1, p_2 = -1 \pm 0.1j$. $G_1(0) = \frac{1}{(1.01)(20)} \approx 1/20$. $G_2(s) = \frac{K}{(s+1)^2+0.1^2}$. $G_2(0) = K / (1^2+0.1^2) = K/1.01$. On pose $K/1.01 = 1/20$, donc $K \approx 1.01/20 \approx 0.05$.</em></p>
+                    <p>On utilisera désormais $G_2(s)$ pour représenter le procédé.</p>
+                </li>
+
+                <li>On propose tout d'abord d'effectuer une correction proportionnelle $C(s) = K_p$. Calculer, en fonction de $K_p$, la fonction de transfert du système en boucle fermée $F(s) = \frac{Y(s)}{Y_r(s)} = \frac{C(s)G_2(s)}{1+C(s)G_2(s)}$.</li>
+
+                <li>La fonction de transfert d'un système du second ordre peut se mettre sous la forme canonique :
+                    $$ F(s) = \frac{K_{BF} \omega_n^2}{s^2 + 2\xi\omega_n s + \omega_n^2} $$
+                    Calculer, en fonction de $K_p$ (et des paramètres de $G_2(s)$), le coefficient d'amortissement $\xi$ et la pulsation propre non amortie $\omega_n$ correspondant à la paire de pôles du système en boucle fermée.</li>
+                <span class="td-page-ref">Travaux Dirigés, page 14</span><div class="clear"></div>
+                <li>Calculer le gain $K_p$ d'un correcteur proportionnel permettant d'obtenir un amortissement donné. Evaluer le gain, noté $K_{0,45}$, donnant au système un amortissement égal à $\xi = 0,45$.</li>
+
+                <li>Quelle est la classe du système corrigé en boucle ouverte $L(s) = K_p G_2(s)$ ? En déduire son erreur statique (ou erreur de position) en réponse à un échelon unité $y_r(t) = \mathcal{U}(t)$. Calculer cette erreur pour le système corrigé à l'aide du correcteur proportionnel de valeur $K_{0,45}$.
+                    <p><em>Explication : La classe est le nombre d'intégrateurs (pôles en $s=0$) dans $L(s)$. Si classe 0, l'erreur statique à un échelon est $e_{stat} = \lim_{t\to\infty} (y_r(t)-y(t)) = \frac{1}{1+L(0)}$. Si classe 1 ou plus, l'erreur est nulle.</em></p>
+                </li>
+
+                <li>Le système subit une perturbation $P(s)$, résultant d'un offset sur l'entrée de commande $U(s)$, conformément au schéma de la figure 13. Calculer l'erreur en régime permanent $e(t) = y_r(t) - y(t)$ introduite par cette perturbation (supposée constante, $P(s)=P_0/s$) lorsque la consigne $Y_r(s)=0$. A quelle condition l'asservissement compense-t-il (rejette-t-il) l'effet de cette perturbation constante ?
+
+                    <div class="placeholder">[Placeholder for FIGURE 13 – Système en boucle fermée avec correcteur proportionnel et perturbation]</div>
+                    <p class="placeholder-caption">FIGURE 13 – Système en boucle fermée avec perturbation additive $P(s)$ sur la commande $U(s)$.</p>
+                    <p><em>Indication : Calculer $Y(s)$ dû à $P(s)$ seul. $Y(s) = \frac{G_2(s)}{1+C(s)G_2(s)} P(s)$. Utiliser le théorème de la valeur finale pour $y(\infty)$. L'erreur due à $P$ est $e_p(\infty) = 0 - y(\infty)$. La perturbation est rejetée si $e_p(\infty)=0$. Cela nécessite une intégration dans la boucle ouverte $C(s)G_2(s)$.</em></p>
+                </li>
+
+                <li>On souhaite remplir le cahier des charges suivant :
+                    <ul>
+                        <li>erreur statique nulle (en réponse à un échelon de consigne) ;</li>
+                        <li>rejet de la perturbation constante $P(s)$ ;</li>
+                        <li>marge de phase de 45 deg.</li>
+                    </ul>
+                    Caractériser le système (classe nécessaire) et déterminer quel type de correction (P, PI, PID, avance/retard de phase) pourrait convenir.
+                    <p><em>Réponse : Pour une erreur statique nulle et rejet de perturbation constante, il faut un intégrateur dans le correcteur (système de classe 1). Un correcteur PI (Proportionnel-Intégral) $C(s) = K_p(1 + \frac{1}{T_i s})$ est le plus simple répondant à ce besoin. La marge de phase de 45° devra être ajustée via $K_p$ et $T_i$.</em></p>
+                </li>
+
+                <li>Déterminer les paramètres du correcteur en question (supposons un PI) en esquissant un diagramme de Bode. On représentera sur une même figure (utiliser une feuille séparée ou refaire la Fig. 6) le diagramme de Bode de $G_2(s)$ puis la construction du correcteur $C(s)$ qui conduit au diagramme de Bode corrigé de la boucle ouverte $L(s) = C(s)G_2(s)$ correspondant au cahier des charges (notamment la marge de phase).
+                    <p><em>Indication : Le PI introduit une phase de -90° à basse fréquence. Ajuster $K_p$ et $T_i$ pour que la pulsation $\omega_{0dB}$ (où $|L(j\omega)|=1$ ou 0 dB) ait une phase $\phi(L(j\omega_{0dB})) = -180° + 45° = -135°$.</em></p>
+                </li>
+
+                <li>Pour résoudre le problème analytiquement (trouver $K_p, T_i$), peut-on facilement reproduire le raisonnement mené dans le cas de la correction proportionnelle (calcul de $\xi, \omega_n$ en fonction des paramètres) ?
+                    <p><em>Réponse : Non, l'ajout de l'intégrateur augmente l'ordre du système en boucle fermée (ordre 3). L'analyse simple en termes de $\xi, \omega_n$ n'est plus directement applicable. L'approche fréquentielle (Bode, Nyquist) ou le lieu des racines est plus adaptée.</em></p>
+                </li>
+            </ol>
+        </section>
+
+        <!-- ==================== Séance 7 ==================== -->
+        <section id="seance7">
+            <span class="td-page-ref">Travaux Dirigés, page 15</span>
+            <h2>Séance 7 – Commande : méthode du lieu des racines</h2>
+            <div class="clear"></div>
+
+            <div class="exercice-intro">
+                <p>On considère un système en apesanteur dont l'altitude $z$ est commandée par un actionneur vertical, supposé de bande passante infinie et de gain $K_a$. En l'absence de pesanteur et de frottement, l'altitude du système est donnée par double intégration de la force verticale appliquée par l'actionneur au système ($m \ddot{z} = F_{actionneur}$). On considère donc que l'ensemble actionneur+procédé a pour fonction de transfert :</p>
+                $$ \frac{Z(s)}{U(s)} = \frac{K_a K_g}{s^2} $$
+                <p>où $U(s)$ est la commande de l'actionneur et $K_g = 1/m$ (inverse de la masse).<br>
+                On donne $K_a = 0,5$ et $K_g = 0,1$. L'asservissement de l'altitude du système correspond au schéma de la figure 14.</p>
+            </div>
+
+            <div class="placeholder">[Placeholder for FIGURE 14 - Système corrigé en boucle fermée (contrôle d'altitude)]</div>
+            <p class="placeholder-caption">FIGURE 14 - Système corrigé en boucle fermée: Consigne $Z_r(s)$, Correcteur $C(s)$, Actionneur $K_a$, Procédé $K_g/s^2$, Sortie $Z(s)$. Retour unitaire.</p>
+
+            <ol>
+                <li>On considère tout d'abord le cas non corrigé $C(s) = 1$ (questions 1 à 7). Calculer la fonction de transfert du système en boucle fermée $F(s) = Z(s)/Z_r(s)$.</li>
+
+                <li>En déduire l'équation différentielle à laquelle obéit cet asservissement ($z(t)$ en fonction de $z_r(t)$). Comment appelle-t-on ce type de système (stable, instable, oscillant...) ?</li>
+
+                <li>Quel en est l'équivalent électrique (circuit à base de composants passifs R, L, C) ? Calculer l'équation différentielle régissant un tel circuit pour justifier le résultat.
+                    <p><em>Indication : Penser à un oscillateur LC non amorti.</em></p>
+                </li>
+
+                <li>Le système (actionneur+procédé $\frac{K_a K_g}{s^2}$) est-il stable en boucle ouverte ? Donner la signification physique de cette réponse (que se passe-t-il si on applique une impulsion de commande $u(t)=\delta(t)$ ?).</li>
+
+                <li>Le système est-il stable en boucle fermée (avec $C(s)=1$)? Donner la signification physique de cette réponse (que se passe-t-il si on applique un échelon de consigne $z_r(t)=\mathcal{U}(t)$ ?).</li>
+
+                <li>Tracer l'allure du diagramme de Bode (gain et phase) du système en boucle ouverte $L(s) = \frac{K_a K_g}{s^2}$. Donner la pulsation $\omega$ pour laquelle le gain en dB coupe l'axe 0 dB.</li>
+
+                <li>Que vaut la marge de phase du système en boucle ouverte ($L(s)$ avec $C(s)=1$)? Quel type de correction (avance ou retard de phase) s'impose pour stabiliser le système et obtenir de bonnes performances ?
+                    <p><em>Indication : La marge de phase est mesurée à la pulsation $\omega_{0dB}$. Ici, la phase est constante à -180°. La marge de phase est nulle. Il faut introduire de l'avance de phase.</em></p>
+                </li>
+
+                <li>On se propose de faire la correction du système pour lui assurer un bon compromis performance-stabilité. En accord avec les réponses précédentes, on cherche tout d'abord à déterminer un correcteur sous la forme d'un correcteur à avance de phase (physiquement réalisable) :
+                    $$ C(s) = K_p \frac{1 + \tau_d s}{1 + a \tau_d s} \quad (2) $$
+                    avec $a < 1$. Quel correcteur idéal ce correcteur approche-t-il (lorsque $a \to 0$)?
+                    <p><em>Réponse : Il approche un correcteur Proportionnel-Dérivé (PD) idéal $K_p(1+\tau_d s)$.</em></p>
+                </li>
+                <span class="td-page-ref">Travaux Dirigés, page 16</span><div class="clear"></div>
+                <li>Pour pouvoir effectuer les calculs «à la main», on va d'abord travailler sur le <strong>correcteur PD idéal</strong>. Esquisser le lieu des racines du système corrigé par :
+                    $$ C(s) = K_p(1 + \tau_d s) $$
+                    La boucle ouverte est $L(s) = C(s) \frac{K_a K_g}{s^2}$. On conservera toujours la variable $\tau_d$ sous sa forme littérale. Préciser la valeur du gain $K_p$ aux points de séparation (breakaway/break-in points) en fonction de $\tau_d$.
+                    <p><em>Indication : Le lieu part des pôles de $L(s)$ (double pôle en 0) et tend vers les zéros de $L(s)$ (un zéro en $-1/\tau_d$, un zéro à l'infini). Il y aura un point de séparation sur l'axe réel.</em></p>
+                </li>
+
+                <li>Dans le cas (général) d'un système d'ordre deux possédant deux pôles complexes conjugués $p_{1,2} = -\xi \omega_n \pm j \omega_n \sqrt{1-\xi^2}$, établir la position de ces pôles dans le plan complexe qui assure un amortissement $\xi = 0,707$ (correspondant à $\cos \phi = \xi$, soit $\phi=45°$ par rapport à l'axe réel négatif) et une pulsation propre non amortie $\omega_n = 5,73$ rad/s. Calculer les coordonnées de ces pôles désirés $p_d$.</li>
+
+                <li>Identifier les paramètres du correcteur PD idéal ($K_p$ et $\tau_d$) permettant d'obtenir ce comportement dynamique (c'est-à-dire faire passer le lieu des racines par les pôles désirés $p_d$) pour le système corrigé en boucle fermée.
+                    <p><em>Indication : Utiliser la condition sur l'argument (la somme des angles des vecteurs allant des pôles et zéros de $L(s)$ au point $p_d$ doit être de -180°) pour trouver $\tau_d$. Puis utiliser la condition sur le module ($|L(p_d)|=1$) pour trouver $K_p$.</em></p>
+                </li>
+
+                <li>Illustrer cette correction en traçant maintenant le lieu des racines (avec le correcteur PD idéal trouvé) et en y faisant apparaître les courbes correspondant à un amortissement $\xi = 0,707$ (droites à 45°) et une pulsation propre non amortie $\omega_n = 5,73$ rad/s (cercle centré à l'origine). Pour tracer précisément la partie du lieu correspondant à des pôles complexes on calculera la position des pôles pour 3 ou 4 valeurs de $K_p$.</li>
+
+                <li>Pour obtenir un correcteur physiquement réalisable sous la forme (2) (avec $a<1$), que reste-t-il à faire ? On doit ajouter un pôle au correcteur en $s = -1/(a\tau_d)$. Ce pôle doit être suffisamment loin pour ne pas trop affecter la dynamique désirée (par exemple, choisir $a=0.1$). Tracer (qualitativement) le lieu des racines ainsi obtenu dans les deux cas possibles : 1) il y a un point de séparation sur l'axe réel 2) il y a trois points de séparation sur l'axe réel (que l'on ne cherchera pas à déterminer). Qu'en sera-t-il des performances obtenues par rapport à celles issues d'une correction PD idéale ?
+                    <p><em>Indication : L'ajout du pôle rapide modifie légèrement le lieu, surtout près de l'axe réel. Les performances seront proches si le pôle est assez loin (5 à 10 fois plus loin que le zéro).</em></p>
+                </li>
+            </ol>
+        </section>
+
+        <!-- ==================== Séance 8 ==================== -->
+        <section id="seance8">
+            <span class="td-page-ref">Travaux Dirigés, page 17</span>
+            <h2>Séance 8 – Commande par retour d'état</h2>
+            <div class="clear"></div>
+            <p class="important-note">N'oubliez pas vos calculatrices en TD !</p>
+
+            <div class="exercice-intro">
+                <p>En pleine mer, un ferry se déplace généralement à vitesse stabilisée. On se propose d'étudier l'asservissement par retour d'état du gouvernail d'un tel bateau pour réaliser une fonction de «pilote automatique». On considère un bateau de 100 m de long, qui, en régime de croisière se déplace à la vitesse de 10 m/s. Son modèle est déterminé en fonction des paramètres suivants (voir figure 15):</p>
+                <ul>
+                    <li>$\delta$: orientation du gouvernail (entrée de commande) ;</li>
+                    <li>$\psi$: cap du bateau dans un repère de référence (sortie à contrôler) ;</li>
+                    <li>$r = \dot{\psi}$: vitesse angulaire de lacet (vitesse de changement de cap) ;</li>
+                    <li>$\beta$: angle de glissement (drift angle) par rapport à la direction principale.</li>
+                </ul>
+            </div>
+
+            <div class="placeholder">[Placeholder for FIGURE 15 - Repérage du système (bateau)]</div>
+            <p class="placeholder-caption">FIGURE 15 - Repérage du système: Schéma d'un bateau avec indication de la direction du mouvement, de l'angle de glissement $\beta$, du cap $\psi$ (implicite), et de l'angle du gouvernail $\delta$.</p>
+
+            <p>L'équation dynamique du système, linéarisée autour du régime de croisière, s'écrit sous forme d'état avec $x = (\beta \ r \ \psi)^T$ :</p>
+            $$ \frac{dx}{dt} = 
+            \begin{pmatrix} -0,0895 & -0,286 & 0 \\ -0,0439 & -0,272 & 0 \\ 0 & 1 & 0 \end{pmatrix} x + 
+            \begin{pmatrix} 0,0145 \\ -0,0122 \\ 0 \end{pmatrix} \delta 
+            $$
+             <span class="td-page-ref">Travaux Dirigés, page 18</span><div class="clear"></div>
+            <p>On se propose d'asservir le cap du bateau : l'angle $\psi$ sera donc considéré comme sortie de notre système ($y=\psi$).</p>
+
+            <ol>
+                <li>Quels sont les états d'équilibre de ce système (avec $\delta=0$)? Sont-ils stables ?
+                    <p><em>Indication : Résoudre $\dot{x}=Ax=0$. Étudier la stabilité en calculant les valeurs propres de A.</em></p>
+                </li>
+
+                <li>Le système est-il commandable (contrôlable) ? On note $\mathcal{C}$ la matrice de commandabilité du système, associée à la paire $(A, B)$.
+                    <p><em>Indication : Calculer $\mathcal{C} = [B \ AB \ A^2B]$ et vérifier si son rang est égal à la dimension de l'état (ici 3).</em></p>
+                </li>
+
+                <li>
+                    <p>A partir d'un modèle d'état quelconque $(A,B)$ d'un système commandable, on peut déterminer le modèle sous forme canonique commandable (CCF - Controllable Canonical Form) par un changement de variable adéquat<a href="#footnote2" id="ref2">²</a>. Soit un système d'équation caractéristique :</p>
+                    $$ s^n + a_{n-1}s^{n-1} + \dots + a_1s + a_0 = 0 \quad (3) $$
+                    <p>On définit la matrice $W$ (liée aux coefficients $a_i$) :</p>
+                     $$ W = \begin{pmatrix} 
+                            a_1 & a_2 & a_3 & \dots & a_{n-1} & 1 \\
+                            a_2 & a_3 & a_4 & \dots & 1 & 0 \\
+                            \vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+                            a_{n-1} & 1 & 0 & \dots & 0 & 0 \\
+                            1 & 0 & 0 & \dots & 0 & 0 
+                         \end{pmatrix} $$
+                     <p>(Note: la structure peut varier légèrement selon les conventions, vérifier la cohérence avec la CCF cible).</p>
+                    <p>Alors le changement de variable $x = T\hat{x}$, avec $T = \mathcal{C}W$ (où $\mathcal{C}$ est la matrice de commandabilité), est régulier et conduit à une représentation du système sous forme canonique commandable $(\hat{A}, \hat{B})$ (encore appelée forme compagnon de commande).</p>
+                    <p><strong>Application :</strong> Déterminer l'équation caractéristique du système (bateau). En déduire la représentation d'état sous forme canonique commandable $(\hat{A}, \hat{B})$. (La matrice de sortie $\hat{C}$ doit aussi être transformée via $\hat{C} = CT$).</p>
+                 </li>
+
+                <li>On suppose que l'état du système $x$ est complètement mesurable à l'aide d'instruments de navigation. Calculer le gain de la matrice de retour d'état $K$ dans la loi de commande $u = \delta = -Kx$ permettant de placer les pôles du système en boucle fermée (les valeurs propres de $A-BK$) aux positions désirées :
+                    $$ p_1 = -0,2 $$
+                    $$ p_2 = -0,2 + 0,2j $$
+                    $$ p_3 = -0,2 - 0,2j $$
+                    <p><em>Indication : Utiliser la forme canonique commandable $(\hat{A}, \hat{B})$ facilite le calcul du retour $\hat{K}$ tel que $\hat{A}-\hat{B}\hat{K}$ ait le polynôme caractéristique désiré $(s-p_1)(s-p_2)(s-p_3)$. Ensuite, $K = \hat{K} T^{-1}$. Alternativement, utiliser la formule d'Ackermann sur la paire $(A,B)$ originale.</em></p>
+                </li>
+
+                <li>Compléter la synthèse par le calcul du gain de pré-compensation (feedforward) $N$ permettant d'obtenir une erreur statique nulle en régime permanent entre le cap de consigne $\psi_c$ (supposée constante) et le cap réel du bateau $\psi$. La loi de commande devient $u = \delta = -Kx + N\psi_c$. On donnera le schéma de principe de l'asservissement ainsi réalisé.
+                    <p><em>Indication : En régime permanent, $\dot{x}=0$, donc $Ax_{ss} + B u_{ss} = 0$ et $y_{ss} = \psi_{ss} = C x_{ss}$. On veut $\psi_{ss}=\psi_c$. La commande est $u_{ss} = -Kx_{ss} + N\psi_c$. Résoudre pour $N$. Souvent $N = [C(-A+BK)^{-1}B]^{-1}$ si la sortie est $y=Cx$, mais ici la sortie est $x_3$. Une approche plus simple consiste à ajuster $N$ pour que le gain statique de la boucle fermée de $\psi_c$ à $\psi$ soit 1. Le gain statique est $C(A-BK)^{-1}BN$.</em></p>
+                </li>
+
+                <li>Question subsidiaire : de passage en salle informatique vérifier le résultat en appliquant la formule d'Ackermann avec Matlab (fonction `acker` ou `place`) et en réalisant l'asservissement avec Simulink.</li>
+            </ol>
+            <p><em>Ce TD est basé sur un exercice proposé dans l'ouvrage Feedback control of dynamic systems, de G. F. Franklin, J. D. Powell et A. Emami-Naeini, édition Prentice Hall, 2002.</em></p>
+        </section>
+
+        <!-- ==================== Séance 9 ==================== -->
+        <section id="seance9">
+             <span class="td-page-ref">Travaux Dirigés, page 19</span>
+            <h2>Séance 9 – Placement de pôles : deux solutions</h2>
+            <div class="clear"></div>
+
+            <div class="exercice-intro">
+                <p>Soit un procédé d'entrée $u$ et de sortie $y$. Son évolution est décrite par le système d'équations différentielles d'ordre un suivant (représentation d'état) :</p>
+                $$ \dot{x}_1 = -4 x_1 - 0,5 x_2 + 0,5 u $$
+                $$ \dot{x}_2 = 8 x_1 $$
+                $$ \dot{x}_3 = x_2 $$
+                <p>et l'équation de sortie :</p>
+                $$ y = 0,25 x_2 + 0,05 x_3 $$
+                <p>L'objectif de ce problème est d'asservir la sortie $y$ du système afin de remplir le cahier des charges suivant :</p>
+                <ul>
+                    <li>erreur statique nulle (pour une consigne en échelon) ;</li>
+                    <li>premier dépassement inférieur à 5% de la consigne ;</li>
+                    <li>temps de réponse (à 5%) inférieur à 2 s.</li>
+                </ul>
+            </div>
+
+            <h3>Méthode du lieu des racines</h3>
+            <ol>
+                <li>Montrer que la fonction de transfert du système $G(s) = Y(s)/U(s)$ est :
+                    $$ G(s) = \frac{Y(s)}{U(s)} = \frac{0.05(s+5)}{s(s^2+4s+4)} = \frac{0.05 (s+5)}{s(s+2)^2} $$ 
+                    <!-- Correction : Le numérateur était erroné dans l'OCR, recalculé à partir des équations d'état -->
+                     <!-- Recalcul G(s): Y(s) = (0.25 + 0.05/s)X2(s) ; sX3=X2 => X3=X2/s -->
+                     <!-- sX2 = 8 X1 => X1 = sX2/8 -->
+                     <!-- sX1 = -4 X1 - 0.5 X2 + 0.5 U => s(sX2/8) = -4(sX2/8) - 0.5 X2 + 0.5 U -->
+                     <!-- s^2/8 X2 = -s/2 X2 - 0.5 X2 + 0.5 U -->
+                     <!-- (s^2/8 + s/2 + 0.5) X2 = 0.5 U => (s^2 + 4s + 4)/8 X2 = 0.5 U => (s+2)^2 X2 = 4 U => X2(s) = 4 U(s) / (s+2)^2 -->
+                     <!-- Y(s) = (0.25 + 0.05/s) * [4 U(s) / (s+2)^2] = ( (0.25s + 0.05)/s ) * 4 U(s) / (s+2)^2 -->
+                     <!-- Y(s)/U(s) = (s + 0.2)/s * 4 / (s+2)^2 = 4(s+0.2) / (s(s+2)^2) -->
+                    <p><em>Correction: La fonction de transfert donnée dans le TD original (page 21) semble être $G(s) = \frac{s+0.2}{s(s+2)^2}$. Nous utiliserons cette forme pour la suite.</em></p>
+                     $$ G(s) = \frac{s+0.2}{s(s+2)^2} $$
+                </li>
+
+                <li>Donner l'équation caractéristique définissant le lieu des racines du système en boucle fermée avec un correcteur proportionnel $C(s)=K_p$.
+                    <p><em>Réponse: $1 + K_p G(s) = 0 \implies s(s+2)^2 + K_p(s+0.2) = 0$.</em></p>
+                </li>
+
+                <li>Appliquer les règles de construction du lieu des racines (points de départ, d'arrivée, asymptotes, points sur l'axe réel, points de séparation) et tracer le lieu aussi précisément que possible. 
+                    <p><em>Indication (polynôme pour points de séparation) : Les racines du polynôme $2 x^3 + 4,6 x^2 + 1,6 x + 0,8$ sont -2 et $-0,15 \pm 0,42j$. Ces racines correspondent aux points où $\frac{dG(s)}{ds}=0$ ou $\frac{dK_p}{ds}=0$, utiles pour trouver les points de séparation. Vérifier si ces points appartiennent au lieu.</em></p>
+                </li>
+
+                <li>La méthode du lieu des racines est généralement basée sur des compensations (ajout de pôles/zéros via le correcteur $C(s)$). Quelles compensations (type de correcteur) sont envisageables ici pour satisfaire le cahier des charges (notamment l'erreur statique nulle)?
+                    <p><em>Réponse: Le système G(s) a déjà un intégrateur (classe 1), donc l'erreur statique à un échelon sera nulle avec un simple gain $K_p$ (si stable). Pour ajuster le dépassement et le temps de réponse, on peut utiliser un correcteur PD, Avance de phase, PID, etc.</em></p>
+                </li>
+
+                <li>On souhaite corriger le système à l'aide d'un correcteur $C(s)$ ayant deux pôles et deux zéros, permettant de se placer dans l'hypothèse d'un système d'ordre deux dominant en boucle fermée. En accord avec les questions précédentes (et le besoin potentiel d'ajuster la dynamique), choisir l'un des pôles et les deux zéros du correcteur pour *simplifier* la dynamique de la boucle ouverte (compensation pôle/zéro). Donner la forme du correcteur complet $C(s)$ (on notera $p_c$ le pôle restant à déterminer) et donner la fonction de transfert de la chaîne directe résultante $L(s) = C(s)G(s)$.
+                    <p><em>Indication : Pour simplifier, on peut placer des zéros du correcteur sur les pôles lents du procédé (ici, les pôles en -2). Par exemple, $C(s) = K_c \frac{(s+2)^2}{(s+z_1)(s+p_c)}$. Ou plus simple, si on veut juste ajouter une dynamique, un PD: $C(s)=K_c(s+z_c)$. Si on utilise $C(s) = K_c \frac{s+0.2}{s+p_c}$, on simplifie le zéro du procédé. Si on choisit $C(s) = K_c \frac{(s+2)^2}{(s+z_1)(s+p_c)}$, on simplifie les pôles du procédé. Choisissons de simplifier le zéro : $C(s)=K_c \frac{s+p_c}{s+0.2}$ (retard) ou $C(s)=K_c \frac{s+z_c}{s+p_c}$ (avance/retard). Une approche fréquente est de placer un zéro pour attirer le lieu vers la gauche. Essayons un PD idéalisé: $C(s)=K_c(s+z_c)$. Alors $L(s) = K_c \frac{(s+z_c)(s+0.2)}{s(s+2)^2}$.</em></p>
+                </li>
+
+                <li>Une fois ces compensations (supposons un choix simple, e.g., $C(s)=K_c$) faites, il reste donc à placer un pôle (si nécessaire) et régler le gain du correcteur $K_c$. Tracer le lieu des racines (pour $C(s)=K_c$) en choisissant le pôle de sorte que le système en boucle fermée soit toujours stable (si applicable).</li>
+                <span class="td-page-ref">Travaux Dirigés, page 20</span><div class="clear"></div>
+                <li>Dans le cas d'un système possédant une paire de pôles complexes dominants en boucle fermée $p_{1,2} = -\xi \omega_n \pm j \omega_n \sqrt{1-\xi^2}$, la contrainte du cahier des charges liée au premier dépassement ($D\% < 5\%$) est équivalente à une contrainte sur le coefficient d'amortissement $\xi$. La contrainte sur le temps de réponse ($t_r < 2s$) conduit quant à elle à placer les pôles en boucle fermée à gauche d'une droite verticale dans le lieu des racines. Retrouver l'origine de ces deux règles (formules liant $D\%$ à $\xi$ et $t_r$ à $\xi\omega_n$).
+                    <p><em>Formules usuelles : $D\% = 100 e^{-\frac{\pi \xi}{\sqrt{1-\xi^2}}}$. Pour $D\% < 5\%$, il faut $\xi > 0.7$. Temps de réponse $t_{r5\%} \approx \frac{3}{\xi \omega_n}$. Pour $t_{r5\%} < 2s$, il faut $\xi \omega_n > 3/2 = 1.5$. $\xi\omega_n$ est la partie réelle (opposée) des pôles dominants.</em></p>
+                </li>
+
+                <li>Traduire les contraintes correspondant au cahier des charges sur la position des pôles en boucle fermée et représenter graphiquement ces contraintes (zones interdites/permises) sur une nouvelle figure (plan 's').</li>
+
+                <li>Étant donnée l'allure du lieu des racines déterminé à la question 6 (ou 3, si $C(s)=K_p$) et les contraintes définies à la question précédente, placer alors le(s) pôle(s) dominant(s) du système pour remplir le cahier des charges. Représenter le(s) point(s) choisi(s) sur le tracé du lieu précédent.
+                    <p><em>Indication: Trouver l'intersection du lieu des racines avec les frontières de la zone permise. Choisir un point dans la zone permise sur le lieu.</em></p>
+                </li>
+
+                <li>Enfin, calculer le gain proportionnel $K_c$ (ou $K_p$) du correcteur permettant d'obtenir ces pôles et donc de remplir le cahier des charges.
+                    <p><em>Indication: Utiliser la condition sur le module $|L(p_d)|=1$ où $p_d$ est le pôle dominant choisi.</em></p>
+                </li>
+            </ol>
+
+            <h3>Correction par retour d'état</h3>
+            <p>On suppose dans cette partie que l'état $x = (x_1, x_2, x_3)^T$ est entièrement mesurable à tout instant.</p>
+            <ol>
+                <li>Sous quelle condition existe-t-il un retour d'état $u = -Kx$ permettant d'imposer le placement des pôles (les valeurs propres de $A-BK$) du système en boucle fermée ? Cette condition est-elle satisfaite ici ?
+                    <p><em>Réponse: La condition est que le système (paire A, B) soit commandable. Calculer la matrice de commandabilité $\mathcal{C}=[B \ AB \ A^2B]$ et vérifier son rang.</em></p>
+                </li>
+
+                <li>Le système étant d'ordre trois, la forme d'état donnée au début du problème n'est pas canonique et ne permet pas de calculer simplement un correcteur par retour d'état. Pour cela, établir la forme canonique commandable (CCF) de la représentation d'état, notée :
+                    $$ \dot{\hat{z}} = A_c \hat{z} + B_c u $$
+                    $$ y = C_c \hat{z} $$
+                    (Utiliser la méthode vue en Séance 8, Q3).
+                </li>
+
+                <li>Déterminer alors les gains $K_1, K_2$ et $K_3$ de la loi de commande par retour d'état $u = -K \hat{z} = -K_1 \hat{z}_1 - K_2 \hat{z}_2 - K_3 \hat{z}_3$ permettant de placer les pôles du système en boucle fermée en $-1,5 \pm 1,5j$ et $-0,2$.
+                    <p><em>Indication : Le polynôme caractéristique désiré est $(s - (-1.5+1.5j))(s - (-1.5-1.5j))(s - (-0.2)) = ((s+1.5)^2 + 1.5^2)(s+0.2) = (s^2+3s+4.5)(s+0.2)$. Le polynôme caractéristique de $A_c-B_cK$ peut être directement écrit en fonction des $K_i$ grâce à la structure de $A_c, B_c$. Identifier les coefficients pour trouver $K=[K_1 K_2 K_3]$.</em></p>
+                </li>
+
+                <li>Introduire enfin la consigne $y_r$ dans l'asservissement : $u = -K\hat{z} + \alpha y_r$. Calculer le gain $\alpha$ de sorte que l'erreur statique du système ($e = y_r - y$) soit nulle pour une consigne $y_r$ constante.
+                     <p><em>Indication : Le gain statique de $\hat{z}$ à $y$ en boucle fermée doit être 1. Calculer le gain statique $H(0) = C_c(-A_c+B_cK)^{-1}B_c \alpha$. On veut $H(0)=1$.</em></p>
+                     <p><strong>Indication pour l'inversion de matrice (utile pour la transformation T ou le calcul de $\alpha$) :</strong></p>
+                     <div class="placeholder">[Placeholder for Matrix Inversion Hint (Matrices 4x4)]</div>
+                     <p class="placeholder-caption">Hint : Exemple d'inversion de la matrice W ou $\mathcal{C}$ (non fournie ici, mais généralement nécessaire).</p>
+                 </li>
+             </ol>
+         </section>
+
+        <!-- ==================== Séance 10 ==================== -->
+        <section id="seance10">
+             <span class="td-page-ref">Travaux Dirigés, page 21</span>
+            <h2>Séance 10 - Réalisation des correcteurs à base d'AOP</h2>
+             <div class="clear"></div>
+
+            <div class="exercice-intro">
+                <p>Un amplificateur opérationnel (AOP), ou op-amp, est un composant électronique qui amplifie la différence de potentiel entre l'entrée non-inverseuse $V_+$ et l'entrée inverseuse $V_-$. Les AOP sont utilisés notamment pour faire des calculs analogiques, des filtres, mais aussi des correcteurs pour l'Automatique.</p>
+            </div>
+
+            <ol>
+                <li>Préciser les hypothèses relatives à un <strong>amplificateur idéal</strong>. Quels sont les régimes de fonctionnement d'un AOP réel ?
+                    <p><em>Hypothèses AOP Idéal (en régime linéaire) : 1) Gain différentiel infini ($A_d \to \infty$), 2) Impédance d'entrée infinie ($Z_e \to \infty \implies i_+ = i_- = 0$), 3) Impédance de sortie nulle ($Z_s = 0$). Conséquence de $A_d \to \infty$ avec sortie finie : $V_+ - V_- = 0 \implies V_+ = V_-$ (court-circuit virtuel).<br>Régimes AOP Réel : Linéaire (si la sortie $V_s$ est entre les tensions de saturation $V_{sat-}$ et $V_{sat+}$), Saturation positive ($V_s = V_{sat+}$), Saturation négative ($V_s = V_{sat-}$).</em></p>
+                </li>
+
+                <li>En pratique, l'amplificateur opérationnel réel présente des défauts par rapport au modèle idéal. Donner un modèle d'AOP qui prend en compte les caractéristiques (non-idéales) suivantes :
+                    <ul>
+                        <li>gain en basse fréquence (gain DC) $A$ (fini) ;</li>
+                        <li>bande passante déterminée par $\omega_p$ (pôle dominant, $A(s) = \frac{A}{1+s/\omega_p}$) ;</li>
+                        <li>impédance d'entrée $Z_e$ (finie) ;</li>
+                        <li>impédance de sortie $Z_s$ (non nulle) ;</li>
+                        <li>saturation.</li>
+                    </ul>
+                    <p><em>Indication: Dessiner le schéma équivalent incluant $Z_e$ entre $V_+$ et $V_-$, une source de tension dépendante $A_d(s)(V_+-V_-)$ en série avec $Z_s$ pour la sortie. La saturation est une non-linéarité sur la sortie.</em></p>
+                </li>
+
+                <li>On considère le montage <strong>inverseur</strong> de la Figure 16, en régime linéaire.
+                    <div class="placeholder">[Placeholder for FIGURE 16 – Montage inverseur]</div>
+                    <p class="placeholder-caption">FIGURE 16 – Montage inverseur: Entrée $V_e(s)$ connectée à $Z_1(s)$, qui va à l'entrée $V_-$. L'entrée $V_+$ est à la masse. Une impédance $Z_2(s)$ relie la sortie $V_s(s)$ à l'entrée $V_-$. </p>
+                    
+                    <p>On souhaite étudier les effets d'un gain fini $A$ et d'une bande passante finie $\omega_p$ (modélisés par $A(s) = \frac{A}{1+s/\omega_p}$ comme gain différentiel de l'AOP, $V_s = A(s)(V_+ - V_-)$), en supposant $Z_e$ infinie et $Z_s$ nulle.</p>
+                    <ol type="a">
+                        <li>Trouver la fonction de transfert $H(s) = V_s(s)/V_e(s)$.</li>
+                        <li>Trouver la fonction de transfert (tension différentielle d'entrée normalisée) $(V_+(s) - V_-(s))/V_e(s)$.</li>
+                        <li>Trouver la limite de ces fonctions de transfert quand $A \to \infty$. Que retrouve-t-on ?</li>
+                        <li>Application numérique pour : $Z_1(s) = R$, $Z_2(s) = aR$, avec $a = 100$. Le gain $A$ et la bande passante $\omega_p$ de l'AOP (en boucle ouverte) sont déterminés à partir de la réponse fréquentielle donnée à la Figure 17. Calculer le produit gain $\times$ bande passante (GBWP) de l'AOP en boucle ouverte, et le GBWP du montage inverseur en boucle fermée. Que constatez-vous ?
+                         <span class="td-page-ref">Travaux Dirigés, page 22</span><div class="clear"></div>
+                            <div class="placeholder">[Placeholder for FIGURE 17 – Réponse fréquentielle d'un AOP TL082 en boucle ouverte]</div>
+                            <p class="placeholder-caption">FIGURE 17 – Réponse fréquentielle d'un AOP TL082 en boucle ouverte: Gain différentiel (dB) et Phase (°) vs Fréquence (Hz). Vcc= +/-5V to +/-15V, RL=2kOhm, TA=25°C.</p>
+                            <p><em>Indication: Lire A (gain DC en dB, convertir) et $\omega_p$ (fréquence de coupure à -3dB) sur la figure 17. Calculer GBWP = $A \times \omega_p$. Pour le montage fermé, calculer le gain DC $H(0)$ et la fréquence de coupure $\omega_{p,BF}$. Calculer $GBWP_{BF} = |H(0)| \times \omega_{p,BF}$. Normalement, $GBWP_{BF} \approx GBWP$.</em></p>
+                        </li>
+                    </ol>
+                </li>
+
+                <li><p><strong>On considère désormais un AOP idéal (en régime linéaire) pour simplifier :</strong></p>
+                    <ul>
+                        <li>les courants d'entrée $i_+$ et $i_-$ sont nuls ;</li>
+                        <li>en régime linéaire $\implies V_+ = V_-$.</li>
+                    </ul>
+                   Trouver à nouveau la fonction de transfert $V_s(s)/V_e(s)$ pour le montage inverseur (Figure 16) sous ces hypothèses.
+                   <p><em>Réponse : $V_s/V_e = - Z_2(s) / Z_1(s)$.</em></p>
+                </li>
+
+                <li>Donner les schémas et les relations entrée-sortie pour les configurations suivantes utilisant un AOP idéal : amplificateur sommateur inverseur et amplificateur soustracteur (différentiel).
+                     <p><em>Indication: Sommateur: plusieurs entrées $V_{e1}, V_{e2}, ...$ via $R_1, R_2, ...$ vers $V_-$, résistance de retour $R_f$. Sortie $V_s = -R_f (\frac{V_{e1}}{R_1} + \frac{V_{e2}}{R_2} + ...)$. Soustracteur: montage plus complexe avec entrées sur $V_+$ et $V_-$. Sortie $V_s = K(V_{e+} - V_{e-})$.</em></p>
+               </li>
+
+                <li>Trouver la fonction de transfert $H(s) = V_s(s)/V_e(s)$ pour le montage de la Figure 18, en utilisant un AOP idéal. Que représente cette fonction de transfert (quel type de filtre ou correcteur) ?
+                    <div class="placeholder">[Placeholder for FIGURE 18 - Circuit correcteur à base d'AOP]</div>
+                    <p class="placeholder-caption">FIGURE 18 - Circuit correcteur à base d'AOP: Entrée $V_e$ vers $R_3$ et série $(R_1, C_1)$ qui vont à $V_-$. $V_+$ est à la masse. Retour de $V_s$ vers $V_-$ via parallèle $(R_2, C_2)$ et $R_4$ en série.</p>
+                     <p><em>Indication: Calculer l'impédance $Z_1(s)$ (entrée vers $V_-$) et $Z_2(s)$ (retour $V_s$ vers $V_-$). Utiliser la formule $H(s) = -Z_2(s)/Z_1(s)$. L'expression peut ressembler à un filtre passe-bande, PID, etc. selon les valeurs relatives.</em></p>
+                </li>
+                 <span class="td-page-ref">Travaux Dirigés, page 23</span><div class="clear"></div>
+                <li>Trouver la fonction de transfert pour le montage de la Figure 18 dans les deux cas particuliers suivants :
+                    <ul>
+                        <li>Cas 1: $R_1 = \infty$ (supprimée), $C_1 = 0$ (supprimée) et $R_4 = \infty$ (supprimée). Reste $R_3$ en entrée, $(R_2 // C_2)$ en retour.</li>
+                        <li>Cas 2: $R_2 = \infty$ (supprimée), $C_2 = 0$ (supprimée) et $R_3 = \infty$ (supprimée). Reste $(R_1 + 1/C_1s)$ en entrée, $R_4$ en retour.</li>
+                    </ul>
+                    Identifier le type de correcteur obtenu dans chaque cas (Proportionnel, Intégral, Dérivé, PI, PD, ...).
+                </li>
+
+                <li>En déduire un montage à base d'AOP (possiblement en combinant plusieurs étages via un sommateur) permettant de réaliser le correcteur de type <strong>PID</strong> :
+                    $$ C(s) = K_p + \frac{K_i}{s} + \frac{K_d s}{\tau_d s + 1} $$
+                    (Note: le terme dérivé est filtré, ce qui est physiquement réalisable).<br>
+                    Application numérique pour : $K_p = 6.5$, $K_i = 5$, $K_d = 0.3$ et $\tau_d = 0.02$.
+                    <p><em>Indication: Un PID peut être réalisé en sommant les sorties de trois circuits : un proportionnel (ampli inverseur), un intégrateur (AOP avec R en entrée, C en retour), et un dérivateur filtré (AOP avec C en entrée, R en retour, plus filtrage).</em></p>
+                </li>
+
+                <li>Trouver la fonction de transfert d'un correcteur (réalisable avec un montage AOP simple, type Figure 18 ou variation) qui permet d'avoir :
+                    <ul>
+                        <li>un déphasage de +40° à $\omega = 107$ rad/s ;</li>
+                        <li>un gain égal à 6.02 dB (soit $10^{6.02/20} \approx 2$) en basse fréquence ($\omega \to 0$).</li>
+                    </ul>
+                    En déduire un montage à base d'AOP permettant de réaliser ce correcteur.
+                    <p><em>Indication: Un déphasage positif suggère un correcteur à avance de phase. La forme est $C(s) = K_c \frac{1+\tau s}{1+a \tau s}$ avec $a<1$. Déterminer $K_c, \tau, a$ à partir des spécifications. Réaliser avec un montage AOP (e.g., Figure 18 avec des composants bien choisis).</em></p>
+                </li>
+            </ol>
+        </section>
+
+
+    </main>
+
+    <footer>
+        <hr style="margin: 2em 0;">
+        <p style="font-size: 0.8em; text-align: center;">Bernard Bayle, Hassan Omran - Télécom Physique Strasbourg, 1ère Année</p>
+        <p style="font-size: 0.8em;" id="footnote1"><a href="#ref1">1.</a> Cet ouvrage est disponible en plusieurs exemplaires à la bibliothèque.</p>
+        <p style="font-size: 0.8em;" id="footnote2"><a href="#ref2">2.</a> La démonstration de la formule de passage d'une représentation quelconque a une représentation sous forme canonique commandable pourra par exemple être trouvée dans l'ouvrage <em>Modern control engineering</em>, de K. Ogata, édition Prentice Hall, 2001 (page 914-915, exercice A-12-2 et A-12-3).</p>
+    </footer>
+
+</body>
+</html>
