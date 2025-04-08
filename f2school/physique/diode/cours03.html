@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Diodes Zener</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossOrigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossOrigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossOrigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 1.5em;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+             margin-bottom: 1em;
+        }
+         h2 {
+            color: #0056b3;
+            margin-top: 2em;
+        }
+        h3 {
+             color: #444;
+             margin-top: 1.5em;
+        }
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 10px;
+            margin: 15px auto; /* Center placeholders */
+            text-align: center;
+            background-color: #f9f9f9;
+            color: #666;
+            min-height: 100px;
+            max-width: 450px; /* Limit width */
+            display: flex;
+            flex-direction: column; /* Stack image placeholder and caption */
+            align-items: center;
+            justify-content: center;
+        }
+         .placeholder-text {
+             margin-bottom: 5px;
+         }
+         .caption {
+             font-style: italic;
+             font-size: 0.9em;
+             margin-top: 5px;
+         }
+        .important {
+            font-weight: bold;
+        }
+        .note {
+            font-style: italic;
+            color: #555;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        ul {
+            margin-left: 20px;
+            list-style-type: disc;
+        }
+        .formula-description {
+             margin: 10px 0 5px 0;
+        }
+         .formula {
+             text-align: center;
+             margin: 5px 0 15px 0;
+         }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>LES DIODES ZENER</h1>
+
+    <section id="proprietes">
+        <h2>1. PROPRIETES DE LA DIODE ZENER</h2>
+        <p>
+            Nous avons précédemment étudié le comportement en direct et en inverse d'une jonction PN, incluant le <span class="important">coude de Zener</span> et le <span class="important">claquage par avalanche</span> en polarisation inverse. Les diodes Zener sont spécifiquement fabriquées pour mettre en évidence cet effet de claquage inverse contrôlé et permettre son utilisation dans des circuits de <span class="important">régulation de tension</span>.
+        </p>
+        <p>
+            En polarisation <span class="important">directe</span>, ces diodes ont une caractéristique comparable à celle de n'importe quelle diode à jonction standard (avec un seuil d'environ 0.6-0.7V pour le silicium) et peuvent être utilisées pour des fonctions comme la détection.
+        </p>
+        <p>
+            Cependant, l'intérêt principal réside dans leur caractéristique <span class="important">inverse</span>. On cherche à obtenir un "coude" très prononcé (une transition rapide) à une tension inverse spécifique, appelée <span class="important">tension Zener (Vz)</span>. L'idéal serait une caractéristique formant un angle droit : une résistance inverse très grande (circuit ouvert) jusqu'à Vz, puis une résistance nulle (court-circuit ou source de tension parfaite) au-delà.
+        </p>
+
+        <div class="placeholder">
+            <div class="placeholder-text">[Placeholder: Figure 1 - Graphe comparant la caractéristique inverse idéale (angle droit à Vz) et pratique (coude arrondi, pente non nulle après Vz). Axes If/Ir vs Vf/Vr. Annotation "Tension de zener".]</div>
+            <div class="caption">Fig. 1 – Courbes théoriques et pratiques d'une diode zéner</div>
+        </div>
+
+        <p>
+            En pratique, la transition n'est pas parfaitement abrupte et la résistance dynamique après le coude n'est pas nulle, mais on obtient des résistances suffisamment faibles pour une bonne régulation, comme indiqué sur la figure 1.
+        </p>
+        <p>
+            Les tensions Zener disponibles commercialement s'échelonnent typiquement entre <span class="important">2 V et 200 V</span>. Pour obtenir une gamme aussi étendue, différents niveaux de dopage du monocristal et différents phénomènes physiques sont mis en jeu :
+        </p>
+        <ul>
+            <li>
+                <span class="important">Diodes à basse tension (en dessous de 5-6 V) :</span> Le claquage est principalement dû à l'<span class="important">effet Zener</span> (effet de champ quantique qui arrache les électrons de valence). Le coude de la caractéristique est assez peu prononcé, et le courant augmente de façon plutôt exponentielle avant la zone de régulation. La résistance dynamique inverse est relativement plus élevée que pour les diodes de tension supérieure.
+            </li>
+            <li>
+                <span class="important">Diodes à tension supérieure (au-dessus de 6-7 V) :</span> Le claquage est principalement dû à l'<span class="important">effet d'avalanche</span> (les porteurs minoritaires accélérés par le champ ionisent d'autres atomes, créant une multiplication de porteurs). Le coude est généralement plus franc, et le courant augmente très rapidement une fois le claquage amorcé. La résistance dynamique est plus faible.
+            </li>
+            <li>
+                <span class="important">Diodes de tension intermédiaire (entre 5 V et 7 V environ) :</span> Les deux effets (Zener et avalanche) coexistent et contribuent au claquage. Les propriétés (résistance dynamique, coefficient de température) dépendent du point de fonctionnement précis et de la température.
+            </li>
+        </ul>
+        <p>
+            Toutes ces diodes portent le nom générique de "diodes Zener". Elles sont fabriquées au <span class="important">silicium</span>, car le coude de claquage est plus marqué pour ce semi-conducteur que pour le germanium.
+        </p>
+        <p>
+            Ce claquage inverse <span class="important">n'est pas destructif</span> si l'on prend soin de ne pas dépasser la <span class="important">puissance maximale</span> que la jonction peut dissiper (ce qui limite le courant Zener admissible) et donc si la température maximale de la jonction n'est pas atteinte. L'utilisation d'un circuit externe pour limiter le courant est essentielle.
+        </p>
+    </section>
+
+    <section id="caracteristiques">
+        <h2>2. CARACTERISTIQUES ELECTRIQUES DES DIODES ZENER</h2>
+        <p>
+            La caractéristique essentielle est la tension Zener (Vz), mais il existe un certain nombre d'autres caractéristiques et limites qu'il est indispensable de connaître pour utiliser correctement ces diodes.
+        </p>
+
+        <h3>2.1. LE COURANT INVERSE MAXIMAL OU COURANT DE ZENER (IR ou Iz)</h3>
+        <p>
+            Lorsqu'une diode Zener est utilisée en inverse dans sa zone de régulation, le courant qui la traverse ($I_R$ ou plus communément $I_Z$) doit être limité par un composant externe, typiquement une résistance série ($R_s$), comme montré dans le montage théorique de la figure 2.
+        </p>
+
+        <div class="placeholder">
+             <div class="placeholder-text">[Placeholder: Figure 2 - Schéma de principe : Source de tension Vb, résistance série Rs, diode Zener en inverse (cathode au +). Courant Iz et tension Vz indiqués.]</div>
+            <div class="caption">Fig. 2 – Montage théorique d'une diode</div>
+        </div>
+
+        <p>
+            Le fabricant spécifie un <span class="important">courant Zener maximal continu admissible ($I_{Zmax}$)</span>, qui ne doit pas être dépassé en fonctionnement normal pour éviter la surchauffe et la destruction. Ce courant est lié à la puissance maximale dissipable ($P_{Zmax}$) par la relation $I_{Zmax} \approx P_{Zmax} / V_Z$.
+        </p>
+        <p>
+            Le fabricant peut aussi indiquer une zone de fonctionnement pour des <span class="important">courants inverses transitoires</span> (très courts), dont la valeur de crête peut être beaucoup plus élevée que l'intensité continue admissible, à condition que la durée soit très brève.
+        </p>
+
+        <h3>2.2. LE COURANT DIRECT MAXIMAL (IFM)</h3>
+        <p>
+            Si la diode Zener est utilisée en polarisation directe (sens passant), elle se comporte comme une diode standard. Il est utile de connaître le <span class="important">courant direct maximal ($I_{FM}$)</span> qu'elle peut supporter dans ce cas, comme pour toute diode de redressement (voir chapitre précédent).
+        </p>
+
+        <h3>2.3. LA TEMPERATURE MAXIMALE DE LA JONCTION (Tj max)</h3>
+        <p>
+            Comme il s'agit de diodes au silicium, cette température limite de fonctionnement de la jonction est généralement fixée à <span class="important">150°C ou 175°C</span>. Pour les diodes Zener de puissance (dissipant plusieurs watts), un montage sur <span class="important">radiateur</span> (dissipateur thermique) est nécessaire pour évacuer la chaleur, maintenir la jonction sous sa température limite et permettre une puissance dissipée plus importante.
+        </p>
+
+        <h3>2.4. LA PUISSANCE TOTALE (Pc ou Pzmax)</h3>
+        <p>
+            La puissance totale maximale ($P_c$ ou $P_{Zmax}$) que peut dissiper la jonction sans dépasser $T_{J max}$ dépend de la température ambiante ($T_{amb}$) et de la résistance thermique totale ($R_{th}$) entre la jonction et l'air ambiant.
+        </p>
+        <div class="formula-description">La formule est :</div>
+        <div class="formula">
+            $ P_c = \frac{T_{J max} - T_{amb}}{R_{th}} $
+        </div>
+        <p>
+            La résistance thermique totale ($R_{th}$) est la somme des résistances thermiques successives : jonction-boîtier ($R_{th(j-b)}$ ou $R_{th(j-c)}$), boîtier-radiateur ($R_{th(b-r)}$ ou $R_{th(c-h)}$), et radiateur-ambiant ($R_{th(r-amb)}$ ou $R_{th(h-a)}$). Elle est exprimée en °C/W et dépend de l'efficacité du système de refroidissement (taille du radiateur, ventilation...).
+        </p>
+        <div class="formula">
+             $ R_{th} = R_{th(j-b)} + R_{th(b-r)} + R_{th(r-amb)} $
+        </div>
+
+        <h3>2.5. LA RESISTANCE OU L'IMPEDANCE DYNAMIQUE (rd ou Rz)</h3>
+        <p>
+            Ce n'est pas une caractéristique limite dont le dépassement détruirait la jonction, mais une caractéristique <span class="important">primordiale pour déterminer l'efficacité d'un circuit de régulation</span>. La résistance (ou impédance) dynamique, notée $r_d$ ou $R_Z$, est l'expression de la pente de la caractéristique inverse dans la zone Zener :
+        </p>
+        <div class="formula">
+            $ r_d = R_Z = \frac{\Delta V_Z}{\Delta I_Z} $
+        </div>
+        <p>
+            Ce n'est pas une valeur fixe : elle dépend du point de fonctionnement, donc du niveau du courant Zener $I_Z$. En général, $r_d$ <span class="important">diminue lorsque le courant $I_Z$ augmente</span>, jusqu'à atteindre une valeur minimale (palier).
+        </p>
+        <p>
+            Pour un même niveau de courant Zener ($I_Z$), l'impédance dynamique $r_d$ varie aussi en fonction de la tension Zener nominale ($V_Z$) de la diode :
+        </p>
+        <ul>
+            <li>Elle est relativement élevée pour les faibles tensions Zener (ex: 3.3 V).</li>
+            <li>Elle diminue rapidement lorsque $V_Z$ augmente.</li>
+            <li>Elle atteint une valeur minimale pour $V_Z$ entre 6 V et 9 V environ.</li>
+            <li>Elle remonte ensuite légèrement pour des tensions $V_Z$ plus élevées.</li>
+        </ul>
+        <p>
+            Donc, pour une tension $V_Z$ donnée, $r_d$ diminue si $I_Z$ augmente (jusqu'à un certain point). Pour un courant $I_Z$ donné, il existe une plage de tensions $V_Z$ (autour de 6-9V) où $r_d$ est minimale. Une faible résistance dynamique est souhaitable pour une bonne régulation (la tension Vz varie peu même si Iz varie).
+        </p>
+        <p class="formula-description">
+            Le <span class="important">facteur de régulation F</span> est parfois utilisé pour caractériser la qualité de la régulation. Il est défini comme le quotient de la variation relative du courant par la variation relative de la tension :
+        </p>
+         <div class="formula">
+            $ F = \frac{\Delta I_Z / I_Z}{\Delta V_Z / V_Z} = \frac{V_Z / I_Z}{\Delta V_Z / \Delta I_Z} = \frac{R_{statique}}{r_{dynamique}} $
+        </div>
+        <p>
+             Ici, $R_{statique} = V_Z / I_Z$ est la résistance "statique" au point de fonctionnement, et $r_d$ est la résistance dynamique. On peut atteindre des valeurs de F de 100 à 1000 pour de faibles variations autour du point de fonctionnement.
+        </p>
+
+        <h3>2.6. LE COEFFICIENT DE TEMPERATURE</h3>
+        <p>
+            Bien que la tension Zener soit considérée comme stable, elle dépend légèrement du courant $I_Z$ (via $r_d$) et surtout de la <span class="important">température</span> de la jonction. Cette variation avec la température peut être positive ou négative :
+        </p>
+        <ul>
+            <li>Pour les diodes de tensions <span class="important">inférieures à 5-6 V</span> (où l'effet Zener domine), la tension Zener <span class="important">décroît</span> lorsque la température augmente (coefficient de température négatif).</li>
+            <li>Pour les diodes de tensions <span class="important">supérieures à 6-7 V</span> (où l'effet avalanche domine), la tension Zener <span class="important">croît</span> lorsque la température augmente (coefficient de température positif).</li>
+            <li>Entre 5 V et 7 V environ, on trouve des diodes présentant un coefficient de température <span class="important">nul ou très faible</span>, car les deux effets se compensent partiellement.</li>
+        </ul>
+        <p>
+            Le coefficient de température est spécifié par le fabricant, soit en pourcentage de la tension Zener par degré Celsius (% / °C), soit directement en millivolts par degré Celsius (mV / °C).
+        </p>
+        <p class="note">
+            Pour compenser la dérive thermique des diodes Zener à coefficient positif (> 7V), on peut les placer en série avec une ou plusieurs diodes à jonction au silicium ordinaires (polarisées en direct), qui possèdent un coefficient de température négatif (environ -2 mV / °C).
+        </p>
+
+        <h3>2.7. LE BRUIT DES DIODES ZENER</h3>
+        <p>
+            Les diodes Zener génèrent un certain niveau de bruit électrique (faibles variations aléatoires de la tension Zener). Cet effet est dû probablement à des phénomènes de <span class="important">microplasmas</span> (petites zones où l'avalanche s'amorce de façon instable) ou à des imperfections de la jonction.
+        </p>
+        <p>
+            En principe, le bruit est maximal au voisinage du coude de la caractéristique (zone de transition vers la régulation). Dans la région de Zener stabilisée, il est en moyenne de l'ordre de <span class="important">4 µV</span> (microvolts), et généralement inférieur à 10 µV. Ce niveau de bruit peut être problématique dans certaines applications de référence de tension de haute précision.
+        </p>
+
+        <h3>2.9. LA CAPACITE DES DIODES ZENER</h3>
+         <p class="note">(Note: La numérotation saute de 2.7 à 2.9 dans le document original)</p>
+        <p>
+            Comme toutes les jonctions PN polarisées en inverse, les diodes Zener présentent une <span class="important">capacité de jonction</span>. Cette capacité dépend de la tension inverse appliquée (donc de $V_Z$ pour une Zener en régulation) car celle-ci détermine l'épaisseur de la zone désertée (zone de déplétion).
+        </p>
+        <p>
+            Certains types de diodes Zener basse tension peuvent présenter une capacité relativement élevée (jusqu'à 800 pF pour une tension inverse de 2 V, voir figure 3).
+        </p>
+
+        <div class="placeholder">
+             <div class="placeholder-text">[Placeholder: Figure 3 - Graphe montrant la capacité de jonction (en pF) en fonction de la tension d'avalanche (Vz). La capacité diminue fortement lorsque Vz augmente.]</div>
+            <div class="caption">Fig. 3 – Exemple de courbe de la capacité de la jonction en fonction de la tension.</div>
+        </div>
+
+        <p>
+            Pour un type de diode donné (même $V_Z$), la capacité diminue si la tension inverse appliquée augmente (ce qui n'est pas le cas en régulation où V est fixée à $V_Z$). Pour une même tension inverse (ou en comparant différentes diodes à leur tension $V_Z$), la capacité <span class="important">diminue lorsque la tension Zener nominale augmente</span>.
+        </p>
+        <p>
+            Outre cette capacité de jonction, les diodes Zener ont généralement une faible capacité parasite (inférieure à 10 pF) due aux connexions et au boîtier.
+        </p>
+        <p class="note">
+            On peut utiliser des diodes Zener (particulièrement celles autour de 7 V qui ont une faible impédance dynamique) comme des diodes à capacité variable (Varicap ou Varactor) en les polarisant en inverse avant le coude Zener.
+        </p>
+    </section>
+
+    <section id="applications">
+        <h2>3. APPLICATIONS</h2>
+        <p>
+            Les applications des diodes Zener sont très nombreuses; elles se rapportent aux grandes catégories suivantes:
+        </p>
+        <ul>
+            <li>Effet de <span class="important">régulation</span> de tension;</li>
+            <li>Tension constante servant de <span class="important">référence</span>;</li>
+            <li>Effet de <span class="important">seuil</span> et <span class="important">écrêtage</span>;</li>
+            <li>Utilisation comme <span class="important">capacité</span> variable (moins courant).</li>
+        </ul>
+
+        <h3>3.1. EFFET DE REGULATION</h3>
+        <p>
+            Une des applications les plus importantes est la réalisation d'<span class="important">alimentations stabilisées</span>. Le schéma le plus simple est le régulateur shunt (parallèle) montré sur la figure 4.
+        </p>
+
+        <div class="placeholder">
+             <div class="placeholder-text">[Placeholder: Figure 4 - Schéma d'un régulateur Zener simple : Source 9V (avec potentielle ondulation), résistance série 10 Ohms, condensateur d'entrée 1000uF, diode Zener 6.2V / 200mA en parallèle avec la charge RL (33 Ohms dans l'exemple).]</div>
+            <div class="caption">Fig. 4 – Un schéma simple d'alimentation stabilisée.</div>
+        </div>
+
+        <p>
+            Lorsque la tension aux bornes d'entrée (après la résistance série) croît et dépasse la tension Zener $V_Z$, le courant dans la diode Zener augmente ($I_Z$), mais la tension à ses bornes (qui est aussi la tension de sortie $V_{out}$) reste constante et égale à $V_Z$. La résistance série $R_s$ absorbe la différence de tension entre l'entrée et la sortie.
+        </p>
+        <p>
+            Si la résistance série $R_s$ est faible, le courant dans la diode Zener peut devenir rapidement important si la tension d'entrée augmente ou si la charge consomme peu de courant. Cela peut nécessiter l'emploi d'une diode Zener de puissance coûteuse, montée sur un radiateur. C'est pourquoi ce schéma simple est souvent limité aux faibles courants, ou utilisé comme étage de référence pour des régulateurs plus complexes (avec transistor série).
+        </p>
+        <p class="note">
+            Dans ce montage, la diode Zener remplace avantageusement le second condensateur de filtrage d'une alimentation classique.
+            Exemple donné (fig. 4) : Une diode Zener de 6.2 V, alimentée par une source de 9 V (avec une résistance interne de 0.6 Ω) à travers une résistance série de 10 Ω. On obtient en sortie une tension stabilisée de 6.2 V pour un courant de charge $I_L$ allant de 0 à 200 mA. Le facteur de stabilisation (rapport des variations relatives entrée/sortie) est de 50/1. Le ronflement et l'ondulation de la source sont atténués dans les mêmes proportions. La diode Zener filtre mieux la sortie qu'un condensateur de 1000 µF dans ce cas.
+        </p>
+
+        <h3>3.2. EFFET DE SEUIL, ECRETEUR</h3>
+        <p>
+            On utilise les diodes Zener dans un grand nombre de montages pour leurs propriétés de seuil et d'écrêtage (limitation de tension) :
+        </p>
+        <ul>
+            <li><span class="important">Limiteurs de "volume"</span> ou de signal à la sortie d'amplificateurs basse fréquence, en particulier dans les émetteurs.</li>
+            <li><span class="important">Protection</span> des appareils de mesure à cadre mobile contre les surtensions.</li>
+            <li>Appareils de mesure à <span class="important">échelle dilatée</span> (où seule une partie de la gamme de tension est affichée).</li>
+            <li><span class="important">Temporisateurs et relais à seuil</span> de tension (qui s'activent quand une tension dépasse Vz).</li>
+            <li>Relais à minimum et à maximum, disjoncteurs basés sur un seuil de tension.</li>
+            <li><span class="important">Ecrêteurs (clippers)</span> pour protéger les éléments de montage contre les surtensions. En utilisant deux diodes Zener montées tête-bêche (anode contre anode ou cathode contre cathode), on peut réaliser un écrêteur symétrique qui limite la tension dans les deux alternances.</li>
+            <li>Enfin, on peut protéger un <span class="important">transistor</span> contre les surtensions transitoires (par exemple, sur le collecteur lors de la coupure d'une charge inductive) au moyen d'une diode Zener montée en parallèle sur le transistor (entre collecteur et émetteur, par exemple).</li>
+        </ul>
+    </section>
+
+</body>
+
+</html>
