@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Électrostatique - Cours MPSI</title>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px auto;
+            padding: 15px;
+            max-width: 1000px; /* Slightly wider for potentially wider tables/formulas */
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        h1, h2, h3, h4 {
+            color: #0056b3; /* Blue */
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #003366; /* Darker Blue */
+            border-color: #003366;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+        }
+        h2 {
+           background-color: #e7f1ff;
+           padding: 10px 15px;
+           border-left: 5px solid #0056b3;
+           border-bottom: none;
+           margin-top: 40px;
+           font-size: 1.8em;
+        }
+        h3 {
+            border-bottom: 1px dashed #adb5bd;
+            color: #007bff; /* Lighter Blue */
+            margin-top: 25px;
+            font-size: 1.4em;
+        }
+        h4 {
+            color: #17a2b8; /* Teal */
+            border-bottom: none;
+            margin-top: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .section {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        strong, .highlight {
+            font-weight: bold;
+            color: #343a40;
+        }
+        .important {
+             color: #dc3545; /* Red */
+             font-weight: bold;
+        }
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        li {
+           margin-bottom: 8px;
+        }
+        code {
+            background-color: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .formula-box {
+            border: 1px solid #adb5bd;
+            background-color: #f1f3f5; /* Lighter gray */
+            padding: 15px;
+            margin: 20px auto;
+            border-radius: 5px;
+            text-align: center;
+            overflow-x: auto;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .toc h2 {
+            margin-top: 0;
+            border-bottom: none;
+            background: none;
+            border-left: none;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc > ul > li {
+            margin-bottom: 12px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .toc ul ul {
+            margin-left: 25px;
+            font-weight: normal;
+            font-size: 0.95em;
+        }
+         .toc ul ul li {
+             margin-bottom: 6px;
+         }
+        .page-ref {
+            float: right;
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        .course-info {
+            text-align: right;
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+            padding-top: 15px;
+        }
+        .example {
+            border-left: 4px solid #17a2b8; /* Teal border */
+            padding-left: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="course-info">MPSI - Électromagnétisme - Électrostatique</div>
+    <h1>Électrostatique</h1>
+
+    <div class="toc section">
+        <h2>Table des matières</h2>
+        <ul>
+            <li>1 La charge électrique <span class="page-ref">[p. 1]</span>
+                <ul>
+                    <li>1.1 Propriétés</li>
+                    <li>1.2 Distributions de charges
+                        <ul>
+                            <li>1.2.1 Distribution volumique</li>
+                            <li>1.2.2 Distribution surfacique <span class="page-ref">[p. 2]</span></li>
+                            <li>1.2.3 Distribution linéique <span class="page-ref">[p. 2]</span></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>2 Champ électrostatique <span class="page-ref">[p. 2]</span>
+                <ul>
+                    <li>2.1 Loi de Coulomb</li>
+                    <li>2.2 Champ d'une charge ponctuelle</li>
+                    <li>2.3 Principe de superposition</li>
+                    <li>2.4 Champ d'une distribution</li>
+                    <li>2.5 Lignes de champ <span class="page-ref">[p. 3]</span></li>
+                </ul>
+            </li>
+            <li>3 Invariances et symétries <span class="page-ref">[p. 3]</span>
+                <ul>
+                    <li>3.1 Invariances des distributions de charges</li>
+                    <li>3.2 Plan de symétrie et plan d'antisymétrie</li>
+                    <li>3.3 Conséquences pour le champ électrostatique</li>
+                </ul>
+            </li>
+            <li>4 Potentiel électrostatique <span class="page-ref">[p. 4]</span>
+                <ul>
+                    <li>4.1 Circulation de E</li>
+                    <li>4.2 Potentiel</li>
+                    <li>4.3 Potentiel créé par une distribution de charges</li>
+                    <li>4.4 Surfaces équipotentielles</li>
+                    <li>4.5 Énergie potentielle <span class="page-ref">[p. 5]</span></li>
+                </ul>
+            </li>
+            <li>5 Théorème de Gauss <span class="page-ref">[p. 5]</span></li>
+            <li>6 Analogie gravitationnelle <span class="page-ref">[p. 5]</span></li>
+            <li>7 Le dipôle électrostatique <span class="page-ref">[p. 5]</span>
+                <ul>
+                    <li>7.1 Actions exercées par un dipôle</li>
+                    <li>7.2 Actions subies par un dipôle <span class="page-ref">[p. 6]</span></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section" id="charge">
+        <span class="page-ref">[p. 1]</span>
+        <h2>1 La charge électrique</h2>
+
+        <h3>1.1 Propriétés</h3>
+        <p>
+            On appelle <strong class="highlight">charge</strong> d'une particule une grandeur physique fondamentale qui caractérise les <strong class="highlight">interactions électromagnétiques</strong> qu'elle exerce ainsi que celles qu'elle subit.
+        </p>
+        <p class="example">
+            C'est l'analogue de la <strong class="highlight">masse</strong> pour l'interaction gravitationnelle : la masse caractérise la façon dont une particule interagit gravitationnellement (crée un champ et subit une force).
+        </p>
+        <ul>
+            <li>La charge est une grandeur <strong class="highlight">scalaire</strong> pouvant prendre des valeurs positives ou négatives (ou nulle).</li>
+            <li>
+                La charge est <strong class="important">quantifiée</strong> : toute charge électrique observée est un multiple entier d'une charge élémentaire $e$.
+                <div class="formula-box">
+                    $ q = Z e $
+                </div>
+                où $Z$ est un entier relatif (positif, négatif ou nul) et $e$ est la charge élémentaire :
+                <div class="formula-box">
+                    $ e \approx 1,602 \times 10^{-19} \text{ C} $
+                </div>
+                L'unité de la charge électrique est le <strong class="highlight">Coulomb (C)</strong>.
+            </li>
+            <li>
+                La charge est une grandeur <strong class="important">conservative</strong> : la charge électrique totale d'un système isolé (qui n'échange pas de matière avec l'extérieur) reste constante au cours du temps. La charge ne peut être ni créée ni détruite globalement, seulement transférée ou produite par paires de signes opposés.
+            </li>
+            <li>
+                La charge totale d'un système ne dépend pas du référentiel dans lequel on la mesure (principe d'<strong class="highlight">invariance</strong> de la charge).
+            </li>
+        </ul>
+
+        <h3>1.2 Distributions de charges</h3>
+        <p>
+            À l'échelle macroscopique, on considère la matière comme un milieu continu. Au lieu de décrire chaque charge individuelle, on utilise des densités de charge.
+        </p>
+
+        <h4>1.2.1 Distribution volumique</h4>
+        <p>
+            Si les charges sont réparties dans un volume, on définit la <strong class="highlight">densité volumique de charge</strong> $\rho$ (ou charge volumique) en un point P comme la charge $dq$ contenue dans un petit volume élémentaire $d\tau$ entourant P, divisée par ce volume :
+        </p>
+        <div class="formula-box">
+            $ \rho = \frac{dq}{d\tau} \quad (\text{en C/m}^3) $
+        </div>
+        <p>
+            Le volume $d\tau$ est considéré "petit" à l'échelle macroscopique (pour que $\rho$ puisse varier d'un point à l'autre) mais "grand" à l'échelle microscopique (pour contenir un grand nombre de charges $q_i$ et permettre une moyenne, $dq = \sum_{i \in d\tau} q_i$).
+            La charge contenue dans un volume élémentaire $d\tau$ est alors $dq = \rho d\tau$.
+        </p>
+
+        <span class="page-ref">[p. 2]</span>
+        <h4>1.2.2 Distribution surfacique</h4>
+        <p>
+            Si les charges sont réparties sur une surface (ou si une des 3 dimensions de la distribution est négligeable par rapport aux deux autres), on définit la <strong class="highlight">densité surfacique de charge</strong> $\sigma$ (ou charge surfacique) en un point P de la surface comme la charge $dq$ contenue sur un petit élément de surface $dS$ entourant P, divisée par cette aire :
+        </p>
+        <div class="formula-box">
+             $ \sigma = \frac{dq}{dS} \quad (\text{en C/m}^2) $
+        </div>
+         <p>La charge contenue sur un élément de surface $dS$ est alors $dq = \sigma dS$.</p>
+         <p class="example">(Note: l'expression $dq = \rho h dS = \sigma dS$ suggère qu'une densité surfacique peut être vue comme la limite d'une densité volumique $\rho$ répartie sur une faible épaisseur $h$, avec $\sigma = \rho h$).</p>
+
+
+        <h4>1.2.3 Distribution linéique</h4>
+        <p>
+            Si les charges sont réparties le long d'une ligne ou d'une courbe (ou si deux des 3 dimensions sont négligeables par rapport à la troisième), on définit la <strong class="highlight">densité linéique de charge</strong> $\lambda$ (ou charge linéique) en un point P de la ligne comme la charge $dq$ contenue sur un petit élément de longueur $dl$ entourant P, divisée par cette longueur :
+        </p>
+         <div class="formula-box">
+             $ \lambda = \frac{dq}{dl} \quad (\text{en C/m}) $
+         </div>
+        <p>La charge contenue sur un élément de longueur $dl$ est alors $dq = \lambda dl$.</p>
+    </div>
+
+    <div class="section" id="champ">
+        <span class="page-ref">[p. 2]</span>
+        <h2>2 Champ électrostatique</h2>
+
+        <h3>2.1 Loi de Coulomb</h3>
+        <p>
+            La loi de Coulomb décrit la force d'interaction entre deux charges ponctuelles $q_1$ et $q_2$, situées respectivement aux points $M_1$ et $M_2$. La force $\vec{F}_{1\to 2}$ exercée <strong class="highlight">par $q_1$ sur $q_2$</strong> est :
+        </p>
+        <div class="formula-box">
+             $ \vec{F}_{1\to 2} = \frac{1}{4\pi\epsilon_0} \frac{q_1 q_2}{r_{12}^2} \vec{u}_{12} = \frac{1}{4\pi\epsilon_0} \frac{q_1 q_2}{M_1 M_2^2} \frac{\vec{M_1 M_2}}{M_1 M_2} $
+        </div>
+        <p>
+            où $\epsilon_0$ est la permittivité du vide, $r_{12} = M_1 M_2$ est la distance entre les charges, et $\vec{u}_{12} = \vec{M_1 M_2} / M_1 M_2$ est le vecteur unitaire dirigé de $q_1$ vers $q_2$.
+            La constante $k_e = \frac{1}{4\pi\epsilon_0} \approx 9 \times 10^9$ N⋅m²/C².
+        </p>
+
+        <h3>2.2 Champ d'une charge ponctuelle</h3>
+        <p>
+            La loi de Coulomb peut être interprétée comme l'interaction entre la charge $q_2$ et le <strong class="highlight">champ électrique</strong> $\vec{E}_1(M_2)$ créé par la charge $q_1$ au point $M_2$.
+        </p>
+        <p>
+            Une charge ponctuelle $q$ placée en un point O crée en tout autre point M de l'espace un champ électrique $\vec{E}_q(M)$ :
+        </p>
+        <div class="formula-box">
+            $ \vec{E}_q(M) = \frac{1}{4\pi\epsilon_0} \frac{q}{OM^2} \vec{u}_{OM} = \frac{q}{4\pi\epsilon_0} \frac{\vec{OM}}{OM^3} $
+        </div>
+        <p>
+            où $\vec{u}_{OM} = \vec{OM}/OM$. Ce champ décrit l'influence de $q$ sur l'espace environnant.
+            Si une autre charge $q'$ est placée en M, elle subit une force $\vec{F}_{q\to q'}$ due à ce champ :
+        </p>
+        <div class="formula-box">
+            $ \vec{F}_{q\to q'} = q' \vec{E}_q(M) $
+        </div>
+
+        <h3>2.3 Principe de superposition</h3>
+        <p>
+            Le champ électrique total $\vec{E}(M)$ créé en un point M par un ensemble de charges ponctuelles $q_1, q_2, ..., q_n$ (situées en $O_1, O_2, ..., O_n$) est la <strong class="important">somme vectorielle</strong> des champs créés individuellement par chaque charge :
+        </p>
+        <div class="formula-box">
+             $ \vec{E}(M) = \sum_{i} \vec{E}_i(M) = \sum_{i} \frac{1}{4\pi\epsilon_0} \frac{q_i}{O_i M^2} \vec{u}_{O_i M} = \sum_{i} \frac{q_i}{4\pi\epsilon_0} \frac{\vec{O_i M}}{O_i M^3} $
+        </div>
+        <p>
+            De même, la force exercée par un ensemble de charges sur une autre charge est la somme vectorielle des forces individuelles. En particulier, la force entre deux charges n'est pas modifiée par la présence d'une troisième charge.
+        </p>
+
+        <h3>2.4 Champ d'une distribution continue</h3>
+        <p>
+            Pour une distribution continue de charges, on découpe la distribution en éléments de charge infinitésimaux $dq$ localisés en un point P. Chaque $dq$ crée un champ élémentaire $d\vec{E}(M)$ au point M :
+        </p>
+         <div class="formula-box">
+             $ d\vec{E}(M) = \frac{1}{4\pi\epsilon_0} \frac{dq}{PM^2} \vec{u}_{PM} = \frac{dq}{4\pi\epsilon_0} \frac{\vec{PM}}{PM^3} $
+         </div>
+         <p>
+             Le champ total est obtenu en intégrant (sommant) ces contributions sur toute la distribution source, en remplaçant $dq$ par l'expression appropriée ($\rho d\tau$, $\sigma dS$ ou $\lambda dl$) :
+         </p>
+         <ul>
+             <li>
+                 Pour une distribution volumique $\rho(P)$ dans un volume $\mathcal{V}$:
+                 <div class="formula-box">
+                     $ \vec{E}(M) = \iiint_{\mathcal{V}} \frac{\rho(P) d\tau}{4\pi\epsilon_0} \frac{\vec{PM}}{PM^3} $
+                 </div>
+             </li>
+             <li>
+                 Pour une distribution surfacique $\sigma(P)$ sur une surface $\mathcal{S}$:
+                 <div class="formula-box">
+                     $ \vec{E}(M) = \iint_{\mathcal{S}} \frac{\sigma(P) dS}{4\pi\epsilon_0} \frac{\vec{PM}}{PM^3} $
+                 </div>
+             </li>
+             <li>
+                 Pour une distribution linéique $\lambda(P)$ sur une ligne $\mathcal{L}$:
+                 <div class="formula-box">
+                     $ \vec{E}(M) = \int_{\mathcal{L}} \frac{\lambda(P) dl}{4\pi\epsilon_0} \frac{\vec{PM}}{PM^3} $
+                 </div>
+             </li>
+         </ul>
+
+         <span class="page-ref">[p. 3]</span>
+         <h3>2.5 Lignes de champ</h3>
+         <p>
+             Une <strong class="highlight">ligne de champ</strong> électrostatique est une courbe orientée qui est, en chacun de ses points M, tangente au vecteur champ électrique $\vec{E}(M)$.
+         </p>
+         <p>Propriétés :</p>
+         <ol>
+             <li>Les lignes de champ <strong class="highlight">divergent</strong> (partent) des charges positives et <strong class="highlight">convergent</strong> (arrivent) vers les charges négatives.</li>
+             <li>Deux lignes de champ ne peuvent pas se couper en un point M où le champ $\vec{E}(M)$ est défini et non nul (car le champ serait tangent à deux directions différentes, ce qui est impossible). Elles ne peuvent se croiser qu'en des points où $\vec{E}(M) = \vec{0}$ (points singuliers) ou n'est pas défini (sur les charges sources ponctuelles).</li>
+             <li>Comportement à l'infini pour une distribution de charge localisée :
+                <ul>
+                    <li>Si la charge totale $Q_{tot}$ est positive, les lignes de champ partent vers l'infini.</li>
+                    <li>Si $Q_{tot}$ est négative, les lignes de champ proviennent de l'infini.</li>
+                    <li>Si $Q_{tot}$ est nulle (ex: dipôle), les lignes de champ partent des charges + et reviennent sur les charges -, sans aller/venir de l'infini.</li>
+                </ul>
+             </li>
+         </ol>
+    </div>
+
+     <div class="section" id="symetries">
+        <span class="page-ref">[p. 3]</span>
+        <h2>3 Invariances et symétries</h2>
+        <p>L'étude des invariances et symétries de la distribution de charges (la cause) permet de simplifier grandement la détermination du champ électrostatique (l'effet).</p>
+
+        <h3>3.1 Invariances des distributions de charges</h3>
+        <ul>
+            <li>
+                <strong class="highlight">Invariance par translation</strong> suivant un axe $\Delta$ : La densité de charge $\rho(M)$ est la même en M et en son translaté M' le long de $\Delta$. $ \rho(M) = \rho(M') $.
+                <div class="example">Exemple : Une distribution invariante par translation suivant Oz ne dépend pas de z: $ \rho(r, \theta, z) = \rho(r, \theta) $.</div>
+            </li>
+            <li>
+                <strong class="highlight">Invariance par rotation</strong> autour d'un axe $\Delta$ : La densité de charge $\rho(M)$ est la même en M et en son image M' par rotation autour de $\Delta$. $ \rho(M) = \rho(M') $.
+                 <div class="example">Exemple : Une distribution invariante par rotation autour de Oz ne dépend pas de l'angle $\theta$: $ \rho(r, \theta, z) = \rho(r, z) $.</div>
+            </li>
+             <li>
+                <strong class="highlight">Symétrie cylindrique</strong> : La distribution est invariante par rotation autour de l'axe Oz ET par translation le long de Oz. La densité ne dépend que de la distance $r$ à l'axe : $ \rho(r, \theta, z) = \rho(r) $.
+            </li>
+             <li>
+                <strong class="highlight">Symétrie sphérique</strong> : La distribution est invariante par rotation autour de n'importe quel axe passant par un centre O (ou invariance par rotation autour des axes Ox, Oy, Oz). La densité ne dépend que de la distance $r$ au centre O : $ \rho(r, \theta, \phi) = \rho(r) $.
+            </li>
+        </ul>
+
+        <h3>3.2 Plan de symétrie et plan d'antisymétrie</h3>
+        <ul>
+            <li>
+                Un plan $\Pi$ est un <strong class="highlight">plan de symétrie</strong> pour la distribution de charge si pour tout point M, son symétrique M' par rapport à $\Pi$ existe et a la même densité de charge : $ \rho(M) = \rho(M') $.
+            </li>
+             <li>
+                Un plan $\Pi^*$ est un <strong class="highlight">plan d'antisymétrie</strong> pour la distribution de charge si pour tout point M, son symétrique M' par rapport à $\Pi^*$ existe et a une densité de charge opposée : $ \rho(M) = -\rho(M') $.
+            </li>
+        </ul>
+
+        <h3>3.3 Conséquences pour le champ électrostatique</h3>
+        <p>
+            <strong class="highlight">Principe de Curie :</strong> L'effet (le champ $\vec{E}$) doit posséder <strong class="important">au moins</strong> les éléments d'invariance et de symétrie de la cause (la distribution de charge $\rho$).
+        </p>
+        <ul>
+            <li>Si $\rho$ est invariante par translation // $\Delta$, alors $\vec{E}$ est indépendant de la coordonnée le long de $\Delta$.</li>
+            <li>Si $\rho$ est invariante par rotation autour de $\Delta$, alors $\vec{E}$ est indépendant de l'angle de rotation.</li>
+            <li>Si $\Pi$ est un plan de <strong class="highlight">symétrie</strong> pour $\rho$, alors le champ $\vec{E}(M')$ en M' (symétrique de M) est le symétrique du champ $\vec{E}(M)$ : $ \vec{E}(M') = \text{sym}_{\Pi}(\vec{E}(M)) $.
+                <br/> Conséquence : En tout point $M \in \Pi$, le champ $\vec{E}(M)$ est contenu dans le plan $\Pi$ ( $ \vec{E}(M) \in \Pi $ ).
+            </li>
+            <li>Si $\Pi^*$ est un plan d'<strong class="highlight">antisymétrie</strong> pour $\rho$, alors le champ $\vec{E}(M')$ en M' est l'opposé du symétrique du champ $\vec{E}(M)$ : $ \vec{E}(M') = -\text{sym}_{\Pi^*}(\vec{E}(M)) $.
+                <br/> Conséquence : En tout point $M \in \Pi^*$, le champ $\vec{E}(M)$ est perpendiculaire au plan $\Pi^*$ ( $ \vec{E}(M) \perp \Pi^* $ ).
+            </li>
+        </ul>
+    </div>
+
+     <div class="section" id="potentiel">
+        <span class="page-ref">[p. 4]</span>
+        <h2>4 Potentiel électrostatique</h2>
+
+        <h3>4.1 Circulation de E</h3>
+        <p>
+            Le travail $W_{A\to B}$ de la force électrostatique $\vec{F} = q'\vec{E}$ lorsqu'une charge $q'$ se déplace d'un point A à un point B est appelé <strong class="highlight">circulation</strong> de $\vec{F}$ : $W_{A\to B} = \int_A^B \vec{F} \cdot d\vec{OM} = q' \int_A^B \vec{E} \cdot d\vec{OM}$.
+            La circulation du champ $\vec{E}$ est $ C_{A\to B}(\vec{E}) = \int_A^B \vec{E} \cdot d\vec{OM} $.
+        </p>
+        <p>
+            Pour le champ créé par une charge ponctuelle $q$ en O, $ \vec{E}(M) = \frac{q}{4\pi\epsilon_0 r^2} \vec{e}_r $. En coordonnées sphériques, $d\vec{OM} = dr\,\vec{e}_r + r\,d\theta\,\vec{e}_\theta + r\sin\theta\,d\phi\,\vec{e}_\phi$.
+            $ \vec{E} \cdot d\vec{OM} = \frac{q}{4\pi\epsilon_0 r^2} dr $.
+            $ C_{A\to B}(\vec{E}) = \int_{r_A}^{r_B} \frac{q}{4\pi\epsilon_0 r^2} dr = \frac{q}{4\pi\epsilon_0} \left[ -\frac{1}{r} \right]_{r_A}^{r_B} = \frac{q}{4\pi\epsilon_0} \left( \frac{1}{r_A} - \frac{1}{r_B} \right) $.
+        </p>
+        <p>
+            Le résultat ne dépend que des points de départ et d'arrivée, pas du chemin suivi. La circulation de $\vec{E}$ est <strong class="important">conservative</strong>.
+            Grâce au principe de superposition, ce résultat se généralise à un champ créé par n'importe quelle distribution de charges statiques.
+        </p>
+
+        <h3>4.2 Potentiel</h3>
+        <p>
+            Puisque la circulation de $\vec{E}$ ne dépend pas du chemin, le champ $\vec{E}$ dérive d'une fonction scalaire appelée <strong class="highlight">potentiel électrostatique</strong> $V$, telle que :
+        </p>
+        <div class="formula-box">
+             $ \int_A^B \vec{E} \cdot d\vec{OM} = V(A) - V(B) $
+        </div>
+        <p>
+            Ceci est équivalent à la relation locale (voir section 4.3 du cours précédent ou section 4.3 de celui-ci) :
+        </p>
+        <div class="formula-box">
+            $ \vec{E} = -\text{grad} V = -\vec{\nabla} V $
+        </div>
+        <p>
+             Le potentiel $V$ est défini à une constante additive près. Pour une charge ponctuelle $q$ en O, en choisissant $V(\infty)=0$, on a :
+        </p>
+         <div class="formula-box">
+             $ V(r) = \frac{1}{4\pi\epsilon_0} \frac{q}{r} $
+         </div>
+         <p>Un champ vectoriel $\vec{E}$ dont la circulation est conservative (ou qui dérive d'un potentiel scalaire) est appelé un <strong class="highlight">champ de gradient</strong>.</p>
+
+        <h3>4.3 Potentiel créé par une distribution de charges</h3>
+        <p>Par superposition, le potentiel créé par une distribution de charges est la somme (ou l'intégrale) des potentiels créés par chaque charge élémentaire :</p>
+        <ul>
+            <li>Charges discrètes $q_i$ en $P_i$:
+                <div class="formula-box">
+                    $ V(M) = \sum_i \frac{1}{4\pi\epsilon_0} \frac{q_i}{P_i M} $ (+ cte)
+                </div>
+            </li>
+             <li>Distribution volumique $\rho(P)$:
+                <div class="formula-box">
+                    $ V(M) = \iiint \frac{\rho(P) d\tau}{4\pi\epsilon_0 PM} $ (+ cte)
+                </div>
+            </li>
+             <li>Distribution surfacique $\sigma(P)$:
+                <div class="formula-box">
+                    $ V(M) = \iint \frac{\sigma(P) dS}{4\pi\epsilon_0 PM} $ (+ cte)
+                </div>
+            </li>
+             <li>Distribution linéique $\lambda(P)$:
+                <div class="formula-box">
+                    $ V(M) = \int \frac{\lambda(P) dl}{4\pi\epsilon_0 PM} $ (+ cte)
+                </div>
+            </li>
+        </ul>
+
+        <h3>4.4 Surfaces équipotentielles</h3>
+        <p>
+            Une <strong class="highlight">surface équipotentielle</strong> est l'ensemble des points M où le potentiel $V(M)$ a une valeur constante donnée ($V(M)=V_0$).
+        </p>
+        <ul>
+            <li>Le champ électrique $\vec{E}$ est toujours <strong class="important">perpendiculaire</strong> aux surfaces équipotentielles.
+                <br/><i>Justification:</i> Pour un déplacement $d\vec{OM}$ sur une équipotentielle, $dV=0$. Or $dV = \vec{\nabla}V \cdot d\vec{OM} = -\vec{E} \cdot d\vec{OM}$. Donc $\vec{E} \cdot d\vec{OM} = 0$, ce qui signifie que $\vec{E}$ est orthogonal à tout déplacement tangentiel $d\vec{OM}$ à la surface.
+            </li>
+            <li>Les lignes de champ sont orientées dans le sens des potentiels <strong class="important">décroissants</strong>.
+                <br/><i>Justification:</i> Le long d'une ligne de champ $d\vec{OM}$ est colinéaire et de même sens que $\vec{E}$. Donc $\vec{E} \cdot d\vec{OM} = E \, dOM > 0$. Comme $dV = -\vec{E} \cdot d\vec{OM}$, on a $dV < 0$.
+            </li>
+        </ul>
+    </div>
+
+     <div class="section" id="energie_potentielle">
+         <span class="page-ref">[p. 5]</span>
+        <h3>4.5 Énergie potentielle</h3>
+        <p>
+            Le travail $W_{A\to B} = \int_A^B \vec{F} \cdot d\vec{OM}$ effectué par la force électrostatique $\vec{F}=q'\vec{E}$ sur une charge $q'$ qui se déplace de A à B est égal à la diminution de son énergie potentielle $E_p$:
+            $ W_{A\to B} = E_p(A) - E_p(B) $.
+        </p>
+        <p>
+             Puisque $W_{A\to B} = q'(V(A)-V(B))$, on en déduit que l'énergie potentielle d'une charge $q'$ placée en un point M où règne un potentiel $V(M)$ est :
+        </p>
+        <div class="formula-box">
+            $ E_p(M) = q' V(M) $ (+ constante, souvent choisie nulle là où V=0)
+        </div>
+        <p>
+            L'<strong class="highlight">énergie potentielle d'interaction</strong> entre deux charges $q_1$ (en $M_1$) et $q_2$ (en $M_2$) est l'énergie de $q_2$ dans le potentiel $V_1$ créé par $q_1$ (ou l'inverse). Pour éviter de compter deux fois, on prend la forme symétrique:
+        </p>
+         <div class="formula-box">
+             $ E_{p12} = \frac{1}{2} (q_1 V_2(M_1) + q_2 V_1(M_2)) = \frac{1}{4\pi\epsilon_0} \frac{q_1 q_2}{M_1 M_2} $
+         </div>
+         <p>
+            Pour un système de $n$ charges, l'énergie potentielle totale est $ E_p = \frac{1}{2} \sum_{i=1}^n q_i V_i $, où $V_i$ est le potentiel créé par toutes les autres charges ($j \ne i$) à l'emplacement de $q_i$.
+        </p>
+    </div>
+
+     <div class="section" id="gauss">
+        <span class="page-ref">[p. 5]</span>
+        <h2>5 Théorème de Gauss</h2>
+        <p>
+            Le <strong class="highlight">flux</strong> du champ électrostatique $\vec{E}$ sortant à travers une surface <strong class="important">fermée</strong> S (appelée surface de Gauss) est égal à la charge totale $Q_{int}$ <strong class="important">enfermée</strong> à l'intérieur de cette surface, divisée par $\epsilon_0$.
+        </p>
+         <div class="formula-box">
+             $ \Phi = \oint_S \vec{E} \cdot d\vec{S}_{ext} = \frac{Q_{int}}{\epsilon_0} $
+         </div>
+         <p>
+             où $d\vec{S}_{ext}$ est le vecteur surface élémentaire pointant vers l'extérieur de la surface fermée S.
+         </p>
+         <p class="example">
+            Vérification pour une charge ponctuelle $q$ en O et une surface de Gauss sphérique de rayon $r$ centrée en O:
+            $ \vec{E} = \frac{q}{4\pi\epsilon_0 r^2} \vec{e}_r $. $ d\vec{S} = r^2 \sin\theta d\theta d\phi \, \vec{e}_r $.
+            $ \vec{E} \cdot d\vec{S} = \frac{q}{4\pi\epsilon_0 r^2} r^2 \sin\theta d\theta d\phi = \frac{q}{4\pi\epsilon_0} \sin\theta d\theta d\phi $.
+            $ \Phi = \oint_S \vec{E} \cdot d\vec{S} = \frac{q}{4\pi\epsilon_0} \int_0^\pi \sin\theta d\theta \int_0^{2\pi} d\phi = \frac{q}{4\pi\epsilon_0} [-\cos\theta]_0^\pi [ \phi ]_0^{2\pi} = \frac{q}{4\pi\epsilon_0} (2)(2\pi) = \frac{q}{\epsilon_0} $.
+            La charge intérieure est $Q_{int} = q$. Le théorème est vérifié.
+         </p>
+    </div>
+
+     <div class="section" id="gravitation">
+         <span class="page-ref">[p. 5]</span>
+        <h2>6 Analogie gravitationnelle</h2>
+        <p>
+            Il existe une forte analogie formelle entre l'électrostatique et la gravitation newtonienne. Les résultats de l'électrostatique peuvent souvent être transposés à la gravitation en effectuant les substitutions :
+        </p>
+        <ul>
+            <li>Charge $q \quad \longleftrightarrow \quad$ Masse $m$</li>
+            <li>Constante $ \frac{1}{4\pi\epsilon_0} \quad \longleftrightarrow \quad$ Constante gravitationnelle $-G$
+                <br/>(Le signe moins vient du fait que la gravitation est toujours attractive, alors que la force EM peut être attractive ou répulsive; ou, si on prend $G$ positif, la force est $\vec{F} = -G \frac{m_1 m_2}{r^2}\vec{u}_{12}$).
+            </li>
+            <li>Champ électrique $\vec{E} \quad \longleftrightarrow \quad$ Champ gravitationnel $\vec{G}$ (souvent noté $\vec{g}$)</li>
+            <li>Potentiel électrique $V \quad \longleftrightarrow \quad$ Potentiel gravitationnel $V_g$</li>
+        </ul>
+        <p>Ainsi :</p>
+        <ul>
+            <li>Champ gravitationnel créé par une masse $m$ : $ \vec{G} = -G \frac{m}{r^2} \vec{e}_r $</li>
+            <li>Force gravitationnelle sur une masse $m'$ : $ \vec{F} = m' \vec{G} $</li>
+            <li>Potentiel gravitationnel créé par $m$ ($V_g(\infty)=0$): $ V_g = -G \frac{m}{r} $</li>
+            <li>Relation champ-potentiel : $ \vec{G} = -\vec{\nabla} V_g $</li>
+            <li>Énergie potentielle gravitationnelle de $m'$ : $ E_p = m' V_g = -G \frac{m m'}{r} $</li>
+            <li>Théorème de Gauss pour la gravitation : $ \oint_S \vec{G} \cdot d\vec{S}_{ext} = -4\pi G M_{int} $</li>
+        </ul>
+    </div>
+
+    <div class="section" id="dipole">
+        <span class="page-ref">[p. 5]</span>
+        <h2>7 Le dipôle électrostatique</h2>
+        <p>
+            Un <strong class="highlight">dipôle électrostatique</strong> est un système constitué de deux charges ponctuelles opposées, $+q$ et $-q$, séparées par une distance $d$. On s'intéresse souvent aux effets de ce système à une distance $r$ grande par rapport à la séparation $d$ ($r \gg d$). C'est un exemple simple de distribution dont la charge totale est nulle.
+        </p>
+
+        <h3>7.1 Actions exercées par un dipôle (Champ et Potentiel créés)</h3>
+        <p>
+            Soit les charges $-q$ en $A$ et $+q$ en $B$, avec $O$ milieu de $AB$. On pose $\vec{AB} = \vec{d}$. Le <strong class="highlight">moment dipolaire</strong> est défini comme $ \vec{p} = q \vec{AB} = q \vec{d} $. Il est dirigé de la charge - vers la charge +.
+            Soit un point d'observation $M$ défini par $\vec{r} = \vec{OM}$, avec $r \gg d = AB$. On note $\theta$ l'angle entre l'axe du dipôle (direction de $\vec{p}$) et la direction $\vec{OM}$.
+        </p>
+        <p>
+            Le potentiel créé en M est la somme des potentiels de $+q$ et $-q$:
+            $ V(M) = \frac{1}{4\pi\epsilon_0} \left( \frac{q}{BM} - \frac{q}{AM} \right) $.
+        </p>
+        <p>
+            En utilisant des approximations pour $r \gg d$:
+            $ BM \approx r - \frac{d}{2} \cos\theta $
+            $ AM \approx r + \frac{d}{2} \cos\theta $
+            $ \frac{1}{BM} \approx \frac{1}{r} (1 + \frac{d}{2r} \cos\theta) $
+            $ \frac{1}{AM} \approx \frac{1}{r} (1 - \frac{d}{2r} \cos\theta) $
+            $ V(M) \approx \frac{q}{4\pi\epsilon_0} \left[ \frac{1}{r}(1 + \frac{d}{2r}\cos\theta) - \frac{1}{r}(1 - \frac{d}{2r}\cos\theta) \right] = \frac{q}{4\pi\epsilon_0 r} \left( \frac{d}{r}\cos\theta \right) $
+            $ V(M) \approx \frac{q d \cos\theta}{4\pi\epsilon_0 r^2} $.
+        </p>
+        <p>
+             En introduisant le moment dipolaire $p = qd$ et le vecteur unitaire $\vec{e}_r = \vec{OM}/r$ (tel que $\vec{p} \cdot \vec{e}_r = p \cos\theta$), on obtient :
+        </p>
+        <div class="formula-box">
+            $ V(M) = \frac{1}{4\pi\epsilon_0} \frac{p \cos\theta}{r^2} = \frac{1}{4\pi\epsilon_0} \frac{\vec{p} \cdot \vec{e}_r}{r^2} = \frac{1}{4\pi\epsilon_0} \frac{\vec{p} \cdot \vec{r}}{r^3} $
+        </div>
+        <p>Le potentiel d'un dipôle décroît en $1/r^2$.</p>
+
+        <span class="page-ref">[p. 6]</span>
+        <p>On calcule le champ électrostatique $\vec{E} = -\text{grad} V$ en coordonnées sphériques (où $\vec{p}$ définit l'axe $\theta=0$, donc $V = \frac{p\cos\theta}{4\pi\epsilon_0 r^2}$).</p>
+        <ul>
+            <li>Composante radiale : $ E_r = -\frac{\partial V}{\partial r} = - \frac{p \cos\theta}{4\pi\epsilon_0} \frac{\partial}{\partial r}(r^{-2}) = - \frac{p \cos\theta}{4\pi\epsilon_0} (-2r^{-3}) = \frac{1}{4\pi\epsilon_0} \frac{2p \cos\theta}{r^3} $</li>
+            <li>Composante orthoradiale (ou polaire) : $ E_\theta = -\frac{1}{r} \frac{\partial V}{\partial \theta} = -\frac{1}{r} \frac{p}{4\pi\epsilon_0 r^2} \frac{\partial}{\partial \theta}(\cos\theta) = -\frac{p}{4\pi\epsilon_0 r^3} (-\sin\theta) = \frac{1}{4\pi\epsilon_0} \frac{p \sin\theta}{r^3} $</li>
+            <li>Composante azimutale : $ E_\phi = -\frac{1}{r\sin\theta} \frac{\partial V}{\partial \phi} = 0 $ (car V ne dépend pas de $\phi$).</li>
+        </ul>
+        <p>Le champ d'un dipôle décroît en $1/r^3$. On peut vérifier que l'expression vectorielle compacte est :</p>
+        <div class="formula-box">
+             $ \vec{E}(M) = \frac{1}{4\pi\epsilon_0 r^3} \left[ 3(\vec{p} \cdot \vec{e}_r) \vec{e}_r - \vec{p} \right] = \frac{1}{4\pi\epsilon_0} \left[ \frac{3(\vec{p} \cdot \vec{r})\vec{r}}{r^5} - \frac{\vec{p}}{r^3} \right] $
+        </div>
+        (Note: La forme finale du PDF $ E = \frac{1}{4\pi\epsilon_0 r^3} (\frac{3 p \cdot r}{r^2} r - p) $ est correcte mais peut être ambiguë. $\frac{3 (\vec{p} \cdot \vec{r})\vec{r}}{r^5}$ est plus clair).
+
+        <h3>7.2 Actions subies par un dipôle (dans un champ extérieur)</h3>
+        <p>
+            On considère maintenant un dipôle $\vec{p} = q\vec{AB}$ plongé dans un champ électrique extérieur $\vec{E}_{ext}$ (qui n'est PAS créé par le dipôle lui-même).
+        </p>
+        <ul>
+            <li>
+                <strong class="highlight">Force totale :</strong> La force sur $+q$ est $\vec{F}_B = q\vec{E}_{ext}(B)$ et sur $-q$ est $\vec{F}_A = -q\vec{E}_{ext}(A)$. La force totale est $\vec{F} = \vec{F}_A + \vec{F}_B = q(\vec{E}_{ext}(B) - \vec{E}_{ext}(A))$.
+                <br/> Si le champ extérieur est <strong class="important">uniforme</strong> ($\vec{E}_{ext}(A) = \vec{E}_{ext}(B)$), alors la force totale est <strong class="important">nulle</strong> : $ \vec{F} = \vec{0} $.
+                <br/> Si le champ n'est pas uniforme, il y a une force nette $\vec{F} \approx q (\vec{AB} \cdot \vec{\nabla}) \vec{E}_{ext} = (\vec{p} \cdot \vec{\nabla}) \vec{E}_{ext}$.
+            </li>
+             <li>
+                <strong class="highlight">Couple (Moment) :</strong> Le couple exercé par les forces par rapport au centre O du dipôle est $ \vec{M}_O = \vec{OB} \wedge \vec{F}_B + \vec{OA} \wedge \vec{F}_A $.
+                Si le champ est <strong class="important">uniforme</strong> $ \vec{E}_{ext} $:
+                $ \vec{M}_O = \vec{OB} \wedge (q\vec{E}_{ext}) + \vec{OA} \wedge (-q\vec{E}_{ext}) = q(\vec{OB} - \vec{OA}) \wedge \vec{E}_{ext} = q \vec{AB} \wedge \vec{E}_{ext} $.
+                <div class="formula-box">
+                    $ \vec{M}_O = \vec{p} \wedge \vec{E}_{ext} $
+                </div>
+                Le couple tend à aligner le moment dipolaire $\vec{p}$ avec le champ extérieur $\vec{E}_{ext}$ (position où le couple est nul).
+            </li>
+            <li>
+                <strong class="highlight">Énergie potentielle :</strong> L'énergie potentielle du dipôle $\vec{p}$ dans le champ extérieur $\vec{E}_{ext}$ (associé au potentiel $V_{ext}$) est $ E_p = (+q) V_{ext}(B) + (-q) V_{ext}(A) = q (V_{ext}(B) - V_{ext}(A)) $.
+                Pour un déplacement $d\vec{l} = \vec{AB} = \vec{d}$, la variation de potentiel est $dV_{ext} = \vec{\nabla}V_{ext} \cdot d\vec{l} = -\vec{E}_{ext} \cdot \vec{d}$.
+                Donc $V_{ext}(B) - V_{ext}(A) \approx -\vec{E}_{ext}(O) \cdot \vec{d}$.
+                $ E_p \approx q (-\vec{E}_{ext} \cdot \vec{d}) = - (q\vec{d}) \cdot \vec{E}_{ext} $.
+                 <div class="formula-box">
+                     $ E_p = -\vec{p} \cdot \vec{E}_{ext} $
+                 </div>
+                 L'énergie potentielle est <strong class="important">minimale</strong> lorsque $\vec{p}$ est aligné avec $\vec{E}_{ext}$ ($\cos\theta=1$), ce qui correspond à la position d'équilibre stable. Elle est maximale lorsque $\vec{p}$ est anti-aligné ($\cos\theta=-1$).
+            </li>
+        </ul>
+    </div>
+
+    <footer>
+        Damien DECOUT - Dernière modification : avril 2007
+    </footer>
+
+</body>
+</html>
