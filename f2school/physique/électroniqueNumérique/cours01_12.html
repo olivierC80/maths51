@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Électronique Numérique - Chapitre 5: Compteurs, Registres, Mémoires</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            counter-reset: page 30; /* Start page numbering from 31 (PDF page 101) */
+        }
+
+        header,
+        footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #555;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        footer::after {
+          counter-increment: page;
+          content: "Page " counter(page);
+          position: absolute;
+          right: 0;
+        }
+
+        footer {
+            border-top: 1px solid #ccc;
+            border-bottom: none;
+            margin-top: 15px;
+            padding-top: 5px;
+            text-align: center; /* Center text potentially, but page number is on the right */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        h1 { font-size: 2em; text-align: center; }
+        h2 { font-size: 1.8em; border-bottom: 1px solid #eee; padding-bottom: 0.3em; margin-top: 2em;}
+        h3 { font-size: 1.6em; margin-top: 2em; }
+        h4 { font-size: 1.4em; margin-top: 1.8em; }
+        h5 { font-size: 1.2em; margin-top: 1.5em; }
+        h6 { font-size: 1.1em; font-style: italic; margin-top: 1.5em;}
+
+
+        img.placeholder {
+            display: block;
+            max-width: 90%;
+            min-height: 100px;
+            border: 1px dashed #aaa;
+            margin: 15px auto;
+            padding: 10px;
+            text-align: center;
+            color: #888;
+            background-color: #f9f9f9;
+        }
+
+        .caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 1em;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .footnote {
+            font-size: 0.85em;
+            margin-top: 15px;
+            color: #444;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Adjust KaTeX display alignment */
+        .katex-display {
+            text-align: center;
+            margin: 1em 0;
+        }
+        .katex-display > .katex {
+            display: inline-block;
+            text-align: initial;
+        }
+         .exercise-section h3, .exercise-section h4, .exercise-section h5 {
+            margin-top: 1.5em;
+            border-top: none;
+            padding-top: 0;
+        }
+        .correction-section h4, .correction-section h5 {
+             margin-top: 1.5em; /* Reduced top margin for exercise headings */
+             border-top: none; /* Remove top border */
+             padding-top: 0; /* Remove padding */
+        }
+        .correction-section > h5:first-of-type {
+             margin-top: 2em;
+             border-top: 2px solid #ccc;
+             padding-top: 1em;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Start Previous Content (Pages 1-30 / PDF 71-100) -->
+    <!-- ... [HTML content from the previous responses would go here] ... -->
+    <!-- End Previous Content -->
+
+    <!-- Start Page 31 Content (PDF Page 101) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+    <div class="correction-section"> <!-- Start corrections section -->
+    <h5>Exercice 4 (suite)</h5>
+    <h6>d. Evolution des états non compris dans le cycle de comptage (suite).</h6>
+
+    <p>Pour répondre à la question sur le devenir des états non utilisés (101, 110, 111), il faut, pour chaque état, établir les valeurs des entrées des bascules ($J_B, K_B, J_C, K_C, S, R$) puis déterminer l'état suivant après une impulsion d'horloge (front descendant sur B pour $Q_B, Q_C, Q_D$). Rappel des équations des entrées synchrones (avec J=K=1 pour $Q_C$):</p>
+    $J_B = \overline{Q_D}$, $K_B = 1$
+    <br>$J_C = 1$, $K_C = 1$ (Toggle, si horloge active)
+    <br>$S = Q_B \cdot Q_C$, $R = Q_D$ (Pour la bascule $Q_D$)
+
+    <p><strong>Analyse des états hors cycle :</strong></p>
+    <ul>
+        <li>
+            Pour l'état $Q_D Q_C Q_B = 101$ (état 5):
+            <br>Entrées : $J_B = \overline{1} = 0$, $K_B = 1$. $J_C = 1$, $K_C = 1$. $S = 1 \cdot 0 = 0$, $R = 1$.
+            <br>Comportement à l'impulsion d'horloge (sur B): $Q_A$ passe $1\to0$ (si compteur /10 complet). $Q_B$ (avec $J_B=0, K_B=1$) -> Reset $\to 0$. $Q_C$ reçoit une horloge $Q_B: 1\to0$, donc $Q_C$ (avec $J_C=1, K_C=1$) -> Toggle $\to 1$. $Q_D$ (avec $S=0, R=1$) -> Reset $\to 0$.
+            <br>L'état futur sera donc $Q_D Q_C Q_B = 010$ (état 2). L'état 101 évolue ainsi vers l'état 010, qui appartient au cycle de comptage normal.
+        </li>
+        <li>
+            Pour l'état $Q_D Q_C Q_B = 110$ (état 6):
+            <br>Entrées : $J_B = \overline{1} = 0$, $K_B = 1$. $J_C = 1$, $K_C = 1$. $S = 0 \cdot 1 = 0$, $R = 1$.
+            <br>Comportement à l'impulsion d'horloge (sur B): $Q_A$ passe $0\to1$. Pas d'horloge sur B.
+            <br><strong>Correction de l'analyse PDF :</strong> Dans un compteur asynchrone, l'horloge de $Q_C$ est $Q_B$, l'horloge de $Q_D$ dépend du schéma exact (souvent $Q_A$ ou B aussi pour le 7490). Le PDF dit: "la sortie $Q_B$ restant inchangée, il n'y a pas d'impulsion sur l'entrée horloge de la bascule représentant le bit $Q_C$. En conséquent bien que $J_C=1, K_C=1$ le bit $Q_C$ ne change pas !".
+            <br>Si $Q_B$ doit passer de 0 à 1 (car J=0, K=1 => Reset, reste 0) ou doit basculer, analysons: $J_B=\bar{1}=0, K_B=1$. $Q_B$ est reseté à 0 (ou reste 0). Donc $Q_B: 0 \to 0$. Puisque $Q_B$ ne fait pas $1 \to 0$, $Q_C$ ne reçoit pas de front descendant et ne toggle pas, $Q_C$ reste à 1. Pour $Q_D$, $S=0, R=1$, donc $Q_D$ est reseté à 0.
+            <br>L'état futur sera donc $Q_D Q_C Q_B = 010$ (état 2). L'état 110 évolue vers 010.
+        </li>
+        <li>
+            Pour l'état $Q_D Q_C Q_B = 111$ (état 7):
+            <br>Entrées : $J_B = \overline{1} = 0$, $K_B = 1$. $J_C = 1$, $K_C = 1$. $S = 1 \cdot 1 = 1$, $R = 1$.
+            <br>Comportement à l'impulsion d'horloge (sur B): $Q_B$ (avec $J_B=0, K_B=1$) -> Reset $\to 0$. $Q_C$ reçoit horloge $Q_B: 1\to0$, donc $Q_C$ (avec $J_C=1, K_C=1$) -> Toggle $\to 0$. $Q_D$ (avec $S=1, R=1$, condition interdite RS) -> comportement dépend de l'implémentation, mais souvent force Q=0 (ou $\bar{Q}=0$). Supposons Reset prioritaire ou état final $Q=0$.
+            <br>L'état futur sera donc $Q_D Q_C Q_B = 000$ (état 0). L'état 111 évolue vers 000.
+        </li>
+    </ul>
+    <p>
+        Conclusion: Les trois états en dehors du cycle évoluent donc, en une seule impulsion d'horloge, vers un état du cycle de comptage normal (0, 2). Le compteur n'est pas bloqué. La Figure 42.b) (page suivante) schématise le fonctionnement complet du compteur avec l'évolution des états hors cycle.
+    </p>
+
+    </div> <!-- End corrections section -->
+
+    <h3>5.3. Les compteurs synchrones.</h3>
+
+    <h4>5.3.1. Les compteurs binaires à retenue série.</h4>
+    <p>
+        Rappelons que dans un compteur synchrone (architecture synchrone), chaque bit de sortie $Q_i$ commute ($0 \leftrightarrow 1$) si, et seulement si, tous les bits de poids inférieurs ($Q_{i-1} \dots Q_A$) sont au niveau haut (condition 2 de 5.1.2). L'horloge externe est connectée à toutes les bascules.
+    </p>
+    <p>
+        La condition "tous les bits de poids inférieurs sont au niveau haut" est calculée logiquement. Par exemple, la bascule représentant le bit $Q_D$ (4ème bit, $i=3$) commute si $Q_A \cdot Q_B \cdot Q_C = 1$. Cette quantité logique ($Q_A \cdot Q_B \cdot Q_C$) s'appelle la <strong>retenue</strong> (carry) pour l'étage D. Si la retenue est à 1, la bascule doit commuter (toggle). Si la retenue est différente de 1 (donc 0), la bascule doit être en mode mémoire pour ne pas commuter.
+    </p>
+    <p>
+        On réalise généralement ces compteurs en utilisant des bascules JK. La condition de retenue est utilisée pour piloter les entrées J et K. Si la retenue est 1, on met J=K=1 (mode toggle). Si la retenue est 0, on met J=K=0 (mode mémoire). L'entrée T d'une bascule T équivalente serait directement ce signal de retenue. $T_i = Q_{i-1} \cdot \dots \cdot Q_A$.
+    </p>
+    <!-- Schema on next page -->
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 41 Content -->
+
+    <!-- Start Page 42 Content (PDF Page 112) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;">
+         <div>
+            <img src="placeholder_figure42a.png" alt="Figure 42a: Cycle normal du compteur par 5." class="placeholder" style="width: 250px;">
+            <p class="caption">a) Cycle normal (0-4)</p>
+        </div>
+         <div>
+            <img src="placeholder_figure42b.png" alt="Figure 42b: Cycle complet incluant états hors cycle." class="placeholder" style="width: 350px;">
+            <p class="caption">b) Cycle complet avec états hors cycle</p>
+        </div>
+    </div>
+    <p class="caption">Figure 42: Cycle de comptage du compteur par 5 (interne au 7490). Les transitions entre états se produisent sur les fronts descendants du signal présent sur l'entrée B.</p>
+    <p style="text-align: center;">(Description 42b: Montre les états 000, 001, 010, 011, 100 formant le cycle principal. Montre aussi les états 101 et 110 allant vers 010, et l'état 111 allant vers 000.)</p>
+
+    <p>
+        La manière la plus simple (en termes de structure logique) de calculer la retenue pour l'étage $i$ ($T_i = Q_{i-1} \cdot \dots \cdot Q_A$) est d'effectuer le produit ET de proche en proche, en n'utilisant que des portes AND à deux entrées : $T_i = T_{i-1} \cdot Q_{i-1}$, où $T_{i-1}$ est la retenue calculée pour l'étage précédent. Par exemple: $T_A=1$ (toujours toggle), $T_B = T_A \cdot Q_A = Q_A$, $T_C = T_B \cdot Q_B = (Q_A \cdot Q_B)$, $T_D = T_C \cdot Q_C = (Q_A \cdot Q_B) \cdot Q_C$.
+    </p>
+    <p>
+        On aboutit ainsi au schéma de la Figure 43 (page suivante) pour un compteur synchrone à <strong>retenue série</strong>. Cette structure est finalement assez peu utilisée en pratique pour les compteurs rapides. En effet, la retenue se propage en série d'un bout à l'autre du circuit à travers la chaîne de portes AND. Ce délai d'établissement de la retenue s'accumule et limite la fréquence maximum de comptage, similaire (mais moins critique) au cas des compteurs asynchrones. A l'inverse, il faut signaler que comme toutes les bascules sont synchronisées sur la même horloge, les états transitoires (glitches sur les sorties pendant la commutation) n'existent quasiment plus par rapport aux compteurs asynchrones.
+    </p>
+
+    <h4>5.3.2. Les compteurs binaires à retenue parallèle (ou anticipée).</h4>
+    <p>
+        Pour surmonter la limitation de vitesse due à la propagation série de la retenue, on utilise une structure à <strong>retenue parallèle</strong> ou <strong>anticipée</strong> (Look-Ahead Carry).
+    </p>
+    <p>
+        Pour chaque bit, par exemple le bit $i$, on calcule la retenue $T_i = Q_{i-1} \cdot \dots \cdot Q_A$ directement à partir des sorties des bits précédents en utilisant des portes AND à entrées multiples. Par exemple, pour un compteur 4 bits :
+        <br>$T_A = 1$
+        <br>$T_B = Q_A$
+        <br>$T_C = Q_A \cdot Q_B$
+        <br>$T_D = Q_A \cdot Q_B \cdot Q_C$
+    </p>
+    <p>
+        Ces portes AND à entrées multiples ne coûtent pas beaucoup plus cher que les portes à deux entrées dans les technologies intégrées et elles ont (idéalement) le même temps de propagation, quel que soit le nombre d'entrées. La retenue pour chaque étage est donc disponible beaucoup plus rapidement, après un seul délai de porte AND (plus le temps d'établissement des sorties Q). On atteint de cette façon des fréquences de comptage plus élevées.
+    </p>
+    <p>
+        On aboutit de cette façon au schéma de la Figure 44 (page suivante) sur lequel on distingue bien les portes AND multiples qui calculent directement la retenue ($T_B, T_C, T_D$) pour chaque étage. On remarque également souvent une entrée $R$ (ou $Enable$, $CET$, $CEP$) qui correspond à une retenue initiale (permettant de valider le comptage ou de cascader les compteurs) ainsi qu'une sortie $R'$ pour une éventuelle retenue propagée (ripple carry out, $RCO = T_D \cdot Q_D$) vers le compteur suivant dans le cas d'une mise en série.
+    </p>
+    <p>
+        Ces compteurs sont parfois appelés compteurs à propagation de retenue (même si la retenue est parallèle, le terme peut prêter à confusion avec la retenue série). Le terme "retenue anticipée" est plus clair.
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 42 Content -->
+
+    <!-- Start Page 43 Content (PDF Page 113) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <div>
+        <img src="placeholder_figure43.png" alt="Figure 43: Compteur synchrone à retenue série." class="placeholder">
+        <p class="caption">Figure 43 Compteur synchrone série. R correspond à la retenue initiale (entrée de validation ou Enable) et R' à la retenue finale (à transmettre, éventuellement au compteur suivant)</p>
+        <p style="text-align:center;">(Description: 4 bascules JK. CLK commun (E). J=K pour chaque bascule. $J_A=K_A=R$. $J_B=K_B=AND(R, Q_A)$. $J_C=K_C=AND(AND(R, Q_A), Q_B)$. $J_D=K_D=AND(AND(AND(R, Q_A), Q_B), Q_C)$. La sortie $R'=AND(J_D, Q_D)$.)</p>
+
+    </div>
+    <div style="margin-top: 30px;">
+        <img src="placeholder_figure44.png" alt="Figure 44: Compteur synchrone à retenue parallèle." class="placeholder">
+        <p class="caption">Figure 44 Schéma de principe d'un compteur synchrone à retenue parallèle</p>
+        <p style="text-align:center;">(Description: 4 bascules JK. CLK commun (E). J=K pour chaque bascule. $J_A=K_A=R$. $J_B=K_B=AND(R, Q_A)$. $J_C=K_C=AND(R, Q_A, Q_B)$. $J_D=K_D=AND(R, Q_A, Q_B, Q_C)$. La sortie $R'=AND(J_D, Q_D)$.)</p>
+    </div>
+
+    <h4>5.3.3. Les compteurs synchrones par 10 (Décade BCD).</h4>
+    <p>
+        Comme pour les compteurs asynchrones, on a souvent besoin de compteurs synchrones modulo N, avec $N \neq 2^n$. Une méthode courante pour réaliser un cycle de comptage tronqué (par exemple, modulo 10) à partir d'un compteur binaire synchrone (par exemple, modulo 16) est d'utiliser l'entrée de remise à zéro (CLEAR) présente sur chaque bascule du compteur.
+    </p>
+    <p>
+        Selon les compteurs, cette remise à zéro peut se faire de deux façons :
+    </p>
+    <ul>
+        <li><strong>Remise à zéro Asynchrone :</strong> En agissant sur l'entrée CLR (asynchrone) de chaque bascule. L'effet est immédiat et indépendant des impulsions arrivant sur l'horloge.</li>
+        <li><strong>Remise à zéro Synchrone :</strong> En utilisant une entrée CLEAR synchrone (parfois appelée Load ou Parallel Load avec les entrées de données à 0). La remise à zéro ne sera effective qu'au moment de la prochaine impulsion active arrivant sur l'horloge. Alternativement, on peut forcer les entrées J=0, K=1 sur toutes les bascules.</li>
+    </ul>
+    <p>
+        Les compteurs disposant d'une <strong>remise à zéro synchrone</strong> permettent de réaliser facilement des cycles de comptage par $N \neq 2^n$. Par exemple, pour réaliser un compteur par 10 (modulo 10, de 0 à 9) à partir d'un compteur synchrone par 16 (modulo 16, de 0 à 15):
+    </p>
+    <ol>
+        <li>On utilise un compteur synchrone 4 bits (par exemple, le 74163).</li>
+        <li>On décode en sortie la valeur $N-1$, c'est-à-dire 9 (binaire $1001$). Cette détection se fait avec une porte logique (ici, $Q_D \cdot Q_A = 1$).</li>
+        <li>On rétro-agit (connecte) le signal de détection de l'état 9 sur l'entrée CLEAR synchrone (souvent active bas, donc on utilise $\overline{Q_D \cdot Q_A}$) du compteur.</li>
+        <li>Ainsi, lorsque le compteur atteint l'état 9, l'entrée CLEAR synchrone est activée. À l'impulsion d'horloge <strong>suivante</strong>, le compteur sera remis à zéro (état 0000) au lieu de passer à l'état 10 (1010).</li>
+    </ol>
+    <p>
+        Le compteur effectue donc le cycle 0, 1, ..., 8, 9, 0. On réalise de la même façon des compteurs par 7, 5, 11.... La Figure 45 (page suivante) propose un exemple de compteur par 10 réalisé à partir d'un compteur synchrone par 16 de référence 74163 (qui possède une entrée $\overline{LOAD}$ synchrone utilisée ici comme Clear synchrone en mettant les entrées parallèles à 0, ou une entrée $\overline{CLR}$ synchrone sur d'autres modèles).
+    </p>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 43 Content -->
+
+    <!-- Start Page 44 Content (PDF Page 114) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <p>
+        Comme dans le cas des compteurs asynchrones, la réalisation de cycles de comptage dans des codes autres que le code binaire standard (CBN) nécessite une synthèse complète et spécifique du compteur (détermination des équations des entrées de chaque bascule en fonction de l'état présent pour obtenir l'état futur désiré), ce qui sort du cadre du cours de 1<sup>ère</sup> année.
+    </p>
+
+     <div>
+        <img src="placeholder_figure45.png" alt="Figure 45: Réalisation d'un compteur synchrone par 10 via Clear synchrone." class="placeholder">
+        <p class="caption">Figure 45 Réalisation d'un compteur synchrone par 10 en utilisant une contre réaction sur l'entrée CLEAR synchrone.</p>
+        <p style="text-align:center;">(Description: Un compteur synchrone 4 bits (boîte 74163) avec sorties QA, QB, QC, QD. Les sorties QD et QA entrent dans une porte AND, dont la sortie va sur l'entrée $\overline{CLR}$ (Clear synchrone, active bas) du compteur. L'entrée E est l'horloge. Lorsque l'état 9 (1001) est atteint, QD=1 et QA=1, la sortie de l'AND est 1, activant $\overline{CLR}$ (s'il est actif bas, il faudrait une NAND ou une inversion). Au prochain coup d'horloge, le compteur est remis à 0.)</p>
+    </div>
+
+
+    <h3>5.4. Les registres.</h3>
+
+    <h4>5.4.1. Définitions.</h4>
+    <p>
+        Les registres sont les éléments de base des mémoires réalisées avec des semi-conducteurs. On peut se représenter un registre comme un ensemble de mémoires élémentaires (bascules), susceptibles de stocker chacune un bit. Un registre de $n$ bits peut donc mémoriser une information de $n$ bits (un mot binaire).
+    </p>
+    <p>
+        L'entrée des informations dans un registre peut se faire :
+    </p>
+    <ul>
+        <li>Soit en <strong>série</strong> : les bits sont entrés les uns après les autres, sur une seule ligne d'entrée, au rythme d'une horloge.</li>
+        <li>Soit en <strong>parallèle</strong> : tous les $n$ bits sont présentés simultanément sur $n$ lignes d'entrée et chargés en une seule opération d'horloge.</li>
+    </ul>
+    <p>
+        De la même façon, la présentation (lecture) des informations mémorisées sur les sorties peut se faire :
+    </p>
+    <ul>
+        <li>Soit en <strong>série</strong> : les bits sortent les uns après les autres sur une seule ligne de sortie.</li>
+        <li>Soit en <strong>parallèle</strong> : tous les $n$ bits sont disponibles simultanément sur $n$ lignes de sortie.</li>
+    </ul>
+    <p>
+        On aboutit ainsi à 4 types de fonctionnements (et de registres) différents :
+    </p>
+    <ol>
+        <li><strong>Parallèle-Parallèle (PIPO - Parallel In, Parallel Out)</strong>: Chargement parallèle, lecture parallèle. Ce sont les registres tampon.</li>
+        <li><strong>Série-Série (SISO - Serial In, Serial Out)</strong>: Entrée série, sortie série.</li>
+        <li><strong>Série-Parallèle (SIPO - Serial In, Parallel Out)</strong>: Entrée série, lecture parallèle.</li>
+        <li><strong>Parallèle-Série (PISO - Parallel In, Serial Out)</strong>: Chargement parallèle, lecture série.</li>
+    </ol>
+    <p>Les registres permettant les opérations série sont appelés registres à décalage.</p>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 44 Content -->
+
+    <!-- Start Page 45 Content (PDF Page 115) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h4>5.4.2. Les registres tampon (PIPO).</h4>
+    <p>
+        Les registres tampon sont des registres de type parallèle-parallèle (PIPO). Ils sont constitués de $n$ bascules de type D synchrones (Flip-Flops), commandées par une même horloge CLK (Figure 46).
+    </p>
+    <p>
+        Au signal d'horloge (front actif sur CLK), les données $D_i$ présentes sur les $n$ entrées parallèles sont recopiées (mémorisées) sur les sorties $Q_i$ correspondantes. Les sorties $Q_i$ restent stables entre deux impulsions d'horloge.
+    </p>
+    <p>
+        Une entrée asynchrone $\overline{CLR}$ (Clear, active bas) permet souvent, de façon prioritaire, d'effacer le contenu du registre et d'écrire $Q_i = 0$ pour tous les bits, indépendamment de l'horloge et des entrées D.
+    </p>
+    <p>
+        Entre deux impulsions d'horloge (et quand $\overline{CLR}$ est inactif), les sorties $Q_i$ sont parfaitement isolées des variations éventuelles sur les entrées $D_i$. Le registre "mémorise" les données chargées.
+    </p>
+
+     <div>
+        <img src="placeholder_figure46.png" alt="Figure 46: Registre tampon (PIPO) à base de bascules D." class="placeholder">
+        <p class="caption">Figure 46 Registre tampon à base de bascules D</p>
+        <p style="text-align:center;">(Description: n bascules D. Chaque bascule a une entrée $D_i$ et une sortie $Q_i$. Toutes les bascules partagent la même entrée d'horloge CLK et la même entrée de Clear asynchrone $\overline{CLR}$ (active bas, indiquée par le cercle sur l'entrée CLR des bascules).)</p>
+    </div>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 45 Content -->
+
+    <!-- Start Page 46 Content (PDF Page 116) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h4>5.4.3. Les registres à décalage (Shift Registers).</h4>
+    <p>
+        Les registres à décalage sont des registres de type série-série (SISO) ou série-parallèle (SIPO), dans lesquels les informations (bits) sont décalées d'une bascule (d'une position) vers la suivante au rythme des impulsions d'une horloge. Ils sont généralement réalisés avec des bascules synchrones (Flip-Flops), souvent de type D ou RS maître-esclave.
+    </p>
+    <p>
+        Le schéma de principe d'un registre à décalage (ici, décalage vers la droite) avec entrée série est présenté sur la Figure 47. Il est constitué de plusieurs bascules connectées en cascade : la sortie $Q$ d'une bascule est connectée à l'entrée de la bascule suivante. Toutes les bascules sont commandées par la même horloge CLK.
+    </p>
+    <p>
+        Au fur et à mesure des impulsions d'horloge, la donnée présente sur l'entrée série E (appliquée à l'entrée $S_A$ de la première bascule $Q_A$) est transférée dans la première bascule. Simultanément, le contenu de la première bascule ($Q_A$) est transféré dans la deuxième ($Q_B$), celui de la deuxième dans la troisième ($Q_C$), et ainsi de suite. Le bit qui était dans la dernière bascule est perdu (ou disponible sur la sortie $Q_D$ comme sortie série).
+    </p>
+    <p>
+        Dans l'exemple de la Figure 47, des bascules RS sont utilisées (probablement implicitement des D-FlipFlops ou des RS modifiées). La présence de l'inverseur entre R et S (non montré explicitement pour chaque bascule mais indiqué conceptuellement par $S = \overline{R}$) assure que les entrées R et S sont toujours complémentaires, forçant la bascule à être soit en mode SET ($S=1, R=0$) soit en mode RESET ($S=0, R=1$). Dans ces conditions, la sortie $Q_i$ de chaque bascule recopie, au moment de l'impulsion d'horloge, la valeur présente sur son entrée $S_i$ (qui est la sortie $Q_{i-1}$ de la bascule précédente, ou l'entrée E pour la première).
+    </p>
+
+     <div>
+        <img src="placeholder_figure47.png" alt="Figure 47: Schéma de principe d'un registre à décalage série (droite)." class="placeholder">
+        <p class="caption">Figure 47 Schéma de principe d'un registre à décalage avec une entrée série (E). Le décalage se fait de $Q_A$ vers $Q_B$, etc.</p>
+        <p style="text-align:center;">(Description: 4 bascules RS (ou D) en cascade. Entrée série E -> S de la 1ère bascule ($Q_A$). $Q_A \to S$ de la 2ème ($Q_B$). $Q_B \to S$ de la 3ème ($Q_C$). $Q_C \to S$ de la 4ème ($Q_D$). Toutes les bascules partagent la même horloge CLK. Implicitement R = $\overline{S}$ pour chaque bascule.)</p>
+    </div>
+
+    <p>Donnons un exemple de fonctionnement pour fixer les idées. On suppose que la situation de départ est la suivante: Entrée série $E = 0$, et seule la sortie $Q_A$ de la première bascule est au niveau 1, les autres étant au niveau 0 (état initial $Q_A Q_B Q_C Q_D = 1000$).</p>
+    <ul>
+        <li>
+            <strong>1<sup>ère</sup> impulsion d'horloge :</strong> Chaque bascule recopie sur sa sortie Q la valeur présente sur son entrée S (qui est la sortie Q de la bascule précédente, ou E pour $Q_A$).
+            <br> - $Q_A$ recopie E=0 $\to Q_A=0$.
+            <br> - $Q_B$ recopie $Q_A=1$ (valeur avant l'horloge) $\to Q_B=1$.
+            <br> - $Q_C$ recopie $Q_B=0$ $\to Q_C=0$.
+            <br> - $Q_D$ recopie $Q_C=0$ $\to Q_D=0$.
+            <br>On obtient donc après l'impulsion l'état $Q_A Q_B Q_C Q_D = 0100$. Le '1' a été décalé d'une position vers la droite.
+        </li>
+        <li>
+            <strong>2<sup>ème</sup> impulsion d'horloge :</strong> L'entrée E est toujours 0. L'état avant est 0100.
+            <br> - $Q_A$ recopie E=0 $\to Q_A=0$.
+            <br> - $Q_B$ recopie $Q_A=0$ $\to Q_B=0$.
+            <br> - $Q_C$ recopie $Q_B=1$ $\to Q_C=1$.
+            <br> - $Q_D$ recopie $Q_C=0$ $\to Q_D=0$.
+            <br>Après l'impulsion, on a donc $Q_A Q_B Q_C Q_D = 0010$. Le '1' s'est encore décalé.
+        </li>
+    </ul>
+    <p>
+        On raisonne de la même façon pour la troisième impulsion et l'on aboutit à
+        <!-- Continuation on next page -->
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 46 Content -->
+
+     <!-- Start Page 47 Content (PDF Page 117) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+    <!-- Continuation from previous page -->
+    l'état $Q_A Q_B Q_C Q_D = 0001$. Ainsi, au fur et à mesure des impulsions sur l'entrée d'horloge (CLK), le '1' présent initialement sur $Q_A$ a été progressivement décalé vers la droite à travers le registre.
+
+    <h4>5.4.4. Les registres universels.</h4>
+    <p>
+        Dans la pratique, il est inutile d'effectuer la synthèse (conception détaillée) des registres à décalage : un choix très vaste est offert par les constructeurs de circuits intégrés.
+    </p>
+    <p>
+        À titre d'exemple, citons les <strong>registres universels</strong>, comme le type '194' (par exemple 74HC194, 74LS194, etc.) dont le schéma fonctionnel et la table de vérité sont présentés sur la page suivante (Figure 48). Ce sont des registres (généralement 4 bits) très flexibles qui combinent plusieurs modes de fonctionnement :
+    </p>
+    <ul>
+        <li><strong>Chargement parallèle :</strong> Les 4 bits peuvent être chargés simultanément via des entrées parallèles (A, B, C, D).</li>
+        <li><strong>Chargement série :</strong> Les données peuvent être entrées bit par bit via une entrée série.</li>
+        <li><strong>Décalage à droite :</strong> L'information peut être décalée de $Q_A$ vers $Q_D$. Une entrée série spécifique (Serial Right, SR SER) fournit le bit entrant en $Q_A$.</li>
+        <li><strong>Décalage à gauche :</strong> L'information peut être décalée de $Q_D$ vers $Q_A$. Une autre entrée série (Serial Left, SL SER) fournit le bit entrant en $Q_D$.</li>
+        <li><strong>Maintien / Mémoire :</strong> Le contenu du registre peut être maintenu sans changement.</li>
+        <li><strong>Remise à zéro asynchrone :</strong> Une entrée $\overline{CLEAR}$ permet d'effacer le contenu (mettre tous les bits à 0) de manière asynchrone.</li>
+    </ul>
+    <p>
+        Le mode de fonctionnement est choisi avec des entrées de commande synchrones $S_0$ et $S_1$ (Mode Control), dont la combinaison sélectionne l'opération effectuée au prochain front actif de l'horloge (voir la table de vérité Figure 48).
+    </p>
+
+    <h4>5.4.5. Applications des registres à décalage</h4>
+    <p>
+        Les registres à décalage sont utilisés dans de nombreuses applications, comme par exemple:
+    </p>
+    <ul>
+        <li>La <strong>conversion parallèle-série</strong> (registre PISO) : On charge les données en parallèle, puis on les lit en série bit par bit en appliquant des impulsions d'horloge. Utile pour la transmission de données sur une seule ligne.</li>
+        <li>La <strong>conversion série-parallèle</strong> (registre SIPO) : On entre les données en série, puis on les lit toutes en même temps sur les sorties parallèles après $n$ coups d'horloge. Utile pour la réception de données série.</li>
+        <li>La <strong>mise en mémoire temporaire</strong> (buffer), avant affichage par exemple, des sorties d'un compteur (registre PIPO ou SIPO).</li>
+        <li>La <strong>génération de séquences</strong> binaires spécifiques ou pseudo-aléatoires (en rebouclant certaines sorties sur l'entrée série via des portes logiques, par exemple pour les LFSR - Linear Feedback Shift Registers).</li>
+        <li>La <strong>réalisation de compteurs</strong> dans des codes autres que le code binaire naturel (par exemple, compteur en anneau, compteur Johnson).</li>
+        <li>La <strong>multiplication (ou division)</strong> d'un nombre binaire par une puissance de 2 ($2^p$) se traduit simplement par un décalage de tous les bits de $p$ cases vers la gauche (pour la multiplication) ou vers la droite (pour la division entière).</li>
+    </ul>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 47 Content -->
+
+    <!-- Start Page 48 Content (PDF Page 118) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+     <div>
+        <img src="placeholder_figure48.png" alt="Figure 48: Schéma et table de fonction d'un registre à décalage universel (type 74xx194)." class="placeholder" style="max-width: 100%;">
+        <p class="caption">Figure 48 Schéma d'un registre à décalage universel type 194</p>
+        <p style="text-align: center;">(Description: Contient la table de fonction ("Function Table") montrant les différents modes (Clear, Parallel Load, Shift Right, Shift Left, Hold) en fonction des entrées CLEAR, S1, S0 et CLOCK. Montre aussi le diagramme logique ("logic diagram") interne du registre 4 bits avec les bascules, les multiplexeurs de sélection de mode, et les entrées/sorties parallèles et série.)</p>
+    </div>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 48 Content -->
+
+     <!-- Start Page 49 Content (PDF Page 119) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>5.5. Les mémoires à semi-conducteur.</h3>
+    <p>
+        Contrairement aux systèmes analogiques qui traitent généralement l'information en temps réel, les systèmes numériques permettent de <strong>mémoriser</strong> des informations (données, instructions) avant ou pendant leur traitement. La capacité de mémorisation est fondamentale pour les ordinateurs et de nombreux autres systèmes numériques.
+    </p>
+    <p>
+        Actuellement, on distingue trois grands types technologiques de mémoires (voir Figure 49, page suivante) :
+    </p>
+    <ul>
+        <li>Les mémoires <strong>magnétiques</strong> comme par exemple les disques durs (HDD) ou les anciennes disquettes et bandes magnétiques. Elles offrent de grandes capacités de stockage non volatile mais avec des temps d'accès relativement lents.</li>
+        <li>Les mémoires à <strong>semi-conducteur</strong> telles que les RAM ou les ROM. Elles sont basées sur des circuits intégrés et offrent des temps d'accès beaucoup plus rapides. Elles peuvent être volatiles (RAM) ou non volatiles (ROM).</li>
+        <li>Les mémoires <strong>optiques</strong> comme les CD, les DVD et les Blu-ray. Elles sont lues par laser et offrent un stockage non volatile de grande capacité, principalement pour la distribution de contenu ou l'archivage.</li>
+    </ul>
+    <p>
+        Dans ce cours, nous ne décrirons que les mémoires à semi-conducteurs (et très brièvement les mémoires optiques mentionnées comme exemple).
+    </p>
+
+    <h4>5.5.1. Les mémoires vives (RAM).</h4>
+    <p>
+        Les mémoires vives ou <strong>RAM (Random Access Memory)</strong> sont des mémoires à semi-conducteur qui peuvent être <strong>lues</strong> ou <strong>écrites</strong> rapidement (quasi-instantanément) en fonction des besoins de l'utilisateur. Les temps d'accès (temps nécessaire pour lire ou écrire une donnée) sont de l'ordre de quelques nanosecondes à quelques dizaines de nanosecondes (10 à 50 ns, voire moins pour les technologies modernes).
+    </p>
+    <p>
+        Historiquement, le nom de RAM (Accès Aléatoire) est apparu pour signifier que, contrairement aux supports séquentiels comme les bandes magnétiques qui étaient alors les seuls supports d'information existants, il n'est pas nécessaire de faire défiler toutes les données situées avant l'information que l'on cherche pour y accéder. On peut accéder directement à n'importe quelle case mémoire (via son adresse) avec un temps d'accès quasi constant, d'où le terme "aléatoire" (au sens de "n'importe quel endroit").
+    </p>
+    <p>
+        Ce type de mémoire est largement utilisé dans tous les systèmes ayant besoin de stocker temporairement de l'information pendant leur fonctionnement, comme par exemple la mémoire principale des micro-ordinateurs (pour stocker le système d'exploitation, les applications en cours et les données utilisateur).
+    </p>
+    <p>
+        Leur inconvénient majeur est la <strong>volatilité</strong> : elles perdent toute l'information stockée en cas de coupure de l'alimentation électrique.
+    </p>
+    <p>
+        En pratique, il existe deux grandes sortes (technologies) de mémoires vives (RAM) : les RAM statiques (SRAM) et les RAM dynamiques (DRAM).
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 49 Content -->
+
+     <!-- Start Page 50 Content (PDF Page 120) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+     <div>
+        <img src="placeholder_figure49.png" alt="Figure 49: Classification des différents types de mémoires." class="placeholder" style="max-width: 100%;">
+        <p class="caption">Figure 49 Les différents types de mémoires</p>
+        <p style="text-align: center;">(Description: Diagramme arborescent classifiant les mémoires. Racine "Mémoires". Branches principales: "Mémoires à semi-conducteurs", "Mémoires magnétiques", "Mémoires optiques", "Mémoires holographiques". Semi-conducteurs -> "Mémoires vives (RAM)" et "Mémoires mortes (ROM)". RAM -> "DRAM", "SRAM". ROM -> "Non programmables (ROM)" et "Electriquement programmables". Prog -> "PROM", "EPROM", "EEPROM". Optiques -> "CD / DVD".)</p>
+    </div>
+
+    <h6>a. Les RAM statiques (SRAM).</h6>
+    <p>
+        L'unité de base (cellule mémoire 1 bit) d'une SRAM est typiquement une <strong>bascule</strong> (flip-flop), par exemple une bascule D ou une bascule RS (Figure 50, non fournie, mais on peut imaginer une bascule D avec des contrôles d'accès). La mémorisation repose sur l'état stable (0 ou 1) de la bascule.
+    </p>
+    <ul>
+        <li><strong>Phase d'écriture :</strong> Pour écrire une donnée, la ligne de sélection de la cellule est activée, et la donnée présente sur le bus de données (D) est recopiée dans la bascule au moment d'une impulsion d'horloge ou via un signal d'écriture (Write Enable).</li>
+        <li><strong>Phase de lecture :</strong> Pour lire la donnée, la ligne de sélection est activée, ce qui connecte la sortie (Q) de la bascule au bus de données.</li>
+    </ul>
+    <p>
+        Tant que l'alimentation est maintenue, la bascule conserve son état (d'où le terme "statique"), sans besoin de rafraîchissement. Les SRAM sont rapides mais leurs cellules (souvent 6 transistors par bit) prennent plus de place sur le silicium que les cellules DRAM.
+    </p>
+
+    <h6>b. Les RAM dynamiques (DRAM).</h6>
+    <p>
+        Le principe de fonctionnement d'une cellule mémoire DRAM est assez simple puisqu'il s'agit, pour mémoriser un bit (1 ou 0), de <strong>charger ou de décharger un petit condensateur</strong><sup>12</sup>. La présence d'une charge représente un 1, l'absence de charge un 0 (ou vice-versa). La cellule DRAM de base est très simple (typiquement un seul transistor et un condensateur).
+    </p>
+    <p>
+        Cependant, en raison des inévitables courants de fuite à travers le transistor et le diélectrique du condensateur, l'information stockée (la charge) tend à se dégrader au cours du temps (le condensateur se décharge). Ces mémoires doivent donc être périodiquement <strong>rafraîchies</strong> : leur contenu doit être lu puis réécrit à intervalle régulier (typiquement toutes les quelques dizaines de millisecondes, par exemple 20 ms) pour maintenir l'information. Des circuits de contrôle spécifiques gèrent ce rafraîchissement.
+    </p>
+    <p>
+        Malgré cet inconvénient (complexité du rafraîchissement, légère latence associée), les DRAM sont très fréquemment utilisées comme mémoire principale des ordinateurs car leur simplicité (taille réduite de la cellule mémoire) permet de les intégrer en très grande densité (plus grand nombre de bits par puce de silicium) et à moindre coût que leurs concurrentes statiques (SRAM).
+    </p>
+     <p class="footnote">
+        <sup>12</sup> En pratique, les "condensateurs" sont souvent les capacités parasites des grilles de transistors MOS ou des structures dédiées intégrées sur la puce.
+    </p>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 50 Content -->
+
+
+    <!-- KaTeX render script configuration -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                macros: {
+                    "\\bar": "\\overline", // Define \bar as \overline for consistency
+                    "\\arrow": "\\rightarrow",
+                    "\\phi": "\\times" // Use 'X' or times symbol for don't care
+                },
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+</html>
