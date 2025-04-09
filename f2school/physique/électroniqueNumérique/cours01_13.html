@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Électronique Numérique - Chapitre 5: Compteurs, Registres, Mémoires</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            counter-reset: page 40; /* Start page numbering from 41 (PDF page 111) */
+        }
+
+        header,
+        footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #555;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        footer::after {
+          counter-increment: page;
+          content: "Page " counter(page);
+          position: absolute;
+          right: 0;
+        }
+
+        footer {
+            border-top: 1px solid #ccc;
+            border-bottom: none;
+            margin-top: 15px;
+            padding-top: 5px;
+            text-align: center; /* Center text potentially, but page number is on the right */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        h1 { font-size: 2em; text-align: center; }
+        h2 { font-size: 1.8em; border-bottom: 1px solid #eee; padding-bottom: 0.3em; margin-top: 2em;}
+        h3 { font-size: 1.6em; margin-top: 2em; }
+        h4 { font-size: 1.4em; margin-top: 1.8em; }
+        h5 { font-size: 1.2em; margin-top: 1.5em; }
+        h6 { font-size: 1.1em; font-style: italic; margin-top: 1.5em;}
+
+
+        img.placeholder {
+            display: block;
+            max-width: 90%;
+            min-height: 100px;
+            border: 1px dashed #aaa;
+            margin: 15px auto;
+            padding: 10px;
+            text-align: center;
+            color: #888;
+            background-color: #f9f9f9;
+        }
+
+        .caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 1em;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .footnote {
+            font-size: 0.85em;
+            margin-top: 15px;
+            color: #444;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Adjust KaTeX display alignment */
+        .katex-display {
+            text-align: center;
+            margin: 1em 0;
+        }
+        .katex-display > .katex {
+            display: inline-block;
+            text-align: initial;
+        }
+         .exercise-section h3, .exercise-section h4, .exercise-section h5 {
+            margin-top: 1.5em;
+            border-top: none;
+            padding-top: 0;
+        }
+        .correction-section h4, .correction-section h5, .correction-section h6 {
+             margin-top: 1.5em; /* Reduced top margin for exercise headings */
+             border-top: none; /* Remove top border */
+             padding-top: 0; /* Remove padding */
+        }
+        .correction-section > h5:first-of-type {
+             margin-top: 2em;
+             border-top: 2px solid #ccc;
+             padding-top: 1em;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Start Previous Content (Pages 1-40 / PDF 71-110) -->
+    <!-- ... [HTML content from the previous responses would go here] ... -->
+    <!-- End Previous Content -->
+
+    <!-- Start Page 41 Content (PDF Page 111) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h6>d. Evolution des états non compris dans le cycle de comptage (suite).</h6>
+
+    <p>Pour répondre à la question sur le devenir des états non utilisés (101, 110, 111), il faut, pour chaque état, établir les valeurs des entrées des bascules ($J_B, K_B, J_C, K_C, S, R$) puis déterminer l'état suivant après une impulsion d'horloge (front descendant sur B pour $Q_B, Q_C, Q_D$). Rappel des équations des entrées synchrones (avec J=K=1 pour $Q_C$):</p>
+    $J_B = \overline{Q_D}$, $K_B = 1$
+    <br>$J_C = 1$, $K_C = 1$ (Toggle, si horloge active)
+    <br>$S = Q_B \cdot Q_C$, $R = Q_D$ (Pour la bascule $Q_D$)
+
+    <p><strong>Analyse des états hors cycle :</strong></p>
+    <ul>
+        <li>
+            Pour l'état $Q_D Q_C Q_B = 101$ (état 5):
+            <br>Entrées : $J_B = \overline{1} = 0$, $K_B = 1$. $J_C = 1$, $K_C = 1$. $S = 1 \cdot 0 = 0$, $R = 1$.
+            <br>Comportement à l'impulsion d'horloge (front descendant sur B): $Q_B$ (avec $J_B=0, K_B=1$) est Reset $\to 0$. $Q_C$ reçoit une horloge $Q_B: 1\to0$, donc $Q_C$ (avec $J_C=1, K_C=1$) -> Toggle ($0 \to 1$). $Q_D$ (avec $S=0, R=1$) est Reset $\to 0$.
+            <br>L'état futur sera donc $Q_D Q_C Q_B = 010$ (état 2). L'état 101 évolue ainsi vers l'état 010, qui appartient au cycle de comptage normal.
+        </li>
+        <li>
+            Pour l'état $Q_D Q_C Q_B = 110$ (état 6):
+            <br>Entrées : $J_B = \overline{1} = 0$, $K_B = 1$. $J_C = 1$, $K_C = 1$. $S = 0 \cdot 1 = 0$, $R = 1$.
+            <br>Comportement à l'impulsion d'horloge (front descendant sur B): $Q_B$ (avec $J_B=0, K_B=1$) est Reset $\to 0$ (reste à 0). Puisque $Q_B$ ne fait pas $1 \to 0$, $Q_C$ ne reçoit pas de front descendant et ne toggle pas, $Q_C$ reste à 1. Pour $Q_D$, $S=0, R=1$, donc $Q_D$ est Reset $\to 0$.
+            <br>L'état futur sera donc $Q_D Q_C Q_B = 010$ (état 2). L'état 110 évolue vers 010.
+        </li>
+        <li>
+            Pour l'état $Q_D Q_C Q_B = 111$ (état 7):
+            <br>Entrées : $J_B = \overline{1} = 0$, $K_B = 1$. $J_C = 1$, $K_C = 1$. $S = 1 \cdot 1 = 1$, $R = 1$.
+            <br>Comportement à l'impulsion d'horloge (front descendant sur B): $Q_B$ (avec $J_B=0, K_B=1$) est Reset $\to 0$. $Q_C$ reçoit horloge $Q_B: 1\to0$, donc $Q_C$ (avec $J_C=1, K_C=1$) -> Toggle ($1 \to 0$). $Q_D$ (avec $S=1, R=1$, condition interdite RS). Si Reset prioritaire, $Q_D \to 0$.
+            <br>L'état futur sera donc $Q_D Q_C Q_B = 000$ (état 0). L'état 111 évolue vers 000.
+        </li>
+    </ul>
+    <p>
+        Conclusion: Les trois états en dehors du cycle évoluent donc, en une seule impulsion d'horloge, vers un état du cycle de comptage normal (0 ou 2). Le compteur n'est pas bloqué. La Figure 42.b) (page suivante) schématise le fonctionnement complet du compteur avec l'évolution des états hors cycle.
+    </p>
+
+    <h3>5.3. Les compteurs synchrones.</h3>
+
+    <h4>5.3.1. Les compteurs binaires à retenue série.</h4>
+    <p>
+        Rappelons que dans un compteur synchrone (architecture synchrone), chaque bit de sortie $Q_i$ commute ($0 \leftrightarrow 1$) si, et seulement si, tous les bits de poids inférieurs ($Q_{i-1} \dots Q_A$) sont au niveau haut (condition 2 de 5.1.2). L'horloge externe est connectée à toutes les bascules.
+    </p>
+    <p>
+        La condition "tous les bits de poids inférieurs sont au niveau haut" est calculée logiquement. Par exemple, la bascule représentant le bit $Q_D$ (4ème bit, $i=3$) commute si $Q_A \cdot Q_B \cdot Q_C = 1$. Cette quantité logique ($Q_A \cdot Q_B \cdot Q_C$) s'appelle la <strong>retenue</strong> (carry) pour l'étage D. Si la retenue est à 1, la bascule doit commuter (toggle). Si la retenue est différente de 1 (donc 0), la bascule doit être en mode mémoire pour ne pas commuter.
+    </p>
+    <p>
+        On réalise généralement ces compteurs en utilisant des bascules JK. La condition de retenue est utilisée pour piloter les entrées J et K. Si la retenue est 1, on met J=K=1 (mode toggle). Si la retenue est 0, on met J=K=0 (mode mémoire). L'entrée T d'une bascule T équivalente serait directement ce signal de retenue. $T_i = Q_{i-1} \cdot \dots \cdot Q_A$.
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 41 Content -->
+
+    <!-- Start Page 42 Content (PDF Page 112) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;">
+         <div>
+            <img src="placeholder_figure42a.png" alt="Figure 42a: Cycle normal du compteur par 5." class="placeholder" style="width: 250px;">
+            <p class="caption">a) Cycle normal (0-4)</p>
+        </div>
+         <div>
+            <img src="placeholder_figure42b.png" alt="Figure 42b: Cycle complet incluant états hors cycle." class="placeholder" style="width: 350px;">
+            <p class="caption">b) Cycle complet avec états hors cycle</p>
+        </div>
+    </div>
+    <p class="caption">Figure 42: Cycle de comptage du compteur par 5 (interne au 7490). Les transitions entre états se produisent sur les fronts descendants du signal présent sur l'entrée B.</p>
+    <p style="text-align: center;">(Description 42b: Montre les états 000, 001, 010, 011, 100 formant le cycle principal. Montre aussi les états 101 et 110 allant vers 010, et l'état 111 allant vers 000.)</p>
+
+    <p>
+        La manière la plus simple (en termes de structure logique) de calculer la retenue pour l'étage $i$ ($T_i = Q_{i-1} \cdot \dots \cdot Q_A$) est d'effectuer le produit ET de proche en proche, en n'utilisant que des portes AND à deux entrées : $T_i = T_{i-1} \cdot Q_{i-1}$, où $T_{i-1}$ est la retenue calculée pour l'étage précédent. Par exemple: $T_A=1$ (toujours toggle), $T_B = T_A \cdot Q_A = Q_A$, $T_C = T_B \cdot Q_B = (Q_A \cdot Q_B)$, $T_D = T_C \cdot Q_C = (Q_A \cdot Q_B) \cdot Q_C$.
+    </p>
+    <p>
+        On aboutit ainsi au schéma de la Figure 43 (page suivante) pour un compteur synchrone à <strong>retenue série</strong>. Cette structure est finalement assez peu utilisée en pratique pour les compteurs rapides. En effet, la retenue se propage en série d'un bout à l'autre du circuit à travers la chaîne de portes AND. Ce délai d'établissement de la retenue s'accumule et limite la fréquence maximum de comptage, similaire (mais moins critique) au cas des compteurs asynchrones. A l'inverse, il faut signaler que comme toutes les bascules sont synchronisées sur la même horloge, les états transitoires (glitches sur les sorties pendant la commutation) n'existent quasiment plus par rapport aux compteurs asynchrones.
+    </p>
+
+    <h4>5.3.2. Les compteurs binaires à retenue parallèle (ou anticipée).</h4>
+    <p>
+        Pour surmonter la limitation de vitesse due à la propagation série de la retenue, on utilise une structure à <strong>retenue parallèle</strong> ou <strong>anticipée</strong> (Look-Ahead Carry).
+    </p>
+    <p>
+        Pour chaque bit, par exemple le bit $i$, on calcule la retenue $T_i = Q_{i-1} \cdot \dots \cdot Q_A$ directement à partir des sorties des bits précédents en utilisant des portes AND à entrées multiples. Par exemple, pour un compteur 4 bits :
+        <br>$T_A = 1$
+        <br>$T_B = Q_A$
+        <br>$T_C = Q_A \cdot Q_B$
+        <br>$T_D = Q_A \cdot Q_B \cdot Q_C$
+    </p>
+    <p>
+        Ces portes AND à entrées multiples ne coûtent pas beaucoup plus cher que les portes à deux entrées dans les technologies intégrées et elles ont (idéalement) le même temps de propagation, quel que soit le nombre d'entrées. La retenue pour chaque étage est donc disponible beaucoup plus rapidement, après un seul délai de porte AND (plus le temps d'établissement des sorties Q). On atteint de cette façon des fréquences de comptage plus élevées.
+    </p>
+    <p>
+        On aboutit de cette façon au schéma de la Figure 44 (page suivante) sur lequel on distingue bien les portes AND multiples qui calculent directement la retenue ($T_B, T_C, T_D$) pour chaque étage. On remarque également souvent une entrée $R$ (ou $Enable$, $CET$, $CEP$) qui correspond à une retenue initiale (permettant de valider le comptage ou de cascader les compteurs) ainsi qu'une sortie $R'$ pour une éventuelle retenue propagée (ripple carry out, $RCO = T_D \cdot Q_D$) vers le compteur suivant dans le cas d'une mise en série.
+    </p>
+    <p>
+        Ces compteurs sont parfois appelés compteurs à propagation de retenue (même si la retenue est parallèle, le terme peut prêter à confusion avec la retenue série). Le terme "retenue anticipée" est plus clair.
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 42 Content -->
+
+    <!-- Start Page 43 Content (PDF Page 113) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <div>
+        <img src="placeholder_figure43.png" alt="Figure 43: Compteur synchrone à retenue série." class="placeholder">
+        <p class="caption">Figure 43 Compteur synchrone série. R correspond à la retenue initiale (entrée de validation ou Enable) et R' à la retenue finale (à transmettre, éventuellement au compteur suivant)</p>
+        <p style="text-align:center;">(Description: 4 bascules JK. CLK commun (E). J=K pour chaque bascule. $J_A=K_A=R$. $J_B=K_B=AND(R, Q_A)$. $J_C=K_C=AND(AND(R, Q_A), Q_B)$. $J_D=K_D=AND(AND(AND(R, Q_A), Q_B), Q_C)$. La sortie $R'=AND(J_D, Q_D)$.)</p>
+    </div>
+    <div style="margin-top: 30px;">
+        <img src="placeholder_figure44.png" alt="Figure 44: Compteur synchrone à retenue parallèle." class="placeholder">
+        <p class="caption">Figure 44 Schéma de principe d'un compteur synchrone à retenue parallèle</p>
+        <p style="text-align:center;">(Description: 4 bascules JK. CLK commun (E). J=K pour chaque bascule. $J_A=K_A=R$. $J_B=K_B=AND(R, Q_A)$. $J_C=K_C=AND(R, Q_A, Q_B)$. $J_D=K_D=AND(R, Q_A, Q_B, Q_C)$. La sortie $R'=AND(J_D, Q_D)$.)</p>
+    </div>
+
+    <h4>5.3.3. Les compteurs synchrones par 10 (Décade BCD).</h4>
+    <p>
+        Comme pour les compteurs asynchrones, on a souvent besoin de compteurs synchrones modulo N, avec $N \neq 2^n$. Une méthode courante pour réaliser un cycle de comptage tronqué (par exemple, modulo 10) à partir d'un compteur binaire synchrone (par exemple, modulo 16) est d'utiliser l'entrée de remise à zéro (CLEAR) présente sur chaque bascule du compteur.
+    </p>
+    <p>
+        Selon les compteurs, cette remise à zéro peut se faire de deux façons :
+    </p>
+    <ul>
+        <li><strong>Remise à zéro Asynchrone :</strong> En agissant sur l'entrée CLR (asynchrone) de chaque bascule. L'effet est immédiat et indépendant des impulsions arrivant sur l'horloge.</li>
+        <li><strong>Remise à zéro Synchrone :</strong> En utilisant une entrée CLEAR synchrone (parfois appelée Load ou Parallel Load avec les entrées de données à 0). La remise à zéro ne sera effective qu'au moment de la prochaine impulsion active arrivant sur l'horloge. Alternativement, on peut forcer les entrées J=0, K=1 sur toutes les bascules.</li>
+    </ul>
+    <p>
+        Les compteurs disposant d'une <strong>remise à zéro synchrone</strong> permettent de réaliser facilement des cycles de comptage par $N \neq 2^n$. Par exemple, pour réaliser un compteur par 10 (modulo 10, de 0 à 9) à partir d'un compteur synchrone par 16 (modulo 16, de 0 à 15):
+    </p>
+    <ol>
+        <li>On utilise un compteur synchrone 4 bits (par exemple, le 74163).</li>
+        <li>On décode en sortie la valeur $N-1$, c'est-à-dire 9 (binaire $1001$). Cette détection se fait avec une porte logique (ici, $Q_D \cdot Q_A = 1$).</li>
+        <li>On rétro-agit (connecte) le signal de détection de l'état 9 sur l'entrée CLEAR synchrone (souvent active bas, donc on utilise $\overline{Q_D \cdot Q_A}$) du compteur.</li>
+        <li>Ainsi, lorsque le compteur atteint l'état 9, l'entrée CLEAR synchrone est activée. À l'impulsion d'horloge <strong>suivante</strong>, le compteur sera remis à zéro (état 0000) au lieu de passer à l'état 10 (1010).</li>
+    </ol>
+    <p>
+        Le compteur effectue donc le cycle 0, 1, ..., 8, 9, 0. On réalise de la même façon des compteurs par 7, 5, 11.... La Figure 45 (page suivante) propose un exemple de compteur par 10 réalisé à partir d'un compteur synchrone par 16 de référence 74163 (qui possède une entrée $\overline{LOAD}$ synchrone utilisée ici comme Clear synchrone en mettant les entrées parallèles à 0, ou une entrée $\overline{CLR}$ synchrone sur d'autres modèles).
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 43 Content -->
+
+    <!-- Start Page 44 Content (PDF Page 114) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <p>
+        Comme dans le cas des compteurs asynchrones, la réalisation de cycles de comptage dans des codes autres que le code binaire standard (CBN) nécessite une synthèse complète et spécifique du compteur (détermination des équations des entrées de chaque bascule en fonction de l'état présent pour obtenir l'état futur désiré), ce qui sort du cadre du cours de 1<sup>ère</sup> année.
+    </p>
+
+     <div>
+        <img src="placeholder_figure45.png" alt="Figure 45: Réalisation d'un compteur synchrone par 10 via Clear synchrone." class="placeholder">
+        <p class="caption">Figure 45 Réalisation d'un compteur synchrone par 10 en utilisant une contre réaction sur l'entrée CLEAR synchrone.</p>
+        <p style="text-align:center;">(Description: Un compteur synchrone 4 bits (boîte 74163) avec sorties QA, QB, QC, QD. Les sorties QD et QA entrent dans une porte AND, dont la sortie va sur l'entrée $\overline{CLR}$ (Clear synchrone, active bas) du compteur. L'entrée E est l'horloge. Lorsque l'état 9 (1001) est atteint, QD=1 et QA=1, la sortie de l'AND est 1, activant $\overline{CLR}$ (s'il est actif bas, il faudrait une NAND ou une inversion). Au prochain coup d'horloge, le compteur est remis à 0.)</p>
+    </div>
+
+    <h3>5.4. Les registres.</h3>
+
+    <h4>5.4.1. Définitions.</h4>
+    <p>
+        Les registres sont les éléments de base des mémoires réalisées avec des semi-conducteurs. On peut se représenter un registre comme un ensemble de mémoires élémentaires (bascules), susceptibles de stocker chacune un bit. Un registre de $n$ bits peut donc mémoriser une information de $n$ bits (un mot binaire).
+    </p>
+    <p>
+        L'entrée des informations dans un registre peut se faire :
+    </p>
+    <ul>
+        <li>Soit en <strong>série</strong> : les bits sont entrés les uns après les autres, sur une seule ligne d'entrée, au rythme d'une horloge.</li>
+        <li>Soit en <strong>parallèle</strong> : tous les $n$ bits sont présentés simultanément sur $n$ lignes d'entrée et chargés en une seule opération d'horloge.</li>
+    </ul>
+    <p>
+        De la même façon, la présentation (lecture) des informations mémorisées sur les sorties peut se faire :
+    </p>
+    <ul>
+        <li>Soit en <strong>série</strong> : les bits sortent les uns après les autres sur une seule ligne de sortie.</li>
+        <li>Soit en <strong>parallèle</strong> : tous les $n$ bits sont disponibles simultanément sur $n$ lignes de sortie.</li>
+    </ul>
+    <p>
+        On aboutit ainsi à 4 types de fonctionnements (et de registres) différents :
+    </p>
+    <ol>
+        <li><strong>Parallèle-Parallèle (PIPO - Parallel In, Parallel Out)</strong>: Chargement parallèle, lecture parallèle. Ce sont les registres tampon.</li>
+        <li><strong>Série-Série (SISO - Serial In, Serial Out)</strong>: Entrée série, sortie série.</li>
+        <li><strong>Série-Parallèle (SIPO - Serial In, Parallel Out)</strong>: Entrée série, lecture parallèle.</li>
+        <li><strong>Parallèle-Série (PISO - Parallel In, Serial Out)</strong>: Chargement parallèle, lecture série.</li>
+    </ol>
+    <p>Les registres permettant les opérations série sont appelés registres à décalage.</p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 44 Content -->
+
+    <!-- Start Page 45 Content (PDF Page 115) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h4>5.4.2. Les registres tampon (PIPO).</h4>
+    <p>
+        Les registres tampon sont des registres de type parallèle-parallèle (PIPO). Ils sont constitués de $n$ bascules de type D synchrones (Flip-Flops), commandées par une même horloge CLK (Figure 46).
+    </p>
+    <p>
+        Au signal d'horloge (front actif sur CLK), les données $D_i$ présentes sur les $n$ entrées parallèles sont recopiées (mémorisées) sur les sorties $Q_i$ correspondantes. Les sorties $Q_i$ restent stables entre deux impulsions d'horloge.
+    </p>
+    <p>
+        Une entrée asynchrone $\overline{CLR}$ (Clear, active bas) permet souvent, de façon prioritaire, d'effacer le contenu du registre et d'écrire $Q_i = 0$ pour tous les bits, indépendamment de l'horloge et des entrées D.
+    </p>
+    <p>
+        Entre deux impulsions d'horloge (et quand $\overline{CLR}$ est inactif), les sorties $Q_i$ sont parfaitement isolées des variations éventuelles sur les entrées $D_i$. Le registre "mémorise" les données chargées.
+    </p>
+
+     <div>
+        <img src="placeholder_figure46.png" alt="Figure 46: Registre tampon (PIPO) à base de bascules D." class="placeholder">
+        <p class="caption">Figure 46 Registre tampon à base de bascules D</p>
+        <p style="text-align:center;">(Description: n bascules D. Chaque bascule a une entrée $D_i$ et une sortie $Q_i$. Toutes les bascules partagent la même entrée d'horloge CLK et la même entrée de Clear asynchrone $\overline{CLR}$ (active bas, indiquée par le cercle sur l'entrée CLR des bascules).)</p>
+    </div>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 45 Content -->
+
+    <!-- Start Page 46 Content (PDF Page 116) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h4>5.4.3. Les registres à décalage (Shift Registers).</h4>
+    <p>
+        Les registres à décalage sont des registres de type série-série (SISO) ou série-parallèle (SIPO), dans lesquels les informations (bits) sont décalées d'une bascule (d'une position) vers la suivante au rythme des impulsions d'une horloge. Ils sont généralement réalisés avec des bascules synchrones (Flip-Flops), souvent de type D ou RS maître-esclave.
+    </p>
+    <p>
+        Le schéma de principe d'un registre à décalage (ici, décalage vers la droite) avec entrée série est présenté sur la Figure 47. Il est constitué de plusieurs bascules connectées en cascade : la sortie $Q$ d'une bascule est connectée à l'entrée de la bascule suivante. Toutes les bascules sont commandées par la même horloge CLK.
+    </p>
+    <p>
+        Au fur et à mesure des impulsions d'horloge, la donnée présente sur l'entrée série E (appliquée à l'entrée $S_A$ de la première bascule $Q_A$) est transférée dans la première bascule. Simultanément, le contenu de la première bascule ($Q_A$) est transféré dans la deuxième ($Q_B$), celui de la deuxième dans la troisième ($Q_C$), et ainsi de suite. Le bit qui était dans la dernière bascule est perdu (ou disponible sur la sortie $Q_D$ comme sortie série).
+    </p>
+    <p>
+        Dans l'exemple de la Figure 47, des bascules RS sont utilisées (probablement implicitement des D-FlipFlops ou des RS modifiées). La présence de l'inverseur entre R et S (non montré explicitement pour chaque bascule mais indiqué conceptuellement par $S = \overline{R}$) assure que les entrées R et S sont toujours complémentaires, forçant la bascule à être soit en mode SET ($S=1, R=0$) soit en mode RESET ($S=0, R=1$). Dans ces conditions, la sortie $Q_i$ de chaque bascule recopie, au moment de l'impulsion d'horloge, la valeur présente sur son entrée $S_i$ (qui est la sortie $Q_{i-1}$ de la bascule précédente, ou l'entrée E pour la première).
+    </p>
+
+     <div>
+        <img src="placeholder_figure47.png" alt="Figure 47: Schéma de principe d'un registre à décalage série (droite)." class="placeholder">
+        <p class="caption">Figure 47 Schéma de principe d'un registre à décalage avec une entrée série (E). Le décalage se fait de $Q_A$ vers $Q_B$, etc.</p>
+        <p style="text-align:center;">(Description: 4 bascules RS (ou D) en cascade. Entrée série E -> S de la 1ère bascule ($Q_A$). $Q_A \to S$ de la 2ème ($Q_B$). $Q_B \to S$ de la 3ème ($Q_C$). $Q_C \to S$ de la 4ème ($Q_D$). Toutes les bascules partagent la même horloge CLK. Implicitement R = $\overline{S}$ pour chaque bascule.)</p>
+    </div>
+
+    <p>Donnons un exemple de fonctionnement pour fixer les idées. On suppose que la situation de départ est la suivante: Entrée série $E = 0$, et seule la sortie $Q_A$ de la première bascule est au niveau 1, les autres étant au niveau 0 (état initial $Q_A Q_B Q_C Q_D = 1000$).</p>
+    <ul>
+        <li>
+            <strong>1<sup>ère</sup> impulsion d'horloge :</strong> Chaque bascule recopie sur sa sortie Q la valeur présente sur son entrée S (qui est la sortie Q de la bascule précédente, ou E pour $Q_A$).
+            <br> - $Q_A$ recopie E=0 $\to Q_A=0$.
+            <br> - $Q_B$ recopie $Q_A=1$ (valeur avant l'horloge) $\to Q_B=1$.
+            <br> - $Q_C$ recopie $Q_B=0$ $\to Q_C=0$.
+            <br> - $Q_D$ recopie $Q_C=0$ $\to Q_D=0$.
+            <br>On obtient donc après l'impulsion l'état $Q_A Q_B Q_C Q_D = 0100$. Le '1' a été décalé d'une position vers la droite.
+        </li>
+        <li>
+            <strong>2<sup>ème</sup> impulsion d'horloge :</strong> L'entrée E est toujours 0. L'état avant est 0100.
+            <br> - $Q_A$ recopie E=0 $\to Q_A=0$.
+            <br> - $Q_B$ recopie $Q_A=0$ $\to Q_B=0$.
+            <br> - $Q_C$ recopie $Q_B=1$ $\to Q_C=1$.
+            <br> - $Q_D$ recopie $Q_C=0$ $\to Q_D=0$.
+            <br>Après l'impulsion, on a donc $Q_A Q_B Q_C Q_D = 0010$. Le '1' s'est encore décalé.
+        </li>
+    </ul>
+    <p>
+        On raisonne de la même façon pour la troisième impulsion et l'on aboutit à
+        <!-- Continuation on next page -->
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 46 Content -->
+
+     <!-- Start Page 47 Content (PDF Page 117) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+    <!-- Continuation from previous page -->
+    l'état $Q_A Q_B Q_C Q_D = 0001$. Ainsi, au fur et à mesure des impulsions sur l'entrée d'horloge (CLK), le '1' présent initialement sur $Q_A$ a été progressivement décalé vers la droite à travers le registre.
+
+    <h4>5.4.4. Les registres universels.</h4>
+    <p>
+        Dans la pratique, il est inutile d'effectuer la synthèse (conception détaillée) des registres à décalage : un choix très vaste est offert par les constructeurs de circuits intégrés.
+    </p>
+    <p>
+        À titre d'exemple, citons les <strong>registres universels</strong>, comme le type '194' (par exemple 74HC194, 74LS194, etc.) dont le schéma fonctionnel et la table de vérité sont présentés sur la page suivante (Figure 48). Ce sont des registres (généralement 4 bits) très flexibles qui combinent plusieurs modes de fonctionnement :
+    </p>
+    <ul>
+        <li><strong>Chargement parallèle :</strong> Les 4 bits peuvent être chargés simultanément via des entrées parallèles (A, B, C, D).</li>
+        <li><strong>Chargement série :</strong> Les données peuvent être entrées bit par bit via une entrée série.</li>
+        <li><strong>Décalage à droite :</strong> L'information peut être décalée de $Q_A$ vers $Q_D$. Une entrée série spécifique (Serial Right, SR SER) fournit le bit entrant en $Q_A$.</li>
+        <li><strong>Décalage à gauche :</strong> L'information peut être décalée de $Q_D$ vers $Q_A$. Une autre entrée série (Serial Left, SL SER) fournit le bit entrant en $Q_D$.</li>
+        <li><strong>Maintien / Mémoire :</strong> Le contenu du registre peut être maintenu sans changement.</li>
+        <li><strong>Remise à zéro asynchrone :</strong> Une entrée $\overline{CLEAR}$ permet d'effacer le contenu (mettre tous les bits à 0) de manière asynchrone.</li>
+    </ul>
+    <p>
+        Le mode de fonctionnement est choisi avec des entrées de commande synchrones $S_0$ et $S_1$ (Mode Control), dont la combinaison sélectionne l'opération effectuée au prochain front actif de l'horloge (voir la table de vérité Figure 48).
+    </p>
+
+    <h4>5.4.5. Applications des registres à décalage</h4>
+    <p>
+        Les registres à décalage sont utilisés dans de nombreuses applications, comme par exemple:
+    </p>
+    <ul>
+        <li>La <strong>conversion parallèle-série</strong> (registre PISO) : On charge les données en parallèle, puis on les lit en série bit par bit en appliquant des impulsions d'horloge. Utile pour la transmission de données sur une seule ligne.</li>
+        <li>La <strong>conversion série-parallèle</strong> (registre SIPO) : On entre les données en série, puis on les lit toutes en même temps sur les sorties parallèles après $n$ coups d'horloge. Utile pour la réception de données série.</li>
+        <li>La <strong>mise en mémoire temporaire</strong> (buffer), avant affichage par exemple, des sorties d'un compteur (registre PIPO ou SIPO).</li>
+        <li>La <strong>génération de séquences</strong> binaires spécifiques ou pseudo-aléatoires (en rebouclant certaines sorties sur l'entrée série via des portes logiques, par exemple pour les LFSR - Linear Feedback Shift Registers).</li>
+        <li>La <strong>réalisation de compteurs</strong> dans des codes autres que le code binaire naturel (par exemple, compteur en anneau, compteur Johnson).</li>
+        <li>La <strong>multiplication (ou division)</strong> d'un nombre binaire par une puissance de 2 ($2^p$) se traduit simplement par un décalage de tous les bits de $p$ cases vers la gauche (pour la multiplication) ou vers la droite (pour la division entière).</li>
+    </ul>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 47 Content -->
+
+    <!-- Start Page 48 Content (PDF Page 118) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+     <div>
+        <img src="placeholder_figure48.png" alt="Figure 48: Schéma et table de fonction d'un registre à décalage universel (type 74xx194)." class="placeholder" style="max-width: 100%;">
+        <p class="caption">Figure 48 Schéma d'un registre à décalage universel type 194</p>
+        <p style="text-align: center;">(Description: Contient la table de fonction ("Function Table") montrant les différents modes (Clear, Parallel Load, Shift Right, Shift Left, Hold) en fonction des entrées CLEAR, S1, S0 et CLOCK. Montre aussi le diagramme logique ("logic diagram") interne du registre 4 bits avec les bascules, les multiplexeurs de sélection de mode, et les entrées/sorties parallèles et série.)</p>
+    </div>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 48 Content -->
+
+     <!-- Start Page 49 Content (PDF Page 119) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>5.5. Les mémoires à semi-conducteur.</h3>
+    <p>
+        Contrairement aux systèmes analogiques qui traitent généralement l'information en temps réel, les systèmes numériques permettent de <strong>mémoriser</strong> des informations (données, instructions) avant ou pendant leur traitement. La capacité de mémorisation est fondamentale pour les ordinateurs et de nombreux autres systèmes numériques.
+    </p>
+    <p>
+        Actuellement, on distingue trois grands types technologiques de mémoires (voir Figure 49, page suivante) :
+    </p>
+    <ul>
+        <li>Les mémoires <strong>magnétiques</strong> comme par exemple les disques durs (HDD) ou les anciennes disquettes et bandes magnétiques. Elles offrent de grandes capacités de stockage non volatile mais avec des temps d'accès relativement lents.</li>
+        <li>Les mémoires à <strong>semi-conducteur</strong> telles que les RAM ou les ROM. Elles sont basées sur des circuits intégrés et offrent des temps d'accès beaucoup plus rapides. Elles peuvent être volatiles (RAM) ou non volatiles (ROM).</li>
+        <li>Les mémoires <strong>optiques</strong> comme les CD, les DVD et les Blu-ray. Elles sont lues par laser et offrent un stockage non volatile de grande capacité, principalement pour la distribution de contenu ou l'archivage.</li>
+    </ul>
+    <p>
+        Dans ce cours, nous ne décrirons que les mémoires à semi-conducteurs (et très brièvement les mémoires optiques mentionnées comme exemple).
+    </p>
+
+    <h4>5.5.1. Les mémoires vives (RAM).</h4>
+    <p>
+        Les mémoires vives ou <strong>RAM (Random Access Memory)</strong> sont des mémoires à semi-conducteur qui peuvent être <strong>lues</strong> ou <strong>écrites</strong> rapidement (quasi-instantanément) en fonction des besoins de l'utilisateur. Les temps d'accès (temps nécessaire pour lire ou écrire une donnée) sont de l'ordre de quelques nanosecondes à quelques dizaines de nanosecondes (10 à 50 ns, voire moins pour les technologies modernes).
+    </p>
+    <p>
+        Historiquement, le nom de RAM (Accès Aléatoire) est apparu pour signifier que, contrairement aux supports séquentiels comme les bandes magnétiques qui étaient alors les seuls supports d'information existants, il n'est pas nécessaire de faire défiler toutes les données situées avant l'information que l'on cherche pour y accéder. On peut accéder directement à n'importe quelle case mémoire (via son adresse) avec un temps d'accès quasi constant, d'où le terme "aléatoire" (au sens de "n'importe quel endroit").
+    </p>
+    <p>
+        Ce type de mémoire est largement utilisé dans tous les systèmes ayant besoin de stocker temporairement de l'information pendant leur fonctionnement, comme par exemple la mémoire principale des micro-ordinateurs (pour stocker le système d'exploitation, les applications en cours et les données utilisateur).
+    </p>
+    <p>
+        Leur inconvénient majeur est la <strong>volatilité</strong> : elles perdent toute l'information stockée en cas de coupure de l'alimentation électrique.
+    </p>
+    <p>
+        En pratique, il existe deux grandes sortes (technologies) de mémoires vives (RAM) : les RAM statiques (SRAM) et les RAM dynamiques (DRAM).
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 49 Content -->
+
+     <!-- Start Page 50 Content (PDF Page 120) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+     <div>
+        <img src="placeholder_figure49.png" alt="Figure 49: Classification des différents types de mémoires." class="placeholder" style="max-width: 100%;">
+        <p class="caption">Figure 49 Les différents types de mémoires</p>
+        <p style="text-align: center;">(Description: Diagramme arborescent classifiant les mémoires. Racine "Mémoires". Branches principales: "Mémoires à semi-conducteurs", "Mémoires magnétiques", "Mémoires optiques", "Mémoires holographiques". Semi-conducteurs -> "Mémoires vives (RAM)" et "Mémoires mortes (ROM)". RAM -> "DRAM", "SRAM". ROM -> "Non programmables (ROM)" et "Electriquement programmables". Prog -> "PROM", "EPROM", "EEPROM". Optiques -> "CD / DVD".)</p>
+    </div>
+
+    <h6>a. Les RAM statiques (SRAM).</h6>
+    <p>
+        L'unité de base (cellule mémoire 1 bit) d'une SRAM est typiquement une <strong>bascule</strong> (flip-flop), par exemple une bascule D ou une bascule RS (voir Figure 50, page suivante). La mémorisation repose sur l'état stable (0 ou 1) de la bascule.
+    </p>
+    <ul>
+        <li><strong>Phase d'écriture :</strong> Pour écrire une donnée, la ligne de sélection de la cellule est activée, et la donnée présente sur le bus de données (D) est recopiée dans la bascule au moment d'une impulsion d'horloge ou via un signal d'écriture (Write Enable).</li>
+        <li><strong>Phase de lecture :</strong> Pour lire la donnée, la ligne de sélection est activée, ce qui connecte la sortie (Q) de la bascule au bus de données.</li>
+    </ul>
+    <p>
+        Tant que l'alimentation est maintenue, la bascule conserve son état (d'où le terme "statique"), sans besoin de rafraîchissement. Les SRAM sont rapides mais leurs cellules (souvent 6 transistors par bit) prennent plus de place sur le silicium que les cellules DRAM.
+    </p>
+
+    <h6>b. Les RAM dynamiques (DRAM).</h6>
+    <p>
+        Le principe de fonctionnement d'une cellule mémoire DRAM est assez simple puisqu'il s'agit, pour mémoriser un bit (1 ou 0), de <strong>charger ou de décharger un petit condensateur</strong><sup>12</sup>. La présence d'une charge représente un 1, l'absence de charge un 0 (ou vice-versa). La cellule DRAM de base est très simple (typiquement un seul transistor et un condensateur).
+    </p>
+    <p>
+        Cependant, en raison des inévitables courants de fuite à travers le transistor et le diélectrique du condensateur, l'information stockée (la charge) tend à se dégrader au cours du temps (le condensateur se décharge). Ces mémoires doivent donc être périodiquement <strong>rafraîchies</strong> : leur contenu doit être lu puis réécrit à intervalle régulier (typiquement toutes les quelques dizaines de millisecondes, par exemple 20 ms) pour maintenir l'information. Des circuits de contrôle spécifiques gèrent ce rafraîchissement.
+    </p>
+    <p>
+        Malgré cet inconvénient (complexité du rafraîchissement, légère latence associée), les DRAM sont très fréquemment utilisées comme mémoire principale des ordinateurs car leur simplicité (taille réduite de la cellule mémoire) permet de les intégrer en très grande densité (plus grand nombre de bits par puce de silicium) et à moindre coût que leurs concurrentes statiques (SRAM).
+    </p>
+     <p class="footnote">
+        <sup>12</sup> En pratique, les "condensateurs" sont souvent les capacités parasites des grilles de transistors MOS ou des structures dédiées intégrées sur la puce.
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 50 Content -->
+
+     <!-- Start Page 51 Content (PDF Page 121) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+     <div>
+        <img src="placeholder_figure50.png" alt="Figure 50: Cellule élémentaire SRAM." class="placeholder">
+        <p class="caption">Figure 50 Cellule élémentaire d'une mémoire RAM statique (SRAM).</p>
+        <p style="text-align:center;">(Description: Une bascule D (entrée D, sortie Q, horloge CLK). Une ligne "Sélection lecture" active une porte (AND?) connectant Q à la sortie "LECTURE". Une ligne "Sélection écriture" et une entrée "ECRITURE" contrôlent l'entrée D et/ou l'horloge CLK pour l'écriture.)</p>
+    </div>
+
+
+    <h4>5.5.2. Les mémoires mortes (ROM).</h4>
+    <p>
+        Les mémoires mortes ou <strong>ROM (Read Only Memory)</strong> ne sont accessibles qu'en <strong>lecture</strong>. Leur contenu est défini lors de leur fabrication ou par une opération de programmation spécifique, et ne peut pas être modifié par l'utilisateur pendant le fonctionnement normal du système. Elles sont utilisées pour stocker des informations permanentes (programmes, tables de constantes, etc.).
+    </p>
+    <p>
+        Elles doivent être programmées en dehors du système où elles sont exploitées. Selon le mode d'écriture (programmation) et son caractère définitif ou pas, on distingue différents types de mémoires mortes :
+    </p>
+
+    <h6>a. Les ROM (Mask ROM).</h6>
+    <p>
+        Les ROM "pures" (parfois appelées Mask ROM) sont écrites (programmées) <strong>une fois pour toutes en usine</strong> chez le fabriquant de la mémoire, lors de la fabrication du circuit intégré. Cette programmation est faite directement sur le "wafer" (galette de silicium) à l'aide de <strong>masques photographiques</strong> qui définissent les interconnexions ou la présence/absence de transistors pour coder les 0 et les 1. Bien évidemment, la fabrication de ROM par masque ne se conçoit que pour des <strong>séries très importantes</strong> (typiquement > 10 000 unités) afin d'amortir les coûts fixes de création des masques.
+    </p>
+
+    <h6>b. Les PROM (Programmable ROM).</h6>
+    <p>
+        Si l'écriture est réalisée par l'utilisateur (ou un centre spécialisé) <strong>après la fabrication</strong> de la mémoire, à l'aide d'un appareil appelé "programmateur de PROM", on parle de <strong>PROM (Programmable ROM)</strong>.
+    </p>
+    <p>
+        En pratique, les PROM sont constituées par un réseau de diodes ou de transistors connectés via des <strong>fusibles</strong> microscopiques. Initialement, tous les fusibles sont intacts, ce qui correspond généralement à un état logique défini (par exemple, 0). La programmation est réalisée en "grillant" (détruisant) sélectivement certains fusibles du réseau en appliquant une tension relativement élevée (10-15 V) et un courant important pendant une courte durée (quelques millisecondes) à l'adresse et pour le bit désiré. La destruction du fusible change l'état logique mémorisé (par exemple, à 1). Cette opération est <strong>irréversible</strong> : une PROM ne peut être programmée qu'une seule fois (on parle aussi d'OTP - One Time Programmable).
+    </p>
+    <p>
+        Considérons, par exemple, la PROM de 4 mots de 5 bits ($4 \times 5 = 20$ bits) représentée sur la Figure 51 (page suivante). Un décodeur 2 vers 4 (avec entrées d'adresse $a_1, a_0$ et sorties actives à l'état bas) permet de sélectionner une ligne (mot) parmi les 4. Par exemple, si l'adresse $a_1 a_0 = 01$, la ligne notée '01' est forcée à 0 et les autres lignes restent à 1. Les 5 bits de sortie ($S_4 \dots S_0$) sont connectés à ces lignes via des diodes/fusibles.
+    </p>
+    <ul>
+        <li><strong>Figure 51.a (Avant programmation):</strong> Tous les fusibles sont intacts (toutes les diodes sont connectées). Lorsque la ligne '01' est sélectionnée (à 0), toutes les sorties $S_i$ sont tirées à 0 via les diodes. Les sorties valent donc 00000. (Le texte dit "toutes les sorties sont au niveau bas", ce qui suggère que l'état initial est 0).</li>
+        <li><strong>Figure 51.b (Après programmation):</strong> Certains fusibles ont été détruits. Si le fusible entre la ligne '01' et la sortie $S_i$ est détruit, $S_i$ ne sera plus tirée à 0 et restera au niveau haut (via une résistance de pull-up, non montrée, ou par défaut). Si le fusible (diode) est présent, $S_i$ sera à 0. Le contenu de la mémoire (le mot de 5 bits à l'adresse 01) est ainsi défini par la présence ou l'absence des fusibles/diodes.</li>
+    </ul>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 51 Content -->
+
+    <!-- Start Page 52 Content (PDF Page 122) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <p>
+        Après programmation (destruction de certains fusibles/diodes), on peut obtenir la situation représentée sur la Figure 51.b. Une ligne de sortie ($S_i$) vaut 1 en l'absence de diode (liaison détruite) entre elle et la ligne d'adresse sélectionnée (qui est à 0). À l'inverse, si une diode est présente, elle ramène le potentiel de la ligne de sortie à 0. Le contenu de cette mémoire 20 bits (4 mots de 5 bits) après programmation pourrait être le suivant (selon la Figure 51.b implicite et la table fournie) :
+    </p>
+     <table>
+        <thead>
+            <tr><th colspan="2">Adresse</th> <th colspan="5">Sorties</th></tr>
+            <tr><th>$a_1$</th><th>$a_0$</th> <th>$S_4$</th><th>$S_3$</th><th>$S_2$</th><th>$S_1$</th><th>$S_0$</th></tr>
+        </thead>
+         <tbody>
+            <tr><td>0</td><td>0</td> <td>0</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td> <td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td> <td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td> <td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+        </tbody>
+    </table>
+
+    <p>Les PROM sont plutôt utilisées pour des systèmes fabriqués en séries restreintes ou dont le programme est susceptible d'être mis à jour (par remplacement de la PROM).</p>
+
+    <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+         <div>
+            <img src="placeholder_figure51a.png" alt="Figure 51a: Principe PROM avant programmation." class="placeholder" style="width: 300px;">
+            <p class="caption">a) Avant programmation</p>
+        </div>
+         <div>
+            <img src="placeholder_figure51b.png" alt="Figure 51b: Principe PROM après programmation." class="placeholder" style="width: 300px;">
+            <p class="caption">b) Après programmation</p>
+        </div>
+    </div>
+     <p class="caption">Figure 51 Principe de la programmation d'une mémoire PROM. a) avant la programmation. b) après la programmation.</p>
+     <p style="text-align:center;">(Description: Un décodeur 2 vers 4 sélectionne une ligne (00, 01, 10, 11) en la mettant à 0. Les lignes de sortie S0-S4 sont tirées vers 5V (haut). Des diodes connectent chaque intersection ligne/colonne. a) Toutes les diodes sont présentes. Si une ligne est à 0, les sorties connectées sont à 0. b) Certaines diodes/fusibles sont détruites (absentes). Si la diode est absente, la sortie reste à 1 même si la ligne est à 0.)</p>
+
+
+    <h6>c. Les PROM effaçables.</h6>
+    <p>
+        Il existe des PROM que l'on peut effacer et reprogrammer plusieurs fois :
+    </p>
+    <ul>
+        <li>Les <strong>EPROM (Erasable PROM)</strong> : Elles utilisent une technologie de stockage de charge sur une grille flottante de transistor MOS. Elles sont programmées électriquement (comme les PROM, mais avec des tensions différentes et des mécanismes de charge). L'effacement se fait en exposant la puce de silicium (visible à travers une fenêtre en quartz sur le boîtier) à des rayons <strong>UV (ultraviolets)</strong> intenses pendant plusieurs minutes. Cette exposition dissipe les charges stockées et remet la mémoire à son état initial (généralement tout à 1).</li>
+        <li>Les <strong>EEPROM (Electrical Erasable PROM)</strong> ou E<sup>2</sup>PROM : Elles sont également basées sur la technologie des grilles flottantes, mais peuvent être effacées <strong>électriquement</strong>, octet par octet ou par blocs, sans nécessiter de rayons UV ni de démontage du composant. Il est bien entendu possible de réécrire dans ces mémoires effaçables.</li>
+        <li>Les mémoires <strong>Flash</strong> : C'est une variante des EEPROM, optimisée pour un effacement par blocs (secteurs) plutôt qu'octet par octet, ce qui les rend plus rapides pour l'effacement et l'écriture de grandes quantités de données.</li>
+    </ul>
+    <p>
+        Les EPROM et les EEPROM (et Flash) sont surtout utilisées dans les phases de <strong>développement</strong> de systèmes (pour tester et modifier facilement le programme) ou dans les systèmes fabriqués en très petites séries, ou encore pour stocker des paramètres ou des firmwares qui peuvent nécessiter des mises à jour occasionnelles.
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 52 Content -->
+
+    <!-- Start Page 53 Content (PDF Page 123) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h4>5.5.3. Organisation d'une mémoire.</h4>
+    <p>
+        D'un point de vue logique, une mémoire (RAM ou ROM) est constituée d'un ensemble de <strong>registres</strong> de taille fixe (par exemple, 8 bits ou 1 octet), chacun associé à une <strong>adresse</strong> unique. L'un de ces registres est en relation avec l'extérieur (le bus de données) soit pour sa lecture (ROM) soit pour sa lecture ou son écriture (RAM).
+    </p>
+    <p>
+        La Figure 52 (page suivante) représente l'organisation interne typique d'une RAM composée de 64 registres de 8 bits.
+    </p>
+    <ul>
+        <li><strong>Taille des registres (Largeur)</strong>: La taille (en bits) des registres définit le format ou la largeur du mot de la mémoire (ici 8 bits, soit 1 octet). C'est le nombre de bits qui sont lus ou écrits en une seule opération.</li>
+        <li><strong>Nombre de registres (Profondeur)</strong>: Le nombre de registres détermine la capacité totale de la mémoire (ici 64 registres, donc une capacité de $64 \times 8 = 512$ bits, soit 64 octets).</li>
+    </ul>
+
+    <h6>a. Les données (Bus de données).</h6>
+    <p>
+        Pour limiter au maximum l'encombrement du composant (le nombre de broches du circuit intégré), on utilise généralement les mêmes pattes physiques (broches) pour les entrées de données (Input lors de l'écriture) et les sorties de données (Output lors de la lecture) de la RAM. Ces broches bidirectionnelles constituent le <strong>bus de données</strong> (Data Bus, souvent noté $D_0 \dots D_7$ ou $I/O_1 \dots I/O_8$ pour une mémoire 8 bits).
+    </p>
+    <p>
+        On gagne ainsi un facteur 2 sur le nombre de broches dédiées aux données (ici, 8 broches au lieu de 8 pour l'entrée + 8 pour la sortie = 16), mais il faut bien sûr ajouter une entrée de contrôle supplémentaire pour spécifier si la RAM fonctionne en mode lecture (les données sortent sur le bus) ou en mode écriture (les données entrent depuis le bus). Cette entrée est souvent appelée $\overline{OE}$ (Output Enable, active bas)<sup>13</sup> ou $\overline{RD}$ (Read). Pour la RAM considérée ici (64x8), le gain en broches est de $16/2 - 1 (\text{pour } \overline{OE}) = 7$ broches.
+    </p>
+
+    <h6>b. Les adresses (Bus d'adresses).</h6>
+    <p>
+        Le choix du registre (case mémoire) auquel on veut accéder (lire ou écrire) est réalisé en décodant l'<strong>adresse</strong> fournie sur le bus d'adresses. Pour accéder à l'un des 64 registres, il faut $n$ bits d'adresse tels que $2^n \ge 64$. Ici, $2^6 = 64$, donc il faut 6 bits d'adresse, notés $A_5 A_4 A_3 A_2 A_1 A_0$. $A_5$ est le bit d'adresse de poids fort (MSB) et $A_0$ le bit de poids faible (LSB). L'adresse $A_5 A_4 A_3 A_2 A_1 A_0 = 001101$ (binaire pour 13) désigne ainsi le registre n°13 (le 14ème registre, si on commence à 0).
+    </p>
+    <p>
+        Là encore, des "astuces de câblage" (multiplexage d'adresses) permettent de réduire le nombre de broches physiques nécessaires pour les mémoires de grande capacité. Par exemple, une mémoire de 1 Méga-Octet (1 Mo = $2^{20}$ octets) nécessite 20 bits d'adresse ($A_{19} \dots A_0$). Au lieu d'avoir 20 broches dédiées à l'adresse, on peut réduire ce nombre par 2 (à 10 broches) en transmettant l'adresse en deux paquets consécutifs de 10 bits (adresse de ligne puis adresse de colonne), synchronisés par des signaux de contrôle supplémentaires (RAS, CAS pour les DRAM).
+    </p>
+
+    <h6>c. Gestion des cycles d'écriture et de lecture (Signaux de contrôle).</h6>
+    <p>
+        En plus de l'entrée $\overline{OE}$ (Output Enable) décrite précédemment (qui contrôle la direction du bus de données, souvent active bas pour la lecture), les RAM possèdent souvent au moins
+        <!-- Continuation on next page -->
+    </p>
+     <p class="footnote">
+        <sup>13</sup> En électronique, les broches des composants ont souvent des noms mnémotechniques en rapport avec leur fonction. Par convention, si le nom est surmonté d'une barre (ou précédé/suivi d'un #, *, / selon les notations), la fonction est active au niveau logique bas (0V). Ainsi, $\overline{OE} = 0$ place la RAM en mode lecture (active les sorties sur le bus), et $\overline{OE} = 1$ met les sorties en haute impédance (désactivées). L'exemple du texte original semble utiliser OE actif haut pour la lecture (OE=1 lecture, OE=0 écriture/haute impédance), ce qui est moins courant. Nous utiliserons la convention $\overline{OE}$ active bas pour lecture.
+    </p>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 53 Content -->
+
+    <!-- Start Page 54 Content (PDF Page 124) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+    <!-- Continuation from previous page -->
+    deux autres entrées de contrôle :
+    </p>
+    <ul>
+        <li>L'entrée $\overline{CS}$ (Chip Select, Sélection de Circuit, active bas) : Elle permet d'activer le composant mémoire. Si $\overline{CS}=1$, la mémoire est désactivée (mode veille ou "standby") pour réduire la consommation électrique, et elle n'interagit pas avec les bus d'adresse et de données. Si $\overline{CS}=0$, la mémoire est active et répond aux autres signaux de contrôle. Ceci permet de connecter plusieurs mémoires sur les mêmes bus et de n'en sélectionner qu'une à la fois.</li>
+        <li>L'entrée $\overline{WE}$ (Write Enable, Validation d'Écriture, active bas) : Elle autorise l'opération d'écriture dans la RAM (si $\overline{CS}=0$ également). Si $\overline{WE}=0$, les données présentes sur le bus de données sont écrites dans la case mémoire sélectionnée par l'adresse. Si $\overline{WE}=1$, l'écriture est inhibée (et si $\overline{OE}=0$, c'est une opération de lecture).</li>
+    </ul>
+
+     <div>
+        <img src="placeholder_figure52.png" alt="Figure 52: Organisation d'une mémoire RAM 64x8 bits." class="placeholder">
+        <p class="caption">Figure 52 Schéma de l'organisation d'une mémoire RAM 64x8 bits.</p>
+        <p style="text-align:center;">(Description: Un bloc "Décodeur 1 parmi 64" reçoit les 6 bits d'adresse $A_0-A_5$ et sélectionne une des 64 lignes. Chaque ligne active un "Registre" (0 à 63). Tous les registres sont connectés à un "Tampon entrées / sorties" bidirectionnel de 8 bits ($I/O_1 - I/O_8$). Ce tampon est contrôlé par $\overline{OE}$ (Output Enable). L'opération d'écriture est contrôlée par $\overline{WE}$ (Write Enable) et la sélection globale par $\overline{CS}$ (Chip Select).)</p>
+    </div>
+
+    <p>
+        Tout cela fait beaucoup d'entrées pour un seul composant, et il convient, lorsque l'on veut utiliser une RAM, de respecter une certaine <strong>chronologie</strong> (timing) pour les signaux d'adresse, de données et de contrôle.
+    </p>
+    <p>
+        En général, dans un <strong>cycle d'écriture</strong>, il faut :
+    </p>
+    <ol>
+        <li>Tout d'abord sélectionner le composant ($\overline{CS} = 0$).</li>
+        <li>S'assurer que la mémoire n'est pas en mode lecture ($\overline{OE} = 1$).</li>
+        <li>Fixer l'adresse ($A_0 \dots A_5$) de la case mémoire à écrire.</li>
+        <li>Placer les données à écrire sur le bus de données ($I/O_1 \dots I/O_8$).</li>
+        <li>Ensuite seulement, donner l'ordre d'écriture en activant $\overline{WE}$ ($\overline{WE}: 1 \to 0$). L'impulsion $\overline{WE}$ doit rester active pendant une durée minimale spécifiée.</li>
+        <li>Désactiver $\overline{WE}$ ($\overline{WE}: 0 \to 1$). Les données et l'adresse doivent être maintenues stables pendant un certain temps après la désactivation de $\overline{WE}$ (hold time).</li>
+    </ol>
+    <p>
+        Cette chronologie (simplifiée) est illustrée sur la Figure 53 (page suivante). Un cycle de lecture suit une chronologie similaire mais en activant $\overline{OE}=0$ et gardant $\overline{WE}=1$.
+    </p>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 54 Content -->
+
+     <!-- Start Page 55 Content (PDF Page 125) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+     <div>
+        <img src="placeholder_figure53.png" alt="Figure 53: Cycle d'écriture dans une RAM." class="placeholder">
+        <p class="caption">Figure 53 Cycle d'écriture dans une RAM.</p>
+        <p style="text-align:center;">(Description: Chronogramme montrant les signaux $\overline{CS}$, $\overline{OE}$, Adresses, Données, $\overline{WE}$. $\overline{CS}$ est bas pendant le cycle. $\overline{OE}$ est haut. Les Adresses sont stables. Les Données à écrire sont placées sur le bus. $\overline{WE}$ passe à bas puis revient à haut pour déclencher l'écriture. Les zones hachurées indiquent des états indéfinis ou haute impédance pour les données avant/après le cycle d'écriture.)</p>
+    </div>
+
+    <p>
+        En plus des mémoires à base de semiconducteurs, il existe aujourd'hui d'autres types de mémoires basées sur le stockage optique de l'information. Même si ces mémoires sortent, à priori, du cadre de ce chapitre sur l'électronique numérique, il n'est pas inutile d'avoir quelques idées sur leur fonctionnement, d'autant plus qu'elles équipent la totalité des ordinateurs actuels (lecteurs/graveurs CD/DVD).
+    </p>
+
+    <h3>5.6. Les mémoires optiques CD et DVD.</h3>
+    <p>
+        Les CD (Compact Disk) et DVD (Digital Versatile Disc) sont extrêmement répandus aujourd'hui. Ils sont utilisés pour stocker de la musique (CD Audio), des données informatiques (CD-ROM, DVD-ROM) ou de la vidéo (DVD Vidéo). Du fait de leur "facilité" de fabrication et d'utilisation, ils sont devenus un système standard de diffusion et de stockage de l'information. Les principes de stockage de l'information sur ces deux types de supports sont semblables (gravure de microcuvettes le long d'une spirale lue par laser), avec des densités plus élevées pour le DVD. Nous commencerons par étudier les CD.
+    </p>
+
+    <h4>5.6.1. Les CD préenregistrés (CD-ROM).</h4>
+
+    <h6>a. Stockage de l'information.</h6>
+    <p>
+        Un CD est essentiellement un simple morceau de plastique transparent (polycarbonate) d'environ 1,2 mm d'épaisseur. L'information (les données numériques, codées) est écrite (gravée) lors de la fabrication le long d'une <strong>spirale</strong> très longue (environ 5 km !) qui se déroule de l'intérieur vers l'extérieur du disque (Figure 54.a).
+    </p>
+    <p>
+        Au cours de la fabrication (pressage), l'information est stockée sous forme de <strong>microcuvettes</strong> (pits) gravées sur une des faces du disque. Les zones non gravées entre les cuvettes sont appelées "plats" (lands). Cette face gravée est ensuite recouverte d'une fine couche métallique réfléchissante (aluminium, argent ou or), puis d'un revêtement de vernis acrylique pour protéger le dépôt métallique (Figure 54.b).
+    </p>
+    <p>
+        Ce qui est réellement impressionnant sur un CD, ce sont les dimensions de ces microcuvettes (Figure 55, page suivante) :
+    </p>
+    <ul>
+        <li>Profondeur : environ 125 nm (nanomètres)</li>
+        <li>Largeur : environ 500 nm</li>
+        <li>Longueur : variable, de 830 nm au minimum jusqu'à environ 3 µm.</li>
+        <li>Séparation entre les pistes de la spirale : 1,6 µm (micromètres).</li>
+    </ul>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 55 Content -->
+
+     <!-- Start Page 56 Content (PDF Page 126) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <p>
+        ($1\,\mathrm{nm} = 10^{-9}\,\mathrm{m} = 1\,\mathrm{milliardième}$ de mètre). Les sillons (pistes) de la spirale étant séparés de 1,6 µm, on peut calculer que l'information est stockée sur une longueur totale d'environ 5 kilomètres !
+    </p>
+
+    <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;">
+        <div>
+            <img src="placeholder_figure54a.png" alt="Figure 54a: Spirale de données sur un CD." class="placeholder" style="width: 200px;">
+            <p class="caption">a)</p>
+        </div>
+        <div>
+            <img src="placeholder_figure54b.png" alt="Figure 54b: Coupe transversale d'un CD." class="placeholder" style="width: 350px;">
+            <p class="caption">b)</p>
+        </div>
+    </div>
+     <p class="caption">Figure 54 a) Sur un disque CD les données sont écrites le long d'une spirale qui part du centre vers l'extérieur du disque. b) Coupe transversale d'un disque CD.</p>
+     <p style="text-align: center;">(Description 54b: De bas en haut: Polycarbonate plastique (1.2mm), couche réfléchissante (Aluminium), couche protectrice (Acrylic), étiquette (Label). Les cuvettes sont gravées dans le polycarbonate, vues par le dessous.)</p>
+
+
+    <div>
+        <img src="placeholder_figure55.png" alt="Figure 55: Agrandissement de la surface d'un CD préenregistré." class="placeholder">
+        <p class="caption">Figure 55 Agrandissement de la surface d'un disque CD préenregistré.</p>
+        <p style="text-align: center;">(Description: Image microscopique montrant les cuvettes (zones sombres ou claires selon l'éclairage) et les plats (zones claires) le long des pistes. Indique la largeur des pistes (1.6 µm) et la longueur minimale des cuvettes/plats (0.83 µm min).)</p>
+    </div>
+
+    <h6>b. Lecture.</h6>
+    <p>
+        Le rôle principal d'un lecteur de CD est de focaliser un faisceau <strong>laser</strong> très fin sur la spirale où sont gravées les microcuvettes, tout en suivant cette spirale pendant la rotation du disque.
+    </p>
+    <p>
+        Le faisceau laser (émis par une diode laser) passe à travers la couche de polycarbonate transparente et se réfléchit sur la couche métallique. Le faisceau réfléchi est ensuite capté par une <strong>photodiode</strong>.
+    </p>
+    <p>
+        La profondeur des cuvettes (environ 1/4 de la longueur d'onde du laser dans le polycarbonate) est choisie pour que, lorsque le laser éclaire une cuvette, la lumière réfléchie par le fond de la cuvette et celle réfléchie par le plat environnant interfèrent de manière destructive. Ainsi :
+    </p>
+    <ul>
+        <li>Lorsque le laser est réfléchi sur une partie <strong>plate</strong> (land), une grande partie de la lumière retourne vers la photodiode (haute réflexion).</li>
+        <li>Lorsque le laser est réfléchi dans une <strong>cuvette</strong> (pit), l'interférence réduit considérablement la quantité de lumière retournant vers la photodiode (basse réflexion).</li>
+    </ul>
+    <p>
+        Cette modulation de la réflexion (haut/bas) en fonction du passage sur un plat ou une cuvette permet de reconstituer le signal numérique inscrit sur le disque (Figure 56, page suivante). En fait, ce ne sont pas les niveaux eux-mêmes (cuvette/plat) qui représentent directement les 0 et les 1, mais les <strong>transitions</strong> entre cuvette et plat (ou plat et cuvette) qui codent les '1' dans certains schémas de codage (comme EFM - Eight-to-Fourteen Modulation utilisé pour les CD). La longueur des cuvettes et des plats code des séquences de '0'. C'est le délai entre deux transitions consécutives (fronts du signal lu) qui constitue l'information.
+    </p>
+    <p>
+        Ce type de fonctionnement (lecture optique de structures nanométriques en mouvement rapide) impose des contraintes très fortes sur la fiabilité et la précision des parties mécaniques (rotation du disque, suivi de piste par le bloc optique) et optiques (focalisation du laser) d'un lecteur de CD.
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 56 Content -->
+
+     <!-- Start Page 57 Content (PDF Page 127) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+     <div>
+        <img src="placeholder_figure56.png" alt="Figure 56: Principe de lecture des données sur CD." class="placeholder">
+        <p class="caption">Figure 56 Principe de la lecture des données sur un disque CD. Lorsque le laser arrive sur un creux (cuvette), le rayon n'est pas (ou peu) réfléchi vers la photodiode et n'est donc pas détecté (signal bas, '0' logique dans cette interprétation simplifiée). Sur un plat, il est détecté (signal haut).</p>
+        <p style="text-align: center;">(Description: Schéma montrant le CD en rotation, le laser éclairant la piste, la photodiode recevant la réflexion. Le signal brut de la photodiode (Signal numérique) est une onde carrée. Il passe par un Convertisseur Numérique-Analogique (CAN - erreur probable, devrait être traitement numérique ou CNA plus loin?) puis un traitement (Ampli) pour donner la sortie audio ou de données du CD-ROM.)</p>
+    </div>
+
+    <p>Un lecteur de CD est composé de 3 parties importantes (Figure 57, page suivante) :</p>
+    <ul>
+        <li>Un <strong>moteur de rotation</strong> (spindle motor) qui fait tourner le disque. Sa vitesse de rotation est très précisément contrôlée et varie (entre 200 et 500 tours/min environ) en fonction de la partie du disque qui est lue (plus lent vers l'extérieur) pour maintenir une vitesse linéaire constante de lecture de la piste.</li>
+        <li>Un <strong>système optique mobile</strong> (pickup assembly) comprenant, entre autres, la diode laser, les lentilles de focalisation et de collimation, et la photodiode (souvent plusieurs photodiodes pour aider au suivi de piste et à la focalisation).</li>
+        <li>Un <strong>second moteur</strong> (tracking motor / sled motor) qui déplace radialement le système optique le long du disque afin que le laser suive précisément la spirale. Ce système de déplacement doit avoir une précision de l'ordre du micron.</li>
+    </ul>
+
+    <h4>5.6.2. Les CD enregistrables (CD-R).</h4>
+    <p>
+        Les disques CD-R (Recordable) permettent à l'utilisateur d'enregistrer des données une seule fois. Ils sont constitués d'un support en plastique (polycarbonate) sur lequel est déposée une couche de <strong>colorant organique</strong> (dye layer), puis une couche métallique réfléchissante (or ou argent).
+    </p>
+    <p>
+        Il n'y a bien sûr plus de microcuvettes pré-gravées à la surface du disque vierge puisque celui-ci ne contient pas encore de données. En revanche, la future spirale sur laquelle seront enregistrées les informations est matérialisée par un <strong>sillon guide pré-gravé</strong> (pre-groove), très peu profond, dans la surface du plastique. Ce sillon aide le laser du graveur à suivre la piste pendant l'enregistrement.
+    </p>
+     <!-- Recording process on next page -->
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 57 Content -->
+
+     <!-- Start Page 58 Content (PDF Page 128) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+     <div>
+        <img src="placeholder_figure57.png" alt="Figure 57: Les différentes parties d'un lecteur de CD." class="placeholder">
+        <p class="caption">Figure 57 Les différentes parties d'un lecteur de CD.</p>
+        <p style="text-align: center;">(Description: Photo de l'intérieur d'un lecteur CD montrant le moteur de rotation du disque (Disc Drive Motor), le bloc optique mobile (Laser Pickup Assembly) avec la lentille (Laser Lens), et le moteur de déplacement du bloc optique (Tracking Motor/Drive).)</p>
+    </div>
+
+    <p>
+        L'enregistrement des données sur un CD-R se fait à l'aide d'un <strong>laser de gravure</strong> focalisé, dont la puissance est modulée dans le temps entre deux niveaux :
+    </p>
+    <ul>
+        <li>La <strong>puissance de lecture</strong> (faible, inférieure au mW), qui ne modifie pas le disque.</li>
+        <li>La <strong>puissance d'écriture</strong> (plus élevée, comprise entre 6 et 12 mW selon les disques et la vitesse de gravure).</li>
+    </ul>
+    <p>
+        Le colorant organique absorbe fortement la lumière du laser à la puissance d'écriture, ce qui induit un échauffement local très rapide et intense. Cet échauffement provoque deux effets :
+    </p>
+    <ol>
+        <li>Le <strong>colorant est dégradé</strong> chimiquement (brûlé ou transformé) de manière irréversible.</li>
+        <li>Le <strong>substrat en plastique</strong> juste en dessous subit une <strong>déformation locale</strong> (formation d'une "bosse" ou d'une zone modifiée).</li>
+    </ol>
+    <p>
+        Ces deux effets combinés (modification du colorant et déformation) se traduisent par une <strong>baisse locale de la réflexion</strong> de la lumière laser lors de la lecture ultérieure, simulant ainsi l'effet d'une microcuvette pré-gravée d'un CD-ROM. La modulation de la puissance du laser (écriture / lecture) est évidemment imposée par le signal (les données) que l'on veut écrire, suivant le même codage EFM que pour les CD-ROM.
+    </p>
+    <p>
+        Les CD-R ne sont enregistrables qu'<strong>une seule fois</strong> car les effets du laser de gravure sur le colorant et le support plastique sont irréversibles. Une autre catégorie de CD a donc été développée afin de permettre l'effacement et la réécriture des données inscrites.
+    </p>
+
+    <h4>5.6.3. Les CD réenregistrables (CD-RW).</h4>
+    <p>
+        Les CD-RW (ReWritable) utilisent des matériaux à <strong>changement de phase</strong> pour stocker l'information. Ce sont des alliages métalliques spéciaux (souvent à base de Germanium, Antimoine, Tellure - GeSbTe) dans lesquels peuvent coexister, à température ambiante, deux phases (états structurels) différentes :
+    </p>
+    <ul>
+        <li>Une phase <strong>cristalline</strong>, ordonnée.</li>
+        <li>Une phase <strong>amorphe</strong>, désordonnée.</li>
+    </ul>
+    <p>
+        Ces deux états du matériau ont des propriétés optiques (indice de réfraction, réflectivité) très différentes. Cette différence est mise à profit pour enregistrer l'information sous forme d'une variation locale de la réflexion lors de la lecture par le laser.
+    </p>
+    <ul>
+        <li>L'état initial (disque vierge ou effacé), associé à la réflexion haute, est l'état <strong>cristallin</strong>.</li>
+        <li>Une donnée est inscrite sous la forme d'une <strong>marque amorphe</strong> ayant une réflexion basse.</li>
+    </ul>
+    <p>
+        Pour effacer les données (les marques amorphes), il suffit de chauffer modérément pour <strong>recristalliser</strong> ces marques (Figure 58, non fournie).
+    </p>
+
+    <h6>a. Ecriture des données (Création d'une marque amorphe).</h6>
+    <p>
+        Pour écrire une marque amorphe (représentant un bit ou une transition), il faut chauffer très rapidement le matériau à changement de phase au-dessus de sa température de fusion (environ 600°C) à l'aide d'une impulsion laser de forte puissance (puissance d'écriture), puis le <strong>refroidir très rapidement</strong>. Ce refroidissement rapide "gèle" le matériau dans un état désordonné : l'état amorphe.
+    </p>
+     <!-- Erase process description would follow -->
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 58 Content -->
+
+
+    <!-- KaTeX render script configuration -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                macros: {
+                    "\\bar": "\\overline", // Define \bar as \overline for consistency
+                    "\\arrow": "\\rightarrow",
+                    "\\phi": "\\times" // Use 'X' or times symbol for don't care
+                },
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+</html>
