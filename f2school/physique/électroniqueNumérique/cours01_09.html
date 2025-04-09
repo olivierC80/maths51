@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Électronique Numérique - Chapitre 4: Logique Séquentielle (Suite)</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            counter-reset: page;
+        }
+
+        header,
+        footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #555;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        footer::after {
+          counter-increment: page;
+          content: "Page " counter(page);
+          position: absolute;
+          right: 0;
+        }
+
+        footer {
+            border-top: 1px solid #ccc;
+            border-bottom: none;
+            margin-top: 15px;
+            padding-top: 5px;
+            text-align: center; /* Center text potentially, but page number is on the right */
+        }
+
+        h1, h2, h3, h4, h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        h1 { font-size: 1.8em; }
+        h2 { font-size: 1.6em; border-bottom: 1px solid #eee; padding-bottom: 0.3em; }
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; }
+        h5 { font-size: 1.1em; font-style: italic; }
+
+        img.placeholder {
+            display: block;
+            max-width: 80%;
+            min-height: 150px;
+            border: 1px dashed #aaa;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            color: #888;
+            background-color: #f9f9f9;
+        }
+
+        .caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .footnote {
+            font-size: 0.85em;
+            margin-top: 15px;
+            color: #444;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Adjust KaTeX display alignment */
+        .katex-display {
+            text-align: center;
+            margin: 1em 0;
+        }
+        .katex-display > .katex {
+            display: inline-block;
+            text-align: initial;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Start Previous Content (Pages 1-10 / PDF 71-80) -->
+    <!-- ... [HTML content from the previous response would go here] ... -->
+    <!-- End Previous Content -->
+
+    <!-- Start Page 11 Content (PDF Page 81) -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <p>Le fonctionnement de la bascule D est illustré sur le chronogramme suivant (Figure 27, page suivante). On suppose que l'état initial est caractérisé par $E = 0$ et $Q=0$.</p>
+    <ul>
+        <li>
+            Pour $t < t_1$: $E=0$, la bascule est en mode mémoire. Les variations de l'entrée $D$ ne sont pas répercutées sur les sorties. La bascule reste dans l'état d'équilibre $Q=0, \bar{Q}=1$.
+        </li>
+        <li>
+            À l'instant $t = t_1$: l'entrée de validation $E$ passe au niveau haut ($E: 0 \to 1$) alors que $D = 1$. On a donc $S' = D \cdot E = 1 \cdot 1 = 1$ et $R' = \bar{D} \cdot E = 0 \cdot 1 = 0$. Par conséquent la bascule interne passe en mode SET et $Q=1$.
+        </li>
+        <li>
+            À l'instant $t = t_2$: Pendant que $E=1$, l'entrée $D$ passe au niveau bas ($D: 1 \to 0$). En conséquence, les entrées internes deviennent $S' = D \cdot E = 0 \cdot 1 = 0$ et $R' = \bar{D} \cdot E = 1 \cdot 1 = 1$. Ceci entraîne la commutation de la sortie $Q$ vers le niveau bas ($Q:1 \to 0$, mode RESET).
+        </li>
+        <li>
+            À l'instant $t = t_3$: Toujours avec $E=1$, l'entrée $D$ repasse à l'état haut ($D: 0 \to 1$). Donc $S' = D \cdot E = 1 \cdot 1 = 1$ et $R' = \bar{D} \cdot E = 0 \cdot 1 = 0$. Par conséquent la sortie $Q$ effectue la transition $Q:0 \to 1$ (mode SET). En analysant le chronogramme, on constate que depuis l'instant $t = t_1$ (où E est devenu actif) jusqu'à maintenant, la sortie $Q$ a recopié (suivi) les changements de l'entrée $D$.
+        </li>
+        <li>
+            À l'instant $t = t_4$: l'entrée de validation $E$ repasse à 0 ($E: 1 \to 0$). Ceci entraîne de nouveau $R' = S' = 0$ (car $R'=\bar{D} \cdot 0 = 0$ et $S'=D \cdot 0 = 0$). La bascule est en mode mémoire. Elle mémorise la valeur présente sur la sortie $Q$ au moment de la transition $E :1 \to 0$. Juste avant $t_4$, D était à 1, donc Q était à 1. La bascule mémorise donc $Q=1$. Les changements ultérieurs de D (après $t_4$) n'auront pas d'effet tant que E reste à 0.
+        </li>
+    </ul>
+
+    <h6>c. Equation caractéristique</h6>
+
+    <p>
+        L'équation caractéristique de la bascule D (D Latch) décrit la sortie $Q$ (état futur $Q_{n+1}$) en fonction de l'entrée $D$ et de l'entrée de validation $E$. Elle s'obtient facilement en considérant le fonctionnement :
+        Si $E=0$, $Q_{n+1} = Q_n$ (mémoire).
+        Si $E=1$, $Q_{n+1} = D$ (transparence).
+        On peut combiner cela en une seule équation :
+        $Q_{n+1} = E \cdot D + \bar{E} \cdot Q_n$.
+    </p>
+    <p>
+        (Note: Le document original dérive l'équation $Q=D$ en partant de l'équation de la bascule RS $Q = \bar{R'} \cdot (S' + Q_0)$ et en substituant $S'=D$ et $R'=\bar{D}$, mais cela ne semble s'appliquer que lorsque E=1 et ne représente pas l'équation caractéristique complète du Latch incluant E. La dérivation $Q = \bar{(\bar{D})} \cdot (D+Q_0) = D \cdot (D+Q_0) = D \cdot D + D \cdot Q_0 = D + D \cdot Q_0 = D(1+Q_0) = D$ est valide uniquement sous la condition $E=1$. L'équation caractéristique générale d'un D-Latch est bien $Q_{n+1} = E \cdot D + \bar{E} \cdot Q_n$.)
+    </p>
+
+
+    <h4>4.2.4. Bascules synchrones / bascules asynchrones</h4>
+
+    <p>
+        En logique séquentielle, on est amené à définir deux grands types de circuits, basés sur la manière dont ils réagissent aux changements d'entrée et gèrent le temps : les circuits asynchrones et les circuits synchrones.
+    </p>
+    <!-- Continuation on next page -->
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 11 Content -->
+
+    <!-- Start Page 12 Content (PDF Page 82) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <div>
+        <img src="placeholder_figure27.png" alt="Figure 27: Chronogramme illustrant le fonctionnement d'une bascule D (D Latch)." class="placeholder">
+        <p class="caption">Figure 27 Fonctionnement d'une bascule D</p>
+        <p style="text-align:center;">(Description: Le chronogramme montre les signaux E (validation), D (donnée), R' et S' (entrées internes de la bascule RS), et Q (sortie). Lorsque E=1 (entre t1 et t4), Q suit les variations de D. R' est $\bar{D} \cdot E$ et S' est $D \cdot E$. Lorsque E=0 (avant t1 et après t4), Q conserve sa dernière valeur, indépendamment de D, et R'=S'=0.)</p>
+    </div>
+
+    <ul>
+        <li>
+            <strong>Les circuits asynchrones :</strong>
+            <br>
+            Un système asynchrone est un système dont les sorties peuvent changer d'état à n'importe quel moment suite à un changement sur une ou plusieurs de ses entrées. Ces circuits sont souvent sensibles aux <strong>niveaux</strong> logiques des entrées (par exemple, la bascule RS change d'état dès que S ou R passe à 1, la bascule D Latch est transparente quand E est au niveau 1). Après un changement des entrées, le circuit évolue librement, potentiellement en passant par des états transitoires, jusqu'à ce qu'il atteigne un nouvel état stable. Les transitions d'un état à un autre se produisent donc à des instants qui dépendent uniquement des temps de propagation des portes logiques composant le circuit, et non d'un signal de synchronisation externe. On ne peut pas contrôler précisément le moment de ces transitions.
+            <br><br>
+            Toutes les bascules que nous avons étudiées jusqu'à présent (Bascule RS simple, Bascule RS avec validation, Bascule D Latch) sont des systèmes asynchrones (ou plus précisément, sensibles aux niveaux).
+        </li>
+    </ul>
+    <!-- Continuation on next page -->
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 12 Content -->
+
+    <!-- Start Page 13 Content (PDF Page 83) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <ul>
+        <li>
+            <strong>Les circuits synchrones :</strong>
+            <br>
+            Les circuits synchrones ont une de leurs entrées, généralement appelée entrée d'<strong>horloge</strong> (ou $CLK$ pour clock), qui joue un rôle spécial. Ces circuits sont conçus pour ne changer d'état qu'à des moments bien précis, dictés par le signal d'horloge. Typiquement, le changement d'état se produit sur un <strong>front</strong> (transition rapide) du signal d'horloge : soit le front montant ($0 \to 1$), soit le front descendant ($1 \to 0$). L'entrée d'horloge est donc sensible à ces "impulsions"<sup>7</sup> (fronts), tandis que les autres entrées (données, commande) restent sensibles à des niveaux logiques, mais leur valeur n'est prise en compte qu'au moment du front actif de l'horloge.
+            <br><br>
+            Pour ces systèmes, quelle que soit la valeur des entrées de données ou de commande, le passage d'un état à un autre ne se fait qu'au moment où l'entrée d'horloge reçoit un front actif.
+            <br><br>
+            Les circuits synchrones avec horloge sont très répandus et constituent la base de la plupart des systèmes numériques complexes (processeurs, mémoires, etc.). En effet, dans de nombreux systèmes, comme les ordinateurs par exemple, les opérations doivent être parfaitement cadencées de manière à se produire dans un ordre bien déterminé et coordonné. La synchronisation de toutes les parties du système par une horloge commune est alors indispensable.
+        </li>
+    </ul>
+    <p class="footnote">
+       <sup>7</sup> En électronique numérique le terme impulsion utilisé ici dans le contexte des circuits synchrones désigne plus spécifiquement le <strong>front</strong> de montée ou de descente, d'un signal rectangulaire (le signal d'horloge) qui doit être "très raide" (transition rapide) mais la durée du niveau haut ou bas n'est pas nécessairement très courte.
+    </p>
+
+    <h4>4.2.5. La structure maître-esclave (Master-Slave)</h4>
+
+    <p>
+        Les bascules synchrones (sensibles aux fronts d'horloge, aussi appelées <strong>flip-flops</strong> en anglais, par opposition aux latches sensibles aux niveaux) présentent, outre la synchronisation, l'avantage d'être peu sensibles aux parasites ou aux changements des entrées qui peuvent survenir entre les fronts actifs de l'horloge. En effet, puisque seule compte la valeur des entrées au moment précis du front d'horloge, toute variation intempestive des entrées entre deux fronts actifs sera sans effet sur la sortie de la bascule.
+    </p>
+    <p>
+        Ces bascules synchrones sont souvent basées sur une structure <strong>maître-esclave</strong> dont nous allons donner le principe.
+    </p>
+    <p>
+        Nous avons vu, dans le paragraphe 4.2.2 (bascule RS avec validation), que le verrouillage d'une bascule (latch) à l'aide d'une entrée de validation $E$ permettait de s'affranchir des parasites sur les entrées lorsque $E = 0$. Le problème subsiste néanmoins lorsque l'entrée de validation est active ($E = 1$), car la sortie peut encore changer si les entrées changent. Pour résoudre ce problème et obtenir une sensibilité uniquement aux fronts, il faudrait un système qui, lorsque la commande d'enregistrement est active (par exemple, $CLK=1$), capture les informations sur les entrées mais sans que la sortie principale ne change encore, et qui, lorsque la commande d'enregistrement devient inactive (par exemple, $CLK=0$), transfère l'information capturée vers la sortie principale. Autrement dit :
+    </p>
+    <ul>
+        <li>Pendant une phase de l'horloge (ex: $CLK=1$): les entrées sont "ouvertes" pour capturer la donnée, mais la sortie est "verrouillée".</li>
+        <li>Pendant l'autre phase de l'horloge (ex: $CLK=0$): les entrées sont "verrouillées" (la nouvelle donnée n'est plus prise en compte), mais la sortie est "ouverte" pour refléter la donnée capturée à la phase précédente.</li>
+    </ul>
+    <p>
+        La solution consiste à utiliser deux bascules (latches) en cascade : une bascule "maître" (d'entrée) et une bascule "esclave" (de sortie). Leurs commandes de validation sont complémentaires, souvent dérivées du signal d'horloge $CLK$ et de son inverse $\overline{CLK}$.
+    </p>
+    <ul>
+        <li>Lorsque l'horloge est dans un état (ex: $CLK=1$), le maître est actif (capture l'entrée) et l'esclave est en mémoire (la sortie ne change pas).</li>
+        <li>Lorsque l'horloge passe dans l'autre état (ex: $CLK=0$), le maître devient inactif (mémorise la valeur capturée) et l'esclave devient actif (recopie la sortie du maître).</li>
+    </ul>
+    <p>
+        Ainsi, la sortie globale du système maître-esclave ne change qu'à la transition de l'horloge qui désactive le maître et active l'esclave (dans cet exemple, la transition $1 \to 0$). Le système devient sensible au front descendant. Ce type de structure est schématisé sur la Figure 28.
+    </p>
+    <p>
+        Une telle structure est dite maître-esclave; la bascule d'entrée est le maître, la bascule de sortie, qui recopie l'état du maître lors du front d'horloge, est l'esclave. La plupart des bascules synchrones (flip-flops) sont basées sur ce type de structure ou des variantes améliorées (comme les structures edge-triggered directes).
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 13 Content -->
+
+    <!-- Start Page 14 Content (PDF Page 84) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <div>
+        <img src="placeholder_figure28.png" alt="Figure 28: Principe de la structure maître-esclave." class="placeholder">
+        <p class="caption">Figure 28 Principe de la structure maître-esclave</p>
+        <p style="text-align:center;">(Description: Deux blocs "Bascule" en série. Le premier est la "Bascule d'entrée" (Maître), le second est la "Bascule de sortie" (Esclave). Une entrée "Validation" contrôle les deux, probablement de manière complémentaire, par exemple via le signal d'horloge et son inverse, pour assurer le fonctionnement maître-esclave.)</p>
+    </div>
+
+    <h4>4.2.6. Un exemple détaillé de bascule synchrone : la bascule D (D Flip-Flop)</h4>
+
+    <p>
+        Avant de voir les différents types de bascules synchrones disponibles dans les catalogues de composants, nous allons analyser en détail la réalisation et le fonctionnement d'une bascule D synchrone (D Flip-Flop) à partir de deux bascules RS asynchrones (latches). La bascule D synchrone est une bascule dont la sortie $Q$ recopie la valeur de l'entrée $D$ uniquement au moment d'un front actif (montant ou descendant) de l'horloge $CLK$.
+    </p>
+
+    <h6>a. Schéma</h6>
+
+    <p>
+        Le schéma de principe d'une bascule D synchrone (ici, sensible au front descendant) réalisée à partir de deux bascules RS asynchrones à base de portes NOR est représenté sur la Figure 29. Pour alléger le schéma, les deux bascules RS asynchrones sont représentées sous forme de blocs. Chacun de ces blocs est identique à la bascule RS décrite dans le paragraphe 4.2.1 (Figure 23). La première bascule RS est le maître, la seconde est l'esclave.
+    </p>
+
+    <div>
+        <img src="placeholder_figure29.png" alt="Figure 29: Schéma d'une bascule D synchrone (Master-Slave, falling-edge) basée sur deux bascules RS asynchrones." class="placeholder">
+        <p class="caption">Figure 29 Schéma d'une bascule D synchrone basée sur deux bascules RS asynchrones</p>
+        <p style="text-align:center;">(Description: L'entrée D est connectée, via un inverseur et des portes AND contrôlées par CLK, aux entrées S' et R' de la première bascule RS (Maître). La sortie Q' du maître est connectée, via des portes AND contrôlées par $\overline{CLK}$ (CLK inversé), aux entrées S et R de la seconde bascule RS (Esclave). La sortie Q de l'esclave est la sortie principale de la bascule D synchrone. CLK est inversé par une porte NOT avec un cercle sur sa sortie.)</p>
+    </div>
+    <!-- Continuation on next page -->
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 14 Content -->
+
+    <!-- Start Page 15 Content (PDF Page 85) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h6>b. Fonctionnement</h6>
+
+    <p>
+        À partir du schéma précédent (Figure 29), on établit facilement les expressions logiques donnant la valeur des entrées R', S' de la bascule maître et R, S de la bascule esclave en fonction de l'horloge CLK, de l'entrée D et de la sortie Q' du maître :
+    </p>
+    <ul>
+        <li>Entrées du Maître : L'entrée S' reçoit $D$ quand $CLK=1$, et l'entrée R' reçoit $\bar{D}$ quand $CLK=1$. On peut écrire $S' = CLK \cdot D$ et $R' = CLK \cdot \bar{D}$.</li>
+        <li>Entrées de l'Esclave : L'entrée S reçoit $Q'$ quand $\overline{CLK}=1$ (i.e., $CLK=0$), et l'entrée R reçoit $\bar{Q'}$ quand $\overline{CLK}=1$. On peut écrire $S = \overline{CLK} \cdot Q'$ et $R = \overline{CLK} \cdot \bar{Q'}$.</li>
+    </ul>
+
+    <p>
+        On constate ainsi le fonctionnement suivant, selon le niveau de l'horloge CLK :
+    </p>
+    <ul>
+        <li>
+            Si $CLK = 1$ ($\overline{CLK}=0$):
+            <ul>
+                <li>Maître : $S' = D$ et $R' = \bar{D}$. La bascule maître est en mode d'écriture (Set si D=1, Reset si D=0). Elle recopie l'entrée $D$ sur sa sortie $Q'$ (donc $Q' = D$).</li>
+                <li>Esclave : $S = 0 \cdot Q' = 0$ et $R = 0 \cdot \bar{Q'} = 0$. La bascule esclave est en mode mémoire ($R=S=0$). Sa sortie $Q$ ne change pas et reste égale à la valeur qu'elle avait précédemment.</li>
+            </ul>
+            Donc, quand $CLK=1$, le maître suit D, mais la sortie finale Q reste stable.
+        </li>
+        <li>
+            Si $CLK = 0$ ($\overline{CLK}=1$):
+            <ul>
+                <li>Maître : $S' = 0 \cdot D = 0$ et $R' = 0 \cdot \bar{D} = 0$. La bascule maître est en mode mémoire ($R'=S'=0$). Elle conserve la dernière valeur de D capturée juste avant que CLK ne passe à 0. Sa sortie $Q'$ reste stable (égale à la valeur de D au moment du front descendant).</li>
+                <li>Esclave : $S = 1 \cdot Q' = Q'$ et $R = 1 \cdot \bar{Q'} = \bar{Q'}$. La bascule esclave est en mode d'écriture. Elle recopie la sortie de la bascule maître. Sa sortie $Q$ devient égale à $Q'$ (et $\bar{Q}$ devient égale à $\bar{Q'}$).</li>
+            </ul>
+            Donc, quand $CLK=0$, le maître est en mémoire, et l'esclave recopie l'état mémorisé du maître sur la sortie finale Q.
+        </li>
+    </ul>
+
+    <p>
+        On a bien entendu la situation où le changement de Q se produit lorsque CLK passe de 1 à 0 (front descendant). C'est à ce moment que l'esclave devient actif et recopie le maître (qui vient juste d'être mis en mémoire). Ce fonctionnement est illustré sur le chronogramme représenté sur la Figure 30 (page suivante).
+    </p>
+    <p>Analyse du chronogramme (Figure 30) :</p>
+    <ul>
+        <li>
+            Lorsque $t_0 < t < t_1$. L'entrée $CLK$ est au niveau haut ($CLK = 1$). La bascule d'entrée (maître) est active ($R' = \bar{D}, S' = D$) et elle recopie la valeur de l'entrée $D$ sur $Q'$ ($Q' = D, \bar{Q'} = \bar{D}$). À l'inverse, la bascule de sortie (esclave) est en mode mémoire ($R=S=0$) et sa sortie $Q$ conserve sa valeur précédente.
+        </li>
+        <li>
+            Dans l'intervalle $t_1 < t < t_2$. L'entrée $CLK$ est au niveau bas ($CLK = 0$). La bascule d'entrée (maître) passe en mode mémoire. Les sorties $Q'$ et $\bar{Q'}$ gardent en mémoire les valeurs de $D$ et $\bar{D}$ présentes juste avant l'instant $t_1$ (moment de la transition $CLK:1 \to 0$, le front descendant sur CLK). Ainsi $Q' = D(t_1)$ et $\bar{Q'} = \overline{D(t_1)}$. En revanche, la seconde bascule (esclave) est maintenant en mode d'écriture avec $R = \bar{Q'}$ et $S = Q'$. Elle recopie donc l'état de la bascule maître sur sa sortie : $Q = Q' = D(t_1)$ (et $\bar{Q} = \bar{Q'} = \overline{D(t_1)}$). C'est pendant cet intervalle (après le front descendant) que la sortie Q prend la valeur que D avait au moment du front.
+        </li>
+         <li>
+            Lorsque $t_2 < t < t_3$. L'horloge $CLK$ repasse à 1. Le maître redevient actif avec $R' = \bar{D}$ et $S' = D$. Il recopie la valeur présente sur l'entrée $D$ ($Q' = D, \bar{Q'} = \bar{D}$). La bascule esclave repasse en mode mémoire ($R=S=0$) et ses sorties ne changent pas ($Q$ conserve la valeur $D(t_1)$).
+        </li>
+    <!-- Continuation on next page -->
+    </ul>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 15 Content -->
+
+    <!-- Start Page 16 Content (PDF Page 86) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <div>
+        <img src="placeholder_figure30.png" alt="Figure 30: Chronogramme illustrant le fonctionnement d'une bascule D synchrone active sur front descendant." class="placeholder">
+        <p class="caption">Figure 30 Chronogramme illustrant le fonctionnement d'une bascule D synchrone active sur front descendant.</p>
+        <p style="text-align:center;">(Description: Signaux CLK, D, R', S', Q', $\bar{Q'}$, R, S, Q. Q' suit D quand CLK=1. Q suit Q' quand CLK=0. La mise à jour de Q se fait effectivement juste après le front descendant de CLK (aux instants t1, t3, t5), et Q prend la valeur que D avait juste avant ce front.)</p>
+    </div>
+
+    <ul>
+         <li>
+            Dans l'intervalle $t_3 < t < t_4$. L'horloge $CLK$ repasse à 0 (front descendant à $t_3$). La bascule maître repasse en mode mémoire, capturant la valeur $D(t_3)$ ($Q'=D(t_3), \bar{Q'}=\overline{D(t_3)}$). La seconde bascule (esclave) commute en mode d'écriture et recopie l'état de la bascule maître ($Q = Q' = D(t_3)$). La sortie Q est mise à jour avec la nouvelle valeur.
+        </li>
+        <!-- Continuation description from page 87 -->
+        <li>
+            Lorsque $t_4 < t < t_5$. L'entrée $CLK$ est au niveau haut ($CLK=1$). La bascule maître est active et recopie la valeur de l'entrée $D$ ($Q'=D$). La bascule esclave est en mode mémoire et ses sorties ne changent pas ($Q$ conserve la valeur $D(t_3)$).
+        </li>
+    </ul>
+    <!-- Continuation summary from page 87 -->
+     <p>
+        On voit donc qu'à chaque front descendant de l'horloge (à $t_1, t_3, t_5, ...$), la sortie $Q$ recopie la valeur que possédait l'entrée $D$ juste avant cet instant. Le fonctionnement de cette bascule D synchrone est donc similaire à celui de sa consœur asynchrone (D Latch avec E=1) mais la prise en compte de l'entrée D et la mise à jour de la sortie Q ne se font qu'au moment du front actif de l'horloge (ici, front descendant). Toutes les variations de $D$ entre deux fronts descendants d'horloge sont donc sans effet sur la sortie $Q$.
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 16 Content -->
+
+    <!-- Start Page 17 Content (PDF Page 87) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+
+    <h4>4.2.7. Représentations des bascules synchrones (Flip-Flops)</h4>
+
+    <p>
+        Les principales bascules synchrones (flip-flops) disponibles dans le commerce sont :
+    </p>
+    <ul>
+        <li>
+            <strong>Les bascules RS synchrones</strong>: Leur table de vérité est identique à celle de leurs homologues asynchrones (RS Latch avec validation), mais le changement d'état ne se produit que sur le front actif de l'horloge. La condition $S=R=1$ reste généralement interdite ou conduit à un état imprévisible après le front d'horloge.
+        </li>
+        <li>
+            <strong>Les bascules D synchrones (D Flip-Flop)</strong>: Comme celle étudiée précédemment. La sortie $Q$ prend la valeur de l'entrée $D$ au moment du front actif de l'horloge. $Q_{n+1} = D_n$.
+        </li>
+        <li>
+            <strong>Les bascules JK synchrones (JK Flip-Flop)</strong>: Elles sont similaires aux bascules RS, avec l'entrée $J$ correspondant à $S$ (Set) et l'entrée $K$ correspondant à $R$ (Reset). La différence majeure est le comportement pour la combinaison d'entrée $J=1, K=1$. Pour cette combinaison, la bascule JK fonctionne en mode <strong>Toggle</strong> (basculement), c'est-à-dire que sa sortie $Q$ change de valeur (s'inverse) à chaque front actif d'horloge. $Q_{n+1} = \bar{Q_n}$ si $J=K=1$. Par rapport aux bascules RS, les bascules JK permettent d'utiliser toutes les combinaisons des entrées $J$ et $K$.
+        </li>
+    </ul>
+
+    <p>
+        On a représenté sur la Figure 31 les symboles normalisés (schématiques) utilisés pour chacune de ces bascules synchrones. Ces symboles incluent souvent des entrées supplémentaires dites asynchrones.
+    </p>
+
+    <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+        <div style="text-align: center;">
+            <img src="placeholder_figure31a.png" alt="Figure 31a: Symbole d'une bascule RS synchrone" class="placeholder" style="width:150px; min-height: 180px;">
+            <p class="caption">a) Bascule RS</p>
+        </div>
+        <div style="text-align: center;">
+            <img src="placeholder_figure31b.png" alt="Figure 31b: Symbole d'une bascule D synchrone" class="placeholder" style="width:150px; min-height: 180px;">
+            <p class="caption">b) Bascule D</p>
+        </div>
+        <div style="text-align: center;">
+            <img src="placeholder_figure31c.png" alt="Figure 31c: Symbole d'une bascule JK synchrone" class="placeholder" style="width:150px; min-height: 180px;">
+            <p class="caption">c) Bascule JK</p>
+        </div>
+    </div>
+    <p class="caption" style="text-align: center;">Figure 31 Représentation des principales bascules synchrones. a) la bascule RS, b) la bascule D, c) la bascule JK.</p>
+    <p style="text-align: center;">(Description: Les symboles montrent les entrées synchrones (R, S, D, J, K), l'entrée d'horloge (CLK, marquée d'un triangle indiquant la sensibilité au front), les sorties (Q, $\bar{Q}$). Ils incluent aussi des entrées asynchrones PR (Preset) et CLR (Clear). L'absence de cercle sur l'entrée CLK indique une sensibilité au front montant.)</p>
+     <!-- Continuation on next page -->
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 17 Content -->
+
+    <!-- Start Page 18 Content (PDF Page 88) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+     <p>
+        On note la présence de deux entrées supplémentaires sur ces symboles : $PR$ (Preset) et $CLR$ (Clear). Ces entrées sont généralement <strong>asynchrones</strong>, ce qui signifie que leur action est prioritaire sur l'horloge et les entrées synchrones ($R, S, D, J, K$). Elles forcent la sortie $Q$ à un état donné indépendamment du signal d'horloge :
+     </p>
+     <ul>
+         <li>$PR$ (Preset) force $Q=1$.</li>
+         <li>$CLR$ (Clear) force $Q=0$.</li>
+     </ul>
+     <p>
+        Leur effet est "immédiat" dès qu'elles sont activées. Selon les circuits intégrés, ces entrées peuvent être actives au niveau haut (notées PR, CLR) ou, plus fréquemment, actives au niveau bas (notées $\overline{PR}$, $\overline{CLR}$ ou avec un cercle d'inversion sur le symbole). Quand elles sont actives au niveau bas, elles sont notées $\overline{PR}$ et $\overline{CLR}$ dans les tables de vérité et sur les symboles des bascules (par une barre au-dessus du nom ou un cercle sur l'entrée du symbole). Pour que la bascule fonctionne normalement en mode synchrone, ces entrées asynchrones doivent être maintenues à leur niveau inactif (par exemple, niveau haut si elles sont actives bas).
+        <br>(Note: Dans certains cas, des entrées Preset/Clear synchrones existent, leur effet n'est alors pris en compte qu'au front d'horloge, mais les entrées asynchrones sont plus communes).
+    </p>
+
+    <p>
+        Signalons enfin qu'il existe également des bascules synchrones actives sur le <strong>front descendant</strong> du signal d'horloge. Elles se distinguent de leurs consœurs actives sur front montant par un cercle d'inversion placé sur l'entrée d'horloge ($CLK$) dans le symbole schématique (voir Figure 32).
+    </p>
+
+    <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+        <div style="text-align: center;">
+            <img src="placeholder_figure32a.png" alt="Figure 32a: Symbole bascule RS active sur front descendant" class="placeholder" style="width:150px; min-height: 180px;">
+            <p class="caption">a) Bascule RS</p>
+        </div>
+        <div style="text-align: center;">
+            <img src="placeholder_figure32b.png" alt="Figure 32b: Symbole bascule D active sur front descendant" class="placeholder" style="width:150px; min-height: 180px;">
+            <p class="caption">b) Bascule D</p>
+        </div>
+        <div style="text-align: center;">
+            <img src="placeholder_figure32c.png" alt="Figure 32c: Symbole bascule JK active sur front descendant" class="placeholder" style="width:150px; min-height: 180px;">
+            <p class="caption">c) Bascule JK</p>
+        </div>
+    </div>
+     <p class="caption" style="text-align: center;">Figure 32 Représentation des principales bascules synchrones actives sur front descendant.</p>
+    <p style="text-align: center;">(Description: Similaire à Figure 31, mais avec un cercle sur l'entrée CLK, indiquant que la bascule est sensible au front descendant $1 \to 0$ de l'horloge.)</p>
+
+    <h4>4.2.8. Tables de vérités et tables des commandes (Tables d'excitation)</h4>
+
+    <p>
+        Nous donnons ci-dessous les tables de vérité des bascules synchrones RS, D et JK. Ces tables décrivent l'état futur de la sortie ($Q_{n+1}$) en fonction des entrées synchrones ($S_n, R_n, D_n, J_n, K_n$) et de l'état présent ($Q_n$) juste avant le front actif de l'horloge.
+    </p>
+    <p>
+        Pour chacune d'entre elles, nous donnons aussi la <strong>table des commandes</strong> (ou <strong>table d'excitation</strong><sup>8</sup>). Cette table est en fait une autre représentation de la table de vérité, mais organisée différemment : elle indique quelles doivent être les valeurs des entrées synchrones ($S_n, R_n$, etc.) pour obtenir une transition donnée sur la sortie (par exemple, passer de $Q_n=0$ à $Q_{n+1}=1$) au prochain front d'horloge. Ces tables sont particulièrement utiles lors de la synthèse (conception) d'une fonction séquentielle (par exemple, pour concevoir un compteur). Le symbole $\phi$ (ou 'X') y représente une condition indifférente ("don't care"), signifiant que la valeur de l'entrée correspondante n'importe pas pour obtenir la transition souhaitée.
+    </p>
+     <p class="footnote">
+       <sup>8</sup> Dans la littérature ces tables sont parfois appelées table de fonctionnement ou tables d'excitation ("excitation tables").
+    </p>
+    <p>
+        Pour écrire les tables de vérité, nous adoptons les notations suivantes :
+    </p>
+    <!-- Continuation on next page -->
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 18 Content -->
+
+    <!-- Start Page 19 Content (PDF Page 89) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <ul>
+        <li>
+            $R_n, S_n, D_n, J_n, K_n, Q_n$ et $\bar{Q_n}$ représentent les valeurs des entrées synchrones et des sorties <strong>juste avant</strong> le $n^{ème}$ front actif de l'horloge CLK. Selon les bascules, il peut s'agir soit d'un front montant $\uparrow$, soit d'un front descendant $\downarrow$.
+        </li>
+        <li>
+            $Q_{n+1}$ et $\bar{Q_{n+1}}$ représentent les valeurs des sorties <strong>juste après</strong> le $n^{ème}$ front actif de l'horloge CLK.
+        </li>
+    </ul>
+
+    <p>
+        Ces tables de vérité ne font pas apparaître les entrées asynchrones $\overline{PR}$ et $\overline{CLR}$ qui, rappelons-le, peuvent être asynchrones et sont prioritaires sur les autres entrées. On notera également que l'entrée horloge ($CLK$) ne figure pas explicitement dans les tables de vérité, car il est implicite que les transitions ne se produisent qu'au moment du front actif de $CLK$. Il ne faut cependant pas oublier que dans un circuit synchrone, les transitions s'effectuent <strong>uniquement</strong> au moment où l'entrée d'horloge ($CLK$) reçoit une impulsion (front actif). Toute variation des entrées synchrones entre deux impulsions d'horloge est sans effet sur les sorties (sauf pour les entrées asynchrones).
+    </p>
+
+    <h6>a. Bascule RS Synchrone</h6>
+
+    <p>Les tables de vérité et de commandes (excitation) s'écrivent respectivement :</p>
+
+    <div style="display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: wrap;">
+        <!-- Table de Vérité RS -->
+        <div style="margin: 10px;">
+            <p style="text-align:center;">Table de Vérité (RS)</p>
+            <table>
+                <thead>
+                    <tr><th>$S_n$</th><th>$R_n$</th><th>$Q_n$</th><th>$Q_{n+1}$</th><th>$\bar{Q}_{n+1}$</th><th>Mode</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td rowspan="2">Mémoire</td></tr>
+                    <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td rowspan="2">Reset</td></tr>
+                    <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td rowspan="2">Set</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>X</td><td>?</td><td>?</td><td>Interdit</td></tr>
+                </tbody>
+            </table>
+             <p style="text-align:center; font-size:0.9em;">(Note: Le cas $S_n=R_n=1$ est interdit car $Q_{n+1}$ est indéterminé ou non souhaité. Souvent traité comme produisant $Q_{n+1}=0$ ou $\phi$ dans les simplifications). La table du PDF ne montre pas $Q_n$ explicitement mais la combine.)</p>
+
+             <p style="text-align:center;">Table de Vérité Simplifiée (RS) (comme PDF)</p>
+             <table>
+                <thead>
+                    <tr><th>$S_n$</th><th>$R_n$</th><th>$Q_{n+1}$</th><th>$\bar{Q}_{n+1}$</th><th>Mode</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>$Q_n$</td><td>$\bar{Q_n}$</td><td>Mémoire</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>Reset</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>Set</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>« Interdit » (souvent 0,0)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table d'Excitation RS -->
+        <div style="margin: 10px;">
+            <p style="text-align:center;">Table d'Excitation (RS)</p>
+             <table>
+                <thead>
+                    <tr><th>$Q_n \to Q_{n+1}$</th><th>$S_n$</th><th>$R_n$</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>$0 \to 0$</td><td>0</td><td>$\phi$ (ou X)</td></tr>
+                    <tr><td>$0 \to 1$</td><td>1</td><td>0</td></tr>
+                    <tr><td>$1 \to 0$</td><td>0</td><td>1</td></tr>
+                    <tr><td>$1 \to 1$</td><td>$\phi$ (ou X)</td><td>0</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p>
+        La table d'excitation (ou des commandes) se lit de la façon suivante. La ligne 1 indique que pour maintenir la sortie $Q$ à 0 ($Q_n=0 \to Q_{n+1}=0$) après l'impulsion d'horloge, il faut que l'entrée $S_n$ soit à 0 avant l'impulsion, tandis que l'entrée $R_n$ peut être indifféremment à 0 (mode mémoire) ou à 1 (mode reset), d'où $S_n=0, R_n=\phi$. La ligne 2 indique que pour faire passer la sortie $Q$ de 0 à 1 ($Q_n=0 \to Q_{n+1}=1$), il faut que $S_n = 1$ et $R_n = 0$ (mode Set) juste avant l'impulsion d'horloge. Etc.
+    </p>
+
+    <p>L'équation caractéristique s'obtient facilement en écrivant la table de Karnaugh :</p>
+    <!-- K-Map and equation on next page -->
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 19 Content -->
+
+     <!-- Start Page 20 Content (PDF Page 90) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <p style="text-align:center;">Table de Karnaugh pour $Q_{n+1}$ (RS Flip-Flop)</p>
+     <table>
+        <thead>
+            <tr>
+                <th>$Q_n \setminus S_n R_n$</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>0</td> <!-- Mem(0) -->
+                <td>0</td> <!-- Reset -->
+                <td>0</td> <!-- Interdit -> 0 -->
+                <td>1</td> <!-- Set -->
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td> <!-- Mem(1) -->
+                <td>0</td> <!-- Reset -->
+                <td>0</td> <!-- Interdit -> 0 -->
+                <td>1</td> <!-- Set -->
+            </tr>
+        </tbody>
+    </table>
+    <p style="text-align:center;">$Q_{n+1}$</p>
+
+    <p>Il vient ainsi (en groupant la colonne $S_n\overline{R_n}$ et la cellule $\overline{S_n}\overline{R_n}Q_n$):</p>
+    <p style="text-align:center; font-size:1.2em;">
+        $Q_{n+1} = S_n \cdot \overline{R_n} + \overline{S_n} \cdot \overline{R_n} \cdot Q_n$
+    </p>
+    <p style="text-align:center;">(Ou, comme dérivé dans les pensées à partir de la K-map dans le PDF qui semble utiliser une convention légèrement différente pour les groupements aboutissant à l'équation ci-dessous, qui est aussi correcte) :</p>
+    <p style="text-align:center; font-size:1.2em;">
+       $Q_{n+1} = S_n \overline{R_n} + \overline{R_n} Q_n = \overline{R_n} (S_n + Q_n)$
+    </p>
+
+
+    <h6>b. Bascule D Synchrone (D Flip-Flop)</h6>
+    <p>Les tables de vérité et de commandes s'écrivent respectivement :</p>
+
+     <div style="display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: wrap;">
+        <!-- Table de Vérité D -->
+        <div style="margin: 10px;">
+             <p style="text-align:center;">Table de Vérité (D)</p>
+             <table>
+                <thead>
+                    <tr><th>$D_n$</th><th>$Q_n$</th><th>$Q_{n+1}$</th><th>$\bar{Q}_{n+1}$</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+                </tbody>
+            </table>
+             <p style="text-align:center;">Table de Vérité Simplifiée (D)</p>
+             <table>
+                <thead>
+                    <tr><th>$D_n$</th><th>$Q_{n+1}$</th><th>$\bar{Q}_{n+1}$</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+         <!-- Table d'Excitation D -->
+        <div style="margin: 10px;">
+             <p style="text-align:center;">Table d'Excitation (D)</p>
+             <table>
+                <thead>
+                    <tr><th>$Q_n \to Q_{n+1}$</th><th>$D_n$</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>$0 \to 0$</td><td>0</td></tr>
+                    <tr><td>$0 \to 1$</td><td>1</td></tr>
+                    <tr><td>$1 \to 0$</td><td>0</td></tr>
+                    <tr><td>$1 \to 1$</td><td>1</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p>
+        Ces deux tables sont bien entendu évidentes pour une bascule D (puisque Q recopie D à chaque coup d'horloge) et on retrouve sans peine l'équation caractéristique de ce type de bascule :
+    </p>
+    <p style="text-align:center; font-size:1.2em;">
+        $Q_{n+1} = D_n$
+    </p>
+
+    <h6>c. Bascule JK Synchrone (JK Flip-Flop)</h6>
+    <p>Les tables de vérité et de commandes s'écrivent respectivement :</p>
+     <!-- Tables JK on next conceptual page if needed, or here if space -->
+     <!-- ... [ JK tables would follow ] ... -->
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 20 Content -->
+
+
+    <!-- KaTeX render script configuration -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                macros: {
+                    "\\bar": "\\overline" // Define \bar as \overline for consistency
+                },
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+</html>
