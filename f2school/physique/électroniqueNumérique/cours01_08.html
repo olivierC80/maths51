@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Électronique Numérique - Chapitre 4: Logique Séquentielle</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+        }
+
+        header,
+        footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #555;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            border-top: 1px solid #ccc;
+            border-bottom: none;
+            margin-top: 15px;
+            padding-top: 5px;
+            text-align: center;
+        }
+
+        h1, h2, h3, h4, h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        h1 { font-size: 1.8em; }
+        h2 { font-size: 1.6em; border-bottom: 1px solid #eee; padding-bottom: 0.3em; }
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; }
+        h5 { font-size: 1.1em; font-style: italic; }
+
+        img.placeholder {
+            display: block;
+            max-width: 80%;
+            min-height: 150px;
+            border: 1px dashed #aaa;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            color: #888;
+            background-color: #f9f9f9;
+        }
+
+        .caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .footnote {
+            font-size: 0.85em;
+            margin-top: 15px;
+            color: #444;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Start Page 1 Content -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h2>Autocorrection</h2>
+
+    <p>Cette section présente un exercice ou un exemple d'application. La Figure 21 montre un circuit dont la fonction doit être déterminée.</p>
+
+    <div>
+        <img src="placeholder_figure21.png" alt="Figure 21: Schéma d'un circuit logique, probablement un multiplexeur 8 vers 1." class="placeholder">
+        <p class="caption">Figure 21</p>
+        <p style="text-align:center;">(Description: Le circuit est un multiplexeur 8 vers 1. Les entrées de données sont D0 à D7. Les entrées de sélection sont S0, S1, S2, connectées aux signaux a, b, c respectivement. La sortie est Fa. Les entrées D1, D2, D6 sont connectées à VCC (niveau logique 1) via un symbole 'd' qui pourrait indiquer un buffer ou simplement une connexion. Les autres entrées D0, D3, D4, D5, D7 sont connectées à GND (niveau logique 0). Les entrées de sélection a, b, c sont connectées à S0, S1, S2. Le but est probablement de déterminer la fonction logique Fa en fonction de a, b, c.)</p>
+    </div>
+
+    <footer>
+        <span>Page 71</span>
+    </footer>
+    <!-- End Page 1 Content -->
+
+    <!-- Page 2 is mostly blank, just headers and page number -->
+    <!-- Start Page 3 Content -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h2>Chapitre 4</h2>
+    <h3>Logique séquentielle</h3>
+
+    <h4>4.1. Introduction</h4>
+
+    <p>
+        Tous les circuits que nous avons étudiés jusqu'à présent ont été réalisés en agençant, de façon plus ou moins astucieuse, des portes logiques les unes derrière les autres. Ces circuits appartiennent à la <strong>logique combinatoire</strong>. Dans ces circuits, la sortie à un instant donné dépend <em>uniquement</em> des valeurs des entrées à ce même instant. À aucun moment la sortie d'une porte logique n'a été rebouclée (feedback), plus ou moins directement, vers son entrée (comme illustré en Figure 22.a). Ce type de circuit, pour lequel on peut toujours calculer de proche en proche la valeur des sorties lorsque l'on connaît les entrées, est décrit dans le cadre de la logique combinatoire. Pour ces circuits une même combinaison des entrées donnera toujours la même valeur des sorties.
+    </p>
+
+    <div>
+        <img src="placeholder_figure22a.png" alt="Figure 22a: Circuit combinatoire utilisant des portes NAND2, sans rebouclage." class="placeholder" style="width:45%; display:inline-block; vertical-align: top;">
+        <img src="placeholder_figure22b.png" alt="Figure 22b: Circuit séquentiel utilisant des portes NAND2, avec rebouclage de la sortie vers une entrée." class="placeholder" style="width:45%; display:inline-block; vertical-align: top;">
+        <p class="caption">Figure 22: (a) circuit décrit par la logique combinatoire. (b) circuit décrit par la logique séquentielle.</p>
+    </div>
+
+    <p>
+        La situation est complètement différente lorsque la sortie d'une porte est rebouclée sur son entrée (Figure 22.b). Ce type de circuit introduit une dépendance temporelle et appartient à la <strong>logique séquentielle</strong>. Dans cette situation l'état de sortie du circuit à un instant donné dépend :
+    </p>
+    <ul>
+        <li>De la valeur des entrées à cet instant</li>
+    <!-- Continuation on next page -->
+
+    <footer>
+        <span>Page 73</span>
+    </footer>
+    <!-- End Page 3 Content -->
+
+    <!-- Start Page 4 Content -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+        <!-- Continuation from previous page -->
+        <li>De la valeur de la (ou des) sortie(s) aux instants antérieurs (c'est-à-dire, de l'état précédent du circuit).</li>
+    </ul>
+
+    <p>
+        Ces circuits sont évidemment parfaitement déterministes mais leur état présent est fixé par toute la séquence des entrées, c'est-à-dire par les valeurs qui ont précédé les valeurs actuelles. Une étude temporelle est donc indispensable pour en comprendre le fonctionnement. Ces circuits n'obéissent plus aux règles (simples) de la logique combinatoire. Ils doivent être décrits et étudiés dans le cadre de la logique séquentielle. Le terme "séquentielle" fait ici référence à une succession d'événements dans le temps et s'applique aux systèmes où le temps joue un rôle à part entière pour la détermination de l'état de sortie. Autrement dit, ces circuits possèdent une "mémoire" de leur état passé.
+    </p>
+
+    <p>
+        Bien entendu, toutes les règles d'algèbre de Boole que nous avons vues précédemment s'appliqueront également en logique séquentielle pour analyser le comportement des portes logiques individuelles.
+    </p>
+
+    <h4>4.2. Les bascules (Latches / Flip-Flops)</h4>
+
+    <p>
+        Les bascules (terme général qui englobe les "latches" et les "flip-flops" en anglais) sont les éléments de base de la logique séquentielle, un peu comme l'étaient les portes logiques en logique combinatoire. Elles sont fondamentales car elles permettent de stocker une information binaire (un bit). Nous verrons par la suite qu'elles permettent de réaliser de nombreux systèmes (compteurs, registres, mémoires ...) d'où leur importance.
+    </p>
+
+    <p>
+        De façon générale une bascule se caractérise par :
+    </p>
+    <ul>
+        <li>
+            <strong>L'existence de deux états de sortie stables</strong>. C'est à dire deux états (par exemple, sortie Q=0 ou sortie Q=1) dans lesquels la bascule peut se maintenir indéfiniment sans action extérieure (elle "mémorise" l'état).
+        </li>
+        <li>
+            <strong>Des entrées de commande</strong> permettant de passer au choix d'un état stable à un autre.
+        </li>
+    </ul>
+
+    <p>
+        Nous allons tout de suite donner l'exemple de la bascule la plus simple très connue sous le nom de <strong>bascule RS</strong>.
+    </p>
+
+    <h5>4.2.1. La bascule RS</h5>
+
+    <h6>a. Schéma</h6>
+
+    <p>
+        La bascule RS est la plus simple des bascules. Elle est réalisée à partir de deux portes NOR ou de deux portes NAND interconnectées avec rebouclage. Nous allons étudier en détail le fonctionnement de la bascule RS réalisée avec des portes NOR. Le schéma de cette bascule est donné sur la Figure 23. La bascule possède deux entrées notées $R$ (Reset) et $S$ (Set) ainsi que deux sorties conventionnellement notées $Q$ et $\bar{Q}$. Idéalement, la sortie $\bar{Q}$ est toujours l'inverse logique de la sortie $Q$.
+    </p>
+
+    <footer>
+        <span>Page 74</span>
+    </footer>
+    <!-- End Page 4 Content -->
+
+    <!-- Start Page 5 Content -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <div>
+        <img src="placeholder_figure23.png" alt="Figure 23: Schéma d'une bascule RS réalisée avec deux portes NOR interconnectées." class="placeholder">
+        <p class="caption">Figure 23: Bascule RS réalisée avec des portes NOR</p>
+        <p style="text-align:center;">(Description: Deux portes NOR. L'entrée R et la sortie Q de la seconde porte sont les entrées de la première porte NOR, dont la sortie est $\bar{Q}$. L'entrée S et la sortie $\bar{Q}$ de la première porte sont les entrées de la seconde porte NOR, dont la sortie est Q.)</p>
+    </div>
+
+    <h6>b. Fonctionnement</h6>
+
+    <p>
+        La bascule étant constituée sur la base de portes NOR, rappelons qu'une sortie de porte NOR est à 0 si au moins une de ses entrées est à 1, et elle est à 1 uniquement si toutes ses entrées sont à 0. Dès que l'une des entrées R ou S est au niveau 1 (et l'autre à 0), l'état des sorties $Q$ et $\bar{Q}$ est forcé. Compte tenu de la table de vérité de la fonction NOR et de la structure rebouclée, on remarque que :
+    </p>
+    <ul>
+        <li>
+            La combinaison $S = 1$ et $R = 0$ impose $Q=1$ et $\bar{Q} = 0$. (La porte du bas a une entrée S=1, donc sa sortie Q=1. Cette sortie Q=1 va à l'entrée de la porte du haut, avec R=0. Les entrées 0 et 1 donnent une sortie $\bar{Q}=0$). L'entrée $S = 1$ place la sortie $Q$ au niveau haut. Cette combinaison des entrées correspond au mode de fonctionnement <strong>SET</strong> (mise à 1).
+        </li>
+        <li>
+            La combinaison $S = 0$ et $R = 1$ impose $Q=0$ et $\bar{Q} = 1$. (La porte du haut a une entrée R=1, donc sa sortie $\bar{Q}=0$. Cette sortie $\bar{Q}=0$ va à l'entrée de la porte du bas, avec S=0. Les entrées 0 et 0 donnent une sortie Q=0). L'entrée $R = 1$ place la sortie $Q$ au niveau bas. Cette combinaison des entrées correspond au mode de fonctionnement <strong>RESET</strong> (mise à 0).
+        </li>
+    </ul>
+
+    <p>
+        La situation la plus intéressante est certainement $S = 0, R = 0$. Dans ce cas, les sorties dépendent de l'état précédent. Si $Q$ était à 1 (et donc $\bar{Q}$ à 0), la porte du haut a les entrées $R=0$ et $Q=1$, sa sortie $\bar{Q}$ devient 0. La porte du bas a les entrées $S=0$ et $\bar{Q}=0$, sa sortie $Q$ reste à 1. L'état $\{Q=1, \bar{Q}=0\}$ est stable.
+        Inversement, si $Q$ était à 0 (et donc $\bar{Q}$ à 1), la porte du haut a les entrées $R=0$ et $Q=0$, sa sortie $\bar{Q}$ devient 1. La porte du bas a les entrées $S=0$ et $\bar{Q}=1$, sa sortie $Q$ reste à 0. L'état $\{Q=0, \bar{Q}=1\}$ est aussi stable.
+        Cette situation ($S=0, R=0$) autorise donc en sortie aussi bien la combinaison $Q=1, \bar{Q}=0$ que la combinaison $Q=0, \bar{Q}=1$. Ces deux combinaisons correspondent aux deux <strong>états stables</strong> (ou états mémoire) de la bascule, c'est-à-dire aux deux états dans lesquels la bascule se maintient indéfiniment tant que l'on ne change pas la valeur de ses entrées ($S=0, R=0$). La combinaison effectivement présente sur les sorties dépend de la combinaison des entrées qui a précédé la situation $S = 0, R = 0$. Cette situation antérieure était nécessairement du type $S = 1, R = 0$ (qui a forcé $Q=1$) ou $S = 0, R = 1$ (qui a forcé $Q=0$)$^6$, et c'est la dernière entrée (S ou R) qui valait 1 qui impose l'état mémorisé par la bascule lorsque les deux entrées retournent à 0.
+    </p>
+
+    <p class="footnote">
+        <sup>6</sup> La combinaison des entrées précédente ne peut pas être $S = 1, R = 1$. En pratique, les deux entrées ne peuvent pas changer rigoureusement au même instant pour passer de $S=1, R=1$ à $S=0, R=0$; l'une commute nécessairement avant l'autre, déterminant ainsi l'état final (ce qui rend la transition depuis $S=1, R=1$ potentiellement imprédictible).
+    </p>
+
+    <footer>
+        <span>Page 75</span>
+    </footer>
+    <!-- End Page 5 Content -->
+
+    <!-- Start Page 6 Content -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <p>Ainsi, lorsque $S=0, R=0$ :</p>
+    <ul>
+        <li>$Q=1, \bar{Q}=0$ si l'état juste avant était induit par $S = 1$ et $R = 0$.</li>
+        <li>$Q=0, \bar{Q}=1$ si l'état juste avant était induit par $S = 0$ et $R = 1$.</li>
+    </ul>
+
+    <p>
+        Lorsque $S = 0, R = 0$ la bascule mémorise donc l'état associé à la précédente combinaison active des entrées (Set ou Reset). La combinaison $S = 0, R = 0$ est ainsi appelée mode <strong>MEMOIRE</strong>.
+    </p>
+
+    <p>
+        Remarquons pour finir que la combinaison des entrées $S = 1$ et $R = 1$ force les deux sorties des portes NOR à 0. On trouve en effet $Q=0$ et $\bar{Q}=0$. Dans cet état, les sorties ne sont plus complémentées, ce qui contredit la convention $Q / \bar{Q}$. Bien que cette situation n'entraîne aucun dommage pour les circuits et qu'elle soit parfaitement réalisable en pratique, on a coutume de la désigner comme <strong>interdite</strong> pour une bascule RS. La raison principale est que si les entrées passent simultanément de $S=1, R=1$ à $S=0, R=0$, l'état final de la bascule est indéterminé (il dépendra de quelle porte réagit la plus vite, une condition de course ou "race condition").
+    </p>
+
+    <h6>c. Chronogramme</h6>
+
+    <p>
+        Le comportement de la bascule RS lors de changements successifs des entrées $R$ et $S$ est illustré sur le chronogramme suivant (Figure 24). Les flèches sur le dessin indiquent les relations de cause à effet entre les signaux (par exemple, un changement sur S cause un changement sur Q). En pratique on trouvera souvent ce type d'informations dans les DATA BOOKS (fiches techniques) des constructeurs.
+    </p>
+
+    <ul>
+        <li>
+            À $t = t_0$ les entrées sont $R = 0$ et $S = 0$. Supposons que l'état initial mémorisé soit $Q = 0$ et $\bar{Q}=1$. La bascule est en mode MEMOIRE.
+        </li>
+        <li>
+            À $t = t_1$: $R = 0$ et $S$ effectue la transition $0 \to 1$. La bascule passe en mode SET et les sorties commutent en conséquence $Q:0 \to 1$ et $\bar{Q}:1 \to 0$.
+        </li>
+        <li>
+            À $t = t_2$: $R = 0$ et $S$ retourne au niveau bas $S:1 \to 0$. Les entrées sont maintenant $R=0, S=0$. Les sorties ne changent pas et restent $Q=1$ et $\bar{Q}=0$. La bascule a donc mémorisé le passage de l'entrée S au niveau 1. Elle est en mode MEMOIRE.
+        </li>
+        <li>
+            À $t = t_3$: l'entrée $R$ effectue la transition $0 \to 1$ alors que $S = 0$. La bascule passe en mode RESET et les sorties commutent $Q:1 \to 0$ et $\bar{Q}:0 \to 1$.
+        </li>
+        <li>
+            À $t = t_4$: L'entrée $R$ revient au niveau bas $R:1 \to 0$ et $S = 0$. Les entrées sont de nouveau $R=0, S=0$. La bascule revient alors en mode MEMOIRE, mais cette fois la sortie mémorisée est $Q = 0$ et $\bar{Q} = 1$.
+        </li>
+    </ul>
+
+    <footer>
+        <span>Page 76</span>
+    </footer>
+    <!-- End Page 6 Content -->
+
+    <!-- Start Page 7 Content -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <div>
+        <img src="placeholder_figure24.png" alt="Figure 24: Chronogramme illustrant le fonctionnement d'une bascule RS NOR pour différentes transitions des entrées R et S." class="placeholder">
+        <p class="caption">Figure 24 Fonctionnement de la bascule RS à base de portes NOR</p>
+         <p style="text-align:center;">(Description: Le chronogramme montre les signaux R, S, Q, $\bar{Q}$ en fonction du temps t. Les transitions aux instants $t_1, t_2, t_3, t_4$ correspondent aux descriptions données dans le texte. Les flèches indiquent la causalité: S passe à 1 cause Q passe à 1; S passe à 0 ne cause pas de changement; R passe à 1 cause Q passe à 0; R passe à 0 ne cause pas de changement.)</p>
+   </div>
+
+    <h6>d. Table de vérité et équation caractéristique</h6>
+
+    <p>
+        On peut écrire une table de vérité pour cette bascule en faisant explicitement intervenir le temps, ou plus précisément l'état antérieur. Comme dans les DATA BOOKS, on notera $Q_0$ la valeur de la sortie $Q$ juste avant l'application des entrées S et R (ou juste avant que la condition $S = 0, R = 0$ ne soit réalisée, pour le cas mémoire). La table suivante donne la valeur de la sortie $Q$ (et $\bar{Q}$) après stabilisation, en fonction des entrées $S$, $R$ et de l'état précédent $Q_0$.
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>S</th>
+                <th>R</th>
+                <th>$Q_0$</th>
+                <th>$Q$ (état suivant)</th>
+                <th>$\bar{Q}$ (état suivant)</th>
+                <th>Mode</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>$Q_0$</td>
+                <td>$Q_0$</td>
+                <td>$\bar{Q_0}$</td>
+                <td>Mémoire</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>X (indifférent)</td>
+                <td>0</td>
+                <td>1</td>
+                <td>Reset</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>X (indifférent)</td>
+                <td>1</td>
+                <td>0</td>
+                <td>Set</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>X (indifférent)</td>
+                <td>0</td>
+                <td>0</td>
+                <td>« Interdit »</td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="text-align:center; font-size:0.9em;">(Note: La colonne $Q_0$ est pertinente seulement pour la ligne $S=0, R=0$. Pour les autres lignes, l'état précédent n'influence pas le nouvel état forcé par S ou R.)</p>
+
+    <p>
+        Cette table de vérité donne la valeur présente (ou future proche) de la sortie $Q$ en fonction des entrées S, R et de la valeur précédente $Q_0$.
+    </p>
+
+    <p>
+        L'<strong>équation caractéristique</strong> s'obtient à partir de la table de vérité précédente en exprimant la sortie future $Q$ (souvent notée $Q_{n+1}$ ou $Q^+$) en fonction des entrées ($S, R$) et de l'état présent $Q$ (souvent noté $Q_n$ ou $Q$, ici $Q_0$).
+    </p>
+
+    <footer>
+        <span>Page 77</span>
+    </footer>
+    <!-- End Page 7 Content -->
+
+    <!-- Start Page 8 Content -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <p>
+        Cherchons l'expression de $Q$ en fonction de $R, S$ et $Q_0$. Pour cela, on peut utiliser une table de Karnaugh. En considérant la sortie $Q$ de la table de vérité précédente (et en traitant la condition interdite $S=1, R=1$ comme produisant $Q=0$, ou comme une condition indifférente 'X' si l'on veut s'assurer qu'on ne l'utilise pas), on obtient la table de Karnaugh suivante (Disposition un peu inhabituelle dans le document original, nous la reconstruisons logiquement) :
+    </p>
+    <p style="text-align:center;">Table de Karnaugh pour Q(S, R, Q₀)</p>
+     <table>
+        <thead>
+            <tr>
+                <th>$Q_0 \setminus SR$</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>0</td> <!-- S=0,R=0,Q0=0 -> Q=0 (Mem) -->
+                <td>0</td> <!-- S=0,R=1 -> Q=0 (Reset) -->
+                <td>0</td> <!-- S=1,R=1 -> Q=0 (Interdit) -->
+                <td>1</td> <!-- S=1,R=0 -> Q=1 (Set) -->
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td> <!-- S=0,R=0,Q0=1 -> Q=1 (Mem) -->
+                <td>0</td> <!-- S=0,R=1 -> Q=0 (Reset) -->
+                <td>0</td> <!-- S=1,R=1 -> Q=0 (Interdit) -->
+                <td>1</td> <!-- S=1,R=0 -> Q=1 (Set) -->
+            </tr>
+        </tbody>
+    </table>
+    <p style="text-align:center;">(Groupements possibles: un groupe de 2 pour $S\bar{R}$ (colonne 10), et un groupe de 2 pour $Q_0 \bar{S} \bar{R}$ (cellule $Q_0=1, SR=00$). Cependant, si l'on groupe la colonne $\bar{R}$ (colonnes 00 et 10) lorsque $Q_0=1$ ou $S=1$, on obtient $\bar{R} \cdot (S + Q_0)$. Vérifions l'équation donnée.)</p>
+
+
+    <p>On obtient l'équation caractéristique :</p>
+    <p style="text-align:center; font-size:1.2em;">
+        $Q = S \cdot \bar{R} + Q_0 \cdot \bar{R}$
+    </p>
+    <p style="text-align:center;">Qui peut se factoriser en :</p>
+     <p style="text-align:center; font-size:1.2em;">
+        $Q = \bar{R} \cdot (S + Q_0)$
+    </p>
+    <p style="text-align:center;">(Cette équation signifie que la sortie Q sera 1 si Reset (R) n'est pas actif ET si soit Set (S) est actif, soit la bascule était déjà à 1 ($Q_0=1$) et on est en mode mémoire (S=0). Elle couvre bien les cas Set, Reset et Mémoire, mais ne gère pas le cas interdit $S=1, R=1$ correctement si on le voulait différent de 0.)</p>
+
+    <h6>e. Conclusion</h6>
+
+    <p>Plusieurs conclusions peuvent être tirées de l'étude précédente de la bascule RS NOR :</p>
+    <ol>
+        <li>La bascule RS à base de portes NOR possède un mode mémoire ($S = R = 0$) auquel sont associés deux états stables en sortie: soit $Q=1$ et $\bar{Q}=0$, soit $Q = 0$ et $\bar{Q}=1$.</li>
+        <li>La transition $R:0 \to 1$ (passage à 1 de R) avec $S = 0$ entraîne la sortie $Q \to 0$. Pour cette raison l'entrée R est appelée l'entrée <strong>RESET</strong> (remise à zéro).</li>
+        <li>La transition $S:0 \to 1$ (passage à 1 de S) avec $R = 0$ entraîne la sortie $Q \to 1$. Pour cette raison l'entrée S est appelée l'entrée <strong>SET</strong> (mise à un).</li>
+        <li>Les entrées R et S sont des entrées de commande permettant de passer d'un état stable à un autre.</li>
+        <li>Ce type de bascule présente au moins deux inconvénients majeurs :
+            <br>a) Une faible immunité aux parasites (bruit) sur les entrées R et S, puisque toute variation des entrées (même non désirée, comme une impulsion de bruit) est prise en compte et est susceptible de modifier l'état des sorties de manière inopportune.
+            <br>b) La difficulté de connecter entre elles un grand nombre de bascules pour former des systèmes complexes. En effet, les bascules commutant chacune à leur rythme (dès qu'une entrée change), il est impossible de les synchroniser précisément pour réaliser un système où les changements d'état doivent se faire de manière coordonnée.
+        </li>
+    </ol>
+
+    <p>
+        Pour remédier, au moins en partie, à ces problèmes (notamment la sensibilité aux entrées et la synchronisation), d'autres types de bascules ont été développés, souvent en ajoutant une entrée de contrôle supplémentaire dite d'horloge ou de validation.
+    </p>
+
+    <footer>
+        <span>Page 78</span>
+    </footer>
+    <!-- End Page 8 Content -->
+
+    <!-- Start Page 9 Content -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h5>4.2.2. La bascule RS avec validation (RS latch)</h5>
+
+    <h6>a. Schéma</h6>
+
+    <p>
+        Le schéma de principe d'une bascule RS avec validation (aussi appelée "gated RS latch" en anglais) est représenté sur la Figure 25. On reconnaît aisément la bascule RS de base (faite avec les portes NOR) dont les entrées effectives sont maintenant notées $R'$ et $S'$. Ces entrées $R'$ et $S'$ sont générées par deux portes AND qui combinent les entrées externes $R$ et $S$ avec une entrée de validation $E$ (pour Enable en anglais). L'entrée $E$ permet de contrôler l'ouverture ou la fermeture des portes AND, et donc de décider si les signaux $R$ et $S$ peuvent atteindre la bascule RS interne.
+    </p>
+
+    <div>
+        <img src="placeholder_figure25.png" alt="Figure 25: Schéma d'une bascule RS avec entrée de validation E, utilisant des portes AND et NOR." class="placeholder">
+        <p class="caption">Figure 25 Schéma d'une bascule RS avec entrée de validation</p>
+        <p style="text-align:center;">(Description: Les entrées R et E alimentent une porte AND dont la sortie est R'. Les entrées S et E alimentent une autre porte AND dont la sortie est S'. R' et S' sont les entrées de la bascule RS NOR de base (Figure 23), qui produit les sorties Q et $\bar{Q}$.)</p>
+    </div>
+
+    <h6>b. Fonctionnement</h6>
+
+    <p>
+        Raisonnons en considérant les deux valeurs possibles du signal de validation $E$:
+    </p>
+    <ul>
+        <li>
+            Lorsque $E = 0$: Les sorties des deux portes AND sont forcées à 0, donc $R' = 0$ et $S' = 0$. La bascule RS interne est alors en mode <strong>mémoire</strong> ($S'=0, R'=0$). Elle restera dans son état actuel quelles que soient les valeurs présentes sur les entrées externes $R$ et $S$. Les entrées R et S sont ignorées.
+        </li>
+        <li>
+            Lorsque $E = 1$: Les portes AND deviennent "transparentes" pour les signaux R et S (car $X \cdot 1 = X$). On a alors $R' = R$ et $S' = S$. Dans ce cas, la bascule avec validation se comporte exactement comme la bascule RS simple étudiée précédemment, en fonction des valeurs de $R$ et $S$:
+            <ul>
+                <li>Si $R = 1, S = 0$ (et $E=1$), alors $R' = 1, S' = 0$, ce qui impose en sortie $Q=0$ et $\bar{Q}=1$ (mode <strong>reset</strong>).</li>
+                <li>Si $R = 0, S = 1$ (et $E=1$), alors $R' = 0, S' = 1$, ce qui impose en sortie $Q=1$ et $\bar{Q}=0$ (mode <strong>set</strong>).</li>
+                <li>Si $R = 0, S = 0$ (et $E=1$), alors $R' = 0, S' = 0$, la bascule reste en mode <strong>mémoire</strong> de son état précédent.</li>
+                <li>Si $R = 1, S = 1$ (et $E=1$), alors $R' = 1, S' = 1$. C'est la condition <strong>interdite</strong>, produisant $Q=0, \bar{Q}=0$.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <p>
+        On voit nettement sur cet exemple que le fonctionnement de la bascule RS avec validation est identique à celui de la bascule RS simple lorsque $E = 1$. En revanche,
+    <!-- Continuation on next page -->
+
+    <footer>
+        <span>Page 79</span>
+    </footer>
+    <!-- End Page 9 Content -->
+
+    <!-- Start Page 10 Content -->
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+        <!-- Continuation from previous page -->
+        lorsque $E = 0$ la bascule est bloquée (insensible aux entrées R et S) et conserve l'état qu'elle avait juste avant que $E$ ne passe à 0, ou l'état qui a été imposé par $R$ et $S$ au moment où $E$ était à 1. Plus précisément, l'état de la bascule est déterminé par les valeurs de R et S pendant que E est à 1. Lorsque $E$ passe à 0, l'état présent à ce moment-là est mémorisé ("latch" signifie verrouiller en anglais). Dans cette situation ($E=0$), les variations ultérieures des entrées $R$ et $S$ n'affectent plus les sorties. L'entrée E agit comme une commande "d'enregistrement".
+    </p>
+
+    <h5>4.2.3. La bascule D (D Latch)</h5>
+
+    <h6>a. Schéma</h6>
+
+    <p>
+        Le logigramme de la bascule D (ou "D Latch", "Data Latch") est donné sur la Figure 26. Il s'agit en réalité d'une bascule RS avec validation (voir le paragraphe 4.2.2) sur laquelle on a ajouté un inverseur (porte NOT) entre l'entrée de donnée unique $D$ et les chemins menant aux entrées $S$ et $R$. L'entrée $S$ reçoit directement le signal $D$ (via la porte AND de validation), tandis que l'entrée $R$ reçoit le signal inversé $\bar{D}$ (via l'autre porte AND de validation). La présence de cet inverseur entraîne obligatoirement que lorsque l'entrée de validation $E$ est active ($E=1$), les entrées internes $S'$ et $R'$ sont toujours complémentaires : $R' = \bar{S'}$ (plus précisément, $S'=D \cdot E$ et $R'=\bar{D} \cdot E$). Par conséquent, les conditions $S'=R'=0$ (mémoire, lorsque E=1) et $S'=R'=1$ (interdite) ne peuvent jamais se produire lorsque $E=1$. La bascule n'est donc jamais en mode mémoire ni en mode interdit lorsque l'entrée de validation $E$ est active.
+    </p>
+
+     <div>
+        <img src="placeholder_figure26.png" alt="Figure 26: Schéma d'une bascule D (D Latch) utilisant un inverseur, des portes AND et une bascule RS NOR interne." class="placeholder">
+        <p class="caption">Figure 26 Schéma d'une bascule D</p>
+        <p style="text-align:center;">(Description: L'entrée D est connectée à une porte AND (avec E) pour former S'. L'entrée D passe aussi par un inverseur (INV) pour donner $\bar{D}$, qui est connecté à l'autre porte AND (avec E) pour former R'. R' et S' sont les entrées de la bascule RS NOR interne qui produit Q et $\bar{Q}$.)</p>
+    </div>
+
+    <h6>b. Fonctionnement</h6>
+
+    <p>
+        Comme pour la bascule RS avec validation, nous allons raisonner sur les deux valeurs possibles de l'entrée de validation $E$.
+    </p>
+    <ul>
+        <li>
+            Lorsque $E = 0$: Comme précédemment, $R' = 0$ et $S' = 0$. La bascule interne est en mode <strong>mémoire</strong>. Les variations de l'entrée $D$ n'affectent pas les sorties $Q$ et $\bar{Q}$. La bascule conserve la dernière valeur enregistrée.
+        </li>
+        <li>
+            Lorsque $E = 1$: Les portes AND sont actives. On a $S' = D \cdot 1 = D$ et $R' = \bar{D} \cdot 1 = \bar{D}$.
+            <ul>
+                <li>Si $D = 1$, alors $S' = 1$ et $R' = 0$. La bascule interne est mise à l'état SET, donc $Q=1$ et $\bar{Q}=0$.</li>
+                <li>Si $D = 0$, alors $S' = 0$ et $R' = 1$. La bascule interne est mise à l'état RESET, donc $Q=0$ et $\bar{Q}=1$.</li>
+            </ul>
+            Dans ces conditions ($E=1$), la sortie $Q$ <strong>recopie</strong> (suit) la valeur de l'entrée $D$. On dit que la bascule est "transparente".
+        </li>
+    </ul>
+
+    <p>
+        Le fonctionnement de la bascule D est illustré sur le chronogramme suivant (Figure non fournie dans l'OCR, mais on peut l'imaginer: Q suit D quand E=1, et Q garde sa valeur quand E=0). Quand E passe de 1 à 0, la valeur de D à cet instant précis est mémorisée en Q.
+    </p>
+
+    <footer>
+        <span>Page 80</span>
+    </footer>
+    <!-- End Page 10 Content -->
+
+    <!-- KaTeX render script configuration -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                // • auto-render specific keys, e.g.:
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+</html>
