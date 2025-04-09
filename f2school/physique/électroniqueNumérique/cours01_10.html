@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Électronique Numérique - Chapitre 4: Logique Séquentielle (Fin)</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            counter-reset: page 20; /* Start page numbering from 21 (PDF page 91) */
+        }
+
+        header,
+        footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #555;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        footer::after {
+          counter-increment: page;
+          content: "Page " counter(page);
+          position: absolute;
+          right: 0;
+        }
+
+        footer {
+            border-top: 1px solid #ccc;
+            border-bottom: none;
+            margin-top: 15px;
+            padding-top: 5px;
+            text-align: center; /* Center text potentially, but page number is on the right */
+        }
+
+        h1, h2, h3, h4, h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        h1 { font-size: 1.8em; }
+        h2 { font-size: 1.6em; border-bottom: 1px solid #eee; padding-bottom: 0.3em; }
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; }
+        h5 { font-size: 1.1em; font-style: italic; }
+
+        img.placeholder {
+            display: block;
+            max-width: 80%;
+            min-height: 100px; /* Reduced min-height */
+            border: 1px dashed #aaa;
+            margin: 15px auto; /* Reduced margin */
+            padding: 10px;
+            text-align: center;
+            color: #888;
+            background-color: #f9f9f9;
+        }
+
+        .caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: 5px;
+            margin-bottom: 15px; /* Reduced margin */
+            font-size: 0.9em;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px 10px; /* Reduced padding */
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .footnote {
+            font-size: 0.85em;
+            margin-top: 15px;
+            color: #444;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Adjust KaTeX display alignment */
+        .katex-display {
+            text-align: center;
+            margin: 1em 0;
+        }
+        .katex-display > .katex {
+            display: inline-block;
+            text-align: initial;
+        }
+        .exercise-section h3 {
+            margin-top: 2em;
+            border-top: 2px solid #ccc;
+            padding-top: 1em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Start Previous Content (Pages 1-20 / PDF 71-90) -->
+    <!-- ... [HTML content from the previous responses would go here] ... -->
+    <!-- End Previous Content -->
+
+    <!-- Start Page 21 Content (PDF Page 91) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h6>c. Bascule JK Synchrone (JK Flip-Flop)</h6>
+    <p>Les tables de vérité et de commandes (excitation) s'écrivent respectivement :</p>
+
+     <div style="display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: wrap;">
+        <!-- Table de Vérité JK -->
+        <div style="margin: 10px;">
+            <p style="text-align:center;">Table de Vérité (JK)</p>
+            <table>
+                <thead>
+                    <tr><th>$J_n$</th><th>$K_n$</th><th>$Q_n$</th><th>$Q_{n+1}$</th><th>$\bar{Q}_{n+1}$</th><th>Mode</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td rowspan="2">Mémoire</td></tr>
+                    <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td rowspan="2">Reset</td></tr>
+                    <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td rowspan="2">Set</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td rowspan="2">Toggle</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                </tbody>
+            </table>
+            <p style="text-align:center;">Table de Vérité Simplifiée (JK)</p>
+            <table>
+                 <thead>
+                    <tr><th>$J_n$</th><th>$K_n$</th><th>$Q_{n+1}$</th><th>$\bar{Q}_{n+1}$</th><th>Mode</th></tr>
+                </thead>
+                 <tbody>
+                    <tr><td>0</td><td>0</td><td>$Q_n$</td><td>$\bar{Q_n}$</td><td>Mémoire</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>Reset</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>Set</td></tr>
+                    <tr><td>1</td><td>1</td><td>$\bar{Q_n}$</td><td>$Q_n$</td><td>Toggle</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table d'Excitation JK -->
+        <div style="margin: 10px;">
+            <p style="text-align:center;">Table d'Excitation (JK)</p>
+            <table>
+                 <thead>
+                    <tr><th>$Q_n \to Q_{n+1}$</th><th>$J_n$</th><th>$K_n$</th></tr>
+                </thead>
+                 <tbody>
+                    <tr><td>$0 \to 0$</td><td>0</td><td>$\phi$</td></tr>
+                    <tr><td>$0 \to 1$</td><td>1</td><td>$\phi$</td></tr>
+                    <tr><td>$1 \to 0$</td><td>$\phi$</td><td>1</td></tr>
+                    <tr><td>$1 \to 1$</td><td>$\phi$</td><td>0</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p>
+        Par rapport à la bascule RS, l'entrée $J$ joue le rôle de $S$ (mode Set) et l'entrée $K$ celui de $R$ (mode Reset). On remarque également qu'il n'y a plus de ligne "interdite". Lorsque les deux entrées $J$ et $K$ sont toutes les deux au niveau haut ($J=1, K=1$) avant le front d'horloge, la bascule fonctionne en mode <strong>Toggle</strong> : la sortie $Q$ s'inverse ($Q_{n+1} = \bar{Q_n}$).
+    </p>
+    <p>
+        La table des commandes (excitation) de la bascule JK contient une valeur indéterminée ($\phi$) à chaque ligne. Cela offre plus de flexibilité lors de la conception (synthèse) de circuits séquentiels, car ces $\phi$ peuvent être choisis comme 0 ou 1 pour simplifier les équations logiques des entrées J et K.
+        <br>(Il est mentionné qu'on pourrait imposer $J=K$, se ramenant à une bascule T (Toggle), mais cela ferait perdre le bénéfice des simplifications offertes par les $\phi$.)
+    </p>
+
+    <p>L'équation caractéristique de la bascule JK s'obtient en écrivant la table de Karnaugh:</p>
+    <p style="text-align:center;">Table de Karnaugh pour $Q_{n+1}$ (JK Flip-Flop)</p>
+    <table>
+        <thead>
+            <tr>
+                <th>$Q_n \setminus J_n K_n$</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>0</td> <!-- Mem(0) -->
+                <td>0</td> <!-- Reset -->
+                <td>1</td> <!-- Toggle(0->1) -->
+                <td>1</td> <!-- Set -->
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td> <!-- Mem(1) -->
+                <td>0</td> <!-- Reset -->
+                <td>0</td> <!-- Toggle(1->0) -->
+                <td>1</td> <!-- Set -->
+            </tr>
+        </tbody>
+    </table>
+    <p style="text-align:center;">$Q_{n+1}$</p>
+
+    <p>Ce qui donne après simplification (grouper $J_n \bar{K_n}$ et $\bar{K_n} Q_n$, non, plutôt $J_n \bar{Q_n}$ et $\bar{K_n} Q_n$ ):</p>
+    <p style="text-align:center; font-size:1.2em;">
+        $Q_{n+1} = J_n \cdot \bar{Q_n} + \bar{K_n} \cdot Q_n$
+    </p>
+
+    <h4>Paramètres dynamiques des bascules.</h4>
+    <p>
+        En complément de toutes les informations concernant la fonction logique des différentes bascules (table de vérité, équation caractéristique, etc.), les documentations techniques (datasheets) des fabricants contiennent également de nombreuses informations sur les <strong>paramètres dynamiques</strong> (temporels) des bascules. Ceux-ci incluent :
+    </p>
+    <ul>
+        <li><strong>Temps de propagation (Propagation Delay)</strong>: Le délai entre l'instant où l'entrée active (front d'horloge ou entrée asynchrone) change et l'instant où la sortie $Q$ (ou $\bar{Q}$) réagit et atteint son nouvel état stable. Typiquement noté $t_{PLH}$ (propagation delay low-to-high) et $t_{PHL}$ (propagation delay high-to-low).</li>
+        <li><strong>Temps de pré-positionnement (Setup Time, $t_{su}$)</strong>: Le temps minimum pendant lequel les entrées synchrones (D, J, K, S, R) doivent être stables <em>avant</em> le front actif de l'horloge pour garantir que leur valeur soit correctement prise en compte.</li>
+        <li><strong>Temps de maintien (Hold Time, $t_h$)</strong>: Le temps minimum pendant lequel les entrées synchrones doivent rester stables <em>après</em> le front actif de l'horloge pour garantir une capture correcte.</li>
+        <li><strong>Fréquence maximale d'horloge ($f_{max}$)</strong>: La fréquence la plus élevée du signal d'horloge à laquelle la bascule peut fonctionner de manière fiable. Elle est limitée par les temps de propagation internes et les temps de setup/hold.</li>
+        <li><strong>Largeur minimale d'impulsion (Minimum Pulse Width)</strong>: La durée minimale pendant laquelle le signal d'horloge (ou les signaux Preset/Clear asynchrones) doit rester à l'état haut ou bas pour être correctement reconnu.</li>
+    </ul>
+    <!-- Continuation on next page -->
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 21 Content -->
+
+    <!-- Start Page 22 Content (PDF Page 92) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <p>
+        Ces paramètres ne doivent pas être ignorés lorsque l'on souhaite réaliser un circuit séquentiel complexe nécessitant plusieurs bascules, surtout à des fréquences élevées. Le respect des temps de setup et de hold est crucial pour éviter des erreurs de fonctionnement (métastabilité). La fréquence maximale limite la vitesse globale du système.
+        <br>Nous reviendrons sur ce point dans le polycopié de 2<sup>ème</sup> année.
+    </p>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 22 Content -->
+
+    <!-- Start Page 23 Content (PDF Page 93) -->
+    <div class="page-break exercise-section"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>Autocorrection</h3>
+
+    <h4>4.3. Exercices.</h4>
+
+    <h5>Exercice 1</h5>
+
+    <p>Le montage de la Figure 33 représente une bascule réalisée à partir de portes NAND.</p>
+    <div>
+        <img src="placeholder_figure33.png" alt="Figure 33: Bascule RS réalisée avec des portes NAND." class="placeholder">
+        <p class="caption">Figure 33</p>
+        <p style="text-align:center;">(Description: Deux portes NAND interconnectées. L'entrée R (active bas, notée $\bar{R}$ implicitement) et la sortie Q de la seconde porte sont les entrées de la première porte NAND (numéro 1), dont la sortie est $\bar{Q}$. L'entrée S (active bas, notée $\bar{S}$ implicitement) et la sortie $\bar{Q}$ de la première porte sont les entrées de la seconde porte NAND (numéro 2), dont la sortie est Q.)</p>
+    </div>
+
+    <ol>
+        <li>Que valent les sorties $Q$ et $\bar{Q}$ dans les deux situations suivantes: R = 1, S = 0 et R = 0, S = 1? (Attention: pour une bascule NAND, les entrées sont typiquement actives bas, donc S=0 active Set, R=0 active Reset).</li>
+        <li>Le circuit est dans un état défini par R = 1, S = 0, $Q = 1, \bar{Q}=0$. (Cet état correspond à S=0, donc Set actif). Quelle est l'évolution des sorties lorsque l'entrée S commute vers le niveau haut (R = 1, S:0 $\to$ 1)?</li>
+        <li>Le circuit est dans un état défini par R = 0, S = 1, $Q = 0, \bar{Q}=1$. (Cet état correspond à R=0, donc Reset actif). Quelle est l'évolution des sorties lorsque l'entrée R commute vers le niveau haut (S = 1, R:0 $\to$ 1)?</li>
+        <li>Donner la table de vérité décrivant le fonctionnement de ce circuit (bascule $\bar{S}\bar{R}$).</li>
+    </ol>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 23 Content -->
+
+    <!-- Start Page 24 Content (PDF Page 94) -->
+    <div class="page-break exercise-section"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>Autocorrection</h3>
+
+    <h5>Exercice 2</h5>
+    <p>
+        On considère le montage de la Figure 34 réalisé avec une bascule D synchrone (type Flip-Flop, marqué IFD?) active sur les fronts montants du signal d'horloge CLK. Les sorties Q et $\bar{Q}$ de la bascule sont combinées avec CLK par des portes NOR pour générer les signaux A et B.
+    </p>
+
+    <div>
+        <img src="placeholder_figure34.png" alt="Figure 34: Circuit avec bascule D et portes NOR." class="placeholder">
+        <p class="caption">Figure 34</p>
+        <p style="text-align:center;">(Description: Une bascule D (IFD?) avec entrée D, entrée CLK (marquée CL). La sortie Q va sur une porte NOR avec CLK pour donner A. La sortie $\bar{Q}$ (obtenue via un inverseur INV à partir de Q) va sur une autre porte NOR avec CLK pour donner B. L'entrée D de la bascule est connectée à la sortie A.)</p>
+
+    </div>
+
+    <ol>
+        <li>Donner les expressions logiques des sorties A et B en fonction de Q et CLK.</li>
+        <li>Compléter le chronogramme de la Figure 35, en supposant que l'état initial de Q est 0.</li>
+    </ol>
+
+    <div>
+        <img src="placeholder_figure35.png" alt="Figure 35: Chronogramme à compléter pour l'exercice 2." class="placeholder">
+        <p class="caption">Figure 35</p>
+        <p style="text-align:center;">(Description: Chronogramme vide pour les signaux A, B, Q, avec le signal CLK fourni (une onde carrée).) </p>
+    </div>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 24 Content -->
+
+    <!-- Start Page 25 Content (PDF Page 95) -->
+    <div class="page-break exercise-section"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>Autocorrection</h3>
+
+    <h5>Exercice 3</h5>
+    <p>
+        Soit une bascule JK dont la table de vérité est donnée ci-dessous. Les entrées Clear (R) et Preset (S) sont <strong>synchrones</strong> (prises en compte sur le front d'horloge) et notées respectivement R et S. L'entrée CE (Chip Enable ou Clock Enable) permet de valider le fonctionnement sur front d'horloge. La bascule est active sur front montant (indiqué par $\uparrow$ dans la colonne C pour Clock). R et S sont prioritaires sur J et K.
+    </p>
+    <div>
+        <!-- Placeholder for the table image or recreate it -->
+        <img src="placeholder_table_ex3.png" alt="Table de vérité de la bascule JK de l'exercice 3" class="placeholder" style="max-width: 600px;">
+        <!-- Or Recreated Table -->
+        <p style="text-align:center;">Table de Vérité (Exercice 3)</p>
+        <table>
+             <thead>
+                <tr><th colspan="5">Inputs</th><th colspan="2">Outputs</th></tr>
+                <tr><th>R (Clr)</th><th>S (Pre)</th><th>CE</th><th>J</th><th>K</th><th>C (Clk)</th><th>Q</th></tr>
+            </thead>
+             <tbody>
+                <tr><td>1</td><td>X</td><td>X</td><td>X</td><td>X</td><td>$\uparrow$</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>X</td><td>X</td><td>X</td><td>$\uparrow$</td><td>1</td></tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>X</td><td>X</td><td>X</td><td>No Chg</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>$\uparrow$</td><td>No Chg ($Q_n$)</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>$\uparrow$</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>$\uparrow$</td><td>Toggle ($\bar{Q_n}$)</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>$\uparrow$</td><td>1</td></tr>
+            </tbody>
+        </table>
+        <p style="text-align:center; font-size:0.9em;">(Note: R=1 force Q=0, S=1 force Q=1 (prioritaire). Si R=S=0, CE=0 inhibe l'horloge. Si R=S=0, CE=1, la bascule répond à J, K sur front montant $\uparrow$.)</p>
+    </div>
+
+    <p>Compléter le chronogramme suivant (pour CE = 1 constant) :</p>
+    <div>
+        <img src="placeholder_chrono_ex3.png" alt="Chronogramme à compléter pour l'exercice 3" class="placeholder">
+        <p style="text-align:center;">(Description: Chronogramme vide pour Q, avec CLK, Reset (R), Set (S), J, K fournis. CE=1 est supposé.)</p>
+    </div>
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 25 Content -->
+
+    <!-- Start Page 26 Content (PDF Page 96) -->
+    <div class="page-break exercise-section"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>Autocorrection</h3>
+
+    <h5>Exercice 4</h5>
+    <p>
+        On considère le schéma de la figure ci-dessous (Figure 36) réalisé avec des bascules RS asynchrones à base de portes NOR. Le circuit est contrôlé par une entrée E.
+    </p>
+    <div>
+        <img src="placeholder_figure36.png" alt="Figure 36: Circuit maître-esclave avec bascules RS NOR." class="placeholder">
+        <p class="caption">Figure 36</p>
+        <p style="text-align:center;">(Description: Deux bascules RS (blocs Q1/$\bar{Q1}$ et Q2/$\bar{Q2}$). L'entrée E est connectée à des portes AND. E et $\bar{Q2}$ entrent dans une AND -> R1. E et Q2 entrent dans une AND -> S1. $\bar{E}$ (via inverseur) et Q1 entrent dans une AND -> R2. $\bar{E}$ et $\bar{Q1}$ entrent dans une AND -> S2. La sortie globale est Q (identique à Q2).) </p>
+    </div>
+    <ol>
+        <li>Donner les expressions logiques des entrées R1, S1 (bascule 1, maître) et R2, S2 (bascule 2, esclave) en fonction de E, Q1, $\bar{Q1}$, Q2, $\bar{Q2}$.</li>
+        <li>Rappeler la table de vérité et le fonctionnement d'une bascule RS asynchrone à base de portes NOR.</li>
+        <li>Que peut-on dire du fonctionnement des bascules 1 et 2 lorsque E = 0?</li>
+        <li>Même question lorsque E = 1.</li>
+        <li>Compléter le chronogramme de la Figure 37 (page suivante). Fournir les signaux R1, S1, Q1, $\bar{Q1}$, R2, S2, Q (qui est Q2). Supposer l'état initial Q1=Q2=0.</li>
+        <li>Quelle est la fonction réalisée par ce montage? (Quel type de bascule synchrone cela émule-t-il et sur quel front?)</li>
+    </ol>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 26 Content -->
+
+    <!-- Start Page 27 Content (PDF Page 97) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>Autocorrection</h3>
+
+    <div>
+        <img src="placeholder_figure37.png" alt="Figure 37: Chronogramme à compléter pour l'exercice 4." class="placeholder">
+        <p class="caption">Figure 37</p>
+        <p style="text-align:center;">(Description: Chronogramme vide pour R1, S1, Q1, $\bar{Q1}$, R2, S2, Q, avec le signal E fourni (onde carrée).)</p>
+    </div>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 27 Content -->
+
+    <!-- Start Page 28 Content (PDF Page 98) -->
+    <div class="page-break exercise-section"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>Autocorrection</h3>
+    <h4>4.4. Correction des exercices</h4>
+
+    <h5>Exercice 1 (Bascule $\bar{S}\bar{R}$ NAND)</h5>
+    <ol>
+        <li>
+            Rappel : Porte NAND -> sortie = 0 si TOUTES les entrées = 1 ; sortie = 1 si AU MOINS UNE entrée = 0.
+            <br> - Cas R=1, S=0 : S=0 est l'entrée active (Set). Sur la porte NAND n°2 (sortie Q), l'entrée S=0 force la sortie $Q=1$. Les entrées de la porte NAND n°1 sont R=1 et Q=1, donc sa sortie $\bar{Q}= \overline{1 \cdot 1} = 0$. Résultat : $Q=1, \bar{Q}=0$. Mode SET.
+            <br> - Cas R=0, S=1 : R=0 est l'entrée active (Reset). Sur la porte NAND n°1 (sortie $\bar{Q}$), l'entrée R=0 force la sortie $\bar{Q}=1$. Les entrées de la porte NAND n°2 sont S=1 et $\bar{Q}=1$, donc sa sortie $Q = \overline{1 \cdot 1} = 0$. Résultat : $Q=0, \bar{Q}=1$. Mode RESET.
+        </li>
+        <li>
+            État initial: R=1, S=0, $Q=1, \bar{Q}=0$.
+            <br>Lorsque S commute $S:0 \to 1$ (tout en gardant R=1). Les entrées deviennent R=1, S=1. C'est le mode mémoire pour une bascule NAND. L'état précédent est conservé.
+            <br>Analyse: Porte 1: entrées R=1, Q=1 -> $\bar{Q}=0$. Porte 2: entrées S=1, $\bar{Q}=0$ -> $Q=1$. L'état $Q=1, \bar{Q}=0$ est stable et conservé. Les sorties restent donc $Q=1, \bar{Q}=0$.
+        </li>
+        <li>
+             État initial: R=0, S=1, $Q=0, \bar{Q}=1$.
+             <br>Lorsque R commute $R:0 \to 1$ (tout en gardant S=1). Les entrées deviennent R=1, S=1. C'est le mode mémoire. L'état précédent $Q=0, \bar{Q}=1$ est conservé.
+             <br>Analyse: Porte 1: entrées R=1, Q=0 -> $\bar{Q}=1$. Porte 2: entrées S=1, $\bar{Q}=1$ -> $Q=0$. L'état $Q=0, \bar{Q}=1$ est stable et conservé. Les sorties restent donc $Q=0, \bar{Q}=1$.
+        </li>
+        <li>
+             Table de vérité ($\bar{S}\bar{R}$ Latch NAND). On note $\bar{S}_n, \bar{R}_n$ les entrées (actives bas).
+             <table>
+                <thead><tr><th>$\bar{S}_n$</th><th>$\bar{R}_n$</th><th>$Q_{n+1}$</th><th>$\bar{Q}_{n+1}$</th><th>Mode</th></tr></thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>Interdit</td></tr>
+                    <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>Set</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>Reset</td></tr>
+                    <tr><td>1</td><td>1</td><td>$Q_n$</td><td>$\bar{Q_n}$</td><td>Mémoire</td></tr>
+                </tbody>
+            </table>
+             (Note : Le texte de correction du PDF pour Q4 semble erroné ou incomplet, il donne une table qui ne correspond pas à une bascule NAND standard $\bar{S}\bar{R}$. La table fournie ici est la table standard.)
+        </li>
+    </ol>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 28 Content -->
+
+    <!-- Start Page 29 Content (PDF Page 99) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>Autocorrection</h3>
+
+    <h5>Exercice 2</h5>
+    <ol>
+        <li>
+            Directement à partir du schéma (Figure 34), en utilisant la fonction NOR ($A+B$ inversé):
+            <br> Sortie A = NOR(Q, CLK) = $\overline{Q + CLK}$
+            <br> Sortie B = NOR($\bar{Q}$, CLK) = $\overline{\bar{Q} + CLK}$
+            <br>(Note: Le texte de correction PDF donne $A=\bar{Q}+CLK$ et $B=Q+CLK$ ce qui ne correspond pas aux portes NOR du schéma. La correction ci-dessus est basée sur le schéma.)
+            <br> De plus, l'entrée D de la bascule est $D=A$. Donc $D = \overline{Q + CLK}$.
+        </li>
+        <li>
+            La bascule D synchrone recopie sur sa sortie Q la valeur présente sur son entrée D ($D=A$) au moment du front <strong>montant</strong> sur le signal d'horloge CLK.
+            <br> $Q_{n+1} = D_n = A_n = \overline{Q_n + CLK_n}$ (valeurs juste avant le front montant).
+            <br> Les sorties A et B dépendent de Q et CLK à chaque instant: $A = \overline{Q + CLK}$, $B = \overline{\bar{Q} + CLK}$.
+            <br> <strong>Chronogramme complété (Description):</strong>
+            <ul>
+                <li>Initialement Q=0. CLK=0 -> A=$\overline{0+0}=1$, B=$\overline{1+0}=0$. D=A=1.</li>
+                <li>CLK monte (1er front): Q prend la valeur de D=1. Q passe à 1.</li>
+                <li>CLK=1: Q=1 -> A=$\overline{1+1}=0$, B=$\overline{0+1}=0$. D=A=0.</li>
+                <li>CLK descend: Q=1 -> A=$\overline{1+0}=0$, B=$\overline{0+0}=1$. D=A=0.</li>
+                <li>CLK monte (2e front): Q prend la valeur de D=0. Q passe à 0.</li>
+                <li>CLK=1: Q=0 -> A=$\overline{0+1}=0$, B=$\overline{1+1}=0$. D=A=0.</li>
+                <li>CLK descend: Q=0 -> A=$\overline{0+0}=1$, B=$\overline{1+0}=0$. D=A=1.</li>
+                <li>CLK monte (3e front): Q prend la valeur de D=1. Q passe à 1.</li>
+                <li>Et ainsi de suite... Le circuit semble osciller ou diviser la fréquence par 2. Q change d'état à chaque front montant.</li>
+            </ul>
+             <img src="placeholder_chrono_ex2_corr.png" alt="Chronogramme complété pour l'exercice 2" class="placeholder">
+        </li>
+    </ol>
+
+    <h5>Exercice 3</h5>
+    <p>
+        La bascule est active sur fronts montants. L'entrée R (Reset synchrone) est prioritaire sur S (Set synchrone), qui est prioritaire sur J/K. CE=1 est supposé constant. On analyse le comportement à chaque front montant de CLK en regardant R, S, J, K juste avant.
+    </p>
+    <ul>
+        <li>1er front: R=0, S=0, J=1, K=0 -> Set synchrone. Q passe à 1.</li>
+        <li>2e front: R=0, S=0, J=1, K=1 -> Toggle. Q=1 avant, donc Q passe à 0.</li>
+        <li>3e front: R=0, S=0, J=0, K=1 -> Reset synchrone. Q passe à 0 (reste à 0).</li>
+        <li>4e front: R=0, S=1 -> Set synchrone (prioritaire sur J/K). Q passe à 1.</li>
+        <li>5e front: R=0, S=0, J=0, K=0 -> Mémoire. Q=1 avant, donc Q reste à 1.</li>
+        <li>6e front: R=1 -> Reset synchrone (prioritaire). Q passe à 0.</li>
+        <li>7e front: R=0, S=0, J=1, K=1 -> Toggle. Q=0 avant, donc Q passe à 1.</li>
+        <li>8e front: R=0, S=0, J=1, K=0 -> Set synchrone. Q passe à 1 (reste à 1).</li>
+    </ul>
+    <img src="placeholder_chrono_ex3_corr.png" alt="Chronogramme complété pour l'exercice 3" class="placeholder">
+
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 29 Content -->
+
+    <!-- Start Page 30 Content (PDF Page 100) -->
+    <div class="page-break"></div>
+    <header>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </header>
+
+    <h3>Autocorrection</h3>
+
+    <h5>Exercice 4</h5>
+    <ol>
+        <li>
+            Il s'agit d'une structure maître-esclave. Sur le schéma (Figure 36) on lit directement (en utilisant $\bar{E}$ pour la sortie de l'inverseur):
+            <br> $R1 = E \cdot \overline{Q2}$
+            <br> $S1 = E \cdot Q2$
+            <br> $R2 = \overline{E} \cdot \overline{Q1}$ (Attention, le schéma montre $\bar{E}$ et Q1 vers R2?)
+            <br> $S2 = \overline{E} \cdot Q1$ (Attention, le schéma montre $\bar{E}$ et $\bar{Q1}$ vers S2?)
+            <br> (Relecture attentive du schéma PDF: R1=AND(E, $\bar{Q2}$), S1=AND(E, Q2), R2=AND($\bar{E}$, Q1), S2=AND($\bar{E}$, $\bar{Q1}$). La sortie globale Q=Q2.)
+            <br> Les équations correctes sont donc:
+            <br> $R1 = E \cdot \overline{Q2}$
+            <br> $S1 = E \cdot Q2$
+            <br> $R2 = \overline{E} \cdot Q1$
+            <br> $S2 = \overline{E} \cdot \overline{Q1}$
+        </li>
+        <li>
+             Table de vérité Bascule RS NOR (donnée page 77 PDF / page 19 HTML):
+             <table>
+                <thead><tr><th>S</th><th>R</th><th>$Q_{n+1}$</th><th>Mode</th></tr></thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>$Q_n$</td><td>Mémoire</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td><td>Reset</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>Set</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td><td>Interdit</td></tr>
+                </tbody>
+            </table>
+             Fonctionnement: S=1 force Q=1, R=1 force Q=0. S=R=0 mémorise. S=R=1 est interdit (force Q=0, $\bar{Q}=0$).
+        </li>
+        <li>
+            Lorsque E = 0: $\overline{E} = 1$.
+            <br> Bascule 1 (maître): $R1 = 0 \cdot \overline{Q2} = 0$, $S1 = 0 \cdot Q2 = 0$. La bascule 1 est en mode <strong>mémoire</strong>. Ses sorties Q1, $\overline{Q1}$ ne changent pas.
+            <br> Bascule 2 (esclave): $R2 = 1 \cdot Q1 = Q1$, $S2 = 1 \cdot \overline{Q1} = \overline{Q1}$. La bascule 2 est en mode <strong>écriture</strong> (Set si $\overline{Q1}=1$, Reset si $Q1=1$). Elle recopie l'état de la bascule maître : $Q2 = S2 = \overline{Q1}$ (si R2=Q1=0) et $Q2=0$ si R2=Q1=1. En fait, elle recopie $\overline{Q1}$ sur Q2. $Q2 = \overline{Q1}$. (La sortie Q=Q2 prend la valeur inverse de la sortie Q1 du maître).
+        </li>
+        <li>
+            Lorsque E = 1: $\overline{E} = 0$.
+            <br> Bascule 1 (maître): $R1 = 1 \cdot \overline{Q2} = \overline{Q2}$, $S1 = 1 \cdot Q2 = Q2$. La bascule 1 est en mode <strong>écriture</strong>. Elle recopie l'état (inversé) de la bascule 2 : $Q1 = S1 = Q2$ (si R1=$\overline{Q2}$=0) ou $Q1=0$ (si R1=$\overline{Q2}$=1). Elle recopie $Q2$ sur $Q1$. Donc $Q1 = Q2$.
+            <br> Bascule 2 (esclave): $R2 = 0 \cdot Q1 = 0$, $S2 = 0 \cdot \overline{Q1} = 0$. La bascule 2 est en mode <strong>mémoire</strong>. Sa sortie Q2 (et donc Q) ne change pas.
+        </li>
+        <li>
+            <strong>Chronogramme (Description basé sur E=0 -> Q2=$\overline{Q1}$, E=1 -> Q1=Q2):</strong>
+            <br> Le circuit se comporte comme une bascule T (Toggle) active sur front descendant de E. Quand E passe de 1 à 0, Q2 (la sortie) prend la valeur $\overline{Q1}$. Mais juste avant (quand E=1), Q1 était égal à Q2. Donc Q2 prend la valeur $\overline{Q2_{avant}}$. La sortie Q (=Q2) bascule à chaque front descendant de E.
+            <br> - Initial Q1=0, Q2=0.
+            <br> - E=1: R1=$\bar{0}$=1, S1=0 -> Q1=0. R2=0, S2=0 -> Q2=0 (mem). Q=0.
+            <br> - E:1->0: R1=0, S1=0 -> Q1=0 (mem). R2=Q1=0, S2=$\bar{Q1}$=1 -> Q2=1. Q passe à 1.
+            <br> - E=1: R1=$\bar{1}$=0, S1=1 -> Q1=1. R2=0, S2=0 -> Q2=1 (mem). Q=1.
+            <br> - E:1->0: R1=0, S1=0 -> Q1=1 (mem). R2=Q1=1, S2=$\bar{Q1}$=0 -> Q2=0. Q passe à 0.
+            <br> - E=1: R1=$\bar{0}$=1, S1=0 -> Q1=0. R2=0, S2=0 -> Q2=0 (mem). Q=0.
+            <br> - E:1->0: R1=0, S1=0 -> Q1=0 (mem). R2=Q1=0, S2=$\bar{Q1}$=1 -> Q2=1. Q passe à 1.
+             <img src="placeholder_chrono_ex4_corr.png" alt="Chronogramme complété pour l'exercice 4" class="placeholder">
+        </li>
+        <li>
+            La fonction réalisée est celle d'une bascule <strong>T (Toggle) synchrone</strong>, active sur <strong>front descendant</strong> du signal E (qui joue le rôle d'horloge). La sortie Q change d'état (bascule) à chaque fois que E passe de 1 à 0.
+        </li>
+    </ol>
+
+    <footer>
+        <span>Licence d'Ingénierie Electrique 1<sup>ère</sup> année</span>
+        <span>Électronique Numérique</span>
+    </footer>
+    <!-- End Page 30 Content -->
+
+
+    <!-- KaTeX render script configuration -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                macros: {
+                    "\\bar": "\\overline", // Define \bar as \overline for consistency
+                    "\\arrow": "\\rightarrow",
+                    "\\phi": "\\times" // Use 'X' or times symbol for don't care as in some tables
+                },
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+</html>
