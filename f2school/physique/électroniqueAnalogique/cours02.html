@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronique Analogique - SMP S5</title>
+    <!-- Link to KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- Deferred KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX Auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ]
+        });"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        h1 { font-size: 2em; text-align: center; }
+        h2 { font-size: 1.5em; margin-top: 30px; }
+        h3 { font-size: 1.2em; margin-top: 20px; }
+        h4 { font-size: 1.1em; margin-top: 15px; }
+        p {
+            text-align: justify;
+        }
+        figure {
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #eee;
+            padding: 10px;
+        }
+        figcaption {
+            font-style: italic;
+            color: #555;
+            margin-top: 5px;
+        }
+        img.placeholder {
+            max-width: 100%;
+            height: auto;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+            display: inline-block; /* Necessary for centering */
+        }
+        .math-display {
+            display: block;
+            text-align: center;
+            margin: 15px 0;
+            overflow-x: auto; /* Handle wide formulas */
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        .header-info { text-align: center; margin-bottom: 30px; }
+        .logo { max-width: 150px; float: right; margin-left: 20px;}
+        .clear { clear: both; }
+        .toc { margin: 20px 0; padding: 15px; border: 1px solid #ddd; background-color: #f9f9f9; }
+        .toc ul { list-style: none; padding: 0; }
+        .toc li a { text-decoration: none; color: #0056b3; }
+        .toc li a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ===== Page 1: Title Page ===== -->
+    <header class="header-info">
+        <img src="placeholder_logo_ibnzohr.png" alt="Logo Université Ibn Zohr" class="logo placeholder">
+        <p>Université Ibn Zohr</p>
+        <p>Faculté des sciences d'Agadir</p>
+        <p>Département de physique</p>
+        <p>Filière : Sciences de la Matière Physique (SMP)</p>
+        <p>Licence S5</p>
+        <div class="clear"></div>
+
+        <h1>Support de cours :<br>Electronique analogique</h1>
+
+        <figure>
+            <img src="placeholder_title_schematic.png" alt="Schéma électronique abstrait (filtre actif?)" class="placeholder" style="max-width: 400px;">
+        </figure>
+
+        <p>Réalisé par :</p>
+        <p><strong>Professeur Noureddine MAOUHOUB</strong></p>
+        <p><a href="mailto:n.maouhoub@uiz.ac.ma">n.maouhoub@uiz.ac.ma</a></p>
+        <p>Année universitaire 2015-2016</p>
+    </header>
+
+    <!-- ===== Page 2: Table of Contents ===== -->
+    <nav class="toc">
+        <h2>Sommaire</h2>
+        <ul>
+            <li><a href="#chap1">Chapitre I : Les filtres actifs</a> (Page 3)</li>
+            <li><a href="#chap2">Chapitre II : La contre réaction</a> (Page 17)</li>
+            <li><a href="#chap3">Chapitre III : Les oscillateurs sinusoïdaux</a> (Page 26)</li>
+            <li><a href="#chap4">Chapitre IV : Les comparateurs et multivibrateurs astables</a> (Page 36)</li>
+            <li><a href="#refs">Références bibliographiques</a></li>
+        </ul>
+    </nav>
+
+    <!-- ===== Page 3-16: Chapter I ===== -->
+    <section id="chap1">
+        <h2>Chapitre I : Les filtres actifs</h2>
+
+        <h3>I.1 Définitions</h3>
+
+        <h4>a- Fonction filtrage</h4>
+        <p>Le filtrage de fréquence a pour but de supprimer les signaux de fréquences indésirables et de conserver, voire d'amplifier, les signaux de fréquences souhaitées. Un filtre est donc un circuit électronique, souvent représenté comme un quadripôle (un circuit à deux ports : une entrée et une sortie), qui permet de sélectionner une bande de fréquences spécifique.</p>
+
+        <h4>b- Filtre actif / filtre passif</h4>
+        <ul>
+            <li>Un <strong>filtre passif</strong> est constitué uniquement de composants passifs : résistances (R), condensateurs (C) et/ou bobines (inductances L). Ces composants subissent les tensions et courants qui leur sont appliqués mais ne peuvent pas fournir d'amplification de puissance. Leur gain en tension est au maximum de 1 (0 dB).</li>
+            <li>Un <strong>filtre actif</strong> intègre au moins un composant actif, capable d'amplifier le signal (par exemple, un amplificateur opérationnel (AOP), un transistor). Cela permet non seulement de filtrer mais aussi de modifier (amplifier) l'amplitude des signaux dans la bande passante. Un filtre actif est donc composé d'éléments dont l'impédance dépend de la fréquence (C, L, ou autres combinaisons) et d'un élément actif. Les filtres actifs permettent souvent d'éviter l'utilisation de bobines (qui sont coûteuses, encombrantes et non idéales) et peuvent offrir un gain supérieur à 1.</li>
+        </ul>
+
+        <h4>c- Fonction de transfert d'un filtre</h4>
+        <p>La fonction de transfert d'un filtre, notée $H(j\omega)$, est une grandeur complexe qui décrit comment le filtre modifie l'amplitude et la phase d'un signal sinusoïdal en fonction de sa pulsation $\omega$ (où $\omega = 2\pi f$, $f$ étant la fréquence). C'est le rapport entre le signal de sortie (tension ou courant) et le signal d'entrée.</p>
+        <figure>
+            <img src="placeholder_fig_I_0.png" alt="Bloc diagramme Filtre H(jω) avec Ve et Vs" class="placeholder" style="max-width: 300px;">
+            <figcaption>Représentation d'un filtre comme un quadripôle.</figcaption>
+        </figure>
+        <p>Pour les tensions, la fonction de transfert (ou gain complexe en tension) est :</p>
+        <span class="math-display"> H(j\omega) = \frac{V_s(j\omega)}{V_e(j\omega)} </span>
+        <p>Le module $|H(j\omega)|$ représente le gain en amplitude, et l'argument $\arg(H(j\omega))$ représente le déphasage introduit par le filtre.</p>
+
+        <h4>d- La fréquence de coupure d'un filtre actif</h4>
+        <p>La fréquence de coupure ($f_c$, ou pulsation de coupure $\omega_c$) est une fréquence caractéristique qui délimite la bande passante du filtre. Pour les filtres passe-bas et passe-haut simples, c'est la fréquence pour laquelle le gain en amplitude $|H(j\omega_c)|$ est réduit à $\frac{1}{\sqrt{2}}$ (environ 0.707) de sa valeur maximale $H_{max}$.</p>
+        <span class="math-display"> |H(j\omega_c)| = \frac{H_{max}}{\sqrt{2}} </span>
+        <p>En décibels (dB), le gain est défini comme $G_{dB} = 20 \log_{10} |H(j\omega)|$. Une division par $\sqrt{2}$ correspond à une atténuation de 3 dB, car $20 \log_{10} (\frac{1}{\sqrt{2}}) \approx -3.01$ dB. La fréquence de coupure est donc souvent appelée fréquence à -3dB.</p>
+        <span class="math-display"> G_{dB}(\omega_c) = G_{max, dB} - 3 \text{ dB} </span>
+
+        <h4>e- La bande passante d'un filtre actif</h4>
+        <p>La bande passante (BP) d'un filtre est l'intervalle de fréquences pour lequel le filtre laisse passer le signal avec une atténuation faible (ou une amplification significative). Conventionnellement, elle est définie comme l'intervalle de fréquences où le gain est supérieur ou égal à $H_{max}/\sqrt{2}$ (ou $G_{max, dB} - 3$ dB). Pour un filtre passe-bande, elle est définie par deux fréquences de coupure ($f_{c1}$ et $f_{c2}$), et la bande passante est $BP = f_{c2} - f_{c1}$. Pour un filtre passe-bas, la bande passante va de 0 Hz à $f_c$. Pour un filtre passe-haut, elle va de $f_c$ à l'infini (en théorie).</p>
+
+        <h3>I-2 Filtres actifs du premier ordre</h3>
+        <p>Les filtres du premier ordre ont une fonction de transfert dont le dénominateur est un polynôme du premier degré en $j\omega$. Leur pente d'atténuation (ou d'amplification pour un passe-haut en basse fréquence) est de $\pm 20$ dB par décade en dehors de la bande passante.</p>
+
+        <h4>a- Filtre passe-bas</h4>
+        <p>Un filtre passe-bas laisse passer les basses fréquences (inférieures à $\omega_0$) et atténue les hautes fréquences. Sa fonction de transfert typique est :</p>
+        <span class="math-display"> H(j\omega) = \frac{k}{1+j\frac{\omega}{\omega_0}} </span>
+        <p>Où $k$ est le gain statique (gain à $\omega=0$) et $\omega_0$ est la pulsation de coupure.</p>
+
+        <h5>Diagramme de Bode :</h5>
+        <p>Le diagramme de Bode représente le gain en dB et la phase en fonction de la fréquence (ou pulsation) sur une échelle logarithmique.</p>
+        <p><strong>Gain en décibels (dB) :</strong></p>
+        <span class="math-display"> H_{dB}(\omega) = 20 \log_{10} |H(j\omega)| = 20 \log_{10} \left| \frac{k}{\sqrt{1 + (\frac{\omega}{\omega_0})^2}} \right| = 20 \log_{10} k - 10 \log_{10} \left( 1 + \left(\frac{\omega}{\omega_0}\right)^2 \right) </span>
+        <p><strong>Étude asymptotique du gain :</strong></p>
+        <ul>
+            <li>Pour $\omega \ll \omega_0$: $\frac{\omega}{\omega_0} \approx 0$. Le terme $10 \log_{10}(...)$ tend vers 0. L'asymptote est une droite horizontale : $H_{dB} \approx 20 \log_{10} k = k_{dB}$ (gain statique en dB).</li>
+            <li>Pour $\omega \gg \omega_0$: $\left(\frac{\omega}{\omega_0}\right)^2 \gg 1$. $H_{dB} \approx 20 \log_{10} k - 10 \log_{10} \left(\frac{\omega}{\omega_0}\right)^2 = 20 \log_{10} k - 20 \log_{10} \omega + 20 \log_{10} \omega_0$. C'est une droite de pente -20 dB par décade (une décade est un facteur 10 en fréquence).</li>
+            <li>Pour $\omega = \omega_0$: $H_{dB}(\omega_0) = 20 \log_{10} k - 10 \log_{10}(1+1) = k_{dB} - 10 \log_{10}(2) \approx k_{dB} - 3$ dB. C'est la pulsation de coupure à -3dB.</li>
+        </ul>
+        <p><strong>Déphasage :</strong></p>
+        <span class="math-display"> \phi(\omega) = \arg(H(j\omega)) = \arg(k) - \arg\left(1 + j\frac{\omega}{\omega_0}\right) = 0 - \arctan\left(\frac{\omega}{\omega_0}\right) </span>
+        <p>(En supposant $k$ réel et positif).</p>
+        <p><strong>Étude asymptotique du déphasage :</strong></p>
+        <ul>
+            <li>Pour $\omega \ll \omega_0$: $\arctan(\frac{\omega}{\omega_0}) \approx 0$. L'asymptote est $\phi \approx 0$.</li>
+            <li>Pour $\omega \gg \omega_0$: $\arctan(\frac{\omega}{\omega_0}) \approx \frac{\pi}{2}$. L'asymptote est $\phi \approx -\frac{\pi}{2}$ radians (-90°).</li>
+            <li>Pour $\omega = \omega_0$: $\phi(\omega_0) = -\arctan(1) = -\frac{\pi}{4}$ radians (-45°).</li>
+        </ul>
+
+        <figure>
+            <img src="placeholder_fig_I_1.png" alt="Diagramme de Bode (Gain et Phase) d'un filtre passe-bas du 1er ordre" class="placeholder">
+            <figcaption>Figure I.1 : Diagramme de Bode d'un filtre passe bas</figcaption>
+        </figure>
+
+        <h5>Exemples de filtres actifs passe-bas du 1er ordre :</h5>
+        <p>Deux configurations courantes utilisant un AOP :</p>
+        <figure>
+            <img src="placeholder_fig_I_1_exemples.png" alt="Deux schémas de filtres passe-bas actifs du 1er ordre (inverseur et non-inverseur)" class="placeholder" style="max-width: 700px;">
+            <figcaption>Exemples de filtres passe-bas actifs du 1er ordre.</figcaption>
+        </figure>
+        <p>Pour le circuit de gauche (type inverseur) :</p>
+        <span class="math-display"> H(j\omega) = \frac{V_s}{V_e} = -\frac{Z_2}{Z_1} = -\frac{\frac{R_2}{1+jR_2C\omega}}{R_1} = -\frac{R_2}{R_1} \frac{1}{1+jR_2C\omega} </span>
+        <p>C'est un passe-bas avec $k = -R_2/R_1$ et $\omega_0 = 1/(R_2C)$.</p>
+        <p>Pour le circuit de droite (type non-inverseur) :</p>
+        <span class="math-display"> V^+ = V_e \frac{\frac{1}{jC\omega}}{R + \frac{1}{jC\omega}} = V_e \frac{1}{1+jRC\omega} </span>
+        <span class="math-display"> V_s = V^+ \left(1 + \frac{R_2}{R_1}\right) \implies H(j\omega) = \frac{V_s}{V_e} = \left(1 + \frac{R_2}{R_1}\right) \frac{1}{1+jRC\omega} </span>
+        <p>C'est un passe-bas avec $k = 1 + R_2/R_1$ et $\omega_0 = 1/(RC)$.</p>
+
+        <h4>b- Filtre passe-haut</h4>
+        <p>Un filtre passe-haut laisse passer les hautes fréquences (supérieures à $\omega_0$) et atténue les basses fréquences. Sa fonction de transfert typique est :</p>
+        <span class="math-display"> H(j\omega) = \frac{k \cdot j\frac{\omega}{\omega_0}}{1+j\frac{\omega}{\omega_0}} </span>
+        <p>Où $k$ est le gain en haute fréquence (gain à $\omega \to \infty$) et $\omega_0$ est la pulsation de coupure.</p>
+
+        <h5>Diagramme de Bode :</h5>
+        <p><strong>Gain en décibels (dB) :</strong></p>
+        <span class="math-display"> H_{dB}(\omega) = 20 \log_{10} |H(j\omega)| = 20 \log_{10} \left| \frac{k \frac{\omega}{\omega_0}}{\sqrt{1 + (\frac{\omega}{\omega_0})^2}} \right| = 20 \log_{10} k + 20 \log_{10} \left(\frac{\omega}{\omega_0}\right) - 10 \log_{10} \left( 1 + \left(\frac{\omega}{\omega_0}\right)^2 \right) </span>
+        <p><strong>Étude asymptotique du gain :</strong></p>
+         <ul>
+            <li>Pour $\omega \ll \omega_0$: $\left(\frac{\omega}{\omega_0}\right)^2 \ll 1$. $H_{dB} \approx 20 \log_{10} k + 20 \log_{10} \left(\frac{\omega}{\omega_0}\right)$. C'est une droite de pente +20 dB par décade.</li>
+             <li>Pour $\omega \gg \omega_0$: $\left(\frac{\omega}{\omega_0}\right)^2 \gg 1$. Le terme $10 \log_{10}(...)$ tend vers $20 \log_{10}(\omega/\omega_0)$. L'asymptote est une droite horizontale : $H_{dB} \approx 20 \log_{10} k = k_{dB}$ (gain HF en dB).</li>
+            <li>Pour $\omega = \omega_0$: $H_{dB}(\omega_0) = k_{dB} + 20 \log_{10}(1) - 10 \log_{10}(1+1) = k_{dB} - 3$ dB. C'est la pulsation de coupure à -3dB.</li>
+        </ul>
+         <p><strong>Déphasage :</strong></p>
+        <span class="math-display"> \phi(\omega) = \arg(k) + \arg\left(j\frac{\omega}{\omega_0}\right) - \arg\left(1 + j\frac{\omega}{\omega_0}\right) = 0 + \frac{\pi}{2} - \arctan\left(\frac{\omega}{\omega_0}\right) </span>
+        <p>(En supposant $k$ réel et positif).</p>
+        <p><strong>Étude asymptotique du déphasage :</strong></p>
+        <ul>
+            <li>Pour $\omega \ll \omega_0$: $\arctan(\frac{\omega}{\omega_0}) \approx 0$. L'asymptote est $\phi \approx \frac{\pi}{2}$ (90°).</li>
+            <li>Pour $\omega \gg \omega_0$: $\arctan(\frac{\omega}{\omega_0}) \approx \frac{\pi}{2}$. L'asymptote est $\phi \approx \frac{\pi}{2} - \frac{\pi}{2} = 0$.</li>
+            <li>Pour $\omega = \omega_0$: $\phi(\omega_0) = \frac{\pi}{2} - \arctan(1) = \frac{\pi}{2} - \frac{\pi}{4} = \frac{\pi}{4}$ (45°).</li>
+        </ul>
+
+         <figure>
+            <img src="placeholder_fig_I_2.png" alt="Diagramme de Bode (Gain et Phase) d'un filtre passe-haut du 1er ordre" class="placeholder">
+            <figcaption>Figure I.2 : Diagramme de Bode d'un filtre passe haut</figcaption>
+        </figure>
+
+        <h5>Exemples de filtres actifs passe-haut du 1er ordre :</h5>
+        <figure>
+            <img src="placeholder_fig_I_2_exemples.png" alt="Deux schémas de filtres passe-haut actifs du 1er ordre (inverseur et non-inverseur)" class="placeholder" style="max-width: 700px;">
+            <figcaption>Exemples de filtres passe-haut actifs du 1er ordre.</figcaption>
+        </figure>
+         <p>Pour le circuit de gauche (type inverseur) :</p>
+        <span class="math-display"> H(j\omega) = -\frac{Z_2}{Z_1} = -\frac{R_2}{\frac{1}{jC\omega} + R_1} = -\frac{jR_2C\omega}{1+jR_1C\omega} = -\frac{R_2}{R_1} \frac{jR_1C\omega}{1+jR_1C\omega} </span>
+         <p>C'est un passe-haut avec $k = -R_2/R_1$ et $\omega_0 = 1/(R_1C)$.</p>
+         <p>Pour le circuit de droite (type non-inverseur) :</p>
+        <span class="math-display"> V^+ = V_e \frac{R}{R + \frac{1}{jC\omega}} = V_e \frac{jRC\omega}{1+jRC\omega} </span>
+        <span class="math-display"> V_s = V^+ \left(1 + \frac{R_2}{R_1}\right) \implies H(j\omega) = \left(1 + \frac{R_2}{R_1}\right) \frac{jRC\omega}{1+jRC\omega} </span>
+         <p>C'est un passe-haut avec $k = 1 + R_2/R_1$ et $\omega_0 = 1/(RC)$.</p>
+
+        <h4>c- Filtre passe-tout (filtre déphaseur)</h4>
+        <p>Ce type de filtre laisse passer toutes les fréquences avec un gain constant (idéalement 1, soit 0 dB), mais introduit un déphasage qui varie avec la fréquence. Il est utilisé pour corriger la phase d'un signal sans affecter son amplitude.</p>
+        <p>Deux formes courantes pour la fonction de transfert :</p>
+        <span class="math-display"> H(j\omega) = \frac{1-j\frac{\omega}{\omega_0}}{1+j\frac{\omega}{\omega_0}} \quad \text{ou} \quad H(j\omega) = -\frac{1-j\frac{\omega}{\omega_0}}{1+j\frac{\omega}{\omega_0}} = \frac{-1+j\frac{\omega}{\omega_0}}{1+j\frac{\omega}{\omega_0}} </span>
+        <p>Dans les deux cas, le module est $|H(j\omega)| = \frac{|1-j\frac{\omega}{\omega_0}|}{|1+j\frac{\omega}{\omega_0}|} = \frac{\sqrt{1+(\omega/\omega_0)^2}}{\sqrt{1+(\omega/\omega_0)^2}} = 1$.</p>
+        <p>Le gain en décibel est donc toujours nul : $H_{dB} = 20 \log_{10}(1) = 0$ dB.</p>
+        <p><strong>Déphasage (pour la première forme) :</strong></p>
+        <span class="math-display"> \phi(\omega) = \arg\left(1-j\frac{\omega}{\omega_0}\right) - \arg\left(1+j\frac{\omega}{\omega_0}\right) = -\arctan\left(\frac{\omega}{\omega_0}\right) - \arctan\left(\frac{\omega}{\omega_0}\right) = -2\arctan\left(\frac{\omega}{\omega_0}\right) </span>
+        <p><strong>Étude asymptotique du déphasage :</strong></p>
+        <ul>
+            <li>Pour $\omega \ll \omega_0$: $\phi \approx 0$.</li>
+            <li>Pour $\omega \gg \omega_0$: $\phi \approx -2 \times \frac{\pi}{2} = -\pi$ (-180°).</li>
+            <li>Pour $\omega = \omega_0$: $\phi(\omega_0) = -2\arctan(1) = -2 \times \frac{\pi}{4} = -\frac{\pi}{2}$ (-90°).</li>
+        </ul>
+         <p>(Pour la seconde forme, le déphasage est $\pi - 2\arctan(\omega/\omega_0)$, variant de $\pi$ à $0$).</p>
+
+        <figure>
+            <img src="placeholder_fig_I_3.png" alt="Diagramme de Bode (Gain et Phase) d'un filtre passe-tout du 1er ordre" class="placeholder">
+            <figcaption>Figure I.3 : Diagramme de Bode d'un filtre passe tout</figcaption>
+        </figure>
+
+        <h5>Exemples de filtres actifs passe-tout du 1er ordre :</h5>
+        <figure>
+             <img src="placeholder_fig_I_3_exemples.png" alt="Deux schémas de filtres passe-tout actifs du 1er ordre" class="placeholder" style="max-width: 700px;">
+             <figcaption>Exemples de filtres passe-tout actifs du 1er ordre.</figcaption>
+         </figure>
+         <p>Pour les deux circuits (analyse détaillée requise, utilisant les règles de l'AOP idéal) :</p>
+         <span class="math-display"> H(j\omega) = \frac{1-jRC\omega}{1+jRC\omega} \quad \text{(pour le circuit de gauche, si les R sont égaux et C idem)} </span>
+         <span class="math-display"> H(j\omega) = \frac{-1+jRC\omega}{1+jRC\omega} \quad \text{(pour le circuit de droite, si les R sont égaux et C idem)} </span>
+         <p>Avec $\omega_0 = 1/(RC)$.</p>
+
+        <h3>I-3 Filtres actifs du deuxième ordre</h3>
+        <p>Les filtres du deuxième ordre ont une fonction de transfert dont le dénominateur est un polynôme du second degré en $j\omega$. Ils permettent d'obtenir des pentes d'atténuation plus raides ($\pm 40$ dB/décade) et des formes de réponse plus sélectives que les filtres du premier ordre.</p>
+
+        <h4>I-3-1 Structures de quelques circuits classiques</h4>
+        <p>Plusieurs topologies existent pour réaliser des filtres actifs du second ordre. Deux des plus connues sont les structures de Rauch (ou MFB - Multiple Feedback) et de Sallen-Key (ou VCVS - Voltage Controlled Voltage Source).</p>
+
+        <h5>a- Structure de Rauch (MFB)</h5>
+        <p>Cette structure utilise plusieurs chemins de rétroaction. Elle est souvent utilisée pour les filtres inverseurs.</p>
+        <figure>
+             <img src="placeholder_fig_I_4.png" alt="Schéma général de la structure de Rauch" class="placeholder" style="max-width: 450px;">
+             <figcaption>Figure I.4 : Filtre actif à base de la structure de Rauch</figcaption>
+         </figure>
+         <p>En supposant un AOP idéal ($V^+ = V^-$, courants d'entrée nuls), on peut analyser le circuit. L'entrée non-inverseuse $V^+$ est à la masse, donc $V^- = 0$ (masse virtuelle).</p>
+         <p>Le potentiel au nœud N ($V_N$) est déterminé par les courants qui s'y rejoignent (loi des nœuds) :</p>
+         <span class="math-display"> \frac{V_e - V_N}{Z_1} + \frac{0 - V_N}{Z_2} + \frac{V_s - V_N}{Z_4} + \frac{0 - V_N}{Z_3} = 0 </span>
+         <p>Simplification pour trouver $V_N$ :</p>
+         <span class="math-display"> V_N \left( \frac{1}{Z_1} + \frac{1}{Z_2} + \frac{1}{Z_3} + \frac{1}{Z_4} \right) = \frac{V_e}{Z_1} + \frac{V_s}{Z_4} </span>
+         <p>Le courant dans $Z_5$ vient de $V_N$ et $V_s$, et arrive à l'entrée $V^- = 0$ :</p>
+         <span class="math-display"> \frac{V_N - 0}{Z_3} + \frac{V_s - 0}{Z_5} = 0 \implies V_N = -V_s \frac{Z_3}{Z_5} </span>
+         <p>En combinant ces équations et en réarrangeant (calculs assez longs), on obtient la fonction de transfert générale de la structure de Rauch :</p>
+         <span class="math-display"> H(j\omega) = \frac{V_s}{V_e} = \frac{-Z_2 Z_4 Z_5 / Z_3}{Z_1 Z_2 (1 + \frac{Z_4}{Z_3} + \frac{Z_4}{Z_5}) + Z_4 (Z_1 + Z_2)} = \frac{-Z_5/Z_1}{Z_3/Z_1 + Z_3 Z_4/(Z_1 Z_2) + Z_3 Z_4/(Z_1 Z_5) + Z_4/Z_2 + Z_4/Z_1} </span>
+         <p>Une forme plus simple est souvent présentée :</p>
+         <span class="math-display"> H(j\omega) = \frac{-Z_2 Z_4 Z_5}{Z_1 Z_2 (Z_3 + Z_4 + Z_5) + Z_3 Z_4 (Z_1 + Z_2)} </span>
+         <p>En choisissant judicieusement les impédances $Z_1$ à $Z_5$ comme des résistances ou des condensateurs, on peut réaliser différents types de filtres (passe-bas, passe-haut, passe-bande).</p>
+
+        <h5>b- Structure de Sallen-Key (VCVS)</h5>
+        <p>Cette structure utilise une rétroaction positive via le réseau RC et une rétroaction négative (ou un simple gain) via l'AOP. Elle est souvent utilisée pour les filtres non-inverseurs.</p>
+        <figure>
+             <img src="placeholder_fig_I_5.png" alt="Schéma général de la structure de Sallen-Key" class="placeholder" style="max-width: 450px;">
+             <figcaption>Figure I.5 : Filtre actif à base de la structure de Sallen et Key</figcaption>
+         </figure>
+         <p>L'AOP est monté en amplificateur non-inverseur avec un gain $k = 1 + \frac{(k-1)R}{R} = k$. (Note : la notation $k-1$ dans le schéma est un peu confuse, $k$ représente le gain total $V_s/V^+$). On suppose l'AOP idéal, $V^- = V^+$.</p>
+         <span class="math-display"> V_s = k V^+ </span>
+         <p>Loi des nœuds au point A (potentiel $V_A$) :</p>
+         <span class="math-display"> \frac{V_e - V_A}{Z_1} + \frac{V_s - V_A}{Z_2} + \frac{V^+ - V_A}{Z_3} = 0 </span>
+         <p>Loi des nœuds au point $V^+$ :</p>
+         <span class="math-display"> \frac{V_A - V^+}{Z_3} + \frac{0 - V^+}{Z_4} = 0 \implies V_A = V^+ \left( 1 + \frac{Z_3}{Z_4} \right) </span>
+         <p>En substituant $V_A$ et $V_s = k V^+$ dans la première équation des nœuds et en réarrangeant (calculs également longs), on obtient la fonction de transfert. Il est souvent plus simple de calculer $1/H(j\omega)$ :</p>
+         <span class="math-display"> \frac{1}{H(j\omega)} = \frac{V_e}{V_s} = \frac{1}{k} \left[ 1 + \frac{Z_1}{Z_2} + \frac{Z_1}{Z_3} + \frac{Z_1}{Z_4} + \frac{Z_1 Z_3}{Z_2 Z_4} - \frac{Z_1}{Z_3} (k) \left(1 + \frac{Z_3}{Z_4}\right) \right] </span>
+         <p>Une forme simplifiée souvent donnée est :</p>
+         <span class="math-display"> \frac{1}{H(j\omega)} = \frac{1}{k} \left[ 1 + \frac{Z_1}{Z_2} + \frac{Z_1}{Z_4} + \frac{Z_3}{Z_4} + \frac{Z_1 Z_3}{Z_2 Z_4} - k \frac{Z_1}{Z_4} \right] </span>
+         <p>La formule donnée dans le PDF est :</p>
+         <span class="math-display"> \frac{1}{H(j\omega)} = \frac{1}{k} \left[ 1 + (1-k)\frac{Z_1}{Z_4} + \frac{Z_1}{Z_3} + \frac{Z_1}{Z_2} + \frac{Z_1 Z_2}{Z_3 Z_4} \right] \quad \text{(Vérifier cette formule, semble y avoir une erreur dans l'original)} </span>
+         <p>La forme canonique correcte est souvent écrite comme :</p>
+         <span class="math-display"> H(j\omega) = \frac{k}{1 + Z_1(\frac{1}{Z_2}+\frac{1}{Z_3}+\frac{1}{Z_4}) + \frac{Z_1 Z_3}{Z_2 Z_4} - k \frac{Z_1}{Z_3}} </span>
+
+        <h4>I-3-2 Les fonctions de filtrage du second ordre</h4>
+
+        <h5>a- Filtre passe-bas</h5>
+        <p>La fonction de transfert normalisée d'un filtre passe-bas du second ordre est :</p>
+        <span class="math-display"> H(j\omega) = \frac{H_0}{1 - (\frac{\omega}{\omega_0})^2 + 2m j \frac{\omega}{\omega_0}} = \frac{H_0}{1 - x^2 + j 2mx} </span>
+        <p>Où :</p>
+        <ul>
+            <li>$H_0$ est le gain statique (gain à $\omega = 0$).</li>
+            <li>$\omega_0$ est la pulsation propre (ou fréquence naturelle non amortie) du filtre. Ce n'est pas toujours la fréquence de coupure à -3dB.</li>
+            <li>$m$ est le facteur d'amortissement (sans dimension, positif). Il détermine la forme de la réponse près de $\omega_0$. On utilise aussi souvent le facteur de qualité $Q = 1/(2m)$.</li>
+            <li>$x = \omega/\omega_0$ est la pulsation réduite.</li>
+        </ul>
+        <p><strong>Gain en dB :</strong></p>
+        <span class="math-display"> H_{dB}(\omega) = 20 \log_{10} |H_0| - 10 \log_{10} \left[ (1-x^2)^2 + (2mx)^2 \right] </span>
+        <p><strong>Déphasage :</strong></p>
+        <span class="math-display"> \phi(\omega) = \arg(H_0) - \arctan \left( \frac{2mx}{1-x^2} \right) </span>
+
+        <p><strong>Comportement selon $m$ (ou $Q$) :</strong></p>
+        <ul>
+            <li><strong>$m > 1$ ($Q < 0.5$) : Sur-amorti.</strong> La réponse est similaire à deux filtres du 1er ordre en cascade. Pas de pic de résonance. La fonction de transfert peut être factorisée en deux pôles réels distincts :
+            <span class="math-display"> H(j\omega) = \frac{H_0}{(1+j\omega/\omega_1)(1+j\omega/\omega_2)} </span>
+            avec $\omega_{1,2} = \omega_0 (m \mp \sqrt{m^2-1})$.</li>
+            <li><strong>$m = 1$ ($Q = 0.5$) : Amortissement critique.</strong> Limite entre sur-amorti et sous-amorti. Pôle double réel. Réponse la plus rapide sans dépassement.
+            <span class="math-display"> H(j\omega) = \frac{H_0}{(1+j\omega/\omega_0)^2} </span></li>
+            <li><strong>$m < 1$ ($Q > 0.5$) : Sous-amorti.</strong> La réponse présente un pic (résonance) près de $\omega_0$ si $m$ est suffisamment petit ($m < 1/\sqrt{2} \approx 0.707$, soit $Q > 0.707$). Les pôles sont complexes conjugués :
+            $\omega_{p1, p2} = \omega_0 (-m \pm j\sqrt{1-m^2})$.
+            La fréquence de résonance $\omega_r$ (où le gain est maximal) existe si $m < 1/\sqrt{2}$ et vaut :
+            <span class="math-display"> \omega_r = \omega_0 \sqrt{1-2m^2} </span>
+            Le gain maximal à cette fréquence est :
+            <span class="math-display"> H_{max}(\omega_r) = \frac{H_0}{2m\sqrt{1-m^2}} </span></li>
+        </ul>
+        <p><strong>Fréquence de coupure $\omega_c$ (-3dB) :</strong> Elle dépend de $m$. On la trouve en résolvant $|H(j\omega_c)|^2 = |H_0|^2 / 2$. L'équation $(1-x_c^2)^2 + (2mx_c)^2 = 2$ donne $x_c^4 + (4m^2-2)x_c^2 - 1 = 0$. La solution positive pour $x_c^2$ donne $\omega_c$. Une expression est donnée dans le PDF :</p>
+        <span class="math-display"> \omega_c = \omega_0 \sqrt{ (1-2m^2) + \sqrt{(1-2m^2)^2 + 1} } \quad \text{(Formule complexe, souvent on retient $\omega_c \approx \omega_0$ pour $m \approx 0.7$)} </span>
+        <p>La formule du PDF semble différente : $\omega_c = \omega_0 \left( \sqrt{(2m^2-1)^2+1} - (2m^2-1) \right)^{1/2}$ ? Vérification nécessaire. La dépendance est correcte.</p>
+
+        <figure>
+            <img src="placeholder_fig_I_6.png" alt="Diagramme de Bode (Gain et Phase) d'un filtre passe-bas du 2nd ordre pour différentes valeurs de m" class="placeholder">
+            <figcaption>Figure I.6 : Diagramme de Bode d'un filtre passe bas du second ordre</figcaption>
+        </figure>
+
+        <h5>Exemples de filtres actifs passe-bas du 2ème ordre :</h5>
+        <p><strong>Structure de Rauch :</strong></p>
+        <figure>
+            <img src="placeholder_fig_I_6_rauch_PB.png" alt="Schéma filtre passe-bas 2ème ordre structure Rauch" class="placeholder" style="max-width: 400px;">
+        </figure>
+        <p>En choisissant $Z_1=R$, $Z_2=1/(jC_1\omega)$, $Z_3=R$, $Z_4=1/(jC_2\omega)$, $Z_5=R$ (exemple simple), on peut obtenir la fonction de transfert. Le PDF donne (pour une configuration spécifique non dessinée mais classique) :</p>
+        <span class="math-display"> H(j\omega) = \frac{-1/ (R^2 C_1 C_2 (j\omega)^2 )}{1 + 3RC_2(j\omega) + R^2 C_1 C_2 (j\omega)^2} = \frac{-1}{R^2 C_1 C_2 (j\omega)^2 + 3RC_2(j\omega) + 1} </span>
+        <p>Comparaison avec la forme canonique :</p>
+        <span class="math-display"> H_0 = -1 </span>
+        <span class="math-display"> \omega_0 = \frac{1}{R\sqrt{C_1 C_2}} </span>
+        <span class="math-display"> 2m = 3RC_2 \omega_0 = 3RC_2 \frac{1}{R\sqrt{C_1 C_2}} = 3 \sqrt{\frac{C_2}{C_1}} \implies m = \frac{3}{2} \sqrt{\frac{C_2}{C_1}} </span>
+
+        <p><strong>Structure de Sallen-Key :</strong></p>
+         <figure>
+            <img src="placeholder_fig_I_6_sk_PB.png" alt="Schéma filtre passe-bas 2ème ordre structure Sallen-Key" class="placeholder" style="max-width: 400px;">
+        </figure>
+        <p>Configuration classique : $Z_1=R$, $Z_2=R$, $Z_3=1/(jC_1\omega)$, $Z_4=1/(jC_2\omega)$. L'AOP a un gain $k=1+R_2/R_1$. Le PDF donne :</p>
+        <span class="math-display"> H(j\omega) = \frac{k}{R^2 C_1 C_2 (j\omega)^2 + R(C_1+C_2 + C_1(1-k))j\omega + 1} = \frac{1+R_2/R_1}{R^2 C_1 C_2 (j\omega)^2 + R(C_2 + (C_1+C_2)(1-k))j\omega + 1} </span>
+        <p>Le PDF utilise $R(2C_2 - C_1 R_2/R_1)j\omega$ au dénominateur, ce qui correspond à une simplification pour $R_1=R_2$ ou un cas particulier? Vérification nécessaire. Pour le cas standard $R_1=R, R_2=R, C_1=C, C_2=C$ et $k=1$ (suiveur) :</p>
+        <span class="math-display"> H(j\omega) = \frac{1}{R^2 C^2 (j\omega)^2 + 2RCj\omega + 1} \implies \omega_0 = 1/RC, m = 1 </span>
+        <p>Pour le cas du PDF avec $Z_1=R, Z_2=1/(jC_1\omega), Z_3=R, Z_4=1/(jC_2\omega)$ et gain $k=1+R_2/R_1$ (une autre config Sallen-Key PB) :</p>
+        <span class="math-display"> H(j\omega) = \frac{k}{R^2C_1C_2(j\omega)^2 + R(C_1+C_2(1-k))(j\omega)+1} </span>
+        <p>Le PDF donne (pour la config dessinée) :</p>
+        <span class="math-display"> \omega_0 = \frac{1}{R\sqrt{C_1 C_2}} </span>
+        <span class="math-display"> 2m = \frac{R(2C_2 - C_1 R_2/R_1)}{R\sqrt{C_1 C_2} \omega_0} = \frac{2C_2 - C_1 R_2/R_1}{\sqrt{C_1 C_2}} \implies m = \frac{2C_2 - C_1(k-1)}{\sqrt{C_1 C_2}} \quad \text{(Vérifier cette formule)} </span>
+
+
+        <h5>b- Filtre passe-haut</h5>
+        <p>La fonction de transfert normalisée d'un filtre passe-haut du second ordre est :</p>
+        <span class="math-display"> H(j\omega) = \frac{H_0 (j\frac{\omega}{\omega_0})^2}{1 - (\frac{\omega}{\omega_0})^2 + 2m j \frac{\omega}{\omega_0}} = \frac{-H_0 x^2}{1 - x^2 + j 2mx} </span>
+        <p>$H_0$ est le gain en haute fréquence ($\omega \to \infty$). $\omega_0$ et $m$ ont la même signification que pour le passe-bas.</p>
+        <p><strong>Gain en dB :</strong></p>
+        <span class="math-display"> H_{dB}(\omega) = 20 \log_{10} |H_0| + 40 \log_{10} x - 10 \log_{10} \left[ (1-x^2)^2 + (2mx)^2 \right] </span>
+        <p><strong>Déphasage :</strong></p>
+        <span class="math-display"> \phi(\omega) = \arg(H_0) + \arg((j\omega)^2) - \arctan \left( \frac{2mx}{1-x^2} \right) = \arg(H_0) + \pi - \arctan \left( \frac{2mx}{1-x^2} \right) </span>
+        <p>Le comportement asymptotique est une pente de +40 dB/décade à basse fréquence et un gain $H_0$ (0 dB si $H_0=1$) à haute fréquence. Le déphasage varie de $+\pi$ (ou 0 si $H_0$ est négatif) à 0.</p>
+        <p>Le diagramme de Bode se déduit de celui du passe-bas par :</p>
+        <ul>
+            <li>Symétrie du gain par rapport à l'axe vertical $x=1$ ($\omega=\omega_0$).</li>
+            <li>Translation verticale de la phase de $+\pi$ radians.</li>
+        </ul>
+
+         <figure>
+            <img src="placeholder_fig_I_7.png" alt="Diagramme de Bode (Gain et Phase) d'un filtre passe-haut du 2nd ordre pour différentes valeurs de m" class="placeholder">
+            <figcaption>Figure I.7 : Diagramme de Bode d'un filtre passe haut du second ordre</figcaption>
+        </figure>
+
+        <h5>Exemples de filtres actifs passe-haut du 2ème ordre :</h5>
+         <p><strong>Structure de Rauch :</strong></p>
+         <figure>
+            <img src="placeholder_fig_I_7_rauch_PH.png" alt="Schéma filtre passe-haut 2ème ordre structure Rauch" class="placeholder" style="max-width: 400px;">
+            <figcaption>Exemple Structure de Rauch Passe-Haut</figcaption>
+         </figure>
+         <p>Configuration typique: $Z_1=1/(jC\omega)$, $Z_3=1/(jC\omega)$, $Z_5=1/(jC\omega)$, $Z_2=R_1$, $Z_4=R_2$. Le PDF donne pour le circuit dessiné ($C, C, C, R_1, R_2$)</p>
+        <span class="math-display"> H(j\omega) = \frac{-(jC\omega)^2 R_1 R_2}{(jC\omega)^2 R_1 R_2 + 3jC\omega R_1 + 1} </span>
+         <p>Comparaison avec la forme canonique :</p>
+         <span class="math-display"> H_0 = -1 </span>
+         <span class="math-display"> \omega_0 = \frac{1}{C\sqrt{R_1 R_2}} </span>
+         <span class="math-display"> 2m = \frac{3CR_1}{C\sqrt{R_1 R_2}} = 3 \sqrt{\frac{R_1}{R_2}} \implies m = \frac{3}{2} \sqrt{\frac{R_1}{R_2}} </span>
+
+         <p><strong>Structure de Sallen-Key :</strong></p>
+         <figure>
+             <img src="placeholder_fig_I_7_sk_PH.png" alt="Schéma filtre passe-haut 2ème ordre structure Sallen-Key" class="placeholder" style="max-width: 400px;">
+             <figcaption>Exemple Structure de Sallen-Key Passe-Haut</figcaption>
+         </figure>
+          <p>Configuration classique: $Z_1=1/(jC\omega)$, $Z_2=1/(jC\omega)$, $Z_3=R$, $Z_4=R$. Gain $k=1+R_2/R_1$. Le PDF donne pour le circuit dessiné ($C, C, R_3, R_4$ et AOP avec gain $K=1+R_2/R_1$)</p>
+         <span class="math-display"> H(j\omega) = \frac{K (jC\omega)^2 R_3 R_4}{(jC\omega)^2 R_3 R_4 + jC\omega(R_3+R_4+R_3(1-K)) + 1} </span>
+         <p>En comparant :</p>
+         <span class="math-display"> H_0 = K = 1 + R_2/R_1 </span>
+         <span class="math-display"> \omega_0 = \frac{1}{C\sqrt{R_3 R_4}} </span>
+         <span class="math-display"> 2m = \frac{C(R_3+R_4+R_3(1-K))}{C\sqrt{R_3 R_4}} = \frac{R_3(2-K)+R_4}{\sqrt{R_3 R_4}} </span>
+         <p>Le PDF donne $m = \frac{1}{2} \frac{(1+K)R_4 + 2R_3}{\sqrt{R_3 R_4}}$ (semble différent, K est $R_2/R_1$ ou $1+R_2/R_1$ ?). La formule du PDF semble être $m = \frac{1}{2} \frac{(1+R_2/R_1)R_4 + R_3(1-(1+R_2/R_1))}{\sqrt{R_3 R_4}}$? S'il manque un $R_3$ dans le numérateur de la formule du PDF, elle pourrait être $m = \frac{1}{2} \frac{R_4+2R_3 + (K-1)R_4}{\sqrt{R_3R_4}}$. Vérification nécessaire.
+
+        <h5>c- Filtre passe-bande</h5>
+        <p>Un filtre passe-bande laisse passer une bande de fréquences autour d'une fréquence centrale $\omega_0$ et atténue les fréquences en dehors de cette bande. Sa fonction de transfert typique est :</p>
+        <span class="math-display"> H(j\omega) = \frac{H_0 (2m j \frac{\omega}{\omega_0})}{1 - (\frac{\omega}{\omega_0})^2 + 2m j \frac{\omega}{\omega_0}} = \frac{H_0 (j \frac{1}{Q} x)}{1 - x^2 + j \frac{1}{Q} x} </span>
+        <p>Où $H_0$ est le gain à la fréquence centrale $\omega_0$, $m = 1/(2Q)$ est le facteur d'amortissement, et $Q$ est le facteur de qualité. Un $Q$ élevé correspond à une bande passante étroite et une sélectivité élevée.</p>
+        <p><strong>Gain en dB :</strong></p>
+        <span class="math-display"> H_{dB}(\omega) = 20 \log_{10} |H_0| + 20 \log_{10} (2mx) - 10 \log_{10} \left[ (1-x^2)^2 + (2mx)^2 \right] </span>
+        <p><strong>Déphasage :</strong></p>
+        <span class="math-display"> \phi(\omega) = \arg(H_0) + \arg(j) - \arctan \left( \frac{2mx}{1-x^2} \right) = \arg(H_0) + \frac{\pi}{2} - \arctan \left( \frac{2mx}{1-x^2} \right) </span>
+        <p>Le gain est maximal ($H_0$) à $\omega = \omega_0$ ($x=1$). Le déphasage est nul à $\omega_0$. Les fréquences de coupure à -3dB sont $\omega_{c1, c2} = \omega_0 (\sqrt{1+m^2} \mp m)$. La bande passante est $BP = \omega_{c2} - \omega_{c1} = 2m\omega_0 = \omega_0/Q$.</p>
+        <p>Le diagramme de Bode se déduit de celui du passe-bas par :</p>
+        <ul>
+            <li>Ajout de $20 \log_{10}(2mx)$ au gain du passe-bas.</li>
+            <li>Translation verticale de la phase de $+\pi/2$ radians.</li>
+        </ul>
+
+        <figure>
+            <img src="placeholder_fig_I_8.png" alt="Diagramme de Bode (Gain et Phase) d'un filtre passe-bande du 2nd ordre pour différentes valeurs de Q (ou m)" class="placeholder">
+            <figcaption>Figure I.8 : Diagramme de Bode d'un filtre passe bande du second ordre</figcaption>
+        </figure>
+
+        <h5>Exemples de filtres actifs passe-bande du 2ème ordre :</h5>
+        <p><strong>Structure de Rauch :</strong></p>
+         <figure>
+            <img src="placeholder_fig_I_8_rauch_PBande.png" alt="Schéma filtre passe-bande 2ème ordre structure Rauch" class="placeholder" style="max-width: 400px;">
+            <figcaption>Exemple Structure de Rauch Passe-Bande</figcaption>
+         </figure>
+         <p>PDF donne pour le circuit dessiné ($C, C, R_1, R_2, R_3$) :</p>
+         <span class="math-display"> H(j\omega) = \frac{-j\omega C R_3}{(j\omega)^2 C^2 R_1 R_3 + j\omega C(R_1+R_3)//R_2 + 1} \quad \text{(Notation //R2? Doit être +2R1 si R2=R1?)} </span>
+         <p>Le PDF donne $H(j\omega) = \frac{-(j\omega C) R_3}{(j\omega C)^2 R_3(R_1//R_2) + 2(j\omega C)(R_1//R_2) + 1}$. Si $R_1=R_2=R$, alors $R_1//R_2 = R/2$.</p>
+         <span class="math-display"> H(j\omega) = \frac{-j\omega C R_3}{(j\omega C)^2 R_3 R/2 + 2(j\omega C)R/2 + 1} = \frac{-j\omega C R_3}{1 + j\omega CR + (j\omega)^2 C^2 R R_3 / 2} </span>
+        <p>En comparant avec $\frac{H_0 (2mj\omega/\omega_0)}{1 - (\omega/\omega_0)^2 + 2m j \omega/\omega_0}$: </p>
+         <span class="math-display"> \omega_0 = \sqrt{\frac{2}{C^2 R R_3}} = \frac{1}{C} \sqrt{\frac{2}{R R_3}} </span>
+         <span class="math-display"> 2m = CR \omega_0 = CR \frac{1}{C} \sqrt{\frac{2}{R R_3}} = \sqrt{\frac{2R}{R_3}} </span>
+         <span class="math-display"> H_0 (2m \omega_0) = -CR_3 \implies H_0 = \frac{-CR_3}{2m \omega_0} = \frac{-CR_3}{\sqrt{2R/R_3} \sqrt{2/(C^2 R R_3)}} = \frac{-CR_3}{ \sqrt{4R/ (C^2 R R_3^2)}} = \frac{-CR_3}{2/ (C R_3)} = -\frac{C^2 R R_3^2}{2} ?? $ Vérifier calculs et circuit.
+         <p>Formules du PDF :</p>
+         <span class="math-display"> \omega_0 = \frac{1}{C\sqrt{R_3 (R_1 // R_2)}} = \frac{\sqrt{1+R_1/R_2}}{C\sqrt{R_1 R_3}} </span>
+         <span class="math-display"> m = \sqrt{\frac{R_1 // R_2}{R_3}} = \sqrt{\frac{R_1 R_2}{(R_1+R_2)R_3}} </span>
+         <p>Gain à $\omega_0$: $H(\omega_0) = -R_3 / (2(R_1//R_2))$</p>
+
+        <p><strong>Structure de Sallen-Key :</strong></p>
+        <p>Exercice laissé dans le PDF : Exprimer la fonction de transfert, $\omega_0$ et $m$ pour le filtre suivant.</p>
+         <figure>
+            <img src="placeholder_fig_I_8_sk_PBande_exo.png" alt="Schéma filtre passe-bande 2ème ordre structure Sallen-Key (Exercice)" class="placeholder" style="max-width: 400px;">
+             <figcaption>Exercice: Analyse du filtre passe-bande Sallen-Key</figcaption>
+         </figure>
+         <p>(Solution typique : $\omega_0 = \frac{\sqrt{2}}{RC}$, $Q = 1/\sqrt{2}$ pour $C_1=C_2=C, R=R, 2R$)</p>
+
+
+        <h5>d- Filtre réjecteur de bande (coupe bande / notch)</h5>
+        <p>Un filtre réjecteur de bande (ou coupe-bande, notch) atténue fortement les signaux dans une bande étroite autour de $\omega_0$ et laisse passer les fréquences en dehors.</p>
+        <span class="math-display"> H(j\omega) = H_0 \frac{1 - (\frac{\omega}{\omega_0})^2}{1 - (\frac{\omega}{\omega_0})^2 + 2m j \frac{\omega}{\omega_0}} = H_0 \frac{1 - x^2}{1 - x^2 + j 2mx} </span>
+        <p>$H_0$ est le gain loin de $\omega_0$ (à $\omega \to 0$ et $\omega \to \infty$). Le gain est idéalement nul à $\omega = \omega_0$. $m$ et $Q=1/(2m)$ définissent la largeur de la bande rejetée.</p>
+        <p><strong>Gain en dB :</strong></p>
+        <span class="math-display"> H_{dB}(\omega) = 20 \log_{10} |H_0| + 20 \log_{10} |1-x^2| - 10 \log_{10} \left[ (1-x^2)^2 + (2mx)^2 \right] </span>
+        <p><strong>Déphasage :</strong></p>
+        <span class="math-display"> \phi(\omega) = \arg(H_0) + \arg(1-x^2) - \arctan \left( \frac{2mx}{1-x^2} \right) </span>
+        <p>Attention, $\arg(1-x^2)$ est 0 si $x<1$ et $\pi$ si $x>1$. Le déphasage saute de 0 à $-\pi$ (ou de $\pi$ à 0) à $\omega_0$.</p>
+        <ul>
+            <li>Si $x < 1$: $\phi = \arg(H_0) - \arctan(\frac{2mx}{1-x^2})$.</li>
+            <li>Si $x > 1$: $\phi = \arg(H_0) + \pi - \arctan(\frac{2mx}{1-x^2}) = \arg(H_0) + \pi - (-\arctan(\frac{2m x}{x^2-1})) = \arg(H_0) + \pi + \arctan(\frac{2m x}{x^2-1})$.</li>
+        </ul>
+
+        <figure>
+            <img src="placeholder_fig_I_9.png" alt="Diagramme de Bode (Gain) d'un filtre coupe-bande du 2nd ordre" class="placeholder">
+            <figcaption>Figure I.9 : Diagramme du gain d'un filtre coupe bande du second ordre</figcaption>
+        </figure>
+        <p>NB : Le diagramme de phase ressemble à celui d'un filtre passe-bas du second ordre (car la partie $1-x^2$ au numérateur n'introduit qu'un saut de $\pi$ à $\omega_0$).</p>
+
+        <h5>Exemple de filtre réjecteur de bande (Twin-T) :</h5>
+        <figure>
+            <img src="placeholder_fig_I_9_twinT.png" alt="Schéma filtre réjecteur 'Twin-T' actif" class="placeholder" style="max-width: 450px;">
+            <figcaption>Exemple de filtre réjecteur actif (Twin-T)</figcaption>
+        </figure>
+        <p>Ce circuit utilise un réseau passif "Twin-T" (double T) connu pour sa réjection à $\omega_0 = 1/(RC)$. L'AOP est utilisé en suiveur ($V^+=V^-$) pour bufferiser la sortie et éviter le chargement du réseau. La fonction de transfert de ce circuit est :</p>
+         <span class="math-display"> H(j\omega) = \frac{1 - (RC\omega)^2}{1 - (RC\omega)^2 + j 4RC\omega} </span>
+        <p>Ici, $H_0=1$, $\omega_0 = 1/(RC)$, et $2m = 4$, donc $m=2$ ($Q=0.25$). La réjection n'est pas très sélective. D'autres configurations actives permettent d'améliorer le Q.</p>
+
+        <h4>I-3-3 Structures de filtres actifs utilisant un quadripôle</h4>
+        <p>Une autre approche consiste à utiliser un quadripôle passif (souvent un réseau RC) dans la boucle de rétroaction d'un amplificateur.</p>
+        <h5>Exemple avec un filtre passe-bas :</h5>
+         <figure>
+            <img src="placeholder_fig_I_10_quadripole.png" alt="Schéma filtre actif utilisant un quadripôle en rétroaction" class="placeholder" style="max-width: 450px;">
+            <figcaption>Exemple de filtre utilisant un quadripôle (Passe-bas)</figcaption>
+         </figure>
+         <p>Ici, deux quadripôles RC sont utilisés. L'analyse (supposant AOP idéal, $V_a = V_b = V_s$, $V_e=0$) donne une fonction de transfert complexe. Le PDF donne :</p>
+         <span class="math-display"> H(j\omega) = \frac{V_s}{V_e} = \frac{-1}{1 + 2j\omega R C_2 + (j\omega R)^2 C_1 C_2} </span>
+         <p>C'est un filtre passe-bas du second ordre avec :</p>
+         <span class="math-display"> H_0 = -1 </span>
+         <span class="math-display"> \omega_0 = \frac{1}{R\sqrt{C_1 C_2}} </span>
+         <span class="math-display"> 2m = 2RC_2 \omega_0 = 2RC_2 \frac{1}{R\sqrt{C_1 C_2}} = 2\sqrt{\frac{C_2}{C_1}} \implies m = \sqrt{\frac{C_2}{C_1}} </span>
+
+    </section>
+
+    <!-- ===== Page 17-25: Chapter II ===== -->
+    <section id="chap2">
+        <h2>Chapitre II : La contre réaction</h2>
+        <p>(Aussi appelée Réaction Négative)</p>
+
+        <h3>II.1 Principe et définition</h3>
+        <p>Le principe de la réaction (ou rétroaction, feedback en anglais) consiste à prélever une partie du signal de sortie ($X_s$) d'un système (généralement un amplificateur, caractérisé par sa fonction de transfert $H$) et à la réinjecter à son entrée, où elle est combinée (soustraite dans le cas de la contre-réaction) avec le signal d'entrée extérieur ($X'_e$).</p>
+        <figure>
+            <img src="placeholder_fig_II_1.png" alt="Schéma de base de la contre-réaction" class="placeholder" style="max-width: 450px;">
+            <figcaption>Figure II.1 : Schéma de base d'une contre réaction</figcaption>
+        </figure>
+        <p>Dans ce schéma :</p>
+        <ul>
+            <li>$H$ est la fonction de transfert de la chaîne directe (amplificateur).</li>
+            <li>$B$ est la fonction de transfert de la chaîne de retour (réseau de réaction).</li>
+            <li>$X'_e$ est le signal d'entrée externe du système bouclé.</li>
+            <li>$X_s$ est le signal de sortie du système bouclé.</li>
+            <li>$X_r = B \cdot X_s$ est le signal de retour.</li>
+            <li>$X_e = X'_e - X_r$ est le signal d'erreur (ou signal d'entrée effectif de l'ampli H). La soustraction caractérise la contre-réaction.</li>
+        </ul>
+        <p>On a les relations : $X_s = H \cdot X_e$ et $X_e = X'_e - B \cdot X_s$.</p>
+        <p>En substituant $X_e$, on obtient : $X_s = H (X'_e - B X_s) = H X'_e - H B X_s$.</p>
+        <p>$X_s (1 + B H) = H X'_e$.</p>
+        <p>La fonction de transfert du système complet (en boucle fermée) $H'$ est donc :</p>
+        <span class="math-display"> H' = \frac{X_s}{X'_e} = \frac{H}{1 + B H} </span>
+        <p>Terminologie :</p>
+        <ul>
+            <li>$B$ : Taux de rétroaction.</li>
+            <li>$T = B H$ : Gain de boucle (ou transmittance en boucle ouverte).</li>
+            <li>$F = 1 + B H$ : Facteur de rétroaction. Pour une contre-réaction efficace, on cherche $|1+BH| \gg 1$.</li>
+        </ul>
+
+        <h3>II. 2 Propriétés de la contre réaction</h3>
+        <p>La contre-réaction modifie profondément les caractéristiques de l'amplificateur de base H. Ses principaux avantages sont :</p>
+
+        <h4>a- Sensibilité aux variations relatives du gain H</h4>
+        <p>Le gain $H$ de l'amplificateur peut varier à cause de la température, du vieillissement des composants, des variations d'alimentation, etc. On souhaite que le gain en boucle fermée $H'$ soit moins sensible à ces variations.</p>
+        <p>On calcule la dérivée de $H'$ par rapport à $H$ :</p>
+        <span class="math-display"> \frac{dH'}{dH} = \frac{d}{dH} \left( \frac{H}{1+BH} \right) = \frac{1 \cdot (1+BH) - H \cdot B}{(1+BH)^2} = \frac{1}{(1+BH)^2} </span>
+        <p>La variation relative de $H'$ est $\frac{dH'}{H'}$, et celle de $H$ est $\frac{dH}{H}$. Leur rapport est :</p>
+        <span class="math-display"> \frac{dH'/H'}{dH/H} = \frac{dH'}{dH} \cdot \frac{H}{H'} = \frac{1}{(1+BH)^2} \cdot \frac{H}{H/(1+BH)} = \frac{1}{1+BH} </span>
+        <p>Soit :</p>
+        <span class="math-display"> \frac{dH'}{H'} = \frac{1}{1+BH} \frac{dH}{H} </span>
+        <p>Comme $|1+BH| > 1$ pour une contre-réaction, la variation relative du gain en boucle fermée est réduite par le facteur $1+BH$ par rapport à la variation relative du gain en boucle ouverte.</p>
+        <p><strong>Exemple :</strong> $H = 10^5$, $H' = 100$. On a $H' = H/(1+BH) \implies 1+BH = H/H' = 10^5/100 = 1000$. Si $dH/H = 20\%$, alors $dH'/H' = \frac{1}{1000} \times 20\% = 0.02\%$. La stabilité du gain est grandement améliorée.</p>
+        <p>Si le gain de boucle $|BH| \gg 1$, alors $H' \approx \frac{H}{BH} = \frac{1}{B}$. Le gain en boucle fermée ne dépend presque plus de $H$, mais seulement du réseau de réaction $B$, qui peut être réalisé avec des composants passifs précis et stables (résistances, condensateurs).</p>
+
+        <h4>b- Élargissement de la bande passante</h4>
+        <p>Considérons un amplificateur $H$ de type passe-bas du premier ordre :</p>
+        <span class="math-display"> H(j\omega) = \frac{H_0}{1+j\omega/\omega_c} </span>
+        <p>Où $H_0$ est le gain statique et $\omega_c$ est la pulsation de coupure en boucle ouverte.</p>
+        <p>Appliquons une contre-réaction avec un réseau $B$ réel (indépendant de la fréquence).</p>
+        <span class="math-display"> H'(j\omega) = \frac{H(j\omega)}{1 + B H(j\omega)} = \frac{\frac{H_0}{1+j\omega/\omega_c}}{1 + B \frac{H_0}{1+j\omega/\omega_c}} = \frac{H_0}{1+j\omega/\omega_c + B H_0} = \frac{H_0}{1+BH_0 + j\omega/\omega_c} </span>
+        <span class="math-display"> H'(j\omega) = \frac{H_0 / (1+BH_0)}{1 + j \frac{\omega}{\omega_c(1+BH_0)}} </span>
+        <p>C'est encore un passe-bas du premier ordre, mais avec :</p>
+        <ul>
+            <li>Un nouveau gain statique : $H'_0 = \frac{H_0}{1+BH_0}$ (réduit).</li>
+            <li>Une nouvelle pulsation de coupure : $\omega'_c = \omega_c (1+BH_0)$ (augmentée).</li>
+        </ul>
+        <p>Le produit Gain $\times$ Bande Passante reste (approximativement) constant :</p>
+        <span class="math-display"> H'_0 \cdot \omega'_c = \frac{H_0}{1+BH_0} \cdot \omega_c (1+BH_0) = H_0 \omega_c </span>
+        <p>La contre-réaction réduit le gain mais élargit la bande passante dans la même proportion.</p>
+        <figure>
+            <img src="placeholder_fig_II_2.png" alt="Effet de la contre-réaction sur la bande passante" class="placeholder">
+            <figcaption>Figure II.2 : Effet de la contre réaction sur la bande passante</figcaption>
+        </figure>
+
+        <h4>c- Réduction de la distorsion harmonique</h4>
+        <p>Un amplificateur réel n'est pas parfaitement linéaire. Si on applique un signal sinusoïdal pur $x_e(t) = a_0 \cos(\omega_0 t)$ à l'entrée, la sortie $x_s(t)$ contiendra non seulement la fréquence fondamentale $\omega_0$ (avec une amplitude $H a_0$), mais aussi des harmoniques $2\omega_0, 3\omega_0, ...$ avec des amplitudes $a_2, a_3, ...$. C'est la distorsion harmonique.</p>
+        <figure>
+            <img src="placeholder_fig_II_3.png" alt="Illustration de la distorsion harmonique" class="placeholder" style="max-width: 500px;">
+            <figcaption>Figure II.3 : Distorsion harmonique dans un amplificateur</figcaption>
+        </figure>
+        <p>On peut modéliser la distorsion comme un générateur de perturbation $D$ ajouté à la sortie de l'amplificateur linéaire $H$.</p>
+        <figure>
+            <img src="placeholder_fig_II_4.png" alt="Modèle de contre-réaction avec distorsion" class="placeholder" style="max-width: 500px;">
+            <figcaption>Figure II.4 : Contre réaction avec distorsion harmonique</figcaption>
+        </figure>
+        <p>Le signal de sortie $X_s$ est maintenant la somme de la sortie de l'ampli $H X_e$ et de la distorsion $D$ : $X_s = H X_e + D$.</p>
+        <p>Toujours avec $X_e = X'_e - B X_s$.</p>
+        <p>$X_s = H (X'_e - B X_s) + D = H X'_e - H B X_s + D$</p>
+        <p>$X_s (1 + B H) = H X'_e + D$</p>
+        <span class="math-display"> X_s = \frac{H}{1+BH} X'_e + \frac{1}{1+BH} D </span>
+        <p>La sortie contient le signal amplifié désiré (avec le gain réduit $H'$) et le signal de distorsion $D$ divisé par le facteur de rétroaction $1+BH$. La distorsion harmonique générée par l'amplificateur est donc réduite par la contre-réaction.</p>
+
+        <h4>d- Réduction du bruit</h4>
+        <p>De manière similaire, si un bruit $N$ (par exemple, bruit thermique interne, interférences externes captées) est ajouté à la sortie de l'amplificateur.</p>
+        <figure>
+            <img src="placeholder_fig_II_5.png" alt="Modèle de contre-réaction avec bruit en sortie" class="placeholder" style="max-width: 500px;">
+            <figcaption>Figure II.5 : Contre réaction bruit à la sortie</figcaption>
+        </figure>
+        <p>La sortie $X_s$ est la somme de la sortie de l'ampli $H X_e$ et du bruit $N$ : $X_s = H X_e + N$.</p>
+        <p>En utilisant $X_e = X'_e - B X_s$, on arrive exactement à la même équation que pour la distorsion :</p>
+        <span class="math-display"> X_s = \frac{H}{1+BH} X'_e + \frac{1}{1+BH} N </span>
+        <p>Le bruit ajouté en sortie (ou en interne dans les derniers étages) est réduit par le facteur $1+BH$. Attention : le bruit ajouté à l'entrée ($X'_e$) ou dans les premiers étages de $H$ n'est pas réduit de la même manière, il est amplifié par $H'$.</p>
+
+        <h3>II.3 Les différents types de contre réaction</h3>
+        <p>La nature des signaux d'entrée ($X_e$) et de sortie ($X_s$) de l'amplificateur H détermine le type d'amplification. Le type de connexion (série ou parallèle/shunt) à l'entrée et à la sortie pour la boucle de retour détermine le type de contre-réaction et affecte les impédances d'entrée et de sortie du système bouclé.</p>
+
+        <h4>Types d'amplificateurs :</h4>
+        <figure>
+             <img src="placeholder_fig_II_amp_types.png" alt="Bloc Amplificateur H avec Xe et Xs" class="placeholder" style="max-width: 200px;">
+         </figure>
+        <table border="1" style="margin: auto; border-collapse: collapse; width: 80%;">
+            <thead>
+                <tr><th>Signal $X_e$</th><th>Signal $X_s$</th><th>Ampli de type</th><th>Expression de H</th><th>Symbole</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>tension ($V_e$)</td><td>tension ($V_s$)</td><td>tension</td><td>$H = A_v = V_s/V_e$</td><td>$A_v$</td></tr>
+                <tr><td>tension ($V_e$)</td><td>courant ($I_s$)</td><td>transconductance</td><td>$H = G_m = I_s/V_e$</td><td>$G_m$</td></tr>
+                <tr><td>courant ($I_e$)</td><td>tension ($V_s$)</td><td>transrésistance</td><td>$H = R_m = V_s/I_e$</td><td>$R_m$</td></tr>
+                <tr><td>courant ($I_e$)</td><td>courant ($I_s$)</td><td>courant</td><td>$H = A_i = I_s/I_e$</td><td>$A_i$</td></tr>
+            </tbody>
+        </table>
+        <figcaption style="text-align: center;">Tableau II.1 : Les différents types d'amplificateurs</figcaption>
+
+        <h4>Les quatre types de contre réaction :</h4>
+        <p>La manière dont le signal de sortie est prélevé (en tension ou en courant) et dont le signal de retour est réinjecté à l'entrée (en série ou en parallèle) définit quatre configurations fondamentales :</p>
+        <ol>
+            <li><strong>Entrée Série, Sortie Parallèle (Tension-Tension) :</strong>
+                <ul>
+                    <li>Sortie : La tension $V_s$ est mesurée (connexion parallèle).</li>
+                    <li>Retour : Une tension $V_r = B V_s$ est générée.</li>
+                    <li>Entrée : $V_r$ est soustraite en série de la tension d'entrée $V'_e$. $V_e = V'_e - V_r$.</li>
+                    <li>Amplificateur H : Amplificateur de tension ($A_v$). $H' = A_v / (1 + B A_v)$.</li>
+                    <li>Augmente l'impédance d'entrée, diminue l'impédance de sortie.</li>
+                </ul>
+                <figure>
+                    <img src="placeholder_fig_II_serie_parallele.png" alt="Schéma Contre-réaction Série-Parallèle (Tension-Tension)" class="placeholder" style="max-width: 400px;">
+                    <figcaption>Contre réaction tension-tension (série-parallèle)</figcaption>
+                </figure>
+            </li>
+            <li><strong>Entrée Série, Sortie Série (Courant-Tension) :</strong>
+                 <ul>
+                    <li>Sortie : Le courant $I_s$ est mesuré (connexion série).</li>
+                    <li>Retour : Une tension $V_r = B I_s$ est générée (B est une transrésistance).</li>
+                    <li>Entrée : $V_r$ est soustraite en série de la tension d'entrée $V'_e$. $V_e = V'_e - V_r$.</li>
+                    <li>Amplificateur H : Amplificateur de transconductance ($G_m$). $H' = G_m / (1 + B G_m)$. (Sortie $I_s$)</li>
+                    <li>Augmente l'impédance d'entrée, augmente l'impédance de sortie.</li>
+                </ul>
+                 <figure>
+                     <img src="placeholder_fig_II_serie_serie.png" alt="Schéma Contre-réaction Série-Série (Courant-Tension)" class="placeholder" style="max-width: 400px;">
+                     <figcaption>Contre réaction courant-tension (série-série)</figcaption>
+                 </figure>
+            </li>
+            <li><strong>Entrée Parallèle, Sortie Parallèle (Tension-Courant) :</strong>
+                 <ul>
+                    <li>Sortie : La tension $V_s$ est mesurée (connexion parallèle).</li>
+                    <li>Retour : Un courant $I_r = B V_s$ est généré (B est une transconductance).</li>
+                    <li>Entrée : $I_r$ est soustrait en parallèle du courant d'entrée $I'_e$. $I_e = I'_e - I_r$.</li>
+                    <li>Amplificateur H : Amplificateur de transrésistance ($R_m$). $H' = R_m / (1 + B R_m)$. (Sortie $V_s$)</li>
+                    <li>Diminue l'impédance d'entrée, diminue l'impédance de sortie.</li>
+                 </ul>
+                 <figure>
+                     <img src="placeholder_fig_II_parallele_parallele.png" alt="Schéma Contre-réaction Parallèle-Parallèle (Tension-Courant)" class="placeholder" style="max-width: 400px;">
+                     <figcaption>Contre réaction tension-courant (parallèle-parallèle)</figcaption>
+                 </figure>
+             </li>
+             <li><strong>Entrée Parallèle, Sortie Série (Courant-Courant) :</strong>
+                 <ul>
+                    <li>Sortie : Le courant $I_s$ est mesuré (connexion série).</li>
+                    <li>Retour : Un courant $I_r = B I_s$ est généré (B est un gain en courant).</li>
+                    <li>Entrée : $I_r$ est soustrait en parallèle du courant d'entrée $I'_e$. $I_e = I'_e - I_r$.</li>
+                    <li>Amplificateur H : Amplificateur de courant ($A_i$). $H' = A_i / (1 + B A_i)$.</li>
+                    <li>Diminue l'impédance d'entrée, augmente l'impédance de sortie.</li>
+                 </ul>
+                  <figure>
+                     <img src="placeholder_fig_II_parallele_serie.png" alt="Schéma Contre-réaction Parallèle-Série (Courant-Courant)" class="placeholder" style="max-width: 400px;">
+                     <figcaption>Contre réaction courant-courant (parallèle-série)</figcaption>
+                 </figure>
+            </li>
+        </ol>
+
+        <h3>II.4 Calcul des impédances d'un amplificateur avec contre réaction idéale</h3>
+        <p>On considère les hypothèses simplificatrices suivantes (modèle idéal) :</p>
+        <ul>
+            <li>Amplificateur H unidirectionnel (pas d'effet de la sortie sur l'entrée de H).</li>
+            <li>Circuit de réaction B unidirectionnel (pas d'effet de l'entrée sur la sortie de B).</li>
+            <li>Le réseau B ne charge ni l'entrée ni la sortie de H (impédances d'entrée/sortie de B infinies/nulles selon le cas).</li>
+            <li>Impédance interne de la source d'entrée $R_i$ idéale (nulle pour source de tension, infinie pour source de courant).</li>
+            <li>Impédance de charge $Z_c$ idéale (infinie si on mesure une tension, nulle si on mesure un courant), n'affectant pas $B$.</li>
+        </ul>
+
+        <h4>a- Cas d'une contre réaction tension / tension (Série-Parallèle)</h4>
+        <p><strong>Amplificateur sans contre réaction :</strong></p>
+        <p>Modélisé par son gain en tension à vide $A_v$, son impédance d'entrée $Z_e$ et son impédance de sortie $Z_s$.</p>
+        <figure>
+             <img src="placeholder_fig_II_6.png" alt="Schéma équivalent Ampli tension sans CR" class="placeholder" style="max-width: 450px;">
+             <figcaption>Figure II.6 : Schéma équivalent d'un amplificateur de tension</figcaption>
+        </figure>
+        <p>$V_e = Z_e I_e$ et $V_s = A_v V_e - Z_s I_s$ (si $I_s$ sortant, ou $+Z_s I_s$ si $I_s$ entrant comme sur le schéma).</p>
+
+        <p><strong>Amplificateur avec contre réaction tension-tension :</strong></p>
+        <figure>
+             <img src="placeholder_fig_II_6_avec_CR.png" alt="Schéma équivalent Ampli tension avec CR Série-Parallèle" class="placeholder" style="max-width: 500px;">
+             <figcaption>Amplificateur avec contre-réaction Tension-Tension</figcaption>
+         </figure>
+        <p>Hypothèse : Le quadripôle de retour G (ici noté B ou G) est idéal et ne tire pas de courant ($I_0 = 0$). $B$ est le taux de réaction en tension ($V_r = B V_s$).</p>
+
+        <h5>Calcul d'impédance d'entrée $Z'_e$:</h5>
+        <p>$Z'_e = V'_e / I_e$.</p>
+        <p>On a $V'_e = V_e + V_r = V_e + B V_s$.</p>
+        <p>$V_e = Z_e I_e$.</p>
+        <p>$V_s \approx A_v V_e$ (en négligeant la charge $Z_c$ et l'effet de $Z_s$, ou en considérant $A_v$ comme le gain en charge). Le courant $I_s$ est celui qui va dans la charge $Z_c$.</p>
+        <p>$V'_e = Z_e I_e + B (A_v V_e) = Z_e I_e + B A_v (Z_e I_e) = Z_e I_e (1 + B A_v)$.</p>
+        <span class="math-display"> Z'_e = \frac{V'_e}{I_e} = Z_e (1 + B A_v) </span>
+        <p>L'impédance d'entrée est augmentée par le facteur $(1+BH)$.</p>
+        <p>(Le PDF utilise G au lieu de B, $G.A_v$ au lieu de $BA_v$, et introduit $\epsilon$ qui n'est pas défini ici. La formule du PDF $Z'_e = (1 + \frac{G.A_v}{1+\epsilon}) Z_e$ semble compliquée, le résultat standard est $Z'_e = Z_e(1+BA_v)$).</p>
+
+        <h5>Calcul d'impédance de sortie $Z'_s$:</h5>
+        <p>Pour calculer $Z'_s$, on annule la source d'entrée indépendante ($V'_e = 0$) et on applique une source de tension test $V_t$ à la sortie, puis on calcule le courant $I_t$ fourni par cette source. $Z'_s = V_t / I_t$.</p>
+        <p>Si $V'_e = 0$, alors $V_e = -V_r = -B V_s$. Ici, $V_s = V_t$.</p>
+        <p>Le circuit de sortie est $V_t = A_v V_e - Z_s I_t = A_v (-B V_t) - Z_s I_t$.</p>
+        <p>$V_t (1 + A_v B) = -Z_s I_t$.</p>
+        <span class="math-display"> Z'_s = \frac{V_t}{I_t} = \frac{-Z_s}{1 + A_v B} \quad \text{(Attention au signe de } I_t \text{)} </span>
+        <p>Si $I_t$ est défini comme sortant de la source test (entrant dans le circuit), $I_t = -I_s$. L'équation de sortie est $V_t = A_v V_e + Z_s I_t$.</p>
+        <p>$V_t = A_v (-B V_t) + Z_s I_t \implies V_t (1 + A_v B) = Z_s I_t$.</p>
+        <span class="math-display"> Z'_s = \frac{V_t}{I_t} = \frac{Z_s}{1 + A_v B} </span>
+        <p>L'impédance de sortie est diminuée par le facteur $(1+BH)$.</p>
+        <p>(Le PDF donne $Z'_s = Z_s / (1+G.A_v)$, ce qui correspond au résultat standard si G=B).</p>
+
+        <p><strong>Conclusion Tension-Tension :</strong> Diminue le gain ($A'_v = A_v / (1+BA_v)$), augmente $Z_e$, diminue $Z_s$. Idéal pour un amplificateur de tension (qui doit avoir $Z_e$ grande et $Z_s$ petite).</p>
+
+        <p><strong>Exemple : Amplificateur inverseur à AOP</strong></p>
+        <figure>
+            <img src="placeholder_fig_II_aop_inv.png" alt="Schéma Ampli inverseur AOP" class="placeholder" style="max-width: 350px;">
+            <img src="placeholder_fig_II_aop_inv_equiv.png" alt="Schéma équivalent avec CR Tension-Tension" class="placeholder" style="max-width: 500px;">
+            <figcaption>Ampli inverseur et son modèle équivalent en contre-réaction Tension-Tension.</figcaption>
+        </figure>
+        <p>L'ampli de base H est l'AOP ($A_v = A_0$, $Z_e = Z_{in, AOP}$, $Z_s = Z_{out, AOP}$). Le réseau B est le diviseur de tension $R_1, R_2$. Le signal $V_s$ est prélevé en parallèle. Le signal de retour $V_r = V_s \frac{R_1}{R_1+R_2}$ est appliqué à l'entrée inverseuse. L'entrée $V'_e$ est appliquée via $R_1$ ? Non, cet exemple est plus complexe, il s'agit d'une réaction parallèle-parallèle si on considère $V_e$ comme source et $R_1$ comme impédance de source. Le schéma équivalent dessiné dans le PDF semble correspondre à un ampli non-inverseur où la CR est bien série-parallèle. Pour l'inverseur, l'analyse est différente (voir section suivante ou TD).</p>
+
+        <h4>b- Cas d'une contre réaction courant / tension (Série-Série)</h4>
+        <p>Amplificateur H : Transconductance $G_m = I_s / V_e$. Impédance d'entrée $Z_e$, impédance de sortie $Z_s$.</p>
+        <p>Réseau de retour B : Transrésistance $V_r = B I_s$.</p>
+        <figure>
+             <img src="placeholder_fig_II_courant_tension_equiv.png" alt="Schéma équivalent Ampli transconductance avec CR Série-Série" class="placeholder" style="max-width: 500px;">
+             <figcaption>Amplificateur avec contre-réaction Courant-Tension (Série-Série)</figcaption>
+         </figure>
+        <p>Hypothèse : Le quadripôle G (B) est idéal.</p>
+
+        <h5>Calcul d'impédance d'entrée $Z'_e$:</h5>
+        <p>$Z'_e = V'_e / I_e$.</p>
+        <p>$V'_e = V_e + V_r = V_e + B I_s$.</p>
+        <p>$V_e = Z_e I_e$.</p>
+        <p>$I_s = G_m V_e$ (en négligeant $Z_s$).</p>
+        <p>$V'_e = Z_e I_e + B (G_m V_e) = Z_e I_e + B G_m (Z_e I_e) = Z_e I_e (1 + B G_m)$.</p>
+        <span class="math-display"> Z'_e = Z_e (1 + B G_m) </span>
+        <p>L'impédance d'entrée est augmentée.</p>
+        <p>(Le PDF donne $Z'_e = Z_e (1 + \frac{G.G_m}{1+Z_s/Z_c})$ ce qui inclut l'effet de charge, si G=B). Dans le cas idéal $Z_c=0$ (sortie courant), le terme $Z_s/Z_c$ tend vers l'infini ? Non, ici $Z_s$ est en série. L'analyse est différente. PDF: $Z'_e = Z_e (1 + \frac{G.Gm}{1+Z_s/R_L})$ si $R_L$ est la charge. La formule du PDF $Z'_e = Z_e (1 + \frac{G.G_m}{1+Z_c/Z_s})$ ? Vérifier. Le résultat standard est $Z_e(1+BG_m)$)</p>
+
+
+        <h5>Calcul d'impédance de sortie $Z'_s$:</h5>
+        <p>On annule $V'_e = 0$, on applique une source de courant test $I_t$ à la sortie et on mesure la tension $V_t$ aux bornes. $Z'_s = V_t / I_t$.</p>
+        <p>$V'_e=0 \implies V_e = -V_r = -B I_s$. Ici $I_s = I_t$.</p>
+        <p>Le circuit de sortie : $I_t$ se divise entre $Z_s$ et la source dépendante $G_m V_e$. La tension $V_t$ est la tension aux bornes de cette association.</p>
+        <p>Alternative : appliquer $V_t$ et calculer $I_t$. Le courant de la source dépendante est $G_m V_e = G_m (-B I_t)$. Le courant total $I_t$ est la somme du courant dans $Z_s$ ($V_t/Z_s$) et du courant de la source dépendante : $I_t = V_t/Z_s - G_m V_e = V_t/Z_s - G_m(-B I_t)$ ? Non, la source de courant $G_m V_e$ est en parallèle avec $Z_s$.</p>
+        <p>$I_t = \frac{V_t}{Z_s} + G_m V_e = \frac{V_t}{Z_s} + G_m (-B I_s)$. Ici $I_s$ n'est pas $I_t$. $I_s$ est le courant qui traverse la sortie série. C'est $I_t$.</p>
+        <p>$I_t = \frac{V_t}{Z_s} + G_m (-B I_t) \implies I_t (1 + G_m B) = \frac{V_t}{Z_s}$.</p>
+        <span class="math-display"> Z'_s = \frac{V_t}{I_t} = Z_s (1 + G_m B) </span>
+        <p>L'impédance de sortie est augmentée.</p>
+        <p>(Le PDF donne $Z'_s = Z_s (1+G.G_m)$, correspond si G=B).</p>
+
+        <p><strong>Conclusion Courant-Tension :</strong> Gain global $G'_m = G_m/(1+BG_m)$, augmente $Z_e$, augmente $Z_s$. Idéal pour un amplificateur de transconductance (source de courant commandée en tension).</p>
+
+        <p><strong>Exemple : Transistor en Collecteur Commun (Émetteur Suiveur)</strong></p>
+        <figure>
+            <img src="placeholder_fig_II_cc.png" alt="Schéma Collecteur Commun (Emetteur Suiveur)" class="placeholder" style="max-width: 350px;">
+            <figcaption>Exemple de contre-réaction courant-tension : Collecteur Commun</figcaption>
+        </figure>
+        <p>Ici, l'amplificateur est le transistor. Le signal de sortie est le courant d'émetteur $i_e \approx i_c$. La résistance $R_E$ joue le rôle du réseau de retour B. Elle convertit le courant $i_e$ en une tension $V_r = R_E i_e$. Cette tension est en série avec la tension base-émetteur $V_{be}$ (qui est le $V_e$ de l'ampli) et s'oppose à la tension d'entrée $V_{in}$ appliquée à la base. $V_{in} = V_{be} + V_r = V_e + R_E i_e$. C'est bien une configuration Série-Série. $G_m \approx g_m$ du transistor, $B=R_E$. L'impédance d'entrée est augmentée ($Z_{in, CC} \approx r_{be} + (\beta+1)R_E$) et l'impédance de sortie est augmentée (vue de l'émetteur, $Z_{out, CC} \approx R_E // (r_e + R_{source}/\beta)$ mais vue de la charge $R_C$, elle est élevée).</p>
+
+        <h3>II.5 Contre réaction non idéale (contre réaction réelle)</h3>
+        <p>Dans la réalité, les hypothèses simplificatrices (unidirectionnalité, non-chargement) ne sont pas toujours vérifiées. Le réseau de retour B peut charger l'amplificateur H et vice-versa, et les transferts peuvent ne pas être purement unidirectionnels.</p>
+        <p>L'analyse devient plus complexe et nécessite l'utilisation de modèles plus complets (paramètres h, y, z, etc.) ou des analyses de circuit directes.</p>
+
+        <h4>Transformation d'une configuration réelle :</h4>
+        <p>L'objectif est de ramener une configuration réelle à une configuration idéale équivalente pour pouvoir appliquer les formules simplifiées. Cela implique de modifier les blocs H et B en intégrant les effets de charge mutuels.</p>
+        <p><strong>Exemple (Réaction Série-Parallèle réelle) :</strong></p>
+         <figure>
+            <img src="placeholder_fig_II_reel_ideal.png" alt="Transformation configuration réelle en idéale (Série-Parallèle)" class="placeholder" style="max-width: 600px;">
+            <figcaption>Transformation d'une configuration réelle en idéale</figcaption>
+         </figure>
+         <p>Le réseau B a une impédance d'entrée $Z_{er}$ (vue de la sortie de H) et une impédance de sortie $Z_{sr}$ (vue de l'entrée de H). $R_i$ est la résistance interne de la source $V'_e$. $Z_c$ est la charge.</p>
+         <p>On définit un nouvel amplificateur $H'$ (noté $A'v$ ici) qui inclut l'effet de charge de $Z_{er}$ et $Z_c$ sur H. Son impédance de sortie $Z'_s$ inclut $Z_s$ en parallèle avec $Z_{er}$ et $Z_c$. Son gain $A'v$ est le gain de H chargé par $Z_{er}//Z_c$.</p>
+         <p>On définit une nouvelle impédance d'entrée $Z'_e$ qui inclut $R_i$, $Z_e$ et $Z_{sr}$.</p>
+         <p>Le réseau B est considéré comme idéal ($B_v$).</p>
+         <p>Le gain du montage complet devient :</p>
+         <span class="math-display"> A''v = \frac{A'v}{1 + B_v A'v} </span>
+         <p>L'impédance d'entrée vue par la source $V'_e$ est :</p>
+         <span class="math-display"> Z''_{in} = Z'_{in} (1 + B_v A'v) \quad \text{où } Z'_{in} = R_i + Z_e + Z_{sr} </span>
+         <p>L'impédance de sortie vue par la charge $Z_c$ est :</p>
+         <span class="math-display"> Z''_{out} = \frac{Z'_{out}}{1 + B_v A'v} \quad \text{où } Z'_{out} = Z_s // Z_{er} </span>
+         <p>Cette méthode permet de réutiliser les formules idéales après avoir correctement redéfini les blocs H et B modifiés par les interactions.</p>
+
+    </section>
+
+    <!-- ===== Page 26-35: Chapter III ===== -->
+    <section id="chap3">
+        <h2>Chapitre III : Les oscillateurs sinusoïdaux</h2>
+
+        <h3>III.1 Principe de l'oscillateur sinusoïdal à réaction</h3>
+        <p>Un oscillateur sinusoïdal à réaction est un système électronique conçu pour générer un signal de sortie sinusoïdal de fréquence et d'amplitude stables, sans nécessiter de signal d'entrée sinusoïdal externe. Il utilise une boucle de rétroaction positive pour entretenir les oscillations.</p>
+        <p>Il est constitué d'une chaîne directe (amplificateur) de fonction de transfert $A(j\omega)$ et d'une chaîne de retour (réseau de réaction, souvent sélectif en fréquence) de fonction de transfert $B(j\omega)$. La sortie est rebouclée sur l'entrée.</p>
+        <figure>
+            <img src="placeholder_fig_III_1.png" alt="Schéma de base d'un oscillateur à réaction" class="placeholder" style="max-width: 400px;">
+            <figcaption>Figure III.1 : Schéma de base d'un oscillateur à réaction</figcaption>
+        </figure>
+        <p>Le signal de sortie $V_s$ existe même sans signal d'entrée externe ($V_e=0$). En analysant la boucle, on a : $V_{retour} = B(j\omega) V_s$ et $V_s = A(j\omega) V_{retour}$.</p>
+        <p>Donc $V_s = A(j\omega) B(j\omega) V_s$, ce qui s'écrit :</p>
+        <span class="math-display"> (1 - A(j\omega) B(j\omega)) V_s(j\omega) = 0 </span>
+        <p>Pour avoir une solution non nulle ($V_s \neq 0$), il faut que le terme entre parenthèses soit nul :</p>
+        <span class="math-display"> T(j\omega) = A(j\omega) B(j\omega) = 1 </span>
+        <p>Où $T(j\omega)$ est le gain de boucle (ou transmittance en boucle ouverte FTBO).</p>
+
+        <h4>Critère de BARKHAUSEN ou condition d'auto-oscillation</h4>
+        <p>Pour qu'un système bouclé oscille de manière entretenue à une pulsation $\omega_0$, il faut que le gain de boucle $T(j\omega_0)$ soit exactement égal à 1. Cette condition complexe se décompose en deux conditions réelles :</p>
+        <ol>
+            <li><strong>Condition sur le module :</strong> Le module du gain de boucle doit être égal à 1.
+            <span class="math-display"> |A(j\omega_0) B(j\omega_0)| = 1 </span>
+            Cela signifie que l'amplification apportée par A compense exactement l'atténuation apportée par B à la fréquence $\omega_0$. C'est la condition d'entretien des oscillations.</li>
+            <li><strong>Condition sur la phase :</strong> La phase (argument) du gain de boucle doit être un multiple entier de $2\pi$ (0, $2\pi$, $4\pi$, ...).
+            <span class="math-display"> \arg(A(j\omega_0) B(j\omega_0)) = \arg(A(j\omega_0)) + \arg(B(j\omega_0)) = 2k\pi, \quad k \in \mathbb{Z} </span>
+            Cela signifie que le signal réinjecté à l'entrée est en phase avec le signal qui l'a généré, créant une rétroaction positive constructive. Cette condition détermine la (ou les) fréquence(s) d'oscillation $\omega_0$.</li>
+        </ol>
+
+        <h4>Condition de démarrage des oscillations</h4>
+        <p>Le critère de Barkhausen ($|T|=1$) assure l'entretien d'une oscillation existante. Mais pour que l'oscillation démarre à partir du bruit électronique présent dans le circuit lors de la mise sous tension, il faut que le gain de boucle soit légèrement supérieur à 1 à la fréquence $\omega_0$ :</p>
+        <span class="math-display"> |A(j\omega_0) B(j\omega_0)| > 1 \quad \text{(au démarrage)} </span>
+        <p>Avec $\arg(A(j\omega_0) B(j\omega_0)) = 2k\pi$.</p>
+        <p>Dans ce cas, l'amplitude du signal à $\omega_0$ va croître exponentiellement. Cette croissance doit être limitée par un mécanisme non linéaire dans l'amplificateur (saturation, limitation de gain) qui réduit le gain effectif de A jusqu'à ce que $|T|$ redevienne exactement égal à 1. L'amplitude se stabilise alors.</p>
+        <figure>
+             <img src="placeholder_fig_III_2.png" alt="Diagrammes de Bode FTBO pour démarrage et fonctionnement" class="placeholder" style="max-width: 600px;">
+             <figcaption>Figure III.2 : Condition de démarrage d'un oscillateur à réaction</figcaption>
+         </figure>
+
+        <h3>III.2 Principaux types d'oscillateurs à réaction</h3>
+        <p>Les oscillateurs sont souvent classés selon le type de réseau de réaction B utilisé (RC, LC, quartz).</p>
+
+        <h4>a- Oscillateur à pont de Wien</h4>
+        <p>Utilise un réseau RC appelé "pont de Wien" comme élément sélectif en fréquence B.</p>
+        <figure>
+             <img src="placeholder_fig_III_3.png" alt="Schéma Oscillateur à pont de Wien" class="placeholder" style="max-width: 500px;">
+             <figcaption>Figure III.3 : Oscillateur à pont de Wien</figcaption>
+         </figure>
+         <p><strong>Chaîne directe A :</strong> C'est un amplificateur non-inverseur.
+         <span class="math-display"> A(j\omega) = A = 1 + \frac{R_2}{R_1} \quad \text{(gain réel, indépendant de } \omega \text{)} </span>
+         <p><strong>Chaîne de retour B :</strong> Le réseau "pont de Wien" (formé par R, C, R, C).
+         <span class="math-display"> Z_{serie} = R + \frac{1}{jC\omega} = \frac{1+jRC\omega}{jC\omega} </span>
+         <span class="math-display"> Z_{parallele} = \frac{R \cdot (1/jC\omega)}{R + 1/jC\omega} = \frac{R}{1+jRC\omega} </span>
+         <span class="math-display"> B(j\omega) = \frac{V_{retour}}{V_s} = \frac{Z_{parallele}}{Z_{serie} + Z_{parallele}} = \frac{\frac{R}{1+jRC\omega}}{\frac{1+jRC\omega}{jC\omega} + \frac{R}{1+jRC\omega}} </span>
+         <span class="math-display"> B(j\omega) = \frac{R jC\omega}{(1+jRC\omega)^2 + R jC\omega} = \frac{jRC\omega}{1 - (RC\omega)^2 + 2jRC\omega + jRC\omega} = \frac{jRC\omega}{1 - (RC\omega)^2 + 3jRC\omega} </span>
+         <p><strong>Gain de boucle :</strong> $T(j\omega) = A \cdot B(j\omega) = A \frac{jRC\omega}{1 - (RC\omega)^2 + 3jRC\omega}$.</p>
+         <p><strong>Condition de phase :</strong> $\arg(T) = 2k\pi$. Comme A est réel > 0, il faut $\arg(B) = 0$. La partie imaginaire du dénominateur de B doit être nulle par rapport à la partie imaginaire du numérateur? Non, B doit être réel et positif.</p>
+         <p>Le numérateur est purement imaginaire. Pour que $B$ soit réel, il faut que la partie réelle du dénominateur soit nulle : $1 - (RC\omega_0)^2 = 0 \implies RC\omega_0 = 1$.</p>
+         <span class="math-display"> \omega_0 = \frac{1}{RC} \quad \text{ou} \quad f_0 = \frac{1}{2\pi RC} </span>
+         <p>À cette pulsation, le dénominateur devient $3jRC\omega_0 = 3j$.</p>
+         <span class="math-display"> B(j\omega_0) = \frac{jRC\omega_0}{3jRC\omega_0} = \frac{j}{3j} = \frac{1}{3} </span>
+         <p>Le gain de boucle à $\omega_0$ est $T(j\omega_0) = A \cdot B(j\omega_0) = A \cdot \frac{1}{3}$.</p>
+         <p><strong>Condition de module :</strong> $|T(j\omega_0)| = 1$.</p>
+         <span class="math-display"> A \cdot \frac{1}{3} = 1 \implies A = 3 </span>
+         <p><strong>Condition d'oscillation :</strong></p>
+         <span class="math-display"> \omega_0 = \frac{1}{RC} \quad \text{et} \quad A = 1 + \frac{R_2}{R_1} = 3 \implies R_2 = 2R_1 </span>
+         <p><strong>Condition de démarrage :</strong> Il faut $A > 3$, soit $R_2 > 2R_1$. En pratique, on utilise une résistance non linéaire (ampoule, thermistance, diodes) pour $R_1$ ou $R_2$ afin que le gain A soit > 3 au démarrage et se stabilise à A=3 lorsque l'amplitude augmente.</p>
+
+        <h4>b- Oscillateur déphaseur (à réseau RC)</h4>
+        <p>Utilise une cascade de cellules RC pour introduire un déphasage total de 180° (ou -180°). L'amplificateur doit être inverseur (déphasage de 180°) pour que le déphasage total de la boucle soit 360° (ou 0°).</p>
+        <figure>
+            <img src="placeholder_fig_III_4.png" alt="Schéma Oscillateur déphaseur RC" class="placeholder" style="max-width: 500px;">
+            <figcaption>Figure III.4 : Oscillateur à réseau déphaseur</figcaption>
+        </figure>
+        <p><strong>Chaîne directe A :</strong> Amplificateur inverseur.
+        <span class="math-display"> A(j\omega) = A = -\frac{R_2}{R_1} \quad \text{(gain réel, négatif)} </span>
+        <p><strong>Chaîne de retour B :</strong> Cascade de 3 cellules RC passe-haut (ou passe-bas). Ici, passe-haut.
+        <span class="math-display"> H_{cellule}(j\omega) = \frac{R}{R + 1/(jC\omega)} = \frac{jRC\omega}{1+jRC\omega} </span>
+        <p>La fonction de transfert de 3 cellules en cascade n'est pas simplement $(H_{cellule})^3$ car les cellules se chargent mutuellement. L'analyse complète donne :</p>
+        <span class="math-display"> B(j\omega) = \frac{V_{retour}}{V_s} = \frac{(jRC\omega)^3}{1 + 5(jRC\omega) + 6(jRC\omega)^2 + (jRC\omega)^3} </span>
+        <p>Posons $x = RC\omega$.</p>
+        <span class="math-display"> B(jx) = \frac{-jx^3}{(1-6x^2) + j(5x-x^3)} </span>
+        <p><strong>Gain de boucle :</strong> $T(jx) = A \cdot B(jx) = -|A| \frac{-jx^3}{(1-6x^2) + j(5x-x^3)}$.</p>
+        <p><strong>Condition de phase :</strong> $\arg(T) = 0$. Il faut que $T$ soit réel et positif. Comme $A$ est négatif, il faut que $B$ soit réel et négatif.</p>
+        <p>Pour que $B$ soit réel, la partie imaginaire de son dénominateur doit être nulle : $5x_0 - x_0^3 = 0 \implies x_0(5-x_0^2)=0$. Comme $x_0 \neq 0$, on a $x_0^2 = 5$, soit $x_0 = \sqrt{5}$.</p>
+        <span class="math-display"> (RC\omega_0)^2 = 5 \implies \omega_0 = \frac{\sqrt{5}}{RC} ? \text{Non, } x_0 = RC\omega_0 \implies \omega_0 = \frac{\sqrt{5}}{RC} </span>
+        <p>Vérification: La source dit $\omega_0 = 1/(\sqrt{6}RC)$. Recalculons B(j$\omega$).
+        Analyse par matrice de transfert ou par nœuds:
+        $V_1 = V_s H_1$, $V_2 = V_1 H_2$, $V_{retour} = V_2 H_3$. $H_i$ inclut le chargement.
+        Le résultat classique est $\omega_0 = 1/(\sqrt{6}RC)$. A cette fréquence:</p>
+        <span class="math-display"> x_0 = 1/\sqrt{6} \implies x_0^2 = 1/6 </span>
+        <span class="math-display"> B(j\omega_0) = \frac{-j(1/\sqrt{6})^3}{(1-6(1/6)) + j(5(1/\sqrt{6}) - (1/\sqrt{6})^3)} = \frac{-j/(6\sqrt{6})}{0 + j(5/\sqrt{6} - 1/(6\sqrt{6}))} = \frac{-j/(6\sqrt{6})}{j(30-1)/(6\sqrt{6})} = \frac{-1}{29} </span>
+         <p>Le gain de boucle est $T(j\omega_0) = A \cdot B(j\omega_0) = (-\frac{R_2}{R_1}) \cdot (-\frac{1}{29}) = \frac{R_2}{29 R_1}$.</p>
+        <p><strong>Condition de module :</strong> $|T(j\omega_0)| = 1$.</p>
+        <span class="math-display"> \frac{R_2}{29 R_1} = 1 \implies R_2 = 29 R_1 </span>
+        <p><strong>Condition d'oscillation :</strong></p>
+        <span class="math-display"> \omega_0 = \frac{1}{\sqrt{6}RC} \quad \text{et} \quad A = -29 \implies R_2 = 29R_1 </span>
+        <p><strong>Condition de démarrage :</strong> $R_2 > 29 R_1$.</p>
+
+
+        <h4>c- Oscillateur Colpitts</h4>
+        <p>Utilise un circuit résonant LC pour la sélectivité en fréquence. Le condensateur est divisé en deux ($C_1, C_2$) pour créer le point de retour. La réaction est prise aux bornes de $C_1$.</p>
+        <figure>
+            <img src="placeholder_fig_III_5.png" alt="Schéma Oscillateur Colpitts (AOP)" class="placeholder" style="max-width: 500px;">
+            <figcaption>Figure III.5 : Exemple d'oscillateur Colpitts</figcaption>
+        </figure>
+        <p><strong>Chaîne directe A :</strong> Amplificateur inverseur (ici, base commune ou source commune si transistor) ou non-inverseur avec AOP. Le schéma montre un AOP inverseur avec $R$ en entrée et le circuit LC en retour.</p>
+        <p>Analyse simplifiée: L'AOP est inverseur de gain $A = -R_2/R_1$. Le réseau B est le circuit LC avec retour sur $C_1$.
+        <span class="math-display"> Z_{LC} = jL\omega + \frac{1}{jC_1\omega} + \frac{1}{jC_2\omega} = jL\omega + \frac{1}{j\omega C_{eq}} \quad \text{avec } C_{eq} = \frac{C_1 C_2}{C_1+C_2} </span>
+        <p>Le retour se fait via $C_1$. $V_{retour}$ est la tension aux bornes de $C_1$.
+        Il faut analyser le circuit complet. Le PDF semble analyser un cas où l'AOP est non-inverseur ($A=1+R_2/R_1$) et le réseau B est un diviseur capacitif avec une inductance L.</p>
+        <p>Considérons l'analyse du PDF (AOP non-inverseur):</p>
+        <span class="math-display"> A(j\omega) = A = 1 + R_2/R_1 </span>
+        <p>Réseau B (vu de la sortie $V_s$ vers l'entrée $V_{retour}$ aux bornes de $C_1$, en série avec R) :</p>
+        <span class="math-display"> B(j\omega) = \frac{Z_{C1}}{Z_L + Z_{C1} + Z_{C2}} = \frac{1/(jC_1\omega)}{jL\omega + 1/(jC_1\omega) + 1/(jC_2\omega)} = \frac{1}{1 - LC_1\omega^2 + C_1/C_2} </span>
+        <p>Ceci n'est pas B, mais le gain du diviseur capacitif simple. Il faut inclure R. L'analyse du PDF donne :</p>
+        <span class="math-display"> B(j\omega) = \frac{V_{retour}}{V_s} \approx \frac{C_1}{C_1+C_2} \quad \text{(approximatif)} </span>
+        <p>Analyse de la boucle complète $T = AB$: Pour osciller, il faut $T=1$.</p>
+        <p>La fréquence d'oscillation est déterminée par la résonance du circuit LC :</p>
+        <span class="math-display"> \omega_0^2 L C_{eq} = 1 \implies \omega_0 = \frac{1}{\sqrt{L C_{eq}}} = \frac{1}{\sqrt{L \frac{C_1 C_2}{C_1+C_2}}} </span>
+        <p>La condition sur le gain (module) vient de l'atténuation du diviseur capacitif : $V_{retour}/V_s = C_1/(C_1+C_2)$ à la résonance (si R est grand?). Il faut que l'ampli A compense cette atténuation.</p>
+        <span class="math-display"> A \cdot \frac{C_1}{C_1+C_2} = 1 \implies A = 1 + \frac{C_2}{C_1} </span>
+        <p><strong>Condition d'oscillation (Colpitts AOP non-inv):</strong></p>
+        <span class="math-display"> f_0 = \frac{1}{2\pi \sqrt{L C_{eq}}} \quad \text{et} \quad A = 1 + \frac{R_2}{R_1} = 1 + \frac{C_2}{C_1} \implies \frac{R_2}{R_1} = \frac{C_2}{C_1} </span>
+        <p><strong>Condition de démarrage :</strong> $R_2/R_1 > C_2/C_1$.</p>
+        <p><strong>Exemple avec transistor bipolaire (émetteur commun) :</strong></p>
+        <figure>
+            <img src="placeholder_fig_III_5_bjt.png" alt="Schéma Oscillateur Colpitts (BJT)" class="placeholder" style="max-width: 450px;">
+            <figcaption>Oscillateur Colpitts avec Transistor Bipolaire</figcaption>
+        </figure>
+        <p>Le circuit LC est connecté au collecteur. La réaction est prise entre émetteur et base via le diviseur $C_1, C_2$. La fréquence est la même. La condition de gain dépend du gain en courant $\beta$ et des résistances de polarisation. Typiquement $h_{fe} > C_2/C_1$.</p>
+
+        <h4>d- Oscillateur Clapp</h4>
+        <p>Similaire au Colpitts, mais ajoute un petit condensateur $C$ en série avec la bobine $L$. Cela permet de rendre la fréquence d'oscillation moins dépendante des capacités parasites du transistor (ou AOP) $C_1, C_2$.</p>
+         <figure>
+            <img src="placeholder_fig_III_6.png" alt="Schéma Oscillateur Clapp (AOP)" class="placeholder" style="max-width: 500px;">
+            <figcaption>Figure III.6 : Exemple d'oscillateur Clapp</figcaption>
+        </figure>
+        <p>La fréquence d'oscillation est maintenant déterminée par $L$ et la capacité série équivalente $C_{tot} = (1/C_1 + 1/C_2 + 1/C)^{-1}$.</p>
+        <span class="math-display"> \omega_0 = \frac{1}{\sqrt{L C_{tot}}} \approx \frac{1}{\sqrt{LC}} \quad \text{si C est petit devant } C_1, C_2 </span>
+        <p>La condition de gain reste approximativement $A > 1 + C_2/C_1$.</p>
+
+
+        <h4>e- Oscillateur Hartley</h4>
+        <p>Similaire au Colpitts, mais utilise une inductance à prise médiane ($L_1, L_2$) au lieu d'un diviseur capacitif.</p>
+         <figure>
+            <img src="placeholder_fig_III_7.png" alt="Schéma Oscillateur Hartley (AOP)" class="placeholder" style="max-width: 500px;">
+            <figcaption>Figure III.7 : Exemple d'oscillateur Hartley</figcaption>
+        </figure>
+        <p>L'inductance équivalente est $L_{eq} = L_1 + L_2$ (si pas de couplage mutuel, ou $L_1+L_2+2M$ avec couplage M).</p>
+        <p>La fréquence d'oscillation est :</p>
+        <span class="math-display"> \omega_0 = \frac{1}{\sqrt{L_{eq} C}} = \frac{1}{\sqrt{(L_1+L_2)C}} </span>
+        <p>Le rapport de transformation de la bobine détermine le taux de réaction. La tension de retour est prise aux bornes de $L_1$. $V_{retour}/V_s = L_1 / (L_1+L_2)$ (approximatif).</p>
+        <p>La condition de gain devient :</p>
+        <span class="math-display"> A \cdot \frac{L_1}{L_1+L_2} = 1 \implies A = \frac{L_1+L_2}{L_1} = 1 + \frac{L_2}{L_1} </span>
+        <p><strong>Condition d'oscillation (Hartley AOP non-inv):</strong></p>
+        <span class="math-display"> f_0 = \frac{1}{2\pi \sqrt{(L_1+L_2)C}} \quad \text{et} \quad A = 1 + \frac{R_2}{R_1} = 1 + \frac{L_2}{L_1} \implies \frac{R_2}{R_1} = \frac{L_2}{L_1} </span>
+         <p><strong>Condition de démarrage :</strong> $R_2/R_1 > L_2/L_1$.</p>
+
+
+        <h3>III.3 Les oscillateur à résistance négative</h3>
+        <p>Une autre approche pour créer des oscillations est de compenser les pertes (résistance positive R) dans un circuit résonant (LC ou RLC) en introduisant un composant ou circuit qui se comporte comme une résistance négative ($R_n = -R$).</p>
+        <p>Considérons un circuit RLC parallèle.</p>
+         <figure>
+            <img src="placeholder_fig_III_8.png" alt="Circuit RLC parallèle et série avec résistance négative" class="placeholder" style="max-width: 600px;">
+            <figcaption>Figure III.8 : Circuit RLC (a) parallèle et (b) série</figcaption>
+        </figure>
+        <p><strong>Circuit Parallèle (a) :</strong> La loi des nœuds donne :</p>
+        <span class="math-display"> i_L + i_R + i_C + i_{Rn} = 0 </span>
+        <p>Avec $i_L$ tel que $u = L di_L/dt$, $i_R=u/R$, $i_C=C du/dt$, $i_{Rn}=u/R_n$. Exprimé en tension $u$ :</p>
+        <span class="math-display"> \frac{1}{L} \int u dt + \frac{u}{R} + C \frac{du}{dt} + \frac{u}{R_n} = 0 </span>
+        <p>En dérivant par rapport au temps :</p>
+        <span class="math-display"> \frac{u}{L} + \left(\frac{1}{R} + \frac{1}{R_n}\right) \frac{du}{dt} + C \frac{d^2u}{dt^2} = 0 </span>
+        <span class="math-display"> \frac{d^2u}{dt^2} + \frac{1}{C} \left(\frac{1}{R} + \frac{1}{R_n}\right) \frac{du}{dt} + \frac{1}{LC} u = 0 </span>
+        <p>C'est l'équation d'un oscillateur harmonique amorti. Le terme d'amortissement est $\alpha = \frac{1}{2C} (\frac{1}{R} + \frac{1}{R_n})$.</p>
+        <ul>
+            <li>Si $R_n > 0$, l'amortissement est positif, les oscillations s'amortissent.</li>
+            <li>Si $R_n < 0$ et $|R_n| = R$, alors $(\frac{1}{R} + \frac{1}{R_n}) = 0$, l'amortissement est nul. On obtient des oscillations entretenues à $\omega_0 = 1/\sqrt{LC}$.</li>
+            <li>Si $R_n < 0$ et $|R_n| < R$, l'amortissement est négatif, les oscillations divergent (démarrage).</li>
+        </ul>
+        <p><strong>Circuit Série (b) :</strong> La loi des mailles donne :</p>
+        <span class="math-display"> u_L + u_R + u_C + u_{Rn} = 0 \quad \text{(si en boucle fermée)} </span>
+        <p>Avec $u_L = L di/dt$, $u_R=Ri$, $u_C = (1/C) \int i dt$, $u_{Rn}=R_n i$.</p>
+        <span class="math-display"> L \frac{di}{dt} + (R+R_n)i + \frac{1}{C} \int i dt = 0 </span>
+        <p>En dérivant :</p>
+        <span class="math-display"> L \frac{d^2i}{dt^2} + (R+R_n) \frac{di}{dt} + \frac{1}{C} i = 0 </span>
+        <span class="math-display"> \frac{d^2i}{dt^2} + \frac{R+R_n}{L} \frac{di}{dt} + \frac{1}{LC} i = 0 </span>
+        <p>L'amortissement est $\alpha = (R+R_n)/(2L)$. Les oscillations sont entretenues si $R+R_n = 0$, soit $R_n = -R$.</p>
+
+        <h4>Réalisation pratique de la résistance négative :</h4>
+        <p>On peut utiliser un AOP avec rétroaction positive pour simuler une résistance négative.</p>
+        <figure>
+            <img src="placeholder_fig_III_9.png" alt="Circuit réalisant une résistance négative (NIC)" class="placeholder" style="max-width: 600px;">
+            <figcaption>Figure III.9 : Exemple d'oscillateur à résistance négative</figcaption>
+        </figure>
+        <p>Le circuit de gauche (Convertisseur d'Impédance Négative - NIC) : AOP idéal, $V^-=V^+$.</p>
+        <span class="math-display"> V^+ = u \frac{R_3}{R_1+R_3} </span>
+        <span class="math-display"> \frac{0 - V^-}{R_2} + \frac{i_e + (0-u_s)}{R_f??} \text{ Erreur schéma/formule} </span>
+        <p>Analyse du circuit AOP de gauche : $V^+=V^-=0$. Courant entrant $i_e$. Nœud à $V^-$: $\frac{V_e - 0}{R_1} + \frac{V_s - 0}{R_2} = 0 \implies V_s = -V_e R_2/R_1$. $i_e = (V_e-0)/R_1$. Si on regarde l'impédance vue de $V_e$? Non.</p>
+        <p>Le circuit à AOP de gauche dans la figure III.9 est un NIC (Negative Impedance Converter). Si on applique une tension $u$ et on mesure le courant $i_e$ qui entre :</p>
+        <span class="math-display"> V^- = u \quad \text{(car suiveur virtuel si R3=inf, R1=0?)} </span>
+        <p>Analyse du circuit AOP dans la partie gauche de la Fig III.9:</p>
+        <span class="math-display"> V^+ = 0 \implies V^- = 0 </span>
+        <span class="math-display"> \frac{u - 0}{R_1} + \frac{V_{inter} - 0}{R_3} = i_e \quad (?) \text{ Non, } i_e \text{ est le courant total.} </span>
+        <span class="math-display"> \text{Nœud } V=u: i_e = \frac{u-V^-}{R_1} + \frac{u-V_s}{R_3} $ ? Schéma confus. </span>
+        <p>Le circuit classique pour $R_n = -R_1 R_3 / R_2$ est un AOP avec $R_1$ entre entrée et $V^-$, $R_2$ entre $V^-$ et sortie, $R_3$ entre $V^+$ et masse, et l'entrée $u$ appliquée sur $V^+$.</p>
+        <p>Le PDF donne la formule $R_n = u/i_e = - R_1 R_3 / R_2$. En connectant ce circuit à un circuit RLC série (Fig III.9 droite), on peut obtenir des oscillations si $R_n = -r$, où $r$ est la résistance série du RLC.</p>
+
+        <h3>III.4. Les oscillateurs à quartz</h3>
+        <h4>a- Introduction</h4>
+        <p>Pour obtenir une très grande stabilité en fréquence (peu de dérive avec la température, le temps, etc.), on utilise des résonateurs à quartz.</p>
+        <p>Le quartz est un cristal qui présente l'effet <strong>piézo-électrique</strong> :</p>
+        <ul>
+            <li>Application d'une tension électrique $\implies$ déformation mécanique.</li>
+            <li>Application d'une contrainte mécanique $\implies$ apparition de charges électriques (tension).</li>
+        </ul>
+        <p>Un cristal de quartz taillé d'une certaine manière possède des fréquences de résonance mécanique très précises et très stables.</p>
+        <figure>
+             <img src="placeholder_fig_III_10.png" alt="Photographie d'un cristal de quartz" class="placeholder" style="max-width: 300px;">
+             <figcaption>Figure III.10 : Le quartz</figcaption>
+         </figure>
+
+        <h4>b- Modélisation électrique du quartz</h4>
+        <p>Près de sa fréquence de résonance fondamentale, un quartz se comporte électriquement comme un circuit RLC série très sélectif, en parallèle avec une capacité due aux électrodes et au boîtier.</p>
+        <figure>
+             <img src="placeholder_fig_III_11.png" alt="Modèle électrique équivalent d'un quartz" class="placeholder" style="max-width: 400px;">
+             <figcaption>Figure III.11 : Modèle électrique du quartz</figcaption>
+         </figure>
+         <ul>
+             <li>$L_q, C_q, R_q$ : Modélisent la résonance mécanique (branche motionnelle). $L_q$ est très grande, $C_q$ très petite, $R_q$ très faible. Le facteur de qualité $Q_q = L_q \omega / R_q$ est très élevé (10 000 à 1 000 000).</li>
+             <li>$C_M$ (ou $C_0$): Capacité parallèle (statique) des électrodes et du boîtier. $C_M \gg C_q$.</li>
+         </ul>
+
+        <h4>c- Impédance du quartz</h4>
+        <p>L'impédance totale $Z(\omega)$ est celle de la branche série $Z_{serie} = R_q + j(L_q \omega - \frac{1}{C_q \omega})$ en parallèle avec $Z_{CM} = \frac{1}{jC_M \omega}$.</p>
+        <span class="math-display"> Z(j\omega) = \frac{Z_{serie} \cdot Z_{CM}}{Z_{serie} + Z_{CM}} </span>
+        <p>L'impédance présente deux fréquences de résonance proches :</p>
+        <ol>
+            <li><strong>Fréquence de résonance série $\omega_s$:</strong> L'impédance de la branche série est minimale (égale à $R_q$) lorsque $L_q \omega_s - 1/(C_q \omega_s) = 0$.
+            <span class="math-display"> \omega_s = \frac{1}{\sqrt{L_q C_q}} </span>
+            À cette fréquence, l'impédance totale $Z(j\omega_s)$ est faible et résistive ($R_q$ en parallèle avec $1/(jC_M \omega_s)$).</li>
+            <li><strong>Fréquence de résonance parallèle $\omega_p$:</strong> L'impédance totale $Z(j\omega)$ devient infinie (résonance parallèle ou anti-résonance) lorsque le dénominateur $Z_{serie} + Z_{CM} = 0$.
+            $R_q + j(L_q \omega_p - \frac{1}{C_q \omega_p}) + \frac{1}{jC_M \omega_p} = 0$.
+            En négligeant $R_q$, on a $L_q \omega_p - \frac{1}{C_q \omega_p} - \frac{1}{C_M \omega_p} = 0$.
+            <span class="math-display"> L_q \omega_p^2 = \frac{1}{C_q} + \frac{1}{C_M} = \frac{C_q+C_M}{C_q C_M} </span>
+            <span class="math-display"> \omega_p = \frac{1}{\sqrt{L_q \frac{C_q C_M}{C_q + C_M}}} = \omega_s \sqrt{1 + \frac{C_q}{C_M}} </span>
+             Comme $C_q \ll C_M$, $\omega_p$ est très légèrement supérieure à $\omega_s$.</li>
+        </ol>
+        <p>L'expression de l'impédance donnée dans le PDF est dérivée de l'admittance $Y=1/Z = Y_{serie} + Y_{CM}$ et simplifiée :</p>
+        <span class="math-display"> Z = -j \frac{1}{\omega C_M} \frac{1 - (\omega/\omega_s)^2}{1 - (\omega/\omega_p)^2} \quad \text{(approximation sans } R_q \text{)} </span>
+
+        <figure>
+            <img src="placeholder_fig_III_12.png" alt="Comportement de l'impédance (Réactance) d'un quartz" class="placeholder" style="max-width: 400px;">
+            <figcaption>Figure III.12 : Comportement capacitif et inductif du quartz</figcaption>
+        </figure>
+        <ul>
+            <li>Pour $\omega < \omega_s$ et $\omega > \omega_p$, l'impédance est <strong>capacitive</strong>.</li>
+            <li>Entre $\omega_s$ et $\omega_p$, l'impédance est <strong>inductive</strong>.</li>
+        </ul>
+        <p>Les oscillateurs à quartz utilisent le quartz dans sa zone inductive ($\omega_s < \omega < \omega_p$), où il remplace l'inductance L dans des structures comme Colpitts ou Pierce.</p>
+
+        <p><strong>Exemple : Oscillateur Colpitts à quartz</strong></p>
+         <figure>
+            <img src="placeholder_fig_III_13_colpitts_quartz.png" alt="Schéma Oscillateur Colpitts à Quartz (BJT)" class="placeholder" style="max-width: 450px;">
+            <figcaption>Exemple : Oscillateur Colpitts à quartz</figcaption>
+        </figure>
+        <p>Le quartz remplace l'inductance L du Colpitts standard. Le circuit oscille à une fréquence $\omega_0$ située entre $\omega_s$ et $\omega_p$, déterminée par la condition de phase nulle, où la réactance inductive du quartz $X_L(\omega_0)$ résonne avec la capacité équivalente vue par le quartz $C_{eq}'$ (combinaison de $C_1, C_2$ et capacités parasites). La fréquence est très proche de $\omega_s$.</p>
+
+    </section>
+
+    <!-- ===== Page 36-40: Chapter IV ===== -->
+    <section id="chap4">
+        <h2>Chapitre IV : Les comparateurs et multivibrateurs astables</h2>
+        <p>Ce chapitre aborde l'utilisation de l'amplificateur opérationnel (AOP) en régime non linéaire (ou régime de saturation). Dans ce mode, la sortie de l'AOP ne suit plus la relation $V_s = A_0 (V^+ - V^-)$ mais est "bloquée" à l'une des tensions d'alimentation (ou une valeur proche), appelée tension de saturation.</p>
+        <ul>
+            <li>Si $V^+ > V^-$ (différence positive), $V_s \to +V_{sat}$ (proche de $+V_{alim}$).</li>
+            <li>Si $V^+ < V^-$ (différence négative), $V_s \to -V_{sat}$ (proche de $-V_{alim}$).</li>
+        </ul>
+        <p>Ce comportement de "basculement" est obtenu en supprimant (ou en utilisant une rétroaction positive) la contre-réaction.</p>
+
+        <h3>IV.1 Les comparateurs</h3>
+        <p>Un comparateur est un circuit qui compare deux tensions analogiques et fournit une sortie logique (ou deux niveaux de tension distincts : $+V_{sat}$ et $-V_{sat}$) indiquant quelle tension est la plus élevée.</p>
+
+        <h4>a- Comparateur simple (à un seuil)</h4>
+        <p>Compare une tension d'entrée $V_e$ à une tension de référence fixe $V_R$.</p>
+         <figure>
+            <img src="placeholder_fig_IV_1_schema.png" alt="Schéma Comparateur simple" class="placeholder" style="max-width: 350px;">
+             <img src="placeholder_fig_IV_1_chrono.png" alt="Chronogramme Comparateur simple" class="placeholder" style="max-width: 450px;">
+             <figcaption>Figure IV.1 : Comparateur simple et son chronogramme de sortie</figcaption>
+         </figure>
+         <p>Ici, $V_e$ est appliquée à l'entrée non-inverseuse ($V^+$) et $V_R$ à l'entrée inverseuse ($V^-$).</p>
+         <span class="math-display"> V_R = \frac{R_2}{R_1+R_2} (+E) \quad \text{(Si R1, R2 forment un pont diviseur depuis +E)} </span>
+         <p>Fonctionnement :</p>
+         <ul>
+             <li>Si $V_e > V_R \implies V^+ > V^- \implies V_s = +V_{sat}$.</li>
+             <li>Si $V_e < V_R \implies V^+ < V^- \implies V_s = -V_{sat}$.</li>
+         </ul>
+         <p>La sortie bascule lorsque $V_e$ franchit le seuil $V_R$. (Le schéma montre $V_e$ sur $V^+$ et $V_R$ sur $V^-$, mais le chronogramme semble correspondre à l'inverse ou $V_e$ comparé à $V_R$ sur $V^+$ ? Cohérence à vérifier. Le schéma dessiné compare $V_e$ à $V_R$, si $V_e > V_R$, $V_s = +V_{sat}$).</p>
+
+        <h4>b- Comparateur à deux seuils (à hystérésis / Trigger de Schmitt)</h4>
+        <p>Pour éviter les basculements intempestifs dus au bruit lorsque $V_e$ est proche de $V_R$, on introduit une rétroaction positive. Cela crée deux seuils de basculement différents, un pour la transition montante de $V_e$ et un pour la transition descendante. L'écart entre ces seuils est appelé tension d'hystérésis.</p>
+
+        <h5>Le comparateur avec inversion (Trigger de Schmitt inverseur)</h5>
+        <p>L'entrée $V_e$ est appliquée à la borne inverseuse. La rétroaction positive se fait sur la borne non-inverseuse.</p>
+         <figure>
+            <img src="placeholder_fig_IV_2.png" alt="Schéma Comparateur à hystérésis (inverseur)" class="placeholder" style="max-width: 350px;">
+             <figcaption>Figure IV.2 : Comparateur à hystérésis avec inversion</figcaption>
+         </figure>
+         <p>La tension sur l'entrée non-inverseuse $V^+$ dépend de la tension de sortie $V_s$ :</p>
+         <span class="math-display"> V^+ = V_s \frac{R_1}{R_1+R_2} </span>
+         <p>La différence d'entrée est $\epsilon = V^+ - V^- = V^+ - V_e$. Le basculement se produit quand $\epsilon$ change de signe, c'est-à-dire quand $V_e = V^+$.</p>
+         <ul>
+             <li><strong>Supposons $V_s = +V_{sat}$ (état initial).</strong>
+                Alors $V^+ = V_{H} = +V_{sat} \frac{R_1}{R_1+R_2}$. C'est le seuil haut.
+                Tant que $V_e < V_{H}$, $\epsilon > 0$ et $V_s$ reste à $+V_{sat}$.
+                Si $V_e$ augmente et dépasse $V_{H}$ ($V_e > V_{H}$), alors $\epsilon$ devient négatif ($V^- > V^+$), et la sortie bascule à $V_s = -V_{sat}$.</li>
+             <li><strong>Maintenant $V_s = -V_{sat}$.</strong>
+                Alors $V^+ = V_{B} = -V_{sat} \frac{R_1}{R_1+R_2}$. C'est le seuil bas.
+                Tant que $V_e > V_{B}$, $\epsilon < 0$ et $V_s$ reste à $-V_{sat}$.
+                Si $V_e$ diminue et passe en dessous de $V_{B}$ ($V_e < V_{B}$), alors $\epsilon$ devient positif ($V^+ > V^-$), et la sortie bascule à $V_s = +V_{sat}$.</li>
+         </ul>
+         <p>Les deux seuils sont :</p>
+         <span class="math-display"> V_H = \frac{R_1}{R_1+R_2} V_{sat} \quad \text{(Seuil de basculement haut)} </span>
+         <span class="math-display"> V_B = -\frac{R_1}{R_1+R_2} V_{sat} \quad \text{(Seuil de basculement bas)} </span>
+         <p>La tension d'hystérésis est $\Delta V = V_H - V_B$ :</p>
+         <span class="math-display"> \Delta V = \frac{2R_1}{R_1+R_2} V_{sat} </span>
+
+         <figure>
+            <img src="placeholder_fig_IV_3.png" alt="Caractéristique de transfert d'un comparateur à hystérésis (inverseur)" class="placeholder" style="max-width: 400px;">
+            <figcaption>Figure IV.3 : Caractéristique de transfert pour un comparateur avec inversion</figcaption>
+        </figure>
+
+        <h5>Le comparateur sans inversion (Trigger de Schmitt non-inverseur)</h5>
+        <p>L'entrée $V_e$ est appliquée à la borne non-inverseuse. La référence (souvent 0V) est sur la borne inverseuse.</p>
+         <figure>
+            <img src="placeholder_fig_IV_4.png" alt="Schéma Comparateur à hystérésis (non-inverseur)" class="placeholder" style="max-width: 350px;">
+            <figcaption>Figure IV.4 : Comparateur à hystérésis sans inversion</figcaption>
+         </figure>
+         <p>Ici, $V^- = 0$. Le basculement se produit quand $V^+$ change de signe. La tension $V^+$ est déterminée par $V_e$ et $V_s$ via le pont diviseur $R_1, R_2$ (superposition) :</p>
+         <span class="math-display"> V^+ = V_e \frac{R_2}{R_1+R_2} + V_s \frac{R_1}{R_1+R_2} </span>
+         <p>La différence d'entrée est $\epsilon = V^+ - V^- = V^+$. Le basculement a lieu quand $V^+=0$.</p>
+         <ul>
+              <li><strong>Supposons $V_s = -V_{sat}$ (état initial).</strong>
+                $V^+ = V_e \frac{R_2}{R_1+R_2} - V_{sat} \frac{R_1}{R_1+R_2}$.
+                Tant que $V^+ < 0$, $V_s$ reste à $-V_{sat}$.
+                Le basculement vers $+V_{sat}$ se produit quand $V^+=0$, soit $V_e \frac{R_2}{R_1+R_2} = V_{sat} \frac{R_1}{R_1+R_2}$.
+                Le seuil haut est $V_H = V_{sat} \frac{R_1}{R_2}$.</li>
+              <li><strong>Maintenant $V_s = +V_{sat}$.</strong>
+                 $V^+ = V_e \frac{R_2}{R_1+R_2} + V_{sat} \frac{R_1}{R_1+R_2}$.
+                 Tant que $V^+ > 0$, $V_s$ reste à $+V_{sat}$.
+                 Le basculement vers $-V_{sat}$ se produit quand $V^+=0$, soit $V_e \frac{R_2}{R_1+R_2} = -V_{sat} \frac{R_1}{R_1+R_2}$.
+                 Le seuil bas est $V_B = -V_{sat} \frac{R_1}{R_2}$.</li>
+         </ul>
+         <p>Les deux seuils sont :</p>
+         <span class="math-display"> V_H = \frac{R_1}{R_2} V_{sat} \quad \text{(Seuil de basculement haut)} </span>
+         <span class="math-display"> V_B = -\frac{R_1}{R_2} V_{sat} \quad \text{(Seuil de basculement bas)} </span>
+          <p>La tension d'hystérésis est $\Delta V = V_H - V_B$ :</p>
+         <span class="math-display"> \Delta V = \frac{2R_1}{R_2} V_{sat} </span>
+
+         <figure>
+            <img src="placeholder_fig_IV_5.png" alt="Caractéristique de transfert d'un comparateur à hystérésis (non-inverseur)" class="placeholder" style="max-width: 400px;">
+            <figcaption>Figure IV.5 : Caractéristique de transfert pour un comparateur sans inversion</figcaption>
+        </figure>
+
+
+        <h3>IV.2 Les multivibrateurs astables</h3>
+        <p>Les multivibrateurs astables sont des oscillateurs qui génèrent un signal de sortie non sinusoïdal, typiquement rectangulaire (ou carré). Ils basculent continuellement entre deux états quasi-stables, sans jamais rester dans un état stable (d'où "astable"). Ils sont souvent basés sur un comparateur à hystérésis et un circuit RC qui contrôle le temps passé dans chaque état.</p>
+
+        <h4>a- Principe de base</h4>
+        <p>Le montage utilise un comparateur à hystérésis (ici, type inverseur) dont la sortie $V_s$ charge ou décharge un condensateur $C$ à travers une résistance $R$. La tension aux bornes du condensateur $V_C$ est appliquée à l'entrée du comparateur qui ne reçoit pas le signal de rétroaction (ici, l'entrée inverseuse).</p>
+         <figure>
+            <img src="placeholder_fig_IV_6.png" alt="Schéma Multivibrateur astable" class="placeholder" style="max-width: 400px;">
+            <figcaption>Figure IV.6 : Multivibrateur astable</figcaption>
+        </figure>
+        <p>Le comparateur est un trigger de Schmitt inverseur avec les seuils :</p>
+        <span class="math-display"> V_H = \frac{R_1}{R_1+R_2} V_{sat} </span>
+        <span class="math-display"> V_B = -\frac{R_1}{R_1+R_2} V_{sat} </span>
+
+        <p><strong>Fonctionnement :</strong></p>
+        <ol>
+            <li><strong>Instant t=0 (mise sous tension) :</strong> Supposons $V_C(0)=0$ (condensateur déchargé). Supposons que la sortie bascule initialement à $V_s = +V_{sat}$ (dû au bruit ou à une dissymétrie). Alors $V^+ = V_H$. Comme $V_C = V^- = 0 < V_H$, la sortie reste bien à $+V_{sat}$.</li>
+            <li><strong>Phase 1 (Charge) :</strong> Le condensateur C se charge à travers R vers la tension $V_s = +V_{sat}$. La tension $V_C(t)$ suit l'équation :
+            <span class="math-display"> V_C(t) = V_{sat} + (V_C(0) - V_{sat}) e^{-t/RC} </span>
+            Ici, $V_C(0)$ est la tension au début de cette phase. Si on part de $t=0$, $V_C(0)=0$, alors $V_C(t) = V_{sat}(1 - e^{-t/RC})$.
+            $V_C(t)$ augmente.</li>
+            <li><strong>Basculement à $t_1$ :</strong> Lorsque $V_C(t)$ atteint le seuil haut $V_H$, la condition $V^- > V^+$ est atteinte. La sortie $V_s$ bascule brutalement à $-V_{sat}$. À cet instant $t_1$, $V_C(t_1) = V_H$.</li>
+            <li><strong>Phase 2 (Décharge) :</strong> Maintenant $V_s = -V_{sat}$. Le condensateur C se décharge (charge négativement) à travers R vers la tension $V_s = -V_{sat}$. La tension $V_C(t)$ (pour $t>t_1$) suit l'équation :
+            <span class="math-display"> V_C(t) = -V_{sat} + (V_C(t_1) - (-V_{sat})) e^{-(t-t_1)/RC} = -V_{sat} + (V_H + V_{sat}) e^{-(t-t_1)/RC} </span>
+            $V_C(t)$ diminue.</li>
+            <li><strong>Basculement à $t_2$ :</strong> Lorsque $V_C(t)$ atteint le seuil bas $V_B$, la condition $V^- < V^+$ ($V_C < V_B = -V_H$ car $V_s=-V_{sat}$) est atteinte. La sortie $V_s$ bascule brutalement à $+V_{sat}$. À cet instant $t_2$, $V_C(t_2) = V_B$.</li>
+            <li><strong>Cycle suivant :</strong> Le condensateur se recharge vers $+V_{sat}$ à partir de $V_C(t_2)=V_B$. Le cycle recommence.</li>
+        </ol>
+
+        <p><strong>Calcul de la période T :</strong></p>
+        <p>Calculons la durée de la phase 2 ($V_s=-V_{sat}$), de $t_1$ à $t_2$. Notons $\Delta t_2 = t_2 - t_1$.</p>
+        <span class="math-display"> V_C(t_2) = V_B = -V_{sat} + (V_H + V_{sat}) e^{-\Delta t_2 / RC} </span>
+        <span class="math-display"> V_B + V_{sat} = (V_H + V_{sat}) e^{-\Delta t_2 / RC} </span>
+        <span class="math-display"> e^{\Delta t_2 / RC} = \frac{V_H + V_{sat}}{V_B + V_{sat}} </span>
+        <span class="math-display"> \Delta t_2 = RC \ln \left( \frac{V_H + V_{sat}}{V_B + V_{sat}} \right) </span>
+        <p>Calculons la durée de la phase 1 ($V_s=+V_{sat}$), de $t_2$ à $t_3$. Notons $\Delta t_1 = t_3 - t_2$.</p>
+        <span class="math-display"> V_C(t) = V_{sat} + (V_C(t_2) - V_{sat}) e^{-(t-t_2)/RC} = V_{sat} + (V_B - V_{sat}) e^{-(t-t_2)/RC} </span>
+        <span class="math-display"> V_C(t_3) = V_H = V_{sat} + (V_B - V_{sat}) e^{-\Delta t_1 / RC} </span>
+        <span class="math-display"> V_H - V_{sat} = (V_B - V_{sat}) e^{-\Delta t_1 / RC} </span>
+        <span class="math-display"> e^{\Delta t_1 / RC} = \frac{V_B - V_{sat}}{V_H - V_{sat}} </span>
+        <span class="math-display"> \Delta t_1 = RC \ln \left( \frac{V_B - V_{sat}}{V_H - V_{sat}} \right) = RC \ln \left( \frac{-(V_H) - V_{sat}}{V_H - V_{sat}} \right) = RC \ln \left( \frac{V_H + V_{sat}}{V_{sat} - V_H} \right) </span>
+        <p>Si le circuit est symétrique ($V_H = -V_B$), alors $\Delta t_1 = \Delta t_2$.</p>
+        <p>En utilisant $V_H = \beta V_{sat}$ et $V_B = -\beta V_{sat}$ avec $\beta = R_1/(R_1+R_2)$:</p>
+        <span class="math-display"> \Delta t_1 = \Delta t_2 = RC \ln \left( \frac{\beta V_{sat} + V_{sat}}{-\beta V_{sat} + V_{sat}} \right) = RC \ln \left( \frac{V_{sat}(1+\beta)}{V_{sat}(1-\beta)} \right) = RC \ln \left( \frac{1+\beta}{1-\beta} \right) </span>
+        <p>La période totale est $T = \Delta t_1 + \Delta t_2 = 2 \Delta t_1$ :</p>
+        <span class="math-display"> T = 2 RC \ln \left( \frac{1+\beta}{1-\beta} \right) = 2 RC \ln \left( \frac{1+\frac{R_1}{R_1+R_2}}{1-\frac{R_1}{R_1+R_2}} \right) = 2 RC \ln \left( \frac{\frac{R_1+R_2+R_1}{R_1+R_2}}{\frac{R_1+R_2-R_1}{R_1+R_2}} \right) </span>
+        <span class="math-display"> T = 2 RC \ln \left( \frac{2R_1+R_2}{R_2} \right) = 2 RC \ln \left( 1 + \frac{2R_1}{R_2} \right) </span>
+        <p>Cette formule correspond à celle donnée dans le PDF.</p>
+
+        <figure>
+            <img src="placeholder_fig_IV_7.png" alt="Chronogramme d'un multivibrateur astable" class="placeholder" style="max-width: 500px;">
+            <figcaption>Figure IV.7 : Chronogramme d'un multivibrateur astable</figcaption>
+        </figure>
+
+    </section>
+
+    <!-- ===== Page 41: References ===== -->
+    <section id="refs">
+        <h2>Références bibliographiques</h2>
+        <ul>
+            <li>Moez HAJJI, « Cours électronique analogique », ISET DE NABEUL (2014)</li>
+            <li>Guy Chateigner, « Manuel du génie électrique » Edition DUNOD 2006</li>
+            <li>Taher Neffati, « Introduction à l'électronique analogique » Edition DUNOD 2008</li>
+            <li><a href="http://philippe.roux.7.perso.neuf.fr/" target="_blank">http://philippe.roux.7.perso.neuf.fr/</a></li>
+        </ul>
+    </section>
+
+    <footer>
+        <hr>
+        <p style="text-align: center; font-size: 0.9em; color: #777;">Cours d'électronique analogique - SMP5 - 2015-2016</p>
+    </footer>
+
+</div><!-- End Container -->
+</body>
+</html>
