@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logique Combinatoire & Séquentielle</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body,{delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ]});"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 900px; margin: auto; }
+        h1, h2, h3, h4, h5, h6 { color: #333; }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 2.5em; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 40px; font-size: 1.8em;}
+        h3 { margin-top: 30px; color: #444; font-size: 1.5em;}
+        h4 { margin-top: 20px; color: #555; font-size: 1.2em;}
+        h5 { margin-top: 15px; color: #666; }
+        h6 { margin-top: 10px; color: #777; font-weight: normal; font-style: italic;}
+        .part-title { text-align: center; margin: 60px 0; font-size: 2em; font-weight: bold; border-top: 3px solid #555; border-bottom: 3px solid #555; padding: 20px 0; background-color: #f0f0f0; }
+        .chapter-intro { display: flex; align-items: flex-start; border-bottom: 1px solid #ccc; padding-bottom: 20px; margin-bottom: 20px; }
+        .chapter-intro .text { flex-grow: 1; padding-right: 20px; }
+        .chapter-intro figure { margin: 0; text-align: center; }
+        .chapter-intro img { max-width: 150px; height: auto; border: 1px solid #ccc; }
+        .quote { font-style: italic; text-align: right; margin: 20px 0; color: #555; }
+        .example { border: 1px solid #e0e0e0; padding: 15px; margin: 15px 0; background-color: #f9f9f9; border-left: 3px solid #007bff; }
+        .example-title { font-weight: bold; margin-bottom: 10px; color: #007bff;}
+        .exercise { border: 1px solid #e0e0e0; padding: 15px; margin: 15px 0; background-color: #fdfdfe; border-left: 3px solid #28a745; }
+        .exercise-title { font-weight: bold; margin-bottom: 10px; color: #28a745; }
+        .definition { border-left: 3px solid #4CAF50; padding-left: 15px; margin: 15px 0; background-color: #e8f5e9; }
+        .note { border-left: 3px solid #ffc107; padding: 10px 15px; margin: 15px 0; background-color: #fff8e1; }
+        table { border-collapse: collapse; margin: 20px auto; width: auto; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; vertical-align: middle; position: relative; min-width: 30px; height: 30px;}
+        th { background-color: #f2f2f2; }
+        code, .mono { background-color: #eee; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        .placeholder { display: block; min-height: 80px; border: 1px dashed #aaa; background-color: #f0f0f0; text-align: center; padding: 20px; margin: 15px 0; font-style: italic; color: #666; box-sizing: border-box; }
+        footer { text-align: right; margin-top: 50px; font-size: 0.9em; color: #555; border-top: 1px solid #eee; padding-top: 10px;}
+        .page-break { page-break-after: always; border-top: 1px dashed #ccc; margin-top: 20px; }
+        /* KaTeX display style */
+        .katex-display { text-align: center; margin: 1em 0; overflow-x: auto; overflow-y: hidden; }
+        .inline-katex .katex { font-size: 1em; }
+        .op-summary-table td, .op-summary-table th { min-width: 40px; }
+        .gate-section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .gate-symbol { display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; }
+        .gate-symbol > div { margin: 10px; }
+        .truth-table-inline table { margin: 5px 0; }
+        .kmap-container { text-align: center; margin: 20px 0; }
+        .kmap { display: inline-block; border: 1px solid #aaa; position: relative; }
+        .kmap-header-col { position: absolute; top: -25px; left: 0; right: 0; text-align: center; font-weight: bold; }
+        .kmap-header-row { position: absolute; left: -40px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-around; align-items: center; font-weight: bold; }
+        .kmap table { margin: 0; border: none; }
+        .kmap th { font-weight: normal; font-size: 0.9em; border: none; background: none; }
+        .kmap td { border: 1px solid #ccc; font-size: 1.1em; }
+        .kmap-index { position: absolute; bottom: 1px; right: 1px; font-size: 0.6em; color: gray; }
+        .kmap-group { position: absolute; border: 2px solid blue; border-radius: 10px; pointer-events: none; } /* For drawing groups */
+         .kmap-group-red { border-color: red; }
+         .kmap-group-green { border-color: green; }
+         .kmap-group-purple { border-color: purple; }
+         .pld-schema { text-align: center; margin: 20px 0; }
+         .pld-schema img { max-width: 80%; height: auto; border: 1px solid #ccc; }
+         .exercise-section { margin-top: 40px; padding: 20px; border: 1px solid #ddd; background-color: #fafafa; }
+         .exercise-section h3 { margin-top: 0; text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- Title Page - Part 2 -->
+        <h1 class="part-title">Deuxième partie</h1>
+        <h2>La logique combinatoire</h2>
+        <figure style="text-align: center;">
+            <div class="placeholder">[Placeholder: Image composite de divers systèmes de numération et symboles logiques - Page 1]</div>
+            <figcaption>Représentation visuelle des concepts de numération et de logique.</figcaption>
+        </figure>
+    </header>
+
+    <main>
+        <!-- Content from previous turn (Chapters IV and V) -->
+        <!-- ... Chapter IV ... -->
+        <!-- ... Chapter V ... -->
+
+        <article> <!-- Chapter VI placeholder or actual content -->
+             <h2 id="chapter-vi">Chapitre VI : Synthèse des circuits combinatoires (Logique Programmable)</h2>
+
+             <p>Ce chapitre aborde la réalisation physique des fonctions logiques combinatoires, en particulier à l'aide de circuits logiques programmables (PLD - Programmable Logic Devices).</p>
+
+            <section id="pld-intro">
+                <h3>VI.1 Introduction aux PLDs</h3>
+                <p>Les PLDs sont des circuits intégrés contenant un grand nombre de portes logiques (ET, OU, inverseurs) dont les interconnexions peuvent être configurées (programmées) par l'utilisateur pour implémenter une fonction logique spécifique. Ils offrent une alternative flexible à la conception avec des portes logiques discrètes ou des circuits intégrés spécifiques (ASICs).</p>
+                <p>La structure générale des PLDs les plus simples repose sur deux matrices de portes : une matrice ET (AND plane) suivie d'une matrice OU (OR plane).</p>
+                <ul>
+                    <li>La <strong>matrice ET</strong> génère des termes produits (mintermes ou autres produits) à partir des entrées (et de leurs compléments).</li>
+                    <li>La <strong>matrice OU</strong> combine ces termes produits pour générer les fonctions de sortie (sous forme de somme de produits).</li>
+                </ul>
+                <p>Selon quelles matrices (ET, OU, ou les deux) sont programmables, on distingue différents types de PLDs.</p>
+            </section>
+
+            <section id="pld-types">
+                 <h3>VI.2 Types de Circuits Logiques Programmables</h3>
+
+                 <section id="prom">
+                    <h4>VI.2.1 PROM (Programmable Read-Only Memory)</h4>
+                    <p>Dans une PROM utilisée comme dispositif logique, la <strong>matrice ET est fixe</strong> et la <strong>matrice OU est programmable</strong>.</p>
+                    <ul>
+                        <li>La matrice ET fixe est en fait un <strong>décodeur d'adresse complet</strong>. Pour \(n\) entrées, il génère tous les \(2^n\) mintermes possibles.</li>
+                        <li>La matrice OU programmable permet de sélectionner quels mintermes sont sommés (connectés via des fusibles ou cellules mémoire) pour former chaque fonction de sortie.</li>
+                    </ul>
+                    <p>Une PROM avec \(n\) entrées et \(m\) sorties peut implémenter \(m\) fonctions logiques quelconques des \(n\) variables.</p>
+                    <div class="pld-schema">
+                         <div class="placeholder">[Placeholder: Schéma structure PROM - Décodeur fixe (matrice ET) -> Matrice OU programmable -> Sorties]</div>
+                         <p>Structure : Les entrées \(e_1, \dots, e_n\) alimentent un décodeur fixe qui génère tous les mintermes. Chaque sortie \(s_1, \dots, s_m\) est la somme (OU) programmable de certains de ces mintermes.</p>
+                     </div>
+
+                     <div class="example">
+                        <div class="example-title">▷ Exemple 6.10 : Réalisation avec PROM</div>
+                        <p>Réaliser le circuit qui calcule le carré d'un nombre N codé en DCB (Décimal Codé Binaire) sur 4 bits (\( N \in [0, 9] \)). \( N = A_3 A_2 A_1 A_0 \). La sortie \( N^2 \) nécessitera jusqu'à 7 bits (\( 9^2 = 81 \)).
+                        Le circuit a 4 entrées (A3, A2, A1, A0) et au moins 7 sorties (S6..S0).</p>
+                        <p>On utilise une PROM avec 6 entrées et 8 sorties (capacité \(2^6 = 64\) octets). On peut utiliser les 4 entrées A3-A0, laisser 2 entrées inutilisées (ou mises à 0), et utiliser 7 des 8 sorties.</p>
+                        <p>Principe : Le décodeur d'adresse de la PROM (matrice ET fixe) va générer les lignes correspondant aux adresses 0 à 15 (si 4 entrées sont utilisées). La matrice OU programmable sera configurée pour que :</p>
+                         <ul>
+                            <li>Pour l'adresse 0 (N=0), les sorties S6-S0 soient 0000000 (\(0^2=0\)).</li>
+                            <li>Pour l'adresse 1 (N=1), les sorties S6-S0 soient 0000001 (\(1^2=1\)).</li>
+                            <li>Pour l'adresse 2 (N=2), les sorties S6-S0 soient 0000100 (\(2^2=4\)).</li>
+                            <li>...</li>
+                            <li>Pour l'adresse 9 (N=9), les sorties S6-S0 soient 1010001 (\(9^2=81\)).</li>
+                            <li>Pour les adresses 10 à 15 (combinaisons DCB invalides), la sortie peut être indifférente (Don't care) ou mise à 0.</li>
+                         </ul>
+                        <div class="pld-schema">
+                             <div class="placeholder">[Placeholder: Schéma PROM pour N^2. Entrées A0-A3 -> Décodeur 6 bits (2^6 lignes) -> Matrice OU programmable (64x8) -> Sorties S0-S7]</div>
+                             <figcaption>Utilisation d'une PROM 6 entrées / 8 sorties pour calculer N² (N en DCB 4 bits)</figcaption>
+                        </div>
+                     </div>
+                </section> <!-- End PROM -->
+
+                 <section id="pal">
+                     <h4>VI.2.2 PAL (Programmable Array Logic)</h4>
+                     <p>Dans une structure PAL, c'est l'inverse de la PROM : la <strong>matrice ET est programmable</strong> et la <strong>matrice OU est fixe</strong>.</p>
+                     <ul>
+                        <li>La matrice ET programmable permet de créer des termes produits spécifiques nécessaires à la fonction, sans générer tous les mintermes.</li>
+                         <li>La matrice OU fixe connecte un nombre déterminé de termes produits à chaque sortie. Chaque sortie est la somme (OU) d'un groupe fixe de lignes de la matrice ET programmable.</li>
+                     </ul>
+                    <p>Les PALs sont généralement plus rapides et moins coûteuses que les PROMs pour implémenter des fonctions qui n'utilisent pas un très grand nombre de termes produits.</p>
+                     <div class="pld-schema">
+                         <div class="placeholder">[Placeholder: Schéma structure PAL - Entrées/Compléments -> Matrice ET programmable -> Matrice OU fixe -> Sorties]</div>
+                         <p>Structure : Les entrées \(e_1, \dots, e_n\) et leurs compléments alimentent une matrice ET programmable. Les sorties de la matrice ET alimentent une matrice OU fixe, où chaque sortie \(s_i\) est connectée à un sous-ensemble fixe de lignes ET.</p>
+                     </div>
+                     <div class="note">
+                        Les circuits PAL existent également en logique séquentielle (Registered PALs), intégrant des bascules (flip-flops) en sortie pour réaliser des machines d'états.
+                     </div>
+                 </section> <!-- End PAL -->
+
+                 <section id="fpla">
+                     <h4>VI.2.3 FPLA / PLA (Field Programmable Logic Array)</h4>
+                     <p>Dans une PLA (ou FPLA pour la version programmable par l'utilisateur), les <strong>deux matrices, ET et OU, sont programmables</strong>.</p>
+                     <ul>
+                         <li>La matrice ET programmable génère les termes produits nécessaires.</li>
+                         <li>La matrice OU programmable permet de sommer (OU) n'importe quelle combinaison de ces termes produits pour former chaque sortie.</li>
+                     </ul>
+                     <p>Cette structure offre la plus grande flexibilité, permettant de partager des termes produits entre différentes sorties et d'optimiser l'utilisation des ressources logiques.</p>
+                     <div class="pld-schema">
+                          <div class="placeholder">[Placeholder: Schéma structure PLA/FPLA - Entrées/Compléments -> Matrice ET programmable -> Matrice OU programmable -> Sorties]</div>
+                          <p>Structure : Flexibilité maximale, les deux plans de portes sont programmables.</p>
+                     </div>
+                     <p>Par conséquent, c'est souvent le type de circuit PLD le plus proposé pour la réalisation de fonctions logiques complexes.</p>
+                 </section> <!-- End FPLA -->
+
+                 <div class="example">
+                     <div class="example-title">▷ Exemple 6.11 : Réalisation avec PLD générique</div>
+                     <p>Implémenter les fonctions suivantes avec une structure PLD (type PAL/PLA) :</p>
+                     <ul>
+                         <li>\( S_1 = \overline{A} B \overline{C} \)</li>
+                         <li>\( S_2 = A \overline{B} C \)</li>
+                         <li>\( S_3 = \overline{A} \overline{C} \)</li>
+                     </ul>
+                     <div class="pld-schema">
+                        <div class="placeholder">[Placeholder: Schéma de type PAL/PLA pour S1, S2, S3. Entrées A, B, C + inverseurs -> Matrice ET programmable (montrant les connexions pour générer \(\overline{A}B\overline{C}\), \(A\overline{B}C\), \(\overline{A}\overline{C}\)) -> Matrice OU (fixe ou programmable) -> Sorties S1, S2, S3]</div>
+                        <figcaption>Réalisation des fonctions S1, S2, S3.</figcaption>
+                     </div>
+                 </div>
+
+                 <section id="pld-programming">
+                     <h4>VI.2.4 Programmation des circuits logiques programmables</h4>
+                     <ul>
+                         <li>Les <strong>PROMs</strong> et certains <strong>PALs</strong> simples se programment assez facilement avec des "programmateurs universels" standards, qui disposent de modules ou d'adaptateurs spécifiques pour chaque famille de composant et constructeur. La programmation consiste souvent à "brûler" des fusibles internes (programmation OTP - One Time Programmable) ou à charger des cellules mémoire (EPROM, EEPROM, Flash).</li>
+                         <li>Les <strong>FPLAs</strong> et les PLDs plus complexes (CPLD, FPGA) nécessitent souvent des programmateurs plus sophistiqués et des logiciels de conception dédiés (fournis par les fabricants de composants) en raison de la complexité des deux matrices programmables et des interconnexions.</li>
+                     </ul>
+                     <p>Le processus de conception implique généralement :</p>
+                     <ol>
+                        <li>La description de la logique souhaitée (via équations booléennes, schémas logiques, langages de description matérielle comme VHDL ou Verilog).</li>
+                        <li>La compilation et la synthèse logique par le logiciel de conception, qui traduit la description en une configuration pour les matrices ET/OU (fichier de programmation).</li>
+                        <li>Le téléchargement de ce fichier de configuration dans le composant PLD via un programmateur ou un câble de programmation (JTAG).</li>
+                     </ol>
+                 </section> <!-- End PLD Programming -->
+            </section> <!-- End PLD Types -->
+
+        </article> <!-- End Chapter VI -->
+
+        <div class="page-break"></div>
+
+        <article> <!-- Chapter VII -->
+             <div class="chapter-intro">
+                 <div class="text">
+                     <h2 id="chapter-vii">Chapitre VII</h2>
+                     <h3>Fonctions et opérateurs arithmétiques</h3>
+                 </div>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Portrait de Charles Babbage]</div>
+                     <figcaption>
+                         Charles Babbage<br>
+                         * 26 déc. 1791, Teignmouth, R.-U.<br>
+                         † 18 oct. 1871, London, R.-U.
+                     </figcaption>
+                 </figure>
+             </div>
+
+             <p class="quote" style="text-align: left;">« ... J'étais assis dans les salles de la Société Analytique, à Cambridge, la tête penchée en avant sur la table dans une sorte d'humeur rêveuse, avec une table de logarithmes ouverte devant moi. Un autre membre, entrant dans la pièce et me voyant à moitié endormi, s'écria : "Eh bien, Babbage, à quoi rêvez-vous ?" ce à quoi j'ai répondu : "Je pense que toutes ces tables" (en montrant les logarithmes) "pourraient être calculées par des machines." »<br> (Charles Babbage)</p>
+             <p>Ce chapitre abordera la conception de circuits logiques capables d'effectuer des opérations arithmétiques de base (addition, soustraction, comparaison, etc.) sur des nombres binaires.</p>
+             <!-- Content for Chapter VII would follow here -->
+
+         </article> <!-- End Chapter VII -->
+
+        <div class="page-break"></div>
+
+        <section class="exercise-section">
+            <h3>[ Exercices sur les systèmes combinatoires ]</h3>
+
+            <div class="exercise">
+                 <div class="exercise-title">► Exercice 2.1</div>
+                 <p>Développer et simplifier algébriquement les expressions booléennes suivantes :</p>
+                 <ul>
+                     <li>\( F_1 = (\overline{x} + y) \cdot (x + z) \)</li>
+                     <li>\( F_2 = (x \cdot \overline{y} + z) \cdot (x+y) \cdot \overline{z} \)</li>
+                     <li>\( F_3 = (x + \overline{y}) \cdot z + x \cdot (y + \overline{z}) + \overline{y} \)</li>
+                     <li>\( F_4 = \overline{b}d + cd + \overline{c}d + abcd + a\overline{b}c \)</li>
+                     <li>\( F_5 = abc + b \cdot (a+c) + \overline{a} b \overline{a} c \)</li>
+                 </ul>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">► Exercice 2.2</div>
+                <p>Faire le schéma des fonctions suivantes avec les portes indiquées :</p>
+                <ul>
+                    <li>\( x = \overline{a} \overline{b} \overline{c} + \overline{e}d \) (uniquement avec des portes NOR à 3 entrées max)</li>
+                    <li>\( y = a(b+c) \) (uniquement avec des portes NAND à 3 entrées max)</li>
+                    <li>\( z = abc \) (uniquement avec des portes NAND à 2 entrées)</li>
+                    <li>\( f = a \oplus b \) (uniquement avec des portes NAND à 2 entrées - 4 portes nécessaires)</li>
+                 </ul>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">► Exercice 2.3</div>
+                <p>Simplifier les expressions logiques suivantes :</p>
+                 <ul>
+                     <li>\( F_1 = ab + \overline{a}bcd \)</li>
+                     <li>\( F_2 = a + (\overline{a} + b) \)</li>
+                     <li>\( F_3 = a \cdot (a+b) \)</li>
+                     <li>\( F_4 = (a \oplus b) \oplus (a \oplus c) \)</li>
+                     <li>\( F_5 = (a \oplus b) + (\overline{a} \oplus \overline{b}) \)</li>
+                 </ul>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">► Exercice 2.4</div>
+                <p>Chercher les formes canoniques (SOP et POS) des expressions suivantes :</p>
+                <ul>
+                    <li>\( F_1 = a \oplus (b+c) \)</li>
+                    <li>\( F_2 = (\overline{a} + c) \cdot b + (\overline{a} + c) \cdot \overline{b} \)</li>
+                 </ul>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">► Exercice 2.5</div>
+                <p>Montrer algébriquement que \( \overline{a}b + bc + ac = \overline{a}b + ac \). Vérifier à l'aide d'un diagramme de Karnaugh.</p>
+                 <p>(Indice: Théorème du consensus \(XY + \overline{X}Z + YZ = XY + \overline{X}Z\))</p>
+             </div>
+
+            <div class="exercise">
+                 <div class="exercise-title">► Exercice 2.6</div>
+                 <p>Simplifier cette expression à l'aide d'un diagramme de Karnaugh :<br>
+                 \( F = \overline{a}(b \oplus c) + \overline{a}cd + \overline{a}d(b \oplus c) + (a \oplus d)\overline{b}\overline{c} + \overline{a}c(b \oplus d) \)</p>
+                 <p>Faire le schéma avec 2 portes dont un XOR.</p>
+             </div>
+
+            <div class="exercise">
+                 <div class="exercise-title">► Exercice 2.7</div>
+                 <p>Une fonction \( f(a,b,c,d) \) est incomplètement définie. On code ses états sur le mot binaire abcd, a représentant le poids fort.</p>
+                 <ul>
+                     <li>La fonction est vraie (1) pour les états (décimaux) 0, 1, 3, 4, 6, A (10), B (11).</li>
+                     <li>Elle est fausse (0) pour les états 7, 8, D (13), E (14).</li>
+                     <li>Les autres états (2, 5, 9, C (12), F (15)) sont indifférents (X).</li>
+                 </ul>
+                 <p>Tracer le diagramme de Karnaugh. Simplifier la fonction en vue d'une réalisation en portes NAND. Même question avec des portes NOR. Quelle est la meilleure solution (la plus simple) ?</p>
+            </div>
+
+        </section> <!-- End Exercise Section -->
+
+        <div class="page-break"></div>
+
+        <!-- Title Page - Part 3 -->
+        <header>
+            <h1 class="part-title">Troisième partie</h1>
+             <h2>Les circuits séquentiels</h2>
+             <figure style="text-align: center;">
+                 <div class="placeholder">[Placeholder: Image composite de divers systèmes de numération et symboles logiques - Page 89]</div>
+                 <figcaption>Introduction aux systèmes logiques séquentiels.</figcaption>
+             </figure>
+         </header>
+        <!-- Content for Part 3 would follow here -->
+
+
+    </main>
+
+    <footer>
+        <span style="float: left;">M. Siadat & C. Diou</span>
+        <span style="float: right;">Page [Auto]</span>
+        <div style="clear: both;"></div>
+    </footer>
+
+</body>
+</html>
