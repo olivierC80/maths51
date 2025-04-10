@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module d'Electronique - 2ème partie : Electronique numérique</title>
+    <!-- KaTeX Includes -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #0056b3; /* Blueish color for headings */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 30px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .slide-content {
+            margin-bottom: 40px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .image-placeholder {
+            display: block;
+            max-width: 400px;
+            height: auto;
+            border: 1px dashed #ccc;
+            text-align: center;
+            padding: 20px;
+            margin: 15px auto; /* Center placeholder */
+            background-color: #eee;
+            color: #666;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 20px 0;
+            width: auto; /* Adjust width as needed */
+            border: 1px solid #ccc;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #eef;
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .note {
+            font-style: italic;
+            color: #555;
+            margin-top: 10px;
+        }
+        .url {
+            font-family: monospace;
+        }
+         .title-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .title-info {
+             text-align: center;
+             flex-grow: 1;
+         }
+        .title-logo {
+             font-size: 1.5em; /* Adjust as needed */
+             font-weight: bold;
+             /* Add more styling for the Qlio logo if desired */
+         }
+         .iut-text {
+             font-size: 0.9em;
+             color: #333;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1: Title Page -->
+    <div class="slide-content">
+        <div class="title-header">
+            <div>
+                 <div class="title-logo">Qlio</div>
+                 <div class="iut-text">IUT qualité,<br>logistique industrielle et organisation</div>
+            </div>
+            <div class="image-placeholder">[Placeholder for Motherboard Image]</div>
+        </div>
+
+        <div class="title-info">
+            <h1>Module d'Electronique</h1>
+            <h2>2<sup>ème</sup> partie : Electronique numérique</h2>
+            <p>
+                © Fabrice Sincère<br>
+                version 3.0.7<br>
+                <span class="url">http://pagesperso-orange.fr/fabrice.sincere</span>
+            </p>
+        </div>
+        <p style="text-align: right;">1</p>
+    </div>
+
+    <!-- Slide 2: Chapter 1 - Number Representation (Decimal / Base B) -->
+    <div class="slide-content">
+        <h2>Chapitre 1 Représentation des nombres</h2>
+
+        <h3>1-1- Numération dans le système décimal (base 10)</h3>
+        <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+            <div>
+                <p>
+                    Le système décimal, que nous utilisons quotidiennement, utilise 10 chiffres : 0, 1, 2, 3, 4, 5, 6, 7, 8, 9.
+                </p>
+                <p>
+                    Un nombre se décompose en puissances de 10. Par exemple, le nombre 4792 se décompose de la façon suivante :
+                    \[ 4792 = 4 \times 1000 + 7 \times 100 + 9 \times 10 + 2 \times 1 \]
+                    Ce qui peut aussi s'écrire en utilisant les puissances de 10 :
+                    \[ (4792)_{10} = 4 \times 10^3 + 7 \times 10^2 + 9 \times 10^1 + 2 \times 10^0 \]
+                    L'indice 10 indique que le nombre est exprimé en base 10.
+                </p>
+             </div>
+             <div class="image-placeholder" style="width:100px; height:150px; margin-left: 20px;">[Placeholder for Keypad Image]</div>
+        </div>
+
+        <h3>1-2- Généralisation : numération en base B</h3>
+        <p>
+            De manière générale, un système de numération en base \(B\) utilise \(B\) chiffres (allant typiquement de 0 à \(B-1\)).
+        </p>
+        <p>
+            Un nombre écrit \( (a_n a_{n-1} \dots a_1 a_0)_B \) dans une base \(B\) représente la valeur :
+            \[ (a_n a_{n-1} \dots a_0)_B = a_n \times B^n + a_{n-1} \times B^{n-1} + \dots + a_1 \times B^1 + a_0 \times B^0 \]
+            Où les \(a_i\) sont les chiffres utilisés dans la base \(B\), et \(0 \le a_i < B\).
+        </p>
+
+        <h4>1-2-1- B=10 : base décimale (utilisée par l'homme <span class="image-placeholder" style="width:30px; height:30px; display:inline-block; vertical-align:middle;">[Hands Icon]</span>)</h4>
+        <p>
+            Comme vu précédemment, la base 10 est la base usuelle pour les humains.
+            \[ (4792)_{10} = 4 \times 10^3 + 7 \times 10^2 + 9 \times 10^1 + 2 \times 10^0 \]
+        </p>
+        <p style="text-align: right;">2</p>
+    </div>
+
+    <!-- Slide 3: Binary Base -->
+    <div class="slide-content">
+        <h3>1-2-2- B=2 : base binaire (utilisée par les systèmes numériques)</h3>
+        <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+            <div>
+                <p>
+                    La base binaire est la base la plus simple, car elle n'utilise que deux chiffres : 0 et 1.
+                </p>
+                <p>
+                    Ces chiffres sont appelés <strong>bits</strong> (contraction de <em>binary digits</em>). Le système binaire est fondamental en électronique numérique et en informatique car les deux états (0 et 1) peuvent facilement être représentés par des états physiques (tension basse/haute, courant passe/passe pas, magnétisation nord/sud, etc.).
+                </p>
+            </div>
+            <div class="image-placeholder" style="width:250px; height:180px; margin-left: 20px;">[Placeholder for Computer with Binary Screen Image]</div>
+         </div>
+         <p>
+             <strong>Exemple de conversion Binaire vers Décimal :</strong><br>
+             Considérons le nombre binaire \( (10010011)_2 \). Pour trouver sa valeur en décimal (base 10), on le décompose en puissances de 2 :
+             \[
+             \begin{align*} (10010011)_2 &= 1 \times 2^7 + 0 \times 2^6 + 0 \times 2^5 + 1 \times 2^4 + 0 \times 2^3 + 0 \times 2^2 + 1 \times 2^1 + 1 \times 2^0 \\ &= 1 \times 128 + 0 \times 64 + 0 \times 32 + 1 \times 16 + 0 \times 8 + 0 \times 4 + 1 \times 2 + 1 \times 1 \\ &= 128 + 0 + 0 + 16 + 0 + 0 + 2 + 1 \\ &= 147 \end{align*}
+             \]
+             Donc, \( (10010011)_2 = (147)_{10} \).
+        </p>
+        <p class="note">
+            <strong>Remarque :</strong> un <strong>byte</strong> (terme anglais) ou <strong>octet</strong> (terme français) est une unité d'information numérique composée de 8 bits.
+        </p>
+        <p style="text-align: right;">3</p>
+    </div>
+
+    <!-- Slide 4: Base Conversion (Decimal to Binary) -->
+    <div class="slide-content">
+        <h3>1-3- Changement de base</h3>
+
+        <h4>Passage du système décimal vers le système binaire</h4>
+        <p>
+            Une méthode courante pour convertir un nombre décimal en binaire est de le décomposer en une somme de puissances de 2. Les puissances de 2 sont : 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, ... (\(2^0, 2^1, 2^2, \dots\))
+        </p>
+        <p>
+            <strong>Exemple :</strong> Convertir le nombre décimal 29 en binaire.
+            <ol>
+                <li>Trouvez la plus grande puissance de 2 inférieure ou égale à 29. C'est 16 (\(2^4\)).</li>
+                <li>Soustrayez cette puissance : \(29 - 16 = 13\).</li>
+                <li>Trouvez la plus grande puissance de 2 inférieure ou égale au reste (13). C'est 8 (\(2^3\)).</li>
+                <li>Soustrayez : \(13 - 8 = 5\).</li>
+                <li>Trouvez la plus grande puissance de 2 inférieure ou égale au reste (5). C'est 4 (\(2^2\)).</li>
+                <li>Soustrayez : \(5 - 4 = 1\).</li>
+                <li>Trouvez la plus grande puissance de 2 inférieure ou égale au reste (1). C'est 1 (\(2^0\)).</li>
+                <li>Soustrayez : \(1 - 1 = 0\). La conversion est terminée.</li>
+            </ol>
+            On a décomposé 29 en : \( 16 + 8 + 4 + 1 \).
+            Cela correspond à \( 1 \times 2^4 + 1 \times 2^3 + 1 \times 2^2 + 0 \times 2^1 + 1 \times 2^0 \).
+            Les coefficients (1, 1, 1, 0, 1) forment le nombre binaire, du bit de poids le plus fort (MSB) au bit de poids le plus faible (LSB).
+            \[ (29)_{10} = 16 + 8 + 4 + 1 = (11101)_2 \]
+        </p>
+        <p class="note">
+            <strong>Remarque :</strong> La Calculatrice Windows® (en mode scientifique) permet de faire ces conversions facilement. Il suffit d'entrer le nombre dans une base (par ex. Décimal), puis de sélectionner une autre base (par ex. Binaire) pour voir le résultat converti.
+        </p>
+        <div style="display: flex; justify-content: space-around;">
+            <div class="image-placeholder" style="width:200px; height:250px;">[Placeholder for Calculator showing 29 (Dec)]</div>
+            <div class="image-placeholder" style="width:300px; height:250px;">[Placeholder for Calculator showing 11101 (Bin)]</div>
+        </div>
+        <p style="text-align: right;">4</p>
+    </div>
+
+    <!-- Slide 5: Conversion Table -->
+    <div class="slide-content">
+        <h3>Table 1: Tableau de Conversion des Nombres</h3>
+        <p>Ce tableau montre la représentation des premiers nombres entiers dans différentes bases couramment utilisées en informatique.</p>
+        <table>
+            <caption>Table 1</caption>
+            <thead>
+                <tr>
+                    <th>Décimal<br>(base 10)</th>
+                    <th>Binaire naturel<br>(base 2)</th>
+                    <th>Octal<br>(base 8)</th>
+                    <th>Hexadécimal<br>(base 16)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+                <tr><td>2</td><td>10</td><td>2</td><td>2</td></tr>
+                <tr><td>3</td><td>11</td><td>3</td><td>3</td></tr>
+                <tr><td>4</td><td>100</td><td>4</td><td>4</td></tr>
+                <tr><td>5</td><td>101</td><td>5</td><td>5</td></tr>
+                <tr><td>6</td><td>110</td><td>6</td><td>6</td></tr>
+                <tr><td>7</td><td>111</td><td>7</td><td>7</td></tr>
+                <tr><td>8</td><td>1000</td><td>10</td><td>8</td></tr>
+                <tr><td>9</td><td>1001</td><td>11</td><td>9</td></tr>
+                <tr><td>10</td><td>1010</td><td>12</td><td>A</td></tr>
+                <tr><td>11</td><td>1011</td><td>13</td><td>B</td></tr>
+                <tr><td>12</td><td>1100</td><td>14</td><td>C</td></tr>
+                <tr><td>13</td><td>1101</td><td>15</td><td>D</td></tr>
+                <tr><td>14</td><td>1110</td><td>16</td><td>E</td></tr>
+                <tr><td>15</td><td>1111</td><td>17</td><td>F</td></tr>
+                <tr><td>16</td><td>10000</td><td>20</td><td>10</td></tr>
+                <tr><td>127</td><td>1111111</td><td>177</td><td>7F</td></tr>
+                <tr><td>128</td><td>10000000</td><td>200</td><td>80</td></tr>
+                <tr><td>255</td><td>11111111</td><td>377</td><td>FF</td></tr>
+                <tr><td>256</td><td>1 00000000</td><td>400</td><td>100</td></tr>
+            </tbody>
+        </table>
+        <p class="note">
+            Note : La base 16 (hexadécimal) utilise les chiffres 0-9 puis les lettres A-F pour représenter les valeurs 10 à 15. La base 8 (octal) utilise les chiffres 0-7. Ces bases sont souvent utilisées comme une représentation compacte des nombres binaires (un chiffre hexa = 4 bits, un chiffre octal = 3 bits).
+        </p>
+        <p style="text-align: right;">5</p>
+    </div>
+
+    <!-- Slide 6: Chapter 2 - Logic Functions (AND Intro) -->
+    <div class="slide-content">
+        <h2>Chapitre 2 Fonctions logiques</h2>
+
+        <h3>2-1- Fonctions logiques de base</h3>
+
+        <h4>Fonction logique ET (AND)</h4>
+        <p>
+            Une fonction logique prend une ou plusieurs entrées logiques (Vrai/Faux, ou 1/0) et produit une sortie logique.
+        </p>
+        <p>
+            <strong>Exemple concret :</strong> "Je vais au cinéma ce soir si Alain <strong>et</strong> Bertrand viennent avec moi."
+        </p>
+        <p>
+            La condition pour aller au cinéma (la sortie) est VRAIE seulement si les deux conditions d'entrée (Alain vient ET Bertrand vient) sont VRAIES simultanément.
+        </p>
+        <p>
+            On peut représenter le comportement de cette fonction avec une <strong>Table de vérité</strong> :
+        </p>
+        <table>
+             <caption>Table de vérité 2 (Exemple Cinéma ET)</caption>
+             <thead>
+                <tr><th>Condition Alain</th><th>Condition Bertrand</th><th>Sortie (Cinéma ?)</th></tr>
+             </thead>
+             <tbody>
+                <tr><td>Ne vient pas</td><td>Ne vient pas</td><td>Pas de cinéma</td></tr>
+                <tr><td>Ne vient pas</td><td>Vient</td><td>Pas de cinéma</td></tr>
+                <tr><td>Vient</td><td>Ne vient pas</td><td>Pas de cinéma</td></tr>
+                <tr><td>Vient</td><td>Vient</td><td>Cinéma</td></tr>
+             </tbody>
+        </table>
+        <p style="text-align: right;">6</p>
+    </div>
+
+    <!-- Slide 7: Logic Variables / AND Truth Table -->
+    <div class="slide-content">
+        <h4>Variable logique</h4>
+        <p>
+            Une <strong>variable logique</strong> est une variable qui ne peut prendre que deux états distincts, souvent représentés par 0 (Faux, non, éteint, bas) et 1 (Vrai, oui, allumé, haut).
+        </p>
+        <p>
+            Appliquons cela à notre exemple du cinéma :
+            <ul>
+                <li>Alain ne vient pas : <code>a = 0</code></li>
+                <li>Alain vient : <code>a = 1</code></li>
+                <li>Bertrand ne vient pas : <code>b = 0</code></li>
+                <li>Bertrand vient : <code>b = 1</code></li>
+                <li>Pas de sortie cinéma (on n'y va pas) : <code>s = 0</code></li>
+                <li>Sortie cinéma (on y va) : <code>s = 1</code></li>
+            </ul>
+        </p>
+        <p>
+            La table de vérité de la fonction ET peut alors s'écrire de façon plus formelle :
+        </p>
+        <table>
+            <caption>Table de vérité 3 (Fonction ET)</caption>
+            <thead>
+                <tr><th>Entrée a</th><th>Entrée b</th><th>Sortie s</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr>
+            </tbody>
+        </table>
+        <p class="note">La sortie <code>s</code> est à 1 si et seulement si <strong>toutes</strong> les entrées (<code>a</code> et <code>b</code>) sont à 1.</p>
+        <p style="text-align: right;">7</p>
+    </div>
+
+     <!-- Slide 8: AND/OR Equations -->
+    <div class="slide-content">
+        <h4>Equation logique (ou équation booléenne)</h4>
+        <p>
+            Le comportement de la fonction ET peut être décrit par une équation logique :
+            \[ s = a \text{ ET } b \]
+            En algèbre de Boole (l'algèbre des variables logiques), on utilise souvent le symbole du point (<code>·</code>) ou parfois aucun symbole (juxtaposition) pour représenter l'opération ET :
+            \[ s = a \cdot b \]
+            ou
+            \[ s = ab \]
+            <span class="note">(Attention : ne pas confondre ce 'produit' logique avec la multiplication arithmétique, même si les résultats pour 0 et 1 coïncident.)</span>
+        </p>
+
+        <hr style="margin: 20px 0;">
+
+        <h4>Fonction logique OU (OR)</h4>
+        <p>
+            <strong>Exemple concret :</strong> "Je vais au cinéma ce soir si Alain <strong>ou</strong> Bertrand viennent avec moi."
+        </p>
+        <p>
+            Ici, la condition pour aller au cinéma (la sortie) est VRAIE si au moins une des conditions d'entrée (Alain vient OU Bertrand vient) est VRAIE. Cela inclut le cas où les deux viennent. C'est ce qu'on appelle un OU inclusif.
+        </p>
+        <p>
+            L'équation logique pour la fonction OU s'écrit :
+            \[ s = a \text{ OU } b \]
+            En algèbre de Boole, on utilise le symbole plus (<code>+</code>) pour représenter l'opération OU :
+            \[ s = a + b \]
+            <span class="note">(Attention : ne pas confondre cette 'somme' logique avec l'addition arithmétique, notamment car \(1+1=1\) en logique OU, voir page suivante.)</span>
+        </p>
+        <p style="text-align: right;">8</p>
+    </div>
+
+     <!-- Slide 9: OR/NOT Truth Tables and Equations -->
+    <div class="slide-content">
+        <h4>Table de vérité de la fonction OU</h4>
+        <p>En utilisant les variables logiques \(a\), \(b\) et \(s\) définies précédemment :</p>
+        <table>
+            <caption>Table de vérité 4 (Fonction OU)</caption>
+            <thead>
+                <tr><th>Entrée a</th><th>Entrée b</th><th>Sortie s = a + b</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr>
+            </tbody>
+        </table>
+        <p class="note">La sortie <code>s</code> est à 1 si <strong>au moins une</strong> des entrées (<code>a</code> ou <code>b</code>) est à 1. Notez bien que \(1 + 1 = 1\) dans ce contexte logique.</p>
+
+        <hr style="margin: 20px 0;">
+
+        <h4>Fonction logique NON (NOT / Inverseur)</h4>
+        <p>
+            Cette fonction n'a qu'une seule entrée. Sa sortie est l'inverse logique de l'entrée.
+        </p>
+        <p>
+            <strong>Exemple concret :</strong> "Je ne vais <strong>pas</strong> au cinéma ce soir si Emma vient."
+            <br> Reformulation logique : Aller_au_cinéma = NON (Emma_vient).
+            Si <code>e</code> représente "Emma vient" (e=1 si elle vient, e=0 si elle ne vient pas), et <code>s</code> représente "Aller au cinéma" (s=1 si on y va, s=0 si on n'y va pas), alors la condition est \( s = \text{NON } e \).
+        </p>
+        <p>
+            L'équation logique pour la fonction NON s'écrit :
+            \[ s = \text{NON } e \]
+            En algèbre de Boole, on utilise une barre de complément (overline) au-dessus de la variable pour désigner la fonction NON :
+            \[ s = \overline{e} \]
+            (D'autres notations existent aussi, comme \(e'\) ou \(\neg e\)).
+        </p>
+         <table>
+            <caption>Table de vérité 5 (Fonction NON)</caption>
+            <thead>
+                <tr><th>Entrée e</th><th>Sortie \(s = \overline{e}\)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td></tr>
+            </tbody>
+        </table>
+        <p class="note">L'inverse de 0 est 1 (\( \overline{0} = 1 \)), et l'inverse de 1 est 0 (\( \overline{1} = 0 \)).</p>
+        <p style="text-align: right;">9</p>
+    </div>
+
+     <!-- Slide 10: NAND Function -->
+    <div class="slide-content">
+        <h3>2-2- Fonctions logiques dérivées</h3>
+        <p>Les fonctions logiques de base (ET, OU, NON) peuvent être combinées pour créer d'autres fonctions.</p>
+
+        <h4>Fonction logique NON-ET (NAND)</h4>
+        <p>
+            Cette fonction est l'inverse de la fonction ET. Sa sortie est 0 seulement lorsque toutes ses entrées sont à 1.
+        </p>
+        <p>
+            <strong>Exemple concret :</strong> "Je ne vais <strong>pas</strong> au cinéma ce soir si Alain <strong>et</strong> Bertrand viennent."
+            <br> La seule condition pour NE PAS y aller est que les DEUX viennent. Dans tous les autres cas, on y va (ou du moins, cette condition spécifique ne nous empêche pas d'y aller).
+            <br> Logiquement : Aller_au_cinéma = NON (Alain_vient ET Bertrand_vient).
+        </p>
+        <p>
+            L'équation logique pour la fonction NON-ET (NAND) combine NON et ET :
+            \[ s = \text{NON } (a \text{ ET } b) \]
+            En notation booléenne, on place une barre de complément au-dessus de l'expression ET :
+            \[ s = \overline{a \cdot b} \quad \text{ou} \quad s = \overline{ab} \]
+        </p>
+        <table>
+            <caption>Table de vérité 6 (Fonction NON-ET / NAND)</caption>
+            <thead>
+                <tr><th>Entrée a</th><th>Entrée b</th><th>\(a \cdot b\) (ET intermédiaire)</th><th>Sortie \(s = \overline{a \cdot b}\)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+            </tbody>
+        </table>
+         <p class="note">La sortie <code>s</code> est l'inverse de la sortie de la fonction ET. Par exemple, si a=0 et b=1, alors \(a \cdot b = 0 \), et donc \(s = \overline{0 \cdot 1} = \overline{0} = 1\).</p>
+         <p class="note">La fonction NAND est importante car elle est "universelle" : on peut construire n'importe quelle autre fonction logique (ET, OU, NON, etc.) en utilisant uniquement des portes NAND.</p>
+
+        <p style="text-align: right;">10</p>
+    </div>
+
+    <script>
+      // Ensure KaTeX renders after the page is loaded
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : false
+        });
+      });
+    </script>
+
+</body>
+</html>
