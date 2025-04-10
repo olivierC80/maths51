@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre VI: Les circuits combinatoires</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3, h4, h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 { font-size: 2em; border-bottom: 2px solid black; padding-bottom: 5px; }
+        h2 { font-size: 1.7em; border-bottom: 1px solid gray; padding-bottom: 3px;}
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; }
+        h5 { font-size: 1.1em; font-weight: bold; }
+        p, li {
+            margin-bottom: 0.8em;
+        }
+        .definition {
+            border-left: 3px solid #eee;
+            padding-left: 15px;
+            margin-left: 10px;
+            font-style: italic;
+        }
+        .remark {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .example {
+            border: 1px dashed #aaa;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        figure {
+            text-align: center;
+            margin: 20px 0;
+        }
+        figcaption {
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 15px 0;
+            width: auto;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            background-color: #fafafa;
+            min-height: 100px;
+            display: inline-block;
+            margin: 10px;
+        }
+        .page-footer {
+            margin-top: 30px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            font-size: 0.8em;
+            color: gray;
+            display: flex;
+            justify-content: space-between;
+        }
+        .katex-display { /* Ensure display math is centered */
+             margin: 1em 0;
+             text-align: center;
+        }
+        .flowchart-step {
+            border: 1px solid #aaa;
+            padding: 10px;
+            margin: 5px auto; /* Center horizontally */
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+            background-color: #f9f9f9;
+        }
+        .flowchart-arrow {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page 1 Content -->
+    <h1>Chapitre VI <br> Les circuits combinatoires</h1>
+
+    <figure style="float: right; margin-left: 20px;">
+         <div class="placeholder">[Placeholder: Image of Augustus De Morgan]</div>
+         <figcaption>
+             Augustus De Morgan<br>
+             * 27 juin 1806, Madura, Indes<br>
+             † 18 mars 1871, Londres, R.-U.
+         </figcaption>
+    </figure>
+
+    <p><strong>Lois de De Morgan (appliquées aux ensembles) :</strong></p>
+    <ul>
+        <li>
+            `\text{comp}(\bigcap_j A_j) = \bigcup_j \text{comp}(A_j)`<br>
+            i.e., le complément de l'intersection d'un nombre quelconque d'ensembles est égal à l'union de leurs compléments.
+            <br><em>(En algèbre booléenne, cela correspond à `\overline{(A \cdot B \cdot ...)} = \overline{A} + \overline{B} + ...`)</em>
+        </li>
+        <li>
+           `\text{comp}(\bigcup_j A_j) = \bigcap_j \text{comp}(A_j)`<br>
+           i.e., le complément de l'union d'un nombre quelconque d'ensembles est égal à l'intersection de leurs compléments.
+           <br><em>(En algèbre booléenne, cela correspond à `\overline{(A + B + ...)} = \overline{A} \cdot \overline{B} \cdot ...`)</em>
+        </li>
+    </ul>
+    <div style="clear: both;"></div>
+
+    <h2>VI.1 Circuits logiques combinatoires usuels</h2>
+
+    <div class="definition">
+        <p><strong>Circuit combinatoire :</strong> circuit dont les sorties dépendent <strong>uniquement</strong> de la combinaison des états des entrées à l'instant de l'observation.</p>
+        <p>Cela signifie qu'un circuit combinatoire n'a pas de mémoire. La sortie à un instant `t` est uniquement fonction de l'entrée à ce même instant `t`.</p>
+    </div>
+
+    <h3>VI.1.1 Circuits de transcodage (codeurs, décodeurs, convertisseurs)</h3>
+    <p>Ces circuits transforment un code d'entrée en un autre code de sortie.</p>
+
+    <h4>VI.1.1.a Codeur (encodeur)</h4>
+    <div class="definition">
+        <p>Circuit à `M` entrées et `N` sorties, où typiquement `M = 2^N`. Il code en binaire le rang (l'indice) de la <strong>seule</strong> entrée active parmi les `M` entrées.</p>
+        <p>Si plusieurs entrées sont actives simultanément, le comportement d'un codeur simple est indéfini. Les codeurs de priorité gèrent ce cas (voir Remarque 6.1).</p>
+    </div>
+
+    <div class="page-footer">
+        <span>Page 71</span>
+    </div>
+    <hr>
+
+    <!-- Page 2 Content -->
+
+    <h5>Schéma général d'un codeur M vers N</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Diagram of a generic M-to-N encoder]</div>
+         <figcaption>Codeur générique avec M entrées (`A_0` à `A_{M-1}`) et N sorties (`S_0` à `S_{N-1}`). Une seule entrée est active à la fois. La sortie représente en binaire le numéro de l'entrée active.</figcaption>
+     </figure>
+
+
+    <div class="example">
+        <h5>▷ Exemple 6.1 : Codeur décimal-DCB</h5>
+        <p>Un exemple courant est le codeur décimal vers BCD (Binary Coded Decimal). Il a 10 entrées (correspondant aux chiffres 0 à 9) et 4 sorties (pour représenter le chiffre en binaire sur 4 bits).</p>
+        <figure>
+             <div class="placeholder">[Placeholder: Diagram of a 10-input to 4-output Decimal-to-BCD encoder]</div>
+             <figcaption>Codeur 10 entrées (0-9) vers 4 sorties (`S_0` à `S_3`). Si l'entrée '3' est active (et les autres inactives), la sortie sera `S_3S_2S_1S_0 = 0011`.</figcaption>
+         </figure>
+    </div>
+
+    <div class="page-footer">
+        <span>Page 72</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 3 Content -->
+
+    <h5>Table de vérité (exemple: Codeur prioritaire 10 vers 4, Actif Bas)</h5>
+    <p>Le tableau suivant illustre le fonctionnement d'un <strong>codeur de priorité</strong> décimal vers BCD où les entrées sont actives à l'état bas ('0') et l'entrée de plus fort poids (ici 9) a la priorité la plus élevée. 'X' signifie "état indifférent" (peut être 0 ou 1).</p>
+    <table>
+     <caption>Table de vérité simplifiée d'un codeur prioritaire 10->4 (Actif Bas)</caption>
+      <thead>
+        <tr><th>A9</th><th>A8</th><th>A7</th><th>A6</th><th>A5</th><th>A4</th><th>A3</th><th>A2</th><th>A1</th><th>A0</th><th>|</th><th>S3</th><th>S2</th><th>S1</th><th>S0</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>|</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>X</td><td>|</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>X</td><td>X</td><td>|</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>X</td><td>X</td><td>X</td><td>|</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>X</td><td>X</td><td>X</td><td>X</td><td>|</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>|</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>|</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>|</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>|</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>0</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>|</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+        <!-- Note: Original OCR table seems slightly different/potentially ambiguous with '1's. This table represents a standard active-low priority encoder behavior. -->
+      </tbody>
+    </table>
+    <p><em>Note: La table fournie dans l'OCR original utilise des '1' là où l'on s'attendrait à des 'X' (Don't Care) pour un codeur prioritaire standard actif bas. L'interprétation la plus probable est que '0' représente l'entrée active et '1' l'entrée inactive. Si plusieurs entrées sont à '0', celle avec l'indice le plus élevé détermine la sortie.</em></p>
+
+
+    <h5>Application : codeur de clavier numérique</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Diagram of a numeric keypad encoder application]</div>
+         <figcaption>Un codeur (souvent prioritaire) est utilisé pour convertir l'appui sur une touche d'un clavier numérique en son code BCD correspondant.</figcaption>
+     </figure>
+
+    <div class="remark">
+        <p><strong>► Remarque 6.1 : Codeurs de priorité</strong></p>
+        <p>Les codeurs de priorités sont une version modifiée du codeur : quand deux entrées (ou plus) sont actives simultanément, c'est l'entrée correspondant au nombre (ou à l'indice) le plus haut qui est choisie et codée en sortie. Les autres entrées actives de rang inférieur sont ignorées.</p>
+    </div>
+
+    <h4>VI.1.1.b Décodeur</h4>
+    <div class="definition">
+        <p>Le décodeur est un circuit qui établit la correspondance entre un code d'entrée sur `N` bits et `M` lignes de sortie, où `M \le 2^N`.</p>
+        <p>Pour chacune des `2^N` combinaisons possibles des entrées, <strong>une seule</strong> ligne de sortie est validée (activée, souvent à l'état bas).</p>
+    </div>
+
+    <div class="example">
+        <h5>▷ Exemple 6.2 : Décodeur DCB-décimal</h5>
+        <p>Ce circuit a 4 entrées (recevant un code BCD) et 10 sorties (numérotées de 0 à 9). Si l'entrée est `0101` (BCD pour 5), seule la sortie numéro 5 sera activée. Si l'entrée est une combinaison invalide en BCD (ex: `1100`), aucune sortie (ou parfois une sortie d'erreur dédiée) n'est activée.</p>
+    </div>
+
+    <div class="remark">
+        <p><strong>► Remarque 6.2 : Entrées de validation (Enable)</strong></p>
+        <p>La plupart des décodeurs sont dotés d'une ou plusieurs entrées de validation (souvent appelées 'Enable' ou 'Strobe'). Ces entrées permettent d'activer ou de désactiver le circuit : si l'entrée de validation n'est pas active, toutes les sorties sont inactives (souvent à l'état haut ou haute impédance), quelle que soit la combinaison des entrées de code. Elles sont utiles pour la mise en cascade ou la synchronisation.</p>
+    </div>
+
+    <div class="page-footer">
+        <span>Page 73</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 4 Content -->
+
+    <h5>Applications des décodeurs</h5>
+
+    <h6>1: Adressage d'une mémoire</h6>
+    <p>Les mémoires (RAM, ROM) sont organisées comme des tableaux de cellules. Pour lire ou écrire une information, il faut sélectionner une ligne spécifique (appelée "mot mémoire"). Un décodeur est utilisé pour transformer l'adresse binaire fournie par le processeur en une seule ligne de sélection active correspondant à cette adresse.</p>
+     <figure>
+         <div class="placeholder">[Placeholder: Diagram of memory addressing using a decoder]</div>
+         <figcaption>Adressage mémoire : Un décodeur `N` vers `2^N` (ici 10 vers 1024) prend l'adresse (sur 10 bits) et active une seule des 1024 lignes (lignes 0 à 1023). Une entrée 'autorisation accès mémoire' (Enable) permet d'activer le décodeur. Les données sont ensuite lues ou écrites sur les lignes de données (ici 8 bits).</figcaption>
+     </figure>
+     <ul>
+        <li>Une mémoire est un tableau d'éléments binaires (divisés en lignes et colonnes).</li>
+        <li>Pour lire un mot mémoire, il faut lui envoyer le numéro de ligne souhaité (adresse).</li>
+        <li>Souvent, le décodeur d'adresse est intégré dans le circuit mémoire lui-même.</li>
+     </ul>
+
+    <h6>2: Génération de fonction logique</h6>
+    <p>Toute fonction logique combinatoire peut être réalisée à partir d'un décodeur et de portes OU (ou NON-OU). Le décodeur génère tous les mintermes possibles des variables d'entrée. Il suffit ensuite de combiner (avec une porte OU) les sorties du décodeur correspondant aux mintermes pour lesquels la fonction doit être égale à 1.</p>
+
+    <div class="example">
+        <h5>▷ Exemple 6.3 : Génération de fonction</h5>
+        <p>Soit la fonction `F(A,B,C) = A\overline{B}C + AB\overline{C} + A\overline{B} + C`.</p>
+        <p><em>(Note: L'expression originale `F=ABC+ABC+AB+C` manque probablement des barres de négation. Supposons `F = A\overline{B}C + AB\overline{C} + A\overline{B} + C`. Simplifiée, cette fonction est `F = A\overline{B} + C`. Si l'on voulait l'implémenter directement avec un décodeur 3 vers 8 et une porte OU, on identifierait les mintermes : `A\overline{B}C` (m5), `AB\overline{C}` (m6), `A\overline{B}` (m4, m5), `C` (m1, m3, m5, m7). La forme somme de mintermes serait `F = m1 + m3 + m4 + m5 + m6 + m7`. On relierait les sorties 1, 3, 4, 5, 6, 7 du décodeur à une porte OU.)</em></p>
+    </div>
+
+    <div class="remark">
+        <p><strong>► Remarque 6.3</strong></p>
+        <p>Lorsqu'on utilise un décodeur pour générer une fonction, il n'est pas nécessaire de simplifier algébriquement la fonction (en forme minimale somme-de-produits) avant la réalisation. Il suffit de connaître sa table de vérité ou sa forme canonique (somme des mintermes).</p>
+    </div>
+
+    <h5>Mise en cascade des décodeurs</h5>
+    <p>Pour réaliser un décodeur avec un grand nombre de sorties, on peut cascader des décodeurs plus petits en utilisant leurs entrées de validation (Enable).</p>
+
+    <div class="example">
+        <h5>▷ Exemple 6.4 : Décodeur 3 vers 8 avec des décodeurs 2 vers 4</h5>
+        <p>On veut réaliser un décodeur à 3 entrées (disons `A_2, A_1, A_0`) et 8 sorties (`S_0` à `S_7`) en utilisant deux décodeurs 2 vers 4.</p>
+         <figure>
+             <div class="placeholder">[Placeholder: Diagram of cascaded decoders: 3-to-8 using two 2-to-4]</div>
+             <figcaption>Réalisation d'un décodeur 3 vers 8. L'entrée `A_2` (bit de poids fort) est utilisée pour valider l'un des deux décodeurs 2 vers 4. Si `A_2=0`, le premier décodeur (sorties `S_0`-`S_3`) est actif et décode `A_1A_0`. Si `A_2=1`, le second décodeur (sorties `S_4`-`S_7`) est actif et décode `A_1A_0`. L'entrée `q_i` semble représenter les entrées `A_i`. `V` est l'entrée Enable.</figcaption>
+         </figure>
+         <p><strong>Exercice :</strong> Réaliser un décodeur 4 vers 16 à l'aide de décodeurs 2 vers 4 (ou de décodeurs 3 vers 8).</p>
+         <!-- Hint: Use 4 décodeurs 2-vers-4 et un 5ème décodeur 2-vers-4 pour générer les Enables, ou 2 décodeurs 3-vers-8 et un inverseur. -->
+    </div>
+
+
+    <div class="page-footer">
+        <span>Page 74</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 5 Content -->
+
+     <h4>VI.1.1.c Transcodeurs (convertisseurs)</h4>
+     <div class="definition">
+         <p>Circuit à `p` entrées et `k` sorties qui convertit un nombre ou une information représenté(e) dans un code C1 (en entrée) en une représentation équivalente dans un code C2 (en sortie).</p>
+     </div>
+
+    <div class="example">
+        <h5>▷ Exemple 6.5 : Exemples de transcodeurs</h5>
+        <ul>
+            <li><strong>Code binaire → code Gray :</strong> Convertit un nombre binaire naturel en son équivalent en code Gray (où deux valeurs successives ne diffèrent que par un seul bit). Utile pour éviter les états transitoires erronés dans les compteurs ou les capteurs de position.</li>
+            <li><strong>Code DCB → code affichage 7 segments :</strong> Convertit un chiffre BCD (4 bits) en signaux de commande (7 bits) pour allumer les segments appropriés d'un afficheur numérique. C'est un type de décodeur, mais la sortie n'active pas une seule ligne mais une combinaison de lignes.</li>
+        </ul>
+    </div>
+
+    <h3>VI.1.2 Multiplexeurs-démultiplexeurs</h3>
+
+    <h4>VI.1.2.a Multiplexeurs (MUX)</h4>
+    <div class="definition">
+        <p>Circuit à `2^n` entrées de données (ou d'informations), `n` entrées de sélection (ou d'adresse), et une seule sortie. Il permet l'aiguillage (la sélection) de l'une des `2^n` entrées de données vers la sortie unique, en fonction de la valeur binaire appliquée aux entrées de sélection.</p>
+        <p>Le multiplexeur agit comme un commutateur rotatif électronique.</p>
+    </div>
+
+    <div class="example">
+        <h5>▷ Exemple 6.6 : MUX 2 vers 1</h5>
+        <p>Un multiplexeur simple avec 2 entrées de données (`E_0`, `E_1`), 1 entrée de sélection (`sel`), et 1 sortie (`S`).</p>
+         <figure>
+             <div class="placeholder">[Placeholder: Diagram of a 2-to-1 MUX]</div>
+             <figcaption>Multiplexeur 2 vers 1.</figcaption>
+         </figure>
+         <table>
+             <caption>Table de vérité MUX 2 vers 1</caption>
+              <thead><tr><th>sel</th><th>S (Sortie)</th></tr></thead>
+              <tbody>
+                  <tr><td>0</td><td>`E_0`</td></tr>
+                  <tr><td>1</td><td>`E_1`</td></tr>
+              </tbody>
+         </table>
+         <p>Équation logique : `S = \overline{\text{sel}} \cdot E_0 + \text{sel} \cdot E_1`</p>
+    </div>
+
+    <div class="remark">
+        <p><strong>► Remarque 6.4</strong></p>
+        <p>La table de vérité d'un multiplexeur devient rapidement très grande à mesure que le nombre d'entrées de sélection augmente (par exemple, un MUX 16 vers 1 a 4 entrées de sélection, soit 16 lignes dans sa table de vérité de sélection, plus les `2^{16}` combinaisons possibles des entrées de données si on voulait tout lister!). On exprime alors directement la fonction de sortie en fonction des entrées de sélection et des entrées de données.</p>
+    </div>
+
+    <div class="example">
+        <h5>▷ Exemple 6.7 : MUX 4 vers 1</h5>
+        <p>Un multiplexeur 4 vers 1 a 4 entrées de données (`E_0, E_1, E_2, E_3`), 2 entrées de sélection (`a_1, a_0`), et 1 sortie (`S`).</p>
+        <p>Équation logique : `S = \overline{a_1}\overline{a_0}E_0 + \overline{a_1}a_0E_1 + a_1\overline{a_0}E_2 + a_1a_0E_3`</p>
+        <!-- L'OCR original mentionnait S=a1.a0.E0 a1.a0.E1 ..., j'ai complété -->
+    </div>
+
+    <h4>VI.1.2.b Application des MUX</h4>
+    <ol>
+        <li>
+            <p><strong>Conversion parallèle-série :</strong> Les données présentes en parallèle sur les entrées du MUX (`E_0` à `E_{2^n-1}`) peuvent être transmises en série sur la sortie unique en faisant varier séquentiellement les entrées de sélection (`a_{n-1}...a_0`). Par exemple, pour un MUX 4 vers 1, on applique successivement `00, 01, 10, 11` sur `a_1a_0` pour transmettre `E_0`, puis `E_1`, puis `E_2`, puis `E_3` sur la sortie `S`.</p>
+        </li>
+        <!-- Les autres applications sont sur la page suivante -->
+    </ol>
+
+    <div class="page-footer">
+        <span>Page 75</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 6 Content -->
+
+    <figure>
+         <div class="placeholder">[Placeholder: Diagram illustrating Parallel-to-Serial conversion using a MUX]</div>
+         <figcaption>Illustration de la conversion parallèle-série : Les bits `1101` sont présents sur les entrées `E_3` à `E_0`. Un compteur génère la séquence `00, 01, 10, 11` sur les entrées de sélection `a_1a_0`. La sortie `S` produit la séquence `1011` (correspondant à `E_0, E_1, E_2, E_3`).</figcaption>
+     </figure>
+
+    <ol start="2">
+        <li>
+            <p><strong>Générateur de fonctions logiques :</strong> Toute fonction logique de `n` variables peut être réalisée avec un multiplexeur `2^n` vers 1. Les variables de la fonction sont connectées aux entrées de sélection (`a_{n-1}...a_0`). Chaque entrée de données (`E_i`) est connectée à '0' (niveau bas) ou '1' (niveau haut) selon la valeur de la fonction pour la combinaison correspondante des variables de sélection. C'est une alternative à l'utilisation de décodeurs et portes OU.</p>
+             <p><em>Variante (Méthode de Shannon) :</em> On peut utiliser un MUX `2^{n-1}` vers 1 pour implémenter une fonction de `n` variables. `n-1` variables sont connectées aux sélections. La `n`-ième variable (ou son complément, ou '0', ou '1') est connectée aux entrées de données `E_i` selon la décomposition de Shannon.</p>
+        </li>
+        <li>
+            <p><strong>Sélection de mots (bus) :</strong> Pour sélectionner un mot de `k` bits parmi plusieurs sources (par exemple, choisir entre les données venant du clavier ou d'un lecteur de disquettes), on utilise `k` multiplexeurs `m` vers 1 en parallèle. Ils partagent les mêmes entrées de sélection, permettant de commuter l'ensemble des `k` bits d'un mot source vers une destination commune (bus).</p>
+             <figure>
+                 <div class="placeholder">[Placeholder: Diagram showing word selection using parallel MUXes]</div>
+                 <figcaption>Sélection de mots : `k` MUX (ici représentés comme un seul bloc "MUX aiguillage") sélectionnent un bus de `n` bits parmi plusieurs sources (Source 1, Source 2, ...) en fonction de la commande de sélection, et le dirigent vers la destination.</figcaption>
+             </figure>
+        </li>
+    </ol>
+
+    <div class="remark">
+        <p><strong>► Remarque 6.5</strong></p>
+        <p>Intérêt de l'utilisation des MUX pour la génération de fonctions : il n'est pas nécessaire de simplifier algébriquement la fonction avant de la réaliser. Il suffit de connaître sa table de vérité.</p>
+    </div>
+
+    <div class="example">
+        <h5>▷ Exemple 6.8 : Implémentation de fonction avec MUX</h5>
+        <p>Soit la fonction `F(A,B,C) = \overline{A}BC + A\overline{B}C` (m3 + m5). (L'original `F ABC ABC` est ambigu).</p>
+        <p>Pour réaliser cette fonction avec un MUX 8 vers 1 :</p>
+        <ul>
+            <li>Connecter A, B, C aux entrées de sélection `a_2, a_1, a_0`.</li>
+            <li>Connecter les entrées de données `E_3` et `E_5` à '1' (Vcc).</li>
+            <li>Connecter toutes les autres entrées de données (`E_0, E_1, E_2, E_4, E_6, E_7`) à '0' (GND).</li>
+            <li>La sortie `S` du MUX réalisera la fonction F.</li>
+        </ul>
+        <p>L'expression `S = \overline{A}\overline{B}\overline{C}E_0 + \overline{A}\overline{B}C E_1 + \overline{A}B\overline{C} E_2 + \overline{A}BC E_3 + A\overline{B}\overline{C} E_4 + A\overline{B}C E_5 + AB\overline{C} E_6 + ABC E_7` représente l'équation générale d'un MUX 8 vers 1, où `A, B, C` sont les sélecteurs.</p>
+    </div>
+
+    <div class="page-footer">
+        <span>Page 76</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 7 Content -->
+
+    <h4>VI.1.2.c Démultiplexeurs (DEMUX)</h4>
+     <div class="definition">
+         <p>Circuit avec 1 entrée d'information (Donnée), `n` entrées de commande (Sélection), et `2^n` sorties. Il permet d'aiguiller l'information présente sur l'entrée unique vers l'une des `2^n` sorties, choisie par les entrées de commande.</p>
+         <p>Le démultiplexeur agit comme un aiguillage qui dirige un signal entrant vers une voie de sortie parmi plusieurs.</p>
+     </div>
+
+     <div class="remark">
+        <p><strong>► Remarque 6.6</strong></p>
+        <p>Le MUX et le DEMUX peuvent être vus comme des circuits programmables simples, car la relation entre une entrée de données spécifique et la sortie (pour le MUX) ou entre l'entrée et une sortie spécifique (pour le DEMUX) peut être modifiée en changeant les entrées de sélection. Cette notion de "programmabilité" est plus développée dans les circuits logiques programmables complexes (voir VI.2.2).</p>
+    </div>
+
+    <div class="example">
+        <h5>▷ Exemple 6.9 : Transmission avec multiplexage/démultiplexage</h5>
+        <p>Pour transmettre plusieurs signaux (sources 0 à n) sur une seule voie de transmission, on utilise un MUX à l'émission pour sélectionner séquentiellement chaque source et l'envoyer sur la voie. À la réception, un DEMUX synchronisé avec le MUX reçoit le signal série et le distribue vers la destination appropriée (récepteur 0 à n).</p>
+         <figure>
+             <div class="placeholder">[Placeholder: Diagram of a MUX/DEMUX transmission system]</div>
+             <figcaption>Système de transmission multiplexé : Plusieurs sources sont combinées par un MUX, transmises sur une voie unique, puis séparées par un DEMUX vers les récepteurs correspondants.</figcaption>
+         </figure>
+    </div>
+
+    <h3>VI.1.3 Le comparateur</h3>
+    <div class="definition">
+        <p>Il détecte la relation d'ordre entre deux nombres binaires A et B. Le circuit le plus simple détecte l'égalité (A = B). Certains circuits (comparateurs de magnitude) permettent également de détecter si A est supérieur à B (A > B) ou inférieur à B (A < B).</p>
+    </div>
+
+    <h4>VI.1.3.a Comparateur de 2 bits élémentaires</h4>
+    <p>Comparaison bit à bit de `a_i` et `b_i` (bits de même poids de A et B).</p>
+    <table>
+     <caption>Comparaison de 2 bits (`a_j`, `b_i`)</caption>
+     <thead><tr><th>`a_j`</th><th>`b_i`</th><th>|</th><th>`E_i` (Égalité)</th><th>`S_i` (`a_j > b_i`)</th><th>`I_i` (`a_j < b_i`)</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>|</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>0</td><td>1</td><td>|</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>|</td><td>0</td><td>1</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>|</td><td>1</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>Équations logiques correspondantes :</p>
+    <ul>
+        <li>Égalité (`E_i`): `E_i = \overline{a_i \oplus b_i}` (XNOR) ou `E_i = \overline{a_i}\overline{b_i} + a_i b_i`</li>
+        <li>Supérieur (`S_i`): `S_i = a_i \overline{b_i}` (Note: dans le texte `a_j b_i` pourrait être une typo pour `a_i \overline{b_i}`)</li>
+        <li>Inférieur (`I_i`): `I_i = \overline{a_i} b_i` (Note: dans le texte `a_i b_i` pourrait être une typo pour `\overline{a_i} b_i`)</li>
+        <li>Différence (`D_i`): `D_i = a_i \oplus b_i` (XOR)</li>
+    </ul>
+
+    <h4>VI.1.3.b Comparateur de 2 nombres (multi-bits)</h4>
+    <p>Pour comparer deux nombres A et B de plusieurs bits, on compare les bits de poids fort d'abord. Si A=B, on compare les bits suivants, et ainsi de suite. La première différence rencontrée détermine la relation (A>B ou A<B). Si tous les bits sont égaux, alors A=B.</p>
+    <p>Les circuits intégrés réalisent souvent cette logique en cascade : chaque étage compare une paire de bits (`a_i, b_i`) et utilise les résultats de l'étage précédent (comparaison des bits de poids supérieurs) pour déterminer ses propres sorties (égalité locale `E_i`, supériorité `S_i`, infériorité `I_i`) et propager l'information vers l'étage suivant (comparaison des bits de poids inférieurs).</p>
+     <figure>
+         <div class="placeholder">[Placeholder: Diagram of a multi-bit comparator]</div>
+         <figcaption>Structure typique d'un comparateur multi-bits (ici 4 bits, a3b3 à a0b0). Chaque étage (Ei, Si, Ii) compare une paire de bits et reçoit des informations de l'étage de poids supérieur. Les sorties finales indiquent A<B, A=B, ou A>B.</figcaption>
+     </figure>
+
+    <div class="page-footer">
+        <span>Page 77</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 8 Content -->
+
+    <h3>VI.1.4 L'unité arithmétique et logique (UAL / ALU)</h3>
+    <div class="definition">
+        <p>Utilisée dans pratiquement tous les systèmes informatiques (au cœur du processeur), l'Unité Arithmétique et Logique (UAL, ou ALU en anglais) réalise des opérations arithmétiques (addition, soustraction, incrémentation, etc.) et logiques (ET, OU, NON, XOR, etc.) sur des opérandes binaires.</p>
+        <p>C'est un circuit <strong>programmable</strong> : des entrées de commande (sélection d'opération) déterminent quelle opération est effectuée sur les données d'entrée (opérandes). Les relations entre les données en sortie et les données en entrée sont donc modifiables par ces commandes.</p>
+    </div>
+
+     <figure>
+         <div class="placeholder">[Placeholder: Generic block diagram of an ALU]</div>
+         <figcaption>Schéma fonctionnel simplifié d'une ALU : Prend deux opérandes A et B (ici 4 bits), une retenue entrante (`C_0` ou `C_{in}`), des signaux de sélection d'opération (`S_0` à `S_3`, `M`), et produit un résultat F (4 bits), une retenue sortante (`C_4` ou `C_{out}`), et éventuellement des signaux pour la retenue anticipée (P: Propagate, G: Generate).</figcaption>
+     </figure>
+
+     <figure>
+         <div class="placeholder">[Placeholder: Pinout diagram of the 74181 ALU chip]</div>
+         <figcaption>
+             <strong>74181 : Unité logique arithmétique 4 bits (générateur de fonction).</strong><br>
+             Exemple de circuit intégré ALU classique. Le brochage montre les entrées pour les opérandes (A0-A3, B0-B3), la sélection d'opération (S0-S3, M), la retenue entrante (Cn), les sorties de résultat (F0-F3), la sortie de retenue (Cn+4), les sorties pour la retenue anticipée (P, G), et une sortie de comparaison (A=B). VCC et GND sont les alimentations.
+         </figcaption>
+     </figure>
+
+    <p><strong>Mise en cascade et retenue anticipée :</strong></p>
+    <p>Pour effectuer des opérations sur des nombres plus grands (ex: 16 bits), on peut cascader plusieurs ALU 4 bits. La retenue de chaque bloc doit être propagée au bloc suivant. Pour accélérer ce processus (surtout pour l'addition), on utilise un mécanisme de <strong>retenue anticipée</strong> (Lookahead Carry). Les sorties P (Propagate) et G (Generate) de chaque ALU sont utilisées par un circuit externe (Générateur de retenue anticipée) pour calculer rapidement les retenues entrantes de chaque bloc sans attendre la propagation séquentielle.</p>
+    <ul>
+        <li>`G_i = 1` (Generate) si l'étage `i` génère une retenue indépendamment de la retenue entrante.</li>
+        <li>`P_i = 1` (Propagate) si l'étage `i` propage une retenue entrante vers sa sortie.</li>
+    </ul>
+     <figure>
+         <div class="placeholder">[Placeholder: Diagram of cascaded ALUs with a Lookahead Carry Generator]</div>
+         <figcaption>Mise en cascade d'ALUs (ici 4 x 4 bits = 16 bits) avec un Générateur de retenue anticipée. Les signaux P et G de chaque ALU alimentent le générateur, qui calcule directement les retenues `C_4`, `C_8`, `C_{12}` pour accélérer l'opération globale.</figcaption>
+     </figure>
+
+    <div class="page-footer">
+        <span>Page 78</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 9 Content -->
+
+    <h2>VI.2 Synthèse des circuits combinatoires</h2>
+    <p>La synthèse est le processus de conception et de réalisation d'un circuit logique pour implémenter une fonction ou un comportement spécifié.</p>
+
+    <h3>VI.2.1 Présentation du processus de conception</h3>
+
+    <p>Le processus typique de conception d'un circuit combinatoire suit plusieurs étapes :</p>
+    <div class="flowchart">
+        <div class="flowchart-step">1. Cahier des charges</div>
+        <div class="flowchart-arrow">↓</div>
+        <div class="flowchart-step">2. Analyse du problème<br>(Définition des entrées/sorties, table de vérité, équations logiques)</div>
+        <div class="flowchart-arrow">↓</div>
+        <div class="flowchart-step">3. Choix d'une technologie et des composants</div>
+        <div class="flowchart-arrow">↓</div>
+        <div class="flowchart-step">4. Établissement du schéma logique détaillé</div>
+        <div class="flowchart-arrow">↓</div>
+        <div class="flowchart-step">5. Prototype d'essai (Simulation et/ou Réalisation physique)</div>
+        <div class="flowchart-arrow">↓</div>
+        <div class="flowchart-step">6. Réalisation finale</div>
+    </div>
+
+    <p><strong>Stratégies de réalisation :</strong></p>
+    <ul>
+        <li>Si le nombre de variables mises en œuvre est faible (typiquement inférieur à 10), les circuits sont réalisés directement à l'aide de la table de vérité ou des équations logiques (éventuellement après simplification) en utilisant des portes logiques de base.</li>
+        <li>Dans le cas contraire (fonctions complexes), la fonction est décomposée en différents blocs fonctionnels plus simples qui sont analysés et réalisés séparément, puis interconnectés.</li>
+    </ul>
+
+    <p><strong>Choix des composants :</strong></p>
+    <p>Le choix des composants utilisés est basé sur différents critères :</p>
+    <ul>
+        <li>Nombre de boîtiers (minimiser la taille et le coût)</li>
+        <li>Coût des composants</li>
+        <li>Disponibilité des composants</li>
+        <li>Possibilité d'ajouter des points de test</li>
+        <li>Complexité des connexions (routage sur le circuit imprimé)</li>
+        <li>Performances (vitesse)</li>
+        <li>Consommation d'énergie</li>
+    </ul>
+
+    <p><strong>Les différents choix technologiques sont :</strong></p>
+    <dl>
+        <dt>a) Utilisation de portes logiques simples</dt>
+        <dd>Utilisation de circuits intégrés contenant des portes logiques de base (OU, ET, NON, NON-OU, NON-ET, XOR). Adapté aux fonctions simples.</dd>
+        <dt>b) Développement de circuits intégrés (CI) spécialisés (ASIC)</dt>
+        <dd>Conception d'un circuit intégré sur mesure pour une application spécifique. Coût de développement élevé, nécessite une production en très grandes séries pour être rentable.</dd>
+        <dt>c) Utilisation de circuits intégrés combinatoires standards et/ou programmables</dt>
+        <dd>Utilisation de composants logiques plus complexes et pré-conçus :
+            <ul>
+                <li>Multiplexeurs (MUX), Démultiplexeurs (DEMUX)</li>
+                <li>Décodeurs, Codeurs</li>
+                <li>Comparateurs, Additionneurs, ALU</li>
+                <li>Circuits logiques programmables : PROM, PAL, PLA, FPGA, CPLD (voir section suivante). Offrent une grande flexibilité.</li>
+            </ul>
+        </dd>
+    </dl>
+
+    <div class="page-footer">
+        <span>Page 79</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 10 Content -->
+
+    <h3>VI.2.2 Circuits logiques programmables</h3>
+
+    <h4>VI.2.2.a Introduction</h4>
+    <p>La réalisation pratique d'un système logique dit « câblé » consiste à utiliser les composants logiques (circuits intégrés - CI) disponibles sur le marché et à les interconnecter de manière fixe. Cela oblige le concepteur à décomposer un système donné en blocs fonctionnels correspondant aux CI disponibles et à optimiser son choix parmi ces composants.</p>
+    <p>L'apparition des circuits adaptables dits « programmables » par le constructeur ou l'utilisateur apporte une solution flexible à ce problème. Ces circuits contiennent une structure logique générique qui peut être configurée (programmée) pour réaliser une fonction spécifique, remplaçant ainsi de nombreux circuits logiques standards.</p>
+
+    <h4>VI.2.2.b Structure des circuits logiques programmables</h4>
+    <p>Le principe de base repose sur le fait que toute fonction logique de `n` variables peut se mettre sous la forme d'une <strong>somme de produits</strong> (forme canonique disjonctive ou forme simplifiée). Cela implique que toute fonction logique peut être réalisée par l'utilisation d'une structure comportant deux ensembles fonctionnels :</p>
+    <ul>
+        <li>Un ensemble d'opérateurs <strong>ET</strong> (AND) organisés sous forme de matrice. Cet ensemble permet de générer les termes produits (mintermes ou produits simplifiés) des variables d'entrée (et/ou de leurs compléments).</li>
+        <li>Un ensemble d'opérateurs <strong>OU</strong> (OR) qui permet de sommer les termes produits sélectionnés pour former les fonctions de sortie souhaitées.</li>
+    </ul>
+    <p>La <strong>programmation</strong> de ces circuits consiste à configurer les connexions au sein de ces matrices. Historiquement, cela se faisait en "grillant" des fusibles placés à chaque point d'intersection potentiel entre les lignes d'entrée/produit et les lignes produit/somme. Griller un fusible supprime le contact entre les lignes. Aujourd'hui, des technologies reprogrammables (EPROM, EEPROM, Flash, SRAM) sont couramment utilisées.</p>
+
+    <p>Il existe plusieurs types de circuits logiques programmables (PLD - Programmable Logic Devices), différant par la partie programmable :</p>
+
+    <h5>1. PROM (Programmable Read-Only Memory) ou PLE (Programmable Logic Element)</h5>
+    <p>Dans une PROM utilisée comme circuit logique :</p>
+    <ul>
+        <li>La matrice <strong>ET</strong> est <strong>fixe</strong> (non programmable). Elle est conçue en usine pour générer <strong>tous</strong> les `2^n` mintermes possibles des `n` entrées. Cette matrice ET est fonctionnellement équivalente à un décodeur `n` vers `2^n`.</li>
+        <li>La matrice <strong>OU</strong> est <strong>programmable</strong>. L'utilisateur peut choisir quels mintermes (générés par la matrice ET fixe) sont connectés aux entrées des portes OU pour former chaque fonction de sortie.</li>
+    </ul>
+    <p>Contrairement aux FPLA (Field Programmable Logic Array) ou PAL (Programmable Array Logic) où la matrice ET est également programmable (cf. page 82 du document original - non fournie ici), la PROM a une structure ET figée.</p>
+    <p><strong>Caractéristiques :</strong></p>
+    <ul>
+        <li>Chaque sortie de la mémoire correspond à une fonction logique. Les sorties sont souvent de type "3 états" (0, 1, haute impédance) pour permettre le partage de bus.</li>
+        <li>La matrice ET fixe correspond à un décodeur `n \to 2^n` (décodeur d'adresse).</li>
+        <li>Une fonction est réalisée en programmant sa <strong>table de vérité</strong> dans la matrice OU. Pour chaque combinaison des entrées (adresse), on programme la valeur de sortie souhaitée ('0' ou '1') en connectant ou non la ligne du minterme correspondant à la porte OU de sortie.</li>
+    </ul>
+
+    <p><strong>Légende des interconnexions (typique pour schémas PLD) :</strong></p>
+    <ul>
+        <li>`*` ou X : Interconnexion non programmée (connexion par défaut, fusible intact).</li>
+        <li>`.` ou absence de X : Interconnexion programmée (connexion supprimée, fusible grillé).</li>
+         <!-- Placeholder for fuse symbols -->
+         <figure>
+             <div class="placeholder">[Placeholder: Symbols for programmed/unprogrammed fuses/connections]</div>
+             <figcaption>Symboles typiques pour représenter une connexion programmable : une croix (X) ou un astérisque (*) indique une connexion intacte (non programmée), tandis qu'un point (.) ou l'absence de symbole à une intersection indique une connexion supprimée (programmée).</figcaption>
+         </figure>
+    </ul>
+
+    <div class="page-footer">
+        <span>Page 80</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+
+    <script>
+        // Ensure Katex renders after the page is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
