@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours d'électronique numérique - Suite</title>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4 { color: #333; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 5px;}
+        h3 { margin-top: 1.5em; }
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            margin: 20px 0;
+            background-color: #fafafa;
+            min-height: 50px;
+        }
+        figcaption { text-align: center; font-style: italic; margin-top: 5px; color: #555; }
+        table { border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f9f9f9; }
+        ul { list-style: none; padding-left: 0; }
+        ul li::before { content: "-"; padding-right: 8px; color: #555; }
+        .note { border-left: 3px solid #ccc; padding-left: 15px; margin: 15px 0; font-style: italic; }
+        .example::before { content: "▷ Exemple"; font-weight: bold; margin-right: 5px;}
+        .remark::before { content: "► Remarque"; font-weight: bold; margin-right: 5px;}
+        .page-footer { text-align: right; margin-top: 30px; font-size: 0.9em; color: #555; }
+        .historical-note { display: flex; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;}
+        .historical-note .text { flex-grow: 1; margin-right: 15px; }
+        .historical-note .image-placeholder { width: 100px; height: auto; flex-shrink: 0;}
+        .chapter-header { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; }
+        .special-chars { font-family: 'Times New Roman', Times, serif; font-style: italic; } /* Attempt to display special chars */
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
+        .conversion-diagram {
+            font-family: monospace;
+            line-height: 1.2;
+            white-space: pre;
+            margin: 15px 0;
+            text-align: center; /* Center the diagram block */
+            display: inline-block; /* Fit container to content */
+            border: 1px solid #eee;
+            padding: 10px;
+        }
+        .memory-layout {
+            border: 1px solid black;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .memory-layout td {
+            border: 1px solid black;
+            padding: 5px 10px;
+            text-align: center;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <section id="conversion-suite">
+        <h3>I.5 Conversion d'un système de numération à un autre (Suite)</h3>
+        <h4>I.5.2 Base 10 vers base B (Suite)</h4>
+        <h5>I.5.2.b Deuxième méthode (Divisions/Multiplications successives) - Illustration Exemple 1.7</h5>
+
+        <p>Illustration graphique du processus pour $(20,4)_{10} \rightarrow (?)_2$ :</p>
+
+        <div style="text-align: center;">
+            <div class="placeholder">
+                [Placeholder: Diagram illustrating the division/multiplication steps for (20.4)10 to base 2 conversion.
+                Partie entière:
+                  20 | 2
+                   0 10 | 2
+                      0  5 | 2
+                         1  2 | 2
+                            0  1 | 2
+                               1  0  (Result: 10100 read upwards)
+                Partie fractionnaire:
+                  0.4 x 2 = 0.8 (Bit 0)
+                  0.8 x 2 = 1.6 (Bit 1)
+                  0.6 x 2 = 1.2 (Bit 1)
+                  0.2 x 2 = 0.4 (Bit 0) -> repeats
+                (Result: 0.0110... read downwards)]
+            </div>
+         </div>
+
+        <p>Le résultat est donc (comme calculé précédemment) $10100,01100110..._2$. Le document PDF tronque la partie fractionnaire et indique $10100,0110$.</p>
+        <p><strong>Note:</strong> La troncature à 4 bits après la virgule ($0110_2 = 0.375_{10}$) est une approximation de $0.4_{10}$. La représentation exacte nécessiterait une infinité de bits ($0.\overline{0110}_2$).</p>
+
+        <h4>I.5.3 Base $B=2^n$ vers base 2</h4>
+        <p>La conversion d'une base $B=2^n$ (comme Octal $B=2^3$ ou Hexadécimal $B=2^4$) vers la base 2 est directe.</p>
+        <p>Chaque symbole (chiffre) de la base $B=2^n$ peut être représenté (et remplacé) par son équivalent binaire sur exactement $n$ bits.</p>
+
+        <p class="example">1.8</p>
+        <p> $(3A9)_{16} \rightarrow (?)_2$ (Ici $B=16=2^4$, donc $n=4$ bits par chiffre)</p>
+        <p> $3_{16} = 0011_2$ </p>
+        <p> $A_{16} = 10_{10} = 1010_2$ </p>
+        <p> $9_{16} = 1001_2$ </p>
+        <p> Donc, $(3A9)_{16} = (0011 \, 1010 \, 1001)_2$ (Les espaces sont pour la lisibilité)</p>
+
+        <p> $(742,5)_8 \rightarrow (?)_2$ (Ici $B=8=2^3$, donc $n=3$ bits par chiffre)</p>
+        <p> $7_8 = 111_2$ </p>
+        <p> $4_8 = 100_2$ </p>
+        <p> $2_8 = 010_2$ </p>
+        <p> $5_8 = 101_2$ </p>
+        <p> Donc, $(742,5)_8 = (111 \, 100 \, 010 , 101)_2$ </p>
+
+         <div class="page-footer">
+           <p>© M. Siadat & C. Diou       11</p>
+        </div>
+    </section>
+
+    <section id="conversion-suite2">
+        <h4>I.5.4 Base 2 vers base $B=2^n$</h4>
+        <p>C'est l'opération inverse de la précédente. Il suffit de regrouper les éléments binaires (e.b. ou bits) par paquets de $n$ bits, en partant de la virgule (vers la gauche pour la partie entière, vers la droite pour la partie fractionnaire). On ajoute des zéros non significatifs si nécessaire pour compléter les paquets.</p>
+        <p>Chaque paquet de $n$ bits est ensuite remplacé par le symbole correspondant dans la base $B=2^n$.</p>
+
+        <p class="example">1.9</p>
+        <p> $(1011011)_2 \rightarrow (?)_8$ (Base 8, $n=3$)</p>
+        <p> Regroupement par 3 bits : $(\underline{001} \, \underline{011} \, \underline{011})_2$ (ajout de zéros à gauche)</p>
+        <p> $001_2 = 1_8$ </p>
+        <p> $011_2 = 3_8$ </p>
+        <p> $011_2 = 3_8$ </p>
+        <p> Donc, $(1011011)_2 = (133)_8$</p>
+
+        <p> $(1011011)_2 \rightarrow (?)_ {16}$ (Base 16, $n=4$)</p>
+        <p> Regroupement par 4 bits : $(\underline{0101} \, \underline{1011})_2$ (ajout de zéros à gauche)</p>
+        <p> $0101_2 = 5_{16}$ </p>
+        <p> $1011_2 = 11_{10} = B_{16}$ </p>
+        <p> Donc, $(1011011)_2 = (5B)_{16}$</p>
+        <div class="placeholder">[Placeholder: Diagram showing the grouping of bits for the example (1011011)2 conversions.]</div>
+
+        <h4>I.5.5 Base $i$ vers base $j$</h4>
+        <p>Pour convertir un nombre d'une base $i$ quelconque vers une base $j$ quelconque :</p>
+        <ul>
+            <li>Si $i$ et $j$ sont toutes deux des puissances de 2 (par exemple, base 8 vers base 16), on utilise la base 2 comme relais : Base $i \rightarrow$ Base 2 $\rightarrow$ Base $j$.</li>
+        </ul>
+        <p class="example">1.10</p>
+        <p> Convertir $(67,2)_8$ en base 16.</p>
+        <p> Étape 1: Base 8 $\rightarrow$ Base 2 (groupes de 3 bits)</p>
+        <p> $6_8 = 110_2$, $7_8 = 111_2$, $2_8 = 010_2$ </p>
+        <p> $(67,2)_8 = (110 \, 111 , 010)_2$ </p>
+        <p> Étape 2: Base 2 $\rightarrow$ Base 16 (groupes de 4 bits)</p>
+        <p> $(\underline{0011} \, \underline{0111} , \underline{0100})_2$ (ajout zéros à gauche et droite)</p>
+        <p> $0011_2 = 3_{16}$, $0111_2 = 7_{16}$, $0100_2 = 4_{16}$ </p>
+        <p> Résultat : $(67,2)_8 = (37,4)_{16}$ </p>
+
+        <ul>
+            <li>Sinon (si l'une des bases n'est pas une puissance de 2, ou si elles ne sont pas reliées simplement), on utilise la base 10 comme relais : Base $i \rightarrow$ Base 10 $\rightarrow$ Base $j$.</li>
+        </ul>
+        <p class="example">1.11</p>
+        <p> Convertir $(123)_5$ en base 7.</p>
+        <p> Étape 1: Base 5 $\rightarrow$ Base 10</p>
+        <p> $(123)_5 = 1 \cdot 5^2 + 2 \cdot 5^1 + 3 \cdot 5^0 = 1 \cdot 25 + 2 \cdot 5 + 3 \cdot 1 = 25 + 10 + 3 = (38)_{10}$ </p>
+        <p> Étape 2: Base 10 $\rightarrow$ Base 7 (divisions successives)</p>
+        <p> $38 \div 7 = 5$ reste $\mathbf{3}$ (LS Digit)</p>
+        <p> $5 \div 7 = 0$ reste $\mathbf{5}$ (MS Digit)</p>
+        <p> Résultat (lecture inverse des restes) : $(53)_7$.</p>
+        <p> Donc, $(123)_5 = (53)_7$.</p>
+
+         <div class="page-footer">
+           <p>12       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+    <hr style="margin: 40px 0;">
+
+    <section id="chapitre2">
+        <div class="chapter-header">Chapitre II</div>
+        <h2>Codage des nombres dans les machines numériques</h2>
+
+         <div class="historical-note">
+            <div class="text">
+                <p><strong>Blaise Pascal</strong><br>
+                * 19 juin 1623, Clermont, France<br>
+                † 19 août 1662, Paris, France</p>
+                <p class="special-chars">« Ami lecteur, cet avertiſſement ſervira pour te faire ſavoir que j'expoſe au public une petite machine de mon invention, par le moyen de laquelle ſeul tu pourraſ, ſanſ peine quelconque, faire touteſ leſ opérationſ de l'arithmétique, et te ſoulager du travail qui t'a ſouvent fatigué l'eſprit, lorſque tu aſ opéré par le jeton ou par la plume : je puiſ, ſanſ préſomption, eſpérer qu'elle ne te déplaira paſ, aprèſ que Monſeigneur le Chancelier l'a honorée de ſon eſtime, et que, danſ Pariſ, ceux qui ſont leſ mieux verſeſ aux mathématiquef ne l'ont paſ jugée indigne de leur approbation. Néanmoinſ, pour ne paſ paraître négligent à lui faire acquérir auſſi la tienne, j'ai cru être obligé de t'éclairer ſur touteſ leſ difficultéſ que j'ai eſtiméeſ capableſ de choquer ton ſenſ lorſque tu prendraſ la peine de la conſidérer. »</p>
+                <p style="text-align: right;">(Blaiſe Paſcal, Aviſ néceſſaire à ceux qui auront curioſité de voir la machine d'arithmétique, et de ſ'en ſervir, 1645).</p>
+
+            </div>
+            <div class="image-placeholder placeholder">[Placeholder: Portrait of Blaise Pascal]</div>
+        </div>
+
+        <p>Les systèmes logiques sont constitués de mécanismes qui ne permettent de noter que 2 états : « 0 » ou « 1 ». Une mémoire élémentaire est donc une unité (appelée <strong>bit</strong>) contenant « 0 » ou « 1 ». Plusieurs de ces unités sont assemblées pour représenter un nombre binaire.</p>
+
+        <p class="example">2.1</p>
+        <p>Mémoire de 8 bits :</p>
+        <div class="placeholder">[Placeholder: Diagram of an 8-bit memory register. Showing 8 boxes labeled with weights $2^7$ down to $2^0$. Arrows indicating 'ordre d'écriture' (write order) and 'ordre de lecture' (read order). Below, an arrow pointing to 'valeur en bits' (value in bits).]</div>
+        <p>Ces mémoires (bits) sont indissociables et l'ordre d'assemblage (leur position) donne le poids de chaque bit.</p>
+
+        <div class="page-footer">
+           <p>13</p>
+        </div>
+
+    </section>
+
+    <section id="representation-entiers">
+        <h3>II.1 Représentation des nombres entiers positifs</h3>
+        <p>Les nombres entiers positifs (ou non signés) sont représentés en binaire pur sur $n$ bits, où $n$ est le nombre d'unités mémoires (bits) allouées (par exemple, $n=8, 16, 32, 64, \dots$).</p>
+        <p>Avec $n$ bits, on peut représenter des nombres allant de 0 (tous les bits à 0) à $2^n - 1$ (tous les bits à 1).</p>
+
+        <h3>II.2 Représentation binaire des entiers signés</h3>
+        <p>Traditionnellement on met un signe « - » pour représenter les nombres négatifs. Mais les systèmes logiques ne permettent de présenter qu'un des deux symboles « 0 » et « 1 », il faut donc chercher une convention pour remplacer le signe « - ».</p>
+
+        <h4>II.2.1 Représentation module et signe (Sign and Magnitude)</h4>
+        <p>Solution la plus simple : on ajoute un élément binaire (bit) à gauche du module (la valeur absolue du nombre en binaire) pour représenter le signe.</p>
+        <p>Convention usuelle :</p>
+        <ul>
+            <li>Le bit de signe est 0 pour un nombre positif.</li>
+            <li>Le bit de signe est 1 pour un nombre négatif.</li>
+        </ul>
+        <p>Formellement : $\begin{cases} 0 \leftrightarrow + \\ 1 \leftrightarrow - \end{cases}$ (le bit le plus à gauche est le bit de signe).</p>
+
+        <p class="example">2.2</p>
+        <p>Représentation Signe-Module avec 4 bits (1 bit de signe, 3 bits de module). Les valeurs vont de -(2³-1) à +(2³-1), soit -7 à +7.</p>
+        <table>
+            <thead>
+                <tr><th>Signe</th><th>Module</th><th>Valeur</th><th>Signe</th><th>Module</th><th>Valeur</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>111</td><td>-7</td><td>0</td><td>111</td><td>7</td></tr>
+                <tr><td>1</td><td>110</td><td>-6</td><td>0</td><td>110</td><td>6</td></tr>
+                <tr><td>1</td><td>101</td><td>-5</td><td>0</td><td>101</td><td>5</td></tr>
+                <tr><td>1</td><td>100</td><td>-4</td><td>0</td><td>100</td><td>4</td></tr>
+                <tr><td>1</td><td>011</td><td>-3</td><td>0</td><td>011</td><td>3</td></tr>
+                <tr><td>1</td><td>010</td><td>-2</td><td>0</td><td>010</td><td>2</td></tr>
+                <tr><td>1</td><td>001</td><td>-1</td><td>0</td><td>001</td><td>1</td></tr>
+                <tr><td>1</td><td>000</td><td>-0</td><td>0</td><td>000</td><td>+0</td></tr>
+            </tbody>
+        </table>
+        <p><strong>Problème :</strong> on a ici deux représentations différentes pour le zéro : $0000$ (+0) et $1000$ (-0). Ceci complique les opérations arithmétiques et les comparaisons.</p>
+
+         <div class="page-footer">
+           <p>14       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+    <section id="complements">
+        <h4>II.2.2 Représentation en complément restreint (Complément à 1, One's Complement)</h4>
+        <p>Pour représenter un nombre négatif $-A$, on part de la représentation du nombre positif $A$ et on inverse (complémente) tous ses bits (y compris le bit qui sera interprété comme signe).</p>
+        <p>Notation: $-A \Leftrightarrow \bar{A}$</p>
+        <p>Comme dans le cas précédent (Signe-Module), la nature (signe) du nombre est donnée par le premier bit (bit de poids fort) :</p>
+        <p> $\begin{cases} 0 \leftrightarrow \text{positif ou nul} \\ 1 \leftrightarrow \text{négatif} \end{cases}$ </p>
+
+        <p class="example">2.3</p>
+        <p>Avec 4 bits :</p>
+        <p> $5_{10} \rightarrow 0101_2$</p>
+        <p> $-5_{10} \rightarrow \overline{0101}_2 = 1010_2$ (en complément à 1)</p>
+
+        <p><strong>Problème :</strong> De nouveau, on a deux représentations différentes pour le zéro.</p>
+        <ul>
+            <li>$+0 \rightarrow 0000$</li>
+            <li>$-0 \rightarrow \overline{0000} = 1111$</li>
+        </ul>
+
+        <h4>II.2.3 Représentation en complément vrai (Complément à 2, Two's Complement)</h4>
+        <p>C'est la représentation la plus utilisée pour les entiers signés dans les ordinateurs. Le bit le plus à gauche est encore le bit de signe :</p>
+        <p> $\begin{cases} 0 \leftrightarrow \text{positif ou nul} \\ 1 \leftrightarrow \text{négatif} \end{cases}$ </p>
+        <p>Pour obtenir la représentation d'un nombre négatif $-A$ à partir de celle du nombre positif $A$ :</p>
+        <ol>
+            <li>On calcule le complément à 1 de A (on inverse tous les bits de A) : $\bar{A}$.</li>
+            <li>On ajoute 1 au résultat : $\bar{A} + 1$.</li>
+        </ol>
+        <p>Donc, $-A \Leftrightarrow \bar{A} + 1$. Cette opération est appelée <strong>complément à 2</strong>.</p>
+        <p>Alternativement, on peut obtenir le complément à 2 en partant du bit de droite (LSB), en recopiant les bits jusqu'au premier '1' rencontré (inclus), puis en inversant tous les bits suivants vers la gauche.</p>
+
+        <p>Exemple de calcul pour $-A$ (représentation de $A$ sur $n$ bits $a_{n-1} \dots a_0$):</p>
+        <p>$A = a_{n-1} \dots a_0$</p>
+        <p>$\bar{A} = \overline{a_{n-1}} \dots \overline{a_0}$ (complément à 1)</p>
+        <p>$-A = \bar{A} + 1$ (complément à 2)</p>
+
+        <p class="remark">2.1</p>
+        <ul>
+            <li>Pour passer d'une valeur négative (en complément à 2) à la valeur positive correspondante, on applique aussi le complément à 2 (l'opération est réversible). $-(-A) \Leftrightarrow \overline{(\bar{A}+1)} + 1 = A$.</li>
+            <li><strong>Avantage principal :</strong> Une seule représentation pour le zéro ($00...0$). Le complément à 2 de $00...0$ est $\overline{00...0} + 1 = 11...1 + 1 = (1)00...0$. En ignorant la retenue sortante (car on représente sur $n$ bits seulement), on retrouve $00...0$.</li>
+            <li>Avec des mots de $n$ bits, on obtient $2^n$ valeurs différentes. La plage de valeurs représentables est asymétrique :
+                <ul>
+                    <li>Valeurs positives : de $0$ à $2^{n-1} - 1$ (bit de signe 0)</li>
+                    <li>Valeurs négatives : de $-1$ à $-2^{n-1}$ (bit de signe 1)</li>
+                 </ul>
+             </li>
+        </ul>
+        <p><sup>1</sup> On complémente chaque coefficient (bit).</p>
+        <p><sup>2</sup> Car on représente sur $n$ bits seulement (la retenue éventuelle sur le $(n+1)$-ième bit est ignorée lors de l'addition $\bar{A}+1$).</p>
+
+         <div class="page-footer">
+           <p>© M. Siadat & C. Diou       15</p>
+        </div>
+    </section>
+
+    <section id="complement-suite">
+         <p class="example">2.4</p>
+         <p>Plage de valeurs en complément à 2 pour $n=8$ bits :</p>
+         <p>$n=8 \Rightarrow \begin{cases} \text{nb positifs (bit signe=0): } 0 \text{ à } 2^{8-1}-1 = 127 \\ \text{nb négatifs (bit signe=1): } -1 \text{ à } -2^{8-1} = -128 \end{cases}$</p>
+         <p>Donc, la plage va de -128 à +127.</p>
+         <p>Note: Le bit de signe indique si le nombre est $\ge 0$ (bit 0) ou $< 0$ (bit 1).</p>
+
+        <p>Règles de remplissage pour l'extension de signe :</p>
+        <ul>
+             <li>Pour représenter un nombre positif sur une mémoire de taille donnée (plus grande que nécessaire), on complète les cases vides de gauche par des 0 (extension du bit de signe 0).</li>
+             <li>Pour représenter un nombre négatif (en complément à 2) sur une mémoire de taille donnée, on complète les cases vides de gauche par des 1 (extension du bit de signe 1).</li>
+        </ul>
+
+        <p class="example">2.5</p>
+        <p>Représenter +13 et -13 sur 8 bits en complément à 2.</p>
+        <p> $+13_{10} = 1101_2$. Sur 8 bits : $00001101_2$. (Bit de signe 0, complété par des 0)</p>
+        <p> Pour -13 :</p>
+        <ol>
+            <li>Partir de +13 sur 8 bits : $00001101$</li>
+            <li>Complément à 1 : $11110010$</li>
+            <li>Ajouter 1 : $11110011$</li>
+        </ol>
+        <p> Donc, $-13_{10}$ sur 8 bits est $11110011_2$. (Bit de signe 1, complété par des 1)</p>
+
+        <h4>II.2.4 Représentation en code relatif à $2^{n-1}$ (Excess-$K$ ou Biased Representation)</h4>
+        <p>Les nombres $x$ sont représentés par la valeur binaire de $x + K$, où $K$ est le biais (offset). Souvent, $K = 2^{n-1}$ ou $K = 2^{n-1}-1$. Ici, le texte mentionne $K=2^{n-1}$.</p>
+        <p>Les nombres $x$ sont représentés par la valeur binaire (non signée) de $x + 2^{n-1}$.</p>
+        <p>On constate ici que le bit de signe est inversé par rapport aux représentations précédentes (0 pour négatif, 1 pour positif, si $K=2^{n-1}$). Ce code est en fait identique au codage en complément à 2 avec le bit de signe complémenté (inversé).</p>
+        <p>Pour calculer l'inverse d'un nombre $(-x)$ en relatif à $2^{n-1}$ à partir de $x$, on peut faire comme en complément à 2 : complémenter le nombre (bit à bit) puis ajouter 1. (Cette affirmation semble lier cette représentation au complément à 2 de manière spécifique).</p>
+        <p><strong>Note :</strong> Cette représentation est principalement utilisée pour coder l'exposant dans les formats de nombres à virgule flottante (voir section II.3.3).</p>
+
+
+        <h3>II.3 Représentation des nombres réels dans un calculateur</h3>
+        <p>Dans un calculateur, un nombre est toujours stocké sous forme d'un bloc de $n$ bits (e.b.), qui est fondamentalement interprété comme un entier (que nous pouvons nommer $N$).</p>
+        <p>Pour représenter les nombres fractionnaires (réels), il est nécessaire de définir la position de la virgule (point binaire). Pour ce faire, il existe deux méthodes principales : virgule fixe et virgule flottante.</p>
+
+        <h4>II.3.1 La représentation en virgule fixe (Fixed-Point)</h4>
+        <p>On décide que la virgule binaire est toujours à une position fixe prédéterminée dans le mot de $n$ bits. Un entier $N$ stocké en mémoire peut être représentatif d'un nombre fractionnaire si on connaît la place implicite de la virgule.</p>
+
+        <p class="example">2.6</p>
+        <p>Supposons une représentation sur $N_{tot}$ bits au total, avec la virgule placée de telle sorte qu'il y ait $K$ bits après la virgule (partie fractionnaire). Il reste donc $N_{tot}-K$ bits pour la partie entière.</p>
+        <p>La valeur $N$ (l'entier binaire stocké) représente alors le nombre réel $Valeur = N \times 2^{-K}$.</p>
+        <p>Les poids des bits vont de $2^{N_{tot}-1-K}$ (pour le bit le plus à gauche de la partie entière) jusqu'à $2^{-K}$ (pour le bit le plus à droite, LSB).</p>
+        <p>Si $N$ est l'entier non signé stocké (valeur de 0 à $2^{N_{tot}}-1$), la plage des nombres réels positifs représentables est :</p>
+        <p>$0 \le Valeur \le (2^{N_{tot}}-1) \times 2^{-K}$</p>
+
+        <div class="page-footer">
+           <p>16       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+    <section id="virgule-fixe-flottante">
+
+        <p>Cas particulier : Virgule au rang $K=0$ (aucun bit après la virgule).</p>
+        <p>La valeur $N$ (l'entier binaire sur $N_{tot}$ bits) a les poids $2^{N_{tot}-1} \dots 2^0$.</p>
+        <p>La plage des nombres est $0 \le N \le 2^{N_{tot}}-1$. C'est la représentation standard des entiers non signés.</p>
+
+        <p><strong>Inconvénients de la méthode en virgule fixe :</strong></p>
+        <ul>
+            <li>Problème de gestion de la virgule, notamment dans les multiplications (le nombre de bits fractionnaires peut doubler). Pour les additions et soustractions, pas de problème si les opérandes ont la même position de virgule, la position de la virgule ne change pas.</li>
+            <li>Utilisation limitée lorsqu'on traite des données de grandeurs très différentes. On doit choisir une position fixe pour la virgule, ce qui impose un compromis entre la plage de valeurs (magnitude) et la précision (nombre de bits après la virgule). On doit prendre un grand nombre total de bits ($N_{tot}$) de part et d'autre de la virgule pour pouvoir représenter à la fois des grandeurs très faibles et des grandeurs très importantes, ce qui est inefficace.</li>
+        </ul>
+
+        <p class="example">2.7</p>
+        <p>Si on décide d'utiliser, par exemple, 4 bits au total, avec 2 bits pour la partie entière et 2 bits pour la partie fractionnaire (K=2). Les poids sont $2^1, 2^0, 2^{-1}, 2^{-2}$.</p>
+        <p>La plus grande valeur représentable est $11,11_2 = 2+1+0.5+0.25 = 3.75_{10}$.</p>
+        <p>On ne peut pas représenter $256.1$ avec ce format (ni même 4.0).</p>
+
+
+        <h4>II.3.2 La représentation en virgule flottante simplifiée (Simplified Floating-Point)</h4>
+
+        <h5>II.3.2.a Introduction [WWW01]</h5>
+        <p>Il arrive dans de nombreux domaines que l'intervalle des valeurs numériques pertinentes soit particulièrement étendu. L'astronomie en est un exemple extrême puisque certains calculs peuvent faire intervenir simultanément la masse du soleil (environ $2 \times 10^{30}$ kg) et la masse de l'électron (environ $9.1 \times 10^{-31}$ kg). Ces deux nombres diffèrent de plus de 60 ordres de grandeur ($10^{60}$)!</p>
+        <p>Des calculs faisant intervenir ces nombres pourraient s'effectuer en précision multiple, avec par exemple des nombres de 62 digits décimaux. Tous les opérandes et tous les résultats seraient représentés par des nombres de 62 digits. Cependant, la masse du soleil n'est connue qu'avec une précision d'environ 5 digits significatifs, et il n'y a en physique pratiquement aucune mesure que l'on puisse réaliser avec une précision de 62 digits. Une solution serait alors d'effectuer les calculs avec une précision (longueur totale) de 62 digits et de laisser tomber (arrondir) 50 ou 60 d'entre eux avant d'annoncer les résultats, mais ceci est coûteux à la fois en espace mémoire et en temps de calcul.</p>
+        <p>En fait, ce qu'il faut est un système permettant de représenter des nombres, tel que la taille de l'intervalle des nombres "exprimables" (la plage de valeurs possibles) soit indépendante du nombre de digits significatifs (la précision).</p>
+
+        <h5>II.3.2.b Principe de la représentation en virgule flottante</h5>
+        <p>Le nombre $N$ est représenté sous une forme similaire à la notation scientifique, généralement $N = M \times B^E$, où :</p>
+        <ul>
+            <li>$M$ est la <strong>mantisse</strong> (ou significande), qui contient les chiffres significatifs du nombre.</li>
+            <li>$B$ est la <strong>base</strong> (généralement 2 pour les ordinateurs).</li>
+            <li>$E$ est l'<strong>exposant</strong>, qui indique la position de la virgule.</li>
+        </ul>
+        <p>Le nombre total de bits alloué est divisé en champs pour stocker (généralement) le signe de la mantisse, l'exposant (lui-même signé ou biaisé), et la mantisse elle-même.</p>
+        <p>Le format de stockage est typiquement :</p>
+        <table class="memory-layout">
+             <tr><td>(Signe)</td><td>Exposant</td><td>Mantisse</td></tr>
+        </table>
+
+        <div class="page-footer">
+           <p>© M. Siadat & C. Diou       17</p>
+        </div>
+    </section>
+
+    <section id="virgule-flottante-approches">
+
+        <h5>Première approche (illustrative, non-standard)</h5>
+        <p>Soit un nombre $N$ en binaire, par exemple $a_3 a_2 a_1 a_0 , a_{-1} a_{-2} a_{-3}$. On peut le noter en déplaçant la virgule pour obtenir une forme "normalisée" (ici, forme entière) multipliée par une puissance de 2.</p>
+        <p>$N = (a_3 a_2 a_1 a_0 a_{-1} a_{-2} a_{-3}) \times 2^{-3}$</p>
+        <p>Ici, $(a_3 a_2 a_1 a_0 a_{-1} a_{-2} a_{-3})$ serait la mantisse (représentée comme un entier) et $-3$ serait l'exposant.</p>
+        <p>Le document donne l'exemple: $(a_6 a_5 a_4 a_3 a_2 a_1 a_0) \times 2^{-3}$</p>
+        <p>$\Rightarrow \begin{cases} \text{exposant} = -3 \\ \text{mantisse} = a_6 a_5 a_4 a_3 a_2 a_1 a_0 \end{cases}$</p>
+        <p>Les valeurs de la mantisse et de l'exposant seraient notées (par exemple) en complément à 2 en mémoire.</p>
+
+        <p class="example">2.8</p>
+        <p>Soit la mémoire de taille suivante : 4 bits pour l'exposant, 12 bits pour la mantisse.</p>
+        <table class="memory-layout">
+            <tr><td>Exposant (4 bits)</td><td>Mantisse (12 bits)</td></tr>
+        </table>
+        <p>Coder la valeur $26,75_{10}$ en virgule flottante selon cette approche.</p>
+        <p>1. Conversion en binaire : $(26,75)_{10} = (11010,11)_2$. (car $16+8+2 + 0.5+0.25 = 26.75$)</p>
+        <p>2. Déplacer la virgule pour avoir une mantisse "entière" (selon l'exemple). Il y a 2 bits après la virgule, donc on peut écrire :</p>
+        <p>$(11010,11)_2 = (1101011)_2 \times 2^{-2}$. (Ici l'exposant serait -2).</p>
+        <p>   *Note: Le document PDF obtient $2^{-3}$ et une mantisse différente. Recalculons en suivant le PDF: $(11010,11)_2 = (11010,110)_2$. Si on veut une mantisse $11010110$, il faut multiplier par $2^{-3}$: $(11010110) \times 2^{-3} = (11010,110)_2$.*</p>
+        <p>3. On a donc :</p>
+        <p>$\Rightarrow \begin{cases} \text{exposant} = -3 \\ \text{mantisse} = 11010110_2 \end{cases}$</p>
+        <p>4. Coder l'exposant et la mantisse (en complément à 2 si besoin, ici supposons-le) sur les bits alloués.</p>
+        <p>   Exposant -3 sur 4 bits (complément à 2) : +3 = 0011, $\bar{3}=1100$, $\bar{3}+1=1101$. Exposant = $1101$.</p>
+        <p>   Mantisse $11010110_2$ sur 12 bits : $000011010110_2$.</p>
+        <p>5. Stockage en mémoire :</p>
+        <table class="memory-layout">
+            <tr><td>1101</td><td>000011010110</td></tr>
+            <tr><td>(exp=-3)</td><td>(mantisse=214)</td></tr>
+        </table>
+        <p>Le nombre stocké représente $214 \times 2^{-3} = 214 / 8 = 26,75$.</p>
+        <div class="placeholder">[Placeholder: Diagram showing the memory layout with 1101 in the exponent field and 000011010110 in the mantisse field.]</div>
+
+
+        <h5>Deuxième approche (plus proche des standards)</h5>
+        <p>Méthode inverse $\rightarrow$ on considère que la mantisse est une valeur fractionnaire, avec la virgule implicite placée juste après le premier bit (ou avant, selon la convention). Le bit le plus à gauche de la mantisse a un poids fixe, par exemple $2^0$ ou $2^{-1}$.</p>
+        <p>Soit $N = a_3 a_2 a_1 a_0 , a_{-1} a_{-2} a_{-3}$.</p>
+        <p>On peut normaliser en déplaçant la virgule pour avoir une forme $0,xxxxx... \times 2^E$ ou $1,xxxxx... \times 2^E$.</p>
+        <p>L'exemple du PDF suggère une forme $(0, a_{-1} a_{-2} a_{-3} a_{-4} a_{-5} a_{-6} a_{-7}) \times 2^4$.</p>
+        <p>$\Rightarrow \begin{cases} \text{exposant} = 4 \\ \text{mantisse} = 0, a_{-1} a_{-2} a_{-3} a_{-4} a_{-5} a_{-6} a_{-7} \end{cases}$ (la mantisse est stockée sans le '0,')</p>
+
+        <p class="example">2.9</p>
+        <p>Même exemple que précédemment : Coder $26,75_{10}$ en utilisant cette approche.</p>
+        <p>$(26,75)_{10} = (11010,11)_2$.</p>
+        <p>On normalise pour avoir la forme $0.1xxxxx... \times 2^E$ ou $1.xxxxx... \times 2^E$.</p>
+        <p>Forme $1.xxxxx...$: $(11010,11)_2 = 1,101011 \times 2^4$.</p>
+        <p>Forme $0.1xxxxx...$: $(11010,11)_2 = 0,1101011 \times 2^5$.</p>
+        <p>Si on suit la forme $0, \dots \times 2^E$ de l'exemple PDF :</p>
+        <p>$\Rightarrow \begin{cases} \text{exposant} = 5 \\ \text{mantisse} = 1101011 \end{cases}$ (on stocke les bits après le '0,')</p>
+        <p>Codage avec 4 bits exposant, 12 bits mantisse:</p>
+        <p>   Exposant +5 sur 4 bits (complément à 2) : $0101$.</p>
+        <p>   Mantisse $1101011$ sur 12 bits : $110101100000$. (Complété par des 0)</p>
+        <p>Stockage :</p>
+         <table class="memory-layout">
+            <tr><td>0101</td><td>110101100000</td></tr>
+        </table>
+        <p>Vérification : La mantisse représente $0.1101011_2 = 0.5+0.25+0.0625+0.015625+0.0078125 = 0.8359375$.</p>
+        <p>$0.8359375 \times 2^5 = 0.8359375 \times 32 = 26.75$. C'est correct.</p>
+         <div class="placeholder">[Placeholder: Diagram showing the memory layout with 0101 in the exponent field and 110101100000 in the mantisse field.]</div>
+
+         <div class="page-footer">
+           <p>18       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+    <section id="ieee754">
+        <p class="remark">2.2</p>
+        <p>Les ordinateurs utilisent cette représentation (virgule flottante) avec souvent 32 bits au total (simple précision) ou 64 bits (double précision). En général, on utilise la représentation normalisée où la mantisse est de la forme $1,xxxx...$ (le '1' avant la virgule est implicite et non stocké pour économiser un bit), et le bit le plus à gauche de la mantisse stockée représente $2^{-1}$. La mantisse $M$ (ou significande) vérifie donc $1 \le M < 2$ (ou $0.5 \le M < 1$ selon la convention exacte).</p>
+
+        <h3>II.3.3 La représentation IEEE 754 [WWW01]</h3>
+        <p>C'est le standard le plus répandu pour l'arithmétique en virgule flottante.</p>
+
+        <h4>II.3.3.a Présentation</h4>
+        <p>Le standard IEEE 754 définit trois formats principaux :</p>
+        <ul>
+            <li><strong>Simple précision (32 bits) :</strong> 1 bit de signe, 8 bits d'exposant, 23 bits de mantisse.</li>
+            <li><strong>Double précision (64 bits) :</strong> 1 bit de signe, 11 bits d'exposant, 52 bits de mantisse.</li>
+            <li><strong>Précision étendue (souvent 80 bits en interne) :</strong> Utilisée par les processeurs pour minimiser les erreurs d'arrondi pendant les calculs intermédiaires.</li>
+        </ul>
+
+        <p>Format simple précision (32 bits) :</p>
+        <table class="memory-layout">
+             <tr><td>s (1 bit)</td><td>exposant (8 bits)</td><td>mantisse (23 bits)</td></tr>
+        </table>
+        <ul>
+            <li>Le signe « s » est codé sur 1 bit (0 pour positif, 1 pour négatif).</li>
+            <li>L'exposant est codé sur 8 bits en <strong>code relatif à 127</strong> (Excess-127). C'est-à-dire que la valeur stockée $E_{stocké}$ représente l'exposant réel $E = E_{stocké} - 127$. (Voir §II.2.4 page 16).</li>
+            <li>La mantisse est stockée sur 23 bits. Elle représente la partie fractionnaire d'un nombre normalisé de la forme $1,fraction$. Le '1' avant la virgule est <strong>implicite</strong> et n'est pas stocké. La valeur représentée par la mantisse est donc $M = 1 + \text{valeur des 23 bits stockés}$. La valeur complète du nombre est $(-1)^s \times M \times 2^E = (-1)^s \times (1 + \text{fraction}) \times 2^{E_{stocké}-127}$.</li>
+        </ul>
+
+        <p>Format double précision (64 bits) :</p>
+        <ul>
+            <li>1 bit de signe (s).</li>
+            <li>11 bits d'exposant, codé en relatif à 1023 (Excess-1023). $E = E_{stocké} - 1023$.</li>
+            <li>52 bits de mantisse (partie fractionnaire après le '1,' implicite).</li>
+            <li>Valeur = $(-1)^s \times (1 + \text{fraction}) \times 2^{E_{stocké}-1023}$.</li>
+        </ul>
+
+        <p>Pour une mantisse normalisée, elle commence toujours par un bit 1 (implicite), suivi par la virgule, puis par le reste de la mantisse (les bits stockés). Le bit initial (toujours présent et toujours à 1 dans une mantisse normalisée) est implicite et non représenté. La valeur de la mantisse $M$ (appelée <strong>significande</strong>) a donc une valeur implicite $1 \le M < 2$.</p>
+
+        <p class="example">2.10</p>
+        <p>Représenter le nombre 1 en format IEEE 754 simple précision.</p>
+        <p>$1 = + 1,0 \times 2^0$.</p>
+        <ul>
+            <li>Signe $s=0$.</li>
+            <li>Exposant réel $E=0$. Exposant stocké $E_{stocké} = E + 127 = 0 + 127 = 127$. En binaire sur 8 bits : $127_{10} = 01111111_2$.</li>
+            <li>Mantisse : La forme est $1,0$. Le '1,' est implicite. La partie fractionnaire est $0$. Les 23 bits stockés sont tous à 0.</li>
+        </ul>
+        <p>Code(1) = $\underbrace{0}_{s} | \underbrace{01111111}_{e} | \underbrace{00000000000000000000000}_{m}$</p>
+        <p>En hexadécimal : $0011 \, 1111 \, 1000 \, \dots \, 0000_2 = 3F800000_{16}$.</p>
+
+        <p>Représenter le nombre 0.5 en format IEEE 754 simple précision.</p>
+        <p>$0.5 = + 1,0 \times 2^{-1}$.</p>
+         <ul>
+            <li>Signe $s=0$.</li>
+            <li>Exposant réel $E=-1$. Exposant stocké $E_{stocké} = E + 127 = -1 + 127 = 126$. En binaire sur 8 bits : $126_{10} = 01111110_2$.</li>
+            <li>Mantisse : La forme est $1,0$. Le '1,' est implicite. La partie fractionnaire est $0$. Les 23 bits stockés sont tous à 0.</li>
+        </ul>
+        <p>Code(0.5) = $\underbrace{0}_{s} | \underbrace{01111110}_{e} | \underbrace{00000000000000000000000}_{m}$</p>
+        <p>En hexadécimal : $0011 \, 1111 \, 0000 \, \dots \, 0000_2 = 3F000000_{16}$.</p>
+
+        <p>Représenter le nombre 1.5 en format IEEE 754 simple précision.</p>
+        <p>$1.5 = + 1,5 \times 2^0$. Forme normalisée : $1,1 \times 2^0$.</p>
+         <ul>
+            <li>Signe $s=0$.</li>
+            <li>Exposant réel $E=0$. Exposant stocké $E_{stocké} = E + 127 = 0 + 127 = 127$. En binaire sur 8 bits : $01111111_2$.</li>
+            <li>Mantisse : La forme est $1,1$. Le '1,' est implicite. La partie fractionnaire est $1$. Les 23 bits stockés sont $1000...0$.</li>
+        </ul>
+        <p>Code(1.5) = $\underbrace{0}_{s} | \underbrace{01111111}_{e} | \underbrace{10000000000000000000000}_{m}$</p>
+        <p>En hexadécimal : $0011 \, 1111 \, 1100 \, \dots \, 0000_2 = 3FC00000_{16}$.</p>
+
+         <div class="page-footer">
+           <p>© M. Siadat & C. Diou       19</p>
+        </div>
+    </section>
+
+    <section id="ieee754-special">
+        <h4>II.3.3.b Nombres spéciaux (IEEE 754)</h4>
+        <p>En arithmétique à virgule flottante on peut obtenir un résultat valable, ou alors rencontrer un problème de dépassement :</p>
+        <ul>
+            <li><strong>Dépassement par valeur supérieure (Overflow) :</strong> lorsque le résultat est trop grand (en valeur absolue) pour pouvoir être représenté dans le format.</li>
+            <li><strong>Dépassement par valeur inférieure (Underflow) :</strong> lorsque le résultat est trop petit (proche de zéro) pour pouvoir être représenté comme un nombre normalisé.</li>
+        </ul>
+
+        <p><strong>Dépassement par valeur inférieure (Underflow) et Nombres Dénormalisés :</strong></p>
+        <p>Cette situation arrive lorsqu'un résultat est trop petit pour pouvoir être représenté sous forme normalisée (c'est-à-dire $1,fraction \times 2^E$ avec l'exposant $E$ minimal autorisé). Le standard IEEE 754 résout partiellement le problème en autorisant dans ce cas une représentation <strong>dénormalisée</strong>.</p>
+        <p>Une représentation dénormalisée est caractérisée par le fait d'avoir un code d'exposant stocké complètement nul ($E_{stocké} = 00...0$). Ceci est interprété comme une indication spéciale :</p>
+        <ul>
+            <li>L'exposant réel est fixé à la valeur minimale possible pour les nombres normalisés (par exemple, $E = 1 - 127 = -126$ pour simple précision).</li>
+            <li>Le bit de poids fort de la mantisse (normalement implicite et valant 1) est cette fois implicitement considéré comme <strong>0</strong>.</li>
+        </ul>
+        <p>La valeur du nombre dénormalisé est donc $(-1)^s \times (0 + \text{fraction}) \times 2^{E_{min}}$, où $E_{min}$ est l'exposant minimal des nombres normalisés (-126 pour simple précision). Les 23 bits stockés représentent directement la mantisse $0,fraction$.</p>
+        <p>De cette façon, le plus petit nombre positif « exprimable » en simple précision est lorsque l'exposant stocké est 0 et la mantisse stockée est $00...01$ (seul le dernier bit est 1). Sa valeur est $0,0...01 \times 2^{-126} = 2^{-23} \times 2^{-126} = 2^{-149}$. (Le PDF indique $2^{-150} \approx 10^{-45}$, il y a peut-être une nuance dans le calcul ou une approximation).</p>
+        <p>Cependant, il faut remarquer que plus le nombre représenté (dénormalisé) est petit, moins sa mantisse comportera de bits significatifs (les zéros à gauche après la virgule implicite '0,' réduisent la précision). Ce schéma permet une approche « douce » (<em>gradual underflow</em>) du phénomène de dépassement par valeur inférieure, en sacrifiant la précision lorsqu'un résultat est trop petit pour admettre une représentation normalisée.</p>
+
+        <p><strong>Zéro :</strong></p>
+        <p>Zéro est représenté sous la forme d'un nombre dénormalisé particulier : l'exposant stocké est nul ($00...0$) et la mantisse stockée est également nulle ($00...0$).</p>
+        <p>Ceci résulte en deux représentations possibles pour zéro :</p>
+        <ul>
+            <li>+0 : Signe = 0, Exposant = 0...0, Mantisse = 0...0</li>
+            <li>-0 : Signe = 1, Exposant = 0...0, Mantisse = 0...0</li>
+        </ul>
+        <p>Ces représentations sont caractérisées par un bit de signe suivi par 31 zéros (en simple précision).</p>
+
+        <p><strong>Dépassement par valeurs supérieures (Overflow) et Infini :</strong></p>
+        <p>Le dépassement par valeurs supérieures ne peut pas être traité comme le dépassement par valeurs inférieures (on ne peut pas juste perdre de la précision). Il est indiqué par un code d'exposant spécial dont tous les bits sont à 1 ($E_{stocké} = 11...1$).</p>
+        <ul>
+            <li>Si l'exposant stocké est $11...1$ et la mantisse stockée est nulle ($00...0$), ceci est interprété comme représentant l'<strong>infini</strong> ($\infty$).</li>
+            <li>L'infini peut être positif ($+\infty$, si $s=0$) ou négatif ($-\infty$, si $s=1$), en fonction de la valeur du bit de signe.</li>
+            <li>L'infini peut être utilisé dans les calculs et les résultats correspondent au sens commun : $\infty + x = \infty$, $\infty \times \infty = \infty$, $x / 0 = \infty$ (pour $x \ne 0$), $x / \infty = 0$.</li>
+        </ul>
+
+        <p><strong>NaN (Not a Number) :</strong></p>
+        <ul>
+             <li>Si l'exposant stocké est $11...1$ et la mantisse stockée est <strong>non nulle</strong>, ceci représente une valeur spéciale appelée NaN (Not a Number).</li>
+             <li>NaN est le résultat d'opérations invalides, comme $0/0$, $\infty - \infty$, $\sqrt{-1}$.</li>
+             <li>Il existe des NaN silencieux (qNaN) et des NaN de signalisation (sNaN), qui peuvent propager ou déclencher des exceptions.</li>
+         </ul>
+
+        <div class="page-footer">
+           <p>20       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+    <script>
+        // Trigger KaTeX rendering
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
