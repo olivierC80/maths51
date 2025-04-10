@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours d'électronique numérique - Arithmétique et Codage</title>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4 { color: #333; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 5px;}
+        h3 { margin-top: 1.5em; }
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            margin: 20px 0;
+            background-color: #fafafa;
+            min-height: 50px;
+        }
+        figcaption { text-align: center; font-style: italic; margin-top: 5px; color: #555; }
+        table { border-collapse: collapse; margin: 15px auto; /* Center tables */ }
+        th, td { border: 1px solid #ccc; padding: 5px 8px; text-align: center; }
+        th { background-color: #f9f9f9; }
+        ul { list-style: none; padding-left: 0; }
+        ul li::before { content: "-"; padding-right: 8px; color: #555; }
+        .note { border-left: 3px solid #17a2b8; padding: 10px 15px; margin: 15px 0; background-color: #e2f8fb; }
+        .note::before { content: "ℹ️ Note"; font-weight: bold; margin-right: 5px; color: #17a2b8;}
+        .example::before { content: "▷ Exemple"; font-weight: bold; margin-right: 5px;}
+        .remark::before { content: "► Remarque"; font-weight: bold; margin-right: 5px;}
+        .page-footer { text-align: right; margin-top: 30px; font-size: 0.9em; color: #555; }
+        .historical-note { display: flex; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;}
+        .historical-note .text { flex-grow: 1; margin-right: 15px; font-size: 0.9em; font-style: italic; }
+        .historical-note .image-placeholder { width: 100px; height: auto; flex-shrink: 0;}
+        .chapter-header { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; }
+        .special-chars { font-family: 'Times New Roman', Times, serif; font-style: italic; }
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        .code-block { background-color: #f8f8f8; border: 1px solid #eee; padding: 10px; font-family: monospace; white-space: pre; margin: 10px 0; text-align: center;}
+        .explanation { background-color: #fff8e1; border-left: 3px solid #ffc107; padding: 10px 15px; margin: 15px 0; }
+        .summary-table th, .summary-table td { font-size: 0.9em; padding: 4px 6px; }
+        .comparison-table th, .comparison-table td { font-size: 0.9em; padding: 4px 6px; text-align: left;}
+        .comparison-table td:first-child {font-weight: bold;}
+
+    </style>
+</head>
+<body>
+
+    <section id="ieee754-special-suite">
+        <h3>II.3 Représentation des nombres réels dans un calculateur (Suite)</h3>
+        <h4>II.3.3 La représentation IEEE 754 (Suite)</h4>
+        <h5>II.3.3.b Nombres spéciaux (Suite)</h5>
+
+        <p><strong>Not a Number (NaN)</strong></p>
+        <p>Cependant, certaines opérations peuvent ne conduire à aucun résultat exprimable, comme $\infty / \infty$ ou $0 \times \infty$.</p>
+        <p>Le résultat de telles opération est alors indiqué par un autre code spécial : le code d'exposant a tous les bits à 1 ($E_{stocké} = 11...1$), suivi par une mantisse <strong>non nulle</strong>. Le « nombre » correspondant est appelé NaN (<em>Not a Number</em>) : c'est un non-nombre.</p>
+
+        <h5>II.3.3.c Résumé des valeurs IEEE 754 (Simple Précision)</h5>
+        <p>Le tableau suivant résume l'interprétation des combinaisons Exposant/Mantisse en simple précision.</p>
+        <table class="summary-table">
+            <thead>
+                <tr><th>Type de Nombre</th><th>Signe (s)</th><th>Exposant (e) <br>(8 bits)</th><th>Mantisse (m) <br>(23 bits)</th><th>Valeur</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Zéro</td><td>0 / 1</td><td>00000000 (0)</td><td>000...000 (0)</td><td>$(-1)^s \times 0$</td></tr>
+                <tr><td>Nombre dénormalisé</td><td>0 / 1</td><td>00000000 (0)</td><td>quelconque $\ne 0$</td><td>$(-1)^s \times (0 + 0.m) \times 2^{-126}$</td></tr>
+                <tr><td>Nombre normalisé</td><td>0 / 1</td><td>00000001 (1) à <br> 11111110 (254)</td><td>quelconque</td><td>$(-1)^s \times (1 + 0.m) \times 2^{e-127}$</td></tr>
+                <tr><td>Infini ($\infty$)</td><td>0 / 1</td><td>11111111 (255)</td><td>000...000 (0)</td><td>$(-1)^s \times \infty$</td></tr>
+                <tr><td>NaN</td><td>0 / 1</td><td>11111111 (255)</td><td>quelconque $\ne 0$</td><td>NaN</td></tr>
+            </tbody>
+        </table>
+        <p>Note : <code>01 à FE</code> dans le tableau PDF original correspond aux valeurs hexadécimales de l'exposant stocké de 1 à 254. <code>00</code> correspond à 0. <code>FF</code> correspond à 255.</p>
+
+        <p>Comparaison des plages et précisions approximatives :</p>
+        <table class="comparison-table">
+            <thead>
+                <tr><th>Caractéristique (IEEE 754)</th><th>Simple précision (32 bits)</th><th>Double précision (64 bits)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Exposant réel (normalisé)</td><td>-126 à +127</td><td>-1022 à +1023</td></tr>
+                <tr><td>Mantisse (Significande M)</td><td>1 $\le$ M < 2 (23 bits stockés + 1 implicite)</td><td>1 $\le$ M < 2 (52 bits stockés + 1 implicite)</td></tr>
+                <!-- <tr><td>+ petit # normalisé (+)</td><td>$2^{-126}$</td><td>$2^{-1022}$</td></tr> -->
+                <!-- <tr><td>+ grand # normalisé (+)</td><td>presque $2^{128}$</td><td>presque $2^{1024}$</td></tr> -->
+                <tr><td>Intervalle utile approx. (+)</td><td>$\approx 10^{-38}$ à $10^{38}$</td><td>$\approx 10^{-308}$ à $10^{308}$</td></tr>
+                <tr><td>+ petit # dénormalisé (+)</td><td>$2^{-149} \approx 10^{-45}$</td><td>$2^{-1074} \approx 10^{-324}$</td></tr>
+            </tbody>
+        </table>
+        <p>Note : Les valeurs $2^{-23}$ et $2^{-52}$ dans le tableau PDF original représentent la résolution de la mantisse. La valeur du significande $M$ va de $1$ (mantisse stockée = 0) à $2 - 2^{-23}$ (simple) ou $2 - 2^{-52}$ (double) (mantisse stockée = tout à 1).</p>
+
+
+    </section>
+
+    <section id="arithmetique-binaire">
+        <h2>II.4 Arithmétique binaire</h2>
+
+        <h3>II.4.1 Addition</h3>
+        <p>L'addition en binaire se fait avec les mêmes règles qu'en décimal : on commence par additionner les bits de poids faibles; on a des retenues (<em>carry</em>) lorsque la somme de deux bits de même poids (plus une éventuelle retenue entrante) dépasse la valeur de l'unité la plus grande (dans le cas du binaire : 1); cette retenue est reportée sur le bit de poids plus fort suivant.</p>
+
+        <p>La table d'addition binaire pour deux bits A et B est la suivante (S = Somme, C = Retenue sortante) :</p>
+        <table class="summary-table">
+           <thead><tr><th>A</th><th>B</th><th>S = A+B</th><th>C (Retenue)</th></tr></thead>
+           <tbody>
+               <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+               <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+               <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+               <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+           </tbody>
+        </table>
+        <p>Lors de l'addition de nombres multi-bits, on doit aussi considérer la retenue entrante de la colonne précédente.</p>
+
+         <div class="page-footer">
+           <p>© M. Siadat & C. Diou       21</p>
+        </div>
+    </section>
+
+    <section id="addition-overflow">
+         <p class="example">2.11</p>
+         <p>Addition de nombres sur 4 bits (interprétés ici en complément à 2) :</p>
+         <div class="code-block">
+           11   <- Retenues
+           0011  ( 3)
+         + 1010  (-6)
+         -------
+           1101  (-3)
+         </div>
+         <p>Ici, $3 + (-6) = -3$. Le résultat est correct. Le bit de signe de 3 est 0, celui de -6 est 1. Le résultat a un bit de signe 1, ce qui est cohérent.</p>
+
+         <div class="explanation">
+             <strong>Note sur l'Exemple 2.11 (virgule flottante ?) :</strong> Le second exemple dans le PDF page 22 semble additionner $7,75 + 5,25$ et obtenir $-3,00$ avec une indication d'overflow. Cela ne correspond pas à une addition standard en complément à 2. Il pourrait s'agir d'une illustration d'arithmétique en virgule fixe ou d'une erreur. L'interprétation $7,75 = 0111.11$? $5,25 = 0101.01$? L'addition montrée est $0111 + 0101 = 1100$ avec des retenues non standard. L'exemple est omis ici car peu clair.
+             Le texte mentionne ensuite un dépassement de capacité (<em>overflow</em>) car "le bit de signe est à 1 alors qu'il aurait dû être à 0 (addition de deux nombres positifs)". Cela confirme que l'exemple (non reproduit ici) visait à montrer une situation d'overflow.
+         </div>
+
+        <p><strong>Conditions de dépassement (Overflow) lors de l'addition en complément à 2 :</strong></p>
+        <p>Un dépassement de capacité se produit lorsque le résultat de l'addition de deux nombres (représentés sur $n$ bits en complément à 2) ne peut pas être représenté sur $n$ bits. Cela se produit dans deux cas :</p>
+        <ul>
+            <li>Addition de deux nombres positifs dont la somme est trop grande (résultat apparaît négatif).</li>
+            <li>Addition de deux nombres négatifs dont la somme est trop petite (résultat apparaît positif).</li>
+        </ul>
+        <p>L'addition d'un nombre positif et d'un nombre négatif ne peut jamais provoquer d'overflow.</p>
+
+        <p>Le tableau suivant analyse les conditions d'overflow pour une addition sur 16 bits ($A+B=R$). $a_{15}, b_{15}, r_{15}$ sont les bits de signe des opérandes et du résultat. $C_{out}$ est la retenue sortante du bit de signe (bit 15).</p>
+         <table class="summary-table">
+            <caption>Conditions d'overflow (D) en addition 16 bits</caption>
+            <thead><tr><th>$a_{15}$</th><th>$b_{15}$</th><th>$r_{15}$</th><th>Opérandes</th><th>Résultat</th><th>$C_{out}$?</th><th>D (Overflow)</th></tr></thead>
+            <tbody>
+                <tr><td>0</td><td>0</td><td>0</td><td>Positif + Positif</td><td>Positif</td><td>0</td><td>non</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>Positif + Positif</td><td>Négatif !</td><td>0</td><td>oui</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>Positif + Négatif</td><td>Positif</td><td>1 ou 0</td><td>non</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>Positif + Négatif</td><td>Négatif</td><td>1 ou 0</td><td>non</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>Négatif + Positif</td><td>Positif</td><td>1 ou 0</td><td>non</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>Négatif + Positif</td><td>Négatif</td><td>1 ou 0</td><td>non</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>Négatif + Négatif</td><td>Positif !</td><td>1</td><td>oui</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>Négatif + Négatif</td><td>Négatif</td><td>1</td><td>non</td></tr>
+            </tbody>
+         </table>
+         <p>Note : R dans le tableau PDF original signifie la retenue sortante $C_{out}$ du bit le plus significatif (MSB).</p>
+
+        <p>Ce tableau permet de déterminer la condition logique de dépassement (indicateur OF : <em>overflow flag</em>). L'overflow se produit si et seulement si les signes des deux opérandes sont identiques, mais le signe du résultat est différent.</p>
+        <p>Condition logique : $OF = (a_{n-1} \land b_{n-1} \land \overline{r_{n-1}}) \lor (\overline{a_{n-1}} \land \overline{b_{n-1}} \land r_{n-1})$</p>
+        <p>Une autre façon de détecter l'overflow est de comparer la retenue entrante ($C_{in}$) et la retenue sortante ($C_{out}$) du bit de signe (MSB). Il y a overflow si et seulement si $C_{in} \ne C_{out}$ pour le bit de signe.</p>
+        <p>Le texte PDF donne la formule $OF = a_{15} \cdot b_{15} \cdot \overline{r_{15}} + \overline{a_{15}} \cdot \overline{b_{15}} \cdot r_{15}$. C'est correct.</p>
+        <ul>
+            <li>Si $OF = 0$, le résultat sur $n$ bits est correct. Le bit de poids fort ($r_{n-1}$) donne le signe du résultat.</li>
+            <li>Si $OF = 1$, le résultat sur $n$ bits est incorrect. Le texte PDF mentionne que l'indicateur de retenue (Carry Flag, C) donne alors le "signe" du résultat? C'est inhabituel et potentiellement incorrect. Normalement si OF=1, le résultat est invalide.</li>
+        </ul>
+
+        <h3>II.4.2 Soustraction</h3>
+        <p>Dans la soustraction binaire directe ($A - B$), on procède comme en décimal en utilisant un emprunt (<em>borrow</em>) lorsque nécessaire. Quand la quantité à soustraire (bit de B + emprunt entrant) est supérieure à la quantité dont on soustrait (bit de A), on emprunte 1 au voisin de gauche. En binaire, cet emprunt ajoute 2 (car $10_2 = 2_{10}$) à la quantité dont on soustrait.</p>
+        <p>La table de soustraction binaire ($S = A - B$) est la suivante ($B_o$ = Emprunt sortant) :</p>
+        <table class="summary-table">
+           <thead><tr><th>A</th><th>B</th><th>S = A-B</th><th>$B_o$ (Emprunt)</th></tr></thead>
+           <tbody>
+               <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+               <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+               <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+               <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+           </tbody>
+        </table>
+
+        <div class="page-footer">
+           <p>22       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+     <section id="soustraction-complement">
+         <p class="example">2.12</p>
+         <p>Soustraction binaire directe :</p>
+         <div class="code-block">
+           Emprunts: 11  00
+                   101,0  (5.0)
+                 - 011,1  (3.5)
+                 -------
+                   001,1  (1.5)
+
+           Emprunts: 1000
+                   0011  ( 3)
+                 - 1100  (12)  <- Interprétation non signée
+                 -------
+                  ? Impossible directement sans signe ou complément
+         </div>
+         <p>Le deuxième exemple du PDF (3 - 12 = -9) ne peut pas être fait directement avec la soustraction binaire simple sur des nombres non signés ou de taille fixe sans gérer les signes. Il est probable qu'il illustre la nécessité d'utiliser des compléments.</p>
+
+        <p class="remark">2.3</p>
+        <p>Alternativement, et c'est la méthode utilisée dans les processeurs, on peut réaliser la soustraction $A - B$ en utilisant l'addition du complément à 2 de B : $A - B = A + (\text{complément à 2 de } B)$.</p>
+        <p>$A + (\bar{B} + 1)$</p>
+        <p>Dans ce cas, il faut interpréter correctement la retenue sortante (Carry Flag) de l'additionneur. Pour l'opération $A + \bar{B} + 1$, la retenue sortante (Carry) est l'inverse de l'emprunt (Borrow) de la soustraction $A - B$. Autrement dit, si le Carry = 1, il n'y a pas eu d'emprunt global (résultat positif ou nul). Si le Carry = 0, il y a eu un emprunt global (résultat négatif).</p>
+
+        <p class="example">2.13</p>
+        <p>Calculer $7 - 2$ en utilisant le complément à 2 sur 5 bits.</p>
+        <p>$+7 = 00111_2$</p>
+        <p>$+2 = 00010_2$</p>
+        <p>Calculer le complément à 2 de +2 :</p>
+        <ol>
+            <li>Complément à 1 de 00010 : $11101$</li>
+            <li>Ajouter 1 : $11101 + 1 = 11110$. Donc $-2_{10} = 11110_2$ (sur 5 bits).</li>
+        </ol>
+        <p>Additionner $7 + (-2)$ :</p>
+         <div class="code-block">
+ Carry-> 1 1110   <- Retenues
+           00111  ( 7)
+         + 11110  (-2)
+         -------
+         (1)00101  ( 5)
+         </div>
+        <p>On ignore la retenue sortante (le 1 entre parenthèses). Le résultat est $00101_2 = 5_{10}$. C'est correct.</p>
+
+        <h3>II.4.3 Multiplication</h3>
+        <p>La table de multiplication en binaire est très simple :</p>
+        <table class="summary-table">
+           <thead><tr><th>A</th><th>B</th><th>P = A x B</th></tr></thead>
+           <tbody>
+               <tr><td>0</td><td>0</td><td>0</td></tr>
+               <tr><td>0</td><td>1</td><td>0</td></tr>
+               <tr><td>1</td><td>0</td><td>0</td></tr>
+               <tr><td>1</td><td>1</td><td>1</td></tr>
+           </tbody>
+        </table>
+        <p>La multiplication binaire de nombres multi-bits se fait de manière similaire à la multiplication décimale :</p>
+        <ol>
+            <li>On forme des produits partiels pour chaque bit du multiplieur.</li>
+            <li>Si le bit du multiplieur est 0, le produit partiel est nul.</li>
+            <li>Si le bit du multiplieur est 1, le produit partiel est constitué du multiplicande, décalé vers la gauche d'un nombre de positions égal au poids du bit du multiplieur.</li>
+            <li>On additionne tous les produits partiels pour obtenir le résultat final.</li>
+        </ol>
+
+         <div class="page-footer">
+           <p>© M. Siadat & C. Diou       23</p>
+        </div>
+     </section>
+
+     <section id="multiplication-division">
+         <p class="example">2.14</p>
+         <p>Multiplier $5 \times 2$ en binaire.</p>
+         <p>$5_{10} = 101_2$ (Multiplicande)</p>
+         <p>$2_{10} = 010_2$ (Multiplieur)</p>
+          <div class="code-block">
+      101  (Multiplicande)
+    x 010  (Multiplieur)
+    -----
+      000  (Produit partiel pour bit 0 du multiplieur)
+     101   (Produit partiel pour bit 1 du multiplieur, décalé de 1)
+    000    (Produit partiel pour bit 2 du multiplieur, décalé de 2)
+    -----
+    01010  (Somme des produits partiels)
+          </div>
+        <p>Le résultat est $1010_2 = 10_{10}$. C'est correct.</p>
+
+        <p class="remark">2.4</p>
+        <p>La multiplication binaire par $2^N$ (où $N$ est un entier) se résume à un décalage logique de $N$ bits vers la gauche du nombre binaire. On introduit $N$ zéros à droite (pour les bits de poids faible).</p>
+
+        <p class="example">2.15</p>
+        <p>Calculer $8 \times 4$ sur 8 bits.</p>
+        <p>$8_{10} = 00001000_2$.</p>
+        <p>$4 = 2^2$, donc $N=2$. On décale de 2 bits vers la gauche.</p>
+        <p><code>00001000</code> décalé à gauche de 2 bits donne <code>00100000</code>.</p>
+        <p>$00100000_2 = 32_{10}$. Correct.</p>
+        <div class="placeholder">[Placeholder: Diagram showing 00001000 shifted left by 2 to become 00100000.]</div>
+
+        <p>Calculer $-16 \times 4$ sur 8 bits (en complément à 2).</p>
+        <p>$-16_{10}$ sur 8 bits : $+16 = 00010000$. Complément à 1 : $11101111$. Complément à 2 : $11110000$.</p>
+        <p>Décaler $11110000$ de 2 bits vers la gauche :</p>
+        <p><code>11110000</code> $\rightarrow$ <code>11000000</code> (Les bits sortants sont perdus, 0 entre à droite).</p>
+        <p>Vérifions le résultat $11000000_2$. C'est un nombre négatif. Pour trouver sa valeur :</p>
+        <ol>
+            <li>Complément à 1 : $00111111$</li>
+            <li>Ajouter 1 : $01000000_2 = 64_{10}$.</li>
+        </ol>
+        <p>Donc $11000000_2$ représente $-64_{10}$.</p>
+        <p>$-16 \times 4 = -64$. Correct. Le décalage à gauche fonctionne aussi pour les nombres négatifs en complément à 2.</p>
+         <div class="placeholder">[Placeholder: Diagram showing 11110000 shifted left by 2 to become 11000000.]</div>
+
+
+        <h3>II.4.4 Division</h3>
+        <p>La table de division binaire pour 1 bit est triviale, mais la division par 0 est impossible.</p>
+         <table class="summary-table">
+           <thead><tr><th>A</th><th>B</th><th>Q = A / B</th></tr></thead>
+           <tbody>
+               <tr><td>0</td><td>0</td><td>impossible</td></tr>
+               <tr><td>0</td><td>1</td><td>0</td></tr>
+               <tr><td>1</td><td>0</td><td>impossible</td></tr>
+               <tr><td>1</td><td>1</td><td>1</td></tr>
+           </tbody>
+        </table>
+         <p>La division binaire de nombres multi-bits s'effectue à l'aide de soustractions et de décalages, de manière similaire à la division longue en décimal.</p>
+
+         <div class="page-footer">
+           <p>24       © M. Siadat & C. Diou</p>
+        </div>
+     </section>
+
+     <section id="division-resume">
+        <p>Le principe est de voir combien de fois le diviseur "rentre" dans une partie du dividende. Comme on est en binaire, le chiffre du quotient ne peut être que 1 (si on peut soustraire le diviseur) ou 0 (si on ne peut pas).</p>
+        <ol>
+            <li>Aligner le diviseur avec les bits de poids fort du dividende.</li>
+            <li>Si le diviseur est plus petit ou égal à la partie correspondante du dividende, le bit du quotient est 1. On soustrait le diviseur et on note le reste.</li>
+            <li>Si le diviseur est plus grand, le bit du quotient est 0. On ne soustrait pas.</li>
+            <li>On "descend" le bit suivant du dividende pour l'ajouter au reste.</li>
+            <li>On décale le diviseur d'une position vers la droite (ou on décale le reste/dividende vers la gauche).</li>
+            <li>On répète les étapes 2-5 jusqu'à ce que tous les bits du dividende aient été traités.</li>
+        </ol>
+
+        <p class="example">2.16</p>
+        <p>Division du nombre $(10010000111)_2$ par $(1011)_2$.</p>
+        <p>(Dividende = $1159_{10}$, Diviseur = $11_{10}$)</p>
+        <div class="code-block">
+          1101001   <- Quotient = 105_10
+        ---------
+1011 | 10010000111
+     - 1011      (Quotient bit=1. 10010 >= 1011. Soustraire)
+     -----
+       1110      (Reste. Descendre 0)
+      -1011      (Quotient bit=1. 1110 >= 1011. Soustraire)
+      -----
+        0110     (Reste. Descendre 0)
+       - 0000     (Quotient bit=0. 0110 < 1011. Soustraire 0)
+       -----
+         1100    (Reste. Descendre 0)
+        -1011    (Quotient bit=1. 1100 >= 1011. Soustraire)
+        -----
+          0011   (Reste. Descendre 1)
+         - 0000   (Quotient bit=0. 0011 < 1011. Soustraire 0)
+         -----
+           0111  (Reste. Descendre 1)
+          - 0000  (Quotient bit=0. 0111 < 1011. Soustraire 0)
+          -----
+            1111 (Reste. Descendre 1)
+           -1011 (Quotient bit=1. 1111 >= 1011. Soustraire)
+           -----
+             100 (Reste final = 4_10)
+        </div>
+        <p>Le quotient est $(1101001)_2 = 105_{10}$ et le reste est $(100)_2 = 4_{10}$. C'est correct.</p>
+        <div class="placeholder">[Placeholder: Diagram showing the long division process from the PDF.]</div>
+
+
+        <p class="remark">2.5</p>
+        <p>La division binaire (entière) par $2^N$ se résume à un décalage logique de $N$ bits vers la droite. Les bits sortants par la droite constituent le reste (ou sont perdus pour la partie entière).</p>
+        <p>En arithmétique signée (complément à 2), il faut utiliser un décalage arithmétique vers la droite : on décale les bits vers la droite, et on recopie le bit de signe original dans les positions laissées vides à gauche pour préserver le signe.</p>
+
+        <p class="example">2.17</p>
+        <p>Calculer $8 / 4$ sur 8 bits.</p>
+        <p>$8_{10} = 00001000_2$.</p>
+        <p>$4 = 2^2$, donc $N=2$. On décale de 2 bits vers la droite.</p>
+        <p><code>00001000</code> décalé à droite de 2 bits (logique) donne <code>00000010</code>.</p>
+        <p>$00000010_2 = 2_{10}$. Correct.</p>
+        <div class="placeholder">[Placeholder: Diagram showing 00001000 shifted right by 2 to become 00000010.]</div>
+
+
+        <p>Calculer $-16 / 4$ sur 8 bits (complément à 2).</p>
+        <p>$-16_{10} = 11110000_2$.</p>
+        <p>Décaler $11110000$ de 2 bits vers la droite en utilisant un décalage <strong>arithmétique</strong> ($N=2$).</p>
+        <p>Le bit de signe est 1. On décale vers la droite et on insère des 1 à gauche.</p>
+        <p><code>11110000</code> $\rightarrow$ <code>11111000</code> $\rightarrow$ <code>11111100</code>.</p>
+        <p>Vérifions le résultat $11111100_2$. C'est un nombre négatif. Pour trouver sa valeur :</p>
+        <ol>
+            <li>Complément à 1 : $00000011$</li>
+            <li>Ajouter 1 : $00000100_2 = 4_{10}$.</li>
+        </ol>
+        <p>Donc $11111100_2$ représente $-4_{10}$.</p>
+        <p>$-16 / 4 = -4$. Correct.</p>
+         <div class="placeholder">[Placeholder: Diagram showing 11110000 arithmetically shifted right by 2 to become 11111100.]</div>
+
+
+        <h2>II.5 En résumé (Chapitre II)</h2>
+        <ul>
+            <li>La valeur d'un nombre est indépendante de la base dans laquelle il est noté (mais sa représentation change).</li>
+            <li>Un même nombre binaire (séquence de bits) peut avoir plusieurs valeurs différentes selon le système de représentation utilisé (non signé, signe-module, complément à 1, complément à 2).</li>
+        </ul>
+
+        <div class="page-footer">
+           <p>© M. Siadat & C. Diou       25</p>
+        </div>
+    </section>
+
+    <section id="resume-representations">
+        <p>Soit le nombre binaire $a_n a_{n-1} \dots a_1 a_0$ (représenté sur $n+1$ bits). Ce nombre vaut :</p>
+        <ul>
+            <li><strong>En représentation non signée :</strong><br>
+                Valeur = $\sum_{i=0}^{n} a_i 2^i = a_n 2^n + a_{n-1} 2^{n-1} + \dots + a_1 2^1 + a_0 2^0$</li>
+            <li><strong>En représentation signée complément à 2 :</strong><br>
+                Valeur = $-a_n 2^n + \sum_{i=0}^{n-1} a_i 2^i = -a_n 2^n + a_{n-1} 2^{n-1} + \dots + a_1 2^1 + a_0 2^0$ <br>
+                <em>(Note: Si la représentation est sur $N$ bits indicés de 0 à $N-1$, la formule est $-a_{N-1} 2^{N-1} + \sum_{i=0}^{N-2} a_i 2^i$. La formule du PDF suppose $n+1$ bits avec $a_n$ comme bit de signe.)</em></li>
+            <li><strong>En représentation signée complément à 1 :</strong><br>
+                Valeur = $ (1 - a_n 2^n) + \sum_{i=0}^{n-1} a_i 2^i $ ? <br>
+                <em>(Note: Cette formule donnée dans le PDF semble non standard et potentiellement incorrecte pour le complément à 1. La valeur est $A$ si $a_n=0$, et $-(2^n-1-A')$ si $a_n=1$ où $A'$ est la valeur des bits $a_{n-1}...a_0$).</em></li>
+            <li><strong>En représentation module et signe :</strong><br>
+                Valeur = $(-1)^{a_n} \times (\sum_{i=0}^{n-1} a_i 2^i) = (-1)^{a_n} \times (a_{n-1} 2^{n-1} + \dots + a_1 2^1 + a_0 2^0)$</li>
+        </ul>
+        <ul>
+             <li>Les opérations arithmétiques (addition, soustraction, etc.) obéissent en binaire aux mêmes règles générales qu'en décimal, il suffit juste de se rappeler que la base de numération est 2 (et non plus 10). L'utilisation du complément à 2 simplifie notamment la soustraction et la gestion des signes dans les circuits électroniques.</li>
+        </ul>
+        <div class="page-footer">
+           <p>26       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+    <hr style="margin: 40px 0;">
+
+    <section id="chapitre3">
+        <div class="chapter-header">Chapitre III</div>
+        <h2>Les codes numériques</h2>
+
+         <div class="historical-note">
+            <div class="text">
+                <p><strong>Richard Wesley Hamming</strong><br>
+                ★ 11 fév. 1915 à Chicago, E.-U.<br>
+                † 7 jan. 1998 à Monterey, E.-U.</p>
+                <p>« Indeed, one of my major complaints about the computer field is that whereas Newton could say, "If I have seen a little farther than others, it is because I have stood on the shoulders of giants," I am forced to say, "Today we stand on each other's feet.” Perhaps the central problem we face in all of computer science is how we are to get to the situation where we build on top of the work of others rather than redoing so much of it in a trivially different way. Science is supposed to be cumulative, not almost endless duplication of the same kind of things. »</p>
+                <p style="text-align: right;">(Richard W. Hamming, <br> One Man's View of Computer Science, 1968, Turing Award Lecture)</p>
+            </div>
+            <div class="image-placeholder placeholder">[Placeholder: Portrait of Richard Wesley Hamming]</div>
+        </div>
+
+        <p><strong>Codage :</strong> opération qui établit une correspondance entre un ensemble source (nombre, caractère, symbole) vers un ensemble but contenant des combinaisons de 0 et de 1.</p>
+
+        <h3>III.1 Codes numériques pondérés</h3>
+        <p>Dans un code pondéré, chaque position de bit se voit attribuer un poids fixe. La valeur du nombre représenté est la somme des poids pour lesquels le bit correspondant est à 1.</p>
+
+        <h4>III.1.1 Code binaire pur (Pure Binary Code / Natural Binary Code)</h4>
+        <ul>
+            <li>C'est un code pondéré par les puissances successives de 2 ($..., 2^3, 2^2, 2^1, 2^0$).</li>
+            <li>Il est utilisé nativement en arithmétique binaire.</li>
+            <li>Ses dérivées par regroupement de bits sont le code octal (groupes de 3 bits) et le code hexadécimal (groupes de 4 bits).</li>
+        </ul>
+         <div class="page-footer">
+           <p>27</p>
+        </div>
+    </section>
+
+    <section id="bcd">
+         <h4>III.1.2 Code DCB (Décimal Codé Binaire) / BCD (Binary Coded Decimal)</h4>
+         <ul>
+            <li>Chaque chiffre décimal (0, 1, ..., 9) est codé individuellement en binaire, généralement avec 4 bits.</li>
+            <li>Le code BCD le plus courant est pondéré avec les poids 8, 4, 2, 1 pour chaque groupe de 4 bits.</li>
+            <li>Ce code est moins dense que le binaire pur (certaines combinaisons de 4 bits, de 1010 à 1111, sont invalides) mais facilite les conversions avec le décimal et l'affichage.</li>
+            <li>Les poids mentionnés dans le PDF (1,2,4,8, 10,20,40,80,100,...) font référence aux poids combinés de la position décimale et du codage 8421 dans cette position. Par exemple, le chiffre des dizaines codé en 8421 a des poids effectifs de 80, 40, 20, 10.</li>
+         </ul>
+
+        <p class="remark">3.1</p>
+        <p>Ne pas confondre BCD et code binaire pur :</p>
+        <ul>
+            <li>Quand on code selon le code binaire pur, on prend le nombre décimal dans son intégralité et on le convertit en base 2.</li>
+            <li>Par contre, quand on code en BCD, on code chaque chiffre décimal indépendamment les uns des autres sur 4 bits.</li>
+        </ul>
+
+        <p class="example">3.1</p>
+        <p>$(137)_{10}$</p>
+        <p>Conversion en binaire pur : $(10001001)_2$.</p>
+        <p>Conversion en BCD (8421) :</p>
+        <p> $1 \rightarrow 0001$ </p>
+        <p> $3 \rightarrow 0011$ </p>
+        <p> $7 \rightarrow 0111$ </p>
+        <p> $(137)_{10} = (\underbrace{0001}_{1} \underbrace{0011}_{3} \underbrace{0111}_{7})_{\text{BCD}}$</p>
+        <div class="explanation">Le BCD donné dans l'exemple du PDF (001011111) semble incorrect. Le binaire pur (010001001) est aussi différent de la valeur correcte 10001001. Nous utilisons les valeurs correctes ici.</div>
+
+
+        <h5>III.1.2.a Addition en DCB (BCD Addition)</h5>
+        <p>L'addition de deux nombres codés en BCD se fait chiffre par chiffre (groupe de 4 bits par groupe de 4 bits), en utilisant l'addition binaire standard, mais avec une correction si nécessaire.</p>
+        <p>L'addition binaire de deux groupes de 4 bits est correcte en BCD tant que le résultat est inférieur ou égal à 9 ($1001_2$) et qu'il n'y a pas de retenue sortante du groupe.</p>
+        <div class="code-block">
+  0000 0010  (0 2 en BCD)
++ 0000 0101  (0 5 en BCD)
+-----------
+  0000 0111  (0 7 en BCD)  <- Résultat correct (7 <= 9)
+        </div>
+
+        <p>Par contre, dès que le résultat de l'addition binaire sur 4 bits est supérieur à 9 ($1001_2$), ou s'il y a une retenue (carry) sortant du groupe de 4 bits, le résultat binaire n'est pas un code BCD valide ou ne représente pas la somme BCD correcte. Il faut apporter une correction :</p>
+        <p><strong>Règle de correction BCD :</strong> Si la somme binaire sur 4 bits produit un résultat > 9 ou une retenue sortante, il faut ajouter 6 ($0110_2$) à cette somme sur 4 bits pour obtenir le résultat BCD correct et la bonne retenue décimale.</p>
+
+        <p>Exemple : $6 + 4 = 10$</p>
+         <div class="code-block">
+  0110  (6 en BCD)
++ 0100  (4 en BCD)
+------
+  1010  (Résultat binaire = 10 decimal)
+        <- Ce résultat (1010) est > 9 (et est un code BCD invalide).
+        <- Correction : Ajouter 6 (0110).
+  1010
++ 0110
+------
+1 0000  <- Résultat BCD: Retenue=1, Valeur=0000. (1 0 en BCD)
+        </div>
+
+        <p>Exemple : $9 + 8 = 17$</p>
+         <div class="code-block">
+  1001  (9 en BCD)
++ 1000  (8 en BCD)
+------
+1 0001  (Résultat binaire avec retenue sortante)
+        <- La somme sur 4 bits (0001) n'est pas > 9, MAIS il y a une retenue sortante (1).
+        <- Correction : Ajouter 6 (0110) à la somme 0001.
+  0001
++ 0110
+------
+  0111  (Résultat BCD = 7)
+        <- La retenue décimale est la retenue sortante binaire (1).
+        <- Résultat final BCD: 1 (retenue) et 7 (somme corrigée) => 0001 0111 (1 7 en BCD)
+        </div>
+         <div class="explanation">L'exemple 09+08 donné dans le PDF page 28 semble utiliser une logique intermédiaire différente et est peu clair. L'approche standard basée sur la règle de correction est présentée ici.</div>
+
+        <div class="page-footer">
+           <p>28       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+     <section id="bcd-aiken">
+         <div class="note">
+             <p><strong>Note 3.1 : Règles de Correction pour l'Addition BCD</strong></p>
+            <ul>
+                <li>Lorsque le résultat de l'addition binaire sur 4 bits est inférieur ou égal à 9 ET qu'il n'y a pas de retenue auxiliaire (carry-out des 4 bits), on ne change pas le résultat.</li>
+                <li>Lorsque le résultat de l'addition binaire sur 4 bits est supérieur à 9 ($> 1001_2$), on ajoute 6 ($0110_2$) au résultat pour obtenir la valeur BCD correcte (et générer la retenue décimale si nécessaire).</li>
+                <li>Lorsqu'il y a une retenue auxiliaire (carry-out des 4 bits), on ajoute également 6 ($0110_2$) au résultat obtenu sur 4 bits, même si cette valeur est inférieure ou égale à 9. La retenue auxiliaire devient la retenue décimale pour le groupe suivant.</li>
+            </ul>
+            <p>Les propriétés énoncées ci-dessus pour les chiffres des unités sont évidemment valables pour les dizaines, les centaines, etc., en propageant les retenues décimales. La correction à apporter sera alors – selon les circonstances – 6, 60 ($0110$ dans le groupe des dizaines), 66 ($0110$ dans les unités et $0110$ dans les dizaines), etc.</p>
+        </div>
+
+        <h5>III.1.2.b Soustraction en DCB (BCD Subtraction)</h5>
+        <p>La soustraction en BCD peut être effectuée en utilisant des compléments (par exemple, complément à 9 ou à 10 du soustracteur, puis addition avec correction), ou par soustraction binaire directe avec des règles de correction basées sur l'emprunt.</p>
+        <div class="note">
+             <p><strong>Note 3.2 : Règles de Correction pour la Soustraction BCD (par soustraction directe)</strong></p>
+             <p>Si on effectue la soustraction binaire directe groupe par groupe :</p>
+            <ul>
+                <li>Lorsque le résultat de la soustraction est positif (pas d'emprunt nécessaire pour ce groupe), on ne change pas le résultat.</li>
+                <li>Lorsqu'un emprunt (borrow) est nécessaire depuis le groupe de poids supérieur, on doit corriger le résultat du groupe courant en soustrayant 6 ($0110_2$).</li>
+            </ul>
+            <p>L'utilisation de compléments est souvent préférée.</p>
+        </div>
+
+        <h3>III.1.3 Code binaire de Aiken</h3>
+        <ul>
+            <li>Code pondéré utilisant les poids 2, 4, 2, 1.</li>
+            <li>Il est <strong>auto-complémentaire</strong> : le code d'un chiffre $x$ est le complément bit-à-bit du code du chiffre $9-x$. Par exemple, code(2) = 0010, code(7) = 1101. On voit que $\overline{0010} = 1101$.</li>
+            <li>Utilisé dans certains calculateurs pour faciliter les opérations arithmétiques impliquant des compléments.</li>
+        </ul>
+
+        <p>Table du code Aiken (pondération 2421) :</p>
+        <table class="summary-table">
+            <thead><tr><th>Décimal</th><th>Aiken (2421)</th><th>Décimal</th><th>Aiken (2421)</th></tr></thead>
+            <tbody>
+                <tr><td>0</td><td>0 0 0 0</td><td>5</td><td>1 0 1 1</td></tr>
+                <tr><td>1</td><td>0 0 0 1</td><td>6</td><td>1 1 0 0</td></tr>
+                <tr><td>2</td><td>0 0 1 0</td><td>7</td><td>1 1 0 1</td></tr>
+                <tr><td>3</td><td>0 0 1 1</td><td>8</td><td>1 1 1 0</td></tr>
+                <tr><td>4</td><td>0 1 0 0</td><td>9</td><td>1 1 1 1</td></tr>
+            </tbody>
+        </table>
+        <div class="explanation">La règle de construction donnée dans le PDF (page 29: "de 5 à 9 on ajoute 6 et on code en binaire pur") ne semble pas correspondre directement à la table Aiken 2421 fournie. La table elle-même est correcte pour le code Aiken 2421 auto-complémentaire.</div>
+
+        <div class="page-footer">
+           <p>© M. Siadat & C. Diou       29</p>
+        </div>
+     </section>
+
+     <section id="biquinaire">
+        <h3>III.1.4 Les codes biquinaires</h3>
+        <ul>
+            <li>Ce sont des codes qui utilisent une combinaison de deux groupes de bits.</li>
+            <li>L'exemple donné utilise 7 bits et est une forme de code "2 parmi 7" (exactement deux bits sont à 1).</li>
+            <li>Structure de l'exemple (code décimal) :
+                <ul>
+                    <li>Un groupe de 2 bits (nommés S et O dans le PDF) pour indiquer la plage (0-4 ou 5-9). Un seul bit est actif : O=1 pour 0-4, S=1 pour 5-9.</li>
+                    <li>Un groupe de 5 bits (nommés 4, 3, 2, 1, 0) pour indiquer la valeur dans la plage. Un seul bit est actif, correspondant à la valeur (ou valeur mod 5).</li>
+                </ul>
+            </li>
+        </ul>
+
+        <p class="example">3.3</p>
+        <p>Table du code biquinaire (2 parmi 7) :</p>
+         <table class="summary-table">
+            <thead><tr><th>Décimal</th><th>S</th><th>O</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr></thead>
+             <tbody>
+                <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>2</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>3</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>4</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>5</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>6</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>7</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>8</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>9</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            </tbody>
+        </table>
+        <ul>
+            <li>Chaque combinaison a exactement deux bits à 1.</li>
+            <li>Cette propriété offre une sécurité pour la détection d'erreurs de transmission (si on reçoit une combinaison avec un nombre de '1' différent de 2, une erreur s'est produite).</li>
+            <li>Ce type de code a été utilisé dans certaines calculatrices anciennes (par exemple, IBM 650).</li>
+        </ul>
+
+        <div class="page-footer">
+           <p>30       © M. Siadat & C. Diou</p>
+        </div>
+     </section>
+
+
+    <script>
+        // Trigger KaTeX rendering
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
