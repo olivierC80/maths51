@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logique Combinatoire & Séquentielle</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body,{delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ]});"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 900px; margin: auto; }
+        h1, h2, h3, h4, h5, h6 { color: #333; }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 2.5em; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 40px; font-size: 1.8em;}
+        h3 { margin-top: 30px; color: #444; font-size: 1.5em;}
+        h4 { margin-top: 20px; color: #555; font-size: 1.2em;}
+        h5 { margin-top: 15px; color: #666; font-size: 1.1em; }
+        h6 { margin-top: 10px; color: #777; font-weight: normal; font-style: italic;}
+        .part-title { text-align: center; margin: 60px 0; font-size: 2em; font-weight: bold; border-top: 3px solid #555; border-bottom: 3px solid #555; padding: 20px 0; background-color: #f0f0f0; }
+        .chapter-intro { display: flex; align-items: flex-start; border-bottom: 1px solid #ccc; padding-bottom: 20px; margin-bottom: 20px; }
+        .chapter-intro .text { flex-grow: 1; padding-right: 20px; }
+        .chapter-intro figure { margin: 0; text-align: center; }
+        .chapter-intro img { max-width: 150px; height: auto; border: 1px solid #ccc; }
+        .quote { font-style: italic; text-align: left; margin: 20px 0; color: #555; padding: 10px; border-left: 3px solid #ccc;}
+        .example { border: 1px solid #e0e0e0; padding: 15px; margin: 15px 0; background-color: #f9f9f9; border-left: 3px solid #007bff; }
+        .example-title { font-weight: bold; margin-bottom: 10px; color: #007bff;}
+        .exercise { border: 1px solid #e0e0e0; padding: 15px; margin: 15px 0; background-color: #fdfdfe; border-left: 3px solid #28a745; }
+        .exercise-title { font-weight: bold; margin-bottom: 10px; color: #28a745; }
+        .definition { border-left: 3px solid #4CAF50; padding-left: 15px; margin: 15px 0; background-color: #e8f5e9; }
+        .note { border-left: 3px solid #ffc107; padding: 10px 15px; margin: 15px 0; background-color: #fff8e1; }
+        table { border-collapse: collapse; margin: 20px auto; width: auto; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; vertical-align: middle; position: relative; min-width: 30px; height: 30px;}
+        th { background-color: #f2f2f2; }
+        code, .mono { background-color: #eee; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        .placeholder { display: block; min-height: 80px; border: 1px dashed #aaa; background-color: #f0f0f0; text-align: center; padding: 20px; margin: 15px 0; font-style: italic; color: #666; box-sizing: border-box; }
+        footer { text-align: right; margin-top: 50px; font-size: 0.9em; color: #555; border-top: 1px solid #eee; padding-top: 10px;}
+        .page-break { page-break-after: always; border-top: 1px dashed #ccc; margin-top: 20px; }
+        /* KaTeX display style */
+        .katex-display { text-align: center; margin: 1em 0; overflow-x: auto; overflow-y: hidden; }
+        .inline-katex .katex { font-size: 1em; }
+        .op-summary-table td, .op-summary-table th { min-width: 40px; }
+        .gate-section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .gate-symbol, .flipflop-symbol { display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; margin: 15px 0; }
+        .gate-symbol > div, .flipflop-symbol > div { margin: 10px; text-align: center; }
+        .truth-table-inline table { margin: 5px auto; }
+        .kmap-container { text-align: center; margin: 20px 0; }
+        .kmap { display: inline-block; border: 1px solid #aaa; position: relative; }
+        .kmap-header-col { position: absolute; top: -25px; left: 0; right: 0; text-align: center; font-weight: bold; }
+        .kmap-header-row { position: absolute; left: -40px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-around; align-items: center; font-weight: bold; }
+        .kmap table { margin: 0; border: none; }
+        .kmap th { font-weight: normal; font-size: 0.9em; border: none; background: none; }
+        .kmap td { border: 1px solid #ccc; font-size: 1.1em; }
+        .kmap-index { position: absolute; bottom: 1px; right: 1px; font-size: 0.6em; color: gray; }
+        .kmap-group { position: absolute; border: 2px solid blue; border-radius: 10px; pointer-events: none; } /* For drawing groups */
+         .kmap-group-red { border-color: red; }
+         .kmap-group-green { border-color: green; }
+         .kmap-group-purple { border-color: purple; }
+         .pld-schema { text-align: center; margin: 20px 0; }
+         .pld-schema img { max-width: 80%; height: auto; border: 1px solid #ccc; }
+         .exercise-section { margin-top: 40px; padding: 20px; border: 1px solid #ddd; background-color: #fafafa; }
+         .exercise-section h3 { margin-top: 0; text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; }
+         .timing-diagram { margin: 15px 0; text-align: center;}
+         .timing-diagram .placeholder { min-height: 60px; }
+         .cmos-schema { text-align: center; margin: 20px 0;}
+         .cmos-schema .placeholder { min-height: 100px; }
+         .bibliography ul, .toc ul { list-style: none; padding-left: 0; }
+         .bibliography li, .toc li { margin-bottom: 10px; }
+         .toc .part { font-weight: bold; font-size: 1.2em; margin-top: 20px; }
+         .toc .chapter { margin-left: 20px; font-weight: bold; }
+         .toc .section { margin-left: 40px; }
+         .toc .page-num { float: right; font-weight: normal; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- Title Page - Part 2 -->
+        <h1 class="part-title">Deuxième partie</h1>
+        <h2>La logique combinatoire</h2>
+        <!-- ... Image Placeholder ... -->
+    </header>
+
+    <main>
+        <!-- Content from previous turns (Chapters IV, V, VI, VIII, IX, XI, XII, XIII) -->
+        <!-- ... Chapter IV ... -->
+        <!-- ... Chapter V ... -->
+        <!-- ... Chapter VI ... -->
+        <!-- ... Chapter VII ... -->
+        <!-- ... Chapter VIII ... -->
+        <!-- ... Chapter IX ... -->
+        <!-- ... Chapter XI ... -->
+        <!-- ... Chapter XII ... -->
+        <!-- ... Chapter XIII ... -->
+
+        <div class="page-break"></div>
+
+        <section class="bibliography">
+            <h2>[ Bibliographie ]</h2>
+            <ul>
+                <li>[WWW01] Site Web <a href="http://www.trotek.ec-lyon.fr/~muller/cours/index.html">http://www.trotek.ec-lyon.fr/~muller/cours/index.html</a></li>
+                <li>[WHI61] J.E. Whitesitt, <i>Boolean algebra and its applications</i>, 1961, Addison-Wesley.</li>
+                <li>[KAR53] Maurice Karnaugh, “The Map Method for Synthesis of Combinational Logic Circuits", <i>Trans. AIEE. pt I</i>, 72(9) :593-599, November 1953.</li>
+                <li>[LAF] J.-C. Lafont & J.-P. Vabre, « Cours et Problèmes d'Électronique Numérique », Éd. Ellipses.</li>
+                <li>[TOC] R. J. TOCCI, « Circuits Numériques, Théorie et Applications », Éd. Dunod.</li>
+            </ul>
+        </section>
+
+        <div class="page-break"></div>
+
+        <section class="toc">
+            <h2>[ Table des matières ]</h2>
+
+            <p>Notes sur cet ouvrage<span class="page-num">3</span></p>
+
+            <div class="part">Partie 1 : Les nombres<span class="page-num">5</span></div>
+            <ul>
+                <li class="chapter">I Les systèmes de numération<span class="page-num">7</span></li>
+                    <ul>
+                        <li class="section">I.1 La représentation polynomiale<span class="page-num">7</span></li>
+                        <li class="section">I.2 Le système binaire<span class="page-num">8</span></li>
+                        <li class="section">I.3 Le système octal<span class="page-num">9</span></li>
+                        <li class="section">I.4 Le système hexadécimal<span class="page-num">9</span></li>
+                        <li class="section">I.5 Conversion d'un système de numération à un autre<span class="page-num">10</span></li>
+                    </ul>
+                <li class="chapter">II Codage des nombres dans les machines numériques<span class="page-num">13</span></li>
+                    <ul>
+                        <li class="section">II.1 Représentation des nombres entiers positifs<span class="page-num">14</span></li>
+                        <li class="section">II.2 Représentation binaire des entiers signés<span class="page-num">14</span></li>
+                        <li class="section">II.3 Représentation des nombres réels dans un calculateur<span class="page-num">16</span></li>
+                        <li class="section">II.4 Arithmétique binaire<span class="page-num">21</span></li>
+                        <li class="section">II.5 En résumé<span class="page-num">25</span></li>
+                    </ul>
+                <li class="chapter">III Les codes numériques<span class="page-num">27</span></li>
+                    <ul>
+                        <li class="section">III.1 Codes numériques pondérés<span class="page-num">27</span></li>
+                        <li class="section">III.2 Codes numériques non pondérés<span class="page-num">31</span></li>
+                        <li class="section">III.3 Codes détecteurs d'erreurs et autocorrecteurs<span class="page-num">34</span></li>
+                        <li class="section">III.4 Les codes alphanumériques<span class="page-num">36</span></li>
+                    </ul>
+                 <li class="section" style="font-weight: bold;">Exercices sur les nombres<span class="page-num">39</span></li>
+            </ul>
+
+            <div class="part">Partie 2 : La logique combinatoire<span class="page-num">41</span></div>
+             <ul>
+                <li class="chapter">IV Algèbre booléenne et opérateurs logiques<span class="page-num">43</span></li>
+                    <ul>
+                        <li class="section">IV.1 Introduction<span class="page-num">43</span></li>
+                        <li class="section">IV.2 Propriétés de l'algèbre booléenne<span class="page-num">45</span></li>
+                        <li class="section">IV.3 Algèbre binaire ou algèbre de commutation<span class="page-num">46</span></li>
+                        <li class="section">IV.4 Théorèmes monovariables<span class="page-num">47</span></li>
+                        <li class="section">IV.5 Théorèmes multivariables<span class="page-num">48</span></li>
+                        <li class="section">IV.6 Opérateurs logiques élémentaires et composés<span class="page-num">52</span></li>
+                        <li class="section">IV.7 Universalité des portes NON-ET et NON-OU<span class="page-num">55</span></li>
+                     </ul>
+                <li class="chapter">V Représentation et simplification des fonctions logiques<span class="page-num">59</span></li>
+                    <ul>
+                        <li class="section">V.1 Méthodes de représentation des fonctions logiques<span class="page-num">59</span></li>
+                        <li class="section">V.2 Simplification d'expressions logiques<span class="page-num">64</span></li>
+                    </ul>
+                <li class="chapter">VI Les circuits combinatoires<span class="page-num">71</span></li>
+                    <ul>
+                        <li class="section">VI.1 Circuits logiques combinatoires usuels<span class="page-num">71</span></li>
+                        <li class="section">VI.2 Synthèse des circuits combinatoires<span class="page-num">79</span></li>
+                    </ul>
+                 <li class="chapter">VII Fonctions et opérateurs arithmétiques<span class="page-num">85</span></li>
+                 <li class="section" style="font-weight: bold;">Exercices sur les systèmes combinatoires<span class="page-num">87</span></li>
+             </ul>
+
+            <div class="part">Partie 3 : Les circuits séquentiels<span class="page-num">89</span></div>
+             <ul>
+                <li class="chapter">VIII Les bascules<span class="page-num">91</span></li>
+                    <ul>
+                        <li class="section">VIII.1 Introduction<span class="page-num">91</span></li>
+                        <li class="section">VIII.2 Point mémoire<span class="page-num">92</span></li>
+                        <li class="section">VIII.3 Bascule RS<span class="page-num">93</span></li>
+                        <li class="section">VIII.4 Bascule RS synchrone ou bascule RSH<span class="page-num">96</span></li>
+                        <li class="section">VIII.5 Bascule à verrouillage (D-latch)<span class="page-num">97</span></li>
+                        <li class="section">VIII.6 Bascules maître-esclave<span class="page-num">98</span></li>
+                        <li class="section">VIII.7 Bascule JK<span class="page-num">98</span></li>
+                        <li class="section">VIII.8 Bascule D synchrone<span class="page-num">100</span></li>
+                        <li class="section">VIII.9 Bascule T<span class="page-num">101</span></li>
+                        <li class="section">VIII.10 Entrées prioritaires asynchrones des bascules<span class="page-num">102</span></li>
+                        <li class="section">VIII.11 Paramètres temporels des bascules<span class="page-num">103</span></li>
+                        <li class="section">VIII.12 Applications des bascules<span class="page-num">103</span></li>
+                    </ul>
+                <li class="chapter">IX Registres : stockage et transfert de données<span class="page-num">107</span></li>
+                     <ul>
+                        <li class="section">IX.1 Définition<span class="page-num">107</span></li>
+                        <li class="section">IX.2 Registre de mémorisation : écriture et lecture parallèles<span class="page-num">108</span></li>
+                        <li class="section">IX.3 Registres à décalage<span class="page-num">108</span></li>
+                        <li class="section">IX.4 Registre universel<span class="page-num">110</span></li>
+                     </ul>
+                <li class="chapter">X Les compteurs<span class="page-num">111</span></li>
+                     <ul>
+                        <li class="section">X.1 Compteur asynchrone (à propagation)<span class="page-num">112</span></li>
+                        <li class="section">X.2 Compteur synchrone (parallèle)<span class="page-num">117</span></li>
+                     </ul>
+                 <li class="chapter">XI Méthodes d'étude des circuits séquentiels<span class="page-num">121</span></li>
+            </ul>
+
+            <div class="part">Partie 4 : Architecture des ordinateurs<span class="page-num">123</span></div>
+             <ul>
+                <li class="chapter">XII Concepts de base des processeurs<span class="page-num">125</span></li>
+             </ul>
+
+            <div class="part">Partie 5 : Technologie des portes logiques<span class="page-num">127</span></div>
+             <ul>
+                <li class="chapter">XIII Famille des circuits logiques<span class="page-num">129</span></li>
+                    <ul>
+                        <li class="section">XIII.1 Implantation des opérateurs en technologie CMOS<span class="page-num">130</span></li>
+                    </ul>
+            </ul>
+
+            <div class="part">Partie 6 : Annexes<span class="page-num">131</span></div>
+             <ul>
+                <li class="chapter">A Correction des exercices<span class="page-num">133</span></li>
+                <li class="section" style="font-weight: bold;">Index<span class="page-num">135</span></li>
+                <li class="section" style="font-weight: bold;">Bibliographie<span class="page-num">137</span></li>
+            </ul>
+
+        </section> <!-- End Table of Contents -->
+
+    </main>
+
+    <footer>
+        <span style="float: left;">M. Siadat & C. Diou</span>
+        <!-- Page numbers below are from the original PDF footer -->
+        <!-- <span style="float: right;">Page [Auto]</span> -->
+        <div style="clear: both;"></div>
+    </footer>
+
+</body>
+</html>
