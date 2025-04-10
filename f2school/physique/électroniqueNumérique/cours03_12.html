@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre X: Les compteurs</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3, h4, h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 { font-size: 2em; border-bottom: 2px solid black; padding-bottom: 5px; }
+        h2 { font-size: 1.7em; border-bottom: 1px solid gray; padding-bottom: 3px;}
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; }
+        h5 { font-size: 1.1em; font-weight: bold; }
+        p, li, dd {
+            margin-bottom: 0.8em;
+        }
+        dt {
+            font-weight: bold;
+        }
+        .definition {
+            border-left: 3px solid #add8e6; /* Light blue */
+            padding-left: 15px;
+            margin-left: 10px;
+            background-color: #f0f8ff; /* Alice blue */
+        }
+        .remark {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .example {
+            border: 1px dashed #aaa;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .quote {
+            font-style: italic;
+            margin: 15px 40px;
+            padding: 10px;
+            border-left: 3px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        figure {
+            text-align: center;
+            margin: 20px 0;
+        }
+        figcaption {
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 15px auto; /* Center table */
+            width: auto;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            background-color: #fafafa;
+            min-height: 100px;
+            display: inline-block;
+            margin: 10px;
+            min-width: 150px;
+            box-sizing: border-box;
+        }
+        .page-footer {
+            margin-top: 30px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            font-size: 0.8em;
+            color: gray;
+            display: flex;
+            justify-content: space-between;
+        }
+        .katex-display { /* Ensure display math is centered */
+             margin: 1em 0;
+             text-align: center;
+        }
+        .vertical-placeholder {
+            border: 1px dashed #aaa;
+            width: 20px; /* Adjust width as needed */
+            min-height: 150px; /* Adjust height as needed */
+            display: inline-block;
+            margin: 10px 5px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            text-align: center;
+            padding: 5px;
+            background-color: #fafafa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page 1 Content -->
+    <h1>Chapitre X <br> Les compteurs</h1>
+
+    <figure style="float: right; margin-left: 20px;">
+         <div class="placeholder">[Placeholder: Image of Claude Elwood Shannon]</div>
+         <figcaption>
+             Claude Elwood Shannon<br>
+             * 30 avr. 1916, Gaylord, E.-U.<br>
+             † 24 fév. 2001, Medford, E.-U.
+         </figcaption>
+    </figure>
+
+    <div class="quote">
+        <p>« The most important results [mostly given in the form of theorems with proofs] deal with conditions under which functions of one or more variables can be generated, and conditions under which ordinary differential equations can be solved. Some attention is given to approximation of functions (which cannot be generated exactly), approximation of gear ratios and automatic speed control. »</p>
+        <p style="text-align: right;">(Claude E. Shannon, Mathematical theory of the differential analyzer, 1941)</p>
+    </div>
+     <div style="clear: both;"></div>
+
+    <div class="definition">
+        <h5>Définition 10.1 : Compteur</h5>
+        <p>Un <strong>compteur</strong> est un circuit séquentiel comportant $n$ bascules décrivant au rythme d'une horloge un cycle de comptage régulier ou quelconque d'un maximum de $2^n$ combinaisons.</p>
+        <p>Essentiellement, il passe par une séquence prédéfinie d'états binaires à chaque impulsion d'horloge.</p>
+    </div>
+
+    <div class="definition">
+        <h5>Définition 10.2 : État, Modulo</h5>
+        <p>La combinaison des sorties des bascules d'un compteur est appelé <strong>état</strong>.</p>
+        <p>Le nombre d'états distincts possibles (ou parcourus dans un cycle) d'un compteur est appelé son <strong>modulo</strong> (souvent noté N).</p>
+    </div>
+
+    <p>Un compteur modulo N passera donc successivement par N états différents avant de revenir au premier état et de recommencer le cycle.</p>
+    <p>Un compteur binaire naturel de n bits aura un modulo maximal de $2^n$ et comptera de 0 ($00...0$) à $N-1 = 2^n - 1$ ($11...1$).</p>
+    <p>Le graphe suivant présente les différents états parcourus par un compteur binaire naturel modulo 8 (3 bits, compte de 0 à 7).</p>
+
+     <figure>
+         <div class="placeholder">[Placeholder: State diagram of a modulo 8 (3-bit) binary counter, showing states 000 to 111 in a circle with transitions]</div>
+         <figcaption>Graphe d'états d'un compteur modulo 8.</figcaption>
+         <!-- Diagram shows nodes 000, 001, 010, 011, 100, 101, 110, 111 arranged in a circle with arrows indicating the sequence. Each arrow represents a clock pulse. -->
+     </figure>
+
+    <div class="page-footer">
+        <span>Page 111</span>
+    </div>
+    <hr>
+
+    <!-- Page 2 Content -->
+    <h2>X.1 Compteur asynchrone (à propagation / Ripple Counter)</h2>
+    <p>Nous avons vu dans la section §VIII.7 page 99 (correction de la référence du document) comment réaliser une division de fréquence par deux à l'aide d'une bascule JK configurée en mode basculement (J=K=1).</p>
+    <p>En cascadant des bascules JK montées en diviseurs de fréquence (la sortie d'une bascule servant d'horloge à la suivante), on peut donc réaliser un compteur. Ce type de compteur est dit <strong>asynchrone</strong> car toutes les bascules ne sont pas commandées par le même signal d'horloge ; l'horloge se "propage" d'une bascule à l'autre.</p>
+    <p>Le modulo du compteur dépendra du nombre de bascules utilisées.</p>
+
+    <h3>X.1.1 Compteur asynchrone à cycle régulier</h3>
+
+    <div class="example">
+        <h5>▷ Exemple 10.1 : Compteur asynchrone 4 bits</h5>
+        <p>Réalisation d'un compteur asynchrone qui compte de 0 à 15 (modulo 16) en utilisant 4 bascules JK.</p>
+
+        <h5>X.1.1.a Réalisation à l'aide de bascules JK</h5>
+         <figure>
+             <div class="placeholder">[Placeholder: Circuit diagram of a 4-bit asynchronous (ripple) counter using JK flip-flops. H -> Clk A; Q_A -> Clk B; Q_B -> Clk C; Q_C -> Clk D. J=K=1 for all FFs.]</div>
+             <figcaption>Compteur asynchrone 4 bits (modulo 16). Les sorties sont A (LSB) à D (MSB).</figcaption>
+             <!-- Diagram shows 4 JK FFs. Clock H connected to FF A's Clk input. Q output of A connected to Clk input of B. Q of B to Clk of C. Q of C to Clk of D. All J and K inputs tied to '1' (High). Outputs are Q of A, B, C, D. -->
+         </figure>
+         <p>La sortie Q de chaque bascule agit comme le signal d'horloge de la bascule suivante.</p>
+
+        <h5>Fonctionnement</h5>
+        <ul>
+            <li>Les entrées J et K de toutes les bascules sont maintenues à 1, donc chaque bascule bascule (change d'état) sur le <strong>front descendant</strong> de son signal d'horloge respectif.</li>
+            <li>La bascule A (LSB - Least Significant Bit) commute à chaque front descendant du signal d'horloge principal H. Sa sortie Q<sub>A</sub> a une fréquence moitié de celle de H.</li>
+            <li>La sortie Q<sub>A</sub> sert d'horloge pour la bascule B. Donc, B commute chaque fois que Q<sub>A</sub> passe de 1 à 0 (front descendant de Q<sub>A</sub>). Sa sortie Q<sub>B</sub> a une fréquence moitié de celle de Q<sub>A</sub> (quart de H).</li>
+            <li>De la même manière, C commute lorsque Q<sub>B</sub> passe de 1 à 0, et D commute lorsque Q<sub>C</sub> passe de 1 à 0.</li>
+        </ul>
+        <p>Le changement d'état se propage ainsi de la bascule A vers la bascule D.</p>
+
+        <h5>X.1.1.b Table d'implication séquentielle (Table d'états)</h5>
+        <p>Elle montre les états binaires (valeurs des sorties DCBA) pris par les bascules après chaque front descendant de l'horloge H.</p>
+        <table>
+            <caption>Séquence d'états du compteur 4 bits (0-15)</caption>
+             <thead><tr><th>N° Impulsion H</th><th>D (MSB)</th><th>C</th><th>B</th><th>A (LSB)</th><th>Valeur Décimale</th></tr></thead>
+             <tbody>
+                 <tr><td>0 (Initial)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                 <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                 <tr><td>2</td><td>0</td><td>0</td><td>1</td><td>0</td><td>2</td></tr>
+                 <tr><td>3</td><td>0</td><td>0</td><td>1</td><td>1</td><td>3</td></tr>
+                 <tr><td>4</td><td>0</td><td>1</td><td>0</td><td>0</td><td>4</td></tr>
+                 <tr><td>5</td><td>0</td><td>1</td><td>0</td><td>1</td><td>5</td></tr>
+                 <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+                 <tr><td>15</td><td>1</td><td>1</td><td>1</td><td>1</td><td>15</td></tr>
+                 <tr><td>16</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0 (Retour à zéro)</td></tr>
+                 <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+             </tbody>
+         </table>
+         <p>Si on imagine que DCBA représente un nombre binaire (avec D comme bit de poids le plus fort et A comme bit de poids le plus faible), le compteur réalise la suite des nombres binaires allant de 0000 à 1111 (soit de 0 à 15 en décimal).</p>
+
+    </div>
+
+
+    <div class="page-footer">
+        <span>Page 112</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 3 Content -->
+    <p>Après la 15<sup>ème</sup> impulsion (front descendant), les bascules sont dans l'état 1111. Quand la 16<sup>ème</sup> impulsion arrive, la bascule A bascule (1->0), ce qui fait basculer B (1->0), qui fait basculer C (1->0), qui fait basculer D (1->0). Le compteur affiche donc 0000 : un nouveau cycle commence.</p>
+
+    <h5>X.1.1.c Chronogramme</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Timing diagram for a 4-bit asynchronous counter showing Clock (H) and outputs A, B, C, D (Q0-Q3)]</div>
+         <figcaption>Chronogramme du compteur asynchrone 4 bits. Notez le délai de propagation entre les changements des différentes sorties.</figcaption>
+         <!-- Diagram shows H as a clock train. A toggles on each falling edge of H. B toggles on each falling edge of A. C toggles on each falling edge of B. D toggles on each falling edge of C. The delays are visible and cumulative. -->
+     </figure>
+     <p>→</p> Chaque bascule divise par deux la fréquence du signal d'horloge qui alimente son entrée.
+     <p>La fréquence de la sortie de la dernière bascule (D) est $f_D = \frac{f_{initiale}}{2^4} = \frac{f_{initiale}}{16}$.</p>
+
+    <h5>Application</h5>
+    <p>Avec ce genre de circuit, on peut diviser la fréquence initiale par n'importe quelle puissance de 2 ($2^n$, où n est le nombre de bascules).</p>
+
+    <h5>X.1.1.d Modulo</h5>
+    <ul>
+        <li>Le <strong>modulo</strong> est le nombre d'états distincts occupés par le compteur pendant un cycle complet.</li>
+        <li>Le modulo maximal d'un compteur à n bits (n bascules) est $2^n$.</li>
+        <li>Exemple : compteur 4 bits → $2^4 = 16$ états distincts (de 0 à 15) → modulo 16.</li>
+    </ul>
+
+    <h3>X.1.2 Décompteurs asynchrones</h3>
+    <p>Pour réaliser un <strong>décompteur</strong> asynchrone (qui compte à rebours, par exemple 7, 6, 5...), il suffit de piloter l'entrée CLK de chaque bascule (sauf la première) par la sortie <strong>complémentée</strong> ($\overline{Q}$) de la bascule précédente, au lieu de la sortie Q.</p>
+    <p>Ainsi, la bascule suivante basculera sur le front descendant de $\overline{Q}$, ce qui correspond au front <strong>montant</strong> de Q (passage de 0 à 1).</p>
+
+    <div class="example">
+        <h5>▷ Exemple 10.2 : Décompteur asynchrone modulo 8</h5>
+         <figure>
+             <div class="placeholder">[Placeholder: Circuit diagram of a 3-bit asynchronous down counter. H -> Clk A; Q_bar_A -> Clk B; Q_bar_B -> Clk C. J=K=1 for all FFs.]</div>
+             <figcaption>Décompteur asynchrone 3 bits (modulo 8, compte 7->0).</figcaption>
+         </figure>
+
+        <h5>Chronogramme :</h5>
+         <figure>
+             <div class="placeholder">[Placeholder: Timing diagram for a 3-bit asynchronous down counter showing Clock (H) and outputs A, B, C (Q0-Q2)]</div>
+             <figcaption>Chronogramme du décompteur asynchrone 3 bits.</figcaption>
+             <!-- Diagram shows H clock. A toggles on falling edge of H. B toggles on falling edge of Q_bar_A (i.e., rising edge of A). C toggles on falling edge of Q_bar_B (i.e., rising edge of B). The sequence CBA goes 111, 110, 101, 100, 011, 010, 001, 000. -->
+         </figure>
+    </div>
+
+
+    <div class="page-footer">
+        <span>Page 113</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 4 Content -->
+    <h3>X.1.3 Compteur asynchrone à modulo N (avec N ≠ 2<sup>n</sup>)</h3>
+    <p>(Compteur à cycle tronqué / raccourci)</p>
+
+    <h5>X.1.3.a Méthode</h5>
+    <p>Pour réaliser un compteur (ou un décompteur) dont le cycle n'est pas une puissance de 2 (par exemple, modulo 10, modulo 6), la solution la plus simple est d'utiliser un compteur asynchrone standard de $n$ bits tel que $2^n \ge N$, et d'agir sur une entrée de remise à zéro (<strong>Clear</strong> ou Reset asynchrone) lorsque la combinaison correspondant à l'état N (qui ne doit pas faire partie du cycle de comptage normal 0 à N-1) se produit sur les sorties.</p>
+    <p>La détection de l'état N se fait généralement avec une porte logique (AND, NAND...). La sortie de cette porte est connectée aux entrées Clear (souvent actives à l'état bas) de toutes les bascules.</p>
+    <p>Ainsi, pour réaliser un compteur modulo N (comptant de 0 à N-1), où $2^{n-1} < N \le 2^n$ :</p>
+    <ol>
+        <li>On réalise un compteur modulo $2^n$ (avec n bascules).</li>
+        <li>On détecte l'état N sur les sorties des bascules.</li>
+        <li>On utilise cette détection pour activer les entrées RAZ (Reset Asynchrone à Zéro) des bascules.</li>
+    </ol>
+    <p>Dès que le compteur atteint l'état N, il est immédiatement remis à 0, et le cycle recommence.</p>
+
+    <div class="example">
+        <h5>▷ Exemple 10.3 : Compteur asynchrone modulo 6</h5>
+        <p>On veut un compteur qui compte de 0 à 5 (6 états). Comme $2^2 = 4 < 6$ et $2^3 = 8 \ge 6$, il faut utiliser <strong>3 bascules</strong> (modulo 8).</p>
+        <p>Le cycle normal serait 000, 001, 010, 011, 100, 101. L'état suivant devrait être 110 (valeur 6). C'est cet état qu'il faut détecter pour forcer le retour à 000.</p>
+        <p>On détecte l'état $Q_2 Q_1 Q_0 = 110$ avec une porte NAND dont les entrées sont connectées à $Q_2$ et $Q_1$. Quand $Q_2=1$ et $Q_1=1$, la sortie de la NAND passe à 0.</p>
+        <p>→ Dès que la sortie de la porte NAND passe à 0, les entrées Clear (actives bas) des bascules sont activées, et les bascules sont forcées à 0 ($Q_2=Q_1=Q_0=0$). Le compteur se remet à compter à partir de 0.</p>
+        <p>⇒ Le compteur réalisé compte de 000 à 101 (de 0 à 5) puis recommence un nouveau cycle. Il est bien <strong>modulo 6</strong>.</p>
+
+         <figure>
+             <div class="placeholder">[Placeholder: Circuit diagram of a modulo 6 asynchronous counter. 3 JK FFs (Q0, Q1, Q2). Q0 output drives Clk Q1, Q1 drives Clk Q2. NAND gate inputs connected to Q1 and Q2. NAND output connected to the asynchronous Clear inputs (active low) of all 3 FFs.]</div>
+             <figcaption>Compteur asynchrone modulo 6.</figcaption>
+         </figure>
+
+        <h5>X.1.3.b Table d'implication séquentielle</h5>
+         <table>
+             <caption>Séquence d'états du compteur modulo 6</caption>
+              <thead><tr><th>N° Impulsion H</th><th>Q<sub>2</sub></th><th>Q<sub>1</sub></th><th>Q<sub>0</sub></th><th>Valeur Décimale</th><th>Commentaire</th></tr></thead>
+              <tbody>
+                  <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+                  <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td></td></tr>
+                  <tr><td>2</td><td>0</td><td>1</td><td>0</td><td>2</td><td></td></tr>
+                  <tr><td>3</td><td>0</td><td>1</td><td>1</td><td>3</td><td></td></tr>
+                  <tr><td>4</td><td>1</td><td>0</td><td>0</td><td>4</td><td></td></tr>
+                  <tr><td>5</td><td>1</td><td>0</td><td>1</td><td>5</td><td></td></tr>
+                  <tr><td>6</td><td>(1</td><td>1</td><td>0)</td><td>(6)</td><td>État transitoire (glitch)</td></tr>
+                  <tr><td>→ Immédiat</td><td>0</td><td>0</td><td>0</td><td>0</td><td>Reset asynchrone</td></tr>
+              </tbody>
+          </table>
+          <p>L'état $Q_2 Q_1 Q_0 = 110$ est un état temporaire (transitoire). Il existe mais pendant une durée très courte (le temps de propagation de la porte NAND et des entrées Clear). C'est un état indésirable que l'on nomme parfois <strong>glitch</strong>.</p>
+    </div>
+
+
+    <div class="page-footer">
+        <span>Page 114</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 5 Content -->
+    <h5>X.1.3.c Chronogramme</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Timing diagram for modulo 6 asynchronous counter showing H, Q0, Q1, Q2. Illustrates the reset action when state 110 is briefly reached.]</div>
+         <figcaption>Chronogramme du compteur modulo 6.</figcaption>
+         <!-- Diagram shows H clock. Q0 toggles normally. Q1 toggles on Q0 falling edge. Q2 toggles on Q1 falling edge. When Q1 and Q2 become high simultaneously (state 110 is reached after Q0 goes 1->0), the reset occurs, forcing Q0, Q1, Q2 to 0 briefly after state 101. -->
+     </figure>
+
+    <div class="remark">
+        <h5>► Remarque 10.1</h5>
+        <p>Dans un compteur asynchrone à cycle tronqué, les sorties des bascules autres que la première (ici Q<sub>1</sub> et Q<sub>2</sub>) ne sont plus des ondes parfaitement carrées avec un rapport cyclique de 50%, à cause du retour à zéro prématuré.</p>
+    </div>
+
+    <h3>X.1.4 Comptage asynchrone dans un ordre quelconque (cycle irrégulier)</h3>
+    <p>Il est parfois nécessaire de réaliser un compteur qui suit une séquence d'états qui n'est pas l'ordre binaire naturel.</p>
+
+    <h5>1<sup>ère</sup> méthode : Compteur standard + Transcodeur</h5>
+    <p>On réalise un compteur asynchrone (ou synchrone) ayant le même modulo que le cycle désiré, puis on utilise un circuit combinatoire (appelé <strong>transcodeur</strong> ou "logic de décodage d'états") pour transformer les sorties du compteur standard en la séquence d'états voulue. Le transcodeur peut être réalisé avec des portes logiques, une ROM, une PAL/GAL, etc.</p>
+
+    <div class="example">
+        <h5>▷ Exemple 10.4 : Compteur suivant le cycle 2, 5, 6, 8, 4, 10</h5>
+        <p>Ce cycle comporte 6 états distincts. On peut utiliser un compteur modulo 6 standard (comptant de 0 à 5) et un transcodeur.</p>
+         <figure>
+             <div class="placeholder">[Placeholder: Block diagram: Clock H -> Modulo 6 Counter (outputs Q2,Q1,Q0) -> Transcoder (outputs Q'3, Q'2, Q'1, Q'0)]</div>
+             <figcaption>Compteur à cycle irrégulier par transcodage.</figcaption>
+         </figure>
+         <table>
+             <caption>Table de transcodage</caption>
+              <thead>
+                  <tr><th colspan="3">État Compteur Modulo 6</th><th colspan="4">Sortie Désirée (Transcodée)</th><th>Valeur Décimale</th></tr>
+                  <tr><th>N°</th><th>Q<sub>2</sub></th><th>Q<sub>1</sub></th><th>Q<sub>0</sub></th><th>Q'<sub>3</sub></th><th>Q'<sub>2</sub></th><th>Q'<sub>1</sub></th><th>Q'<sub>0</sub></th><th>Désirée</th></tr>
+              </thead>
+              <tbody>
+                  <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>2</td></tr>
+                  <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>5</td></tr>
+                  <tr><td>2</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>6</td></tr>
+                  <tr><td>3</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>8</td></tr>
+                  <tr><td>4</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>4</td></tr>
+                  <tr><td>5</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>10</td></tr>
+              </tbody>
+          </table>
+          <p>Le transcodeur est un circuit combinatoire qui implémente cette table de vérité.</p>
+    </div>
+
+    <h5>2<sup>ème</sup> méthode : Forçage d'états</h5>
+    <p>Utilisation des entrées asynchrones de forçage à zéro (RAZ / Clear) et de forçage à un (RAU / Preset) des bascules pour "sauter" certaines étapes ou forcer des transitions spécifiques. Cette méthode est généralement plus complexe à concevoir et peut être sensible aux aléas.</p>
+
+    <div class="example">
+        <h5>▷ Exemple 10.5 : Compteur avec cycle 0, 1, 2, 3, 5, 6, 8, 9, 11, 12, 15</h5>
+        <p>Ce cycle omet les états 4, 7, 10, 13, 14. On réalise un compteur modulo 16 (4 bits) et on ajoute une logique combinatoire qui détecte les états précédant ceux à sauter (3, 6, 9, 12) pour activer les entrées Preset (ou Clear) appropriées afin de forcer le compteur à l'état suivant désiré (5, 8, 11, 15 respectivement) sur le prochain coup d'horloge (si synchrone) ou immédiatement (si asynchrone).</p>
+        <p><em>(La conception détaillée de la logique de forçage n'est pas fournie ici).</em></p>
+    </div>
+
+
+    <div class="page-footer">
+        <span>Page 115</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 6 Content -->
+    <h3>X.1.5 Exemple de CI (Circuit Intégré) de compteur asynchrone</h3>
+    <p>Il existe de nombreuses puces de compteurs intégrés en technologies TTL et CMOS.</p>
+    <ul>
+        <li>En TTL, un des plus populaires est le <strong>7493</strong> (ou 74LS93, etc.), un compteur binaire 4 bits.</li>
+        <li>En CMOS, le <strong>4024</strong> est un compteur binaire 7 bits, et le <strong>4020</strong> un compteur 14 bits.</li>
+    </ul>
+
+    <h5>Exemple : Compteur TTL 7493</h5>
+     <figure style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;">
+         <div class="placeholder" style="min-width: 200px;">[Placeholder: Block symbol of the 7493 IC. Inputs: CP0 (Clock A), CP1 (Clock B), MR1, MR2 (Resets). Outputs: Q0 (QA), Q1 (QB), Q2 (QC), Q3 (QD).]</div>
+         <figcaption style="flex-basis: 100%; text-align: center; margin-top: -10px;">Symbole du compteur 7493</figcaption>
+     </figure>
+     <p>Le 7493 contient en interne une bascule indépendante (actionnée par CP0, sortie Q0) et un compteur 3 bits (actionné par CP1, sorties Q1, Q2, Q3). Pour obtenir un compteur 4 bits, il faut connecter la sortie Q0 à l'entrée CP1.</p>
+
+    <h5>Circuit interne (simplifié)</h5>
+     <figure>
+         <div class="placeholder" style="min-width: 400px;">[Placeholder: Simplified internal schematic of the 7493. Shows FF for Q0 driven by CP0. FF for Q1 driven by CP1 (external connection usually from Q0). FF for Q2 driven by Q1. FF for Q3 driven by Q2. NAND gate with inputs MR1, MR2 controlling asynchronous reset (Clear) of all FFs.]</div>
+         <figcaption>Structure interne simplifiée du 7493.</figcaption>
+     </figure>
+     <ul>
+         <li>H=CP<sub>1</sub> : Horloge du compteur 3 bits (Q1, Q2, Q3).</li>
+         <li>H=CP<sub>0</sub> : Horloge de la première bascule (Q0). Pour un compteur 4 bits, connecter Q0 à CP1.</li>
+         <li>MR<sub>1</sub>, MR<sub>2</sub> : Entrées de Reset (Master Reset). Actives haut. Si MR1 ET MR2 sont HAUT, toutes les sorties Q sont remises à 0 de façon asynchrone.</li>
+     </ul>
+
+
+    <h3>X.1.6 Inconvénients des compteurs asynchrones</h3>
+    <ol>
+        <li><p><strong>Délais de propagation cumulatifs :</strong> Chaque bascule introduit un retard de propagation ($D_p$, typiquement 10-50 ns selon la technologie). Comme les bascules ne commutent pas sur le même signal d'horloge direct, mais sur la sortie de la précédente, les retards s'additionnent. À la $n^{ième}$ bascule (sortie la plus significative), on a un retard total $T_m \approx n \times D_p$ par rapport au front d'horloge initial.</p></li>
+        <li><p><strong>Limitation de fréquence :</strong> Ce retard total limite la fréquence maximum de fonctionnement ($F_H$) du compteur. Pour que le compteur fonctionne correctement, la période de l'horloge ($T_H$) doit être suffisamment longue pour permettre à la propagation de se terminer avant le prochain front actif. Une estimation simple est $T_{H, min} > T_m$. (Le texte utilise $T_H \ge 2 \times T_m$, ce qui est plus conservateur, considérant le temps de stabilisation). La fréquence max est donc $F_H = 1 / T_{H, min} < 1 / (n \times D_p)$ (ou $1 / (2 \times n \times D_p)$ selon la formule du texte). Cette fréquence diminue lorsque le nombre de bits $n$ augmente.</p></li>
+        <li><p><strong>Décalage des sorties (Skew) :</strong> Les fronts des signaux appliqués sur les entrées d'horloge des bascules n'ayant pas lieu au même instant à cause des retards différents, les sorties (Q0, Q1, ..., Qn-1) ne changent pas d'état en même temps. Cela pose un problème si l'on veut lire ou utiliser la valeur du compteur à un instant précis, car les différentes sorties peuvent correspondre à des "instants" légèrement différents. Problème d'interface avec des circuits rapides (temps de lecture inférieur au retard cumulé).</p></li>
+        <li><p><strong>États transitoires (Glitches) :</strong> À cause du décalage des sorties, le compteur peut passer par des états intermédiaires incorrects pendant une transition. Par exemple, en passant de 3 (011) à 4 (100) dans un compteur 3 bits :
+            <ul>
+                <li>Q0 passe 1 -> 0 (immédiatement après le front H)</li>
+                <li>Q1 bascule 1 -> 0 (après délai Dp)</li>
+                <li>Q2 bascule 0 -> 1 (après délai 2*Dp)</li>
+            </ul>
+            La séquence d'états pourrait être : 011 -> 010 (transitoire) -> 000 (transitoire) -> 100 (final). Si la sortie du compteur est décodée par un circuit combinatoire rapide, ces états transitoires peuvent être interprétés à tort et provoquer des dysfonctionnements. C'est particulièrement problématique pour les compteurs à cycle tronqué utilisant une logique de décodage asynchrone pour le reset.</li>
+    </ol>
+    <p>Ces inconvénients rendent les compteurs asynchrones moins adaptés aux applications à haute fréquence ou nécessitant une lecture précise et synchrone de l'état.</p>
+
+
+    <div class="page-footer">
+        <span>Page 116</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 7 Content -->
+    <p>Mais l'inconvénient le plus important est lié au fait que cette structure nécessite souvent de la logique combinatoire agissant sur des signaux asynchrones (par exemple, l'horloge d'une bascule générée par la sortie Q d'une autre bascule, ou le signal Clear généré par un décodage combinatoire des sorties Q). Cette logique combinatoire peut elle-même engendrer (ou propager) des aléas (glitches) ou des états transitoires qui peuvent entraîner des dysfonctionnements du compteur (reset intempestif, comptage erroné).</p>
+
+    <h2>X.2 Compteur synchrone (parallèle)</h2>
+    <p>Dans un compteur synchrone, <strong>toutes les bascules sont déclenchées en même temps par le même signal d'horloge</strong>. Ceci évite le problème du retard de propagation cumulatif et des états transitoires majeurs inhérents aux compteurs asynchrones.</p>
+    <p>Pour qu'une bascule donnée bascule ou non au prochain coup d'horloge, il faut une logique combinatoire sur ses entrées de commande (J, K, D, ou T) qui détermine si le basculement doit avoir lieu, en fonction de l'état actuel des bascules de poids inférieur.</p>
+
+    <h3>X.2.1 Réalisation</h3>
+    <p>La réalisation est possible avec des bascules JK, D ou T.</p>
+    <ul>
+        <li><strong>Avec bascules T (Toggle) :</strong> La bascule T bascule si son entrée T=1 au moment du front d'horloge. Il faut donc concevoir la logique pour que $T_i=1$ si et seulement si la bascule i doit changer d'état. Pour un compteur binaire naturel, la bascule $i$ doit basculer si toutes les bascules précédentes (de poids 0 à i-1) sont à 1.</li>
+        <li><strong>Avec bascules JK :</strong> On peut les utiliser comme des bascules T (en mettant J=K). La logique sera la même que pour T. Alternativement, on peut utiliser les entrées J et K séparément pour optimiser la logique (en utilisant les états indifférents dans les tables de Karnaugh).</li>
+        <li><strong>Avec bascules D :</strong> La sortie $Q_{N+1}$ recopie l'entrée D au front d'horloge. Il faut donc calculer $D_i = Q_{i, N+1}$ (l'état futur désiré) en fonction de l'état actuel (Q<sub>N</sub>). $D_i = Q_{i, N} \oplus T_i$, où $T_i$ est la fonction de basculement dérivée comme pour la bascule T.</li>
+    </ul>
+
+    <div class="example">
+        <h5>▷ Exemple 10.6 : Réalisation d'un compteur synchrone modulo 8 (0-7) à l'aide de bascules T</h5>
+
+        <h5>Table d'excitation</h5>
+        <p>On établit la table de vérité du compteur, montrant l'état présent ($Q_2 Q_1 Q_0$) et l'état suivant désiré ($Q_{2+} Q_{1+} Q_{0+}$), puis on détermine les entrées T nécessaires ($T_2 T_1 T_0$) pour passer de l'état présent à l'état suivant. $T_i = 1$ si $Q_{i+}$ est différent de $Q_i$.</p>
+         <table>
+             <caption>Table d'excitation pour compteur synchrone Modulo 8 avec Bascules T</caption>
+              <thead>
+                  <tr><th colspan="3">État Présent</th><th colspan="3">État Suivant</th><th colspan="3">Entrées T</th></tr>
+                  <tr><th>Q<sub>2</sub></th><th>Q<sub>1</sub></th><th>Q<sub>0</sub></th><th>Q<sub>2+</sub></th><th>Q<sub>1+</sub></th><th>Q<sub>0+</sub></th><th>T<sub>2</sub></th><th>T<sub>1</sub></th><th>T<sub>0</sub></th></tr>
+              </thead>
+              <tbody>
+                  <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                  <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                  <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                  <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                  <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                  <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                  <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                  <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+              </tbody>
+          </table>
+          <p>On constate (par simplification ou K-maps) que :</p>
+          <ul>
+              <li>$T_0 = 1$ (la bascule 0 bascule toujours)</li>
+              <li>$T_1 = Q_0$ (la bascule 1 bascule si Q0=1)</li>
+              <li>$T_2 = Q_1 \cdot Q_0$ (la bascule 2 bascule si Q1=1 ET Q0=1)</li>
+          </ul>
+
+        <h5>Réalisation</h5>
+         <figure>
+             <div class="placeholder">[Placeholder: Circuit diagram of a 3-bit synchronous counter using T flip-flops. Common clock H to all Clk inputs. T0 input connected to '1'. Q0 output connected to T1 input. Q0 and Q1 outputs connected to an AND gate, whose output connects to T2 input.]</div>
+             <figcaption>Compteur synchrone modulo 8 avec bascules T.</figcaption>
+         </figure>
+    </div>
+
+    <div class="example">
+        <h5>▷ Exemple 10.7 : Compteur synchrone décrivant le cycle 4, 9, 1, 3, 2</h5>
+        <p>La réalisation d'un compteur synchrone à cycle irrégulier nécessite de :</p>
+        <ol>
+            <li>Déterminer le nombre de bascules nécessaires (ici, au moins 4 bits pour représenter 9).</li>
+            <li>Créer la table de transition d'états (état présent -> état suivant) pour le cycle désiré.</li>
+            <li>Choisir le type de bascules (JK, D, T).</li>
+            <li>Établir la table d'excitation pour les entrées des bascules choisies.</li>
+            <li>Utiliser des tables de Karnaugh pour simplifier les équations logiques des entrées de chaque bascule.</li>
+            <li>Dessiner le schéma final.</li>
+        </ol>
+        <p><em>(La conception détaillée n'est pas fournie dans le document).</em></p>
+    </div>
+
+    <div class="page-footer">
+        <span>Page 117</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 8 Content -->
+    <p><strong>a) À l'aide de bascules JK :</strong></p>
+    <div class="vertical-placeholder">[Placeholder for Example 10.7 JK Design]</div>
+    <p><em>(Détails de la conception de l'Exemple 10.7 avec bascules JK non fournis)</em></p>
+
+    <p><strong>b) À l'aide de bascules D :</strong></p>
+    <div class="vertical-placeholder">[Placeholder for Example 10.7 D Design]</div>
+    <p><em>(Détails de la conception de l'Exemple 10.7 avec bascules D non fournis)</em></p>
+
+    <p><strong>c) À l'aide de bascules T :</strong></p>
+    <div class="vertical-placeholder">[Placeholder for Example 10.7 T Design]</div>
+    <p><em>(Détails de la conception de l'Exemple 10.7 avec bascules T non fournis)</em></p>
+
+
+    <h3>X.2.2 Exemples de circuit intégré de compteur synchrone</h3>
+    <h5>Compteur pré-réglable (Pre-settable Counter) : Famille 74160/161/162/163</h5>
+    <p>Ces circuits intégrés sont des compteurs synchrones 4 bits qui possèdent des entrées permettant de charger une valeur initiale (pré-réglage).</p>
+    <ul>
+        <li>L'état initial du compteur peut être chargé (de façon synchrone) à partir des entrées de données parallèles D0, D1, D2, D3 (ou A, B, C, D selon la notation) lorsque l'entrée de chargement (Load) est active.</li>
+        <li>L'entrée de validation (Enable) permet de geler (verrouiller) le compteur sans l'arrêter : quand Enable est inactif, le compteur conserve son état même si l'horloge continue d'arriver.</li>
+    </ul>
+
+    <table>
+        <caption>Caractéristiques de quelques compteurs synchrones 4 bits TTL</caption>
+         <thead>
+             <tr><th>Circuit</th><th>Type de Comptage</th><th>Chargement (Load)</th><th>Remise à Zéro (RAZ/Clear)</th></tr>
+         </thead>
+         <tbody>
+             <tr><td>74160</td><td>Synchrone DCB (0-9)</td><td>Synchrone</td><td>Asynchrone</td></tr>
+             <tr><td>74161</td><td>Synchrone Binaire (0-15)</td><td>Synchrone</td><td>Asynchrone</td></tr>
+             <tr><td>74162</td><td>Synchrone DCB (0-9)</td><td>Synchrone</td><td>Synchrone</td></tr>
+             <tr><td>74163</td><td>Synchrone Binaire (0-15)</td><td>Synchrone</td><td>Synchrone</td></tr>
+         </tbody>
+     </table>
+    <ul>
+        <li><strong>RAZ synchrone :</strong> La remise à zéro se produit au prochain front actif de l'horloge après l'activation de l'entrée Clear.</li>
+        <li><strong>RAZ asynchrone :</strong> La remise à zéro est immédiate dès l'activation de l'entrée Clear, indépendamment de l'horloge. L'état 0000 est obtenu (et maintenu tant que Clear est actif). (Note du texte: "000 est obtenu au coup d'horloge suivant l'instant ou clear est porté à l'état actif 0" - cette description semble contradictoire avec le terme "asynchrone", elle décrit plutôt un reset synchrone. Typiquement, le RAZ asynchrone est immédiat).</li>
+    </ul>
+
+
+    <div class="page-footer">
+        <span>Page 118</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 9 Content -->
+    <h5>Compteur/Décompteur (réversible) pré-réglable synchrone : Exemple 74193</h5>
+    <p>Le 74193 (et des circuits similaires comme le 74191, 74192) est un compteur/décompteur synchrone 4 bits pré-réglable.</p>
+    <div class="vertical-placeholder">[Placeholder for 74193 Diagram/Details]</div>
+
+    <p>Fonctions typiques des broches (la nomenclature exacte peut varier) :</p>
+    <ul>
+        <li><strong>MR (Master Reset) :</strong> Entrée de réinitialisation asynchrone (force l'état à 0000).</li>
+        <li><strong>Q<sub>0</sub> ... Q<sub>3</sub> :</strong> Sorties du compteur (Q0=LSB).</li>
+        <li><strong>P<sub>0</sub> ... P<sub>3</sub> (ou A..D) :</strong> Entrées de données parallèles pour le pré-réglage.</li>
+        <li><strong>`\overline{PL}` (Parallel Load) :</strong> Entrée de chargement asynchrone (active bas). Quand `\overline{PL}=0`, les données P0..P3 sont chargées dans le compteur.</li>
+        <li><strong>CP<sub>U</sub> (Clock Pulse Up) :</strong> Entrée du signal d'horloge pour le comptage (incrémentation).</li>
+        <li><strong>CP<sub>D</sub> (Clock Pulse Down) :</strong> Entrée du signal d'horloge pour le décomptage (décrémentation).</li>
+        <li><strong>E<sub>C</sub> / E<sub>D</sub> (ou `\overline{CE}`, `\overline{CET}`, `\overline{CEP}`, Carry/Borrow) :</strong> Entrées/sorties de validation ou de report/retenue pour la mise en cascade. (Le texte mentionne Ec: valide comptage, ED: valide décomptage).</li>
+    </ul>
+
+    <div class="remark">
+        <h5>► Remarque 10.2</h5>
+        <p>Toutes les commandes agissant sur le comptage (Load, Clock Up, Clock Down, Enable, etc.) sont regroupées sur la figure ci-dessous :</p>
+         <figure>
+             <div class="placeholder">[Placeholder: Figure showing control inputs/outputs of a synchronous counter like 74193]</div>
+             <figcaption>Commandes d'un compteur/décompteur synchrone.</figcaption>
+         </figure>
+    </div>
+
+
+    <h3>X.2.3 Applications des compteurs</h3>
+
+    <h5>X.2.3.a Compteur de fréquence</h5>
+    <p>Un compteur peut être utilisé comme élément central d'un <strong>fréquencemètre</strong> numérique.</p>
+    <p>C'est un circuit qui mesure et affiche la fréquence d'un signal impulsionnel (périodique ou non) dont la fréquence est inconnue.</p>
+
+    <div class="page-footer">
+        <span>Page 119</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 10 Content -->
+    <h5>Principe d'un compteur de fréquence</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Block diagram of a frequency counter. Input signal -> Gate (controlled by precise timebase) -> Counter -> Latch/Display.]</div>
+         <figcaption>Principe d'un fréquencemètre numérique.</figcaption>
+     </figure>
+    <ul>
+        <li>On compte le nombre d'impulsions du signal inconnu pendant une <strong>durée très précise</strong> (appelée "base de temps" ou "période de comptage", $T_{gate} = t_2 - t_1$), générée par une horloge de référence stable (ex: quartz).</li>
+        <li>Le compteur est remis à zéro (RAZ) avant le début de la période de comptage ($t_1$).</li>
+        <li>À la fin de la période de comptage ($t_2$), le contenu du compteur (le nombre d'impulsions comptées) est mémorisé (latch) et affiché.</li>
+        <li>La fréquence $f$ est alors calculée (implicitement ou explicitement) par :
+            $f = \frac{\text{Nombre d'impulsions comptées}}{\text{Durée de comptage}} = \frac{\text{contenu}}{t_2 - t_1}$
+        </li>
+    </ul>
+
+    <div class="remark">
+        <h5>► Remarque 10.3 : Affichage et Précision</h5>
+        <p>Pour afficher la fréquence en décimal, le compteur est souvent un montage en cascade de plusieurs compteurs DCB (Décade, modulo 10). Chaque compteur DCB pilote une unité décodeur/afficheur (par exemple, décodeur BCD vers 7 segments et afficheur 7 segments) pour l'affichage décimal.</p>
+        <p>La précision de la mesure de fréquence dépend directement de la précision et de la stabilité de la base de temps ($t_2 - t_1$). Plus la base de temps est longue, plus la mesure est précise (pour les basses fréquences) mais plus la mesure prend de temps.</p>
+    </div>
+
+    <h5>X.2.3.b Horloge numérique</h5>
+    <p>Les compteurs sont la base des horloges numériques.</p>
+     <figure>
+         <div class="placeholder">[Placeholder: Block diagram of a digital clock. Crystal Oscillator -> Frequency Dividers (Counters) -> Counters for Seconds, Minutes, Hours -> Decoders -> Displays.]</div>
+         <figcaption>Principe d'une horloge numérique.</figcaption>
+     </figure>
+     <p>Une base de temps très stable (oscillateur à quartz) génère un signal haute fréquence (ex: 32768 Hz). Ce signal est divisé successivement par des compteurs pour obtenir des fréquences de 1 Hz (pour les secondes), 1/60 Hz (pour les minutes), 1/3600 Hz (pour les heures). D'autres compteurs (modulo 60 pour secondes/minutes, modulo 12 ou 24 pour heures) comptent ces impulsions et leur état est décodé pour l'affichage.</p>
+
+
+    <div class="page-footer">
+        <span>Page 120</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+
+    <script>
+        // Ensure Katex renders after the page is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
