@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours d'électronique numérique - Codes et Exercices</title>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4 { color: #333; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 5px;}
+        h3 { margin-top: 1.5em; }
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            margin: 20px 0;
+            background-color: #fafafa;
+            min-height: 50px;
+        }
+        figcaption { text-align: center; font-style: italic; margin-top: 5px; color: #555; }
+        table { border-collapse: collapse; margin: 15px auto; /* Center tables */ }
+        th, td { border: 1px solid #ccc; padding: 5px 8px; text-align: center; }
+        th { background-color: #f9f9f9; }
+        ul { list-style: none; padding-left: 0; }
+        ul li::before { content: "-"; padding-right: 8px; color: #555; }
+        .note { border-left: 3px solid #17a2b8; padding: 10px 15px; margin: 15px 0; background-color: #e2f8fb; }
+        .note::before { content: "ℹ️ Note"; font-weight: bold; margin-right: 5px; color: #17a2b8;}
+        .example::before { content: "▷ Exemple"; font-weight: bold; margin-right: 5px;}
+        .remark::before { content: "► Remarque"; font-weight: bold; margin-right: 5px;}
+        .exercise::before { content: "► Exercice"; font-weight: bold; margin-right: 5px;}
+        .page-footer { text-align: right; margin-top: 30px; font-size: 0.9em; color: #555; }
+        .code-block { background-color: #f8f8f8; border: 1px solid #eee; padding: 10px; font-family: monospace; white-space: pre; margin: 10px 0; text-align: left; display: inline-block;}
+        .explanation { background-color: #fff8e1; border-left: 3px solid #ffc107; padding: 10px 15px; margin: 15px 0; }
+        .summary-table th, .summary-table td { font-size: 0.9em; padding: 4px 6px; }
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        .formula { margin: 10px 0; padding-left: 20px;}
+        .formula-item::before { content:"☞ "; }
+
+    </style>
+</head>
+<body>
+
+    <section id="non-weighted-codes">
+        <h2>III.2 Codes numériques non pondérés</h2>
+        <p>Contrairement aux codes pondérés (comme le binaire pur ou le BCD 8421), les codes non pondérés n'attribuent pas de poids fixe à chaque position de bit. La valeur représentée dépend de la combinaison globale des bits.</p>
+
+        <h3>III.2.1 Code majoré de trois (Excess-3 / Excédant de 3)</h3>
+        <ul>
+            <li>Pour coder un chiffre décimal (0-9) en Excess-3 :
+                <ol>
+                    <li>On ajoute 3 au chiffre décimal.</li>
+                    <li>On convertit le résultat (qui sera entre 3 et 12) en binaire sur 4 bits.</li>
+                </ol>
+            </li>
+            <li>Ce code est auto-complémentaire par rapport à 9 (le code Excess-3 d'un chiffre $d$ est le complément bit-à-bit du code Excess-3 du chiffre $9-d$).</li>
+            <li>Il facilite certaines opérations arithmétiques, notamment l'addition BCD, car la retenue générée lors de l'addition binaire de deux codes Excess-3 correspond directement à la retenue décimale.</li>
+             <li>La valeur d'un mot en code majoré de trois est en fait égale au code BCD (8421) auquel on a ajouté 3 (0011).</li>
+        </ul>
+
+        <p class="example">3.4</p>
+        <p>Coder $(48)_{10}$ en Excess-3.</p>
+        <ul>
+            <li>Pour le chiffre 4 : $4 + 3 = 7$. $7_{10} = 0111_2$.</li>
+            <li>Pour le chiffre 8 : $8 + 3 = 11$. $11_{10} = 1011_2$.</li>
+        </ul>
+        <p>Donc, $(48)_{10} = (\underbrace{0111}_{4+3} \underbrace{1011}_{8+3})_{\text{Excess-3}}$</p>
+        <div class="placeholder">[Placeholder: Diagram showing 4 -> +3 -> 7 -> 0111 and 8 -> +3 -> 11 -> 1011.]</div>
+
+        <h3>III.2.2 Code de Gray (Binaire Réfléchi)</h3>
+        <ul>
+            <li>Propriété clé : <strong>Un seul bit change</strong> entre les représentations de deux nombres consécutifs. C'est un code basé sur l'adjacence.</li>
+            <li>Il n'est pas pondéré et ne convient pas directement à l'arithmétique binaire standard.</li>
+            <li>Utilisations :
+                <ul>
+                    <li>Étiquetage des axes des tableaux de Karnaugh (pour assurer l'adjacence physique des cases logiquement adjacentes).</li>
+                    <li>Dans certains circuits d'entrée/sortie pour éviter les états transitoires erronés lors du changement de plusieurs bits simultanément (comme dans le binaire pur).</li>
+                    <li>Dans certains convertisseurs analogique/numérique (encodeurs rotatifs ou linéaires) pour minimiser les erreurs de lecture aux transitions.</li>
+                </ul>
+            </li>
+        </ul>
+
+         <p class="example">3.5</p>
+         <p>Table du code Gray sur 4 bits :</p>
+         <table class="summary-table">
+            <thead><tr><th>Décimal</th><th>Gray</th><th>Décimal</th><th>Gray</th></tr></thead>
+            <tbody>
+                <tr><td>0</td><td>0000</td> <td>8</td><td>1100</td></tr>
+                <tr><td>1</td><td>0001</td> <td>9</td><td>1101</td></tr>
+                <tr><td>2</td><td>0011</td> <td>10</td><td>1111</td></tr>
+                <tr><td>3</td><td>0010</td> <td>11</td><td>1110</td></tr>
+                <tr><td>4</td><td>0110</td> <td>12</td><td>1010</td></tr>
+                <tr><td>5</td><td>0111</td> <td>13</td><td>1011</td></tr>
+                <tr><td>6</td><td>0101</td> <td>14</td><td>1001</td></tr>
+                <tr><td>7</td><td>0100</td> <td>15</td><td>1000</td></tr>
+                <!-- <tr><td>16</td><td>(1)0000</td><td></td><td></td></tr> -->
+            </tbody>
+         </table>
+         <p>Note: Le code Gray est cyclique. La transition de 15 (1000) à 0 (0000) change aussi un seul bit si on considère un cycle (par exemple, si on ajoutait une valeur 16 qui reviendrait à 0000).</p>
+         <p>Le code présente des symétries en miroir.</p>
+
+         <p><strong>Conversion Binaire Naturel (CBN) vers Code Binaire Réfléchi (CBR / Gray) :</strong></p>
+         <p>Méthode 1 (logique XOR) : Soit $n_k n_{k-1} ... n_1 n_0$ le nombre en binaire naturel et $g_k g_{k-1} ... g_1 g_0$ le code Gray correspondant.</p>
+         <ul>
+             <li>Le bit de poids fort (MSB) est le même : $g_k = n_k$.</li>
+             <li>Pour les autres bits $i$ (de $k-1$ à 0) : $g_i = n_{i+1} \oplus n_i$ (où $\oplus$ est l'opération OU Exclusif / XOR).</li>
+         </ul>
+
+         <p>Méthode 2 (décalage et XOR, décrite dans le PDF pour ex 3.6) : Pour convertir un nombre CBN en CBR :</p>
+         <ol>
+             <li>Prendre le nombre CBN.</li>
+             <li>Le décaler d'un rang vers la droite (ou vers la gauche selon le texte PDF?), en insérant un 0.</li>
+             <li>Effectuer un OU Exclusif (XOR) bit à bit entre le nombre original et le nombre décalé.</li>
+             <li>Ignorer l'éventuelle retenue ou le bit de poids faible/fort selon la méthode exacte.</li>
+         </ol>
+         <div class="explanation">La méthode décrite dans le PDF pour l'exemple 3.6 ("ajouter le CBN trouvé à lui-même décalé d'un rang vers la gauche, sans tenir compte de l'éventuelle retenue et en abandonnant dans le résultat le bit de poids faible") semble inhabituelle ou potentiellement mal formulée pour la conversion Binaire -> Gray. La méthode standard utilise le XOR avec le décalage à droite: $Gray = CBN \oplus (CBN \gg 1)$. Appliquons cette méthode standard à l'exemple.</div>
+
+        <p class="example">3.6 (revisité avec méthode standard)</p>
+        <p>Soit le nombre décimal 87. Sa valeur binaire est $(1010111)_2$.</p>
+        <p>Conversion vers Gray en utilisant $g_i = n_{i+1} \oplus n_i$ (et $g_{MSB} = n_{MSB}$):</p>
+        <p>CBN = $n_6 n_5 n_4 n_3 n_2 n_1 n_0 = 1010111$</p>
+        <ul>
+            <li>$g_6 = n_6 = 1$</li>
+            <li>$g_5 = n_6 \oplus n_5 = 1 \oplus 0 = 1$</li>
+            <li>$g_4 = n_5 \oplus n_4 = 0 \oplus 1 = 1$</li>
+            <li>$g_3 = n_4 \oplus n_3 = 1 \oplus 0 = 1$</li>
+            <li>$g_2 = n_3 \oplus n_2 = 0 \oplus 1 = 1$</li>
+            <li>$g_1 = n_2 \oplus n_1 = 1 \oplus 1 = 0$</li>
+            <li>$g_0 = n_1 \oplus n_0 = 1 \oplus 1 = 0$</li>
+        </ul>
+        <p>L'équivalent en code Gray de $(87)_{10}$ est $(1111100)_{\text{Gray}}$.</p>
+        <div class="explanation">Le résultat $(1111100)_{\text{Gray}}$ obtenu par la méthode standard diffère du résultat $(11111001 ? \rightarrow 1111100)$ donné dans l'exemple 3.6 du PDF, qui semble avoir une étape de calcul erronée ou une méthode non standard.</div>
+
+
+         <div class="page-footer">
+           <p>32       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+    <section id="gray-conversion">
+         <h5>III.2.2.a Conversion du code binaire naturel vers binaire réfléchi (Gray)</h5>
+         <p>Table de conversion pour 4 bits :</p>
+         <table class="summary-table">
+             <thead>
+                 <tr><th colspan="4">Binaire naturel (n)</th> <th colspan="4">Binaire réfléchi (g)</th></tr>
+                 <tr><th>$n_3$</th><th>$n_2$</th><th>$n_1$</th><th>$n_0$</th> <th>$g_3$</th><th>$g_2$</th><th>$g_1$</th><th>$g_0$</th></tr>
+              </thead>
+             <tbody>
+                 <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                 <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                 <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                 <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                 <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                 <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                 <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                 <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                 <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                 <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                 <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+                 <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+                 <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                 <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                 <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                 <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+             </tbody>
+         </table>
+
+         <p>Les équations logiques pour un mot de 4 bits $(n_3 n_2 n_1 n_0)$ vers Gray $(g_3 g_2 g_1 g_0)$ sont :</p>
+         <div class="formula">
+             <span class="formula-item">$g_3 = n_3$</span><br>
+             <span class="formula-item">$g_2 = n_3 \oplus n_2$</span><br>
+             <span class="formula-item">$g_1 = n_2 \oplus n_1$</span><br>
+             <span class="formula-item">$g_0 = n_1 \oplus n_0$</span>
+         </div>
+
+         <p>Pour un mot binaire de format $N$ bits (indices $N-1$ à 0):</p>
+         <div class="formula">
+              <span class="formula-item">$g_{N-1} = n_{N-1}$</span><br>
+              <span class="formula-item">$g_i = n_{i+1} \oplus n_i$, pour $N-2 \ge i \ge 0$</span>
+         </div>
+
+         <p>On peut également exprimer $g_n$ de manière récursive ?</p>
+         <div class="explanation">Les formules récursives données dans le PDF page 33 pour $g_0, g_1, g_2, g_3$ semblent incorrectes ou non conventionnelles pour la conversion Binaire -> Gray. Les formules directes basées sur le XOR sont standard.</div>
+
+         <div class="page-footer">
+           <p>© M. Siadat & C. Diou       33</p>
+        </div>
+    </section>
+
+    <section id="gray-conversion-reverse">
+        <h5>III.2.2.b Conversion du code binaire réfléchi (Gray) vers binaire naturel</h5>
+        <p>Table de conversion pour 4 bits (inverse de la précédente) :</p>
+         <table class="summary-table">
+             <thead>
+                 <tr><th colspan="4">Binaire réfléchi (g)</th> <th colspan="4">Binaire naturel (n)</th></tr>
+                 <tr><th>$g_3$</th><th>$g_2$</th><th>$g_1$</th><th>$g_0$</th> <th>$n_3$</th><th>$n_2$</th><th>$n_1$</th><th>$n_0$</th></tr>
+              </thead>
+             <tbody>
+                 <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                 <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                 <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                 <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                 <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                 <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                 <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                 <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                 <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                 <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                 <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                 <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                 <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                 <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                 <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+                 <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+             </tbody>
+         </table>
+
+        <p>Les équations logiques pour un mot Gray de 4 bits $(g_3 g_2 g_1 g_0)$ vers Binaire naturel $(n_3 n_2 n_1 n_0)$ sont :</p>
+         <div class="formula">
+             <span class="formula-item">$n_3 = g_3$</span><br>
+             <span class="formula-item">$n_2 = g_3 \oplus g_2 = n_3 \oplus g_2$</span><br>
+             <span class="formula-item">$n_1 = g_3 \oplus g_2 \oplus g_1 = n_2 \oplus g_1$</span><br>
+             <span class="formula-item">$n_0 = g_3 \oplus g_2 \oplus g_1 \oplus g_0 = n_1 \oplus g_0$</span>
+         </div>
+
+        <p>Pour un mot binaire de format $N$ bits (indices $N-1$ à 0):</p>
+         <div class="formula">
+              <span class="formula-item">$n_{N-1} = g_{N-1}$</span><br>
+              <span class="formula-item">$n_i = n_{i+1} \oplus g_i$, pour $N-2 \ge i \ge 0$</span><br>
+              <span class="formula-item">Ou de manière non récursive : $n_i = \bigoplus_{j=i}^{N-1} g_j$ (XOR de tous les bits Gray de $g_i$ jusqu'au MSB $g_{N-1}$)</span>
+         </div>
+
+    </section>
+
+    <section id="error-detection">
+        <h2>III.3 Codes détecteurs d'erreurs et autocorrecteurs</h2>
+        <p>Ces codes sont utilisés pour contrôler (et parfois corriger) les erreurs pouvant survenir lors de la transmission ou du stockage des données.</p>
+        <p>Souvent, on utilise un nombre de bits supérieur à celui strictement nécessaire pour coder l'information elle-même (redondance).</p>
+
+        <h3>III.3.1 Codes biquinaires</h3>
+        <p>Cf. <a href="#biquinaire">III.1.4 page 30</a>. Leur propriété d'avoir toujours un nombre fixe de '1' (par exemple, 2 parmi 7) permet de détecter toute erreur qui changerait ce nombre de '1'.</p>
+
+        <h3>III.3.2 Les codes p parmi n (p-out-of-n codes)</h3>
+        <ul>
+            <li>Ce sont des codes auto-vérificateurs (détecteurs d'erreurs mais pas autocorrecteurs).</li>
+            <li>Ces codes possèdent $n$ bits au total, dont exactement $p$ bits sont à 1 pour toute combinaison valide.</li>
+            <li>La position des $p$ bits à 1 permet de reconnaître l'élément codé.</li>
+            <li>Le nombre de combinaisons valides possibles est donné par le coefficient binomial $C_n^p = \frac{n!}{p!(n-p)!}$.</li>
+            <li>Toute combinaison reçue avec un nombre de '1' différent de $p$ est détectée comme une erreur.</li>
+        </ul>
+
+        <p class="example">3.7</p>
+        <p>Pour transmettre l'information numérique dans les centraux téléphoniques (<em>cross bar</em>), on utilise parfois un code <strong>2 parmi 5</strong> (ou code 74210, faisant référence aux poids parfois associés aux positions pour coder les chiffres 1-9 et 0) pour représenter les chiffres décimaux.</p>
+        <p>Il existe $C_5^2 = \frac{5!}{2!3!} = \frac{120}{2 \times 6} = 10$ combinaisons possibles avec exactement 2 bits à 1 sur 5 bits.</p>
+        <p>Table du code 2 parmi 5 (une version possible) :</p>
+         <table class="summary-table">
+            <thead><tr><th>Déc.</th><th colspan="5">Code 2 parmi 5 (poids 7 4 2 1 0)</th> <th>Déc.</th><th colspan="5">Code 2 parmi 5 (poids 7 4 2 1 0)</th></tr></thead>
+             <tbody>
+                 <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td> <td>6</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                 <tr><td>2</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td> <td>7</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                 <tr><td>3</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td> <td>8</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                 <tr><td>4</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td> <td>9</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                 <tr><td>5</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td> <td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+             </tbody>
+         </table>
+         <p>Note : le chiffre 0 est souvent codé par 7+4 (11000).</p>
+
+        <h3>III.3.3 Les codes à contrôle de parité</h3>
+        <ul>
+            <li>Principe : On ajoute un bit supplémentaire (bit de parité) aux bits de données.</li>
+            <li>Le bit de parité est choisi de sorte que le nombre total de bits à 1 dans le mot transmis (données + parité) soit toujours pair (<strong>parité paire</strong>) ou toujours impair (<strong>parité impaire</strong>).</li>
+            <li>Permet de détecter un nombre impair d'erreurs de bits (1 erreur, 3 erreurs, etc.). Une erreur sur un nombre pair de bits n'est pas détectée.</li>
+        </ul>
+
+        <p class="example">3.8</p>
+        <p>Ajouter un bit de parité paire au mot <code>0101</code>.</p>
+        <p>Le mot <code>0101</code> contient deux '1' (nombre pair).</p>
+        <p>Pour obtenir un nombre total pair de '1', le bit de parité doit être 0.</p>
+        <p>Mot transmis : <code>00101</code> (ou <code>01010</code> si le bit de parité est à la fin).</p>
+        <p>Ajouter un bit de parité impaire au mot <code>0111</code>.</p>
+        <p>Le mot <code>0111</code> contient trois '1' (nombre impair).</p>
+        <p>Pour obtenir un nombre total impair de '1', le bit de parité doit être 0.</p>
+        <p>Mot transmis : <code>00111</code> (ou <code>01110</code>).</p>
+
+         <div class="page-footer">
+           <p>© M. Siadat & C. Diou       35</p>
+        </div>
+    </section>
+
+     <section id="parity-hamming-alphanum">
+
+        <p class="remark">3.2</p>
+        <p>Dans l'application de la méthode de la parité, l'émetteur et le récepteur se mettent d'accord à l'avance sur la parité à surveiller (paire ou impaire).</p>
+
+        <p class="remark">3.3</p>
+        <p>Pour détecter (et parfois localiser) la place d'une erreur unique, on peut utiliser un codage avec parité dans 2 dimensions (parité sur les lignes et les colonnes d'un bloc de données).</p>
+
+        <p class="example">3.9</p>
+        <p>Transmission d'un bloc de données avec parité paire sur lignes et colonnes :</p>
+         <div class="code-block">
+Données originales   Transmission avec parité
+(Lignes)           (Lignes et Colonnes)
+
+ 0 1 0 0 1        0 1 0 0 1 | 0  <- Bit parité ligne
+ 1 0 0 1 0        1 0 0 1 0 | 0
+ 0 0 0 1 1        0 0 0 1 1 | 0
+ 1 1 1 0 1        1 1 1 0 1 | 0
+ 0 0 1 0 1        0 0 1 0 1 | 0
+ ----------       -----------
+                  0 0 0 0 1   <- Bits parité colonne
+                      ^-- Erreur supposée
+
+ --> Si une erreur survient (ex: 0->1 en colonne 4, ligne 2) :
+
+ 0 1 0 0 1 | 0  (OK)
+ 1 0 0 0 0 | 1  (Erreur ligne détectée)
+ 0 0 0 1 1 | 0  (OK)
+ 1 1 1 0 1 | 0  (OK)
+ 0 0 1 0 1 | 0  (OK)
+ ----------
+ 0 0 0 1 1   <- Bit parité colonne
+         ^-- Erreur colonne détectée
+
+ L'intersection de la ligne et de la colonne en erreur localise le bit erroné.
+         </div>
+        <p>Ce code détecte les erreurs simples à condition que le bit de parité lui-même ne soit pas erroné.</p>
+
+        <h3>III.3.4 Code de Hamming</h3>
+        <ul>
+            <li>Ce code est utilisé dans les transmissions de données et le stockage (mémoire ECC).</li>
+            <li>Il permet non seulement de détecter mais aussi de <strong>localiser et corriger</strong> les erreurs sur un seul bit (SECDED : Single Error Correction, Double Error Detection pour certaines versions étendues).</li>
+            <li>Principe : On ajoute plusieurs bits de parité (bits de contrôle) aux bits d'information. Chaque bit de parité vérifie la parité d'un sous-ensemble spécifique des bits (données + autres bits de parité).</li>
+            <li>La combinaison des résultats des vérifications de parité (appelée "syndrome") indique si une erreur s'est produite et, le cas échéant, la position du bit erroné.</li>
+        </ul>
+        <p>Exemple : Code Hamming (7,4) - 4 bits de données (D, C, B, A), 3 bits de parité (g, f, d), 7 bits transmis (abcdefg).</p>
+        <p>Position des bits transmis (1 à 7):</p>
+        <p><code>a(P1) b(P2) c(D1) d(P3) e(D2) f(D3) g(D4)</code> (P=Parité, D=Donnée, indices non standards ici)</p>
+        <p>Le document utilise les lettres $a..g$ pour les 7 bits transmis et $A..D$ pour les 4 bits d'info. Les bits de parité ($a, b, d$) sont calculés comme suit (parité paire) :</p>
+        <ul>
+            <li>$a = B \oplus C \oplus D$ (Parité pour bits 3, 5, 7 - positions avec bit 0 à 1)</li>
+            <li>$b = A \oplus C \oplus D$ (Parité pour bits 3, 6, 7 - positions avec bit 1 à 1)</li>
+            <li>$d = A \oplus B \oplus C$ (Parité pour bits 5, 6, 7 - positions avec bit 2 à 1)</li>
+        </ul>
+        <p>Les bits de données sont $c=A, e=B, f=C, g=D$.</p>
+         <div class="explanation">Les équations fournies dans le PDF pour a, b, d semblent correspondre à un calcul de syndrome plutôt qu'à la génération des bits de parité. La structure standard du Hamming(7,4) place les bits de parité aux positions $2^0, 2^1, 2^2$ (positions 1, 2, 4) et les données aux autres positions (3, 5, 6, 7). Les équations de parité dépendent de cette convention.</div>
+
+
+        <h2>III.4 Les codes alphanumériques</h2>
+        <p>Ils servent à coder non seulement des chiffres, mais aussi des lettres (majuscules et minuscules), des signes de ponctuations et des caractères spéciaux (symboles de contrôle, etc.).</p>
+        <p>Exemple de jeu de caractères : 26 caractères minuscules, 26 caractères majuscules, 10 chiffres, ~7 signes de ponctuation, 20 à 40 caractères spéciaux comme +, |, ≠, %, ...</p>
+
+        <div class="page-footer">
+           <p>36       © M. Siadat & C. Diou</p>
+        </div>
+    </section>
+
+     <section id="ascii-exercises">
+        <h3>III.4.1 Le code ASCII (American Standard Code for Information Interchange)</h3>
+        <ul>
+            <li>C'est le code alphanumérique le plus répandu.</li>
+            <li>On le retrouve pratiquement dans tous les ordinateurs et leurs organes périphériques, pour leurs dialogues et la représentation des textes en mémoire.</li>
+            <li>Standard de base : Chaque symbole (caractère imprimable ou de contrôle) est codé par <strong>7 bits</strong>.</li>
+            <li>Cela permet $2^7 = 128$ combinaisons différentes.</li>
+            <li>Un 8ème bit peut être ajouté, souvent utilisé comme <strong>bit de parité</strong> pour la détection d'erreurs, ou pour étendre le jeu de caractères (ASCII étendu, avec 256 combinaisons).</li>
+        </ul>
+        <div class="placeholder">[Placeholder: Table ASCII (partielle ou complète)]</div>
+
+
+         <div class="page-footer">
+           <p>© M. Siadat & C. Diou       37</p>
+        </div>
+    </section>
+
+    <hr style="margin: 40px 0;">
+
+    <section id="exercises">
+        <h2>[ Exercices sur les nombres ]</h2>
+
+        <p class="exercise">1.1</p>
+        <p>Convertir en binaire, octal et hexadécimal les nombres décimaux suivants : 43 ; 154 ; 25740</p>
+
+        <p class="exercise">1.2</p>
+        <p>Convertir en décimal et hexadécimal les nombres suivants : $(10010101)_{\text{BCD}}$ ; $(1101110)_2$ ; $(75)_8$ ; $(587)_8$</p>
+        <div class="explanation">Note: (587)8 est invalide car le chiffre 8 n'existe pas en base 8.</div>
+
+
+        <p class="exercise">1.3</p>
+        <p>Convertir en binaire et hexadécimal les nombres suivants : $(166,25)_{10}$ ; $(126,34)_8$ ; $(231,1)_4$</p>
+
+        <p class="exercise">1.4</p>
+        <p>Convertir en binaire le nombre décimal suivant : 24537</p>
+
+        <p class="exercise">1.5</p>
+        <p>Convertir en décimal les nombres suivants : $(10010101)_{\text{BCD}}$ ; $(D9,4)_{16}$ ; $(576)_8$</p>
+
+        <p class="exercise">1.6</p>
+        <p>Que peuvent représenter les octets suivants (selon le codage: non signé, signé C2, BCD, ASCII...) ? <code>01111001</code> ; <code>10100100</code> ; <code>01101010</code> ; <code>10010111</code></p>
+
+        <p class="exercise">1.7</p>
+        <p>En parité <strong>impaire</strong>, quel est le bit de parité à associer aux octets suivants (donnés en hexadécimal) ? EC ; F1 ; 69 ; A3</p>
+
+        <p class="exercise">1.8</p>
+        <p>En parité <strong>paire</strong>, quel est le bit de parité à associer aux octets suivants (donnés en hexadécimal) ? CD ; 6E ; B8 ; A4</p>
+
+         <div class="page-footer">
+           <p>39</p>
+        </div>
+    </section>
+
+    <section id="exercises-suite">
+
+        <p class="exercise">1.9</p>
+        <p>On effectue les opérations suivantes sur des octets signés (représentation en complément à 2). Donner les résultats en hexadécimal et en binaire, en discutant leur validité (détection d'overflow). Vérifier en prenant les équivalents décimaux.</p>
+        <p><code>5F + 6D</code> ; <code>E8 + C7</code> ; <code>9A - 17</code> ; <code>5B - C4</code> ; <code>A4 - 62</code></p>
+        <div class="explanation">Note: Les valeurs sont supposées être en hexadécimal.</div>
+
+
+        <p class="exercise">1.10</p>
+        <p>Une mémoire contient des octets stockés entre les adresses $(9400)_{16}$ et $(B3FF)_{16}$ (inclusives). Combien d'octets contient-elle ? Quelle est la capacité totale en kbits ?</p>
+
+        <p class="exercise">1.11</p>
+        <p>Une mémoire contient 2k octets (c'est-à-dire $2 \times 1024 = 2048$ octets) stockés à partir de l'adresse $(700)_{16}$. Quelle est la dernière adresse utilisée par cette mémoire (en hexadécimal) ?</p>
+
+
+         <div class="page-footer">
+           <p>40       © M. Siadat & C. Diou</p>
+        </div>
+
+    </section>
+
+
+    <script>
+        // Trigger KaTeX rendering
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                // Custom macros if needed, e.g., for XOR
+                macros: {
+                    "\\xor": "\\oplus"
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
