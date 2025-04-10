@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuits Combinatoires et Séquentiels</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #0056b3;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #0056b3;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 20px 0;
+            width: auto;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        code, .katex {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+            /* Ensure KaTeX output fits */
+            font-size: inherit;
+            white-space: normal; /* Allow wrapping */
+        }
+
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            color: #888;
+            background-color: #f9f9f9;
+            overflow: auto; /* Handle large images */
+        }
+        .placeholder img {
+             max-width: 100%;
+             height: auto;
+        }
+
+
+        ul {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+         /* Specific style for equations to ensure they don't overflow containers easily */
+        .katex-display {
+             overflow-x: auto;
+             overflow-y: hidden;
+             padding: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Chapitre 4 Circuits combinatoires</h1>
+
+    <p>
+        Un <strong>circuit combinatoire</strong> est un type de circuit logique où l'état de chacune des sorties dépend <em>uniquement</em> de l'état actuel des entrées. Il n'y a pas de notion de mémoire ou d'état antérieur. Mathématiquement, chaque sortie est une fonction booléenne des entrées.
+    </p>
+
+    <h2>4-1 Synthèse d'un circuit combinatoire</h2>
+
+    <p>
+        La synthèse d'un circuit combinatoire consiste à concevoir le circuit (trouver les équations logiques et le schéma des portes) à partir d'une description de son comportement, souvent donnée sous forme de table de vérité.
+    </p>
+
+    <p>
+        <strong>Exemple :</strong> On désire concevoir un circuit logique avec trois entrées (notées a, b, c) et deux sorties (notées s₁ et s₀). Le comportement souhaité est défini par la table de vérité suivante (table 13) :
+    </p>
+
+    <h4>Table de Vérité (Table 13)</h4>
+    <table>
+        <thead>
+            <tr><th>a</th><th>b</th><th>c</th><th>s₁</th><th>s₀</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+        </tbody>
+    </table>
+    <div class="placeholder">
+        [Image Placeholder: Truth Table for s1 and s0 from slide 21]
+        <img src="placeholder_table_13.png" alt="Table de vérité pour s1 et s0">
+    </div>
+
+    <h3>Équations logiques (dérivées de la table de vérité)</h3>
+    <p><strong>Pour la sortie s₀ :</strong> \( s₀ = a \bar{b} \bar{c} + a \bar{b} c \)</p>
+    <p><strong>Pour la sortie s₁ :</strong> \( s₁ = \bar{a} \bar{b} \bar{c} + a \bar{b} \bar{c} + a b c \)</p>
+    <div class="placeholder">
+        [Image Placeholder: Equations derived from truth table from slide 22]
+        <img src="placeholder_equations_s0_s1.png" alt="Equations logiques pour s0 et s1">
+    </div>
+
+    <h3>Simplification des équations logiques</h3>
+    <p><strong>Simplification algébrique de s₀ :</strong> \( s₀ = a \bar{b} \bar{c} + a \bar{b} c = a \bar{b} (\bar{c} + c) = a \bar{b} (1) = a \bar{b} \)</p>
+    <p><strong>Simplification algébrique de s₁ :</strong> \( s₁ = \bar{a} \bar{b} \bar{c} + a \bar{b} \bar{c} + a b c = (\bar{a} + a) \bar{b} \bar{c} + a b c = (1) \bar{b} \bar{c} + a b c = \bar{b} \bar{c} + a b c \)</p>
+    <div class="placeholder">
+         [Image Placeholder: Algebraic simplification from slide 22]
+         <img src="placeholder_simplification_algebra.png" alt="Simplification algébrique des équations">
+    </div>
+
+    <h3>Simplification avec les Tableaux de Karnaugh</h3>
+    <h4>Tableau de Karnaugh pour s₀</h4>
+    <div class="placeholder">
+        [Image Placeholder: Karnaugh Map for s0 from slide 23]
+        <img src="placeholder_kmap_s0.png" alt="Tableau de Karnaugh pour s0">
+         <p>\( s₀ = a \bar{b} \)</p>
+    </div>
+    <h4>Tableau de Karnaugh pour s₁</h4>
+     <div class="placeholder">
+        [Image Placeholder: Karnaugh Map for s1 from slide 23]
+        <img src="placeholder_kmap_s1.png" alt="Tableau de Karnaugh pour s1">
+         <p>\( s₁ = \bar{b} \bar{c} + a b c \)</p>
+    </div>
+
+    <h3>Logigramme (Circuit Logique - fig. 6)</h3>
+    <p>Équations : \( s₀ = a \bar{b} \), \( s₁ = \bar{b} \bar{c} + a b c \)</p>
+    <div class="placeholder">
+        [Image Placeholder: Logic Diagram for s0 and s1 from slide 24]
+        <img src="placeholder_logigramme_s0_s1.png" alt="Logigramme pour s0 et s1">
+    </div>
+
+    <hr style="margin: 40px 0;">
+
+    <h2>4-2 Circuits arithmétiques</h2>
+    <p>
+        À partir des fonctions logiques de base, on peut construire des circuits combinatoires plus complexes capables d'effectuer des opérations arithmétiques sur des nombres binaires.
+    </p>
+
+    <h3>4-2-1 Comparateur 1 bit</h3>
+    <p>Compare deux bits 'a' et 'b'. Sortie 's' = 1 si a=b, 0 sinon.</p>
+    <h4>Table de vérité (Table 14)</h4>
+    <table>
+        <thead><tr><th>a</th><th>b</th><th>s</th></tr></thead>
+        <tbody>
+            <tr><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td></tr>
+        </tbody>
+    </table>
+    <div class="placeholder">
+        [Image Placeholder: Truth Table for 1-bit Comparator from slide 26]
+        <img src="placeholder_table_14.png" alt="Table de vérité comparateur 1 bit">
+    </div>
+    <h4>Équation booléenne</h4>
+    <p>\( s = \bar{a} \bar{b} + a b = \overline{a \oplus b} \) (Fonction XNOR)</p>
+    <h4>Logigramme (fig. 7)</h4>
+     <div class="placeholder">
+        [Image Placeholder: Logic Diagram for 1-bit Comparator (XNOR) from slide 26]
+        <img src="placeholder_logigramme_comp1bit.png" alt="Logigramme comparateur 1 bit (XNOR)">
+    </div>
+
+    <h3>4-2-2 Additionneur 1 bit (Demi-Additionneur)</h3>
+    <p>Additionne deux bits 'a' et 'b'. Sorties : s₀ (Somme LSB) et s₁ (Retenue MSB).</p>
+    <h4>Table de vérité (Table 15)</h4>
+    <table>
+        <thead><tr><th>a</th><th>b</th><th>s₁ (Retenue)</th><th>s₀ (Somme)</th></tr></thead>
+        <tbody>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+        </tbody>
+    </table>
+    <div class="placeholder">
+        [Image Placeholder: Truth Table for Half-Adder from slide 27]
+        <img src="placeholder_table_15.png" alt="Table de vérité demi-additionneur">
+    </div>
+    <h4>Équations booléennes</h4>
+    <p>\( s₀ = a \oplus b \) (XOR)</p>
+    <p>\( s₁ = a \cdot b \) (AND)</p>
+    <h4>Logigramme (fig. 8)</h4>
+    <div class="placeholder">
+        [Image Placeholder: Logic Diagram for Half-Adder from slide 27]
+        <img src="placeholder_logigramme_halfadder.png" alt="Logigramme demi-additionneur">
+    </div>
+
+    <hr style="margin: 40px 0;">
+
+    <h1>Chapitre 5 Circuits séquentiels</h1>
+    <p>
+        Dans un <strong>circuit séquentiel</strong>, les sorties dépendent non seulement des entrées actuelles mais aussi de l'<strong>état antérieur</strong> du circuit, stocké dans des éléments de mémoire.
+    </p>
+
+    <h2>5-1 Fonction mémoire</h2>
+    <p>
+        Les éléments fondamentaux pour stocker l'information (un bit) sont les <strong>bascules</strong> (flip-flops) et les <strong>verrous</strong> (latches).
+    </p>
+
+    <h3>5-1-1 Verrou RS (RS Latch)</h3>
+    <p>
+        Le verrou RS (Reset-Set) a deux entrées (R et S) et deux sorties complémentaires (Q et \( \bar{Q} \)). Il est souvent construit avec des portes NOR ou NAND interconnectées.
+    </p>
+    <h4>Symbole (fig. 10)</h4>
+    <div class="placeholder">
+        [Image Placeholder: RS Latch Symbol from slide 28]
+        <img src="placeholder_symbol_rs_latch.png" alt="Symbole du verrou RS">
+    </div>
+    <h4>Logigramme (fig. 9 - Implémentation avec portes NON-OU / NOR)</h4>
+     <div class="placeholder">
+        [Image Placeholder: RS Latch Logic Diagram (NOR gates) from slide 29]
+        <img src="placeholder_logigramme_rs_nor.png" alt="Logigramme du verrou RS avec portes NOR">
+    </div>
+
+    <h4>Analyse du fonctionnement (Verrou RS NOR)</h4>
+    <p><strong>Rappel Porte NOR :</strong> Sortie = 1 si et seulement si toutes les entrées = 0.</p>
+    <ul>
+        <li><strong>État Interdit (R=1, S=1) :</strong> Force Q=0 et \( \bar{Q}=0 \). À éviter.</li>
+        <li><strong>État Mémoire (R=0, S=0) :</strong> Les sorties conservent leur valeur précédente.</li>
+        <li><strong>Fonction SET (R=0, S=1) :</strong> Force Q à 1.
+            <div class="placeholder">
+                [Image Placeholder: RS Latch SET operation (00 -> 01) from slide 30 - fig 11a]
+                <img src="placeholder_rs_set_transition.png" alt="Transition SET du verrou RS">
+            </div>
+            <p>Transition (01) → (00) : L'état Q=1 est mémorisé.</p>
+             <div class="placeholder">
+                [Image Placeholder: RS Latch Memory operation (after SET: 01 -> 00) from slide 30 - fig 11b]
+                <img src="placeholder_rs_memory_after_set.png" alt="Fonction Mémoire du verrou RS après SET">
+            </div>
+        </li>
+        <li><strong>Fonction RESET (R=1, S=0) :</strong> Force Q à 0.
+            <div class="placeholder">
+                [Image Placeholder: RS Latch RESET operation (00 -> 10) from slide 31 - fig 11c]
+                <img src="placeholder_rs_reset_transition.png" alt="Transition RESET du verrou RS">
+            </div>
+            <p>Transition (10) → (00) : L'état Q=0 est mémorisé.</p>
+             <div class="placeholder">
+                [Image Placeholder: RS Latch Memory operation (after RESET: 10 -> 00) from slide 31 - fig 11d]
+                <img src="placeholder_rs_memory_after_reset.png" alt="Fonction Mémoire du verrou RS après RESET">
+            </div>
+        </li>
+    </ul>
+
+    <h4>Table de vérité fonctionnelle (Table 16)</h4>
+    <p>On note \( Q_n \) l'état avant, et \( Q_{n+1} \) l'état après.</p>
+    <table>
+        <thead><tr><th>R</th><th>S</th><th>\( Q_{n+1} \)</th><th>Fonction</th></tr></thead>
+        <tbody>
+            <tr><td>0</td><td>0</td><td>\( Q_n \)</td><td>Mémoire</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>Set</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>Reset</td></tr>
+            <tr><td>1</td><td>1</td><td>X (Interdit)</td><td>Interdit</td></tr>
+        </tbody>
+    </table>
+    <div class="placeholder">
+        [Image Placeholder: RS Latch Function Table and small diagram from slide 32]
+        <img src="placeholder_table_16_and_diag.png" alt="Table de vérité fonctionnelle Verrou RS">
+    </div>
+
+    <h4>Équation Caractéristique (Tableau de Karnaugh)</h4>
+    <p>L'équation caractéristique exprime \( Q_{n+1} \) en fonction de R, S et \( Q_n \).</p>
+    <p>Table de vérité détaillée pour \( Q_{n+1} \) :</p>
+    <table>
+        <thead><tr><th>R</th><th>S</th><th>\( Q_n \)</th><th>\( Q_{n+1} \)</th></tr></thead>
+        <tbody>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>0</td><td>X</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>X</td></tr>
+        </tbody>
+    </table>
+    <p>Tableau de Karnaugh pour \( Q_{n+1} \):</p>
+    <div class="placeholder">
+        [Image Placeholder: Detailed Truth Table and Karnaugh Map for Qn+1 from slide 33]
+        <img src="placeholder_kmap_qnplus1.png" alt="Tableau de Karnaugh pour Qn+1">
+    </div>
+    <p>L'équation caractéristique du verrou RS (NOR) est : \( Q_{n+1} = S + \bar{R} Q_n \) (avec \( R \cdot S = 0 \))</p>
+
+    <h4>Exercice : Chronogramme (fig. 12)</h4>
+    <div class="placeholder">
+        [Image Placeholder: Timing Diagram Exercise/Solution for RS Latch from slide 34]
+        <img src="placeholder_chrono_exercise_rs.png" alt="Exercice chronogramme Verrou RS" style="margin-bottom:10px;">
+        <img src="placeholder_chrono_solution_rs.png" alt="Correction chronogramme Verrou RS">
+    </div>
+
+    <h3>5-1-2 Verrou RSH (Gated RS Latch)</h3>
+    <p>Ajoute une entrée de validation H (Horloge/Enable). Actif quand H=1, mémorise quand H=0.</p>
+    <h4>Symbole (fig. 13a)</h4>
+    <div class="placeholder">
+        [Image Placeholder: Gated RS Latch Symbol and Clock signal example from slide 35]
+        <img src="placeholder_symbol_rsh_latch.png" alt="Symbole du Verrou RSH et signal H">
+    </div>
+    <h4>Table de vérité (Table 17)</h4>
+    <table>
+        <thead><tr><th>R</th><th>S</th><th>H</th><th>\( Q_{n+1} \)</th><th>Fonction</th></tr></thead>
+        <tbody>
+            <tr><td>X</td><td>X</td><td>0 (inactive)</td><td>\( Q_n \)</td><td>Mémoire</td></tr>
+            <tr><td>0</td><td>0</td><td>1 (active)</td><td>\( Q_n \)</td><td>Mémoire</td></tr>
+            <tr><td>0</td><td>1</td><td>1 (active)</td><td>1</td><td>Set</td></tr>
+            <tr><td>1</td><td>0</td><td>1 (active)</td><td>0</td><td>Reset</td></tr>
+            <tr><td>1</td><td>1</td><td>1 (active)</td><td>X</td><td>Interdit</td></tr>
+        </tbody>
+    </table>
+     <div class="placeholder">
+        [Image Placeholder: Gated RS Latch Truth Table from slide 35]
+        <img src="placeholder_table_17_rsh.png" alt="Table de vérité Verrou RSH">
+    </div>
+    <h4>Équation logique (Caractéristique)</h4>
+    <p>L'équation caractéristique peut s'écrire : \( Q_{n+1} = H \cdot (S + \bar{R} Q_n) + \bar{H} \cdot Q_n \) (sous condition \(R \cdot S = 0\) quand H=1).</p>
+    <p><em>(Note : L'équation sur la diapositive 36 est \( Q_{n+1} = H \cdot (\overline{R \cdot Q_n} + S) + \bar{H} \cdot Q_n \), qui peut correspondre à une implémentation spécifique.)</em></p>
+    <h4>Logigramme</h4>
+    <div class="placeholder">
+        [Image Placeholder: Gated RS Latch Logic Diagram from slide 36]
+        <img src="placeholder_logigramme_rsh.png" alt="Logigramme Verrou RSH">
+    </div>
+
+    <h3>5-1-3 Bascule RSH (RS Flip-Flop)</h3>
+    <p>Sensible aux <strong>transitions (fronts)</strong> de l'horloge H, pas au niveau.</p>
+    <ul>
+        <li>Front montant : changement sur 0 → 1.</li>
+        <li>Front descendant : changement sur 1 → 0.</li>
+    </ul>
+    <h4>Symboles (fig. 13b)</h4>
+    <p>Le triangle (▷) indique la sensibilité au front. Cercle+Triangle (○▷) pour front descendant.</p>
+     <div class="placeholder">
+        [Image Placeholder: RS Flip-Flop Symbols (positive and negative edge) from slide 37]
+        <img src="placeholder_symbols_rsh_ff.png" alt="Symboles Bascule RSH (front montant et descendant)">
+    </div>
+    <p>La table de vérité fonctionnelle (sur le front actif) est identique à celle du verrou (Table 17 pour H=1).</p>
+
+    <h4>Exercice : Chronogrammes (fig. 14)</h4>
+    <p>Comparaison Verrou RSH, Bascule RSH front montant, Bascule RSH front descendant.</p>
+     <div class="placeholder">
+        [Image Placeholder: Timing Diagram Exercise for RSH Latch and Flip-Flops from slide 38]
+        <img src="placeholder_chrono_exercise_rsh_all.png" alt="Exercice chronogrammes Verrou et Bascules RSH">
+    </div>
+    <h4>Correction (fig. 14)</h4>
+    <div class="placeholder">
+        [Image Placeholder: Timing Diagram Solution for RSH Latch and Flip-Flops from slide 39]
+        <img src="placeholder_chrono_solution_rsh_all.png" alt="Correction chronogrammes Verrou et Bascules RSH">
+    </div>
+
+    <h3>5-1-4 Verrou D (D Latch)</h3>
+    <p>Verrou transparent. Entrée de données D, entrée de validation H.</p>
+    <ul>
+        <li>H=1 : Q suit D (transparent).</li>
+        <li>H=0 : Q mémorise la dernière valeur (verrouillé).</li>
+    </ul>
+    <h4>Symbole</h4>
+    <div class="placeholder">
+        [Image Placeholder: D Latch Symbol from slide 40]
+        <img src="placeholder_symbol_d_latch.png" alt="Symbole Verrou D">
+    </div>
+    <h4>Table de vérité (Table 18)</h4>
+    <table>
+        <thead><tr><th>D</th><th>H</th><th>\( Q_{n+1} \)</th><th>Fonction</th></tr></thead>
+        <tbody>
+            <tr><td>X</td><td>0 (inactive)</td><td>\( Q_n \)</td><td>Mémoire</td></tr>
+            <tr><td>0</td><td>1 (active)</td><td>0</td><td>Reset (Q=D)</td></tr>
+            <tr><td>1</td><td>1 (active)</td><td>1</td><td>Set (Q=D)</td></tr>
+        </tbody>
+   </table>
+     <div class="placeholder">
+        [Image Placeholder: D Latch Truth Table from slide 40]
+        <img src="placeholder_table_18_d_latch.png" alt="Table de vérité Verrou D">
+    </div>
+    <h4>Équation logique (Caractéristique)</h4>
+    <p>L'équation caractéristique du Verrou D est : \( Q_{n+1} = H \cdot D + \bar{H} \cdot Q_n \)</p>
+    <div class="placeholder">
+         [Image Placeholder: D Latch Characteristic Equation from slide 41]
+         <p>\( Q_{n+1} = H \cdot D + \bar{H} \cdot Q_n \)</p>
+    </div>
+
+    <h4>Logigramme</h4>
+    <div class="placeholder">
+        [Image Placeholder: D Latch Logic Diagram from slide 41]
+        <img src="placeholder_logigramme_d_latch.png" alt="Logigramme Verrou D">
+        <p><em>Ce logigramme montre une implémentation possible. D est connecté à une porte AND avec H. \( \bar{D} \) (obtenu via l'inverseur '1') est connecté à une autre porte AND avec H. Les sorties de ces AND pilotent un verrou RS interne (réalisé avec les portes NOR '≥1'). L'entrée H sélectionne si le verrou interne est piloté par D/\(\bar{D}\) ou s'il reste en mémoire (implicite via la structure).</em></p>
+    </div>
+
+    <h3>5-1-5 Bascule D (D Flip-Flop)</h3>
+    <p>Mémorise la valeur de l'entrée D sur un <strong>front</strong> d'horloge H (montant ou descendant).</p>
+    <h4>Symboles (fig. 15a)</h4>
+    <p>Similaire au verrou D, mais avec le triangle (▷) sur l'entrée H.</p>
+    <div class="placeholder">
+        [Image Placeholder: D Flip-Flop Symbols (positive/negative edge) from slide 42]
+        <img src="placeholder_symbols_d_ff.png" alt="Symboles Bascule D (front montant et descendant)">
+    </div>
+
+    <h4>Exemple de Chronogrammes (fig. 15b)</h4>
+    <p>La sortie Q prend la valeur de D uniquement sur les fronts actifs de H (ici, fronts montants).</p>
+    <div class="placeholder">
+        [Image Placeholder: D Flip-Flop Timing Diagram Example from slide 42]
+        <img src="placeholder_chrono_d_ff.png" alt="Exemple chronogramme Bascule D">
+    </div>
+
+    <h3>5-1-6 Bascule JK (JK Flip-Flop)</h3>
+    <p>La bascule la plus polyvalente. Deux entrées de contrôle J et K, et une entrée d'horloge H. Évite l'état interdit du RS et ajoute une fonction de basculement (toggle).</p>
+    <h4>Symboles (fig. 16)</h4>
+     <div class="placeholder">
+        [Image Placeholder: JK Flip-Flop Symbols (positive/negative edge) from slide 43]
+        <img src="placeholder_symbols_jk_ff.png" alt="Symboles Bascule JK (front montant et descendant)">
+    </div>
+
+    <h4>Table de vérité (Table 19 - sur front actif de H)</h4>
+    <table>
+        <thead>
+            <tr><th>J</th><th>K</th><th>H (front actif)</th><th>\( Q_{n+1} \)</th><th>Fonction</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>X</td><td>X</td><td>inactive</td><td>\( Q_n \)</td><td>Mémoire</td></tr>
+            <tr><td>0</td><td>0</td><td>active</td><td>\( Q_n \)</td><td>Mémoire</td></tr>
+            <tr><td>0</td><td>1</td><td>active</td><td>0</td><td>Reset</td></tr>
+            <tr><td>1</td><td>0</td><td>active</td><td>1</td><td>Set</td></tr>
+            <tr><td>1</td><td>1</td><td>active</td><td>\( \bar{Q}_n \)</td><td>Basculement (Toggle)</td></tr>
+        </tbody>
+    </table>
+     <div class="placeholder">
+        [Image Placeholder: JK Flip-Flop Truth Table from slide 43]
+        <img src="placeholder_table_19_jk.png" alt="Table de vérité Bascule JK">
+    </div>
+
+    <h4>Équation logique (Caractéristique)</h4>
+    <p>L'équation caractéristique décrivant l'état \(Q_{n+1}\) après le front actif de l'horloge est :</p>
+    <p>\( Q_{n+1} = J \cdot \bar{Q}_n + \bar{K} \cdot Q_n \)</p>
+    <p><em>(Note : L'équation fournie sur la diapositive 44, \( Q_{n+1} = H \cdot (J \cdot \bar{Q}_n + \bar{K} \cdot Q_n) + \bar{H} \cdot Q_n \), décrit le comportement d'un verrou JK activé par niveau H, ou combine l'état actif et inactif. Pour une bascule déclenchée par front, l'équation simplifiée ci-dessus s'applique au moment du front.)</em></p>
+     <div class="placeholder">
+         [Image Placeholder: JK Flip-Flop Characteristic Equation from slide 44]
+         <p>\( Q_{n+1} = H \cdot (J \cdot \bar{Q}_n + \bar{K} \cdot Q_n) + \bar{H} \cdot Q_n \)</p>
+         <p>(Voir note ci-dessus concernant l'interprétation)</p>
+    </div>
+
+    <h3>5-1-7 Entrées asynchrones</h3>
+    <p>
+        Les entrées asynchrones (Preset et Clear) permettent de forcer l'état de la bascule (Q à 1 ou 0) indépendamment des entrées synchrones (J, K, D) et de l'horloge. Elles ont la priorité. Elles sont souvent actives à l'état bas (indiqué par une barre ou un cercle).
+    </p>
+    <h4>Exemple : 7474 (Bascule D TTL avec Preset/Clear)</h4>
+    <div class="placeholder">
+        [Image Placeholder: D Flip-Flop with Asynchronous Preset and Clear from slide 45]
+        <img src="placeholder_dff_preset_clear.png" alt="Bascule D 7474 avec entrées asynchrones">
+    </div>
+    <ul>
+        <li>\( \overline{\text{CLEAR}} = 0 \implies Q=0 \) (Reset asynchrone)</li>
+        <li>\( \overline{\text{PRESET}} = 0 \implies Q=1 \) (Set asynchrone)</li>
+    </ul>
+    <p>Si Preset et Clear sont tous deux actifs (0), le comportement est généralement indéfini ou dépend du circuit spécifique (souvent, les deux sorties Q et \( \bar{Q} \) vont à 1 pour les circuits TTL NAND). Normalement, on maintient Preset et Clear inactifs (à 1) pour le fonctionnement synchrone normal.</p>
+
+    <hr style="margin: 40px 0;">
+
+    <h2>5-2 Fonction comptage : les compteurs numériques</h2>
+    <p>
+        Le comptage d'événements (impulsions d'horloge) nécessite une mémoire pour retenir le compte actuel. On utilise donc des bascules. Un compteur est un circuit séquentiel dont les états de sortie représentent une séquence de nombres binaires.
+    </p>
+    <h3>Exemple : Compteur binaire asynchrone 3 bits (fig. 17)</h3>
+    <p>Aussi appelé compteur à ondulation (ripple counter). Les bascules ne sont pas toutes synchronisées par la même horloge.</p>
+    <div class="placeholder">
+        [Image Placeholder: 3-bit Asynchronous Binary Counter (Ripple Counter) from slide 46]
+        <img src="placeholder_ripple_counter_3bit.png" alt="Compteur binaire asynchrone 3 bits">
+    </div>
+    <p>Description :</p>
+    <ul>
+        <li>Trois bascules JK (ou T, car J=K=1) configurées pour basculer.</li>
+        <li>L'entrée d'horloge externe H attaque la première bascule (Q₀, LSB).</li>
+        <li>La sortie de chaque bascule (ici \( \bar{Q} \), ou Q si bascules front descendant) sert d'horloge à la suivante.</li>
+        <li>Les sorties Q₂, Q₁, Q₀ forment le nombre binaire de 3 bits.</li>
+        <li>Les bascules sont à front descendant (cercle + triangle sur H). La sortie \(Q_0\) change sur front descendant de H. \(Q_1\) change sur front descendant de \(Q_0\). \(Q_2\) change sur front descendant de \(Q_1\).</li>
+        <li>Comme J=K=1, chaque bascule bascule (change d'état) à chaque front descendant actif sur son entrée d'horloge.</li>
+    </ul>
+
+    <h3>Chronogrammes (fig. 18)</h3>
+    <p>Illustrent le fonctionnement du compteur asynchrone 3 bits (front descendant).</p>
+    <div class="placeholder">
+        [Image Placeholder: Timing Diagram for 3-bit Ripple Counter from slide 47]
+        <img src="placeholder_chrono_ripple_counter.png" alt="Chronogrammes compteur asynchrone 3 bits">
+    </div>
+    <p>Observation :</p>
+    <ul>
+        <li>Q₀ bascule à chaque front descendant de H (division par 2 de la fréquence).</li>
+        <li>Q₁ bascule à chaque front descendant de Q₀ (division par 4 de la fréquence de H).</li>
+        <li>Q₂ bascule à chaque front descendant de Q₁ (division par 8 de la fréquence de H).</li>
+        <li>La séquence des états (Q₂Q₁Q₀)₂ est : 000, 001, 010, 011, 100, 101, 110, 111, puis retourne à 000. C'est un compteur binaire naturel modulo 8.</li>
+        <li>Les triangles noirs sur les chronogrammes indiquent les fronts descendants qui provoquent les changements d'état.</li>
+    </ul>
+     <div class="placeholder">
+        [Image Placeholder: Counter State Display Concept from slide 47]
+        <img src="placeholder_counter_display.png" alt="Concept affichage état compteur">
+    </div>
+    <p><strong>Remarque :</strong> Avec n bascules, on peut réaliser un compteur modulo \(2^n\), qui compte de 0 à \(2^n - 1\).</p>
+
+    <hr style="margin: 40px 0;">
+
+     <h2>5-3 Les registres</h2>
+    <p>Un registre est un ensemble de bascules utilisées pour stocker temporairement un groupe de bits (un mot binaire).</p>
+
+    <h3>5-3-1 Registre mémoire (Storage Register)</h3>
+    <p>Stocke un mot binaire. Toutes les bascules partagent une horloge commune.</p>
+    <h4>Exemple : Registre mémoire 3 bits (fig. 19)</h4>
+    <div class="placeholder">
+        [Image Placeholder: 3-bit Storage Register from slide 48]
+        <img src="placeholder_storage_register_3bit.png" alt="Registre mémoire 3 bits">
+    </div>
+    <p>Fonctionnement :</p>
+    <ul>
+        <li>Utilise 3 bascules D (ici, sensibles au niveau H - ce sont des verrous D groupés, ou des bascules si H est un signal d'horloge à front).</li>
+        <li>L'entrée 'commande H' (horloge ou enable) est commune à toutes les bascules.</li>
+        <li>Quand H est active (niveau 1 ou front actif), les données présentes sur les entrées D₀, D₁, D₂ sont chargées dans les bascules correspondantes et apparaissent sur les sorties Q₀, Q₁, Q₂.</li>
+        <li>Quand H est inactive, les données restent mémorisées dans les bascules et les sorties Q₀, Q₁, Q₂ conservent leur valeur, indépendamment des entrées D.</li>
+    </ul>
+
+     <h3>Applications des registres et mémoires</h3>
+     <ul>
+         <li><strong>Registres de microprocesseurs :</strong> Stockage temporaire de données, adresses, instructions à l'intérieur du CPU (ex: registres 32 bits, 64 bits).</li>
+         <li><strong>Mémoire SRAM (Static RAM) :</strong> Mémoire rapide basée sur des bascules (ou plutôt des cellules SRAM spécifiques). Utilisée comme mémoire cache dans les ordinateurs pour un accès rapide aux données fréquemment utilisées.</li>
+     </ul>
+     <h4>Remarque : Taille mémoire</h4>
+     <p>Unités de mesure de la capacité mémoire :</p>
+     <ul>
+         <li>1 octet (byte) = 8 bits</li>
+         <li>1 ko (kilo-octet) = \(2^{10}\) octets = 1024 octets <em>(Note : parfois k=1000, mais en informatique souvent K=1024)</em></li>
+         <li>1 Mo (Méga-octet) = \(1024\) ko = \(2^{20}\) octets = 1 048 576 octets</li>
+         <li>1 Go (Giga-octet) = \(1024\) Mo = \(2^{30}\) octets</li>
+     </ul>
+      <div class="placeholder">
+        [Image Placeholder: File Properties Screenshot from slide 49]
+        <img src="placeholder_file_properties.png" alt="Propriétés de fichier montrant la taille">
+    </div>
+     <p><strong>Application Numérique (A.N.) :</strong> Une mémoire SRAM de 256 ko nécessite (en supposant 1 bascule par bit) :</p>
+     <p>\( 256 \times 1024 \, \text{octets/ko} \times 8 \, \text{bits/octet} = 262144 \times 8 = 2\,097\,152 \) bascules (ou cellules mémoire).</p>
+
+    <h3>5-3-2 Registre à décalage (Shift Register)</h3>
+    <p>Permet de déplacer (décaler) les bits stockés d'une position vers la gauche ou la droite à chaque impulsion d'horloge. Utile pour la conversion série/parallèle, le retard de signaux, etc.</p>
+    <h4>Exemple : Registre à décalage 3 bits (fig. 20)</h4>
+     <div class="placeholder">
+        [Image Placeholder: 3-bit Shift Register from slide 50]
+        <img src="placeholder_shift_register_3bit.png" alt="Registre à décalage 3 bits">
+    </div>
+     <p>Fonctionnement (décalage à droite) :</p>
+    <ul>
+        <li>Trois bascules D connectées en série.</li>
+        <li>L'entrée série (E) est connectée à l'entrée D de la première bascule (la plus à gauche, qui donnera Q₀).</li>
+        <li>La sortie Q de chaque bascule est connectée à l'entrée D de la bascule suivante. (Q₀ → D₁, Q₁ → D₂).</li>
+        <li>Toutes les bascules partagent la même horloge (commande H).</li>
+        <li>À chaque front actif de H :
+            <ul>
+                <li>La valeur de E est chargée dans la première bascule (Q₀ prend la valeur de E).</li>
+                <li>L'ancienne valeur de Q₀ est chargée dans la deuxième bascule (Q₁ prend l'ancienne valeur de Q₀).</li>
+                <li>L'ancienne valeur de Q₁ est chargée dans la troisième bascule (Q₂ prend l'ancienne valeur de Q₁).</li>
+            </ul>
+        </li>
+        <li>L'effet global est un décalage des bits d'une position vers la droite. Le bit sortant est l'ancienne valeur de Q₂.</li>
+    </ul>
+    <div class="placeholder">
+        [Image Placeholder: Shift Register Operation Example from slide 50]
+        <img src="placeholder_shift_register_op.png" alt="Exemple de fonctionnement Registre à décalage">
+        <p><em>L'exemple montre un état initial (avant horloge) avec Q₀=0, Q₁=1, Q₂=1. L'entrée E=1. Après un coup d'horloge (symbolisé par H), le nouvel état est Q₀=1 (valeur de E), Q₁=0 (ancienne valeur de Q₀), Q₂=1 (ancienne valeur de Q₁). Le bit '1' initial en Q₁ a été décalé en Q₂. Le bit '0' initial en Q₀ a été décalé en Q₁. Le bit '1' de l'entrée a été chargé en Q₀.</em></p>
+    </div>
+
+
+    <script>
+        // Ensure KaTeX rendering after page load and updates
+        function doRenderMath() {
+             renderMathInElement(document.body, {
+                 delimiters: [
+                     { left: "$$", right: "$$", display: true },
+                     { left: "\\[", right: "\\]", display: true },
+                     { left: "$", right: "$", display: false },
+                     { left: "\\(", right: "\\)", display: false }
+                 ],
+                 throwOnError: false // Don't stop rendering on errors
+             });
+        }
+        // Use MutationObserver to re-render math if the DOM changes dynamically
+        const observer = new MutationObserver((mutations) => {
+            // Optionally check mutations if needed, otherwise just re-render
+            doRenderMath();
+        });
+        // Start observing the body for changes in child nodes or subtree
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // Initial render on DOMContentLoaded
+        document.addEventListener("DOMContentLoaded", doRenderMath);
+    </script>
+</body>
+</html>
