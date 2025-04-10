@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours Électronique de Puissance - Chapitre II: Redressement Non Commandé</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body,{delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false} ]});"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            color: #333;
+        }
+        h1 { font-size: 2em; border-bottom: 2px solid #ccc; padding-bottom: 0.3em; }
+        h2 { font-size: 1.7em; border-bottom: 1px solid #eee; padding-bottom: 0.2em; }
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; }
+        h5 { font-size: 1.1em; font-style: italic; }
+        h6 { font-size: 1em; font-weight: bold; }
+        p, ul, li {
+            margin-bottom: 1em;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            background-color: #f9f9f9;
+            font-style: italic;
+            color: #555;
+        }
+        .caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto;
+             overflow-y: hidden;
+        }
+        .info-box {
+            border: 1px solid #ddd;
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .footer-info {
+            margin-top: 3em;
+            border-top: 1px solid #ccc;
+            padding-top: 1em;
+            font-size: 0.9em;
+            color: #555;
+        }
+        table {
+            width: 80%;
+            margin: 1em auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Cours Électronique de Puissance (2017/2018)</h1>
+    <p><em>Licence Commande Automatique : S5</em></p>
+    <p class="info-box">Ce cours est à usage strictement didactique.</p>
+
+    <h2>CHAP II. Le Redressement non commandé</h2>
+
+    <h3>II.1 Définitions</h3>
+
+    <p>Les redresseurs sont des convertisseurs fondamentaux de l'électronique de puissance. Leur fonction principale est de convertir une tension alternative (AC) issue d'une source (comme le réseau électrique) en une tension continue (DC), ou plus précisément, en une tension unidirectionnelle dont la valeur moyenne est non nulle. C'est pourquoi on les appelle communément des convertisseurs AC/DC.</p>
+    <p>On distingue principalement deux grandes familles de redresseurs :</p>
+    <ul>
+        <li><strong>Redresseurs non commandés :</strong> Ils sont construits uniquement avec des diodes. La tension de sortie n'est pas réglable et dépend directement de la tension d'entrée et de la charge.</li>
+        <li><strong>Redresseurs commandés :</strong> Ils utilisent des composants commandables comme les thyristors (ou parfois des transistors de puissance). Ils permettent de régler la valeur moyenne de la tension de sortie en contrôlant l'instant d'amorçage des composants (l'angle d'amorçage).</li>
+    </ul>
+
+    <p>On peut aussi classer les redresseurs selon le nombre de phases de la source alternative (monophasé, triphasé) et selon la portion de l'onde alternative utilisée (simple alternance ou demi-onde, double alternance ou pleine onde). Cela mène à une classification plus détaillée :</p>
+    <ul>
+        <li>Redresseurs mono-alternance monophasé non commandés.</li>
+        <li>Redresseurs mono-alternance monophasé commandés.</li>
+        <li>Redresseurs double alternance monophasé non commandés.</li>
+        <li>Redresseurs double alternance monophasé commandés.</li>
+        <li>Redresseurs mono-alternance triphasé non commandés.</li>
+        <li>Redresseurs mono-alternance triphasé commandés.</li>
+        <li>Redresseurs double alternance triphasé non commandés.</li>
+        <li>Redresseurs double alternance triphasé commandés.</li>
+    </ul>
+    <p>Parmi les redresseurs commandés à double alternance, on trouve également des structures "tout thyristors" (où tous les interrupteurs sont commandés) et des structures "mixtes" (combinant thyristors et diodes).</p>
+
+    <p>Les redresseurs <strong>non-commandés</strong> sont utilisés lorsque l'application ne nécessite pas une tension de sortie variable en valeur moyenne (par exemple, alimentation simple, charge de batterie basique).</p>
+    <p>Les redresseurs <strong>commandés</strong> sont nécessaires quand on a besoin de contrôler la tension (ou le courant) de sortie moyenne. La variation est obtenue en ajustant l'angle d'amorçage des thyristors, ce qui retarde le début de la conduction par rapport au passage à zéro naturel de la tension.</p>
+
+    <p>On peut représenter schématiquement un redresseur comme un bloc fonctionnel convertissant l'AC en DC :</p>
+    <div class="placeholder">[Figure II.1: Schéma bloc général d'un redresseur AC/DC]
+        <br> Entrée: Réseau monophasé/triphasé sinusoïdal à fréquence fixe (AC)
+        <br> Bloc: Redresseur
+        <br> Sortie: Réseau continu à valeur moyenne de tension fixe (non commandé) ou réglable (commandé) (DC)
+    </div>
+    <p class="caption">Fig.II.1 représentation des redresseurs</p>
+
+
+    <h3>II.2 Redresseur monophasé simple alternance non commandé</h3>
+
+    <h4>II.2.1 Débit sur une charge résistible</h4>
+
+    <p>Le redresseur monophasé simple alternance (ou demi-onde) est le plus simple. Il ne nécessite qu'une seule diode pour sa réalisation. Le montage de base est représenté ci-dessous, alimentant une charge purement résistive $R$.</p>
+    <div class="placeholder">[Figure II.2: Circuit redresseur monophasé simple alternance non commandé (charge R)]
+        <br> Composants: Source $e(t)$, Diode $D$ (tension $U_D$), Résistance $R$ (tension $U_R$, courant $I$).
+    </div>
+    <p class="caption">Fig.II.2 Redresseur monophasé simple alternance NC</p>
+
+    <h5>II.2.1.1 Analyse du fonctionnement</h5>
+    <p>Le fonctionnement repose sur les propriétés unidirectionnelles de la diode :</p>
+    <ul>
+        <li><strong>Alternance positive de $e(t)$ ($e(t) > V_{seuil}$):</strong> La diode est polarisée en direct. Si on suppose une diode idéale, elle se comporte comme un interrupteur fermé. Le courant $I$ circule ($I = e(t)/R$) et la tension de la source $e(t)$ se retrouve aux bornes de la résistance $R$ ($U_R = e(t)$). Une petite chute de tension $U_D$ apparaît aux bornes de la diode si elle n'est pas idéale.</li>
+        <li><strong>Alternance négative de $e(t)$ ($e(t) \le V_{seuil}$):</strong> La diode est polarisée en inverse. Elle se comporte comme un interrupteur ouvert. Aucun courant ne circule ($I=0$). La tension aux bornes de la résistance est nulle ($U_R=0$). La tension inverse $e(t)$ se retrouve aux bornes de la diode ($U_D = e(t)$).</li>
+    </ul>
+    <p>Le courant $I$ dans la charge est donc redressé : il ne circule que dans un seul sens, pendant les alternances positives de la tension source.</p>
+    <p>Lors de l'étude détaillée, on peut utiliser différents modèles pour la diode :</p>
+    <ul>
+        <li><strong>Diode idéale :</strong> $U_D = 0$ en conduction, résistance inverse infinie.</li>
+        <li><strong>Diode avec seuil :</strong> $U_D = V_j$ (tension de seuil, typ. 0.6-0.7V pour Si) en conduction.</li>
+        <li><strong>Diode avec seuil et résistance :</strong> $U_D = V_j + R_D \cdot I$ en conduction, où $R_D$ est la résistance dynamique.</li>
+    </ul>
+    <p>Si on considère la diode idéale, lorsque la diode conduit, la tension de la source est intégralement appliquée à la résistance.</p>
+
+    <h5>II.2.1.2 Représentation de l'évolution de la tension et du courant</h5>
+    <p>Les formes d'ondes des tensions aux bornes de la source $e(t)$, de la diode $U_D$, et de la résistance $U_R$ dépendent du modèle de diode utilisé. Ci-dessous, les évolutions pour différents modèles. (Note: Pour mieux visualiser l'effet du seuil $V_j$, une tension source $e(t)$ de faible amplitude (ex: 2V crête) est utilisée dans les figures suivantes, avec $V_j=0,6V$).</p>
+
+    <p><strong>Cas 1: Diode idéale ($V_j=0, R_D=0$)</strong></p>
+    <div class="placeholder">[Figure II.2-a: Formes d'ondes (tension source e(t), tension diode Ud, tension résistance Ur) - Diode idéale]
+        <br> 1. Tension source e(t): Sinusoïde complète.
+        <br> 2. Tension diode Ud: 0V pendant l'alternance positive, e(t) (négatif) pendant l'alternance négative.
+        <br> 3. Tension résistance Ur: e(t) pendant l'alternance positive, 0V pendant l'alternance négative.
+    </div>
+    <p class="caption">Fig.II.2-a L'évolution de la tension dans le cas d'une diode idéale</p>
+
+    <p><strong>Cas 2: Diode avec seuil ($V_j=0,6V, R_D=0$)</strong></p>
+    <div class="placeholder">[Figure II.2-b: Formes d'ondes (tension source e(t), tension diode Ud, tension résistance Ur) - Diode avec seuil]
+         <br> 1. Tension source e(t): Sinusoïde complète.
+         <br> 2. Tension diode Ud: $V_j=0.6V$ pendant la conduction (quand $e(t) > V_j$), $e(t)$ quand bloquée. Note: la conduction commence un peu après 0 et finit un peu avant $\pi$. La tension inverse max est $E_{max}$.
+         <br> 3. Tension résistance Ur: $e(t) - V_j$ pendant la conduction, 0V sinon. La crête est $E_{max} - V_j$.
+    </div>
+    <p class="caption">Fig.II.2-b L'évolution de la tension dans le cas d'une diode avec seuil</p>
+
+    <p><strong>Cas 3: Diode avec seuil et résistance ($V_j=0,6V, R_D > 0$)</strong></p>
+     <div class="placeholder">[Figure II.2-c: Formes d'ondes (tension source e(t), tension diode Ud, tension résistance Ur) - Diode avec seuil et résistance]
+          <br> 1. Tension source e(t): Sinusoïde complète.
+          <br> 2. Tension diode Ud: $V_j + R_D \cdot I(t)$ pendant la conduction. Similaire au cas 2, mais la chute de tension directe varie avec le courant.
+          <br> 3. Tension résistance Ur: $e(t) - U_D(t)$ pendant la conduction, 0V sinon. La forme est légèrement modifiée par rapport au cas 2.
+     </div>
+     <p class="caption">Fig.II.2-c L'évolution de la tension dans le cas d'une diode avec seuil et résistance</p>
+
+    <p><strong>Note :</strong> L'utilisation d'une tension source $e(t)$ de faible amplitude dans ces exemples graphiques a pour seul but de rendre visible l'effet de la tension de seuil $V_j$ et de la chute de tension $U_D$ par rapport à la tension source.</p>
+    <p>À chaque instant, la loi des mailles s'applique : $E(t) = U_R + U_D$.</p>
+
+    <h5>II.2.1.3 États de la diode</h5>
+    <p><strong>Quand la diode conduit :</strong></p>
+    <ul>
+        <li>Pour une diode idéale : $U_D=0$.</li>
+        <li>Pour une diode avec seuil : $U_D=V_j$.</li>
+        <li>Pour une diode avec seuil et résistance : $U_D = V_j + R_D \cdot I$.</li>
+    </ul>
+    <p><strong>Quand la diode ne conduit pas :</strong></p>
+    <ul>
+        <li>$I=0$.</li>
+        <li>$U_R = R \cdot I = 0$.</li>
+        <li>$U_D = E(t)$. La tension inverse maximale aux bornes de la diode est $E_{max}$.</li>
+    </ul>
+    <p>Pour une charge résistive, l'évolution du courant $I(t) = U_R(t) / R$ est exactement à l'image (proportionnelle) de la tension redressée $U_R(t)$ aux bornes de la résistance R.</p>
+
+    <h5>II.2.1.4 La valeur moyenne de la tension redressée</h5>
+    <p>Considérons le cas simple d'une diode idéale ($V_j=0$ et $R_D=0$) pour calculer les valeurs caractéristiques. La tension redressée aux bornes de la résistance $U_{red}(t)$ (identique à $U_R(t)$) prend la valeur de la tension de la source $e(t)$ quand la diode conduit.</p>
+    <p>Si la tension de la source est $e(t) = E_{max}\sin(\omega t)$, de période $T = 2\pi/\omega$, alors sur une période :</p>
+    <ul>
+        <li>$U_{red}(t) = e(t) = E_{max}\sin(\omega t)$ pour $\omega t \in [0, \pi]$ (conduction)</li>
+        <li>$U_{red}(t) = 0$ pour $\omega t \in [\pi, 2\pi]$ (blocage)</li>
+    </ul>
+    <p>La valeur moyenne $U_{red\_moy}$ est calculée par intégration sur une période complète $2\pi$ (en utilisant $\theta = \omega t$) :</p>
+    $$ U_{red\_moy} = \frac{1}{2\pi} \int_{0}^{2\pi} U_{red}(\theta) d\theta $$
+    $$ U_{red\_moy} = \frac{1}{2\pi} \left[ \int_{0}^{\pi} E_{max} \sin\theta \, d\theta + \int_{\pi}^{2\pi} 0 \, d\theta \right] $$
+    $$ U_{red\_moy} = \frac{E_{max}}{2\pi} \int_{0}^{\pi} \sin\theta \, d\theta = \frac{E_{max}}{2\pi} [-\cos\theta]_0^\pi $$
+    $$ U_{red\_moy} = \frac{E_{max}}{2\pi} (-\cos\pi - (-\cos0)) = \frac{E_{max}}{2\pi} (-(-1) - (-1)) = \frac{E_{max}}{2\pi} (1 + 1) $$
+    $$ U_{red\_moy} = \frac{2 E_{max}}{2\pi} = \frac{E_{max}}{\pi} $$
+    <p>Donc, la valeur moyenne de la tension redressée simple alternance est $E_{max}/\pi \approx 0.318 E_{max}$.</p>
+
+    <h5>II.2.1.5 La valeur efficace de la tension redressée</h5>
+    <p>La valeur efficace (RMS - Root Mean Square) est une mesure de l'énergie que la tension peut fournir. Elle est donnée par la racine carrée de la moyenne du carré de la tension :</p>
+    $$ U_{red\_eff}^2 = \frac{1}{2\pi} \int_{0}^{2\pi} U_{red}^2(\theta) d\theta $$
+    $$ U_{red\_eff}^2 = \frac{1}{2\pi} \left[ \int_{0}^{\pi} (E_{max} \sin\theta)^2 d\theta + \int_{\pi}^{2\pi} 0^2 \, d\theta \right] $$
+    $$ U_{red\_eff}^2 = \frac{E_{max}^2}{2\pi} \int_{0}^{\pi} \sin^2\theta \, d\theta $$
+    <p>En utilisant l'identité trigonométrique $\sin^2\theta = \frac{1 - \cos(2\theta)}{2}$ :</p>
+    $$ U_{red\_eff}^2 = \frac{E_{max}^2}{2\pi} \int_{0}^{\pi} \frac{1 - \cos(2\theta)}{2} d\theta = \frac{E_{max}^2}{4\pi} \left[ \theta - \frac{1}{2}\sin(2\theta) \right]_0^\pi $$
+    $$ U_{red\_eff}^2 = \frac{E_{max}^2}{4\pi} \left[ (\pi - \frac{1}{2}\sin(2\pi)) - (0 - \frac{1}{2}\sin(0)) \right] = \frac{E_{max}^2}{4\pi} [\pi - 0 - 0 + 0] $$
+    $$ U_{red\_eff}^2 = \frac{E_{max}^2 \pi}{4\pi} = \frac{E_{max}^2}{4} $$
+    $$ U_{red\_eff} = \sqrt{\frac{E_{max}^2}{4}} = \frac{E_{max}}{2} $$
+    <p>La valeur efficace de la tension redressée simple alternance est $E_{max}/2 = 0.5 E_{max}$.</p>
+
+    <h5>II.2.1.6 Taux d'ondulation</h5>
+    <p>Le taux d'ondulation mesure la fluctuation de la tension redressée autour de sa valeur moyenne. Pour la tension, il est souvent défini par rapport à la valeur crête ou la valeur moyenne. Une mesure simple de l'ondulation crête-à-crête est :</p>
+    $$ \Delta U_{red} = U_{red\_max} - U_{red\_min} = E_{max} - 0 = E_{max} $$
+    <p>L'ondulation est très importante (100% de la valeur crête), ce qui signifie que la tension varie de zéro à sa valeur maximale. Ce type de redresseur fournit donc une tension continue de mauvaise qualité.</p>
+    <p><strong>Note :</strong> Les calculs du courant moyen ($I_{moy} = U_{red\_moy}/R$) et efficace ($I_{eff} = U_{red\_eff}/R$) se font de manière identique pour une charge résistive.</p>
+
+    <h4>II.2.2 Débit sur une charge RC (filtrage par condensateur)</h4>
+    <p>Pour améliorer la qualité de la tension continue (réduire l'ondulation), on ajoute souvent un condensateur de filtrage $C$ en parallèle avec la charge résistive $R$.</p>
+    <div class="placeholder">[Figure II.3: Circuit redresseur monophasé simple alternance avec filtrage RC]
+        <br> Composants: Source $e(t)$, Diode $D$ (courant $I_s$, tension $U_D$), Condensateur $C$, Résistance $R$ (tension $U_R=U_C=U_S$).
+    </div>
+    <p class="caption">Fig.II.3. Redresseur mono-alternance avec lissage de la tension</p>
+
+    <h5>II.2.2.1 Analyse de fonctionnement du circuit</h5>
+    <p>Le fonctionnement change radicalement :</p>
+    <ul>
+        <li>Lorsque la tension source $e(t)$ augmente et devient supérieure à la tension aux bornes du condensateur $U_C$ (plus la tension de seuil de la diode), la diode conduit. Le courant source $I_s$ se divise pour charger le condensateur $C$ et alimenter la résistance $R$. $U_C$ suit $e(t)$ (moins la chute dans la diode).</li>
+        <li>Quand $e(t)$ atteint son maximum $E_{max}$ et commence à diminuer, dès que $e(t)$ devient inférieure à $U_C$ (plus seuil), la diode se bloque (polarisée en inverse).</li>
+        <li>Pendant que la diode est bloquée, le condensateur $C$ se décharge lentement dans la résistance $R$, maintenant une tension $U_C$ aux bornes de la charge.</li>
+        <li>La diode ne se remettra à conduire que lors de l'alternance positive suivante, lorsque $e(t)$ dépassera à nouveau la tension $U_C$ restante.</li>
+    </ul>
+    <p>Le condensateur agit comme un réservoir d'énergie, fournissant du courant à la charge pendant que la diode est bloquée.</p>
+
+    <h5>II.2.2.2 Amélioration du taux d'ondulation</h5>
+    <p>Grâce au condensateur, la tension $U_C$ ne retombe plus à zéro. Elle diminue pendant la décharge, mais si la constante de temps $\tau = RC$ est suffisamment grande par rapport à la période $T$ de la source, la tension chutera peu avant la prochaine charge. Le taux d'ondulation $\Delta U_C = U_{Cmax} - U_{Cmin}$ sera donc réduit. Très souvent, le taux d'ondulation est un critère de conception, et on choisit la valeur de $C$ pour satisfaire ce critère.</p>
+
+    <h5>II.2.2.3 Représentation de l'évolution de la tension et du courant</h5>
+    <p>La figure ci-dessous montre l'allure des tensions et du courant source.</p>
+    <div class="placeholder">[Figure II.4: Formes d'ondes (tension source e(t), tension capacité/charge Uc, courant source Id) - Filtrage RC]
+        <br> 1. Tension source e(t): Sinusoïde.
+        <br> 2. Tension Capacité/Charge $U_C(t)$: Se charge rapidement vers $E_{max}$ quand $D$ conduit, se décharge exponentiellement dans $R$ quand $D$ est bloquée. L'ondulation $\Delta U_C$ est visible. $U_{Cmax} \approx E_{max}$.
+        <br> 3. Courant Diode/Source $I_D(t)$: Se présente sous forme d'impulsions brèves et intenses, uniquement pendant les courts intervalles où la diode conduit pour recharger le condensateur. La première impulsion peut être plus importante si le condensateur est initialement déchargé.
+    </div>
+    <p class="caption">Fig. II.4 Evolution de la tension de la source, de la capacité et le courant de la source pour redresseur monophasé avec lissage de la tension</p>
+    <p>Le courant dans la résistance $I_R(t) = U_C(t)/R$ suit l'évolution de la tension aux bornes du condensateur $U_C(t)$. Ce courant est fourni soit par la source (via la diode), soit par le condensateur pendant sa décharge.</p>
+
+    <h5>II.2.2.4 Calcul simplifié de la tension de sortie moyenne et efficace</h5>
+    <p>Pour calculer la valeur moyenne et efficace de la tension de sortie $U_S = U_C$, un calcul exact est complexe. On procède souvent à une simplification en supposant que :</p>
+    <ul>
+        <li>L'ondulation $\Delta U_S = U_{Smax} - U_{Smin}$ est faible devant la valeur moyenne (ce qui est vrai si $\tau = RC \gg T$).</li>
+        <li>La décharge du condensateur dans la résistance $R$ peut être approximée par une droite (au lieu d'une exponentielle) pendant l'intervalle où la diode est bloquée (presque toute la période $T$).</li>
+        <li>La charge du condensateur est quasi instantanée, donc $U_{Smax} \approx E_{max}$.</li>
+    </ul>
+    <p>Sous ces hypothèses, la tension de sortie ressemble à une succession de rampes décroissantes.</p>
+    <div class="placeholder">[Figure II.5: Simplification de la forme d'onde de sortie (approximée par des rampes)]
+        <br> Forme d'onde $U_S(t)$ approximée par des segments de droite décroissants entre $U_{Smax}$ et $U_{Smin}$ sur une période $T$. Le courant diode $I_D$ est représenté par des impulsions.
+    </div>
+    <p class="caption">Fig.II.5 Simplification de la tension de sortie d'un redresseur monophasé simple alternance avec lissage de la tension</p>
+
+    <p><strong>Calcul de la valeur moyenne (simplifié) :</strong></p>
+    <p>Avec l'approximation linéaire (ou "triangulaire"), la valeur moyenne est simplement la moyenne entre la valeur maximale et minimale :</p>
+    $$ U_{S\_moy} \approx \frac{U_{S\_max} + U_{S\_min}}{2} $$
+    <p>On a $U_{S\_max} \approx E_{max}$. La chute de tension pendant la décharge (sur une durée proche de $T$) est $\Delta U_S$. Pour une décharge linéaire, la pente serait $\approx \Delta U_S / T$. Le courant moyen de décharge est $I_{R\_moy} \approx U_{S\_moy}/R$. La charge perdue par le condensateur est $Q = C \Delta U_S$. Le courant moyen de décharge est aussi $I_{R\_moy} \approx Q/T = C \Delta U_S / T$.
+    Donc, $\frac{U_{S\_moy}}{R} \approx \frac{C \Delta U_S}{T}$. Si $U_{S\_moy} \approx E_{max}$ (faible ondulation), alors $\Delta U_S \approx \frac{E_{max} T}{RC}$.
+    Alors $U_{S\_min} = U_{S\_max} - \Delta U_S \approx E_{max} - \frac{E_{max} T}{RC} = E_{max} \left(1 - \frac{T}{RC}\right)$.
+    </p>
+    <p>En utilisant $T = 1/f$ et $\tau=RC$ :</p>
+    $$ U_{S\_min} \approx E_{max} \left(1 - \frac{1}{RCf}\right) = E_{max} \left(1 - \frac{T}{\tau}\right) $$
+    <p>La valeur moyenne devient alors :</p>
+    $$ U_{S\_moy} \approx \frac{E_{max} + E_{max} (1 - T/\tau)}{2} = \frac{E_{max}}{2} (2 - T/\tau) $$
+    $$ U_{S\_moy} \approx E_{max} \left( 1 - \frac{T}{2\tau} \right) = E_{max} \left( 1 - \frac{1}{2RCf} \right) $$
+    <p>Cette formule montre que si $RCf$ est grand, $U_{S\_moy}$ est proche de $E_{max}$.</p>
+
+    <p><strong>Calcul de la valeur efficace (simplifié) :</strong></p>
+    <p>En utilisant l'approximation de la décharge linéaire $U_S(t) \approx E_{max}(1 - t/\tau)$ sur l'intervalle $[0, T]$ (ce qui est une approximation forte), on peut calculer la valeur efficace approchée :</p>
+    $$ U_{S\_eff}^2 = \frac{1}{T} \int_0^T U_S^2(t) dt \approx \frac{1}{T} \int_0^T \left( E_{max} \left(1 - \frac{t}{\tau}\right) \right)^2 dt $$
+    $$ U_{S\_eff}^2 \approx \frac{E_{max}^2}{T} \int_0^T \left( 1 - \frac{2t}{\tau} + \frac{t^2}{\tau^2} \right) dt $$
+    $$ U_{S\_eff}^2 \approx \frac{E_{max}^2}{T} \left[ t - \frac{t^2}{\tau} + \frac{t^3}{3\tau^2} \right]_0^T $$
+    $$ U_{S\_eff}^2 \approx \frac{E_{max}^2}{T} \left( T - \frac{T^2}{\tau} + \frac{T^3}{3\tau^2} \right) = E_{max}^2 \left( 1 - \frac{T}{\tau} + \frac{T^2}{3\tau^2} \right) $$
+    <p>En remplaçant $T=1/f$ et $\tau=RC$ :</p>
+    $$ U_{S\_eff}^2 \approx E_{max}^2 \left( 1 - \frac{1}{RCf} + \frac{1}{3(RCf)^2} \right) $$
+    $$ U_{S\_eff} \approx E_{max} \sqrt{1 - \frac{1}{RCf} + \frac{1}{3(RCf)^2}} $$
+    <p>Si $RCf$ est grand, le terme sous la racine tend vers 1, et $U_{S\_eff} \approx E_{max}$, ce qui est cohérent avec une tension presque constante.</p>
+
+    <h4>II.2.3 Débit sur une charge RL (lissage du courant)</h4>
+    <p>Une autre façon d'améliorer la sortie d'un redresseur est d'utiliser une inductance $L$ en série avec la charge $R$ pour lisser le courant. Pour éviter des surtensions lors du blocage de la diode $D$ et permettre la continuité du courant dans l'inductance, on ajoute une diode de roue libre $D_{RL}$ en parallèle avec la charge RL.</p>
+     <div class="placeholder">[Figure II.6: Circuit redresseur monophasé simple alternance avec filtrage RL et diode de roue libre]
+         <br> Composants: Source $e(t)$, Diode principale $D$ (courant $I_s$, tension $U_D$), Inductance $L$, Résistance $R$ (tension $U_R$), Diode de roue libre $D_{RL}$ (courant $I_{DRL}$). La charge est l'ensemble {L, R}. La tension aux bornes de la charge est $U_{charge} = U_L + U_R$.
+     </div>
+     <p class="caption">Fig.II.3 (devrait être II.6) Redresseur mono-alternance avec lissage du courant</p>
+
+    <h5>II.2.3.1 Analyse de fonctionnement du circuit</h5>
+
+    <h6>Sans diode de roue libre :</h6>
+    <p>Si la diode de roue libre $D_{RL}$ n'est pas présente, le courant $I$ dans l'inductance $L$ est en retard par rapport à la tension $e(t)$. Lorsque $e(t)$ devient négative, la diode $D$ peut être forcée de rester conductrice par l'énergie stockée dans $L$ (le courant $I$ ne peut pas s'annuler instantanément). Cela provoque l'apparition d'une tension négative aux bornes de la charge (RL), ce qui est souvent indésirable. De plus, lorsque le courant $I$ finit par s'annuler (si la conduction n'est pas continue), la diode $D$ se bloque brusquement, et la variation rapide du courant ($di/dt$) peut induire une forte surtension aux bornes de l'inductance ($U_L = L \cdot di/dt$).</p>
+    <div class="placeholder">[Figure II.7-a: Formes d'ondes (tension source, tension charge, courant charge/source) - Charge RL sans diode roue libre]
+         <br> 1. Tension source e(t): Sinusoïde.
+         <br> 2. Tension charge $U_{charge}$: Suit $e(t)$ mais continue pendant une partie de l'alternance négative (tension négative visible).
+         <br> 3. Courant $I_{CH} = I_s$: Lissé par l'inductance, en retard sur $e(t)$, peut s'étendre au-delà de $\pi$.
+    </div>
+    <p class="caption">Fig.II.4 (devrait être II.7-a) L'évolution de la tension... pour une charge inductif sans diode de roue libre</p>
+
+    <h6>Avec diode de roue libre :</h6>
+    <p>La diode de roue libre $D_{RL}$ change le fonctionnement pendant l'alternance négative :</p>
+    <ul>
+        <li>Pendant l'alternance positive de $e(t)$, la diode $D$ conduit, alimentant la charge RL. Le courant $I$ augmente et stocke de l'énergie dans $L$. $D_{RL}$ est bloquée car sa cathode (reliée à $e(t)$ via $D$) est à un potentiel supérieur à son anode (reliée au 0V ou potentiel de référence via R).</li>
+        <li>Lorsque $e(t)$ devient négative (ou inférieure à la tension aux bornes de la charge), la diode $D$ se bloque.</li>
+        <li>À cet instant, le courant $I$ dans l'inductance $L$ ne peut pas s'annuler instantanément. Il trouve un chemin de continuité à travers la diode de roue libre $D_{RL}$ et la résistance $R$. La maille {L, R, $D_{RL}$} est fermée.</li>
+        <li>Pendant que $D_{RL}$ conduit, la tension aux bornes de la charge RL est quasi nulle (égale à la chute de tension dans $D_{RL}$, environ 0.7V). L'énergie de l'inductance se dissipe dans $R$ et dans $D_{RL}$.</li>
+        <li>La diode $D$ reste bloquée tant que $e(t)$ est négative. Elle ne reconduira qu'à l'alternance positive suivante, quand $e(t)$ deviendra suffisante pour reprendre l'alimentation de la charge.</li>
+    </ul>
+    <p>La diode de roue libre empêche donc l'apparition de tension négative aux bornes de la charge et assure la continuité du courant inductif de manière sécurisée.</p>
+    <div class="placeholder">[Figure II.7-b: Formes d'ondes (tension source, tension charge, courant charge ICH, courant source Is, courant diode roue libre IDRL) - Charge RL avec diode roue libre]
+         <br> 1. Tension source e(t): Sinusoïde.
+         <br> 2. Tension charge $U_{charge}$: Suit $e(t)$ (moins chute $D$) pendant la conduction de $D$. Devient quasi nulle (chute $D_{RL}$) pendant la conduction de $D_{RL}$. Pas de tension négative significative.
+         <br> 3. Courant charge $I_{CH}$: Lissé par $L$. Peut devenir continu si $L$ est assez grande.
+         <br> 4. Courant source $I_s$: Impulsions pendant la conduction de $D$.
+         <br> 5. Courant diode roue libre $I_{DRL}$: Circule quand $D$ est bloquée et $I_{CH} > 0$. $I_{CH} = I_s + I_{DRL}$.
+    </div>
+    <p class="caption">Fig.II.4 (devrait être II.7-b) L'évolution de la tension... pour une charge inductif avec diode de roue libre</p>
+
+    <h5>II.2.3.2 Représentation de l'évolution de la tension et du courant (Synthèse)</h5>
+    <p>Le courant $I_{CH}$ dans la charge inductive est en retard par rapport à la tension. </p>
+    <ul>
+        <li><strong>Sans diode de roue libre</strong>, la diode $D$ se bloque quand le courant $I_{CH}$ s'annule (si la conduction devient discontinue) ou est forcée de conduire en inverse si la source devient négative avant l'annulation du courant.</li>
+        <li><strong>Avec diode de roue libre</strong>, la diode $D$ se bloque dès que la tension source $e(t)$ devient inférieure à la tension aux bornes de la charge (proche de 0V lorsque $D_{RL}$ conduit). Le courant $I_{CH}$ circule alors via $D_{RL}$. La diode $D$ ne redeviendra conductrice que lorsque $e(t)$ sera à nouveau positive et supérieure à la tension de seuil.</li>
+    </ul>
+    <p>Le courant dans la charge $I_{CH}$ est la somme du courant venant de la source $I_s$ (via $D$) et du courant circulant dans la diode de roue libre $I_{DRL}$ : $I_{CH}(t) = I_s(t) + I_{DRL}(t)$. Lorsque $D$ conduit, $I_{DRL}=0$ et $I_{CH}=I_s$. Lorsque $D_{RL}$ conduit, $I_s=0$ et $I_{CH}=I_{DRL}$.</p>
+
+
+    <h3>II.3 Redresseur double alternance monophasé non commandé</h3>
+    <p>Les redresseurs double alternance (ou pleine onde) utilisent les deux alternances de la tension source pour fournir une tension redressée à la charge. Cela permet d'obtenir une tension moyenne plus élevée et une ondulation plus faible (fréquence double) qu'avec un redresseur simple alternance. On réalise ces redresseurs soit avec un transformateur à point milieu, soit avec un pont de diodes (pont de Graëtz).</p>
+
+    <h4>II.3.1 Débit sur une charge résistive</h4>
+
+    <h5>II.3.1.1 Montage à point milieu</h5>
+    <p>Ce montage nécessite un transformateur spécial dont l'enroulement secondaire possède une prise médiane (point milieu), fournissant deux tensions secondaires $e_1(t)$ et $e_2(t)$ égales en amplitude mais en opposition de phase par rapport au point milieu. Deux diodes suffisent.</p>
+     <div class="placeholder">[Figure II.8: Redresseur double alternance à point milieu (transformateur)]
+         <br> Composants: Source $e(t)$ au primaire. Secondaire avec point milieu (N), tensions $e_1(t)$ et $e_2(t)$ (phasées à 180°). Diode $D_1$ sur $e_1$, Diode $D_2$ sur $e_2$. Charge $R$ connectée entre les cathodes des diodes et le point milieu N. Tension $U_R$.
+     </div>
+     <p class="caption">Fig.II.4 (devrait être II.8) Redresseur double pont, montage point milieu</p>
+
+    <h6>Fonctionnement et évolution des tensions</h6>
+    <p>On dispose de deux tensions secondaires, $e_1(t)$ et $e_2(t)$, dont les amplitudes sont la moitié de celle qu'aurait un secondaire simple équivalent ($e_{1max} = e_{2max} = E_{sec\_max}/2$).</p>
+    <ul>
+        <li>Pendant l'alternance où $e_1(t)$ est positive (et $e_2(t)$ est négative), la diode $D_1$ conduit et applique $e_1(t)$ à la charge $R$. $D_2$ est bloquée.</li>
+        <li>Pendant l'alternance où $e_2(t)$ est positive (et $e_1(t)$ est négative), la diode $D_2$ conduit et applique $e_2(t)$ à la charge $R$. $D_1$ est bloquée.</li>
+    </ul>
+    <p>Chaque diode fonctionne comme un redresseur simple alternance pour sa propre tension secondaire. La tension $U_R$ aux bornes de la charge est la succession des alternances positives de $e_1(t)$ et $e_2(t)$.</p>
+     <div class="placeholder">[Figure II.9 & II.10: Formes d'ondes tensions primaire e(t), secondaires e1(t) et e2(t), tensions redressées partielles et tension de sortie UR - Montage à point milieu]
+         <br> 1. Tension primaire e(t): Sinusoïde.
+         <br> 2. Tensions secondaires e1(t) et e2(t): Sinusoïdes en opposition de phase, amplitude $E_{max}/2$.
+         <br> 3. Tension redressée par D1: Alternances positives de e1(t).
+         <br> 4. Tension redressée par D2: Alternances positives de e2(t).
+         <br> 5. Tension de sortie $U_R(t)$: Enveloppe supérieure des tensions redressées par D1 et D2. C'est une tension pleine onde redressée, d'amplitude $U_{Rmax} = e_{1max} = e_{2max} = E_{max}/2$ (où $E_{max}$ est l'amplitude crête d'un secondaire simple équivalent). Sa fréquence est double de celle de la source.
+     </div>
+     <p class="caption">Fig.II.5 (devrait être II.9) L'évolution des tensions au primaire et secondaire. Fig.II.6 (devrait être II.10) La tension redressée $U_R$.</p>
+     <p>La résistance (charge) voit donc une tension à ses bornes pendant les deux alternances (positive et négative) de la tension primaire du transformateur. La tension de sortie $U_R$ est périodique, de période $T/2$, où $T$ est la période de la tension d'alimentation $e(t)$.</p>
+
+    <h5>II.3.1.2 Montage en pont (Pont de Graëtz)</h5>
+    <p>C'est le montage redresseur double alternance le plus courant, notamment car il ne nécessite pas de transformateur à point milieu (bien qu'un transformateur puisse être utilisé pour l'isolation ou l'adaptation de tension). Il utilise 4 diodes montées en pont.</p>
+     <div class="placeholder">[Figure II.11: Redresseur double alternance en pont (Graetz)]
+         <br> Composants: Source $e(t)$. Quatre diodes $D_1, D_2, D_3, D_4$ connectées en pont. La source est connectée aux jonctions D1/D3 et D2/D4. La charge $R$ (tension $U_R$) est connectée entre la jonction des cathodes (D1/D2) et la jonction des anodes (D3/D4).
+     </div>
+     <p class="caption">Fig.II.6 (devrait être II.11) Redresseur double alternance, montage en pond</p>
+
+    <h6>Fonctionnement et évolution des tensions</h6>
+    <ul>
+        <li><strong>Alternance positive de $e(t)$ :</strong> Le courant part du pôle positif de $e(t)$, traverse $D_1$, la charge $R$, puis $D_4$ pour revenir au pôle négatif de $e(t)$. Les diodes $D_1$ et $D_4$ conduisent. $D_2$ et $D_3$ sont bloquées. La tension aux bornes de la charge est $U_R(t) = e(t)$ (en négligeant les chutes de tension des diodes).</li>
+        <li><strong>Alternance négative de $e(t)$ :</strong> Le courant part du pôle positif (qui est maintenant le terminal inférieur de $e(t)$), traverse $D_2$, la charge $R$ (dans le même sens que précédemment), puis $D_3$ pour revenir au pôle négatif (terminal supérieur de $e(t)$). Les diodes $D_2$ et $D_3$ conduisent. $D_1$ et $D_4$ sont bloquées. La tension aux bornes de la charge est $U_R(t) = -e(t)$ (qui est positive puisque $e(t)$ est négative).</li>
+    </ul>
+    <p>La tension aux bornes de la charge $U_R(t)$ est donc toujours positive et correspond à la valeur absolue de la tension d'entrée : $U_R(t) = |e(t)|$ (pour des diodes idéales). C'est une tension pleine onde redressée.</p>
+     <div class="placeholder">[Figure II.12: Formes d'ondes tension source et tension redressée UR - Montage en pont]
+         <br> 1. Tension source e(t): Sinusoïde complète.
+         <br> 2. Tension redressée $U_R(t)$: Valeur absolue de e(t). C'est une tension pleine onde redressée, d'amplitude $E_{max}$. Sa fréquence est double de celle de la source.
+     </div>
+     <p class="caption">Fig.II.7 (devrait être II.12) L'évolution de la tension de la source et de celle redressée pour un redresseur double alternance, montage à pont</p>
+    <p>La principale différence entre le montage à point milieu et le montage en pont, pour une même tension source $e(t)$ appliquée au pont ou au primaire du transformateur (supposé 1:1 pour le point milieu), est l'amplitude de la tension redressée maximale. Pour le pont, $U_{Rmax} = E_{max}$, tandis que pour le point milieu, $U_{Rmax} = E_{sec\_max}/2$. Le pont fournit donc une tension redressée d'amplitude double (mais avec une chute de tension due à deux diodes en série au lieu d'une).</p>
+
+    <h5>II.3.1.3 Valeur moyenne de la tension redressée (Pont ou Point Milieu)</h5>
+    <p>Pour un redresseur double alternance (pont ou point milieu), la tension redressée $U_{red}(t)$ est périodique de période $\pi$ (ou $T/2$). Le calcul de la valeur moyenne se fait donc en intégrant sur une demi-période de la source, soit de $0$ à $\pi$.</p>
+    <p>Soit $V_{max}$ l'amplitude de la tension redressée ($V_{max} = E_{max}$ pour le pont, $V_{max} = E_{sec\_max}/2$ pour le point milieu). La tension sur l'intervalle $[0, \pi]$ est $U_{red}(\theta) = V_{max} \sin\theta$ (avec $\theta = \omega t$).</p>
+    $$ U_{red\_moy} = \frac{1}{\pi} \int_{0}^{\pi} U_{red}(\theta) d\theta = \frac{1}{\pi} \int_{0}^{\pi} V_{max} \sin\theta \, d\theta $$
+    $$ U_{red\_moy} = \frac{V_{max}}{\pi} [-\cos\theta]_0^\pi = \frac{V_{max}}{\pi} (-\cos\pi - (-\cos0)) $$
+    $$ U_{red\_moy} = \frac{V_{max}}{\pi} (-(-1) - (-1)) = \frac{V_{max}}{\pi} (1 + 1) $$
+    $$ U_{red\_moy} = \frac{2 V_{max}}{\pi} $$
+    <p>La valeur moyenne est $2V_{max}/\pi \approx 0.637 V_{max}$. C'est le double de la valeur moyenne obtenue en simple alternance.</p>
+
+    <h5>II.3.1.4 La valeur efficace de la tension redressée (Pont ou Point Milieu)</h5>
+    <p>Le calcul de la valeur efficace se fait aussi sur la période $\pi$ :</p>
+    $$ U_{red\_eff}^2 = \frac{1}{\pi} \int_{0}^{\pi} U_{red}^2(\theta) d\theta = \frac{1}{\pi} \int_{0}^{\pi} (V_{max} \sin\theta)^2 d\theta $$
+    $$ U_{red\_eff}^2 = \frac{V_{max}^2}{\pi} \int_{0}^{\pi} \sin^2\theta \, d\theta = \frac{V_{max}^2}{\pi} \int_{0}^{\pi} \frac{1 - \cos(2\theta)}{2} d\theta $$
+    $$ U_{red\_eff}^2 = \frac{V_{max}^2}{2\pi} \left[ \theta - \frac{1}{2}\sin(2\theta) \right]_0^\pi $$
+    $$ U_{red\_eff}^2 = \frac{V_{max}^2}{2\pi} [(\pi - 0) - (0 - 0)] = \frac{V_{max}^2 \pi}{2\pi} = \frac{V_{max}^2}{2} $$
+    $$ U_{red\_eff} = \sqrt{\frac{V_{max}^2}{2}} = \frac{V_{max}}{\sqrt{2}} $$
+    <p>La valeur efficace est $V_{max}/\sqrt{2} \approx 0.707 V_{max}$. C'est la même valeur efficace que la tension sinusoïdale d'amplitude $V_{max}$ elle-même.</p>
+
+    <h3>II.4 Redresseur triphasé non-commandés</h3>
+    <p>Pour les applications de plus forte puissance, on utilise des sources triphasées. Les redresseurs triphasés fournissent une tension de sortie avec une ondulation plus faible et une fréquence d'ondulation plus élevée que les redresseurs monophasés, simplifiant le filtrage.</p>
+
+    <h4>II.4.1 Fonctionnement des redresseurs triphasés simple alternance : montage P3</h4>
+    <p>Le redresseur triphasé simple alternance (ou demi-onde) est appelé montage P3. L'adjectif "parallèle" (P) vient du fait que les trois "bras" redresseurs (une phase + une diode) sont connectés en parallèle entre l'entrée et la sortie. Il utilise 3 diodes.</p>
+    <p>Les figures ci-dessous montrent les deux variantes du montage P3, utilisant un transformateur avec secondaire couplé en étoile (Y). Le point neutre "N" du secondaire est généralement connecté au point de référence de la charge.</p>
+
+    <p><strong>Montage P3 à cathode commune (sortie positive) :</strong></p>
+    <div class="placeholder">[Figure II.13.a: Redresseur triphasé simple alternance P3 (cathode commune)]
+        <br> Composants: Secondaire triphasé étoile (phases e1(t), e2(t), e3(t), neutre N). Trois diodes D1, D2, D3 dont les anodes sont connectées aux phases e1, e2, e3 respectivement. Les cathodes sont reliées ensemble et constituent la borne positive de sortie. La charge R (tension UR, courant ICH) est connectée entre la sortie positive et le neutre N. Courants diodes ID1, ID2, ID3.
+    </div>
+    <p class="caption">Fig.II.8.a (adapté) - Montage P3 cathode commune</p>
+
+    <p><strong>Montage P3 à anode commune (sortie négative) :</strong></p>
+    <div class="placeholder">[Figure II.13.b: Redresseur triphasé simple alternance P3 (anode commune)]
+         <br> Composants: Secondaire triphasé étoile (phases e1(t), e2(t), e3(t), neutre N). Trois diodes D1, D2, D3 dont les cathodes sont connectées aux phases e1, e2, e3 respectivement. Les anodes sont reliées ensemble et constituent la borne négative de sortie. La charge R (tension UR, courant ICH) est connectée entre le neutre N et la sortie négative.
+     </div>
+     <p class="caption">FigII.8.b Redresseurs triphasés simple alternance : montage P3 à anodes communes</p>
+    <p>Dans les deux cas, la structure est similaire. Nous analyserons le montage à cathode commune (sortie positive) alimentant une charge résistive.</p>
+
+    <h4>II.4.2 L'évolution des tensions dans un redresseur P3 (cathode commune)</h4>
+    <p>Considérons le montage P3 à cathode commune alimentant une résistance $R$. Le principe de fonctionnement est simple : <strong>à chaque instant, seule la diode dont l'anode est connectée à la phase ayant le potentiel le plus élevé conduit.</strong> Les deux autres diodes sont bloquées car leur tension anode-cathode est négative.</p>
+    <p>Supposons, par exemple, qu'à un instant $t_1$, la tension de phase $e_1(t)$ devienne la plus positive des trois. Si c'était la diode $D_2$ (connectée à $e_2(t)$) qui conduisait juste avant ($t < t_1$), alors la tension de sortie était $U_d = U_R = e_2(t)$ et la tension aux bornes de $D_2$ était nulle ($V_{D2} \approx 0$). Pour la diode $D_1$, sa tension anode-cathode était $V_{D1} = V_{anode1} - V_{cathode} = e_1(t) - U_d = e_1(t) - e_2(t)$. Puisque $e_1(t)$ devient supérieure à $e_2(t)$ pour $t \ge t_1$, $V_{D1}$ devient positive. La diode $D_1$ s'amorce.</p>
+    <p>Dès que $D_1$ conduit, la tension de sortie devient $U_d = e_1(t)$. La tension aux bornes de $D_1$ devient $V_{D1} \approx 0$. Pour la diode $D_2$, sa tension devient $V_{D2} = V_{anode2} - V_{cathode} = e_2(t) - U_d = e_2(t) - e_1(t)$. Comme $e_1(t) > e_2(t)$, $V_{D2}$ est négative, et la diode $D_2$ se bloque.</p>
+    <p>En résumé, la tension de sortie $U_d = U_R$ suit toujours la plus positive des trois tensions de phase :</p>
+    <ul>
+        <li>$U_d = U_R = e_1(t)$ quand $e_1(t) > e_2(t)$ et $e_1(t) > e_3(t)$</li>
+        <li>$U_d = U_R = e_2(t)$ quand $e_2(t) > e_1(t)$ et $e_2(t) > e_3(t)$</li>
+        <li>$U_d = U_R = e_3(t)$ quand $e_3(t) > e_1(t)$ et $e_3(t) > e_2(t)$</li>
+    </ul>
+    <p>Chaque diode conduit pendant un tiers de la période ($120^\circ$). La tension de sortie $U_d$ est constituée des sommets des sinusoïdes des tensions de phase. L'ondulation est plus faible qu'en monophasé, et sa fréquence fondamentale est 3 fois celle de la source ($3f$).</p>
+    <p>La tension inverse aux bornes d'une diode bloquée est la différence entre la tension de sa phase et la tension de la phase qui conduit (qui est la tension de sortie). Par exemple, pour $D_1$ :</p>
+    <ul>
+        <li>$V_{D1} = 0$ lorsque $D_1$ conduit.</li>
+        <li>$V_{D1} = e_1(t) - e_2(t) = u_{12}(t)$ (tension composée) lorsque $D_2$ conduit.</li>
+        <li>$V_{D1} = e_1(t) - e_3(t) = u_{13}(t)$ (tension composée) lorsque $D_3$ conduit.</li>
+    </ul>
+    <p>La tension inverse maximale aux bornes d'une diode est la valeur crête de la tension composée ($V_{Line\_max} = \sqrt{3} V_{Phase\_max}$).</p>
+    <div class="placeholder">[Figure II.14: Formes d'ondes tensions P3 (sources v1, v2, v3; sortie Ud; tension V_D1) et table de conduction]
+        <br> 1. Tensions de phase $v_1, v_2, v_3$: Sinusoïdes déphasées de 120°.
+        <br> 2. Tension de sortie $u_d$: Suit l'enveloppe supérieure des tensions de phase. Fréquence 3f.
+        <br> 3. Tension $V_{D1}$: Nulle quand D1 conduit, égale à $u_{12}$ quand D2 conduit, égale à $u_{13}$ quand D3 conduit.
+        <br> 4. Table de conduction: Indique quelle diode (D1, D2, D3) conduit sur chaque intervalle de 120°, la valeur de Ud (v1, v2 ou v3) et la valeur de VD1 (0, u12 ou u13).
+    </div>
+    <p class="caption">Fig.II.9 Montage P3 : la tension redressée</p>
+
+    <h3>II.5 Redresseur Triphasé Double Alternance (Pont / PD3)</h3>
+    <p>Le redresseur triphasé double alternance (pleine onde), appelé montage PD3 (P pour parallèle, D pour double, 3 pour triphasé) ou pont de Graëtz triphasé, est le redresseur non commandé le plus utilisé en forte puissance. Il utilise 6 diodes.</p>
+    <p>Il peut être vu comme l'association d'un montage P3 à cathode commune (diodes $D_1, D_2, D_3$) et d'un montage P3 à anode commune (diodes $D_4, D_5, D_6$). Le secondaire du transformateur est généralement couplé en étoile (ou en triangle).</p>
+     <div class="placeholder">[Figure II.15: Redresseur triphasé double alternance PD3 (pont à 6 diodes)]
+         <br> Composants: Secondaire triphasé (e1, e2, e3). Pont de 6 diodes: D1, D2, D3 connectées par leurs cathodes (sortie +). D4, D5, D6 connectées par leurs anodes (sortie -). Les phases sont connectées aux points intermédiaires: e1 à D1/D4, e2 à D2/D5, e3 à D3/D6. La charge R (tension UR) est connectée entre la sortie + et la sortie -.
+     </div>
+     <p class="caption">Fig.II.10 Redresseur double alternance. Montage PD3</p>
+
+    <h4>II.5.1 Fonctionnement et évolution des tensions</h4>
+    <p>En supposant un courant de charge continu (souvent le cas avec des charges inductives ou un fort filtrage capacitif), deux diodes conduisent à tout instant :</p>
+    <ul>
+        <li>Une diode du groupe supérieur (cathode commune : $D_1, D_2, D_3$) : celle dont l'anode est connectée à la phase ayant le potentiel <strong>le plus élevé</strong>.</li>
+        <li>Une diode du groupe inférieur (anode commune : $D_4, D_5, D_6$) : celle dont la cathode est connectée à la phase ayant le potentiel <strong>le plus faible</strong>.</li>
+    </ul>
+    <p>La tension de sortie $U_d = U_R$ est alors la différence entre la tension de phase la plus positive et la tension de phase la plus négative à cet instant. C'est donc une <strong>tension composée (tension ligne-ligne)</strong> du système triphasé.</p>
+    <p>Exemples de conduction et de tension de sortie $U_d = U_R$ (en notant $e_1, e_2, e_3$ les potentiels des phases par rapport au neutre) :</p>
+    <ul>
+        <li>Lorsque $e_1$ est la plus positive et $e_2$ la plus négative : $D_1$ et $D_5$ conduisent. $U_d = e_1 - e_2 = u_{12}(t)$.</li>
+        <li>Lorsque $e_1$ est la plus positive et $e_3$ la plus négative : $D_1$ et $D_6$ conduisent. $U_d = e_1 - e_3 = u_{13}(t)$.</li>
+        <li>Lorsque $e_2$ est la plus positive et $e_3$ la plus négative : $D_2$ et $D_6$ conduisent. $U_d = e_2 - e_3 = u_{23}(t)$.</li>
+        <li>Et ainsi de suite pour les 6 combinaisons possibles sur une période.</li>
+    </ul>
+    <p>Chaque diode conduit pendant un tiers de la période ($120^\circ$). La tension de sortie $U_d$ est composée de 6 segments d'arcs de sinusoïdes (des tensions composées) par période $T$ de la source. La fréquence fondamentale de l'ondulation est donc 6 fois la fréquence de la source ($6f$), ce qui rend le filtrage encore plus facile.</p>
+    <p>La tension de sortie est beaucoup plus lisse que dans les cas précédents. Sa valeur moyenne est plus élevée.</p>
+     <div class="placeholder">[Figure II.16: Formes d'ondes tensions PD3 (phase v1, v2, v3; line u12, u13, u21, u23, u31, u32; sortie Ud; tension V_D1) et table de conduction]
+         <br> 1. Tensions de phase $v_1, v_2, v_3$ et tensions composées $u_{12}, u_{23}, u_{31}, u_{21}, u_{32}, u_{13}$.
+         <br> 2. Tension de sortie $u_d$: Suit l'enveloppe supérieure des 6 tensions composées redressées. Très faible ondulation. Fréquence 6f.
+         <br> 3. Tension $V_{D1}$: Nulle quand D1 conduit. Égale à des différences de potentiels complexes sinon.
+         <br> 4. Table de conduction: Indique quelle paire de diodes (une du haut, une du bas) conduit sur chaque intervalle de 60°, la valeur de Ud (une tension composée) et éventuellement la valeur de VD1. (Note: D'1=D4, D'2=D5, D'3=D6).
+     </div>
+     <p class="caption">Fig.II.11 (devrait être II.16) Montage PD3 : la tension redressée</p>
+
+    <div class="footer-info">
+        <p><strong>Bibliographie indicative :</strong> Les convertisseurs de l'Electronique de Puissance, Guy SEGUIER (Les quatre volumes).</p>
+        <p><strong>Enseignant :</strong> Kifouche Rezki</p>
+        <p>Département Automatisation et Electrification - FHC, UMBB</p>
+    </div>
+
+</body>
+</html>
