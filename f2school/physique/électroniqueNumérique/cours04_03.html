@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuits Combinatoires et Séquentiels</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #0056b3;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #0056b3;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 20px 0;
+            width: auto;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            color: #888;
+            background-color: #f9f9f9;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Chapitre 4 Circuits combinatoires</h1>
+
+    <p>
+        Un <strong>circuit combinatoire</strong> est un type de circuit logique où l'état de chacune des sorties dépend <em>uniquement</em> de l'état actuel des entrées. Il n'y a pas de notion de mémoire ou d'état antérieur. Mathématiquement, chaque sortie est une fonction booléenne des entrées.
+    </p>
+
+    <h2>4-1 Synthèse d'un circuit combinatoire</h2>
+
+    <p>
+        La synthèse d'un circuit combinatoire consiste à concevoir le circuit (trouver les équations logiques et le schéma des portes) à partir d'une description de son comportement, souvent donnée sous forme de table de vérité.
+    </p>
+
+    <p>
+        <strong>Exemple :</strong> On désire concevoir un circuit logique avec trois entrées (notées a, b, c) et deux sorties (notées s₁ et s₀). Le comportement souhaité est défini par la table de vérité suivante (table 13) :
+    </p>
+
+    <h4>Table de Vérité (Table 13)</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>s₁</th>
+                <th>s₀</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="placeholder">
+        [Image Placeholder: Truth Table for s1 and s0 from slide 21]
+        <img src="placeholder_table_13.png" alt="Table de vérité pour s1 et s0" style="max-width: 200px; display: block; margin: 10px auto;">
+    </div>
+
+
+    <h3>Équations logiques (dérivées de la table de vérité)</h3>
+    <p>
+        Pour obtenir l'équation logique de chaque sortie, on utilise la forme "somme de produits" (ou première forme canonique). On identifie les combinaisons d'entrées pour lesquelles la sortie vaut 1, et on additionne (OU logique) les termes produits (mintermes) correspondants. Une variable d'entrée apparaît non-inversée si elle vaut 1 dans la combinaison, et inversée (avec une barre au-dessus) si elle vaut 0.
+    </p>
+
+    <p><strong>Pour la sortie s₀ :</strong></p>
+    <p>s₀ = 1 dans les cas suivants :</p>
+    <ul>
+        <li>a=1, b=0, c=0 → terme : \( a \bar{b} \bar{c} \)</li>
+        <li>a=1, b=0, c=1 → terme : \( a \bar{b} c \)</li>
+    </ul>
+    <p>L'équation logique pour s₀ est donc la somme (OU logique) de ces termes :</p>
+    <p><code>s₀ = a \bar{b} \bar{c} + a \bar{b} c</code></p>
+
+    <p><strong>Pour la sortie s₁ :</strong></p>
+    <p>s₁ = 1 dans les cas suivants :</p>
+    <ul>
+        <li>a=0, b=0, c=0 → terme : \( \bar{a} \bar{b} \bar{c} \)</li>
+        <li>a=1, b=0, c=0 → terme : \( a \bar{b} \bar{c} \)</li>
+        <li>a=1, b=1, c=1 → terme : \( a b c \)</li>
+    </ul>
+    <p>L'équation logique pour s₁ est donc :</p>
+    <p><code>s₁ = \bar{a} \bar{b} \bar{c} + a \bar{b} \bar{c} + a b c</code></p>
+
+    <div class="placeholder">
+        [Image Placeholder: Equations derived from truth table from slide 22]
+        <img src="placeholder_equations_s0_s1.png" alt="Equations logiques pour s0 et s1" style="max-width: 400px; display: block; margin: 10px auto;">
+    </div>
+
+    <h3>Simplification des équations logiques</h3>
+    <p>
+        Les équations obtenues directement de la table de vérité (forme canonique) ne sont pas toujours les plus simples. On peut souvent les simplifier en utilisant les règles de l'algèbre de Boole ou des méthodes graphiques comme les tableaux de Karnaugh. Une équation simplifiée conduit généralement à un circuit avec moins de portes logiques.
+    </p>
+
+    <p><strong>Simplification algébrique de s₀ :</strong></p>
+    <p><code>s₀ = a \bar{b} \bar{c} + a \bar{b} c</code></p>
+    <p>On met \( a \bar{b} \) en facteur :</p>
+    <p><code>s₀ = a \bar{b} (\bar{c} + c)</code></p>
+    <p>En utilisant la règle d'algèbre booléenne \( X + \bar{X} = 1 \), on a \( \bar{c} + c = 1 \).</p>
+    <p>Donc, l'équation simplifiée est :</p>
+    <p><code>s₀ = a \bar{b} \cdot 1 = a \bar{b}</code></p>
+    <p>Cela signifie que s₀ vaut 1 si et seulement si a=1 ET b=0, indépendamment de la valeur de c.</p>
+
+    <p><strong>Simplification algébrique de s₁ :</strong></p>
+    <p><code>s₁ = \bar{a} \bar{b} \bar{c} + a \bar{b} \bar{c} + a b c</code></p>
+    <p>On regroupe les deux premiers termes en mettant \( \bar{b} \bar{c} \) en facteur :</p>
+    <p><code>s₁ = (\bar{a} + a) \bar{b} \bar{c} + a b c</code></p>
+    <p>En utilisant la règle \( \bar{X} + X = 1 \), on a \( \bar{a} + a = 1 \).</p>
+    <p>Donc, l'équation devient :</p>
+    <p><code>s₁ = (1) \bar{b} \bar{c} + a b c</code></p>
+    <p>L'équation simplifiée est :</p>
+    <p><code>s₁ = \bar{b} \bar{c} + a b c</code></p>
+
+    <div class="placeholder">
+         [Image Placeholder: Algebraic simplification from slide 22]
+         <img src="placeholder_simplification_algebra.png" alt="Simplification algébrique des équations" style="max-width: 400px; display: block; margin: 10px auto;">
+    </div>
+
+
+    <h3>Simplification avec les Tableaux de Karnaugh</h3>
+    <p>
+        Il est souvent plus efficace et systématique d'utiliser la technique des <strong>tableaux de Karnaugh</strong> (K-maps) pour simplifier les équations logiques, surtout pour 3 ou 4 variables. Le tableau de Karnaugh est une représentation graphique de la table de vérité qui facilite l'identification des termes adjacents pouvant être regroupés pour simplifier l'équation.
+    </p>
+
+    <h4>Tableau de Karnaugh pour s₀</h4>
+    <div class="placeholder">
+        [Image Placeholder: Karnaugh Map for s0 from slide 23]
+        <img src="placeholder_kmap_s0.png" alt="Tableau de Karnaugh pour s0" style="max-width: 300px; display: block; margin: 10px auto;">
+         <p><code>s₀ = a \bar{b}</code></p>
+    </div>
+    <p>
+        Dans le tableau de Karnaugh pour s₀, les '1' sont placés dans les cases correspondant aux combinaisons d'entrées où s₀=1 (soit a=1, b=0, c=0 et a=1, b=0, c=1). Ces deux cases sont adjacentes (ligne a=1, colonnes bc=00 et bc=01). Le regroupement de ces deux '1' couvre la condition a=1 et b=0, tandis que c change (0 et 1), donc c est éliminé de ce terme. Le terme simplifié résultant de ce groupe est \( a \bar{b} \).
+    </p>
+
+
+    <h4>Tableau de Karnaugh pour s₁</h4>
+     <div class="placeholder">
+        [Image Placeholder: Karnaugh Map for s1 from slide 23]
+        <img src="placeholder_kmap_s1.png" alt="Tableau de Karnaugh pour s1" style="max-width: 300px; display: block; margin: 10px auto;">
+         <p><code>s₁ = \bar{b} \bar{c} + a b c</code></p>
+    </div>
+     <p>
+        Dans le tableau pour s₁, les '1' sont aux positions (a=0, b=0, c=0), (a=1, b=0, c=0) et (a=1, b=1, c=1).
+        On peut former un groupe vertical avec les deux '1' dans la colonne bc=00 (cases a=0 et a=1). Ce groupe couvre b=0 et c=0, tandis que a change, donc a est éliminé. Le terme résultant est \( \bar{b} \bar{c} \).
+        Le troisième '1' à la position (a=1, b=1, c=1) est isolé et ne peut pas être groupé avec d'autres '1'. Il forme un groupe d'une seule case, correspondant au terme \( a b c \).
+        L'équation simplifiée finale est la somme (OU) des termes des groupes : \( s₁ = \bar{b} \bar{c} + a b c \).
+    </p>
+    <p><em>Note: Les résultats de la simplification algébrique et par tableau de Karnaugh concordent, comme attendu.</em></p>
+
+    <h3>Logigramme (Circuit Logique - fig. 6)</h3>
+    <p>
+        Le logigramme est la représentation schématique du circuit logique utilisant les symboles normalisés des portes logiques (ET, OU, NON, etc.). Le logigramme suivant (fig. 6) implémente les équations simplifiées trouvées :
+    </p>
+    <p>Équations :</p>
+    <ul>
+        <li><code>s₀ = a \bar{b}</code></li>
+        <li><code>s₁ = \bar{b} \bar{c} + a b c</code></li>
+    </ul>
+
+    <div class="placeholder">
+        [Image Placeholder: Logic Diagram for s0 and s1 from slide 24]
+        <img src="placeholder_logigramme_s0_s1.png" alt="Logigramme pour s0 et s1" style="max-width: 450px; display: block; margin: 10px auto;">
+    </div>
+
+    <p>Description du circuit :</p>
+    <ul>
+        <li><strong>Pour s₀ :</strong> Une porte NON (inverseur, symbolisée par '1' dans le diagramme) est utilisée pour obtenir \( \bar{b} \) à partir de b. Ensuite, une porte ET (AND, symbolisée par '&') combine l'entrée 'a' et la sortie \( \bar{b} \) pour produire s₀.</li>
+        <li><strong>Pour s₁ :</strong>
+            <ul>
+                <li>Le terme \( \bar{b} \bar{c} \) est généré par : deux portes NON pour obtenir \( \bar{b} \) et \( \bar{c} \), suivies d'une porte ET qui combine \( \bar{b} \) et \( \bar{c} \).</li>
+                <li>Le terme \( a b c \) est généré par une porte ET à trois entrées (ou deux portes ET à deux entrées) combinant a, b et c.</li>
+                <li>Enfin, une porte OU (OR, symbolisée par '≥1') combine les sorties des deux termes (\( \bar{b} \bar{c} \) et \( a b c \)) pour produire la sortie finale s₁.</li>
+            </ul>
+        </li>
+     </ul>
+     <p><em>Note: Les symboles '1' pour NON, '&' pour ET, et '≥1' pour OU sont conformes à certaines normes (par exemple, IEC 60617-12).</em></p>
+
+    <hr style="margin: 40px 0;">
+
+    <h2>4-2 Circuits arithmétiques</h2>
+
+    <p>
+        À partir des fonctions logiques de base, on peut construire des circuits combinatoires plus complexes capables d'effectuer des opérations arithmétiques sur des nombres binaires, telles que l'addition, la soustraction, la multiplication, la division, ou la comparaison.
+    </p>
+
+    <h3>4-2-1 Comparateur 1 bit</h3>
+
+    <p>
+        Un comparateur est un circuit qui compare deux nombres et indique s'ils sont égaux, ou si l'un est plus grand que l'autre. Le comparateur 1 bit est le plus simple : il compare deux bits uniques, 'a' et 'b'.
+    </p>
+    <p>Le résultat de la comparaison d'égalité est donné par une sortie unique 's' :</p>
+    <ul>
+        <li><strong>s = 1</strong> si a = b (les entrées sont égales, soit 0 et 0, soit 1 et 1)</li>
+        <li><strong>s = 0</strong> si a ≠ b (les entrées sont différentes, soit 0 et 1, soit 1 et 0)</li>
+    </ul>
+
+    <h4>Table de vérité (Table 14 - Comparateur 1 bit)</h4>
+    <table>
+        <thead>
+            <tr><th>a</th><th>b</th><th>s (a=b?)</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td></tr>
+        </tbody>
+    </table>
+     <div class="placeholder">
+        [Image Placeholder: Truth Table for 1-bit Comparator from slide 26]
+        <img src="placeholder_table_14.png" alt="Table de vérité comparateur 1 bit" style="max-width: 200px; display: block; margin: 10px auto;">
+    </div>
+
+    <h4>Équation booléenne de la sortie</h4>
+    <p>D'après la table de vérité, s=1 lorsque (a=0 ET b=0) OU (a=1 ET b=1). L'équation est donc :</p>
+    <p><code>s = \bar{a} \bar{b} + a b</code></p>
+    <p>
+        Cette fonction logique est connue sous le nom de <strong>NON-OU exclusif (XNOR)</strong> ou fonction d'équivalence. Elle est l'inverse de la fonction OU exclusif (XOR).
+    </p>
+    <p>On la note souvent : <code>s = \overline{a \oplus b}</code> ou parfois <code>s = a \odot b</code>.</p>
+
+    <h4>Logigramme (fig. 7 - Comparateur 1 bit)</h4>
+    <p>Le circuit peut être réalisé directement avec une porte XNOR.</p>
+     <div class="placeholder">
+        [Image Placeholder: Logic Diagram for 1-bit Comparator (XNOR) from slide 26]
+        <img src="placeholder_logigramme_comp1bit.png" alt="Logigramme comparateur 1 bit (XNOR)" style="max-width: 250px; display: block; margin: 10px auto;">
+         <p><em>Le symbole '=1' est parfois utilisé pour représenter une porte XOR ou XNOR selon le contexte ou la norme. Ici, il représente la fonction XNOR (équivalence).</em></p>
+    </div>
+
+    <h3>4-2-2 Additionneur 1 bit (Demi-Additionneur)</h3>
+
+    <p>
+        L'additionneur 1 bit, souvent appelé <strong>demi-additionneur</strong> (Half-Adder), est un circuit qui réalise l'addition arithmétique de deux bits uniques, 'a' et 'b'.
+    </p>
+    <p>Le résultat de l'addition binaire de deux bits peut nécessiter deux bits de sortie :</p>
+    <ul>
+        <li><strong>s₀ (Sum)</strong> : Le bit de somme (le bit le moins significatif - LSB).</li>
+        <li><strong>s₁ (Carry)</strong> : Le bit de retenue (le bit le plus significatif - MSB).</li>
+    </ul>
+    <p>Les additions possibles sont :</p>
+    <ul>
+        <li>0 + 0 = 0 (Somme s₀=0, Retenue s₁=0) → Résultat binaire 00</li>
+        <li>0 + 1 = 1 (Somme s₀=1, Retenue s₁=0) → Résultat binaire 01</li>
+        <li>1 + 0 = 1 (Somme s₀=1, Retenue s₁=0) → Résultat binaire 01</li>
+        <li>1 + 1 = 2 (en décimal) = 10 (en binaire) (Somme s₀=0, Retenue s₁=1) → Résultat binaire 10</li>
+    </ul>
+
+    <h4>Table de vérité (Table 15 - Demi-Additionneur)</h4>
+    <table>
+        <thead>
+            <tr><th>a</th><th>b</th><th>s₁ (Retenue - MSB)</th><th>s₀ (Somme - LSB)</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+        </tbody>
+    </table>
+     <div class="placeholder">
+        [Image Placeholder: Truth Table for Half-Adder from slide 27]
+        <img src="placeholder_table_15.png" alt="Table de vérité demi-additionneur" style="max-width: 250px; display: block; margin: 10px auto;">
+    </div>
+
+    <h4>Équations booléennes des sorties</h4>
+    <p>En examinant la table de vérité :</p>
+    <ul>
+        <li>La sortie <strong>s₀ (Somme)</strong> est 1 lorsque a est différent de b. C'est la fonction <strong>OU exclusif (XOR)</strong>.
+            <br><code>s₀ = a \oplus b</code>
+        </li>
+        <li>La sortie <strong>s₁ (Retenue)</strong> est 1 uniquement lorsque a et b sont tous les deux 1. C'est la fonction <strong>ET (AND)</strong>.
+            <br><code>s₁ = a \cdot b</code> (ou simplement <code>s₁ = a b</code>)
+        </li>
+    </ul>
+
+    <h4>Logigramme (fig. 8 - Demi-Additionneur)</h4>
+    <p>Le circuit du demi-additionneur est donc composé d'une porte XOR pour calculer la somme et d'une porte AND pour calculer la retenue.</p>
+    <div class="placeholder">
+        [Image Placeholder: Logic Diagram for Half-Adder from slide 27]
+        <img src="placeholder_logigramme_halfadder.png" alt="Logigramme demi-additionneur" style="max-width: 350px; display: block; margin: 10px auto;">
+         <p><em>Ici, le symbole '=1' représente la porte XOR pour la somme s₀, et le symbole '&' représente la porte AND pour la retenue s₁.</em></p>
+    </div>
+
+    <hr style="margin: 40px 0;">
+
+    <h1>Chapitre 5 Circuits séquentiels</h1>
+
+    <p>
+        Contrairement aux circuits combinatoires dont les sorties dépendent uniquement des entrées actuelles, dans un <strong>circuit séquentiel</strong>, les sorties dépendent non seulement des entrées actuelles mais aussi de l'<strong>état antérieur</strong> du circuit. Cet état antérieur est stocké dans des éléments de mémoire.
+    </p>
+    <p>Les circuits séquentiels possèdent une "mémoire" des événements passés, ce qui leur permet de réaliser des fonctions plus complexes comme les compteurs, les registres, et les automates finis.</p>
+
+    <h2>5-1 Fonction mémoire</h2>
+
+    <p>
+        Les éléments fondamentaux qui permettent de stocker l'information (l'état) dans les circuits séquentiels sont appelés <strong>bascules</strong> (flip-flops) et <strong>verrous</strong> (latches). Ces circuits bistables ont la propriété de pouvoir mémoriser une information élémentaire (un bit) et de maintenir cet état tant qu'ils ne reçoivent pas l'ordre de le changer.
+    </p>
+
+    <h3>5-1-1 Verrou RS (RS Latch)</h3>
+
+    <p>
+        Le verrou RS (Reset-Set) est l'un des types les plus simples de circuit mémoire bistable.
+    </p>
+    <ul>
+        <li>Il possède deux entrées :
+            <ul>
+                <li><strong>S (Set)</strong> : Met la sortie principale Q à 1.</li>
+                <li><strong>R (Reset)</strong> : Remet la sortie principale Q à 0.</li>
+            </ul>
+        </li>
+        <li>Il possède généralement deux sorties qui sont normalement complémentaires :
+            <ul>
+                <li><strong>Q</strong> : La sortie principale (l'état mémorisé).</li>
+                <li><strong>\( \bar{Q} \)</strong> : La sortie complémentaire (inverse de Q).</li>
+            </ul>
+        </li>
+    </ul>
+    <p>Le terme "verrou" (latch en anglais) est souvent utilisé pour les circuits mémoire dont l'état peut changer dès qu'une entrée de contrôle est active (sensible au niveau), tandis que "bascule" (flip-flop) désigne généralement des circuits synchronisés par une horloge (sensible aux fronts d'horloge).</p>
+
+    <h4>Symbole (fig. 10)</h4>
+    <p>Le symbole schématique standard d'un verrou RS est :</p>
+    <div class="placeholder">
+        [Image Placeholder: RS Latch Symbol from slide 28]
+        <img src="placeholder_symbol_rs_latch.png" alt="Symbole du verrou RS" style="max-width: 150px; display: block; margin: 10px auto;">
+    </div>
+
+    <h4>Logigramme (fig. 9 - Implémentation avec portes NON-OU / NOR)</h4>
+    <p>Un verrou RS peut être construit en utilisant deux portes NON-OU (NOR) interconnectées de manière croisée (cross-coupled), comme illustré ci-dessous :</p>
+     <div class="placeholder">
+        [Image Placeholder: RS Latch Logic Diagram (NOR gates) from slide 29]
+        <img src="placeholder_logigramme_rs_nor.png" alt="Logigramme du verrou RS avec portes NOR" style="max-width: 300px; display: block; margin: 10px auto;">
+    </div>
+    <p>Dans cette configuration, la sortie de chaque porte NOR est connectée à l'une des entrées de l'autre porte NOR. Les entrées externes sont R et S.</p>
+
+    <h4>Analyse du fonctionnement</h4>
+    <p><strong>Rappel sur la porte NOR :</strong> La sortie d'une porte NOR est 1 si et seulement si <em>toutes</em> ses entrées sont 0. Si au moins une entrée est 1, la sortie est 0.</p>
+
+    <p><strong>État interdit :</strong> Pour un verrou RS basé sur des portes NOR, la combinaison d'entrées <strong>(R=1, S=1) est considérée comme interdite</strong>. Si R=1 et S=1 sont appliqués simultanément, les deux sorties Q et \( \bar{Q} \) seront forcées à 0 (car chaque porte NOR a au moins une entrée à 1). Cela viole la condition que Q et \( \bar{Q} \) doivent être complémentaires. De plus, si les entrées reviennent ensuite à R=0, S=0 à partir de cet état (1,1), l'état futur des sorties est indéterminé (il dépend de quelle porte réagit légèrement plus vite), ce qui peut conduire à une condition de course (race condition) ou à une oscillation métastable.</p>
+
+    <p><strong>Transitions et États Stables :</strong></p>
+    <ul>
+        <li><strong>État Mémoire (R=0, S=0) :</strong> Lorsque R et S sont tous deux à 0, le verrou conserve son état précédent. Si Q était 1, il reste 1. Si Q était 0, il reste 0. C'est la fonction de mémorisation.
+            <ul>
+                <li>Si Q=1 et \( \bar{Q}=0 \): La porte du haut a R=0 et \( \bar{Q}=0 \) comme entrées, sa sortie Q reste 1. La porte du bas a S=0 et Q=1 comme entrées, sa sortie \( \bar{Q} \) reste 0. L'état est stable.</li>
+                <li>Si Q=0 et \( \bar{Q}=1 \): La porte du haut a R=0 et \( \bar{Q}=1 \) comme entrées, sa sortie Q reste 0. La porte du bas a S=0 et Q=0 comme entrées, sa sortie \( \bar{Q} \) reste 1. L'état est stable.</li>
+            </ul>
+        </li>
+        <li><strong>Fonction SET (R=0, S=1) :</strong> Activer l'entrée S (Set) force la sortie Q à 1 (et \( \bar{Q} \) à 0), quel que soit l'état précédent.
+            <ul>
+                <li>S=1 force la sortie de la porte NOR du bas (\( \bar{Q} \)) à 0.</li>
+                <li>Cette sortie \( \bar{Q}=0 \), avec R=0, force la sortie de la porte NOR du haut (Q) à 1.</li>
+                <li>État stable : Q=1, \( \bar{Q}=0 \).</li>
+            </ul>
+            <div class="placeholder">
+                [Image Placeholder: RS Latch SET operation from slide 30 - fig 11a]
+                <img src="placeholder_rs_set.png" alt="Fonction SET du verrou RS" style="max-width: 300px; display: block; margin: 10px auto;">
+            </div>
+        </li>
+         <li><strong>Fonction RESET (R=1, S=0) :</strong> Activer l'entrée R (Reset) force la sortie Q à 0 (et \( \bar{Q} \) à 1), quel que soit l'état précédent.
+            <ul>
+                <li>R=1 force la sortie de la porte NOR du haut (Q) à 0.</li>
+                <li>Cette sortie Q=0, avec S=0, force la sortie de la porte NOR du bas (\( \bar{Q} \)) à 1.</li>
+                <li>État stable : Q=0, \( \bar{Q}=1 \).</li>
+            </ul>
+         </li>
+    </ul>
+
+    <p><strong>Transitions typiques :</strong></p>
+    <ul>
+        <li>(RS) = (00) → (01) [SET] → (00) [Mémorisation Q=1]</li>
+        <li>(RS) = (00) → (10) [RESET] → (00) [Mémorisation Q=0]</li>
+    </ul>
+    <div class="placeholder">
+         [Image Placeholder: RS Latch Memory operation (after SET) from slide 30 - fig 11b]
+        <img src="placeholder_rs_memory.png" alt="Fonction Mémoire du verrou RS après SET" style="max-width: 300px; display: block; margin: 10px auto;">
+        <p><em>Après une opération SET (S=1 puis retour à S=0), l'état Q=1 est mémorisé lorsque R=0 et S=0.</em></p>
+    </div>
+    <p>Le verrou RS est la brique de base pour construire des mémoires plus complexes et des bascules synchrones.</p>
+
+    <script>
+        // Ensure KaTeX rendering after page load
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\[", right: "\\]", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false }
+                ]
+            });
+        });
+    </script>
+</body>
+</html>
