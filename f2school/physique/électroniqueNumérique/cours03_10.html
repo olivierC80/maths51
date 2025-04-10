@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre VIII: Les bascules</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3, h4, h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 { font-size: 2em; border-bottom: 2px solid black; padding-bottom: 5px; }
+        h2 { font-size: 1.7em; border-bottom: 1px solid gray; padding-bottom: 3px;}
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; }
+        h5 { font-size: 1.1em; font-weight: bold; }
+        p, li, dd {
+            margin-bottom: 0.8em;
+        }
+        dt {
+            font-weight: bold;
+        }
+        .definition {
+            border-left: 3px solid #add8e6; /* Light blue */
+            padding-left: 15px;
+            margin-left: 10px;
+            background-color: #f0f8ff; /* Alice blue */
+        }
+        .remark {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .example {
+            border: 1px dashed #aaa;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .exercise {
+            border: 1px solid #ccaa00;
+            background-color: #fff8dc; /* Cornsilk */
+            padding: 10px;
+            margin: 10px 0;
+        }
+         .quote {
+            font-style: italic;
+            margin: 15px 40px;
+            padding: 10px;
+            border-left: 3px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        figure {
+            text-align: center;
+            margin: 20px 0;
+        }
+        figcaption {
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 15px auto; /* Center table */
+            width: auto;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            background-color: #fafafa;
+            min-height: 100px;
+            display: inline-block;
+            margin: 10px;
+            min-width: 150px;
+        }
+        .page-footer {
+            margin-top: 30px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            font-size: 0.8em;
+            color: gray;
+            display: flex;
+            justify-content: space-between;
+        }
+        .katex-display { /* Ensure display math is centered */
+             margin: 1em 0;
+             text-align: center;
+        }
+        /* Style for example 8.1 states */
+        .state-example {
+            display: inline-block;
+            border: 1px solid #eee;
+            padding: 5px 10px;
+            margin: 5px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page 1 Content -->
+    <h1>Chapitre VIII <br> Les bascules</h1>
+
+    <figure style="float: right; margin-left: 20px;">
+         <div class="placeholder">[Placeholder: Image of Alan Mathison Turing]</div>
+         <figcaption>
+             Alan Mathison Turing<br>
+             * 23 juin 1912, Londres, R.-U.<br>
+             † 7 juin 1954, Wilmslow, R.-U. <!-- Corrected date based on common sources -->
+         </figcaption>
+    </figure>
+
+    <div class="quote">
+        <p>« [A universal machine] ... which can be made to do the work of any special-purpose machine, that is to say to carry out any piece of computing, if a tape bearing suitable "instructions" is inserted into it. »</p>
+        <p style="text-align: right;">(Alan M. Turing, 1936, à propos de la « machine de Turing »)</p>
+    </div>
+     <div style="clear: both;"></div>
+
+    <h2>VIII.1 Introduction</h2>
+
+    <div class="definition">
+        <p><strong>Circuit séquentiel :</strong> circuit dont l'état des sorties dépend non seulement des entrées <strong>mais également de l'état antérieur des sorties</strong> (ou plus généralement, de l'état interne du circuit). Ces circuits doivent donc être capables de <strong>mémoriser</strong> une information sur leur état passé.</p>
+        <p>Contrairement aux circuits combinatoires dont la sortie est une fonction unique des entrées actuelles, les circuits séquentiels possèdent une "mémoire" qui influence leur comportement.</p>
+    </div>
+
+    <div class="example">
+        <h5>▷ Exemple 8.1 : Illustration de la dépendance à l'état antérieur</h5>
+        <p>Considérons un système hypothétique avec des entrées M (Mode) et A (Action) et une sortie L (Lampe).</p>
+        <div class="state-example">
+           1. `\{ M=0, A=0 \} \rightarrow L=0`
+        </div>
+        <div class="state-example">
+           2. `\{ M=1, A=0 \} \rightarrow L=1`
+        </div>
+        <div class="state-example">
+           3. `\{ M=0, A=0 \} \rightarrow L=1` (différent de l'état 1 !)
+        </div>
+        <div class="state-example">
+           4. `\{ M=0, A=1 \} \rightarrow L=0`
+        </div>
+         <div class="state-example">
+           5. `\{ M=0, A=0 \} \rightarrow L=0` (identique à l'état 1, différent de 3)
+        </div>
+        <p>Dans ce système, pour une même combinaison des variables d'entrée `(M=0, A=0)`, la sortie `L` peut être différente (`L=0` en 1 et 5, `L=1` en 3). Cela montre que la sortie ne dépend pas uniquement des entrées actuelles mais aussi de l'historique des opérations précédentes (la séquence). La fonctionnalité dépend de l'ordre de déroulement de la séquence. C'est la caractéristique d'un <strong>système séquentiel</strong>.</p>
+    </div>
+
+    <p>Les fonctions séquentielles de base sont :</p>
+    <ul>
+        <li><strong>Mémorisation :</strong> Conserver une valeur binaire (0 ou 1).</li>
+        <li><strong>Comptage :</strong> Suivre une séquence prédéfinie d'états, typiquement pour compter des événements.</li>
+        <li><strong>Décalage :</strong> Déplacer des informations binaires d'une position à une autre.</li>
+    </ul>
+
+    <p>Les circuits séquentiels fondamentaux utilisés pour réaliser ces fonctions sont :</p>
+    <!-- Continued on next page -->
+
+    <div class="page-footer">
+        <span>Page 91</span>
+    </div>
+    <hr>
+
+    <!-- Page 2 Content -->
+
+    <ul>
+        <li><strong>Bascules (Flip-flops) :</strong> Les éléments de mémoire les plus élémentaires (3 types principaux: RS, D, JK, T).</li>
+        <li><strong>Compteurs (Counters) :</strong> Circuits conçus pour le comptage.</li>
+        <li><strong>Registres (Registers) :</strong> Circuits pour stocker et/ou décaler des groupes de bits (mots binaires).</li>
+        <li><strong>Mémoires RAM (Random Access Memory) :</strong> Ensembles organisés de cellules mémoire pour stocker de grandes quantités de données.</li>
+    </ul>
+
+    <p>Ces circuits peuvent travailler soit en mode synchrone, soit en mode asynchrone :</p>
+    <ul>
+        <li><strong>Mode asynchrone :</strong> À tout moment, un changement sur les signaux d'entrée peut provoquer un changement d'état des sorties (après un certain délai de propagation appelé « temps de réponse »). Ces systèmes peuvent être plus rapides dans certains cas, mais ils sont difficiles à concevoir, à tester et à dépanner car leur comportement dépend précisément des délais de propagation, et ils sont sensibles aux aléas (glitches).</li>
+        <li><strong>Mode synchrone :</strong> Le moment exact où les sorties peuvent changer d'état est contrôlé (synchronisé) par un signal d'horloge (clock), qui est typiquement un train d'impulsions carrées ou rectangulaires. Les changements d'état s'effectuent uniquement pendant une transition spécifique de l'horloge, appelée « front » (front montant : passage de 0 à 1, ou front descendant : passage de 1 à 0).</li>
+    </ul>
+
+    <p>La <strong>majorité des systèmes numériques séquentiels sont synchrones</strong>, même si certaines parties (comme une entrée de réinitialisation - reset) peuvent être asynchrones.</p>
+    <p>Les avantages principaux du mode synchrone sont :</p>
+    <ul>
+        <li>Permet de préparer les entrées sans perturber immédiatement les sorties (les changements ne sont pris en compte qu'au prochain front d'horloge).</li>
+        <li>Protège mieux contre les parasites (bruits ou glitches) survenant entre les fronts d'horloge actifs.</li>
+    </ul>
+
+    <p>Les <strong>bascules</strong> peuvent être considérées comme des mémoires élémentaires ; ce sont les briques de base des circuits séquentiels.</p>
+    <p>Ce sont les circuits de mémorisation les plus répandus dans les systèmes numériques en raison de :</p>
+    <ul>
+        <li>Leur rapidité de fonctionnement.</li>
+        <li>La facilité d'écriture et de lecture de l'information (bit).</li>
+        <li>La grande simplicité de leur interconnexion avec des portes logiques.</li>
+    </ul>
+
+    <p>On trouve deux grandes familles de bascules :</p>
+    <ul>
+        <li><strong>Bascules de mémorisation (ex: RS, D) :</strong> Elles possèdent typiquement des commandes pour forcer l'état à 0 (Reset ou Clear), forcer l'état à 1 (Set ou Preset), et mémoriser l'état actuel.</li>
+        <li><strong>Bascules de comptage (ex: JK, T) :</strong> Elles possèdent en outre une commande permettant de changer l'état (basculer ou toggle) en fonction de l'état précédent.</li>
+    </ul>
+
+    <h2>VIII.2 Point mémoire (Memory Point / Latch)</h2>
+    <p>La principale différence entre un système séquentiel et un système combinatoire est que lorsque l'on présente plusieurs fois de suite un même vecteur d'entrée à un système séquentiel, celui-ci – contrairement au système combinatoire – ne délivre pas nécessairement le même vecteur de sortie à chaque fois (voir Exemple 8.1).</p>
+    <p>En d'autres termes, l'état de la sortie d'un système séquentiel dépend non seulement de l'état actuel des variables d'entrée, mais également d'un paramètre lié au « temps », lequel paramètre est la plupart du temps concrétisé par « l'état antérieur » mémorisé par le système.</p>
+
+    <p>Soit le circuit et sa table de vérité associée suivants :</p>
+    <figure>
+         <div class="placeholder">[Placeholder: Circuit diagram showing feedback loop: A & B -> AND -> Input1 OR; F -> Input2 OR; OR output F -> connected back to Input C of AND]</div>
+         <figcaption>Circuit avec rétroaction créant un point mémoire.</figcaption>
+         <table>
+             <caption>Table de vérité du circuit avec état antérieur</caption>
+              <thead><tr><th>A</th><th>B</th><th>`C_{t-1}` (Etat Précédent)</th><th>`C_t` (Etat Actuel)</th><th>F</th></tr></thead>
+              <tbody>
+                  <tr><td>0</td><td>0</td><td>X</td><td>0</td><td>0</td></tr>
+                  <tr><td>0</td><td>1</td><td>X</td><td>0</td><td>0</td></tr>
+                  <tr><td>1</td><td>0</td><td>X</td><td>0</td><td>0</td></tr>
+                  <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                  <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+              </tbody>
+              <!-- Note: The original table seems simplified. The value of F = C. Let's assume F = C. The state C depends on A, B and previous C. Let's try to match the table provided. -->
+              <!-- Let's re-evaluate the circuit: F = C. C = (A & B) OR F = (A & B) OR C. This OR gate seems wrong, maybe F is the OR output? Let's assume F is OR output, C is feedback. F = (A & B & C) + F? This doesn't make sense. -->
+              <!-- Let's interpret the provided table as (A, B) inputs and F as output at time t (Ft). Ct-1 is the state of C just before time t. Let's assume C input to AND gate is Ft-1. Let's assume the OR gate is input B and C, and its output feeds the '1' block? This is very unclear. -->
+              <!-- Let's follow the table given: Ft depends on A, B, and potentially a previous state implied by Ct-1. -->
+              <!-- Table provided: -->
+              <!-- A=0, B=0 => Ft=1 (?? This implies C is likely an OR gate with inversion, or NAND/NOR logic) -->
+              <!-- A=0, B=1 => Ft=0 -->
+              <!-- A=1, B=0 => Ft=Ct-1 (Memory!) -->
+              <!-- A=1, B=1 => Ft=0 -->
+              <!-- Let's assume the circuit is A -> In1 AND; B -> In1 OR; Output OR -> F; F -> C -> In2 AND; Output AND -> In2 OR. -->
+              <!-- F = (B OR C). C = (A AND F_previous). This still doesn't match table easily. -->
+              <!-- Given the context of sequential circuits, the table likely describes the behavior of F at time t (Ft) based on inputs A, B and the state of F at time t-1 (represented by Ct-1). -->
+              <!-- A=1, B=0 => Ft=Ct-1 means if A=1 and B=0, the output holds its previous value. This IS memory. -->
+              <!-- Let's assume C represents the output F(t-1). Table: -->
+              <!-- A | B | F(t-1) | F(t) -->
+              <!-- --|---|--------|----- -->
+              <!-- 0 | 0 | X      | 1    (?) -->
+              <!-- 0 | 1 | X      | 0 -->
+              <!-- 1 | 0 | 0      | 0 -->
+              <!-- 1 | 0 | 1      | 1    (Matches Ft=Ct-1 interpretation if Ct-1 = F(t-1)) -->
+              <!-- 1 | 1 | X      | 0 -->
+              <!-- The table is difficult to reconcile with the diagram elements shown. However, the key point is the line A=1, B=0 where Ft = Ct-1, demonstrating memory. -->
+              <!-- Corrected table interpretation based on the provided table data, assuming Ct-1 is some internal state influencing F at time t: -->
+             <tr><th>A</th><th>B</th><th>`F_t`</th><th>Commentaire (basé sur le texte)</th></tr>
+             <tr><td>0</td><td>0</td><td>1</td><td>(Non expliqué par le texte)</td></tr>
+             <tr><td>0</td><td>1</td><td>0</td><td>(Non expliqué par le texte)</td></tr>
+             <tr><td>1</td><td>0</td><td>`F_{t-1}`</td><td>Mémorisation (si `C_{t-1}` représente `F_{t-1}`)</td></tr>
+             <tr><td>1</td><td>1</td><td>0</td><td>(Non expliqué par le texte)</td></tr>
+         </table>
+         <p><em>Note: Le schéma fourni est ambigu et difficile à corréler directement avec la table de vérité donnée. L'élément crucial illustré par la table (ligne A=1, B=0) est la dépendance de la sortie `F_t` à un état antérieur (`C_{t-1}`), ce qui caractérise un circuit séquentiel.</em></p>
+    </figure>
+
+
+    <div class="page-footer">
+        <span>Page 92</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 3 Content -->
+
+    <p>La sortie de la fonction F ci-dessus est dépendante d'une variable interne (que le schéma nomme C de façon ambiguë, mais qui représente l'état mémorisé). On peut constater que l'état de cette variable mémorisée dépend de l'état des entrées A et B, mais également de son état antérieur : elle mémorise donc une information liée aux entrées appliquées antérieurement au circuit.</p>
+    <p>On constate sur ce circuit (malgré son ambiguïté) que l'effet de mémorisation est dû à la <strong>boucle de rétroaction</strong> (feedback loop) présente, où la sortie (ou un état interne lié) est réinjectée en entrée d'une partie du circuit. À cette boucle est associée la variable (ou l'état) qui constitue le <strong>point mémoire</strong>.</p>
+
+    <div class="definition">
+        <h5>Définition 8.1 : Circuit séquentiel</h5>
+        <p>Un circuit séquentiel est un système <strong>bouclé</strong> (contenant une ou plusieurs boucles de rétroaction) permettant la conservation d'un <strong>état</strong>, dépendant de la valeur des variables d'entrée ainsi que de l'état antérieur du système.</p>
+    </div>
+
+    <p>La <strong>bascule</strong> (flip-flop) constitue le système séquentiel de base et permet de mémoriser un élément d'information élémentaire appelé <strong>bit</strong>.</p>
+
+    <div class="exercise">
+        <h5>► Exercice 3.1 (Référence incorrecte, devrait être 8.1)</h5>
+        <p>En se basant sur la table de vérité de la page précédente (VIII.2) et en supposant que `C_{t-1}` représente l'état de `F` avant l'application des entrées A et B :</p>
+        <p>Quel sera l'état de sortie final du système F à l'issue des deux séquences d'entrée suivantes ?</p>
+        <ol>
+            <li>Séquence 1 : (A=0, B=0) puis (A=1, B=0)</li>
+            <li>Séquence 2 : (A=0, B=1) puis (A=1, B=0)</li>
+        </ol>
+        <p><em>Solution :</em></p>
+        <ol>
+            <li>(A=0, B=0) => F=1. Ensuite (A=1, B=0) => F garde sa valeur précédente, donc F=1. État final = 1.</li>
+            <li>(A=0, B=1) => F=0. Ensuite (A=1, B=0) => F garde sa valeur précédente, donc F=0. État final = 0.</li>
+        </ol>
+        <p><em>Cet exercice illustre bien comment la sortie pour (A=1, B=0) dépend de l'état précédent.</em></p>
+    </div>
+
+    <p>Nous avons brièvement présenté en introduction de ce chapitre ce qu'étaient les systèmes séquentiels synchrones et asynchrones. Une autre façon de décrire ces systèmes est donnée par les définitions 8.2 et 8.3 suivantes :</p>
+
+    <div class="definition">
+        <h5>Définition 8.2 : Système asynchrone</h5>
+        <p>Un système séquentiel est <strong>asynchrone</strong> si, à partir de l'instant où on applique un vecteur d'entrée, son évolution (changement d'état interne et des sorties) est incontrôlable de l'extérieur (elle dépend uniquement des délais de propagation internes).</p>
+    </div>
+
+     <div class="definition">
+        <h5>Définition 8.3 : Système synchrone</h5>
+        <p>Un système séquentiel est <strong>synchrone</strong> si son évolution est contrôlable de l'extérieur par un signal d'horloge. Les changements d'état ne se produisent qu'aux instants définis par ce signal.</p>
+    </div>
+
+    <h2>VIII.3 Bascule RS (Reset-Set)</h2>
+    <p>La bascule RS est le circuit séquentiel le plus simple. C'est une bascule <strong>asynchrone</strong>, et toutes les autres bascules, synchrones ou asynchrones, reposent fondamentalement sur sa structure.</p>
+    <p>Son rôle consiste à mémoriser une information fugitive (une impulsion brève) sur ses entrées R (Reset) ou S (Set), selon le fonctionnement suivant :</p>
+    <ul>
+        <li>Une apparition, même fugitive, d'un niveau actif sur l'entrée <strong>S (Set)</strong> entraîne la sortie Q dans un état stable <strong>Q=1</strong> (et la sortie complémentaire `\overline{Q}=0`).</li>
+        <li>Une apparition, même fugitive, d'un niveau actif sur l'entrée <strong>R (Reset)</strong> entraîne la sortie Q dans un état stable <strong>Q=0</strong> (et `\overline{Q}=1`).</li>
+    </ul>
+    <p>(Le niveau "actif" est généralement '1' pour S et R, mais peut être '0' selon la réalisation).</p>
+
+    <h5>Symbole</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Symbol of an RS flip-flop with inputs R, S and outputs Q, Q_bar]</div>
+         <figcaption>Symbole logique d'une bascule RS.</figcaption>
+         <!-- Standard Symbol: Rectangular box. Inputs S and R on one side (e.g., left). Outputs Q and Q_bar on the other (e.g., right). Q_bar usually has a negation indicator (circle). -->
+         <table>
+             <tr><td>R</td><td rowspan="2" style="border: none; min-width: 50px; text-align: center;">Bascule<br>RS</td><td>Q</td></tr>
+             <tr><td>S</td><td>`\overline{Q}`</td></tr>
+         </table>
+     </figure>
+
+
+    <div class="page-footer">
+        <span>Page 93</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 4 Content -->
+
+    <h5>Tableau de Karnaugh (pour Q suivant, Q<sub>t+1</sub>, en fonction de S, R, et Q actuel, Q<sub>t</sub>)</h5>
+    <!-- Note: K-map is for Q(t+1) = f(S, R, Q(t)) -->
+     <figure>
+         <div class="placeholder">[Placeholder: Karnaugh map for RS flip-flop next state Q(t+1)]</div>
+         <figcaption>Tableau de Karnaugh pour l'état suivant `Q_{t+1}` d'une bascule RS.</figcaption>
+         <table>
+             <caption>K-Map pour `Q_{t+1}`</caption>
+             <tr>
+                 <td rowspan="2" colspan="2"></td>
+                 <th colspan="2">S R</th>
+             </tr>
+              <tr>
+                 <th>00</th><th>01</th><th>11</th><th>10</th>
+             </tr>
+             <tr>
+                 <th rowspan="2">`Q_t`</th>
+                 <th>0</th><td>0</td><td>0</td><td>X</td><td>1</td>
+             </tr>
+              <tr>
+                 <th>1</th><td>1</td><td>0</td><td>X</td><td>1</td>
+             </tr>
+         </table>
+         <p>Équation caractéristique (simplifiée, excluant R=S=1): `Q_{t+1} = S + \overline{R} Q_t`</p>
+         <p>'X' représente l'état interdit ou indéterminé (R=S=1).</p>
+     </figure>
+     <!-- Note: The K-Map in the document seems different. It plots Q(t) vs S and R. If Q(t) is the current state, what does it represent? It might be plotting the stable state Q resulting from inputs S, R. Let's try to match that interpretation. -->
+     <!-- K-Map as shown in document: -->
+      <table>
+          <caption>K-Map (interprétation du document)</caption>
+          <tr>
+              <td rowspan="2" colspan="2"></td>
+              <th colspan="2">R</th>
+          </tr>
+           <tr>
+              <th>0</th><th>1</th>
+          </tr>
+          <tr>
+              <th rowspan="2">S</th>
+              <th>0</th><td>`Q_t` (Mémorise)</td><td>0 (Reset)</td>
+          </tr>
+           <tr>
+              <th>1</th><td>1 (Set)</td><td>X (Interdit)</td>
+          </tr>
+      </table>
+      <!-- This K-map seems to represent the *action* or the resulting *stable state* Q, not Q(t+1) as function of Q(t). -->
+
+
+    <h5>Diagramme temporel</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Timing diagram for RS flip-flop showing S, R inputs and Q output]</div>
+         <figcaption>Diagramme temporel illustrant le comportement d'une bascule RS asynchrone. Quand S passe à 1 (impulsion), Q passe à 1 et y reste même si S retombe à 0. Quand R passe à 1, Q passe à 0 et y reste.</figcaption>
+         <!-- Diagram shows: S pulse -> Q goes high. Later R pulse -> Q goes low. Between pulses, Q holds its state if S=R=0. -->
+     </figure>
+    <p>Quand une impulsion est appliquée à une entrée (S ou R) pour imposer un certain état à la bascule, celle-ci demeure dans cet état, même après que l'impulsion ait disparu (tant que S=R=0). Q garde son état lorsque S passe de 1 à 0 (si R=0) et lorsque R passe de 1 à 0 (si S=0).</p>
+
+    <h5>Table de vérité</h5>
+    <p>Table de vérité détaillée montrant l'état suivant `Q_{t+1}` en fonction des entrées S, R et de l'état actuel `Q_t` :</p>
+    <table>
+         <caption>Table de vérité détaillée RS</caption>
+          <thead><tr><th>S</th><th>R</th><th>`Q_t`</th><th>`Q_{t+1}`</th><th>Mode</th></tr></thead>
+          <tbody>
+              <tr><td>0</td><td>0</td><td>0</td><td>0</td><td rowspan="2">Mémorisation</td></tr>
+              <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+              <tr><td>0</td><td>1</td><td>0</td><td>0</td><td rowspan="2">Reset (Mise à 0)</td></tr>
+              <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+              <tr><td>1</td><td>0</td><td>0</td><td>1</td><td rowspan="2">Set (Mise à 1)</td></tr>
+              <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+              <tr><td>1</td><td>1</td><td>0</td><td>X</td><td rowspan="2">Interdit / Indéterminé</td></tr>
+              <tr><td>1</td><td>1</td><td>1</td><td>X</td></tr>
+          </tbody>
+    </table>
+    <p>Table de vérité condensée (indiquant l'état stable ou l'action) :</p>
+     <table>
+         <caption>Table de vérité condensée RS</caption>
+          <thead><tr><th>S</th><th>R</th><th>`Q_{t+1}`</th><th>Mode</th></tr></thead>
+          <tbody>
+              <tr><td>0</td><td>0</td><td>`Q_t`</td><td>Mémorisation</td></tr>
+              <tr><td>0</td><td>1</td><td>0</td><td>Reset (Mise à 0)</td></tr>
+              <tr><td>1</td><td>0</td><td>1</td><td>Set (Mise à 1)</td></tr>
+              <tr><td>1</td><td>1</td><td>X</td><td>Interdit</td></tr>
+          </tbody>
+    </table>
+
+
+    <h5>Réalisation (avec portes NAND)</h5>
+    <p>Une bascule RS peut être réalisée avec deux portes NAND interconnectées en boucle.</p>
+     <figure>
+         <div class="placeholder">[Placeholder: Circuit diagram of an RS flip-flop using two cross-coupled NAND gates]</div>
+         <figcaption>Réalisation d'une bascule RS avec des portes NAND. Note : avec cette structure, les entrées sont souvent actives à l'état bas (`\overline{S}`, `\overline{R}`).</figcaption>
+         <!-- Standard NAND Latch: Input S' -> NAND1; Input R' -> NAND2; Output NAND1 -> Q -> Input2 NAND2; Output NAND2 -> Q' -> Input2 NAND1. Inputs S' and R' are active LOW. -->
+     </figure>
+     <p>Si les entrées sont actives à l'état BAS (`\overline{S}`, `\overline{R}`), alors l'état `\overline{S}=0, \overline{R}=0` est interdit (il forcerait Q=1 et `\overline{Q}=1`).</p>
+
+    <p><strong>Priorité :</strong> Selon la réalisation, le comportement pour l'état interdit (S=1, R=1 pour portes NOR, ou `\overline{S}=0, \overline{R}=0` pour portes NAND) peut être défini.</p>
+    <ul>
+        <li><strong>Priorité à l'enclenchement (Set) :</strong> Si S=R=1, force Q=1. (Exemple: `Q_{t+1} = S + \overline{R} Q_t`)</li>
+        <li><strong>Priorité au déclenchement (Reset) :</strong> Si S=R=1, force Q=0. (Exemple: `Q_{t+1} = (S + Q_t) \overline{R}`)</li>
+        <li>Le texte mentionne "enclenchement prioritaire" forçant Q=1 si `X=1 -> Q` pour `S=1, R=1`. Cela correspond à une bascule RS où Set domine Reset en cas de conflit.</li>
+    </ul>
+    <p>L'implémentation à base de somme de produits (ET-OU) ou avec des portes NAND correspond généralement à une priorité naturelle (souvent Set pour S=1, R=1 avec NAND, ou indéfini/oscillation). L'implémentation avec des portes NOR (voir page suivante) est plus courante pour une bascule RS simple active haut.</p>
+
+
+    <div class="page-footer">
+        <span>Page 94</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 5 Content -->
+
+    <h5>Réalisation (avec portes NOR)</h5>
+    <p>Une bascule RS peut aussi être réalisée avec deux portes NOR interconnectées.</p>
+     <figure>
+         <div class="placeholder">[Placeholder: Circuit diagram of an RS flip-flop using two cross-coupled NOR gates]</div>
+         <figcaption>Réalisation d'une bascule RS avec des portes NOR. Les entrées S et R sont actives à l'état HAUT.</figcaption>
+         <!-- Standard NOR Latch: Input S -> NOR1; Input R -> NOR2; Output NOR1 -> Q_bar -> Input2 NOR2; Output NOR2 -> Q -> Input2 NOR1. Inputs S and R are active HIGH. -->
+         <p>Avec les portes NOR, l'état S=1, R=1 force `Q=0` et `\overline{Q}=0`, ce qui est incohérent. C'est l'état interdit.</p>
+     </figure>
+
+    <p>Le texte mentionne "déclenchement prioritaire" forçant Q=0 si `X=0 -> Q` pour `S=1, R=1`. Cela correspond à une bascule RS où Reset domine Set en cas de conflit, ou au comportement naturel de la bascule NOR (Q=0, Q_bar=0).</p>
+    <p>L'implémentation à base de produit de sommes (OU-ET) ou avec des portes NOR est la réalisation standard pour une bascule RS active haut.</p>
+
+    <div class="remark">
+        <h5>► Remarque 8.1 : Problème de l'état interdit</h5>
+        <p>Dans les deux cas (NAND ou NOR), l'état où les deux entrées sont actives simultanément (S=R=1 pour NOR, `\overline{S}=\overline{R}=0` pour NAND) est problématique. Non seulement il mène à des sorties Q et `\overline{Q}` qui ne sont plus complémentaires (`Q=Q_bar=0` pour NOR, `Q=Q_bar=1` pour NAND), mais surtout, si on passe de cet état (ex: R=S=1) à l'état de mémorisation (R=S=0), le résultat est imprévisible.</p>
+        <p>L'état final (`Q=0` ou `Q=1`) dépendra de quelle entrée (R ou S) revient à 0 en dernier, même par une différence infime de temps (condition de course - race condition). Selon la rapidité relative des signaux et des portes, la sortie peut prendre aussi bien l'état `Q=1` que `Q=0`.</p>
+        <p>⇒ Il faut donc <strong>interdire</strong> la combinaison R=S=1 (pour NOR) ou `\overline{R}=\overline{S}=0` (pour NAND) ou, si elle ne peut être évitée, s'assurer de ne jamais passer directement de cet état à l'état R=S=0.</p>
+    </div>
+
+    <h5>Fonctionnement détaillé de la bascule avec des NOR (Actives Haut)</h5>
+    <ul>
+        <li><strong>Cas 1 : R=0, S=0 (Mémorisation)</strong>
+            <ul>
+                <li>Si `Q_{t}=0` (donc `\overline{Q}_{t}=1`), alors l'entrée du NOR du haut est (S=0, Q=0) => `\overline{Q}=1`. L'entrée du NOR du bas est (R=0, `\overline{Q}=1`) => `Q=0`. L'état est stable (`Q=0`).</li>
+                <li>Si `Q_{t}=1` (donc `\overline{Q}_{t}=0`), alors l'entrée du NOR du haut est (S=0, Q=1) => `\overline{Q}=0`. L'entrée du NOR du bas est (R=0, `\overline{Q}=0`) => `Q=1`. L'état est stable (`Q=1`).</li>
+                <li>Conclusion : Si R=S=0, la bascule conserve son état antérieur `Q_t`.</li>
+            </ul>
+        </li>
+        <li><strong>Cas 2 : S=1, R=0 (Set)</strong>
+            <ul>
+                <li>L'entrée S=1 sur le NOR du haut force sa sortie `\overline{Q}` à 0, quelles que soient les autres entrées.</li>
+                <li>Cette sortie `\overline{Q}=0` est appliquée au NOR du bas. Avec R=0, l'entrée du NOR du bas est (R=0, `\overline{Q}=0`) => `Q=1`.</li>
+                <li>L'état stable est `Q=1`. C'est l'opération de <strong>SET</strong> (mise à 1).</li>
+            </ul>
+             <figure>
+                 <div class="placeholder">[Placeholder: NOR Latch diagram during SET operation S=1, R=0]</div>
+                 <figcaption>Fonctionnement SET (S=1, R=0) pour la bascule NOR.</figcaption>
+             </figure>
+        </li>
+         <li><strong>Cas 3 : S=0, R=1 (Reset)</strong>
+            <ul>
+                <li>L'entrée R=1 sur le NOR du bas force sa sortie `Q` à 0, quelles que soient les autres entrées.</li>
+                <li>Cette sortie `Q=0` est appliquée au NOR du haut. Avec S=0, l'entrée du NOR du haut est (S=0, Q=0) => `\overline{Q}=1`.</li>
+                <li>L'état stable est `Q=0`. C'est l'opération de <strong>RESET</strong> (mise à 0).</li>
+            </ul>
+             <figure>
+                 <div class="placeholder">[Placeholder: NOR Latch diagram during RESET operation S=0, R=1]</div>
+                 <figcaption>Fonctionnement RESET (S=0, R=1) pour la bascule NOR.</figcaption>
+             </figure>
+        </li>
+         <li><strong>Cas 4 : S=1, R=1 (Interdit)</strong>
+            <ul>
+                <li>S=1 force `\overline{Q}=0`.</li>
+                <li>R=1 force `Q=0`.</li>
+                <li>L'état `Q=0` et `\overline{Q}=0` est incohérent.</li>
+            </ul>
+        </li>
+    </ul>
+
+
+    <div class="page-footer">
+        <span>Page 95</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 6 Content -->
+
+    <ul>
+         <li><strong>Récapitulatif des opérations :</strong>
+            <ul>
+                <li>R=0, S=0 : Mémorise Q.</li>
+                <li>R=0, S=1 : Force Q=1 (SET).</li>
+                <li>R=1, S=0 : Force Q=0 (RESET).</li>
+                <li>R=1, S=1 : État interdit (`Q=0`, `\overline{Q}=0`).
+                    <ul>
+                        <li>Condition indésirable, puisque Q et `\overline{Q}` doivent être l'inverse l'un de l'autre.</li>
+                        <li>De plus, incertitude lorsque S et R reviennent à 0 (condition de course).</li>
+                        <li>⇒ La combinaison R=S=1 ne doit pas être utilisée en pratique pour une bascule RS simple.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <p>L'avantage principal (unique?) de la bascule RS est sa <strong>simplicité</strong>.</p>
+    <p>Ses principaux inconvénients sont :</p>
+    <ul>
+        <li>Le fait qu'elle soit <strong>asynchrone</strong> : sa sortie réagit immédiatement (au délai de propagation près) aux changements sur S et R.</li>
+        <li>Sa <strong>sensibilité aux parasites</strong> : tout bruit (glitch) suffisamment ample et long présent sur l'une des entrées S ou R peut modifier l'état de la sortie de manière intempestive.</li>
+        <li>Le fait qu'il existe un <strong>état interdit</strong> pour R=S=1.</li>
+    </ul>
+
+    <h2>VIII.4 Bascule RS synchrone ou bascule RSH (ou RST)</h2>
+    <p>La bascule RSH<sup>1</sup> est une bascule RS rendue <strong>synchrone</strong> par l'ajout d'un signal de contrôle, typiquement une entrée d'horloge H (parfois appelée Clk, E, G - Clock, Enable, Gate).</p>
+    <p>Le fonctionnement est le suivant :</p>
+    <ul>
+        <li>Lorsque l'entrée de contrôle H est au niveau <strong>inactif</strong> (souvent niveau bas '0'), les entrées R et S sont ignorées. La bascule fonctionne comme une mémoire : elle conserve son état précédent.</li>
+        <li>Lorsque l'entrée de contrôle H est au niveau <strong>actif</strong> (souvent niveau haut '1'), la bascule fonctionne comme une bascule RS classique : les entrées R et S déterminent l'état de la sortie Q.</li>
+    </ul>
+    <p>Elle conserve donc l'état interdit de la bascule RS lorsque H est actif et R=S=1.</p>
+    <p><em><sup>1</sup>Note de bas de page du document: La bascule RSH est également appelée bascule RST; on préférera néanmoins le terme RSH, plus explicite (R, S, H). Parfois aussi appelée RS Gated Latch.</em></p>
+
+    <h5>Symbole</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Symbol of a synchronous RS flip-flop (RSH Latch) with R, S, H inputs and Q, Q_bar outputs]</div>
+         <figcaption>Symbole logique d'une bascule RSH (RS synchrone par niveau).</figcaption>
+          <table>
+             <tr><td>R</td><td rowspan="3" style="border: none; min-width: 50px; text-align: center;">Bascule<br>RSH</td><td>Q</td></tr>
+             <tr><td>S</td><td>`\overline{Q}`</td></tr>
+             <tr><td>H (ou Clk, En)</td><td></td></tr>
+         </table>
+     </figure>
+    <p>L'état de la sortie Q est souvent noté `Q_N` (ou `Q_t`) avant l'instant de décision (pendant que H est inactif ou juste avant qu'il devienne actif) et `Q_{N+1}` (ou `Q_{t+1}`) après la prise en compte des entrées (pendant que H est actif).</p>
+    <p>S et R n'influencent Q que lorsque l'horloge (H) est au niveau haut (actif).</p>
+
+
+    <h5>Table de vérité</h5>
+     <table>
+         <caption>Table de vérité RSH (synchrone niveau haut)</caption>
+          <thead><tr><th>S</th><th>R</th><th>H</th><th>`Q_{N+1}`</th><th>Mode</th></tr></thead>
+          <tbody>
+              <tr><td>X</td><td>X</td><td>0</td><td>`Q_N`</td><td>Mémorisation (H inactif)</td></tr>
+              <tr><td>0</td><td>0</td><td>1</td><td>`Q_N`</td><td>Mémorisation (H actif)</td></tr>
+              <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>Reset (H actif)</td></tr>
+              <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>Set (H actif)</td></tr>
+              <tr><td>1</td><td>1</td><td>1</td><td>X</td><td>Interdit (H actif)</td></tr>
+          </tbody>
+          <!-- Note: Original table has 'X' for H=1, S=1, R=1 output. It should be X (Indeterminate/Forbidden). The original table also uses QN for the QN+1 column when H=0 and H=1, S=0, R=0 which is correct (memorisation). -->
+    </table>
+
+    <h5>Réalisation</h5>
+    <p>Une bascule RSH peut être réalisée en ajoutant deux portes ET (AND gates) à l'entrée d'une bascule RS asynchrone simple (par exemple, celle à base de NOR). L'entrée H contrôle ces portes ET.</p>
+    <!-- Realization diagram on next page -->
+
+
+    <div class="page-footer">
+        <span>Page 96</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 7 Content -->
+
+    <figure>
+         <div class="placeholder">[Placeholder: Circuit diagram of an RSH latch using an RS NOR latch and AND gates controlled by H]</div>
+         <figcaption>Réalisation d'une bascule RSH : Les entrées S et R sont conditionnées par l'entrée H via des portes ET avant d'attaquer une bascule RS (ici, implicitement à base de NOR).</figcaption>
+         <!-- Circuit: S -> AND1_in1; H -> AND1_in2; R -> AND2_in1; H -> AND2_in2; Output AND1 -> S_internal; Output AND2 -> R_internal; S_internal & R_internal feed a basic RS latch (e.g., NOR based) -->
+    </figure>
+     <figure>
+         <div class="placeholder">[Placeholder: Alternative realization using NAND gates, inputs S, R, H, outputs Q, Q_bar]</div>
+         <figcaption>Réalisation d'une bascule RSH avec des portes NAND.</figcaption>
+         <!-- NAND implementation: S -> NAND1_in1; H -> NAND1_in2; R -> NAND2_in1; H -> NAND2_in2; Output NAND1 -> S' input of NAND latch; Output NAND2 -> R' input of NAND latch. The NAND latch itself is made of two cross-coupled NANDs. -->
+     </figure>
+
+
+    <div class="example">
+        <h5>▷ Exemple 8.2 : Diagramme temporel RSH</h5>
+         <figure>
+             <div class="placeholder">[Placeholder: Timing diagram for RSH latch showing H, S, R inputs and Q output]</div>
+             <figcaption>Diagramme temporel : Q ne change que lorsque H est à 1. Si H=1 et S=1/R=0, Q passe à 1. Si H=1 et R=1/S=0, Q passe à 0. Si H=1 et S=R=0, Q garde son état. Si H=0, Q garde son état quelles que soient S et R.</figcaption>
+         </figure>
+    </div>
+
+    <p>L'avantage de la bascule RSH par rapport à la bascule RS asynchrone est sa <strong>sensibilité moindre aux parasites</strong> sur les entrées S et R. Comme la bascule n'est sensible au bruit sur S et R que lorsque l'horloge H est au niveau haut, plus la durée de l'état haut de l'horloge sera brève, moins la bascule sera sensible aux parasites pendant cet intervalle.</p>
+    <p>Cependant, elle reste sensible pendant toute la durée où H est actif.</p>
+
+    <h2>VIII.5 Bascule à verrouillage (D-latch ou Verrou D)</h2>
+    <p>La bascule D-latch (Data latch) est dérivée de la bascule RSH (ou RST) pour laquelle on n'a conservé que les deux combinaisons d'entrée utiles et non interdites : Reset (S=0, R=1) et Set (S=1, R=0). Pour cela, on utilise une seule entrée de donnée, nommée D :</p>
+    <ul>
+        <li>L'entrée S est connectée à D.</li>
+        <li>L'entrée R est connectée à `\overline{D}` (l'inverse de D, obtenu via un inverseur).</li>
+    </ul>
+    <p>Ainsi, on ne peut avoir que S=0/R=1 (si D=0) ou S=1/R=0 (si D=1). L'état S=R=0 (mémorisation de la RSH quand H=1) et l'état S=R=1 (interdit) sont éliminés lorsque H=1.</p>
+
+    <h5>Symbole</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Symbol of a D-latch with D input, En (or H, Clk, G) input, and Q, Q_bar outputs]</div>
+         <figcaption>Symbole logique d'un verrou D (D-latch). L'entrée de contrôle est souvent appelée Enable (En), Gate (G), ou parfois Clock (Clk).</figcaption>
+          <table>
+             <tr><td>D</td><td rowspan="2" style="border: none; min-width: 50px; text-align: center;">Verrou<br>D</td><td>Q</td></tr>
+             <tr><td>En (ou H)</td><td>`\overline{Q}`</td></tr>
+         </table>
+     </figure>
+
+     <h5>Table de vérité</h5>
+     <table>
+         <caption>Table de vérité D-Latch (actif niveau haut)</caption>
+          <thead><tr><th>En</th><th>D</th><th>`Q_{N+1}`</th><th>Mode</th></tr></thead>
+          <tbody>
+              <tr><td>0</td><td>X</td><td>`Q_N`</td><td>Mémorisation / Verrouillé</td></tr>
+              <tr><td>1</td><td>0</td><td>0</td><td>Reset / Transparent (suit D)</td></tr>
+              <tr><td>1</td><td>1</td><td>1</td><td>Set / Transparent (suit D)</td></tr>
+          </tbody>
+    </table>
+    <p>Lorsque En=1, la sortie `Q` suit la valeur de l'entrée `D` (`Q_{N+1} = D`). On dit que le verrou est <strong>transparent</strong>.</p>
+    <p>Lorsque En=0, la sortie `Q` conserve la dernière valeur qu'elle avait lorsque En est passé de 1 à 0. Le verrou est <strong>mémorisé</strong> ou <strong>verrouillé</strong>.</p>
+
+    <h5>Réalisation</h5>
+    <p>On part de la réalisation d'une bascule RSH et on ajoute un inverseur pour générer R à partir de S (ou D).</p>
+     <figure>
+         <div class="placeholder">[Placeholder: Circuit diagram of a D-latch using an RSH latch structure with an inverter on the D input to create R=Not(D)]</div>
+         <figcaption>Réalisation d'un verrou D à partir d'une structure RSH.</figcaption>
+         <!-- Circuit: D -> S input of RSH; D -> NOT -> R input of RSH; H -> H input of RSH. -->
+         <!-- Alternative NAND implementation shown in document: -->
+          <div class="placeholder">[Placeholder: NAND implementation of a D-latch as shown in document]</div>
+         <!-- This NAND implementation directly creates the D-latch behavior. D -> NAND1_in1; En -> NAND1_in2 & NAND2_in2; Output NAND1 -> S' of internal NAND latch; D -> NOT -> NAND2_in1; Output NAND2 -> R' of internal NAND latch. -->
+     </figure>
+
+
+    <div class="page-footer">
+        <span>Page 97</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 8 Content -->
+
+    <h5>Fonctionnement du D-Latch</h5>
+    <ul>
+        <li>Quand l'entrée d'horloge/validation (Clk/En/H) est à <strong>0</strong> : Les portes d'entrée (ET ou NAND conditionnées par H) sont bloquées. La bascule RS interne est en mode mémorisation (ses entrées effectives sont S=0, R=0). L'entrée D n'a aucun effet. La sortie Q conserve sa valeur précédente. => <strong>Mémorisation</strong>.</li>
+        <li>Quand l'entrée d'horloge/validation (Clk/En/H) est à <strong>1</strong> : Les portes d'entrée sont actives.
+            <ul>
+                <li>Si D=1, alors S=1 et R=0 sont appliqués à la bascule RS interne => Q passe à 1 (ou y reste).</li>
+                <li>Si D=0, alors S=0 et R=1 sont appliqués à la bascule RS interne => Q passe à 0 (ou y reste).</li>
+            </ul>
+            Dans ce mode, la sortie Q suit les changements de l'entrée D. => La bascule est <strong>transparente</strong>.
+        </li>
+    </ul>
+    <p>Le D-latch n'a pas d'état interdit. Il est dit transparent sur le <strong>niveau haut</strong> de l'horloge (ou Enable).</p>
+
+    <div class="remark">
+        <h5>► Remarque 8.2 : Symbole d'horloge</h5>
+        <p>Notez l'absence du symbole `>` (indicateur de sensibilité à un front) sur l'entrée d'horloge/validation (H ou En) du D-latch. Cela signifie qu'il est sensible au <strong>niveau</strong> de l'horloge, et non à ses transitions (fronts).</p>
+    </div>
+
+    <h2>VIII.6 Bascules maître-esclave</h2>
+    <p>Les bascules maître-esclaves ont été développées pour diminuer la sensibilité aux parasites et pour résoudre certains problèmes de synchronisation dans les systèmes complexes. L'idée est de réduire ou d'éliminer la période pendant laquelle la bascule est "transparente" aux entrées.</p>
+    <p>La structure maître-esclave est constituée de <strong>deux bascules RSH (ou RST) montées en cascade</strong> :</p>
+    <ul>
+        <li>Le premier étage est appelé le <strong>maître</strong> (master).</li>
+        <li>Le deuxième étage est appelé l'<strong>esclave</strong> (slave).</li>
+    </ul>
+    <p>Elles sont commandées par deux signaux d'horloge en <strong>opposition de phase</strong> (l'un est l'inverse de l'autre). Souvent, on utilise un seul signal d'horloge H, et son inverse `\overline{H}` est généré en interne ou en externe.</p>
+    <p>La fonction globale réalisée est la même que celle d'une seule bascule, mais le comportement temporel est différent : la bascule maître-esclave n'est plus sensible au niveau de l'horloge, mais à une de ses <strong>transitions (front)</strong>.</p>
+
+    <p><strong>Fonctionnement typique (pour une bascule RS maître-esclave sensible au front descendant) :</strong></p>
+    <ul>
+        <li><svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v9zm-1.5-7a.5.5 0 0 0 0-1H3V12h5.5V5.5z"/></svg>
+            <strong>Sur le niveau bas de l'horloge (H=0, `\overline{H}=1`) :</strong>
+            <ul>
+                <li>Le premier étage (maître) est bloqué (mode « mémorisation »). Ses entrées R et S externes n'ont pas d'effet sur lui.</li>
+                <li>Le deuxième étage (esclave) est actif (transparent). Il recopie l'état de la sortie du maître. La sortie finale Q de la bascule est donc stable et égale à l'état du maître.</li>
+            </ul>
+        </li>
+        <li><svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-9zm1.5 7a.5.5 0 0 0 0 1H13V4H7.5v6.5z"/></svg>
+            <strong>Sur le niveau haut de l'horloge (H=1, `\overline{H}=0`) :</strong>
+            <ul>
+                <li>Le premier étage (maître) est actif (mode RS). Il prend l'état déterminé par les entrées R et S externes.</li>
+                <li>Le deuxième étage (esclave) est bloqué (mode « mémorisation »). Il conserve l'état qu'il avait précédemment (qui était l'état du maître lorsque H était bas). La sortie finale Q de la bascule ne change pas pendant ce niveau haut.</li>
+            </ul>
+        </li>
+        <li><svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 11.14L.923 4.817l.707-.707L8 9.728l6.37-6.37.707.707L8.707 11.14a1 1 0 0 1-1.414 0z"/></svg>
+             <strong>Sur le front descendant de l'horloge (passage H de 1 à 0) :</strong>
+            <ul>
+                 <li>Le maître se bloque, mémorisant l'état défini par R et S juste avant le front.</li>
+                 <li>L'esclave devient actif et recopie l'état que le maître vient de mémoriser.</li>
+                 <li>C'est à cet instant précis (le front descendant) que la sortie Q de la bascule peut changer d'état.</li>
+            </ul>
+        </li>
+    </ul>
+    <p>La période pendant laquelle la bascule est sensible aux parasites sur ses entrées R et S se résume donc à la durée de commutation de l'horloge du niveau haut au niveau bas (front descendant) et au temps de stabilisation du maître juste avant ce front. Cela rend la bascule beaucoup moins sensible que le latch RSH.</p>
+
+    <figure>
+         <div class="placeholder">[Placeholder: Circuit diagram of a Master-Slave RS flip-flop using two RSH latches and an inverter for the clock]</div>
+         <figcaption>Structure d'une bascule RS Maître-Esclave. Le maître reçoit H, l'esclave reçoit `\overline{H}`.</figcaption>
+         <!-- Circuit: S, R -> Master RSH (H input); Master Q -> S input Slave RSH; Master Q_bar -> R input Slave RSH; Slave RSH (H_bar input); Slave outputs Q, Q_bar. -->
+    </figure>
+
+
+    <h2>VIII.7 Bascule JK</h2>
+    <p>Les bascules JK sont des bascules <strong>maître-esclave</strong> fonctionnant seulement en mode <strong>synchrone</strong> (sensibles à un front d'horloge). Elles sont plus polyvalentes que les bascules RS, car elles n'ont <strong>pas d'état ambigu</strong> ou interdit. L'état correspondant à R=S=1 pour la RS est redéfini dans la JK.</p>
+    <p>Pour la combinaison J=1, K=1 (équivalente à S=1, R=1), la bascule JK <strong>bascule</strong> (toggle) : sa sortie `Q_{N+1}` prend la valeur inverse de sa sortie précédente `Q_N` (`Q_{N+1} = \overline{Q_N}`).</p>
+
+    <h5>Symbole</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Symbol of a JK flip-flop with J, K, Clk inputs and Q, Q_bar outputs. Clk input has edge-trigger indicator '>']</div>
+         <figcaption>Symbole logique d'une bascule JK (sensible au front descendant si cercle sur Clk, sinon front montant).</figcaption>
+         <!-- Standard Symbol: Rectangular box. J, K inputs top/bottom left. Clk input bottom left with '>' indicator. Q, Q_bar outputs right. -->
+          <table>
+             <tr><td>J</td><td rowspan="3" style="border: none; min-width: 50px; text-align: center;">Bascule<br>JK</td><td>Q</td></tr>
+             <tr><td>K</td><td>`\overline{Q}`</td></tr>
+             <tr><td>`>`Clk</td><td></td></tr>
+             <!-- Note: Circle on Clk input often indicates falling edge trigger. No circle implies rising edge. -->
+         </table>
+     </figure>
+
+
+    <div class="page-footer">
+        <span>Page 98</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 9 Content -->
+
+    <h5>Équation caractéristique et Tableau de Karnaugh</h5>
+    <p>L'état suivant `Q_{N+1}` d'une bascule JK est donné par l'équation caractéristique :</p>
+    `Q_{N+1} = J \cdot \overline{Q_N} + \overline{K} \cdot Q_N`
+    <p>Tableau de Karnaugh pour `Q_{N+1}` en fonction de J, K, et `Q_N` :</p>
+     <figure>
+         <div class="placeholder">[Placeholder: Karnaugh map for JK flip-flop next state Q(N+1)]</div>
+         <figcaption>Tableau de Karnaugh pour l'état suivant `Q_{N+1}` d'une bascule JK.</figcaption>
+          <table>
+             <caption>K-Map pour `Q_{N+1}`</caption>
+             <tr>
+                 <td rowspan="2" colspan="2"></td>
+                 <th colspan="2">J K</th>
+             </tr>
+              <tr>
+                 <th>00</th><th>01</th><th>11</th><th>10</th>
+             </tr>
+             <tr>
+                 <th rowspan="2">`Q_N`</th>
+                 <th>0</th><td>0</td><td>0</td><td>1</td><td>1</td>
+             </tr>
+              <tr>
+                 <th>1</th><td>1</td><td>0</td><td>0</td><td>1</td>
+             </tr>
+         </table>
+          <!-- Note: K-map in document has K vertical, J horizontal. Let's adapt. -->
+          <table>
+             <caption>K-Map pour `Q_{N+1}` (format du document)</caption>
+             <tr>
+                 <td rowspan="2" colspan="2"></td>
+                 <th colspan="2">J</th>
+             </tr>
+              <tr>
+                 <th>0</th><th>1</th>
+             </tr>
+             <tr>
+                 <th rowspan="2">K</th>
+                 <th>0 (`Q_N=0`)</th><td>0</td><td>1</td> <!-- Corresponds to JK=00 QN=0 -> 0; JK=10 QN=0 -> 1 -->
+                 <th>1 (`Q_N=0`)</th><td>0</td><td>1</td> <!-- Corresponds to JK=01 QN=0 -> 0; JK=11 QN=0 -> 1 -->
+             </tr>
+              <tr>
+                 <th>0 (`Q_N=1`)</th><td>1</td><td>1</td> <!-- Corresponds to JK=00 QN=1 -> 1; JK=10 QN=1 -> 1 -->
+                 <th>1 (`Q_N=1`)</th><td>0</td><td>0</td> <!-- Corresponds to JK=01 QN=1 -> 0; JK=11 QN=1 -> 0 -->
+             </tr>
+              <!-- The K-map in the document seems incorrect or uses a non-standard layout. The standard K-map above derived from the equation is correct. -->
+         </table>
+         <p><em>Note : Le tableau de Karnaugh présenté dans le document original semble utiliser une disposition non standard ou contenir des erreurs. Le tableau standard dérivé de l'équation caractéristique est présenté ci-dessus.</em></p>
+     </figure>
+
+
+    <p>La bascule JK est souvent réalisée en modifiant une bascule RS maître-esclave. Sachant que les sorties Q et `\overline{Q}` sont toujours complémentaires, leur <strong>rebouclage</strong> sur les portes d'entrée (typiquement les portes ET conditionnant S et R internes) permet d'éliminer l'état interdit et d'implémenter la fonction de basculement (toggle).</p>
+    <p>Il n'y a pas d'inconvénient à ce rebouclage (qui pourrait sembler créer une boucle instable) car, dans une structure maître-esclave, les sorties de l'esclave (Q et `\overline{Q}`) ne changent d'état que lorsque le maître est bloqué (isolé des entrées J et K externes). Les sorties Q et `\overline{Q}` rebouclées sont donc stables au moment où le maître évalue les entrées J et K.</p>
+    <p>Les bascules JK sont très courantes dans les systèmes numériques.</p>
+    <p>Cette bascule fonctionne toujours sur les <strong>fronts</strong> d'horloge (généralement front descendant pour les structures maître-esclave classiques).</p>
+
+    <h5>Réalisation</h5>
+    <p>Une bascule JK peut être réalisée à partir d'une bascule RSH maître-esclave en ajoutant les connexions de retour :</p>
+     <figure>
+         <div class="placeholder">[Placeholder: Circuit diagram showing JK flip-flop realization using an RSH-ME structure with feedback from Q_bar to J's AND gate and Q to K's AND gate]</div>
+         <figcaption>Réalisation d'une bascule JK à partir d'une RSH Maître-Esclave avec rétroaction.</figcaption>
+         <!-- Circuit: J -> AND1_in1; Clk -> AND1_in2; Q_bar_slave -> AND1_in3; Output AND1 -> S_master; K -> AND2_in1; Clk -> AND2_in2; Q_slave -> AND2_in3; Output AND2 -> R_master; Master-Slave RSH structure follows. -->
+     </figure>
+
+    <p>Réalisation directe avec des portes NAND :</p>
+    <figure>
+         <div class="placeholder">[Placeholder: Circuit diagram of a JK Master-Slave flip-flop using only NAND gates]</div>
+         <figcaption>Réalisation d'une bascule JK Maître-Esclave avec des portes NAND.</figcaption>
+     </figure>
+
+    <div class="page-footer">
+        <span>Page 99</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+    <hr>
+
+    <!-- Page 10 Content -->
+
+    <h5>Table de vérité JK (sensible au front)</h5>
+     <table>
+         <caption>Table de vérité JK (Front actif `↑` ou `↓`)</caption>
+          <thead><tr><th>J</th><th>K</th><th>H (Front actif)</th><th>`Q_{N+1}`</th><th>Mode</th></tr></thead>
+          <tbody>
+              <tr><td>X</td><td>X</td><td>(Pas de front actif)</td><td>`Q_N`</td><td>Mémorisation</td></tr>
+              <tr><td>0</td><td>0</td><td>`↑` / `↓`</td><td>`Q_N`</td><td>Mémorisation</td></tr>
+              <tr><td>0</td><td>1</td><td>`↑` / `↓`</td><td>0</td><td>Reset (Forçage à 0)</td></tr>
+              <tr><td>1</td><td>0</td><td>`↑` / `↓`</td><td>1</td><td>Set (Forçage à 1)</td></tr>
+              <tr><td>1</td><td>1</td><td>`↑` / `↓`</td><td>`\overline{Q_N}`</td><td>Basculement (Toggle/Commutation)</td></tr>
+          </tbody>
+    </table>
+     <!-- Note: The original table shows separate entries for QN=0 and QN=1 when H=Edge. This is redundant given the QN+1 column. -->
+     <!-- Original table interpretation: -->
+      <table>
+          <caption>Table de vérité JK (format du document)</caption>
+          <thead><tr><th>J</th><th>K</th><th>`Q_N`</th><th>H</th><th>`Q_{N+1}`</th><th>Mode</th></tr></thead>
+          <tbody>
+              <tr><td>X</td><td>X</td><td>X</td><td>Stable (pas front)</td><td>`Q_N`</td><td>Mémorisation</td></tr>
+              <tr><td>0</td><td>0</td><td>X</td><td>`↑`/`↓`</td><td>`Q_N`</td><td>Mémorisation</td></tr>
+              <tr><td>X</td><td>0</td><td>1</td><td>`↑`/`↓`</td><td>1</td><td>(Implique J=0 or J=1)</td></tr>
+              <tr><td>X</td><td>1</td><td>1</td><td>`↑`/`↓`</td><td>0</td><td>(Implique J=0 or J=1)</td></tr>
+              <tr><td>0</td><td>X</td><td>0</td><td>`↑`/`↓`</td><td>0</td><td>(Implique K=0 or K=1)</td></tr>
+              <tr><td>1</td><td>X</td><td>0</td><td>`↑`/`↓`</td><td>1</td><td>(Implique K=0 or K=1)</td></tr>
+          </tbody>
+          <!-- This table seems overly complex and partially redundant or ambiguous. The standard condensed table above is clearer. -->
+      </table>
+
+    <div class="remark">
+        <h5>► Remarque 8.3 : Largeur de l'impulsion d'horloge</h5>
+        <p>Pour que le basculement J=1, K=1 fonctionne correctement dans une bascule maître-esclave simple, il faut s'assurer que l'impulsion d'horloge (le temps où H est actif) soit suffisamment courte pour que la sortie Q (qui change sur le front descendant) n'ait pas le temps de revenir influencer l'entrée du maître avant que celui-ci ne se bloque. Si H reste actif trop longtemps après que l'esclave a basculé, il peut y avoir un re-basculement indésirable (oscillation ou capture de la nouvelle valeur de Q par le maître). Les bascules modernes dites "edge-triggered" (déclenchées par front) intègrent des mécanismes pour éviter ce problème, même avec des impulsions d'horloge larges.</p>
+    </div>
+
+    <div class="example">
+        <h5>▷ Exemple 8.3 : Diagramme temporel JK</h5>
+         <figure>
+             <div class="placeholder">[Placeholder: Timing diagram for JK flip-flop showing Clk, J, K inputs and Q output, demonstrating set, reset, toggle, memory modes on clock edges]</div>
+             <figcaption>Diagramme temporel d'une bascule JK (supposée sensible au front descendant). Montre les modes Set (J=1, K=0), Reset (J=0, K=1), Toggle (J=K=1) et Mémorisation (J=K=0) se produisant sur les fronts descendants de l'horloge H.</figcaption>
+         </figure>
+    </div>
+
+    <h2>VIII.8 Bascule D synchrone (Edge-Triggered D Flip-Flop)</h2>
+    <p>La bascule D <strong>synchrone</strong> (souvent appelée simplement "bascule D" ou "D Flip-Flop" par opposition au "D-Latch") est une bascule de type <strong>maître-esclave</strong> (ou structure équivalente sensible aux fronts) conçue sur le même principe que la bascule JK.</p>
+    <p>Elle n'a qu'une seule entrée de donnée nommée D. Elle est conçue pour <strong>recopier</strong> la valeur de l'entrée D sur la sortie Q, mais uniquement à l'instant précis d'un <strong>front actif</strong> de l'horloge.</p>
+
+    <h5>Symbole</h5>
+     <figure>
+         <div class="placeholder">[Placeholder: Symbol of an edge-triggered D flip-flop with D, Clk inputs (Clk has '>'), and Q, Q_bar outputs]</div>
+         <figcaption>Symbole logique d'une bascule D synchrone (sensible au front). Le `>` sur l'entrée Clk indique la sensibilité au front.</figcaption>
+         <table>
+             <tr><td>D</td><td rowspan="2" style="border: none; min-width: 50px; text-align: center;">Bascule<br>D</td><td>Q</td></tr>
+             <tr><td>`>`Clk</td><td>`\overline{Q}`</td></tr>
+         </table>
+     </figure>
+    <p>Le symbole de la bascule D synchrone est identique à celui du D-latch à ceci près que l'entrée d'activation (horloge) dispose du symbole `>` indiquant la sensibilité à un front (et non plus à un niveau).</p>
+
+    <h5>Table de vérité</h5>
+     <table>
+         <caption>Table de vérité Bascule D synchrone (Front actif `↑` ou `↓`)</caption>
+          <thead><tr><th>H (Front actif)</th><th>D</th><th>`Q_{N+1}`</th><th>Mode</th></tr></thead>
+          <tbody>
+              <tr><td>(Pas de front actif)</td><td>X</td><td>`Q_N`</td><td>Mémorisation</td></tr>
+              <tr><td>`↑` / `↓`</td><td>0</td><td>0</td><td>Recopie D (Reset)</td></tr>
+              <tr><td>`↑` / `↓`</td><td>1</td><td>1</td><td>Recopie D (Set)</td></tr>
+          </tbody>
+          <!-- Note: Original table separates H levels and edge. For edge-triggered, only the edge matters. -->
+          <!-- Original table format: -->
+           <table>
+               <caption>Table de vérité (format du document)</caption>
+                <thead><tr><th>H</th><th>`D_N`</th><th>`Q_{N+1}`</th></tr></thead>
+                <tbody>
+                    <tr><td>`0`</td><td>X</td><td>`Q_N`</td></tr>
+                    <tr><td>`1`</td><td>X</td><td>`Q_N`</td></tr>
+                    <tr><td>`↑`/`↓`</td><td>0</td><td>0</td></tr>
+                    <tr><td>`↑`/`↓`</td><td>1</td><td>1</td></tr>
+                </tbody>
+           </table>
+           <!-- This format is slightly confusing as it includes stable levels which cause memorization. The condensed table above is standard for edge-triggered behavior. -->
+    </table>
+    <p>Au moment du front actif de l'horloge (montant ou descendant selon le type), la sortie `Q_{N+1}` prend la valeur qu'avait l'entrée `D_N` juste avant (ou pendant un très court instant autour de) ce front (`Q_{N+1} = D_N`).</p>
+    <p>C'est une bascule de <strong>recopie</strong> ou de <strong>mémorisation</strong> synchrone. On l'emploie massivement dans les registres pour stocker des données en synchronisation avec une horloge.</p>
+
+    <div class="page-footer">
+        <span>Page 100</span>
+        <span>© M. Siadat & C. Diou</span>
+    </div>
+
+    <script>
+        // Ensure Katex renders after the page is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
