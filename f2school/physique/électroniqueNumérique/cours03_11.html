@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logique Combinatoire & Séquentielle</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body,{delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ]});"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 900px; margin: auto; }
+        h1, h2, h3, h4, h5, h6 { color: #333; }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 2.5em; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 40px; font-size: 1.8em;}
+        h3 { margin-top: 30px; color: #444; font-size: 1.5em;}
+        h4 { margin-top: 20px; color: #555; font-size: 1.2em;}
+        h5 { margin-top: 15px; color: #666; font-size: 1.1em; }
+        h6 { margin-top: 10px; color: #777; font-weight: normal; font-style: italic;}
+        .part-title { text-align: center; margin: 60px 0; font-size: 2em; font-weight: bold; border-top: 3px solid #555; border-bottom: 3px solid #555; padding: 20px 0; background-color: #f0f0f0; }
+        .chapter-intro { display: flex; align-items: flex-start; border-bottom: 1px solid #ccc; padding-bottom: 20px; margin-bottom: 20px; }
+        .chapter-intro .text { flex-grow: 1; padding-right: 20px; }
+        .chapter-intro figure { margin: 0; text-align: center; }
+        .chapter-intro img { max-width: 150px; height: auto; border: 1px solid #ccc; }
+        .quote { font-style: italic; text-align: right; margin: 20px 0; color: #555; }
+        .example { border: 1px solid #e0e0e0; padding: 15px; margin: 15px 0; background-color: #f9f9f9; border-left: 3px solid #007bff; }
+        .example-title { font-weight: bold; margin-bottom: 10px; color: #007bff;}
+        .exercise { border: 1px solid #e0e0e0; padding: 15px; margin: 15px 0; background-color: #fdfdfe; border-left: 3px solid #28a745; }
+        .exercise-title { font-weight: bold; margin-bottom: 10px; color: #28a745; }
+        .definition { border-left: 3px solid #4CAF50; padding-left: 15px; margin: 15px 0; background-color: #e8f5e9; }
+        .note { border-left: 3px solid #ffc107; padding: 10px 15px; margin: 15px 0; background-color: #fff8e1; }
+        table { border-collapse: collapse; margin: 20px auto; width: auto; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; vertical-align: middle; position: relative; min-width: 30px; height: 30px;}
+        th { background-color: #f2f2f2; }
+        code, .mono { background-color: #eee; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        .placeholder { display: block; min-height: 80px; border: 1px dashed #aaa; background-color: #f0f0f0; text-align: center; padding: 20px; margin: 15px 0; font-style: italic; color: #666; box-sizing: border-box; }
+        footer { text-align: right; margin-top: 50px; font-size: 0.9em; color: #555; border-top: 1px solid #eee; padding-top: 10px;}
+        .page-break { page-break-after: always; border-top: 1px dashed #ccc; margin-top: 20px; }
+        /* KaTeX display style */
+        .katex-display { text-align: center; margin: 1em 0; overflow-x: auto; overflow-y: hidden; }
+        .inline-katex .katex { font-size: 1em; }
+        .op-summary-table td, .op-summary-table th { min-width: 40px; }
+        .gate-section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .gate-symbol, .flipflop-symbol { display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; margin: 15px 0; }
+        .gate-symbol > div, .flipflop-symbol > div { margin: 10px; text-align: center; }
+        .truth-table-inline table { margin: 5px auto; }
+        .kmap-container { text-align: center; margin: 20px 0; }
+        .kmap { display: inline-block; border: 1px solid #aaa; position: relative; }
+        .kmap-header-col { position: absolute; top: -25px; left: 0; right: 0; text-align: center; font-weight: bold; }
+        .kmap-header-row { position: absolute; left: -40px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-around; align-items: center; font-weight: bold; }
+        .kmap table { margin: 0; border: none; }
+        .kmap th { font-weight: normal; font-size: 0.9em; border: none; background: none; }
+        .kmap td { border: 1px solid #ccc; font-size: 1.1em; }
+        .kmap-index { position: absolute; bottom: 1px; right: 1px; font-size: 0.6em; color: gray; }
+        .kmap-group { position: absolute; border: 2px solid blue; border-radius: 10px; pointer-events: none; } /* For drawing groups */
+         .kmap-group-red { border-color: red; }
+         .kmap-group-green { border-color: green; }
+         .kmap-group-purple { border-color: purple; }
+         .pld-schema { text-align: center; margin: 20px 0; }
+         .pld-schema img { max-width: 80%; height: auto; border: 1px solid #ccc; }
+         .exercise-section { margin-top: 40px; padding: 20px; border: 1px solid #ddd; background-color: #fafafa; }
+         .exercise-section h3 { margin-top: 0; text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; }
+         .timing-diagram { margin: 15px 0; text-align: center;}
+         .timing-diagram .placeholder { min-height: 60px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- Title Page - Part 2 -->
+        <h1 class="part-title">Deuxième partie</h1>
+        <h2>La logique combinatoire</h2>
+        <!-- ... Image Placeholder ... -->
+    </header>
+
+    <main>
+        <!-- Content from previous turns (Chapters IV, V, VI) -->
+        <!-- ... Chapter IV ... -->
+        <!-- ... Chapter V ... -->
+        <!-- ... Chapter VI ... -->
+
+        <div class="page-break"></div>
+
+        <article> <!-- Chapter VIII: Flip-Flops -->
+            <h2 id="chapter-viii">Chapitre VIII : Les Bascules (Flip-Flops)</h2>
+            <!-- Assuming previous sections of Chapter VIII were covered -->
+
+            <!-- Bascule D Maître-Esclave (Page 100 - not provided, but referenced) -->
+            <section id="ff-d-ms">
+                <h4>VIII.8 Bascule D Maître-Esclave (Rappel Structurel)</h4>
+                 <div class="flipflop-symbol">
+                    <div>Réalisation Maître-Esclave (conceptuelle):<br>
+                        <div class="placeholder">[Placeholder: Schéma Bascule D Maître-Esclave (2 étages D avec horloge inversée)]</div>
+                        <p>Entrées: D, H (Horloge). Sorties: Q, \(\overline{Q}\).</p>
+                        <p>Maître (activé par ex. sur front montant), Esclave (activé sur front descendant)</p>
+                    </div>
+                    <div>Réalisation à partir de RSH Maître-Esclave:<br>
+                        <div class="placeholder">[Placeholder: Schéma Bascule D from RSH-ME]</div>
+                        <p>Entrée D -> S, Entrée \(\overline{D}\) -> R.</p>
+                    </div>
+                    <div>Réalisation à partir de JK:<br>
+                        <div class="placeholder">[Placeholder: Schéma Bascule D from JKFF]</div>
+                         <p>Entrée D -> J, Entrée \(\overline{D}\) -> K.</p>
+                    </div>
+                </div>
+
+                 <div class="note">
+                    <strong>► Remarque 8.4 : Fonctionnement Bascule D</strong><br>
+                    La sortie Q ne recopie l'entrée D qu'à des moments précis déterminés par l'horloge (H ou Clk). Le signal Q est donc généralement différent (retardé, échantillonné) du signal D.<br>
+                    Les bascules D fonctionnent sur <strong>fronts d'horloge</strong> (montant ou descendant).
+                    Dans la structure maître-esclave classique (sensible aux niveaux), la donnée D est capturée par le maître pendant une phase de l'horloge (ex: niveau haut) et transférée à la sortie par l'esclave pendant l'autre phase (ex: niveau bas). Les bascules D modernes sont le plus souvent <strong>déclenchées par front</strong> (edge-triggered), où le transfert se fait uniquement sur la transition montante ou descendante de l'horloge. Certaines structures maître-esclave peuvent nécessiter les deux fronts pour un cycle complet, mais les plus courantes aujourd'hui sont déclenchées par un seul front.
+                </div>
+            </section>
+
+            <section id="ff-t">
+                <h3>VIII.9 Bascule T (Toggle)</h3>
+                <p>La bascule T (Toggle) est une bascule synchrone qui change (bascule) son état de sortie Q à chaque front actif de l'horloge si son entrée T est active (généralement T=1), et conserve son état si T est inactive (T=0).</p>
+                <p>Elle s'obtient facilement, par exemple, à partir d'une bascule JK dont les entrées J et K sont reliées ensemble pour former l'entrée T.</p>
+                <p>Elle est utilisable uniquement en mode synchrone et ne fonctionne qu'en commutation (basculement ou maintien).</p>
+
+                <div class="flipflop-symbol">
+                     <div>Symbole:<br>
+                         <div class="placeholder">[Placeholder: Symbole Bascule T (T, Clk -> Q)]</div>
+                     </div>
+                     <div>Réalisation (à partir de JK):<br>
+                        <div class="placeholder">[Placeholder: Schéma Bascule T from JK (T -> J et K, Clk)]</div>
+                    </div>
+                 </div>
+
+                 <h5>Table de vérité</h5>
+                 <table>
+                    <thead><tr><th>T</th><th>\(Q_{N+1}\) (après front horloge)</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>\(Q_N\) (maintien)</td></tr>
+                        <tr><td>1</td><td>\(\overline{Q_N}\) (basculement/toggle)</td></tr>
+                    </tbody>
+                 </table>
+            </section>
+
+            <section id="ff-async">
+                <h3>VIII.10 Entrées prioritaires asynchrones des bascules (Preset / Clear)</h3>
+                <p>La plupart des bascules synchrones (D, JK, T) possèdent également des entrées dites <strong>asynchrones</strong> ou <strong>prioritaires</strong>, généralement appelées <strong>Preset (PRE)</strong> (ou Set) et <strong>Clear (CLR)</strong> (ou Reset).</p>
+                <p>Ces entrées agissent <strong>immédiatement</strong> (indépendamment du signal d'horloge et des entrées synchrones J, K, D, T) pour forcer la sortie Q à un état spécifique :</p>
+                <ul>
+                    <li><strong>Preset (PRE) :</strong> Force la sortie Q à 1 (et \(\overline{Q}\) à 0).</li>
+                    <li><strong>Clear (CLR) :</strong> Force la sortie Q à 0 (et \(\overline{Q}\) à 1).</li>
+                </ul>
+                <p>Elles sont prioritaires car elles prévalent sur les entrées synchrones et l'horloge. Elles agissent généralement sur l'étage de sortie (esclave) de la bascule.</p>
+
+                <div style="text-align:center; margin: 20px 0;">
+                    Structure interne typique (ajout sur l'étage esclave) :
+                    <div class="placeholder">[Placeholder: Schéma Bascule avec PRE/CLR asynchrones (ex: portes NAND/NOR ajoutées sur la sortie)]</div>
+                    <figcaption>Les entrées Preset et Clear modifient directement l'état des portes de l'étage esclave.</figcaption>
+                </div>
+
+                <p>Ces entrées peuvent être <strong>actives à l'état haut</strong> (un '1' force l'action) ou, plus fréquemment, <strong>actives à l'état bas</strong> (un '0' force l'action). Lorsqu'elles sont actives bas, elles sont souvent notées \(\overline{PRE}\) et \(\overline{CLR}\). Pour que la bascule fonctionne normalement en mode synchrone, ces entrées doivent être maintenues à leur niveau inactif (respectivement '0' ou '1').</p>
+
+                <div class="example">
+                    <div class="example-title">▷ Exemple 8.4 : Fonctionnement des entrées asynchrones (actives bas)</div>
+                     <div class="flipflop-symbol">
+                        <div>Symbole JK avec Preset/Clear actifs bas:<br>
+                             <div class="placeholder">[Placeholder: Symbole Bascule JK avec entrées PRE et CLR (bulles indiquant actif bas)]</div>
+                         </div>
+                         <div>Table de vérité (entrées asynchrones) :<br>
+                             <table>
+                                 <caption>Effet des entrées \(\overline{PRE}\) et \(\overline{CLR}\)</caption>
+                                 <thead><tr><th>\(\overline{PRE}\)</th><th>\(\overline{CLR}\)</th><th>Q (immédiat)</th><th>Mode</th></tr></thead>
+                                 <tbody>
+                                     <tr><td>1</td><td>1</td><td>Synchrone (réagit à J, K, Clk)</td><td>Fonctionnement normal</td></tr>
+                                     <tr><td>0</td><td>1</td><td>1</td><td>Preset (forcé à 1)</td></tr>
+                                     <tr><td>1</td><td>0</td><td>0</td><td>Clear (forcé à 0)</td></tr>
+                                     <tr><td>0</td><td>0</td><td>Indéterminé/Interdit (\(Q=\overline{Q}=1\) possible)</td><td>Ambigu, interdit</td></tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                     <p>En général, on applique seulement une courte impulsion (active) à ces entrées pour initialiser l'état de la bascule au démarrage ou lors d'un reset, puis on les maintient à leur niveau inactif (ici, '1') pour le fonctionnement normal.</p>
+                 </div>
+            </section>
+
+            <section id="ff-timing">
+                <h3>VIII.11 Paramètres temporels des bascules</h3>
+                 <div class="note">
+                     <strong>► Remarque 8.5</strong><br>
+                     Les entrées synchrones (D, J, K, T) sont généralement considérées comme des niveaux de tension qui doivent être stables autour du front actif de l'horloge. Les entrées asynchrones (PRE, CLR) et l'horloge (Clk) sont souvent des signaux de type impulsion ou front.
+                 </div>
+
+                <p>Pour qu'une bascule fonctionne correctement, certaines contraintes temporelles doivent être respectées entre les signaux d'entrée et l'horloge. De plus, la sortie ne change pas instantanément.</p>
+                <ul>
+                    <li><strong>Temps de prépositionnement (Setup time, \(t_{su}\)) :</strong> C'est le temps minimum pendant lequel l'entrée synchrone (D, J, K) doit être stable <strong>avant</strong> le front actif de l'horloge pour être correctement prise en compte.</li>
+                    <li><strong>Temps de maintien (Hold time, \(t_h\)) :</strong> C'est le temps minimum pendant lequel l'entrée synchrone doit rester stable <strong>après</strong> le front actif de l'horloge pour garantir la mémorisation correcte.</li>
+                    <li><strong>Temps de propagation (Propagation delay) :</strong> C'est le délai entre l'instant où l'événement déclencheur se produit (front d'horloge, activation de PRE/CLR) et l'instant où la sortie (Q ou \(\overline{Q}\)) change effectivement d'état. On distingue :
+                        <ul>
+                            <li>\(t_{pLH}\) (ou \(t_{PLH}\)) : Délai pour une transition de sortie de Bas (Low) vers Haut (High).</li>
+                            <li>\(t_{pHL}\) (ou \(t_{PHL}\)) : Délai pour une transition de sortie de Haut (High) vers Bas (Low).</li>
+                         </ul>
+                         Ces délais peuvent être spécifiés par rapport à l'horloge (\(t_{pCkQ}\)) ou aux entrées asynchrones (\(t_{pPREQ}\), \(t_{pCLRQ}\)).
+                    </li>
+                    <li><strong>Largeur minimale d'impulsion (\(t_W\)) :</strong> Durée minimale pendant laquelle l'horloge (niveau haut ou bas) ou les signaux asynchrones (PRE, CLR actifs) doivent être maintenus pour garantir le fonctionnement.</li>
+                    <li><strong>Fréquence maximale d'horloge (\(f_{max}\)) :</strong> L'inverse de la période minimale d'horloge, limitée par les temps de propagation internes et les temps de setup/hold. \(f_{max} \approx 1 / (t_{propagation\_interne} + t_{su})\).</li>
+                </ul>
+                 <div class="timing-diagram">
+                    <div class="placeholder">[Placeholder: Diagramme temporel illustrant Setup time, Hold time, Propagation delay]</div>
+                    <figcaption>Paramètres temporels critiques d'une bascule</figcaption>
+                 </div>
+                <p>Le non-respect des temps de setup et hold peut entraîner un état métastable où la sortie de la bascule est indéfinie pendant un certain temps avant de retomber aléatoirement à 0 ou 1.</p>
+
+                <table>
+                    <caption>Désignations synonymes (entrées asynchrones)</caption>
+                    <tbody>
+                        <tr><td>Clear</td><td>Reset</td><td>RAZ (Remise à Zéro)</td><td>\( \overline{R} \)</td><td>DC clear</td></tr>
+                        <tr><td>Preset</td><td>Set</td><td>RAU (Remise à Un - moins courant)</td><td>\( \overline{S} \)</td><td>DC set</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="ff-applications">
+                <h3>VIII.12 Applications des bascules</h3>
+                <p>Les bascules sont les briques de base de toute la logique séquentielle. Leurs applications sont innombrables.</p>
+
+                <section id="appli-memory">
+                    <h4>VIII.12.1 Mémoire</h4>
+                    <p>La fonction première d'une bascule est de mémoriser 1 bit d'information. Elle peut capturer une information fugitive (présente brièvement sur son entrée) sur un front d'horloge et la maintenir stable sur sa sortie jusqu'au prochain événement pertinent.</p>
+                    <div class="example">
+                         <div class="example-title">▷ Exemple 8.5 : Mémorisation d'une commande de marche</div>
+                         <p>Une bascule RS (ou une JK utilisée en RS) peut mémoriser l'appui sur un bouton poussoir "Marche" (connecté à S) jusqu'à ce qu'un bouton "Arrêt" (connecté à R) soit pressé.</p>
+                         <div class="flipflop-symbol">
+                             <div>
+                                <div class="placeholder">[Placeholder: Schéma Bascule SR avec bouton Marche->S, bouton Arrêt->R, sortie Q->Commande]</div>
+                             </div>
+                             <div class="timing-diagram">
+                                <div class="placeholder">[Placeholder: Diagramme temporel montrant impulsion sur S, Q passe à 1, impulsion sur R, Q passe à 0]</div>
+                             </div>
+                         </div>
+                     </div>
+                </section>
+
+                <section id="appli-debounce">
+                    <h4>VIII.12.2 Antirebond pour commutateur</h4>
+                    <p>Les contacts mécaniques des interrupteurs et boutons poussoirs ne commutent pas proprement : ils "rebondissent" plusieurs fois pendant quelques millisecondes avant de se stabiliser. Une simple bascule RS peut éliminer ces rebonds.</p>
+                    <div class="example">
+                         <div class="example-title">▷ Exemple 8.6 : Circuit antirebond</div>
+                         <p>Un commutateur à deux positions stables (ou un bouton poussoir avec contact NO et NF) est connecté aux entrées S et R d'une bascule RS (souvent réalisée avec 2 portes NAND ou NOR). La première fermeture de contact active l'entrée correspondante et fixe la sortie Q, ignorant les rebonds ultérieurs ou l'ouverture momentanée du contact.</p>
+                         <div class="flipflop-symbol">
+                            <div>
+                                <div class="placeholder">[Placeholder: Schéma circuit Antirebond avec bascule RS (NAND ou NOR) et commutateur SPDT]</div>
+                                <figcaption>Le commutateur connecte S ou R à la masse via une résistance de tirage (pull-up).</figcaption>
+                            </div>
+                             <div class="timing-diagram">
+                                <div class="placeholder">[Placeholder: Diagramme temporel montrant signal bruité du commutateur et sortie Q stable]</div>
+                             </div>
+                         </div>
+                     </div>
+                </section>
+
+                <section id="appli-sync">
+                    <h4>VIII.12.3 Synchronisation</h4>
+                    <p>Les bascules D sont utilisées pour synchroniser un signal asynchrone (qui peut changer à n'importe quel moment) avec l'horloge d'un système synchrone. Le signal est appliqué à l'entrée D, et la sortie Q ne changera qu'au prochain front actif de l'horloge du système.</p>
+                     <div class="example">
+                        <div class="example-title">▷ Exemple 8.7 : Synchronisation d'un signal A</div>
+                         <p>Un signal A (potentiellement avec rebonds ou transitions non synchrones) est appliqué à une porte ET avec un signal H (qui pourrait être l'horloge, mais ici semble être un enable asynchrone). La sortie X suit A lorsque H est haut, mais peut contenir des impulsions partielles indésirables si A ou H changent près l'un de l'autre.</p>
+                         <div class="flipflop-symbol">
+                            <div>Circuit initial (non synchronisé):<br>
+                                <div class="placeholder">[Placeholder: Schéma Porte ET avec entrées A et H, sortie X]</div>
+                            </div>
+                            <div class="timing-diagram">
+                                <div class="placeholder">[Placeholder: Diagramme temporel A, H, X montrant impulsion partielle sur X]</div>
+                            </div>
+                        </div>
+                        <p>Solution : Utiliser une bascule D pour échantillonner le signal A (après antirebond si nécessaire) sur le front de l'horloge H du système.</p>
+                        <div class="flipflop-symbol">
+                             <div>Circuit synchronisé:<br>
+                                 <div class="placeholder">[Placeholder: Schéma Signal A -> Entrée D Bascule D, Horloge H -> Clk Bascule D, Sortie Q]</div>
+                                 <figcaption>La sortie Q est une version de A synchronisée sur H.</figcaption>
+                             </div>
+                             <div class="timing-diagram">
+                                 <div class="placeholder">[Placeholder: Diagramme temporel A, H, Q montrant Q changeant seulement sur fronts de H]</div>
+                                 <figcaption>Le signal X (sortie de la porte ET optionnelle après la bascule) sera propre.</figcaption>
+                            </div>
+                        </div>
+                         <p>Note : La synchronisation peut introduire un délai d'un cycle d'horloge et ne résout pas complètement le problème de métastabilité si A change trop près du front de H, mais réduit sa probabilité.</p>
+                    </div>
+                 </section>
+
+                <section id="appli-sequence">
+                     <h4>VIII.12.4 Détection d'une séquence d'entrée</h4>
+                     <p>Des bascules peuvent être utilisées pour détecter si un événement A se produit avant un événement B.</p>
+                     <div class="example">
+                         <div class="example-title">▷ Exemple 8.8 : Détecteur de séquence A avant B</div>
+                         <p>Circuit initial simple avec une porte ET. La sortie X est à 1 si A et B sont actifs, mais ne dit rien sur l'ordre.</p>
+                         <div class="flipflop-symbol">
+                            <div>Porte ET simple:<br>
+                                <div class="placeholder">[Placeholder: Schéma Porte ET avec entrées A et B, sortie X]</div>
+                            </div>
+                             <div class="timing-diagram">
+                                <div class="placeholder">[Placeholder: Diagramme temporel A, B, X]</div>
+                            </div>
+                        </div>
+                         <p>Solution utilisant une bascule JK :</p>
+                         <ul>
+                             <li>L'arrivée de A met J à 1 (via connexion directe ou logique).</li>
+                             <li>L'arrivée de B sert d'horloge (ou déclenche une horloge).</li>
+                             <li>L'arrivée de B met K à 1 (ou K est à 1 par défaut).</li>
+                         </ul>
+                         <p>Si A arrive avant B (front d'horloge), J=1 et K=0 (ou 1) au moment du front de B. La sortie Q passe ou reste à 1.</p>
+                         <p>Si B arrive avant A, J=0 et K=1 au moment du front de B. La sortie Q passe ou reste à 0.</p>
+                         <div class="flipflop-symbol">
+                             <div>Circuit détecteur:<br>
+                                 <div class="placeholder">[Placeholder: Schéma Bascule JK avec A->J, B->Clk, (peut-être B->K ou 1->K), sortie Q]</div>
+                                <figcaption>La sortie Q indique si A s'est produit avant le dernier B.</figcaption>
+                             </div>
+                            <div class="timing-diagram">
+                                 <div class="placeholder">[Placeholder: Diagramme temporel A, B, Q montrant les deux cas]</div>
+                                 <p>Cas 1: A avant B -> Q=1 après B. Cas 2: A après B -> Q=0 après B.</p>
+                             </div>
+                         </div>
+                         <p>Application : détection du sens de rotation d'un moteur avec deux capteurs déphasés A et B.</p>
+                     </div>
+                 </section>
+
+                <section id="appli-divider">
+                    <h4>VIII.12.5 Division de fréquence</h4>
+                    <p>Une bascule configurée en mode "Toggle" (basculement à chaque coup d'horloge) divise la fréquence du signal d'horloge par 2 sur sa sortie Q.</p>
+                    <p>En mettant N bascules T en cascade (la sortie de l'une servant d'horloge à la suivante), on obtient une division de fréquence par \(2^N\). C'est la base des compteurs binaires.</p>
+                    <ul>
+                        <li><strong>Bascule D :</strong> Pour faire basculer une bascule D, il faut reboucler sa sortie \(\overline{Q}\) sur son entrée D. \( D_N = \overline{Q_N} \). Sur le front d'horloge, \( Q_{N+1} = D_N = \overline{Q_N} \). La sortie Q change donc d'état à chaque front actif.
+                             <div class="flipflop-symbol">
+                                <div>Diviseur par 2 (Bascule D):<br>
+                                     <div class="placeholder">[Placeholder: Schéma Bascule D avec \(\overline{Q}\) connectée à D, Horloge H->Clk, Sortie Q]</div>
+                                 </div>
+                                 <div class="timing-diagram">
+                                     <div class="placeholder">[Placeholder: Diagramme temporel H, Q montrant Q à Freq = H/2]</div>
+                                 </div>
+                             </div>
+                        </li>
+                        <li><strong>Bascule JK :</strong> Il suffit de mettre les entrées J et K à 1. La bascule bascule à chaque front d'horloge actif.
+                            <div class="flipflop-symbol">
+                                <div>Diviseur par 2 (Bascule JK):<br>
+                                     <div class="placeholder">[Placeholder: Schéma Bascule JK avec J=1, K=1, Horloge H->Clk, Sortie Q]</div>
+                                 </div>
+                                 <div class="timing-diagram">
+                                     <div class="placeholder">[Placeholder: Diagramme temporel H, Q montrant Q à Freq = H/2]</div>
+                                 </div>
+                             </div>
+                        </li>
+                         <li><strong>Bascule RS (Synchrone) :</strong> On peut la faire basculer en connectant \(S = \overline{Q}\) et \(R = Q\), mais c'est moins direct qu'avec D ou JK. Non montré dans l'OCR.
+                             <div class="flipflop-symbol">
+                                 <div>Diviseur par 2 (Bascule RS Synchrone - conceptuel):<br>
+                                      <div class="placeholder">[Placeholder: Schéma Bascule RS Synchrone avec \(\overline{Q}\) -> S, Q -> R, Horloge H->Clk, Sortie Q]</div>
+                                  </div>
+                                  <div class="timing-diagram">
+                                      <div class="placeholder">[Placeholder: Diagramme temporel H, Q montrant Q à Freq = H/2]</div>
+                                  </div>
+                              </div>
+                         </li>
+                     </ul>
+                </section>
+            </section> <!-- End Applications -->
+
+        </article> <!-- End Chapter VIII -->
+
+        <div class="page-break"></div>
+
+        <article> <!-- Chapter IX: Registers -->
+            <div class="chapter-intro">
+                 <div class="text">
+                     <h2 id="chapter-ix">Chapitre IX</h2>
+                     <h3>Registres : stockage et transfert de données</h3>
+                 </div>
+                 <figure>
+                     <div class="placeholder">[Placeholder: Portrait de Howard H. Aiken]</div>
+                     <figcaption>
+                        Howard Hathaway Aiken<br>
+                        * 9 mars 1900, Hoboken, E.-U.<br>
+                        † 14 mars 1973, St Louis, E.-U.
+                        <br><small>[Reçu le Harry M Goode Memorial Award en 1964 pour sa contribution au développement de l'ordinateur automatique]</small>
+                     </figcaption>
+                 </figure>
+            </div>
+
+             <p class="definition"><strong>Registre :</strong> ensemble de n bascules synchronisées (commandées par la même horloge) permettant de stocker momentanément une information (un mot binaire) sur n bits.</p>
+
+             <div style="text-align:center; margin: 20px 0;">
+                Structure générale d'un registre à décalage :
+                <div class="placeholder">[Placeholder: Schéma bloc Registre à décalage (n bascules Q_A..Q_D, Horloge H, Entrée Série, Sortie Série D/G, Entrées Parallèles, Sorties Parallèles, Commandes)]</div>
+                <figcaption>Registre à décalage avec différentes possibilités d'entrées/sorties.</figcaption>
+             </div>
+
+
+            <section id="reg-definition">
+                <h3>IX.1 Définition</h3>
+                <p>Un registre est un circuit séquentiel constitué de \(n\) bascules (généralement de type D), toutes synchronisées par le même signal d'horloge. Sa fonction principale est de mémoriser temporairement un mot binaire de \(n\) bits.</p>
+                <p>Selon la manière dont les données entrent et sortent du registre, et la possibilité de décaler les bits, on distingue plusieurs types de registres.</p>
+                <p>Certains registres, appelés <strong>registres à décalage (shift registers)</strong>, permettent, grâce à une interconnexion entre les bascules, de translater (décaler) les bits du mot stocké vers la droite ou vers la gauche à chaque coup d'horloge.</p>
+                <p><strong>Applications courantes des registres :</strong></p>
+                <ul>
+                    <li>Stockage temporaire de données dans les processeurs et systèmes numériques.</li>
+                    <li>Conversion Série-Parallèle et Parallèle-Série pour les communications.</li>
+                    <li>Opérations arithmétiques (multiplication/division par décalage).</li>
+                    <li>Lignes à retard numériques.</li>
+                    <li>Mémoires à accès séquentiel (FIFO, LIFO - bien que souvent réalisées différemment).</li>
+                </ul>
+                <p>Un <strong>registre universel</strong> combine plusieurs modes de fonctionnement (chargement parallèle, décalage droite/gauche, maintien) sélectionnables par des entrées de commande.</p>
+            </section>
+
+            <section id="reg-parallel">
+                 <h3>IX.2 Registre de mémorisation : écriture et lecture parallèles</h3>
+                 <p>C'est le type de registre le plus simple. Les \(n\) bits du mot de données sont chargés (écrits) simultanément dans les \(n\) bascules via des entrées parallèles, généralement sur un front d'horloge lorsque l'entrée de validation d'écriture (E, Load, Write Enable) est active.</p>
+                 <p>Les \(n\) bits stockés sont disponibles simultanément sur les \(n\) sorties parallèles (Q des bascules).</p>
+                <div class="placeholder">[Placeholder: Schéma Registre Parallèle 4 bits (4 bascules D, Entrées D3-D0, Horloge Clk commune, Sorties Q3-Q0, Entrée E/Load)]</div>
+                 <figcaption>Registre à chargement parallèle 4 bits. Les données sur D3-D0 sont chargées dans les bascules lorsque E (ou Load) est actif au moment du front d'horloge.</figcaption>
+             </section>
+
+            <section id="reg-shift">
+                <h3>IX.3 Registres à décalage</h3>
+                <p>Dans un registre à décalage, la sortie d'une bascule est connectée à l'entrée de la bascule suivante, permettant aux bits de se propager (décaler) d'une bascule à l'autre à chaque coup d'horloge.</p>
+                <div class="note">
+                    <strong>► Remarque 9.1 : Multiplication/Division par décalage</strong><br>
+                    <ul>
+                        <li>Un décalage des bits vers la <strong>gauche</strong> correspond à une multiplication par 2 du nombre binaire (si aucun bit n'est perdu à gauche et qu'un 0 est inséré à droite).</li>
+                        <li>Un décalage des bits vers la <strong>droite</strong> correspond à une division entière par 2 du nombre binaire (le bit sortant à droite est le reste).</li>
+                    </ul>
+                </div>
+
+                <section id="reg-siso">
+                    <h4>IX.3.1 Registre à écriture série et lecture série (SISO - Serial-In, Serial-Out)</h4>
+                    <p>Les données entrent bit par bit par une seule entrée série (connectée à la première bascule) et sortent bit par bit par la sortie de la dernière bascule.</p>
+                    <p>Il faut \(n\) coups d'horloge pour faire entrer un mot de \(n\) bits, et \(n\) coups d'horloge supplémentaires pour le faire sortir complètement.</p>
+                     <div class="placeholder">[Placeholder: Schéma Registre SISO 4 bits (4 bascules D en cascade, Entrée Série D, Horloge H, Sortie Série Q sur la dernière bascule)]</div>
+                     <figcaption>Registre à décalage Série-Série 4 bits.</figcaption>
+                     <p>Après 4 pulsations de CLK, les 4 bits entrés en série sont stockés. Après 4 autres cycles, ces 4 bits sont sortis en série par Q.</p>
+                     <p>Application principale : ligne à retard numérique (un signal est retardé de N cycles d'horloge).</p>
+                </section>
+
+                <section id="reg-sipo">
+                     <h4>IX.3.2 Registre à écriture série et lecture parallèle (SIPO - Serial-In, Parallel-Out)</h4>
+                     <p>Les données entrent bit par bit par l'entrée série. Une fois les \(n\) bits entrés (après \(n\) coups d'horloge), le mot complet est disponible simultanément sur les sorties parallèles (les sorties Q de toutes les bascules).</p>
+                     <p>Utilisation principale : <strong>convertisseur série-parallèle</strong>, typiquement utilisé à la réception d'une transmission série.</p>
+                    <div class="placeholder">[Placeholder: Schéma Registre SIPO 4 bits (4 bascules D en cascade, Entrée Série D, Horloge H, Sorties Parallèles QA, QB, QC, QD)]</div>
+                     <figcaption>Registre à décalage Série-Parallèle 4 bits.</figcaption>
+                 </section>
+
+                <section id="reg-piso">
+                    <h4>IX.3.3 Registre à écriture parallèle et lecture série (PISO - Parallel-In, Serial-Out)</h4>
+                     <p>Les \(n\) bits du mot sont d'abord chargés simultanément dans les bascules via les entrées parallèles (généralement contrôlé par une entrée "Load" ou "Shift/Load"). Ensuite, les bits sont décalés et sortent un par un par la sortie série de la dernière bascule, nécessitant \(n\) coups d'horloge.</p>
+                    <p>Utilisation principale : <strong>convertisseur parallèle-série</strong>, typiquement utilisé à l'émission lors d'une transmission série.</p>
+                     <p>La structure interne nécessite des multiplexeurs sur l'entrée de chaque bascule pour choisir entre charger la donnée parallèle ou charger la sortie de la bascule précédente (décalage).</p>
+                    <div class="placeholder">[Placeholder: Schéma Registre PISO 4 bits (4 bascules D, Entrées Parallèles A-D, Entrée Shift/Load, Horloge H, Sortie Série sur la dernière bascule, MUX sur chaque entrée D)]</div>
+                     <figcaption>Registre à décalage Parallèle-Série 4 bits.</figcaption>
+                 </section>
+            </section>
+
+            <section id="reg-universal">
+                <h3>IX.4 Registre universel</h3>
+                <p>Le registre universel combine plusieurs modes de fonctionnement, généralement sélectionnés par des entrées de commande (ex: S1, S0).</p>
+                <p>Modes typiques :</p>
+                <table>
+                    <thead><tr><th>S1</th><th>S0</th><th>Mode</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>0</td><td>Maintien / Inhibition horloge (pas de changement)</td></tr>
+                        <tr><td>0</td><td>1</td><td>Décalage à droite (Shift Right)</td></tr>
+                        <tr><td>1</td><td>0</td><td>Décalage à gauche (Shift Left)</td></tr>
+                        <tr><td>1</td><td>1</td><td>Chargement parallèle (Parallel Load)</td></tr>
+                    </tbody>
+                    <!-- Note: L'OCR donne une table différente. S1S0=00: // load, 01: SR, 10: SL, 11: Inhibit Clk -->
+                </table>
+
+                 <p>La structure interne utilise des multiplexeurs (MUX) 4-vers-1 à l'entrée D de chaque bascule \(Q_i\). Les entrées du MUX sont connectées pour réaliser les différents modes :</p>
+                 <ul>
+                     <li>Entrée 0 (S1S0=00) : \(Q_i\) (rebouclage pour maintien, ou horloge inhibée). L'OCR indique Chargement Parallèle pour 00.</li>
+                     <li>Entrée 1 (S1S0=01) : \(Q_{i-1}\) (sortie de la bascule de gauche pour décalage à droite).</li>
+                     <li>Entrée 2 (S1S0=10) : \(Q_{i+1}\) (sortie de la bascule de droite pour décalage à gauche).</li>
+                     <li>Entrée 3 (S1S0=11) : \(D_i\) (entrée parallèle pour chargement). L'OCR indique Inhibition Horloge pour 11.</li>
+                 </ul>
+                <p>En suivant la table de l'OCR (S1S0=00: // load, 01: SR, 10: SL, 11: Inhibit Clk) :</p>
+                 <p>L'entrée \(D_i\) de la bascule \(Q_i\) est donnée par un MUX contrôlé par S1, S0 : <br>
+                 \( D_i = (\overline{S1}\overline{S0} \cdot P_i) + (\overline{S1}S0 \cdot Q_{i-1}) + (S1\overline{S0} \cdot Q_{i+1}) + (S1S0 \cdot Q_i) \) <br>
+                 où \(P_i\) est l'entrée parallèle pour le bit i, et le dernier terme correspond à l'inhibition (maintien).</p>
+                 <p>L'OCR donne une équation différente, semblant utiliser des variables C1, C2 et ei, qi-1, qi+1. Si C1=\(\overline{S1}\) et C2=\(\overline{S0}\), et ei=Entrée parallèle i:</p>
+                 <p> \( D_i = (C1 \cdot C2 \cdot ei) + (C1 \cdot \overline{C2} \cdot Q_{i-1}) + (\overline{C1} \cdot C2 \cdot Q_{i+1}) + (\overline{C1} \cdot \overline{C2} \cdot Q_i) \) </p>
+                 <p>Cette équation correspond à la table S1S0=00: Load //, 01: Shift Right, 10: Shift Left, 11: Inhibit (Hold).</p>
+
+                 <div class="placeholder">[Placeholder: Schéma interne Registre Universel 1 bit (MUX 4-1 -> Bascule D) montrant les connexions pour les 4 modes]</div>
+                 <figcaption>Structure interne d'une cellule de registre universel.</figcaption>
+
+            </section> <!-- End Universal Register -->
+
+        </article> <!-- End Chapter IX -->
+
+
+    </main>
+
+    <footer>
+        <span style="float: left;">M. Siadat & C. Diou</span>
+        <span style="float: right;">Page [Auto]</span>
+        <div style="clear: both;"></div>
+    </footer>
+
+</body>
+</html>
