@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Électronique Numérique: Simplification et Multiplexeurs</title>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #333; }
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
+        table { border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f9f9f9; }
+        .placeholder { 
+            border: 1px dashed #aaa; 
+            padding: 20px; 
+            text-align: center; 
+            color: #777; 
+            margin: 20px 0; 
+            background-color: #fafafa;
+        }
+        figcaption { text-align: center; font-style: italic; margin-top: 5px; color: #555; }
+    </style>
+</head>
+<body>
+
+    <h1>Électronique Numérique - Extrait</h1>
+
+    <section id="karnaugh-maps">
+        <h2>Simplification par Tableaux de Karnaugh (n=5 et n=6)</h2>
+
+        <p>Les tableaux de Karnaugh (K-maps) sont un outil graphique utilisé pour simplifier les fonctions logiques booléennes. Ils représentent la table de vérité d'une fonction d'une manière qui facilite l'identification des termes adjacents (qui ne diffèrent que par une seule variable) afin de les regrouper et de simplifier l'expression logique.</p>
+
+        <p>Pour les fonctions à 5 variables (par exemple, $a, b, c, d, e$), le tableau peut être représenté en 2D en utilisant 2 variables pour les lignes ($ab$) et 3 pour les colonnes ($cde$). L'ordre des combinaisons binaires sur les axes doit suivre le code de Gray (où seulement un bit change entre deux cases adjacentes), y compris pour l'adjacence "circulaire" entre les bords opposés.</p>
+
+        <h3>Exemple de K-map pour 5 variables (1)</h3>
+        <p>Variables: $a, b$ (lignes), $c, d, e$ (colonnes)</p>
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">ab \ cde</th>
+                    <th>000</th><th>001</th><th>011</th><th>010</th><th>110</th><th>111</th><th>101</th><th>100</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>00</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>01</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>11</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>10</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            </tbody>
+        </table>
+        <div class="placeholder">[Image Placeholder: K-Map 1 (5 variables: ab vs cde) showing the '1' entries and groupings described in the text.]</div>
+
+        <h3>Exemple de K-map pour 5 variables (2)</h3>
+        <p>Variables: $a, b$ (lignes), $d, e, c$ (colonnes - ordre différent pour illustrer)</p>
+         <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">ab \ dec</th>
+                    <th>000</th><th>001</th><th>011</th><th>010</th><th>110</th><th>111</th><th>101</th><th>100</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>00</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>01</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>11</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>10</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            </tbody>
+        </table>
+         <div class="placeholder">[Image Placeholder: K-Map 2 (5 variables: ab vs dec) showing the '1' entries.]</div>
+
+        <p>Sur le premier Karnaugh (K-map 1), un produit (terme simplifié) peut se trouver visuellement séparé en deux groupes distincts sur le tableau à cause de la structure 2D. Le "trait de liaison" mentionné dans le texte original fait référence à la reconnaissance que ces groupes sont logiquement adjacents et peuvent être combinés. Pour s'en convaincre, il suffit de remarquer que le premier regroupement correspond au terme $b \bar{c} e$ (par exemple, les '1' dans les colonnes 001 et 101 pour $ab=01$ et $ab=11$) et le second au terme $b c e$ (les '1' dans les colonnes 011 et 111 pour $ab=01$ et $ab=11$). L'application de la règle d'algèbre booléenne $X + \bar{X} = 1$ montre que :</p>
+        $$ (b \bar{c} e) + (b c e) = b e (\bar{c} + c) = b e (1) = b e $$
+        <p>Ce regroupement simplifie donc l'expression.</p>
+
+        <p>Le phénomène de séparation visuelle des termes est encore plus net pour $n = 6$ variables. Certains produits (termes simplifiés) peuvent se retrouver coupés en quatre morceaux sur le tableau de Karnaugh représenté en 2D.</p>
+        
+        <h3>Exemple de K-map pour 6 variables</h3>
+        <p>Variables: $f, a, b$ (lignes), $c, d, e$ (colonnes)</p>
+         <table>
+             <thead>
+                <tr>
+                    <th rowspan="2">fab \ cde</th>
+                    <th>000</th><th>001</th><th>011</th><th>010</th><th>110</th><th>111</th><th>101</th><th>100</th>
+                </tr>
+            </thead>
+             <tbody>
+                <tr><td>000</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>001</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>011</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>010</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>110</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>111</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>101</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>100</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+             </tbody>
+         </table>
+         <div class="placeholder">[Image Placeholder: K-Map for 6 variables (fab vs cde) showing '1' entries, potentially illustrating a term split into four visual groups.]</div>
+
+        <p>En conclusion, la simplification par table de Karnaugh donne une vue graphique des règles algébriques à appliquer pour conduire au mieux les calculs et une représentation synthétique de la fonction. La limite commence à apparaître pour $n = 5$ variables, et le tableau de Karnaugh devient totalement inutilisable (en pratique pour une simplification manuelle) au-delà de $n = 6$ variables en raison de la complexité visuelle croissante.</p>
+
+        <p>Pour un nombre de variables supérieur à 6, il existe d'autres représentations et méthodes de simplification utilisées par les outils informatiques, comme les BDD (Binary Decision Diagram), qui ne sont généralement pas abordées avant des niveaux d'études supérieurs (Maîtrise).</p>
+
+    </section>
+
+    <hr style="margin: 40px 0;">
+
+    <section id="multiplexers">
+        <h1>Chapitre 4: Aiguillages, générateurs de fonctions et de mintermes : Les Multiplexeurs</h1>
+
+        <article id="mux-intro">
+            <h2>4.1 Introduction</h2>
+            <p>Dans tous les systèmes numériques où les traitements sur les informations sont effectués, il est nécessaire de les "aiguiller" (diriger) suivant la fonction à réaliser. Le principe d'aiguillage du trafic ferroviaire représente un bon modèle pour comprendre la notion de transfert d'informations : plusieurs trains (données) peuvent circuler successivement sur une même voie (sortie unique) en provenance de lieux différents (entrées multiples) et transitant vers une destination unique. Cette notion d'aiguillage est l'élément de base du multiplexage numérique.</p>
+        </article>
+
+        <article id="mux-function">
+            <h2>4.2 La fonction de multiplexage</h2>
+            <p>Le multiplexage est une opération qui consiste à faire circuler sur un seul conducteur (la sortie) des informations provenant de sources multiples (les entrées de données). Un multiplexeur (MUX) est un circuit combinatoire qui sélectionne l'une de ses $2^n$ entrées de données pour la connecter à sa sortie unique, en fonction de la valeur de ses $n$ entrées de sélection.</p>
+
+            <figure>
+                 <div class="placeholder">[Image Placeholder: Functional diagram of a $2^n$-to-1 multiplexer showing $2^n$ data inputs $E_0$ to $E_{2^n-1}$, $n$ select inputs $S_0$ to $S_{n-1}$, and one output Y. An arrow indicates that if the select inputs S represent the binary value $i$, then the output $Y$ is connected to the input $E_i$.]</div>
+                 <figcaption>Diagramme fonctionnel d'un multiplexeur $2^n \rightarrow 1$.</figcaption>
+            </figure>
+
+            <p>À partir de cette présentation fonctionnelle du multiplexeur, on va maintenant déterminer la fonction logique réalisée par ce type de circuit.</p>
+            <p>Considérons la table de vérité d'un multiplexeur à deux entrées de sélection ($n=2$), donc $2^2 = 4$ entrées de données ($E_0, E_1, E_2, E_3$) :</p>
+            
+            <table>
+                <thead>
+                    <tr><th>$S_1$</th><th>$S_0$</th><th>Sortie Y</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>$E_0$</td></tr>
+                    <tr><td>0</td><td>1</td><td>$E_1$</td></tr>
+                    <tr><td>1</td><td>0</td><td>$E_2$</td></tr>
+                    <tr><td>1</td><td>1</td><td>$E_3$</td></tr>
+                </tbody>
+            </table>
+
+            <p>Cette table nous permet de déterminer l'équation logique de la sortie Y :</p>
+            <p>$Y = m_0 \cdot E_0 + m_1 \cdot E_1 + m_2 \cdot E_2 + m_3 \cdot E_3$</p>
+            <p>où $m_i$ (minterme numéro $i$) représente le produit logique des entrées de sélection qui vaut 1 uniquement pour la combinaison d'entrée $(S_1, S_0)$ dont la valeur binaire est égale à $i$. (Voir chapitre 2 pour la définition des mintermes).</p>
+            <p>C'est à dire, pour $n=2$ :</p>
+            <ul>
+                <li>$m_0 = \bar{S_1} \bar{S_0}$</li>
+                <li>$m_1 = \bar{S_1} S_0$</li>
+                <li>$m_2 = S_1 \bar{S_0}$</li>
+                <li>$m_3 = S_1 S_0$</li>
+            </ul>
+            <p>Donc, l'équation logique développée est :</p>
+            $$ Y = \bar{S_1} \bar{S_0} E_0 + \bar{S_1} S_0 E_1 + S_1 \bar{S_0} E_2 + S_1 S_0 E_3 $$
+
+            <p>En généralisant ce raisonnement à $2^n$ entrées de données et $n$ entrées de sélection, l'équation logique d'un multiplexeur s'écrit :</p>
+            $$ Y = \sum_{i=0}^{2^n-1} m_i E_i $$
+            <p>où $m_i$ est le minterme correspondant à la combinaison $i$ des $n$ entrées de sélection.</p>
+        </article>
+
+        <article id="mux-function-generator">
+            <h2>4.3 Générateur de fonction</h2>
+            <p>Les multiplexeurs peuvent être utilisés pour implémenter directement n'importe quelle fonction logique combinatoire.</p>
+
+            <section id="mux-sufficient-inputs">
+                <h3>4.3.1 Multiplexeurs possédant un nombre suffisant d'entrées</h3>
+                <p>Au chapitre 2, nous avons vu que toute fonction logique combinatoire $f$ de $n$ variables ($x_1, \dots, x_n$) pouvait s'écrire sous la forme canonique disjonctive (somme de mintermes) :</p>
+                $$ f(x_1, \dots, x_n) = \sum_{m_i \in C_f} m_i $$
+                <p>où $C_f$ est l'ensemble des mintermes pour lesquels la fonction $f$ vaut 1. Les $x_1, \dots, x_n$ représentent les variables d'entrées, et $m_i(x_1, \dots, x_n)$ sont les produits fondamentaux (mintermes) qui interviennent dans la couverture de $f$.</p>
+
+                <p>Si nous considérons maintenant la table de vérité de $f$, pour chaque ligne $i$ (correspondant à une combinaison des entrées $x_1, \dots, x_n$, allant de 0 à $2^n - 1$), la sortie $f$ vaut soit 0, soit 1. Notons $f_i$ cette valeur booléenne (le résultat de la fonction pour l'entrée $i$).</p>
+
+                <p>Comme nous pouvons toujours faire correspondre la suite des variables d'entrée $x_1, \dots, x_n$ au codage binaire de l'indice $i$ (par exemple, $i = (x_n \dots x_1)_2$ en considérant l'ordre usuel d'une table de vérité), on a :</p>
+                <ul>
+                    <li>soit $m_i$ appartient à la couverture de $f$ (c'est-à-dire $f=1$ pour l'entrée $i$), et alors $f_i = 1$,</li>
+                    <li>soit $m_i$ n'appartient pas à la couverture de $f$ (c'est-à-dire $f=0$ pour l'entrée $i$), et alors $f_i = 0$.</li>
+                </ul>
+                <p>Ainsi, si nous nous intéressons à un produit $f_i \cdot m_i$ quelconque, ce produit vaut $m_i$ si $m_i$ appartient à $C_f$ (car $f_i=1$), et vaut 0 sinon (car $f_i=0$). Donc la forme canonique disjonctive de $f$ peut s'écrire de manière plus systématique comme suit :</p>
+                $$ f(x_1, \dots, x_n) = \sum_{i=0}^{2^n-1} f_i \cdot m_i $$
+                <p>tel que $m_i$ est le minterme des variables $x_1, \dots, x_n$ pour la combinaison $i$, et $f_i$ est la valeur de la fonction $f$ pour cette combinaison $i$ (c'est-à-dire $f_i = f(\text{combinaison } i)$).</p>
+
+                <p>En comparant l'équation précédente ($f = \sum f_i \cdot m_i$) et celle établie pour la sortie d'un multiplexeur à $2^n$ entrées de données ($Y = \sum m_i E_i$), il est facile de voir qu'il est toujours possible de réaliser toutes les fonctions de $n$ variables à l'aide d'un multiplexeur $2^n \rightarrow 1$ :</p>
+                <ul>
+                    <li>Les entrées de sélection ($S_{n-1}, \dots, S_0$) du multiplexeur sont connectées aux variables de la fonction ($x_n, \dots, x_1$).</li>
+                    <li>Chaque entrée de données $E_i$ du multiplexeur est connectée à la valeur logique (0 ou 1) que doit prendre la fonction $f$ pour la combinaison d'entrée $i$, c'est-à-dire $E_i = f_i$.</li>
+                </ul>
+                <p>De cette manière, lorsque les entrées de sélection $x_n \dots x_1$ présentent la combinaison $i$, le multiplexeur sélectionne l'entrée $E_i = f_i$, et la sortie $Y$ du multiplexeur sera égale à $f_i$, réalisant ainsi la fonction $f$.</p>
+
+                <p>Prenons à titre d'exemple la table de vérité suivante qui possède trois variables d'entrées A, B, C et considérons un multiplexeur 8 $\rightarrow$ 1 (MPX 8->1), ($n=3$, $2^n=8$). Les entrées du système (A, B, C) sont connectées aux entrées de sélection du MUX ($S_2, S_1, S_0$).</p>
+
+                <table>
+                    <thead>
+                        <tr><th>A</th><th>B</th><th>C</th><th>OUT ($f_i$)</th><th>Connexion MUX</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>$E_0 \leftarrow 0$</td></tr>
+                        <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>$E_1 \leftarrow 0$</td></tr>
+                        <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>$E_2 \leftarrow 1$</td></tr>
+                        <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>$E_3 \leftarrow 1$</td></tr>
+                        <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>$E_4 \leftarrow 0$</td></tr>
+                        <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>$E_5 \leftarrow 1$</td></tr>
+                        <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>$E_6 \leftarrow 1$</td></tr>
+                        <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>$E_7 \leftarrow 0$</td></tr>
+                    </tbody>
+                </table>
+                
+                <figure>
+                    <div class="placeholder">[Image Placeholder: Figure 4.1 - Wiring an 8-to-1 MUX to implement the 3-variable function defined in the truth table. Inputs A, B, C are connected to select lines S2, S1, S0 respectively. Data inputs E0, E1, E4, E7 are connected to logic '0'. Data inputs E2, E3, E5, E6 are connected to logic '1'. The output Y of the MUX provides the function 'OUT'.]</div>
+                    <figcaption>FIG. 4.1 – Exemple de câblage de multiplexeur obtenu directement à partir de la table de vérité.</figcaption>
+                </figure>
+
+            </section>
+
+            <section id="mux-insufficient-inputs">
+                <h3>4.3.2 Multiplexeurs ne possédant pas un nombre suffisant d'entrées de sélection</h3>
+                <p>Lorsque le nombre $n$ de variables d'entrée de la fonction $f$ devient grand, il n'est pas toujours aisé ou économique de disposer d'un multiplexeur $2^n \rightarrow 1$ (avec $n$ entrées de sélection). Dans ce cas, le concepteur peut essayer de trouver une solution moins onéreuse en utilisant un multiplexeur avec un plus petit nombre $k$ d'entrées de sélection (donc $2^k$ entrées de données, avec $k < n$) et des portes logiques supplémentaires pour réaliser la fonction.</p>
+
+                <p>Pour ce faire, il faut dans un premier temps choisir un sous-ensemble de $k$ variables d'entrées parmi les $n$ variables ($x_1, \dots, x_n$) qui seront directement connectées aux $k$ entrées de sélection du multiplexeur. Ces variables sont alors appelées <strong>variables de sélection</strong>.</p>
+
+                <p>Le câblage des $2^k$ entrées de données du multiplexage ($E_0, E_1, \dots, E_{2^k-1}$) est alors obtenu par synthèse logique. Pour chaque entrée de données $E_i$ (où $i$ est la valeur décimale de la combinaison des $k$ variables de sélection), il faut déterminer comment $E_i$ doit être connectée pour que la sortie finale du MUX corresponde à la fonction $f$ désirée. La valeur de $E_i$ dépendra des $n-k$ variables d'entrées restantes (celles qui ne sont pas utilisées comme variables de sélection).</p>
+
+                <p>Considérons ainsi l'entrée $E_i$. Pour déterminer sa connexion, on examine la table de vérité de la fonction $f$, mais on ne regarde que les lignes où les $k$ variables de sélection forment la combinaison binaire $i$. Pour ces lignes, la sortie du MUX doit être égale à la sortie $f$ spécifiée dans la table de vérité. Comme le MUX connectera $E_i$ à la sortie pour cette combinaison $i$, l'entrée $E_i$ doit être égale à la fonction $f$ exprimée en termes des $n-k$ variables restantes, pour les conditions où les variables de sélection valent $i$. On obtient ainsi une équation logique pour chaque $E_i$ qui ne dépend que des $n-k$ variables restantes. Ces équations sont ensuite implémentées à l'aide de portes logiques, et leurs sorties sont connectées aux entrées $E_i$ correspondantes du multiplexeur.</p>
+
+                <p>Pour illustrer ce mode de raisonnement, retraitons l'exemple précédent (fonction de A, B, C) avec un multiplexeur 4 $\rightarrow$ 1 ($k=2$). Nous devons choisir 2 des 3 variables (A, B, C) comme variables de sélection. Choisissons A et B pour les connecter à $S_1$ et $S_0$ respectivement ($k=2, n=3, n-k=1$ variable restante : C).</p>
+
+                <p>Nous devons maintenant déterminer les connexions pour $E_0, E_1, E_2, E_3$.</p>
+                <ul>
+                    <li><strong>Pour $E_0$ (quand $AB=00$) :</strong>
+                        Regardons la table de vérité originale pour $AB=00$.
+                        <ul>
+                            <li>Si C=0, OUT=0.</li>
+                            <li>Si C=1, OUT=0.</li>
+                        </ul>
+                        Comme OUT est toujours 0 quel que soit C, $E_0$ doit être connectée à la logique 0. ($E_0 = 0$)
+                    </li>
+                    <li><strong>Pour $E_1$ (quand $AB=01$) :</strong>
+                        Regardons la table de vérité originale pour $AB=01$.
+                        <ul>
+                            <li>Si C=0, OUT=1.</li>
+                            <li>Si C=1, OUT=1.</li>
+                        </ul>
+                         Comme OUT est toujours 1 quel que soit C, $E_1$ doit être connectée à la logique 1. ($E_1 = 1$)
+                   </li>
+                    <li><strong>Pour $E_2$ (quand $AB=10$) :</strong>
+                        Regardons la table de vérité originale pour $AB=10$.
+                        <ul>
+                            <li>Si C=0, OUT=0.</li>
+                            <li>Si C=1, OUT=1.</li>
+                        </ul>
+                         Ici, OUT est égal à C. Donc, $E_2$ doit être connectée à la variable C. ($E_2 = C$)
+                   </li>
+                    <li><strong>Pour $E_3$ (quand $AB=11$) :</strong>
+                         Regardons la table de vérité originale pour $AB=11$.
+                        <ul>
+                            <li>Si C=0, OUT=1.</li>
+                            <li>Si C=1, OUT=0.</li>
+                        </ul>
+                         Ici, OUT est égal à l'inverse de C. Donc, $E_3$ doit être connectée à $\bar{C}$ (via un inverseur). ($E_3 = \bar{C}$)
+                   </li>
+                </ul>
+
+                <p>Ces calculs peuvent être résumés par des mini-tables de vérité pour chaque entrée $E_i$ en fonction de C:</p>
+                <table>
+                    <caption>Détermination de $E_0$ (AB=00)</caption>
+                    <thead><tr><th>C</th><th>OUT</th></tr></thead>
+                    <tbody><tr><td>0</td><td>0</td></tr><tr><td>1</td><td>0</td></tr></tbody>
+                    <tfoot><tr><td colspan="2">$E_0 = 0$</td></tr></tfoot>
+                </table>
+                 <table>
+                    <caption>Détermination de $E_1$ (AB=01)</caption>
+                    <thead><tr><th>C</th><th>OUT</th></tr></thead>
+                    <tbody><tr><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td></tr></tbody>
+                    <tfoot><tr><td colspan="2">$E_1 = 1$</td></tr></tfoot>
+                </table>
+                 <table>
+                    <caption>Détermination de $E_2$ (AB=10)</caption>
+                     <thead><tr><th>C</th><th>OUT</th></tr></thead>
+                     <tbody><tr><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td></tr></tbody>
+                    <tfoot><tr><td colspan="2">$E_2 = C$</td></tr></tfoot>
+                </table>
+                 <table>
+                    <caption>Détermination de $E_3$ (AB=11)</caption>
+                     <thead><tr><th>C</th><th>OUT</th></tr></thead>
+                     <tbody><tr><td>0</td><td>1</td></tr><tr><td>1</td><td>0</td></tr></tbody>
+                    <tfoot><tr><td colspan="2">$E_3 = \bar{C}$</td></tr></tfoot>
+                </table>
+
+                <p>Le câblage résultant est montré dans la figure 4.2.</p>
+                
+                <figure>
+                     <div class="placeholder">[Image Placeholder: Figure 4.2 - Indirect synthesis using a 4-to-1 MUX (MPX4->1). Inputs A and B are connected to select lines S1 and S0. Input E0 is connected to logic '0'. Input E1 is connected to logic '1'. Input E2 is connected directly to input C. Input E3 is connected to the output of an inverter whose input is C. The output Y of the MUX provides the function 'OUT'.]</div>
+                     <figcaption>FIG. 4.2 – Synthèse indirecte à l'aide d'un multiplexeur 4 vers 1.</figcaption>
+                </figure>
+
+                <p>L'inconvénient majeur de cette approche réside dans le fait que le choix de l'affectation des variables d'entrées du système aux entrées de sélection du multiplexeur est souvent fait de manière arbitraire ou heuristique. Pour obtenir une solution optimale (par exemple, minimisant le nombre de portes logiques supplémentaires nécessaires pour les entrées $E_i$), il faudrait tester tous les choix possibles pour les variables de sélection et ne retenir que la meilleure solution. Cette méthode exhaustive peut être très coûteuse en temps, surtout si le nombre de variables $n$ est grand.</p>
+
+            </section>
+        </article>
+    </section>
+
+    <script>
+        // Trigger KaTeX rendering
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
