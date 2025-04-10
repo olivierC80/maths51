@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logique Combinatoire - Chapitre V</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body,{delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ]});"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 900px; margin: auto; }
+        h1, h2, h3, h4, h5, h6 { color: #333; }
+        h1 { text-align: center; margin-bottom: 30px; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 40px; }
+        h3 { margin-top: 30px; color: #444; }
+        h4 { margin-top: 20px; color: #555; }
+        h5 { margin-top: 15px; color: #666; }
+        h6 { margin-top: 10px; color: #777; font-weight: normal; font-style: italic;}
+        .chapter-intro { display: flex; align-items: flex-start; border-bottom: 1px solid #ccc; padding-bottom: 20px; margin-bottom: 20px; }
+        .chapter-intro .text { flex-grow: 1; padding-right: 20px; }
+        .chapter-intro figure { margin: 0; text-align: center; }
+        .chapter-intro img { max-width: 150px; height: auto; border: 1px solid #ccc; }
+        .quote { font-style: italic; text-align: right; margin: 20px 0; color: #555; }
+        .example { border: 1px solid #e0e0e0; padding: 15px; margin: 15px 0; background-color: #f9f9f9; border-left: 3px solid #007bff; }
+        .example-title { font-weight: bold; margin-bottom: 10px; color: #007bff;}
+        .definition { border-left: 3px solid #4CAF50; padding-left: 15px; margin: 15px 0; background-color: #e8f5e9; }
+        .note { border-left: 3px solid #ffc107; padding: 10px 15px; margin: 15px 0; background-color: #fff8e1; }
+        table { border-collapse: collapse; margin: 20px auto; width: auto; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; vertical-align: middle; position: relative; min-width: 30px; height: 30px;}
+        th { background-color: #f2f2f2; }
+        code, .mono { background-color: #eee; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        .placeholder { display: block; min-height: 80px; border: 1px dashed #aaa; background-color: #f0f0f0; text-align: center; padding: 20px; margin: 15px 0; font-style: italic; color: #666; box-sizing: border-box; }
+        footer { text-align: right; margin-top: 50px; font-size: 0.9em; color: #555; border-top: 1px solid #eee; padding-top: 10px;}
+        .page-break { page-break-after: always; border-top: 1px dashed #ccc; margin-top: 20px; }
+        /* KaTeX display style */
+        .katex-display { text-align: center; margin: 1em 0; overflow-x: auto; overflow-y: hidden; }
+        .inline-katex .katex { font-size: 1em; }
+        .op-summary-table td, .op-summary-table th { min-width: 40px; }
+        .gate-section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .gate-symbol { display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; }
+        .gate-symbol > div { margin: 10px; }
+        .truth-table-inline table { margin: 5px 0; }
+        .kmap-container { text-align: center; margin: 20px 0; }
+        .kmap { display: inline-block; border: 1px solid #aaa; position: relative; }
+        .kmap-header-col { position: absolute; top: -25px; left: 0; right: 0; text-align: center; font-weight: bold; }
+        .kmap-header-row { position: absolute; left: -40px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-around; align-items: center; font-weight: bold; }
+        .kmap table { margin: 0; border: none; }
+        .kmap th { font-weight: normal; font-size: 0.9em; border: none; background: none; }
+        .kmap td { border: 1px solid #ccc; font-size: 1.1em; }
+        .kmap-index { position: absolute; bottom: 1px; right: 1px; font-size: 0.6em; color: gray; }
+        .kmap-group { position: absolute; border: 2px solid blue; border-radius: 10px; pointer-events: none; } /* For drawing groups */
+         .kmap-group-red { border-color: red; }
+         .kmap-group-green { border-color: green; }
+         .kmap-group-purple { border-color: purple; }
+    </style>
+</head>
+<body>
+
+    <!-- Include content from previous turn (Chapters IV and start of V) -->
+    <main>
+        <!-- ... Previous content ... -->
+        <article> <!-- Continuing Chapter V -->
+
+            <section id="karnaugh-diagram">
+                <h6>V.1.1.c Diagramme de Karnaugh [KAR53] et termes adjacents</h6>
+                <p>Le diagramme (ou tableau) de Karnaugh (K-map) est un outil graphique et méthodique essentiel pour la simplification des fonctions logiques (voir §V.2.3 page 64).</p>
+                <p>Comme la table de vérité, il représente le lien entre les entrées et les sorties, chaque case du diagramme correspondant à une ligne de la table de vérité (un minterme ou un maxterme).</p>
+                <p>La caractéristique clé du diagramme de Karnaugh est l'<strong>adjacence logique</strong>. Deux termes (mintermes ou maxtermes) sont dits logiquement adjacents s'ils ne diffèrent que par l'état d'une seule variable. Par exemple, \( A\overline{B}C \) et \( A B C \) sont adjacents car seule la variable B change d'état (\(\overline{B}\) vs \(B\)).</p>
+                <p>Le diagramme de Karnaugh est conçu de telle manière que les cases correspondant à des termes logiquement adjacents sont également <strong>géométriquement adjacentes</strong> (horizontalement ou verticalement). Ceci est réalisé en ordonnant les lignes et les colonnes selon le <strong>code binaire réfléchi (code Gray)</strong>, où seulement un bit change entre deux codes consécutifs. C'est la différence principale avec le diagramme de Veitch qui utilise l'ordre binaire naturel.</p>
+
+                <div class="note">
+                    <strong>► Remarque 5.1 : Structure cylindrique</strong><br>
+                    L'adjacence géométrique s'applique aussi aux bords opposés du tableau. Il faut imaginer le tableau comme étant enroulé sur lui-même, formant un cylindre (ou un tore pour les K-maps à 4 variables) :
+                    <ul>
+                        <li>La première et la dernière colonne sont adjacentes.</li>
+                        <li>La première et la dernière ligne sont adjacentes.</li>
+                    </ul>
+                </div>
+
+                <div class="example">
+                    <div class="example-title">▷ Exemple 5.3 : K-map pour 2 variables</div>
+                     <p>Table de vérité et K-map correspondants pour une fonction X(A,B).</p>
+                     <div style="display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: wrap;">
+                         <div>
+                             Table de vérité :<br>
+                             <table><thead><tr><th>A</th><th>B</th><th>X</th></tr></thead>
+                             <tbody>
+                                 <tr><td>0</td><td>0</td><td>1</td></tr>
+                                 <tr><td>0</td><td>1</td><td>0</td></tr>
+                                 <tr><td>1</td><td>0</td><td>0</td></tr>
+                                 <tr><td>1</td><td>1</td><td>1</td></tr>
+                             </tbody></table>
+                             <p> \( X = \overline{A}\overline{B} + AB \) (XNOR)</p>
+                         </div>
+                         <div class="kmap-container">
+                             K-map (A en ligne, B en colonne):<br>
+                             <div class="kmap">
+                                 <table>
+                                     <thead><tr><th></th><th>B=0</th><th>B=1</th></tr></thead>
+                                     <tbody>
+                                         <tr><th>A=0</th><td>1</td><td>0</td></tr>
+                                         <tr><th>A=1</th><td>0</td><td>1</td></tr>
+                                     </tbody>
+                                 </table>
+                             </div>
+                         </div>
+                         <!-- Note: The OCR shows a slightly different layout/mapping, let's stick to the standard K-map -->
+                     </div>
+                 </div>
+
+                 <p>Diagramme de Karnaugh pour l'additionneur complet (Exemple 5.1) :</p>
+                 <p>(Variable A pour les lignes, variables BC pour les colonnes. Ordre Gray pour BC: 00, 01, 11, 10)</p>
+                 <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                     <div class="kmap-container">
+                         <strong>Sortie S (Somme)</strong><br>
+                         <div class="kmap">
+                             <div class="kmap-header-col">BC</div>
+                             <div class="kmap-header-row">A</div>
+                             <table>
+                                 <thead><tr><th></th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead>
+                                 <tbody>
+                                     <tr><th>0</th>
+                                         <td>0<span class="kmap-index">0</span></td><td>1<span class="kmap-index">1</span></td><td>0<span class="kmap-index">3</span></td><td>1<span class="kmap-index">2</span></td>
+                                     </tr>
+                                     <tr><th>1</th>
+                                         <td>1<span class="kmap-index">4</span></td><td>0<span class="kmap-index">5</span></td><td>1<span class="kmap-index">7</span></td><td>0<span class="kmap-index">6</span></td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                         <p>\( S = \sum m(1, 2, 4, 7) \)</p>
+                     </div>
+                     <div class="kmap-container">
+                         <strong>Sortie R (Retenue)</strong><br>
+                         <div class="kmap">
+                             <div class="kmap-header-col">BC</div>
+                             <div class="kmap-header-row">A</div>
+                             <table>
+                                 <thead><tr><th></th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead>
+                                 <tbody>
+                                     <tr><th>0</th>
+                                         <td>0<span class="kmap-index">0</span></td><td>0<span class="kmap-index">1</span></td><td>1<span class="kmap-index">3</span></td><td>0<span class="kmap-index">2</span></td>
+                                     </tr>
+                                     <tr><th>1</th>
+                                         <td>0<span class="kmap-index">4</span></td><td>1<span class="kmap-index">5</span></td><td>1<span class="kmap-index">7</span></td><td>1<span class="kmap-index">6</span></td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                         <p>\( R = \sum m(3, 5, 6, 7) \)</p>
+                     </div>
+                 </div>
+                 <p>Comme pour le diagramme de Veitch, on peut numéroter les cases du diagramme de Karnaugh selon l'image décimale (indice du minterme) de la fonction représentée.</p>
+
+                 <div class="note">
+                     <strong>► Remarque 5.2 : États indifférents (Don't Cares)</strong><br>
+                     Dans certains cas, la sortie d'une fonction n'est pas spécifiée pour certaines combinaisons d'entrée (par exemple, parce que ces combinaisons ne peuvent jamais se produire en pratique). Ces cas sont appelés <strong>états indifférents</strong> ou <strong>"don't cares"</strong>, et sont notés <strong>'X'</strong> (ou parfois '-', Ø, d) dans la table de vérité et le K-map.
+                     Lors de la simplification, ces 'X' peuvent être considérés comme des 0 ou des 1, au choix, afin de former les plus grands groupements possibles et d'obtenir la simplification la plus optimale (voir §V.2.3.c).
+                 </div>
+                 <p>Chaque case du tableau représente un minterme (si on s'intéresse aux '1') ou un maxterme (si on s'intéresse aux '0').</p>
+                 <ul>
+                     <li>La case correspondant à A=0, B=1, C=0, D=1 ( \( \overline{A} B \overline{C} D \) ) représente le minterme \(m_5\).</li>
+                     <li>Cette même case représente le maxterme \(M_5 = A + \overline{B} + C + \overline{D}\).</li>
+                 </ul>
+                 <p>La représentation de la fonction peut être la somme logique (OU) des mintermes où la fonction vaut '1', ou le produit logique (ET) des maxtermes où la fonction vaut '0'.</p>
+
+                 <h6 style="font-weight: bold;">V.1.1.d Diagramme de Venn</h6>
+                 <p><em>À venir...</em> (Note: Les diagrammes de Venn sont parfois utilisés pour représenter des fonctions logiques simples, mais sont moins pratiques que les K-maps pour la simplification).</p>
+                 <h6 style="font-weight: bold;">V.1.1.e Diagramme de Johnston</h6>
+                 <p><em>À venir...</em> (Note: Moins courant).</p>
+                 <h6 style="font-weight: bold;">V.1.1.f Diagramme de Caroll</h6>
+                 <p><em>À venir...</em> (Note: Similaire à Karnaugh/Veitch, moins courant).</p>
+            </section> <!-- End Karnaugh Diagram -->
+
+            <section id="implicit-repr">
+                <h5>V.1.2 Représentations implicites</h5>
+                <p>Ces méthodes ne listent pas explicitement toutes les combinaisons, mais décrivent la fonction de manière compacte.</p>
+
+                <section id="characteristic-image">
+                    <h6>V.1.2.a Image caractéristique</h6>
+                    <p>L'image caractéristique d'une fonction \(F\) à \(n\) entrées est simplement la séquence des \(2^n\) valeurs de sortie de la fonction, lues dans l'ordre binaire naturel des entrées (comme dans la colonne de sortie d'une table de vérité).</p>
+                    <p>Soit la fonction \( F(x_0, x_1) \) définie par sa table de vérité :</p>
+                    <table>
+                        <thead><tr><th>\(x_1\)</th><th>\(x_0\)</th><th>F</th></tr></thead>
+                        <tbody>
+                            <tr><td>0</td><td>0</td><td>0</td></tr>
+                            <tr><td>0</td><td>1</td><td>1</td></tr>
+                            <tr><td>1</td><td>0</td><td>0</td></tr>
+                            <tr><td>1</td><td>1</td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                    <p>On peut représenter \(F\) par son image caractéristique, notée \( I_c[F(x_0, x_1)] \): <span class="mono">0100</span>.</p>
+                    <p>Pour l'additionneur complet (Exemple 5.1) :</p>
+                    <ul>
+                        <li>Image caractéristique de S : \( I_c[S(A,B,C)] = 01101001 \)</li>
+                        <li>Image caractéristique de R : \( I_c[R(A,B,C)] = 00010111 \)</li>
+                    </ul>
+                    <p>(Note: L'ordre des variables doit être défini, ici A=MSB, C=LSB).</p>
+                </section> <!-- End Characteristic Image -->
+
+                <section id="decimal-image">
+                    <h6>V.1.2.b Image décimale (\(\sum m\) et \(\prod M\))</h6>
+                    <p>Nous avons vu (§IV.5.9) que toute fonction logique \(F\) peut s'exprimer sous ses formes canoniques : somme de mintermes (SOP) ou produit de maxtermes (POS).</p>
+                    <p>L'image décimale est une notation compacte pour ces formes canoniques :</p>
+                    <ul>
+                        <li><strong>Somme des mintermes (\( F_1 \)) :</strong> On note la fonction comme la somme (symbolique \(\sum\)) des indices décimaux (\(d_1, \dots, d_p\)) des mintermes pour lesquels la fonction vaut '1'.
+                            <br> \( F_1 = \sum (d_1, \dots, d_p) \) ou \( F = \sum m(d_1, \dots, d_p) \)
+                        </li>
+                        <li><strong>Produit des maxtermes (\( F_0 \)) :</strong> On note la fonction comme le produit (symbolique \(\prod\)) des indices décimaux (\(d_1, \dots, d_q\)) des maxtermes pour lesquels la fonction vaut '0'.
+                            <br> \( F_0 = \prod (d_1, \dots, d_q) \) ou \( F = \prod M(d_1, \dots, d_q) \)
+                        </li>
+                    </ul>
+                     <p>Les \(d_i\) représentent les valeurs décimales des combinaisons binaires des variables d'entrée (en respectant un ordre de poids défini).</p>
+                     <p>Reprenons la fonction \( F(x_1, x_0) \) de V.1.2.a (avec \(x_1\) = MSB) :</p>
+                     <table>
+                        <thead><tr><th>N (décimal)</th><th>\(x_1\)</th><th>\(x_0\)</th><th>F</th></tr></thead>
+                        <tbody>
+                            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                            <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                            <tr><td>2</td><td>1</td><td>0</td><td>0</td></tr>
+                            <tr><td>3</td><td>1</td><td>1</td><td>0</td></tr>
+                        </tbody>
+                     </table>
+                    <p>La fonction peut s'écrire :</p>
+                    <ul>
+                         <li>\( F_1 = \sum (1) \) ou \( F = \sum m(1) \) (car F=1 seulement pour N=1)</li>
+                         <li>\( F_0 = \prod (0, 2, 3) \) ou \( F = \prod M(0, 2, 3) \) (car F=0 pour N=0, 2, 3)</li>
+                    </ul>
+                     <p>Le principal avantage de cette notation décimale est sa compacité et le risque d'erreur réduit lors de la transcription par rapport à l'écriture complète des termes (\(\overline{A}B\overline{C}...\)). Il est plus difficile de confondre un '3' et un '1' que d'oublier une barre de complémentation.</p>
+                    <p>Comme vu dans §V.1.1.b et §V.1.1.c, cette notation est directement utilisée pour numéroter les cases des diagrammes de Veitch et Karnaugh, facilitant le passage entre la fonction et sa représentation graphique.</p>
+                </section> <!-- End Decimal Image -->
+            </section> <!-- End Implicit Representations -->
+
+            <section id="graphical-repr">
+                 <h5>V.1.3 Représentations graphiques</h5>
+
+                <section id="logic-diagram">
+                    <h6>V.1.3.a Logigramme</h6>
+                    <p>Un logigramme (ou schéma logique) est une représentation graphique directe de l'expression booléenne d'une fonction, utilisant les symboles standardisés des portes logiques (ET, OU, NON, etc.). Il montre comment les portes sont interconnectées pour réaliser la fonction, sans nécessairement tenir compte des détails technologiques (type de CI, brochage).</p>
+
+                     <div class="example">
+                        <div class="example-title">▷ Exemple 5.4 : Logigramme</div>
+                        <p>Logigramme pour la fonction \( X = \overline{A \cdot B} + C \):</p>
+                        <div class="placeholder">[Placeholder: Schéma logique pour X = (A NAND B) OR C. Entrées A, B -> Porte NAND. Sortie NAND, Entrée C -> Porte OU. Sortie OU = X.]</div>
+                        <p><em>(Note: L'OCR montre un schéma différent pour X = A.B + C, avec une porte ET, puis une porte OU. Le symbole '1' dans un carré représente un Buffer/OUI et n'est pas pertinent pour cette fonction.)</em></p>
+                     </div>
+
+                    <div class="note">
+                        <strong>► Remarque 5.3 : Notation Logique Active Haute/Basse</strong><br>
+                        <ul>
+                            <li>Par convention, une entrée ou une sortie d'opérateur logique est dite <strong>active à l'état haut</strong> (active-high) si son état actif (qui déclenche une action ou représente une condition vraie) correspond au niveau logique '1'. Elle est notée par son nom simple (ex: <code>a</code>, <code>b</code>, <code>sel</code>, <code>Enable</code>).</li>
+                             <li>Une entrée ou une sortie est dite <strong>active à l'état bas</strong> (active-low) si son état actif correspond au niveau logique '0'. Elle est souvent notée avec une barre au-dessus (\( \overline{c} \), \( \overline{d} \), \( \overline{MEM} \)), un préfixe 'n' (nEnable), un suffixe '#' ou '*' (ChipSelect#). Graphiquement, l'activation à l'état bas est indiquée par un petit cercle (bulle d'inversion) sur la ligne de signal au niveau de la porte.</li>
+                         </ul>
+                    </div>
+                </section> <!-- End Logic Diagram -->
+                <!-- Autres représentations graphiques comme BDD non mentionnées ici -->
+            </section> <!-- End Graphical Representations -->
+        </section> <!-- End Representation Methods -->
+
+        <div class="page-break"></div>
+
+        <section id="simplification">
+            <h3>V.2 Simplification d'expressions logiques</h3>
+            <p>La simplification des expressions booléennes a pour but de trouver une expression équivalente à la fonction logique initiale, mais qui nécessite moins d'opérateurs (portes) ou moins d'entrées de portes pour sa réalisation matérielle. Cela conduit à des circuits :</p>
+            <ul>
+                <li>Moins coûteux (moins de composants).</li>
+                <li>Plus rapides (moins de délais de propagation à travers les portes).</li>
+                <li>Moins consommateurs d'énergie.</li>
+                <li>Plus fiables.</li>
+            </ul>
+            <p>Plusieurs méthodes existent pour simplifier les fonctions logiques.</p>
+
+            <section id="simpl-canonical">
+                <h4>V.2.1 Formes canoniques d'une fonction logique</h4>
+                <p><em>À venir...</em> (Rappel: Les formes canoniques SOP et POS, bien que non simplifiées, sont un point de départ pour certaines méthodes).</p>
+            </section>
+
+            <section id="simpl-algebraic">
+                <h4>V.2.2 Méthode algébrique</h4>
+                <p>La simplification algébrique consiste à appliquer les postulats et théorèmes de l'algèbre booléenne (commutativité, associativité, distributivité, idempotence, complémentation, absorption, De Morgan, consensus, etc.) pour manipuler et réduire l'expression initiale.</p>
+                <p>Cette méthode demande de l'intuition et de l'expérience pour reconnaître les théorèmes applicables et choisir les bonnes manipulations. Il n'est pas toujours facile de savoir si on a atteint le résultat minimal.</p>
+
+                <div class="example">
+                     <div class="example-title">▷ Exemple 5.5 : Simplification algébrique</div>
+                     <ul>
+                        <li>\( x + \overline{x}y = (x+\overline{x})(x+y) = 1 \cdot (x+y) = x+y \) (Théorème "d'allègement" ou \(X+\overline{X}Y=X+Y\))</li>
+                         <li>\( x \cdot (x+y) = x \cdot x + x \cdot y = x + xy = x(1+y) = x \cdot 1 = x \) (Absorption)</li>
+                         <li>\( ABC + AB\overline{C} + \overline{A}BC + \overline{A}B\overline{C} \)
+                             <br>\( = AB(C+\overline{C}) + \overline{A}B(C+\overline{C}) \) (Factorisation)
+                             <br>\( = AB(1) + \overline{A}B(1) \) (Complémentation \(C+\overline{C}=1\))
+                             <br>\( = AB + \overline{A}B \) (Identité \(X \cdot 1 = X\))
+                             <br>\( = B(A+\overline{A}) \) (Factorisation)
+                             <br>\( = B(1) \) (Complémentation)
+                             <br>\( = B \) (Identité)
+                         </li>
+                         <!-- Note: L'OCR a ABC + ABC + ABC + ABC = AC + AB + BC, ce qui semble incorrect. L'exemple ci-dessus montre une simplification possible. Un autre exemple basé sur l'OCR pourrait être le consensus. -->
+                         <li>\( \overline{A} \overline{B} C + A \overline{B} C + A B \overline{C} + A B C \) (Exemple de l'OCR: F=Σm(1,5,6,7))
+                             <br>\( = \overline{B} C ( \overline{A} + A ) + A B (\overline{C} + C) \)
+                             <br>\( = \overline{B} C + A B \) (Forme simplifiée SOP)
+                             <br><em>(L'OCR donne \( AC + AB + BC \). C'est la fonction Retenue de l'additionneur \( \sum m(3,5,6,7) \). L'exemple 5.5 de l'OCR est donc probablement erroné ou mal retranscrit.)</em>
+                         </li>
+                     </ul>
+                </div>
+            </section> <!-- End Algebraic Simplification -->
+
+            <section id="simpl-kmap">
+                <h4>V.2.3 Simplification par diagramme de Karnaugh</h4>
+                <p>La méthode de simplification par diagramme de Karnaugh (K-map) est une méthode graphique systématique, particulièrement efficace pour les fonctions ayant jusqu'à 4 ou 5 variables. Elle s'appuie sur la propriété d'adjacence géométrique du K-map pour identifier visuellement les termes qui peuvent être combinés et simplifiés.</p>
+                <p>L'idée est de regrouper les cases contenant des '1' (pour une simplification en Somme de Produits - SOP) ou des '0' (pour une simplification en Produit de Sommes - POS) en formant les plus grands rectangles possibles dont les dimensions sont des puissances de 2 (1x1, 1x2, 2x1, 2x2, 1x4, 4x1, 2x4, 4x2, 4x4...).</p>
+                <p>Les diagrammes de Karnaugh contiennent des ensembles de termes (les cases '0' ou '1') appelés <strong>implicants</strong>.</p>
+                <ul>
+                    <li><strong>Implicant :</strong> Un groupe (rectangle de taille \(2^k\)) de '1' (ou de '0') adjacents sur le K-map. Il correspond à un terme produit (ou somme) simplifié.</li>
+                    <li><strong>Implicant Premier (Prime Implicant) :</strong> Un implicant qui ne peut pas être inclus dans un implicant plus grand. C'est un groupe maximal.</li>
+                    <li><strong>Implicant Premier Essentiel (Essential Prime Implicant - EPI) :</strong> Un implicant premier qui couvre au moins un '1' (ou '0') qui n'est couvert par aucun autre implicant premier. Les EPI *doivent* faire partie de la solution minimale.</li>
+                    <li><strong>Implicant Premier Non Essentiel :</strong> Un implicant premier dont tous les '1' (ou '0') sont également couverts par d'autres implicants premiers (souvent des EPI). Ils peuvent ou non être nécessaires pour couvrir tous les termes de la fonction.</li>
+                 </ul>
+
+                 <section id="kmap-sop">
+                    <h5>V.2.3.a Simplification par extraction des sommes de produits (SOP)</h5>
+                    <p>Cette méthode vise à obtenir l'expression la plus simple sous forme de Somme de Produits (OU de termes ET) en regroupant les '1' sur le K-map.</p>
+                    <p><strong>La méthode est la suivante :</strong></p>
+                    <ol>
+                        <li><strong>Dessiner le K-map :</strong> Remplir le tableau de Karnaugh avec les '1', '0' et 'X' (si présents) de la fonction.</li>
+                        <li><strong>Identifier les Implicants Premiers (IP) :</strong> Trouver tous les plus grands groupes possibles de '1' (rectangles de 1, 2, 4, 8... cases adjacentes, en utilisant la structure cylindrique et les 'X' si cela permet de faire des groupes plus grands). Chaque groupe correspond à un IP.</li>
+                        <li><strong>Identifier les Implicants Premiers Essentiels (EPI) :</strong> Repérer les '1' qui ne sont couverts que par un seul IP. Les IP qui couvrent ces '1' sont les EPI.</li>
+                        <li><strong>Sélectionner les IP :</strong>
+                            <ul>
+                                <li>Inclure tous les EPI dans la solution.</li>
+                                <li>Vérifier si tous les '1' de la fonction sont couverts par les EPI sélectionnés.</li>
+                                <li>Si non, choisir un ensemble minimal d'IP non essentiels supplémentaires pour couvrir les '1' restants (loi de couverture ou "Petrick's method" pour les cas complexes).</li>
+                             </ul>
+                         </li>
+                        <li><strong>Écrire l'expression simplifiée :</strong> Pour chaque IP sélectionné, déterminer le terme produit correspondant en ne gardant que les variables qui ne changent pas d'état (ni 0 ni 1) à l'intérieur du groupe. L'expression finale est la somme (OU) de ces termes produits.
+                            <ul>
+                                <li>Un groupe de 1 case (minterme) : toutes les variables apparaissent.</li>
+                                <li>Un groupe de 2 cases (doublet) : élimine 1 variable.</li>
+                                <li>Un groupe de 4 cases (quartet) : élimine 2 variables.</li>
+                                <li>Un groupe de 8 cases (octet) : élimine 3 variables.</li>
+                             </ul>
+                         </li>
+                    </ol>
+
+                    <div class="example">
+                         <div class="example-title">▷ Exemple 5.6 : Simplification SOP</div>
+                         <p>Simplifier la fonction : \( F(A,B,C) = \sum m(0, 1, 4, 5) \)
+                            <br> \( F = \overline{A}\overline{B}\overline{C} + \overline{A}\overline{B}C + A\overline{B}\overline{C} + A\overline{B}C \) </p>
+                         <p>Solution :</p>
+                         <div class="kmap-container">
+                             <div class="kmap">
+                                <div class="kmap-header-col">BC</div>
+                                <div class="kmap-header-row">A</div>
+                                <table>
+                                    <thead><tr><th></th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead>
+                                    <tbody>
+                                        <tr><th>0</th>
+                                            <td>1<span class="kmap-index">0</span></td><td>1<span class="kmap-index">1</span></td><td>0<span class="kmap-index">3</span></td><td>0<span class="kmap-index">2</span></td>
+                                        </tr>
+                                        <tr><th>1</th>
+                                            <td>1<span class="kmap-index">4</span></td><td>1<span class="kmap-index">5</span></td><td>0<span class="kmap-index">7</span></td><td>0<span class="kmap-index">6</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- Grouping visualization -->
+                                <div class="kmap-group" style="top: 8px; left: 8px; width: calc(2 * 32px + 1 * 16px); height: calc(2 * 32px + 1 * 16px);"></div> <!-- Group of 4: m0, m1, m4, m5 -->
+                             </div>
+                         </div>
+                         <ul>
+                             <li>On identifie un seul groupe maximal (Implicant Premier) : le carré de 4 cases (m0, m1, m4, m5).</li>
+                             <li>Ce groupe est essentiel car il couvre tous les '1'.</li>
+                             <li>Dans ce groupe :
+                                 <ul>
+                                     <li>A change (0 et 1) -> A est éliminée.</li>
+                                     <li>B ne change pas (reste à 0) -> on garde \(\overline{B}\).</li>
+                                     <li>C change (0 et 1) -> C est éliminée.</li>
+                                 </ul>
+                             </li>
+                             <li>Le terme produit correspondant est \(\overline{B}\).</li>
+                         </ul>
+                         <p>La solution est \( F(A,B,C) = \overline{B} \)</p>
+                         <p>Image décimale : \( F_1 = \sum m(0,1,4,5) \), \( F_0 = \sum m(2,3,6,7) \)</p>
+                         <p>L'implicant majeur essentiel est \(\overline{B}\).</p>
+                     </div>
+
+                    <div class="example">
+                         <div class="example-title">▷ Exemple 5.7 : Simplification SOP avec IP non essentiels</div>
+                         <p>Simplifier la fonction : \( F(A,B,C) = \sum m(0, 1, 4, 6, 7) \)
+                           <br> \( F = \overline{A}\overline{B}\overline{C} + \overline{A}\overline{B}C + A\overline{B}\overline{C} + AB\overline{C} + ABC \) </p>
+                         <p>Solution :</p>
+                         <div class="kmap-container">
+                             <div class="kmap">
+                                <div class="kmap-header-col">BC</div>
+                                <div class="kmap-header-row">A</div>
+                                <table>
+                                     <thead><tr><th></th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead>
+                                     <tbody>
+                                         <tr><th>0</th>
+                                             <td>1<span class="kmap-index">0</span></td><td>1<span class="kmap-index">1</span></td><td>0<span class="kmap-index">3</span></td><td>0<span class="kmap-index">2</span></td>
+                                         </tr>
+                                         <tr><th>1</th>
+                                             <td>1<span class="kmap-index">4</span></td><td>0<span class="kmap-index">5</span></td><td>1<span class="kmap-index">7</span></td><td>1<span class="kmap-index">6</span></td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
+                                <!-- Grouping visualization -->
+                                <div class="kmap-group kmap-group-red" style="top: 8px; left: 8px; width: calc(1 * 32px + 0 * 16px); height: calc(2 * 32px + 1 * 16px);"></div> <!-- Group m0, m4 -->
+                                <div class="kmap-group kmap-group-green" style="top: calc(1 * 32px + 1 * 16px + 8px); left: calc(2 * 32px + 1 * 16px + 8px); width: calc(2 * 32px + 1 * 16px); height: calc(1 * 32px + 0 * 16px);"></div> <!-- Group m6, m7 -->
+                                <div class="kmap-group kmap-group-purple" style="top: 8px; left: 8px; width: calc(2 * 32px + 1 * 16px); height: calc(1 * 32px + 0 * 16px);"></div> <!-- Group m0, m1 (Non-essential choice 1) -->
+                                <div class="kmap-group kmap-group-blue" style="top: 8px; left: calc(3 * 32px + 2 * 16px + 8px); width: calc(1 * 32px + 0 * 16px); height: calc(2 * 32px + 1 * 16px);"></div> <!-- Group m4, m6 (Non-essential choice 2 - adjacence bords) -->
+
+                             </div>
+                         </div>
+                         <ul>
+                             <li>Implicants Premiers (IP) :
+                                 <ul>
+                                     <li>Groupe m0, m4 : \(\overline{B}\overline{C}\) (Rouge)</li>
+                                     <li>Groupe m6, m7 : \(AB\) (Vert)</li>
+                                     <li>Groupe m0, m1 : \(\overline{A}\overline{B}\) (Violet)</li>
+                                     <li>Groupe m4, m6 : \(A\overline{C}\) (Bleu - via adjacence colonne 00 et 10)</li>
+                                  </ul>
+                             </li>
+                             <li>Implicants Premiers Essentiels (EPI) :
+                                 <ul>
+                                     <li>\( \overline{B}\overline{C} \) est essentiel (couvre m0 qui n'est couvert que par cet IP et \(\overline{A}\overline{B}\)). Erratum : m0 est couvert par deux IP. Vérifions : m1 est couvert par \(\overline{A}\overline{B}\). m7 est couvert par \(AB\). Donc \(\overline{A}\overline{B}\) et \(AB\) sont essentiels.</li>
+                                     <li>\( AB \) est essentiel (couvre m7).</li>
+                                     <li>\( \overline{A}\overline{B} \) est essentiel (couvre m1).</li>
+                                     <li>Vérifions m4: couvert par \(\overline{B}\overline{C}\) et \(A\overline{C}\).</li>
+                                     <li>Vérifions m6: couvert par \(AB\) et \(A\overline{C}\).</li>
+                                     <li>Les EPI sont \( AB \) (couvre m6, m7) et \( \overline{A}\overline{B} \) (couvre m0, m1).</li>
+                                 </ul>
+                            </li>
+                            <li>Couverture des '1' restants :
+                                <ul>
+                                    <li>Les EPI \( AB \) et \( \overline{A}\overline{B} \) couvrent m0, m1, m6, m7.</li>
+                                    <li>Le '1' en m4 n'est pas encore couvert.</li>
+                                    <li>Il faut choisir un IP supplémentaire pour couvrir m4. On peut choisir soit \(\overline{B}\overline{C}\) (m0, m4), soit \(A\overline{C}\) (m4, m6). Les deux choix sont valides et donnent une solution minimale.</li>
+                                </ul>
+                             </li>
+                             <li>Expressions finales :
+                                 <ul>
+                                     <li>Choix 1 (avec \(\overline{B}\overline{C}\)) : \( F = AB + \overline{A}\overline{B} + \overline{B}\overline{C} \)</li>
+                                     <li>Choix 2 (avec \(A\overline{C}\)) : \( F = AB + \overline{A}\overline{B} + A\overline{C} \)</li>
+                                 </ul>
+                            </li>
+                         </ul>
+                         <p><em>(Note: L'OCR indique \(AB\) et \(A\overline{B}\) comme essentiels, et \(B\overline{C}\) ou \(A\overline{C}\) comme non essentiels. Il y a une divergence potentielle dans l'identification des EPI ou une erreur dans l'OCR (\(A\overline{B}\) n'est pas un IP). En suivant la méthode standard, les EPI sont AB et \(\overline{A}\overline{B}\), et on doit ajouter \(\overline{B}\overline{C}\) ou \(A\overline{C}\). Les deux solutions données par l'OCR sont valides mais l'identification des IP/EPI semble confuse dans le texte OCR.)</em></p>
+                     </div>
+                 </section> <!-- End KMAP SOP -->
+
+                 <section id="kmap-pos">
+                     <h5>V.2.3.b Simplification par extraction des produits de sommes (POS)</h5>
+                     <p>Cette méthode vise à obtenir l'expression la plus simple sous forme de Produit de Sommes (ET de termes OU) en regroupant les '0' sur le K-map.</p>
+                     <p>La méthode est duale de la méthode SOP :</p>
+                    <ol>
+                        <li><strong>Dessiner le K-map :</strong> Remplir le tableau avec '0', '1', 'X'.</li>
+                        <li><strong>Identifier les IP (pour les '0') :</strong> Trouver tous les plus grands groupes possibles de '0' adjacents (en utilisant les 'X' si besoin).</li>
+                         <li><strong>Identifier les EPI (pour les '0') :</strong> Repérer les '0' qui ne sont couverts que par un seul IP (de zéros). Ces IP sont les EPI (de zéros).</li>
+                         <li><strong>Sélectionner les IP (de zéros) :</strong> Inclure tous les EPI. Si des '0' restent non couverts, choisir un ensemble minimal d'IP non essentiels (de zéros) pour les couvrir.</li>
+                         <li><strong>Écrire l'expression simplifiée :</strong> Pour chaque IP (de zéros) sélectionné, déterminer le <strong>terme somme</strong> correspondant. Pour cela, on garde les variables qui ne changent pas d'état à l'intérieur du groupe, mais on les complémente par rapport à la méthode SOP :
+                             <ul>
+                                 <li>Si une variable reste à 0 dans le groupe, elle apparaît non complémentée (ex: A).</li>
+                                 <li>Si une variable reste à 1 dans le groupe, elle apparaît complémentée (ex: \(\overline{B}\)).</li>
+                             </ul>
+                             L'expression finale est le produit (ET) de ces termes sommes.
+                             <p><em>Alternative :</em> Simplifier \( \overline{F} \) en SOP en groupant les '0', puis appliquer De Morgan au résultat pour obtenir F en POS.</p>
+                         </li>
+                     </ol>
+
+                    <div class="example">
+                         <div class="example-title">▷ Exemple 5.8 : Simplification POS</div>
+                         <p>Simplifier la fonction \( F(A,B,C) = \prod M(2, 3, 5) \). (Cette fonction correspond à \( F = \sum m(0, 1, 4, 6, 7) \) de l'Exemple 5.7, si on ignore l'erreur dans l'OCR de l'exemple 5.7.)</p>
+                         <p> \( F = (A+\overline{B}+C) \cdot (A+\overline{B}+\overline{C}) \cdot (\overline{A}+B+\overline{C}) \) </p>
+                         <p>Solution (en groupant les '0' sur le K-map de l'Exemple 5.7) :</p>
+                         <div class="kmap-container">
+                             <div class="kmap">
+                                 <div class="kmap-header-col">BC</div>
+                                 <div class="kmap-header-row">A</div>
+                                 <table>
+                                     <thead><tr><th></th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead>
+                                     <tbody>
+                                         <tr><th>0</th>
+                                             <td>1<span class="kmap-index">0</span></td><td>1<span class="kmap-index">1</span></td><td><strong style="color: red;">0</strong><span class="kmap-index">3</span></td><td><strong style="color: red;">0</strong><span class="kmap-index">2</span></td>
+                                         </tr>
+                                         <tr><th>1</th>
+                                             <td>1<span class="kmap-index">4</span></td><td><strong style="color: blue;">0</strong><span class="kmap-index">5</span></td><td>1<span class="kmap-index">7</span></td><td>1<span class="kmap-index">6</span></td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
+                                 <!-- Grouping visualization for 0s -->
+                                 <div class="kmap-group kmap-group-red" style="top: 8px; left: calc(2 * 32px + 1 * 16px + 8px); width: calc(2 * 32px + 1 * 16px); height: calc(1 * 32px + 0 * 16px);"></div> <!-- Group m2, m3 -->
+                                 <div class="kmap-group kmap-group-blue" style="top: 8px; left: calc(1 * 32px + 0 * 16px + 8px); width: calc(1 * 32px + 0 * 16px); height: calc(2 * 32px + 1 * 16px);"></div> <!-- Group m1, m5 (adjacence lignes?) Erratum : m1 is a 1. Group m3,m? or m5,? -->
+                                 <!-- Re-evaluating groups for 0s at m2, m3, m5 -->
+                                 <div class="kmap-group kmap-group-red" style="top: 8px; left: calc(2 * 32px + 1 * 16px + 8px); width: calc(2 * 32px + 1 * 16px); height: calc(1 * 32px + 0 * 16px); border-color: red;"></div> <!-- Group m2, m3 -->
+                                 <div class="kmap-group kmap-group-blue" style="top: 8px; left: calc(1 * 32px + 0 * 16px + 8px); width: calc(2 * 32px + 1 * 16px); height: calc(2 * 32px + 1 * 16px); border-color: blue; border-radius: 0; clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 50% 50%, 50% 100%, 0% 100%);"></div> <!-- Placeholder showing involvement of m3 and m5 potentially -->
+                                 <!-- Let's mark the actual 0s: m2, m3, m5 -->
+                             </div>
+                         </div>
+                         <ul>
+                             <li>IP (de zéros) :
+                                 <ul>
+                                     <li>Groupe m2, m3 : A=0 constant, B change, C=1 constant. Terme somme: \( A + \overline{C} \) (A=0 -> A, C=1 -> \(\overline{C}\)). (Rouge)</li>
+                                     <li>Groupe m?, m5 : A=1 constant, B=0 constant, C=1 constant. Seul m5. Peut-être m(1,5)? Ou m(4,5)? Non. Il faut trouver des groupes de 0.</li>
+                                     <li>Groupe m?, m? : Regroupons m3 et m? ou m5 et m?. Vérifions l'adjacence. m5 (\(A\overline{B}C\)) est 101. m3 (\(\overline{A}BC\)) est 011. m2 (\(\overline{A}B\overline{C}\)) est 010.</li>
+                                     <li>IP pour m2, m3, m5 :
+                                        <ul>
+                                            <li>Groupe m2, m3: \( (A=0, B=1) \). Variable C change. A=0 -> A, B=1 -> \(\overline{B}\). Terme somme: \( A + \overline{B} \).</li>
+                                            <li>Groupe m?, m5: m5 (101) est seul ou groupable avec m7 (111) ou m4(100) ou m1(001)? Non. M5 n'est pas groupable avec m2 ou m3. Peut-être avec m1 ou m4? Non, ils sont '1'. Adjacence m5-m7.</li>
+                                            <li>Reconsidérons l'exemple de l'OCR: \( F = \prod M(2,3,5) \). Les 0 sont aux positions 2, 3, 5.
+                                                <ul>
+                                                    <li>IP1: Cases 2 (\(\overline{A}B\overline{C}\)) et 3 (\(\overline{A}BC\)). A=0, B=1. Terme Somme: \( A+\overline{B} \).</li>
+                                                    <li>IP2: Case 5 (\(A\overline{B}C\)). Peut-elle être groupée? Case 4(\(A\overline{B}\overline{C}\)) est 1. Case 7(\(ABC\)) est 1. Case 1(\(\overline{A}\overline{B}C\)) est 1. Case 5 est isolée parmi les 0s. L'IP est la case 5 elle-même. Terme Somme: \( \overline{A}+B+\overline{C} \).</li>
+                                                 </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                 </ul>
+                            </li>
+                            <li>EPI (de zéros) :
+                                <ul>
+                                    <li>Le '0' de la case 5 n'est couvert que par l'IP2 \( \overline{A}+B+\overline{C} \). Donc IP2 est essentiel.</li>
+                                    <li>Les '0' des cases 2 et 3 sont couverts par l'IP1 \( A+\overline{B} \). Cet IP est aussi essentiel.</li>
+                                 </ul>
+                             </li>
+                            <li>Expression finale (POS) : \( F = (A+\overline{B}) \cdot (\overline{A}+B+\overline{C}) \)</li>
+                         </ul>
+                         <p><em>(Note: L'OCR indique les implicants majeurs essentiels comme \(A+\overline{B}\) et \(\overline{A}+B+\overline{C}\), ce qui correspond à notre analyse. La solution finale donnée par l'OCR est F(A,B,C) = \( (A+\overline{B}) \cdot (\overline{A}+B+\overline{C}) \), également cohérent.)</em></p>
+                    </div>
+
+                    <div class="example">
+                         <div class="example-title">▷ Exemple 5.9 : Simplification POS (4 variables)</div>
+                         <p>Simplifier la fonction : \( F(A,B,C,D) = \prod M(0, 1, 5, 7, 8, 9, 15) \)</p>
+                         <p>Solution (en groupant les '0') :</p>
+                         <div class="kmap-container">
+                            <div class="kmap">
+                                <div class="kmap-header-col">CD</div>
+                                <div class="kmap-header-row">AB</div>
+                                <table>
+                                    <thead><tr><th></th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead>
+                                    <tbody>
+                                        <tr><th>00</th>
+                                            <td><strong style="color:red;">0</strong><span class="kmap-index">0</span></td><td><strong style="color:red;">0</strong><span class="kmap-index">1</span></td><td>1<span class="kmap-index">3</span></td><td>1<span class="kmap-index">2</span></td>
+                                        </tr>
+                                        <tr><th>01</th>
+                                            <td>1<span class="kmap-index">4</span></td><td><strong style="color:green;">0</strong><span class="kmap-index">5</span></td><td><strong style="color:green;">0</strong><span class="kmap-index">7</span></td><td>1<span class="kmap-index">6</span></td>
+                                        </tr>
+                                        <tr><th>11</th>
+                                            <td>1<span class="kmap-index">12</span></td><td>1<span class="kmap-index">13</span></td><td><strong style="color:purple;">0</strong><span class="kmap-index">15</span></td><td>1<span class="kmap-index">14</span></td>
+                                        </tr>
+                                        <tr><th>10</th>
+                                            <td><strong style="color:blue;">0</strong><span class="kmap-index">8</span></td><td><strong style="color:blue;">0</strong><span class="kmap-index">9</span></td><td>1<span class="kmap-index">11</span></td><td>1<span class="kmap-index">10</span></td>
+                                        </tr>
+                                    </tbody>
+                                 </table>
+                                 <!-- Grouping visualization for 0s -->
+                                <div class="kmap-group kmap-group-red" style="top: 8px; left: 8px; width: calc(2 * 32px + 1 * 16px); height: calc(1 * 32px + 0 * 16px);"></div> <!-- Group m0, m1 -->
+                                <div class="kmap-group kmap-group-green" style="top: calc(1 * 32px + 1 * 16px + 8px); left: calc(1 * 32px + 0 * 16px + 8px); width: calc(2 * 32px + 1 * 16px); height: calc(1 * 32px + 0 * 16px);"></div> <!-- Group m5, m7 -->
+                                <div class="kmap-group kmap-group-blue" style="top: calc(3 * 32px + 3 * 16px + 8px); left: 8px; width: calc(2 * 32px + 1 * 16px); height: calc(1 * 32px + 0 * 16px);"></div> <!-- Group m8, m9 -->
+                                <div class="kmap-group kmap-group-purple" style="top: calc(1 * 32px + 1 * 16px + 8px); left: calc(2 * 32px + 1 * 16px + 8px); width: calc(1 * 32px + 0 * 16px); height: calc(2 * 32px + 1 * 16px);"></div> <!-- Group m7, m15 -->
+                                <div class="kmap-group" style="border-color: orange; top: 8px; left: calc(1 * 32px + 0 * 16px + 8px); width: calc(1 * 32px + 0 * 16px); height: calc(4 * 32px + 3 * 16px);"></div> <!-- Group m1, m5, m13(no), m9 -->
+                             </div>
+                         </div>
+                         <ul>
+                             <li>IP (de zéros) :
+                                <ul>
+                                    <li>Groupe m0, m1 (Rouge): A=0, B=0, C=0. Terme: \(A+B+C\)</li>
+                                    <li>Groupe m8, m9 (Bleu): A=1, B=0, C=0. Terme: \(\overline{A}+B+C\)</li>
+                                    <li>Groupe m1, m5 (Orange - via adjacence lignes 00 et 01): B=0, C=0, D=1. Terme: \(B+C+\overline{D}\)</li>
+                                    <li>Groupe m5, m7 (Vert): A=0, B=1, D=1. Terme: \(A+\overline{B}+\overline{D}\)</li>
+                                    <li>Groupe m9, m? : m9(1001) adj m1(0001), m8(1000), m11(1011), m13(1101)? Adjacence avec m1 via C=0, D=1. Groupe m1, m9? Non, A et B changent. Adjacence m9 avec m1, m8, m11, m13. Groupe m1, m5, m9, m13? Non, m13=1.</li>
+                                    <li>Groupe m7, m15 (Pourpre): B=1, C=1, D=1. Terme: \(\overline{B}+\overline{C}+\overline{D}\)</li>
+                                 </ul>
+                             </li>
+                             <li>EPI (de zéros) :
+                                <ul>
+                                   <li>m0 est couvert par (m0,m1).</li>
+                                   <li>m8 est couvert par (m8,m9).</li>
+                                   <li>m15 est couvert par (m7,m15).</li>
+                                   <li>m5 est couvert par (m1,m5) et (m5,m7).</li>
+                                   <li>m7 est couvert par (m5,m7) et (m7,m15).</li>
+                                   <li>m1 est couvert par (m0,m1) et (m1,m5).</li>
+                                   <li>m9 est couvert par (m8,m9) et (m1,m9?).</li>
+                                   <li>Les EPI semblent être : \(A+B+C\) (couvre m0), \(\overline{A}+B+C\) (couvre m8), \(\overline{B}+\overline{C}+\overline{D}\) (couvre m15).</li>
+                                 </ul>
+                            </li>
+                            <li>Couverture des '0' restants : m1, m5, m7, m9 sont à couvrir.
+                                <ul>
+                                   <li>m1 est couvert par (m0,m1) ou (m1,m5).</li>
+                                   <li>m5 est couvert par (m1,m5) ou (m5,m7).</li>
+                                   <li>m7 est couvert par (m5,m7) ou (m7,m15).</li>
+                                   <li>m9 est couvert par (m8,m9).</li>
+                                   <li>On a déjà les EPI : \(A+B+C\), \(\overline{A}+B+C\), \(\overline{B}+\overline{C}+\overline{D}\). Ils couvrent 0, 8, 15, (7).</li>
+                                   <li>Il reste à couvrir 1, 5, 9.</li>
+                                   <li>Pour couvrir 9 : utiliser (m8,m9), mais c'est un EPI déjà pris: \(\overline{A}+B+C\).</li>
+                                   <li>Pour couvrir 1 : utiliser (m0,m1) ou (m1,m5). (m0,m1) est \(A+B+C\). (m1,m5) est \(B+C+\overline{D}\).</li>
+                                   <li>Pour couvrir 5 : utiliser (m1,m5) ou (m5,m7). (m1,m5) est \(B+C+\overline{D}\). (m5,m7) est \(A+\overline{B}+\overline{D}\).</li>
+                                   <li>Choix : Utilisons \(B+C+\overline{D}\) (couvre m1, m5) et \(A+\overline{B}+\overline{D}\) (couvre m5, m7). Cela couvre 1, 5, 7. Le 9 est couvert par EPI.</li>
+                                   <li>Donc, IP nécessaires: \(A+B+C\), \(\overline{A}+B+C\), \(\overline{B}+\overline{C}+\overline{D}\), \(B+C+\overline{D}\), \(A+\overline{B}+\overline{D}\).</li>
+                                </ul>
+                             </li>
+                            <li>Expression finale (POS) : \( F = (A+B+C) \cdot (\overline{A}+B+C) \cdot (\overline{B}+\overline{C}+\overline{D}) \cdot (B+C+\overline{D}) \cdot (A+\overline{B}+\overline{D}) \)</li>
+                        </ul>
+                         <p><em>(Note: L'OCR identifie comme EPI \( \overline{B}C \) et \( \overline{B}\overline{C}\overline{D} \). Cela semble erroné car ce sont des termes produits (SOP) et non sommes (POS). La solution OCR F=(BC).(BCD).(ABD) est aussi erronée. La dérivation ci-dessus suit la méthode POS, mais peut être complexe. Vérifions les termes donnés par l'OCR pour POS : Essentiels \(B+C\) et \(B+D\). Non essentiels \( \overline{A}+\overline{B}+\overline{D} \) ou \( \overline{A}+C+\overline{D} \). Solution \( F = (B+C) \cdot (B+D) \cdot (\overline{A}+\overline{B}+\overline{D}) \). Cela correspondrait à une fonction différente ou à une erreur dans l'énoncé/solution OCR.)</em></p>
+                     </div>
+                </section> <!-- End KMAP POS -->
+
+                <section id="kmap-dontcare">
+                    <h5>V.2.3.c Cas des états indéterminés ou indifférents (Don't Cares)</h5>
+                    <p>Comme mentionné (§V.1.1.c, Remarque 5.2), certaines fonctions logiques peuvent avoir des états indifférents ('X') pour certaines combinaisons d'entrée.</p>
+                    <p>Lors de la simplification avec un K-map :</p>
+                    <ul>
+                        <li>Les 'X' peuvent être inclus dans les groupements de '1' (pour SOP) ou de '0' (pour POS) <strong>si et seulement si</strong> cela permet de former un groupe plus grand (et donc un terme plus simple).</li>
+                        <li>On n'est <strong>pas obligé</strong> de couvrir les 'X'. Ils sont utilisés uniquement pour agrandir les groupes de '1' ou de '0'.</li>
+                        <li>Une même case 'X' peut être utilisée pour un groupement de '1' et pour un groupement de '0'.</li>
+                    </ul>
+                    <p>Conséquences :</p>
+                    <ul>
+                        <li>La simplification SOP (en groupant les '1' et des 'X') et la simplification POS (en groupant les '0' et des 'X') d'une fonction avec des 'X' ne mèneront généralement <strong>pas</strong> à des expressions qui sont le complément De Morgan l'une de l'autre.</li>
+                        <li>Les deux fonctions simplifiées (SOP et POS) seront valides (elles respectent les '0' et '1' spécifiés de la fonction originale), mais elles peuvent différer dans leur comportement pour les combinaisons d'entrée correspondant aux 'X'. Ce n'est pas un problème, car ces combinaisons sont supposées ne pas se produire ou leur sortie n'a pas d'importance.</li>
+                     </ul>
+
+                     <div class="example">
+                         <div class="example-title">▷ Exemple 5.10 : Simplification SOP avec Don't Cares</div>
+                         <p>Simplifier le K-map suivant (fonction F) en SOP :</p>
+                        <div class="kmap-container">
+                             <div class="kmap">
+                                 <div class="kmap-header-col">CD</div>
+                                 <div class="kmap-header-row">AB</div>
+                                 <table>
+                                     <thead><tr><th></th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead>
+                                     <tbody>
+                                         <tr><th>00</th><td>0<span class="kmap-index">0</span></td><td>0<span class="kmap-index">1</span></td><td>0<span class="kmap-index">3</span></td><td>1<span class="kmap-index">2</span></td></tr>
+                                         <tr><th>01</th><td>1<span class="kmap-index">4</span></td><td>1<span class="kmap-index">5</span></td><td>0<span class="kmap-index">7</span></td><td>1<span class="kmap-index">6</span></td></tr>
+                                         <tr><th>11</th><td>X<span class="kmap-index">12</span></td><td>1<span class="kmap-index">13</span></td><td>0<span class="kmap-index">15</span></td><td>X<span class="kmap-index">14</span></td></tr>
+                                         <tr><th>10</th><td>0<span class="kmap-index">8</span></td><td>0<span class="kmap-index">9</span></td><td>X<span class="kmap-index">11</span></td><td>1<span class="kmap-index">10</span></td></tr>
+                                     </tbody>
+                                 </table>
+                                 <!-- Grouping -->
+                                <div class="kmap-group kmap-group-red" style="top: calc(1*48px + 8px); left: 8px; width: calc(2*32px + 1*16px); height: calc(1*32px + 0*16px);"></div> <!-- m4, m5 -->
+                                <div class="kmap-group kmap-group-green" style="top: calc(0*48px + 8px); left: calc(3*32px + 2*16px + 8px); width: calc(1*32px + 0*16px); height: calc(2*32px + 1*16px);"></div> <!-- m2, m6 -->
+                                <div class="kmap-group kmap-group-blue" style="top: calc(2*48px + 8px); left: calc(1*32px + 0*16px + 8px); width: calc(1*32px + 0*16px); height: calc(1*32px + 0*16px);"></div> <!-- m13 -->
+                                <div class="kmap-group kmap-group-purple" style="top: calc(3*48px + 8px); left: calc(3*32px + 2*16px + 8px); width: calc(1*32px + 0*16px); height: calc(1*32px + 0*16px);"></div> <!-- m10 -->
+                                <div class="kmap-group" style="border-color: orange; top: calc(2*48px + 8px); left: 8px; width: calc(1*32px + 0*16px); height: calc(2*32px + 1*16px);"></div> <!-- m12(X), m8(0) -->
+                                <div class="kmap-group" style="border-color: cyan; top: calc(2*48px + 8px); left: calc(3*32px+2*16px+8px); width: calc(1*32px + 0*16px); height: calc(2*32px + 1*16px);"></div> <!-- m14(X), m10(1) -->
+                                <div class="kmap-group" style="border-color: brown; top: calc(3*48px + 8px); left: calc(2*32px+1*16px+8px); width: calc(1*32px + 0*16px); height: calc(1*32px + 0*16px);"></div> <!-- m11(X) -->
+
+                             </div>
+                         </div>
+                         <p>Image décimale : \( F_1 = \sum m(2, 4, 5, 6, 10, 13) \), \( F_X = \sum m(11, 12, 14) \)</p>
+                         <p>Solution :</p>
+                         <ul>
+                             <li>IP (groupant les '1' et utilisant les 'X') :
+                                 <ul>
+                                     <li>Groupe m4, m5, m12(X), m13 : (A=0, B=1) & (A=1, B=1), C=0 -> \(\overline{C}\). Non, AB=01 et 11. B=1. \(\rightarrow B\overline{C}\) ? Non. Ligne AB=01 -> \(\overline{A}B\). Ligne AB=11 -> AB. Groupe m4, m5 -> \(\overline{A}B\overline{C}\). Groupe m13 -> \(AB\overline{C}D\).</li>
+                                     <li>Groupe m2, m6, m10, m14(X) : Colonne CD=10 -> C\(\overline{D}\). Essentiel.</li>
+                                     <li>Groupe m4, m5 : \(\overline{A}B\overline{C}\). Essentiel.</li>
+                                     <li>Groupe m10, m11(X) : \(A\overline{B}C\). Pas un groupe max.</li>
+                                     <li>Groupe m12(X), m13 : \(AB\overline{C}\).</li>
+                                     <li>Groupe m13 : \(AB\overline{C}D\). Isolé?</li>
+                                     <li>Groupe m10 : \(A\overline{B}C\overline{D}\). Isolé?</li>
+                                     <li>Recherche des groupes maximaux de 1 (+X):
+                                        <ul>
+                                            <li>Quartet m2, m6, m10, m14(X) -> \( C\overline{D} \) (EPI, couvre 2, 6, 10)</li>
+                                            <li>Quartet m4, m5, m12(X), m13 -> \( B\overline{C} \) (EPI, couvre 4, 5, 13)</li>
+                                        </ul>
+                                    </li>
+                                 </ul>
+                             </li>
+                             <li>Tous les '1' (2, 4, 5, 6, 10, 13) sont couverts par ces deux EPI.</li>
+                             <li>Expression finale (SOP) : \( F = C\overline{D} + B\overline{C} \)</li>
+                         </ul>
+                         <p><em>(Note: L'OCR donne comme EPI \( \overline{B}D \) et \( \overline{B}\overline{C} \). C'est différent. Il y a une incohérence entre le K-map montré dans l'OCR et la solution textuelle. En suivant le K-map de l'OCR, les EPI sont \( C\overline{D} \) et \( B\overline{C} \), donnant \( F = C\overline{D} + B\overline{C} \).)</em></p>
+                     </div>
+
+                     <div class="example">
+                         <div class="example-title">▷ Exemple 5.11 : Simplification POS avec Don't Cares</div>
+                         <p>Simplifier le même K-map de l'Exemple 5.10 en POS (produit de sommes) en groupant les '0' et utilisant les 'X'.</p>
+                         <p> \( F_0 = \sum m(0, 1, 3, 7, 8, 9, 15) \), \( F_X = \sum m(11, 12, 14) \) </p>
+                         <p>Solution :</p>
+                         <div class="kmap-container">
+                              <div class="kmap">
+                                 <!-- K-map from Example 5.10 -->
+                                 <div class="kmap-header-col">CD</div>
+                                 <div class="kmap-header-row">AB</div>
+                                 <table>
+                                      <thead><tr><th></th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead>
+                                      <tbody>
+                                          <tr><th>00</th><td><strong style="color: red;">0</strong><span class="kmap-index">0</span></td><td><strong style="color: red;">0</strong><span class="kmap-index">1</span></td><td><strong style="color: green;">0</strong><span class="kmap-index">3</span></td><td>1<span class="kmap-index">2</span></td></tr>
+                                          <tr><th>01</th><td>1<span class="kmap-index">4</span></td><td>1<span class="kmap-index">5</span></td><td><strong style="color: green;">0</strong><span class="kmap-index">7</span></td><td>1<span class="kmap-index">6</span></td></tr>
+                                          <tr><th>11</th><td>X<span class="kmap-index">12</span></td><td>1<span class="kmap-index">13</span></td><td><strong style="color: blue;">0</strong><span class="kmap-index">15</span></td><td>X<span class="kmap-index">14</span></td></tr>
+                                          <tr><th>10</th><td><strong style="color: purple;">0</strong><span class="kmap-index">8</span></td><td><strong style="color: purple;">0</strong><span class="kmap-index">9</span></td><td>X<span class="kmap-index">11</span></td><td>1<span class="kmap-index">10</span></td></tr>
+                                      </tbody>
+                                  </table>
+                                 <!-- Grouping 0s + X -->
+                                 <div class="kmap-group kmap-group-red" style="top: 8px; left: 8px; width: calc(2*32px+1*16px); height: calc(1*32px+0*16px);"></div> <!-- m0, m1 -->
+                                 <div class="kmap-group kmap-group-green" style="top: 8px; left: calc(2*32px+1*16px+8px); width: calc(1*32px+0*16px); height: calc(2*32px+1*16px);"></div> <!-- m3, m7 -->
+                                 <div class="kmap-group kmap-group-purple" style="top: calc(3*48px + 8px); left: 8px; width: calc(2*32px+1*16px); height: calc(1*32px+0*16px);"></div> <!-- m8, m9 -->
+                                 <div class="kmap-group kmap-group-blue" style="top: calc(2*48px+8px); left: calc(2*32px+1*16px+8px); width: calc(1*32px+0*16px); height: calc(2*32px+1*16px);"></div> <!-- m15, m7? Non. m15, m11(X)?-->
+                                 <div class="kmap-group" style="border-color: orange; top: 8px; left: 8px; width: calc(1*32px+0*16px); height: calc(4*32px+3*16px);"></div> <!-- m0, m4(1), m12(X), m8 -->
+                                 <div class="kmap-group" style="border-color: brown; top: 8px; left: calc(1*32px+0*16px+8px); width: calc(1*32px+0*16px); height: calc(4*32px+3*16px);"></div> <!-- m1, m5(1), m13(1), m9 -->
+                                 <div class="kmap-group" style="border-color: cyan; top: calc(2*48px+8px); left: calc(2*32px+1*16px+8px); width: calc(2*32px+1*16px); height: calc(2*32px+1*16px);"></div> <!-- m15, m14(X), m11(X) -->
+                             </div>
+                         </div>
+                         <ul>
+                             <li>IP (de zéros + X) :
+                                 <ul>
+                                    <li>Quartet m0, m1, m8, m9 -> \( \overline{B} \) (EPI, couvre 0, 1, 8, 9)</li>
+                                    <li>Quartet m3, m7, m15, m11(X) -> \( CD \) (EPI, couvre 3, 7, 15)</li>
+                                    <!-- Autres IP non essentiels (ex: m0, m8, m12(X), m4(1) non) -->
+                                 </ul>
+                             </li>
+                            <li>Tous les '0' (0, 1, 3, 7, 8, 9, 15) sont couverts par ces deux EPI.</li>
+                            <li>Termes sommes correspondants :
+                                <ul>
+                                    <li>Groupe \( \overline{B} \) (B=0): Terme \( B \)</li>
+                                    <li>Groupe \( CD \) (C=1, D=1): Terme \( \overline{C} + \overline{D} \)</li>
+                                 </ul>
+                             </li>
+                            <li>Expression finale (POS) : \( F = B \cdot (\overline{C} + \overline{D}) \)</li>
+                        </ul>
+                         <p><em>(Note: L'OCR donne comme EPI \( B+C \) et \( \overline{B}+\overline{D} \). Solution \( F = (B+C) \cdot (\overline{B}+\overline{D}) \). Encore une fois, la solution textuelle OCR diffère de l'analyse du K-map montré. En suivant le K-map, la solution POS est \( F = B \cdot (\overline{C} + \overline{D}) \).)</em></p>
+                     </div>
+                 </section> <!-- End KMAP DontCare -->
+             </section> <!-- End KMAP Simplification -->
+
+            <section id="simpl-algorithmic">
+                <h4>V.2.4 Méthodes algorithmiques</h4>
+                <p>Pour les fonctions ayant un grand nombre de variables (au-delà de 5 ou 6), la méthode de Karnaugh devient impraticable visuellement. Des méthodes algorithmiques, implémentables par ordinateur, sont alors utilisées.</p>
+
+                <section id="quine-mccluskey">
+                    <h5>V.2.4.a Algorithme de Quine-McCluskey</h5>
+                    <p>C'est une méthode tabulaire exacte pour trouver l'expression SOP minimale d'une fonction booléenne. Elle se déroule en deux étapes :</p>
+                    <ol>
+                        <li><strong>Trouver tous les Implicants Premiers (IP) :</strong> On compare systématiquement les mintermes (ou termes produits) pour trouver les termes adjacents et les combiner (éliminer une variable). On répète le processus jusqu'à ce qu'aucune autre combinaison ne soit possible. Les termes qui n'ont pas pu être combinés à une étape sont les IP.</li>
+                        <li><strong>Sélectionner un ensemble minimal d'IP (Couverture) :</strong> On construit une table de couverture (Prime Implicant Chart) qui indique quels mintermes sont couverts par quels IP. On utilise ensuite cette table pour sélectionner le nombre minimal d'IP (en commençant par les EPI) qui couvrent tous les mintermes originaux de la fonction.</li>
+                    </ol>
+                    <p><em>À venir...</em> (Description détaillée de l'algorithme).</p>
+                     <p>D'autres algorithmes comme l'algorithme Espresso sont également utilisés en pratique, notamment pour les fonctions à très grand nombre de variables, car ils sont plus rapides bien que ne garantissant pas toujours la solution absolument minimale (heuristiques).</p>
+                 </section> <!-- End Quine McCluskey -->
+            </section> <!-- End Algorithmic Simplification -->
+
+        </section> <!-- End Simplification -->
+        </article> <!-- End Chapter V -->
+
+    </main>
+
+    <footer>
+        <span style="float: left;">M. Siadat & C. Diou</span>
+        <span style="float: right;">Page [Auto]</span>
+        <div style="clear: both;"></div>
+    </footer>
+
+</body>
+</html>
