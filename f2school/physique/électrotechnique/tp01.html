@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T.P 1: Etude du transformateur monophasé</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .tp-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .tp-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        h1, h2, h3 { color: #333; }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 1.8em; }
+        h2 { border-bottom: 2px solid #444; padding-bottom: 5px; margin-top: 30px; font-size: 1.5em;}
+        h3 { border-bottom: 1px solid #ddd; padding-bottom: 3px; margin-top: 25px; font-size: 1.3em; }
+        .section { margin-bottom: 20px; }
+        ul, ol { margin-top: 10px; padding-left: 25px; }
+        li { margin-bottom: 10px; }
+        .sub-list > li { margin-bottom: 5px; }
+        .placeholder { background-color: #eee; border: 1px dashed #ccc; text-align: center; padding: 20px; margin: 15px auto; font-style: italic; color: #666; display: block; max-width: 600px; }
+        .formula { margin: 10px 0; display: block; text-align: center; font-size: 1.1em; }
+        .explanation { font-size: 0.95em; color: #444; margin-bottom: 10px; }
+        .note { font-size: 0.9em; color: #555; font-style: italic; margin-top: 5px; }
+        .centered { text-align: center; }
+    </style>
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="tp-header">
+        T.P 1: Etude du transformateur monophasé
+    </div>
+
+    <h1>T.P 1: Etude du transformateur monophasé</h1>
+
+    <div class="section" id="buts">
+        <h2>I. Buts</h2>
+        <p>Réaliser les essais standards sur un transformateur monophasé :</p>
+        <ul>
+            <li>Essai à vide (Open Circuit Test)</li>
+            <li>Essai en court-circuit (Short Circuit Test)</li>
+            <li>Essai en charge (Load Test)</li>
+        </ul>
+        <p>Prédéterminer un point de fonctionnement en charge en utilisant les résultats des essais précédents (méthode de Kapp).</p>
+    </div>
+
+    <div class="section" id="modeles">
+        <h2>II. Modèles équivalents du transformateur réel</h2>
+
+        <h3>1. Modèle général</h3>
+        <p class="explanation"><strong>Intérêt:</strong> Ce modèle permet de prédéterminer la chute de tension aux bornes du transformateur pour une charge donnée.</p>
+        <p class="explanation"><strong>Hypothèses :</strong></p>
+        <ul>
+            <li>Circuit magnétique non saturé (perméabilité constante).</li>
+            <li>On part d'un transformateur parfait (pas de pertes, couplage parfait) auquel on rajoute les imperfections réelles.</li>
+        </ul>
+
+        <div class="placeholder">Placeholder: Schéma du modèle général du transformateur réel avec imperfections (R1: rés. primaire, jX1: réactance fuite primaire, Rf: résistance pertes fer, jXm: réactance magnétisante, E1: fem primaire, E2: fem secondaire, R2: rés. secondaire, jX2: réactance fuite secondaire, V1: tension primaire, V2: tension secondaire, I1: courant primaire, I2: courant secondaire, I10: courant à vide, I'2: courant primaire équivalent au secondaire).</div>
+
+        <p class="explanation">Avec :</p>
+        <ul>
+            <li>$X_1 = L_1\omega$ et $X_2 = L_2\omega$ : réactances de fuites dues aux inductances de fuite $L_1$ et $L_2$. $\omega$ est la pulsation ($2\pi f$).</li>
+            <li>$R_1$ et $R_2$ : résistances ohmiques des enroulements primaire et secondaire.</li>
+            <li>$R_f$ : résistance modélisant les pertes fer (hystérésis et courants de Foucault).</li>
+            <li>$X_m$ : réactance magnétisante modélisant la création du flux magnétique principal.</li>
+        </ul>
+
+        <p class="explanation">La loi des mailles appliquée au primaire et secondaire (en utilisant les phasors/nombres complexes) donne :</p>
+        <div class="formula"> $\bar{V}_1 = -\bar{E}_1 + R_1 \bar{I}_1 + jX_1 \bar{I}_1 = -\bar{E}_1 + \bar{Z}_1 \bar{I}_1 \quad (1)$ </div>
+        <div class="formula"> $\bar{V}_2 = \bar{E}_2 - R_2 \bar{I}_2 - jX_2 \bar{I}_2 = \bar{E}_2 - \bar{Z}_2 \bar{I}_2 \quad (2)$ </div>
+        <p class="note">$\bar{Z}_1 = R_1 + jX_1$ et $\bar{Z}_2 = R_2 + jX_2$ sont les impédances de fuite. $\bar{E}_1$ et $\bar{E}_2$ sont les f.e.m induites.</p>
+    </div>
+
+    <div class="section" id="kapp-model">
+        <h2>2. Modèle de Kapp</h2>
+        <p class="explanation">Le modèle de Kapp est une simplification du modèle général où la branche de magnétisation ($R_f // jX_m$) est déplacée en entrée du transformateur. C'est une approximation valable pour les calculs de chute de tension en charge.</p>
+        <div class="placeholder">Placeholder: Schéma du modèle de Kapp simplifié (Source V1, R1, jL1w, Transformateur Idéal, R2, jL2w, Charge V2). La branche de magnétisation est souvent omise dans ce schéma simplifié utilisé pour la chute de tension.</div>
+
+        <h3>3. Modèle de Kapp vu du secondaire</h3>
+        <ol style="list-style-type: decimal; list-style-position: inside;">
+            <li><strong>Déterminer le modèle vu du secondaire :</strong><br>
+                On ramène toutes les impédances du primaire au secondaire en utilisant le rapport de transformation $m = N_2/N_1 \approx V_{20}/V_1$. Les impédances vues du secondaire sont multipliées par $m^2$, celles vues du primaire sont divisées par $m^2$. Le modèle de Kapp vu du secondaire regroupe toutes les impédances de fuite en série avec la f.e.m. secondaire à vide $\bar{E}_2 = \bar{V}_{20}$.
+                <div class="placeholder">Placeholder: Schéma du modèle de Kapp ramené au secondaire (Source idéale V20, Impédance Zs=(Rs+jXs) en série, Charge V2, I2).</div>
+            </li>
+            <li><strong>Donner le schéma avec les notations complexes :</strong><br>
+                Les éléments ramenés au secondaire sont regroupés en une résistance totale $R_s$ et une réactance totale $X_s$.
+                <ul>
+                    <li>$R_s = m^2 R_1 + R_2$ : Résistance totale de fuite ramenée au secondaire.</li>
+                    <li>$X_s = m^2 X_1 + X_2 = (m^2 L_1 + L_2)\omega$ : Réactance totale de fuite ramenée au secondaire.</li>
+                    <li>$Z_s = R_s + jX_s$ : Impédance totale de fuite ramenée au secondaire.</li>
+                </ul>
+                 <p class="note">On aurait pu tout ramener au primaire de manière équivalente ($R_p = R_1 + R_2/m^2$, $X_p = X_1 + X_2/m^2$).</p>
+            </li>
+        </ol>
+    </div>
+
+    <div class="section" id="preparations">
+        <h2>III. Préparations (Théoriques)</h2>
+
+        <h3>1. Essai à vide (Open-circuit test)</h3>
+        <p class="explanation">Objectif : Déterminer le rapport de transformation, les pertes fer et les éléments de la branche de magnétisation ($R_f, X_m$).</p>
+        <p>Déterminer :</p>
+        <ol class="sub-list">
+            <li>Le rapport de transformation, $m = V_{20} / V_{1n}$.</li>
+            <li>Les pertes fer, $P_{fer} = P_{10}$ (puissance mesurée à vide, les pertes Joule $R_1 I_{10}^2$ étant négligeables).</li>
+            <li>Les paramètres $R_f$ et $X_m$ (souvent noté $X_\mu$).
+                <br>$P_{10} = V_{1n}^2 / R_f \implies R_f = V_{1n}^2 / P_{10}$.
+                <br>Calculer la puissance apparente à vide $S_{10} = V_{1n} I_{10}$.
+                <br>Calculer la puissance réactive magnétisante $Q_{10} = \sqrt{S_{10}^2 - P_{10}^2}$.
+                <br>$Q_{10} = V_{1n}^2 / X_m \implies X_m = V_{1n}^2 / Q_{10}$.
+            </li>
+            <li>Le courant à vide $I_{10}$ et ses composantes active $I_a$ (ou $I_{1f}$) et réactive $I_r$ (ou $I_{1m}$).
+                <br>$I_a = P_{10} / V_{1n}$.
+                <br>$I_r = Q_{10} / V_{1n}$.
+                <br>Vérification : $I_{10} = \sqrt{I_a^2 + I_r^2}$.
+            </li>
+        </ol>
+
+        <h3>2. Essai en court-circuit (Short-circuit test)</h3>
+         <p class="explanation">Objectif : Déterminer les pertes Joule nominales et les éléments de l'impédance de fuite ($R_s, X_s, Z_s$). L'essai est réalisé sous tension primaire réduite $V_{1cc}$ pour obtenir le courant secondaire nominal $I_{2n}$ (ou un courant connu $I_{2cc}$).</p>
+         <p>Déterminer :</p>
+         <ol class="sub-list">
+            <li>Les pertes joules $P_j$ à $I_{2cc}$. $P_j = P_{1cc}$ (puissance mesurée en court-circuit, les pertes fer étant négligeables car $V_{1cc}$ est faible).</li>
+            <li>Les paramètres $R_s$, $Z_s$ et $X_s$.
+                <div class="formula">R_s = \frac{P_{1cc}}{I_{2cc}^2}</div>
+                <div class="formula">Z_s = \frac{V_{2cc}}{I_{2cc}} \approx \frac{m V_{1cc}}{I_{2cc}}</div>
+                <div class="formula">X_s = \sqrt{Z_s^2 - R_s^2}</div>
+             </li>
+        </ol>
+        <p class="note">⚠️ Précaution : $V_{1cc}$ est une tension réduite (quelques % de $V_{1n}$).</p>
+
+        <h3>3. Détermination de la chute de tension</h3>
+        <p class="explanation">La chute de tension approximative au secondaire, $\Delta V_2$, est la différence entre la tension à vide $V_{20}$ et la tension en charge $V_2$ pour un courant $I_2$ et un déphasage $\phi_2$.</p>
+        <div class="formula"> \Delta V_2 = V_{20} - V_2 \approx (R_s \cos(\phi_2) + X_s \sin(\phi_2)) I_2 </div>
+        <p class="note">Une autre forme est $\Delta V_2 \approx Z_s I_2 \cos(\phi_2 - \phi_{cc})$, où $\phi_{cc}$ est l'angle de l'impédance de court-circuit ($\tan \phi_{cc} = X_s/R_s$).</p>
+
+        <h3>4. Bilan de puissance</h3>
+         <ol class="sub-list">
+            <li><strong>Établir le bilan de puissances du transformateur :</strong><br>
+                 $P_1 = P_2 + P_{fer} + P_{joule}$
+                <ul>
+                    <li>$P_1$ : puissance active absorbée au primaire.</li>
+                    <li>$P_2 = V_2 I_2 \cos(\phi_2)$ : puissance active fournie à la charge.</li>
+                    <li>$P_{fer}$ : pertes fer (considérées constantes, égales à $P_{10}$).</li>
+                    <li>$P_{joule} = R_s I_2^2$ : pertes Joule totales (dans $R_1$ et $R_2$) pour le courant de charge $I_2$.</li>
+                </ul>
+            </li>
+            <li><strong>En déduire le rendement $\eta$ du transformateur :</strong>
+                <div class="formula">\eta = \frac{P_2}{P_1} = \frac{P_2}{P_2 + P_{fer} + P_{joule}}</div>
+             </li>
+        </ol>
+    </div>
+
+    <div class="section" id="travail-demande">
+        <h2>IV. Travail demandé (Manipulations)</h2>
+
+        <h3>1. Essais à puissance réduite</h3>
+        <p class="explanation">Ces essais permettent de déterminer les paramètres du modèle sans dissiper la puissance nominale.</p>
+        <ol class="sub-list">
+            <li><strong>Essai à vide</strong>
+                <ol type="a">
+                    <li>Prévoir le montage permettant de relever $V_1$, $V_{20}$, $I_{10}$, $P_{10}$. (Source variable, Voltmètres, Ampèremètre, Wattmètre).</li>
+                    <li>Tracer la caractéristique $V_{20} = f(V_1)$ pour $V_1$ variant de 0 à $1.2 V_{1n}$. (Le texte original indique $f(I_{10})$, ce qui est moins courant. $V_{20} = f(V_1)$ est la caractéristique à vide standard).</li>
+                    <li>Tracer la caractéristique $P_{10} = f(V_1^2)$ (ou $f(V_1)$).</li>
+                    <li>Déduire de ces essais les pertes fer à la tension primaire nominale ($P_{10}$ à $V_{1n}$) et le rapport de transformation $m$.</li>
+                </ol>
+            </li>
+            <li><strong>Essai en Court-circuit</strong>
+                <ol type="a">
+                    <li>Prévoir le montage permettant de relever $P_{1cc}$ (pertes Joule $P_j$), $I_{2cc}$, et $V_{1cc}$ pour $I_{2cc}$ variant de 0 à $1.25 I_{2n}$. (Source variable basse tension, Ampèremètres primaire/secondaire, Voltmètre primaire, Wattmètre primaire).</li>
+                    <li>Tracer la caractéristique $P_j = f(I_{2cc}^2)$. (Doit être une droite passant par l'origine).</li>
+                </ol>
+             </li>
+        </ol>
+
+        <h3>2. Essai en charge</h3>
+         <ol type="a">
+            <li>Prévoir le montage permettant de tracer la caractéristique $V_2 = f(I_2)$ à $V_1 = V_{1n} = \text{cste}$ et $\cos(\phi_2) = 1$ (charge résistive) pour $I_2$ variant de 0 à $1.2 I_n$. (Source fixe $V_{1n}$, charge résistive variable, Voltmètre secondaire, Ampèremètre secondaire).</li>
+            <li>Déduire de cette courbe le modèle équivalent au transformateur vu du secondaire en précisant la valeur des éléments le constituant ($R_s, X_s, Z_s$ via la chute de tension).</li>
+        </ol>
+
+        <h3>3. Exploitation des résultats (Détermination du rendement par la méthode des pertes séparées)</h3>
+         <ol type="a">
+            <li>Pour différentes valeurs du courant secondaire $I_2$ (ex: 0.25, 0.5, 0.75, 1.0, 1.25 $I_{2n}$), déterminer le rendement $\eta$ en utilisant les pertes fer ($P_{fer}=P_{10}$) et les pertes joules ($P_j = R_s I_2^2$ où $R_s$ a été déterminée en court-circuit). Tracer la caractéristique $\eta = f(I_2)$ pour $\cos(\phi_2) = 1$.</li>
+        </ol>
+
+        <h3>4. Prédétermination d'un point de fonctionnement en charge (méthode de Kapp)</h3>
+         <ol type="a">
+            <li>Déduire des essais à vide et en court-circuit les éléments $Z_s, R_s,$ et $X_s$ du schéma équivalent vu du secondaire.</li>
+            <li>À l'aide du diagramme de Kapp (ou de la formule de chute de tension), et pour un facteur de puissance $\cos \phi_2 = 0.8$ inductif, déterminer graphiquement ou par calcul la tension secondaire $V_2$ pour $I_2 = 0.5 I_{2n}$.</li>
+            <li>Déterminer également le rendement $\eta$ du transformateur pour ce point de fonctionnement ($I_2 = 0.5 I_{2n}$, $\cos \phi_2 = 0.8$ inductif).<br> ($\eta = P_2 / (P_2 + P_{fer} + R_s I_2^2)$, avec $P_2 = V_2 I_2 \cos \phi_2$).</li>
+            <li>(Optionnel) Vérifier expérimentalement les valeurs calculées de $V_2$ et $\eta$ pour $I_2=0.5I_{2n}$ et $\cos(\phi_2) = 0.8$ inductif (nécessite une charge R-L variable).</li>
+        </ol>
+    </div>
+
+    <div class="tp-footer">
+        <span>T.P: Electrotechnique</span>
+        <span>Pages: 2-5</span>
+        <span>Proposé par M : SOYED_Abdessami</span>
+    </div>
+
+</div><!-- /.container -->
+
+</body>
+</html>
