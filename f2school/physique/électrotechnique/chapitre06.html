@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 06 : Les Moteurs à Courant Continu</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX Auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+     <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding-bottom: 50px; /* Space for footer */
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #666;
+            padding-bottom: 10px;
+        }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p, ul, ol {
+            margin-bottom: 1em;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        figure {
+            text-align: center;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            max-width: 600px; /* Adjust as needed */
+        }
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc; /* Border around the placeholder */
+            background-color: #f0f0f0; /* Background for placeholder */
+            display: inline-block; /* Prevents extra space below */
+        }
+        figcaption {
+            font-style: italic;
+            color: #555;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        .placeholder-text {
+            display: block;
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f8f8f8;
+            border-top: 1px solid #ddd;
+            padding: 5px 20px;
+            font-size: 0.8em;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+        }
+        .header-info {
+             display: flex;
+             justify-content: space-between;
+             padding: 5px 0;
+             border-bottom: 1px solid #eee;
+             margin-bottom: 20px;
+             font-size: 0.9em;
+        }
+        .equation-number {
+            float: right;
+            margin-right: 10px;
+        }
+         .formula-block {
+            margin: 1em 0;
+            padding: 0.5em;
+            border-left: 3px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header-info">
+        <span>Cours Electrotechnique</span>
+        <span>GE 2</span>
+        <span>AMARI.Mansour</span>
+    </header>
+
+    <h1>LES MOTEURS A COURANT CONTINU</h1>
+    <h2>CHAPITRE : 06</h2>
+
+    <h3>Contenu</h3>
+    <ul>
+        <li><a href="#principe_mot">1°. Principe de fonctionnement</a></li>
+        <li><a href="#hypothese_mot">2°. Hypothèse</a></li>
+        <li><a href="#moteur_shunt">3°- Moteur shunt</a>
+            <ul>
+                <li><a href="#fonct_shunt_cte">3°.1- Fonctionnement sous tension d'induit cte et excitation cte</a></li>
+                <li><a href="#fonct_shunt_var">3°.2- Fonctionnement sous tension d'induit variable et excitation cte</a></li>
+                <li><a href="#rendement_shunt">3°.3- Rendement</a></li>
+            </ul>
+        </li>
+        <li><a href="#moteur_serie">4°- Moteur à excitation série</a>
+            <ul>
+                <li><a href="#carac_vit_serie">4°.1- Caractéristique de vitesse</a></li>
+                <li><a href="#carac_couple_serie">4°.2- Caractéristique de couple</a></li>
+                <li><a href="#carac_meca_serie">4°.3- Caractéristique mécanique</a></li>
+                <li><a href="#demarrage_serie">4°.4- Problème de démarrage</a></li>
+                <li><a href="#rendement_serie">4°.5- Rendement</a></li>
+            </ul>
+        </li>
+        <li><a href="#comparaison">5°- Comparaison entre moteur série et shunt et applications</a></li>
+        <li><a href="#td4">TD N°4 : Moteurs à courant continu</a></li>
+    </ul>
+
+    <h2 id="principe_mot">1°- Principe de fonctionnement</h2>
+    <p>
+        L'utilisation en <strong>moteur</strong> de la machine à courant continu est très répandue, particulièrement pour les applications nécessitant un fonctionnement à <strong>vitesse réglable</strong>, pour les <strong>asservissements</strong> de position ou de vitesse, et en <strong>traction électrique</strong> (trains, tramways, véhicules électriques anciens).
+    </p>
+    <p>
+        Comme établi au chapitre 4, la machine à courant continu est <strong>réversible</strong>. En moteur, elle convertit l'énergie électrique absorbée en énergie mécanique fournie sur l'arbre.
+    </p>
+     <figure style="max-width: 400px;">
+        <!-- Placeholder for Motor block diagram -->
+        <img src="placeholder_mcc_mot_block2.png" alt="Placeholder Schéma bloc Moteur CC">
+        <figcaption>Bilan de puissance simplifié d'un moteur à courant continu.</figcaption>
+    </figure>
+    <div class="formula-block">
+        Puissance Électrique Absorbée : $P_a = U I$ <br>
+        Puissance Mécanique Utile : $P_u = \Gamma_u \Omega$ <br>
+        Pertes : $P_{pertes} = P_{fer} + P_{meca} + P_{joule}$ <br>
+        Rendement : $\eta = P_u / P_a < 1$
+    </div>
+
+    <p><strong>Remarque :</strong> Pour inverser le sens de rotation d'un moteur à courant continu, on doit inverser le sens du couple électromagnétique ($\Gamma_e = K_M \phi I_a$). Pour cela, il faut inverser le signe d'un seul des deux termes :</p>
+    <ul>
+        <li>Soit inverser le sens du courant dans l'induit ($I_a$).</li>
+        <li>Soit inverser le sens du flux $\phi$ (en inversant le courant dans l'inducteur $j$).</li>
+    </ul>
+    <p>Inverser les deux simultanément (par exemple en inversant la polarité de l'alimentation unique d'un moteur shunt ou série) ne change pas le sens de rotation.</p>
+
+    <h2 id="hypothese_mot">2°- Hypothèse simplificatrice</h2>
+    <p>
+        Pour simplifier l'étude théorique du moteur, nous supposerons (sauf mention contraire) que le moteur est <strong>parfaitement compensé</strong>. Cela signifie que la réaction magnétique de l'induit (RMI) est négligée (soit grâce aux enroulements de compensation et/ou aux pôles auxiliaires, soit parce que son effet est faible).
+    </p>
+    <p>Conséquences de cette hypothèse :</p>
+    <ul>
+        <li>La chute de tension due à la RMI est nulle : $\varepsilon(I_a) = 0$.</li>
+        <li>Le flux en charge est égal au flux à vide (pour un même courant d'excitation $j$) : $\phi_{ch} = \phi_v = \phi$.</li>
+        <li>La force contre-électromotrice (f.c.e.m.) $E$ (ou $E_{ch}$) est égale à la f.e.m. à vide $E_v$ calculée avec le flux $\phi$ : $E = E_v$.</li>
+    </ul>
+    <p>L'expression de la f.c.e.m. $E$ reste la même que pour la génératrice :</p>
+    $$ E = \frac{P}{a} N \phi \frac{n}{60} = K \phi n $$
+     <span class="equation-number">(1)</span>
+    <p>où $n$ est la vitesse en tr/mn et $K = \frac{PN}{60a}$.</p>
+    <p>Ou en utilisant la vitesse angulaire $\Omega$ en rad/s ($\Omega=2\pi n/60$) :</p>
+    $$ E = \frac{PN}{2\pi a} \phi \Omega = K_E \phi \Omega $$
+     <span class="equation-number">(1')</span>
+    <p>où $K_E = \frac{PN}{2\pi a}$ (constante de f.e.m. ou constante électrique).</p>
+    <p>Notation : $P$: paires de pôles, $a$: paires de voies, $N$: conducteurs actifs, $\phi$: flux/pôle (Wb).</p>
+
+    <p>Le modèle électrique de l'induit se simplifie alors :</p>
+     <figure>
+        <!-- Placeholder for Figure 6.2 -->
+        <img src="placeholder_figure_6_2.png" alt="Placeholder Figure 6.2">
+        <figcaption>Figure 6.2: Modèle équivalent simplifié de l'induit du moteur (RMI négligée).</figcaption>
+    </figure>
+    <p>L'équation électrique de l'induit (loi des mailles) devient :</p>
+    $$ U = E + R_a I_a $$
+    <span class="equation-number">(2)</span>
+    <p>où $U$ est la tension d'alimentation de l'induit, $E$ la f.c.e.m., $R_a$ la résistance de l'induit, et $I_a$ le courant absorbé par l'induit.</p>
+    <p><strong>Remarque :</strong> En régime permanent (vitesse constante), le couple utile $\Gamma_u$ fourni par le moteur est égal au couple résistant $\Gamma_r$ imposé par la charge entraînée ($\Gamma_u = \Gamma_r$). Le couple électromagnétique $\Gamma_e = K_M \phi I_a$ (avec $K_M = K_E$) doit vaincre le couple résistant et le couple des pertes $\Gamma_p$ (pertes fer + mécaniques) : $\Gamma_e = \Gamma_r + \Gamma_p$.</p>
+
+
+    <h2 id="moteur_shunt">3°- Moteur shunt</h2>
+    <p>
+        Dans le moteur shunt (ou à excitation parallèle), l'enroulement inducteur (excitation shunt, résistance $r_d$, parfois en série avec un rhéostat de champ $R_h$) est connecté en parallèle avec l'induit. Ils sont donc alimentés par la même tension $U$.
+    </p>
+     <figure>
+        <!-- Placeholder for Figure 6.3 -->
+        <img src="placeholder_figure_6_3.png" alt="Placeholder Figure 6.3">
+        <figcaption>Figure 6.3: Schéma équivalent d'un moteur shunt.</figcaption>
+    </figure>
+    <p>Équations :</p>
+    <ul>
+        <li>Circuit d'excitation : $U = (R_h + r_d) j \implies j = \frac{U}{R_h + r_d}$ <span class="equation-number">(3)</span></li>
+        <li>Circuit d'induit : $U = E + R_a I_a \implies E = U - R_a I_a$</li>
+        <li>Courant total absorbé : $I = I_a + j$</li>
+    </ul>
+    <p>Le courant d'excitation $j$ (et donc le flux $\phi$) dépend de la tension d'alimentation $U$ et du réglage éventuel de $R_h$.</p>
+
+    <h3 id="fonct_shunt_cte">3°.1- Fonctionnement sous tension d'induit constante et excitation constante</h3>
+    <p>
+        C'est le mode de fonctionnement le plus courant : la tension d'alimentation $U$ est constante (imposée par la source), et la résistance d'excitation $(R_h+r_d)$ est constante, donc le courant d'excitation $j$ et le flux $\phi$ sont constants. Ce cas est équivalent à celui d'un moteur à excitation séparée alimenté à tension d'induit et courant d'excitation constants.
+    </p>
+
+    <h4 id="carac_vitesse_shunt_cte">3°.1.1- Caractéristique de vitesse $n = f(I_a)$</h4>
+    <p>On a $E = K \phi n$ et $E = U - R_a I_a$. Comme $U$, $K$, et $\phi$ sont constants :</p>
+    $$ n = \frac{E}{K \phi} = \frac{U - R_a I_a}{K \phi} $$
+    $$ n = \frac{U}{K \phi} - \frac{R_a}{K \phi} I_a $$
+    <span class="equation-number">(4)</span>
+    <p>Posons $n_{00} = \frac{U}{K \phi}$ (vitesse à vide théorique pour $I_a=0$) et $A = \frac{R_a}{K \phi}$.</p>
+    $$ n = n_{00} - A I_a $$
+    La caractéristique de vitesse est une <strong>droite de pente négative très faible</strong> (car $R_a$ est petite).
+     <figure>
+        <!-- Placeholder for Figure 6.4 -->
+        <img src="placeholder_figure_6_4.png" alt="Placeholder Figure 6.4">
+        <figcaption>Figure 6.4: Caractéristique de vitesse $n=f(I_a)$ d'un moteur shunt (ou excitation séparée) à $U=cte, j=cte$.</figcaption>
+    </figure>
+    <p><strong>Remarque :</strong></p>
+    <ul>
+        <li>À vide (charge mécanique nulle), le moteur absorbe un faible courant $I_{a0}$ pour compenser les pertes à vide ($\Gamma_e = \Gamma_p$). Sa vitesse à vide réelle $n_0$ est légèrement inférieure à $n_{00}$ : $n_0 = n_{00} - A I_{a0}$.</li>
+        <li>En charge, lorsque $I_a$ augmente (pour fournir plus de couple), la vitesse $n$ diminue légèrement. Le moteur shunt est donc considéré comme ayant une vitesse <strong>quasi constante</strong>, peu sensible à la charge.</li>
+    </ul>
+
+    <h4 id="carac_couple_shunt_cte">3°.1.2- Caractéristique de couple $\Gamma_e = f(I_a)$</h4>
+    <p>Le couple électromagnétique est donné par $\Gamma_e = K_M \phi I_a$.</p>
+    <p>Comme $K_M$ et $\phi$ sont constants :</p>
+    $$ \Gamma_e = K'_M I_a \quad \text{avec } K'_M = K_M \phi $$
+    <span class="equation-number">(5)</span>
+    La caractéristique de couple est une <strong>droite passant par l'origine</strong>. Le couple est directement proportionnel au courant d'induit.
+     <figure>
+        <!-- Placeholder for Figure 6.5 -->
+        <img src="placeholder_figure_6_5.png" alt="Placeholder Figure 6.5">
+        <figcaption>Figure 6.5: Caractéristique de couple $\Gamma_e = f(I_a)$ et couple utile $\Gamma_u = f(I_a)$ d'un moteur shunt à $U=cte, j=cte$. $\Gamma_p$ est le couple de pertes.</figcaption>
+    </figure>
+    <p>Le couple utile $\Gamma_u = \Gamma_e - \Gamma_p$ est aussi une droite, parallèle à $\Gamma_e(I_a)$ mais décalée vers le bas du couple de pertes $\Gamma_p$. Le moteur ne démarre (couple utile positif) que si $I_a > I_{a0}$ (où $I_{a0}$ est tel que $K'_M I_{a0} = \Gamma_p$).</p>
+
+
+    <h4 id="carac_meca_shunt_cte">3°.1.3- Caractéristique mécanique $\Gamma_u = f(n)$</h4>
+    <p>Cette caractéristique lie le couple utile à la vitesse. On l'obtient en éliminant $I_a$ entre les équations de vitesse (4) et de couple (5).</p>
+    <p>De (4) : $I_a = \frac{n_{00} - n}{A} = \frac{K \phi (n_{00} - n)}{R_a}$.</p>
+    <p>De (5) : $\Gamma_e = K'_M I_a = (K_M \phi) I_a$.</p>
+    <p>En substituant $I_a$ :</p>
+    $$ \Gamma_e = (K_M \phi) \frac{K \phi (n_{00} - n)}{R_a} $$
+    Comme $K_M = K_E = K \times (60 / 2\pi)$, on obtient :
+    $$ \Gamma_e = C (n_{00} - n) $$
+    où $C = \frac{(K \phi) (K_M \phi)}{R_a}$ est une constante.
+    La caractéristique $\Gamma_e = f(n)$ est une <strong>droite de pente négative</strong>.
+     <figure>
+        <!-- Placeholder for Figure 6.6 -->
+        <img src="placeholder_figure_6_6.png" alt="Placeholder Figure 6.6">
+        <figcaption>Figure 6.6: Caractéristique mécanique $\Gamma_e = f(n)$ et $\Gamma_u = f(n)$ d'un moteur shunt à $U=cte, j=cte$.</figcaption>
+    </figure>
+     <p>La caractéristique du couple utile $\Gamma_u = \Gamma_e - \Gamma_p$ est une droite parallèle, décalée de $\Gamma_p$. La vitesse à vide est $n_0$ (où $\Gamma_u=0$).</p>
+     <p>Le <strong>point de fonctionnement</strong> en régime permanent est l'intersection de la caractéristique mécanique du moteur $\Gamma_u(n)$ et de la caractéristique mécanique de la charge entraînée $\Gamma_r(n)$.</p>
+      <figure>
+        <!-- Placeholder for Figure 6.7 -->
+        <img src="placeholder_figure_6_7.png" alt="Placeholder Figure 6.7">
+        <figcaption>Figure 6.7: Détermination du point de fonctionnement $P_f(n_1, \Gamma_{u1})$ par intersection des caractéristiques moteur ($\Gamma_u$) et charge ($\Gamma_r$).</figcaption>
+    </figure>
+
+    <h4 id="demarrage_shunt_cte">3°.1.4- Problème de démarrage</h4>
+    <p>Au moment du démarrage, la vitesse est nulle ($n=0$), donc la f.c.e.m. est nulle ($E=0$).</p>
+    <p>L'équation de l'induit $U = E + R_a I_a$ devient $U = R_a I_{dd}$, où $I_{dd}$ est le courant de démarrage direct.</p>
+    $$ I_{dd} = \frac{U}{R_a} $$
+    Comme la résistance d'induit $R_a$ est très faible, ce courant de démarrage $I_{dd}$ est très élevé (typiquement 10 à 20 fois le courant nominal $I_{an}$). Il est dangereux pour le moteur (échauffement excessif, efforts électrodynamiques) et pour le réseau d'alimentation.
+     <figure>
+        <!-- Placeholder for Figure 6.8 -->
+        <img src="placeholder_figure_6_8.png" alt="Placeholder Figure 6.8">
+        <figcaption>Figure 6.8: Schéma équivalent au démarrage ($n=0 \implies E=0$).</figcaption>
+    </figure>
+    <p>Pour limiter ce courant à une valeur acceptable (généralement $I_{d,max} \approx 1.5$ à $2.5 I_{an}$), on insère un <strong>rhéostat de démarrage $R_{HD}$</strong> en série avec l'induit, uniquement pendant la phase de démarrage.</p>
+    $$ I_d = \frac{U}{R_a + R_{HD}} $$
+    On choisit $R_{HD}$ pour que $I_d \le I_{d,max}$.
+    $$ R_{HD} = \frac{U}{I_{d,max}} - R_a \quad (8) $$
+     <figure>
+        <!-- Placeholder for Figure 6.9 -->
+        <img src="placeholder_figure_6_9.png" alt="Placeholder Figure 6.9">
+        <figcaption>Figure 6.9: Insertion du rhéostat de démarrage $R_{HD}$ en série avec l'induit.</figcaption>
+    </figure>
+    <p>Au fur et à mesure que le moteur accélère, la f.c.e.m. $E$ augmente ($E=K\phi n$), ce qui réduit le courant absorbé $I_a = (U-E)/(R_a+R_{HD})$. On diminue alors progressivement la valeur de $R_{HD}$ (souvent par plots) pour maintenir un courant d'accélération suffisant, jusqu'à court-circuiter complètement le rhéostat ($R_{HD}=0$) lorsque le moteur a atteint sa vitesse de régime.</p>
+    <p>Le couple de démarrage $\Gamma_d = K_M \phi I_d$ doit être supérieur au couple résistant $\Gamma_r$ (incluant le couple de frottement) pour que le moteur puisse démarrer.</p>
+
+
+    <h3 id="fonct_shunt_var">3°.2- Fonctionnement sous tension d'induit variable et excitation constante</h3>
+    <p>
+        C'est un mode de <strong>réglage de la vitesse</strong>. On maintient l'excitation $j$ constante (donc $\phi=cte$) et on fait varier la tension d'alimentation $U$ de l'induit (à l'aide d'une source de tension variable).
+    </p>
+
+    <h4 id="carac_vitesse_shunt_var">3°.2.1- Caractéristique de vitesse $n = f(I_a)$</h4>
+    <p>L'équation (4) est toujours valable : $n = \frac{U}{K \phi} - \frac{R_a}{K \phi} I_a$.</p>
+    <p>Comme $\phi$ est constant, la pente $A = R_a/(K\phi)$ est constante. Modifier $U$ revient à modifier la vitesse à vide théorique $n_{00} = U/(K\phi)$.</p>
+    <p>Les caractéristiques $n(I_a)$ pour différentes tensions $U$ sont des <strong>droites parallèles</strong>. La vitesse à vide et la vitesse en charge sont proportionnelles à la tension $U$. C'est un moyen efficace pour régler la vitesse en dessous de la vitesse nominale (obtenue pour $U=U_n$).</p>
+    <figure>
+        <!-- Placeholder for Figure 6.10 -->
+        <img src="placeholder_figure_6_10.png" alt="Placeholder Figure 6.10">
+        <figcaption>Figure 6.10: Caractéristiques de vitesse $n=f(I_a)$ pour différentes tensions d'alimentation $U$.</figcaption>
+    </figure>
+
+    <h4 id="carac_meca_shunt_var">3°.2.2- Caractéristique mécanique $\Gamma_u = f(n)$</h4>
+    <p>L'équation $\Gamma_e = C (n_{00} - n)$ est toujours valable, où $n_{00}=U/(K\phi)$.</p>
+    <p>Comme la pente $-1/C = -R_a / (K_M K \phi^2)$ ne dépend que de $\phi$ (constant), les caractéristiques mécaniques $\Gamma_e(n)$ pour différentes tensions $U$ sont des <strong>droites parallèles</strong> qui coupent l'axe des vitesses à $n_{00}(U)$.</p>
+     <figure>
+        <!-- Placeholder for Figure 6.11 -->
+        <img src="placeholder_figure_6_11.png" alt="Placeholder Figure 6.11">
+        <figcaption>Figure 6.11: Caractéristiques mécaniques $\Gamma_e=f(n)$ pour différentes tensions d'alimentation $U$.</figcaption>
+    </figure>
+    <p>Ce mode de réglage (variation de $U$ à $\phi=cte$) permet de contrôler le couple et la vitesse dans les quatre quadrants du plan couple-vitesse (en inversant $U$ et/ou $I_a$), ce qui est utilisé dans les variateurs de vitesse électroniques (hacheurs, ponts redresseurs commandés).</p>
+
+
+    <h3 id="rendement_shunt">3°.3- Rendement</h3>
+    <p>Le rendement du moteur shunt est $\eta = P_u / P_a$.</p>
+    <figure>
+        <!-- Placeholder for Figure 6.12 -->
+        <img src="placeholder_figure_6_12.png" alt="Placeholder Figure 6.12">
+        <figcaption>Figure 6.12: Bilan de puissance d'un moteur shunt.</figcaption>
+    </figure>
+    <ul>
+        <li>Puissance absorbée : $P_a = U I = U (I_a + j)$</li>
+        <li>Pertes Joule :
+            <ul>
+                <li>Induit : $P_{ja} = R_a I_a^2$</li>
+                <li>Inducteur : $P_{jd} = U j = (R_h+r_d) j^2$</li>
+            </ul>
+        </li>
+        <li>Pertes collectives (ou constantes) : $P_c = P_{fer} + P_{meca}$ (supposées constantes si la vitesse et le flux varient peu). Elles peuvent être estimées par la puissance absorbée à vide $P_0 = U I_{a0}$ (en négligeant $P_{jd}$ si $j$ est petit, ou en la soustrayant).</li>
+        <li>Puissance électromagnétique : $P_{em} = E I_a = \Gamma_e \Omega$</li>
+        <li>Puissance utile : $P_u = P_{em} - P_c = \Gamma_u \Omega$</li>
+    </ul>
+    <p>Le rendement peut s'écrire :</p>
+    $$ \eta = \frac{P_u}{P_a} = \frac{P_a - P_{ja} - P_{jd} - P_c}{P_a} = \frac{U(I_a+j) - R_a I_a^2 - Uj - P_c}{U(I_a+j)} $$
+    Le rendement varie avec la charge, passant par un maximum lorsque les pertes variables ($P_{ja}$) sont égales aux pertes considérées comme constantes ($P_{jd} + P_c$).
+
+
+    <h2 id="moteur_serie">4°- Moteur à excitation série</h2>
+    <p>Dans ce moteur, l'enroulement inducteur (dit série, résistance $R_s$) est connecté en série avec l'induit. Le même courant $I$ traverse donc l'induit et l'inducteur série : $I = I_a = I_s$.</p>
+     <figure>
+        <!-- Placeholder for Figure 6.13 -->
+        <img src="placeholder_figure_6_13.png" alt="Placeholder Figure 6.13">
+        <figcaption>Figure 6.13: Schéma équivalent d'un moteur série.</figcaption>
+    </figure>
+    <p>L'équation électrique de la maille unique est :</p>
+    $$ U = E + R_a I_a + R_s I_s = E + (R_a + R_s) I $$
+    <span class="equation-number">(10)</span>
+    <p>La principale caractéristique de ce moteur est que le flux $\phi$ est créé par le courant de charge $I$ lui-même. La relation $\phi = f(I)$ dépend de la courbe de magnétisation.</p>
+    <p><strong>Hypothèse simplificatrice :</strong> Pour l'étude des caractéristiques, on suppose souvent que le circuit magnétique n'est <strong>pas saturé</strong>. Dans ce cas, le flux est proportionnel au courant qui le crée :</p>
+    $$ \phi = \alpha I $$
+    où $\alpha$ est une constante de proportionnalité.
+
+    <h3 id="carac_vit_serie">4°.1- Caractéristique de vitesse $n = f(I)$</h3>
+    <p>On a $E = K \phi n = K (\alpha I) n$ et $E = U - (R_a + R_s) I$.</p>
+    <p>En égalant les expressions de $E$ :</p>
+    $$ K \alpha I n = U - (R_a + R_s) I $$
+    En isolant $n$ (ou $\Omega$):
+    $$ n = \frac{U - (R_a + R_s) I}{K \alpha I} = \frac{U}{K' I} - \frac{R_a + R_s}{K'} $$
+    où $K' = K \alpha$.
+    <p>Si on néglige la chute de tension $(R_a+R_s)I$ devant $U$ (valable pour $I$ pas trop grand) :</p>
+    $$ n \approx \frac{U}{K' I} $$
+    La vitesse $n$ est <strong>inversement proportionnelle au courant $I$</strong>. La caractéristique a une allure hyperbolique.
+     <figure>
+        <!-- Placeholder for Figure 6.14 -->
+        <img src="placeholder_figure_6_14.png" alt="Placeholder Figure 6.14">
+        <figcaption>Figure 6.14: Caractéristique de vitesse $n=f(I)$ d'un moteur série (zone non saturée).</figcaption>
+    </figure>
+    <p><strong>Remarque : Emballement à vide !</strong></p>
+    <p>Si la charge mécanique diminue fortement, le courant $I$ tend vers zéro. D'après la relation $n \approx U/(K'I)$, la vitesse $n$ tend vers l'infini. En pratique, la vitesse augmente dangereusement et peut détruire le moteur par effets centrifuges. C'est pourquoi un moteur série ne doit <strong>jamais fonctionner à vide</strong> ou avec une charge trop faible, et doit toujours être accouplé mécaniquement à sa charge (pas de courroie qui pourrait casser).</p>
+    <p>Cette caractéristique est utile en traction : à faible vitesse (démarrage, côte), le courant $I$ est élevé, le moteur fournit un fort couple (voir ci-dessous). À grande vitesse (sur le plat), le courant $I$ est faible.</p>
+
+    <h3 id="carac_couple_serie">4°.2- Caractéristique de couple $\Gamma_e = f(I)$</h3>
+    <p>Le couple électromagnétique est $\Gamma_e = K_M \phi I$.</p>
+    <p>Avec l'hypothèse $\phi = \alpha I$ :</p>
+    $$ \Gamma_e = K_M (\alpha I) I = (K_M \alpha) I^2 $$
+    $$ \Gamma_e = K'_M I^2 $$
+     <span class="equation-number">(11)</span>
+    où $K'_M = K_M \alpha$.
+    <p>Le couple électromagnétique est <strong>proportionnel au carré du courant</strong> (en régime non saturé). C'est une caractéristique essentielle du moteur série : il fournit un très fort couple à fort courant (au démarrage ou à faible vitesse).</p>
+     <figure>
+        <!-- Placeholder for Figure 6.15 -->
+        <img src="placeholder_figure_6_15.png" alt="Placeholder Figure 6.15">
+        <figcaption>Figure 6.15: Caractéristique de couple $\Gamma_e = f(I)$ d'un moteur série (zone non saturée).</figcaption>
+    </figure>
+     <p>La caractéristique du couple utile $\Gamma_u = \Gamma_e - \Gamma_p$ est obtenue par translation de $\Gamma_p$.</p>
+
+
+    <h3 id="carac_meca_serie">4°.3- Caractéristique mécanique $\Gamma_e = f(n)$</h3>
+    <p>On élimine $I$ entre les expressions de $n(I)$ et $\Gamma_e(I)$.</p>
+    <p>De $\Gamma_e = K'_M I^2$, on tire $I = \sqrt{\frac{\Gamma_e}{K'_M}}$.</p>
+    <p>En reportant dans l'expression approchée de la vitesse $n \approx \frac{U}{K' I}$:</p>
+    $$ n \approx \frac{U}{K'} \sqrt{\frac{K'_M}{\Gamma_e}} $$
+    $$ n \approx \frac{Cte}{\sqrt{\Gamma_e}} $$
+    La vitesse est approximativement <strong>inversement proportionnelle à la racine carrée du couple</strong>. La caractéristique mécanique $\Gamma_e(n)$ a une forme hyperbolique abrupte.
+     <figure>
+        <!-- Placeholder for Figure 6.16 -->
+        <img src="placeholder_figure_6_16.png" alt="Placeholder Figure 6.16">
+        <figcaption>Figure 6.16: Caractéristique mécanique $\Gamma_e = f(n)$ d'un moteur série.</figcaption>
+    </figure>
+
+    <h3 id="demarrage_serie">4°.4- Problème de démarrage</h3>
+    <p>Au démarrage ($n=0 \implies E=0$), l'équation $U = E + (R_a+R_s)I$ donne :</p>
+    $$ I_{dd} = \frac{U}{R_a + R_s} $$
+    Comme pour le moteur shunt, la résistance totale $(R_a+R_s)$ est faible et le courant de démarrage direct est très élevé. Il est impératif d'utiliser un <strong>rhéostat de démarrage</strong> en série pour limiter le courant $I_d$. La méthode est la même que pour le moteur shunt.</p>
+    <p>Cependant, le moteur série a l'avantage de produire un très fort couple de démarrage ($\Gamma_d \propto I_d^2$).</p>
+
+    <h3 id="rendement_serie">4°.5- Rendement</h3>
+    <p>Le rendement du moteur série est $\eta = P_u / P_a$.</p>
+    <figure>
+        <!-- Placeholder for Figure 6.17 -->
+        <img src="placeholder_figure_6_17.png" alt="Placeholder Figure 6.17">
+        <figcaption>Figure 6.17: Bilan de puissance d'un moteur série.</figcaption>
+    </figure>
+    <ul>
+        <li>Puissance absorbée : $P_a = U I$</li>
+        <li>Pertes Joule : $P_j = (R_a + R_s) I^2$ (dans l'induit et l'inducteur série)</li>
+        <li>Pertes collectives : $P_c = P_{fer} + P_{meca}$ (attention, $P_{fer}$ dépend du flux $\phi$, donc du courant $I$, elles ne sont pas constantes ici).</li>
+        <li>Puissance utile : $P_u = P_a - P_j - P_c$</li>
+    </ul>
+     $$ \eta = \frac{P_u}{P_a} = \frac{U I - (R_a + R_s) I^2 - P_c(I)}{U I} $$
+
+
+    <h2 id="comparaison">5°- Comparaison entre moteur série et shunt et applications</h2>
+    <p><strong>Comparaison des caractéristiques principales :</strong></p>
+    | Caractéristique        | Moteur Shunt (ou Exc. Séparée)         | Moteur Série                      |
+    |------------------------|--------------------------------------|-----------------------------------|
+    | Vitesse (vs Charge)    | Quasi constante (faible chute)       | Très variable (hyperbolique)      |
+    | Vitesse à vide         | Stable (proche nominale)             | Dangereuse (emballement)          |
+    | Couple (vs Courant)    | Proportionnel à $I_a$ ($\Gamma_e \propto I_a$) | Proportionnel à $I^2$ ($\Gamma_e \propto I^2$) |
+    | Couple de démarrage    | Bon                                  | Très élevé                        |
+    | Réglage vitesse        | Facile (par $U$ ou $j$)              | Possible (par $U$ ou $R_{add}$)    |
+    | Réversibilité          | Simple                               | Simple                            |
+    | Robustesse             | Bonne                                | Très bonne                        |
+
+    <p><strong>Applications typiques :</strong></p>
+    <ul>
+        <li>
+            <strong>Moteur Shunt (ou à excitation séparée) :</strong>
+            <ul>
+                <li><strong>Applications à vitesse constante ou réglable précisément :</strong> machines-outils, enrouleuses/dérouleuses, pompes et ventilateurs (si régulation nécessaire), bancs d'essais, ascenseurs (avec variateurs).</li>
+                <li>Réputé pour sa bonne <strong>régulation de vitesse</strong> (vitesse peu sensible aux variations de couple).</li>
+                <li>Permet un réglage de vitesse aisé sur une large plage par action sur la tension d'induit (en dessous de la vitesse nominale) ou sur le courant d'excitation (défluxage, au-dessus de la vitesse nominale, mais à couple réduit).</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Moteur Série :</strong>
+            <ul>
+                <li><strong>Applications nécessitant un fort couple de démarrage ou supportant de fortes surcharges :</strong> traction électrique (trains, tramways, métros, chariots élévateurs), démarreurs d'automobiles (anciens), appareils de levage (grues, treuils), broyeurs, certains outils électroportatifs (perceuses...).</li>
+                <li>Sa capacité à fournir un couple $\propto I^2$ est un avantage majeur au démarrage.</li>
+                <li>Son "autorégulation" de puissance (ralentit en côte, accélère sur le plat pour une puissance quasi constante) est appréciée en traction.</li>
+                <li>Son principal inconvénient est le <strong>risque d'emballement à vide</strong>, qui limite son usage aux applications où une charge minimale est toujours présente ou où la transmission est directe (pas de courroie).</li>
+            </ul>
+        </li>
+    </ul>
+
+
+    <h2 id="td4">TD N°4 : Moteurs à courant continu</h2>
+    <p>(Contenu non disponible)</p>
+
+    <footer class="footer">
+        <span>Année Universitaire 2011-2012</span>
+        <span>(Conversion HTML du document original)</span>
+    </footer>
+
+</body>
+</html>
