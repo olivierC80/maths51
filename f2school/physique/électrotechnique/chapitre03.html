@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 03 : Transformateur Triphasé</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX Auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding-bottom: 50px; /* Space for footer */
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #666;
+            padding-bottom: 10px;
+        }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p, ul, ol {
+            margin-bottom: 1em;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        figure {
+            text-align: center;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            max-width: 600px; /* Adjust as needed */
+        }
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc; /* Border around the placeholder */
+            background-color: #f0f0f0; /* Background for placeholder */
+            display: inline-block; /* Prevents extra space below */
+        }
+        figcaption {
+            font-style: italic;
+            color: #555;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        .placeholder-text {
+            display: block;
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f8f8f8;
+            border-top: 1px solid #ddd;
+            padding: 5px 20px;
+            font-size: 0.8em;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+        }
+        .header-info {
+             display: flex;
+             justify-content: space-between;
+             padding: 5px 0;
+             border-bottom: 1px solid #eee;
+             margin-bottom: 20px;
+             font-size: 0.9em;
+        }
+        .equation-number {
+            float: right;
+            margin-right: 10px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header-info">
+        <span>Cours Electrotechnique</span>
+        <span>GE 2</span>
+        <span>AMARI.Mansour</span>
+    </header>
+
+    <h1>CHAPITRE : 03 <br> TRANSFORMATEUR TRIPHASE</h1>
+
+    <h2>Contenu :</h2>
+    <ul>
+        <li><a href="#interet">1°- Intérêt</a></li>
+        <li><a href="#constitution_tri">2°- Constitution</a>
+            <ul>
+                <li><a href="#couplage">2°.1- Modes de couplage</a></li>
+                <li><a href="#choix_couplage">2°.2- Choix du couplage</a></li>
+            </ul>
+        </li>
+        <li><a href="#fonctionnement_equilibre">3°- Fonctionnement en régime équilibré</a>
+            <ul>
+                <li><a href="#indice_horaire">3°.1- Indice horaire</a></li>
+                <li><a href="#determination_indice">3°.2- Détermination pratique de l'indice horaire</a></li>
+                <li><a href="#rapport_transfo_tri">3°.3- Rapport de transformation</a></li>
+                <li><a href="#schema_mono_eq">3°.4- Schéma monophasé équivalent</a></li>
+            </ul>
+        </li>
+        <li><a href="#marche_parallele">4°- Marche en parallèle des transformateurs triphasés</a>
+            <ul>
+                <li><a href="#but_parallele">4°.1- But</a></li>
+                <li><a href="#eq_elec_parallele">4°.2- Equations électriques</a></li>
+                <li><a href="#mise_parallele">4°.3- Mise en parallèle des transformateurs triphasés</a></li>
+            </ul>
+        </li>
+        <li><a href="#td2">TD N°2 : Transformateur triphasé & marche en parallèle</a></li>
+    </ul>
+
+    <h2 id="interet">1°- Intérêt</h2>
+    <p>
+        La production, le transport et la distribution de l'énergie électrique se font majoritairement en <strong>triphasé</strong> pour des raisons techniques et économiques. Le transport à haute tension est plus économique (moins de pertes Joule pour la même puissance transportée). Il est donc nécessaire d'utiliser des transformateurs pour élever la tension à la sortie des centrales (transformateurs élévateurs) et l'abaisser près des lieux de consommation (transformateurs abaisseurs).
+    </p>
+    <p>
+        Pour modifier les tensions d'un système triphasé, on peut utiliser deux solutions principales :
+    </p>
+    <ul>
+        <li>
+            <strong>Utiliser trois transformateurs monophasés identiques :</strong> Chaque transformateur gère une phase. Les primaires et secondaires sont ensuite connectés selon le couplage désiré (étoile, triangle). Cette solution est modulable mais plus encombrante et coûteuse.
+            <figure>
+                <!-- Placeholder for Figure 3.1 -->
+                <img src="placeholder_figure_3_1.png" alt="Placeholder Figure 3.1">
+                <figcaption>Figure 3.1: Utilisation de trois transformateurs monophasés identiques. Les flux $\phi_A, \phi_B, \phi_C$ dans chaque noyau sont indépendants. En régime équilibré, $\vec{\phi}_A + \vec{\phi}_B + \vec{\phi}_C = \vec{0}$ si les courants magnétisants sont équilibrés.</figcaption>
+            </figure>
+        </li>
+        <li>
+            <strong>Utiliser un seul transformateur triphasé :</strong> Les trois circuits magnétiques et les enroulements sont combinés dans une structure unique. C'est la solution la plus courante car elle est plus compacte et économique.
+            <figure>
+                <!-- Placeholder for Figure 3.2 -->
+                <img src="placeholder_figure_3_2.png" alt="Placeholder Figure 3.2">
+                <figcaption>Figure 3.2: Structure schématique d'un transformateur triphasé à trois colonnes. Les flux $\phi_A, \phi_B, \phi_C$ sont "forcés" à circuler dans les colonnes et les culasses. La somme des flux dans les trois colonnes doit être nulle pour se refermer par les culasses : $\phi_A + \phi_B + \phi_C = 0$.</figcaption>
+            </figure>
+        </li>
+    </ul>
+
+    <h2 id="constitution_tri">2°- Constitution</h2>
+    <p>
+        Un transformateur triphasé est généralement constitué :
+    </p>
+    <ul>
+        <li>
+            <strong>D'un circuit magnétique :</strong> Le plus souvent, il est formé de trois noyaux verticaux (colonnes) reliés par deux pièces horizontales (culasses haute et basse). L'ensemble est réalisé en tôles magnétiques feuilletées pour minimiser les pertes fer.
+        </li>
+        <li>
+            <strong>D'enroulements :</strong> Chaque colonne porte les enroulements primaire et secondaire correspondant à une phase. Typiquement, l'enroulement basse tension (BT) est placé près du noyau et l'enroulement haute tension (HT) est bobiné par-dessus, avec une isolation adéquate entre eux et avec le noyau. Il peut y avoir plusieurs enroulements secondaires par phase.
+            <figure>
+                <!-- Placeholder for Figure 3.3 -->
+                <img src="placeholder_figure_3_3.png" alt="Placeholder Figure 3.3">
+                <figcaption>Figure 3.3: Disposition typique des enroulements primaire ($N_1$) et secondaire ($N_2$) autour d'une colonne du noyau.</figcaption>
+            </figure>
+        </li>
+    </ul>
+    <p>
+        <strong>Convention de repérage des bornes :</strong>
+    </p>
+    <ul>
+        <li>Enroulements primaires (HT) : Bornes repérées par des lettres majuscules (A, B, C pour les phases ; N pour le neutre si existant).</li>
+        <li>Enroulements secondaires (BT) : Bornes repérées par des lettres minuscules (a, b, c pour les phases ; n pour le neutre si existant).</li>
+        <li><strong>Bornes homologues :</strong> Les bornes désignées par la même lettre (A et a, B et b, C et c) sont dites homologues. Elles correspondent aux extrémités des enroulements d'une même phase bobinés dans le même sens.
+            <br><em>Remarque :</em> Si les enroulements primaire ($N_1$ spires) et secondaire ($N_2$ spires) d'une même colonne sont bobinés dans le même sens et parcourus par le même flux $\phi$, les tensions induites (f.e.m.) $\vec{E}_A$ (primaire) et $\vec{E}_a$ (secondaire) sont en phase.
+        </li>
+    </ul>
+
+    <h3 id="couplage">2°.1- Modes de couplage</h3>
+    <p>
+        Les trois enroulements primaires et les trois enroulements secondaires peuvent être connectés de différentes manières pour former un système triphasé.
+    </p>
+    <ul>
+        <li>
+            <strong>Couplages primaires (HT) :</strong>
+            <ul>
+                <li><strong>Étoile (Y) :</strong> Les trois extrémités "fin" (ou "début") des enroulements sont reliées ensemble pour former le point neutre (N). Les trois autres extrémités sont reliées aux lignes A, B, C.</li>
+                <li><strong>Triangle (D) :</strong> Les enroulements sont connectés en série formant une boucle fermée. La fin d'un enroulement est reliée au début du suivant (A à B', B à C', C à A'). Les lignes A, B, C sont connectées aux sommets.</li>
+            </ul>
+            <figure>
+                <!-- Placeholder for Figure 3.4 -->
+                <img src="placeholder_figure_3_4.png" alt="Placeholder Figure 3.4">
+                <figcaption>Figure 3.4: Couplages possibles au primaire : Étoile (Y) et Triangle (D).</figcaption>
+            </figure>
+        </li>
+        <li>
+            <strong>Couplages secondaires (BT) :</strong>
+            <ul>
+                <li><strong>Étoile (y) :</strong> Similaire à l'étoile primaire, crée un point neutre (n).</li>
+                <li><strong>Triangle (d) :</strong> Similaire au triangle primaire.</li>
+                <li><strong>Zigzag (z) :</strong> Chaque phase secondaire est constituée de deux demi-bobines portées par deux colonnes différentes et connectées en série en opposition. Ce couplage permet de mieux équilibrer les flux en cas de déséquilibre de charge et de disposer d'un neutre stable.</li>
+            </ul>
+            <figure>
+                <!-- Placeholder for Figure 3.5 -->
+                <img src="placeholder_figure_3_5.png" alt="Placeholder Figure 3.5">
+                <figcaption>Figure 3.5: Couplages possibles au secondaire : Étoile (y), Triangle (d) et Zigzag (z).</figcaption>
+            </figure>
+        </li>
+    </ul>
+    <p>
+        En combinant les couplages primaire et secondaire, on obtient différents <strong>groupes de couplage</strong> pour un transformateur triphasé. Les plus courants sont : Yy, Yd, Yz, Dy, Dd, Dz. Le choix dépend de l'application.
+    </p>
+
+    <h3 id="choix_couplage">2°.2- Choix du couplage</h3>
+    <p>
+        Le choix du type de couplage dépend de plusieurs critères :
+    </p>
+    <ul>
+        <li><strong>Besoin d'un neutre au secondaire :</strong> Si la charge nécessite un neutre (ex: réseau de distribution basse tension 230V/400V), le secondaire doit être couplé en étoile (y) ou en zigzag (z).</li>
+        <li><strong>Fonctionnement en régime déséquilibré :</strong> Si la charge risque d'être déséquilibrée (courant de neutre $I_n$ important, ex: $I_n > 0.1 I_{nominal}$), le couplage zigzag (z) au secondaire est préférable car il assure un meilleur équilibrage des f.m.m. et limite la déformation des tensions. Le couplage triangle (d ou D) permet aussi une circulation des courants de déséquilibre (harmonique 3 notamment) sans affecter les lignes externes. Le couplage Yy sans neutre sorti est sensible aux déséquilibres.</li>
+        <li><strong>Niveau de tension :</strong> Côté haute tension (HT), on préfère souvent le couplage étoile (Y) car la tension aux bornes de chaque enroulement est une tension phase (tension simple $V = U/\sqrt{3}$), ce qui nécessite moins de spires et simplifie l'isolation par rapport à un couplage triangle (D) où chaque enroulement voit la tension composée $U$.</li>
+        <li><strong>Niveau de courant :</strong> Côté forts courants (généralement basse tension, BT), le couplage triangle (d) peut être préféré car le courant dans chaque enroulement est $I_{phase} = I_{ligne}/\sqrt{3}$, ce qui permet d'utiliser des conducteurs de section plus faible que pour un couplage étoile (y) où $I_{phase} = I_{ligne}$.</li>
+    </ul>
+
+    <h2 id="fonctionnement_equilibre">3°- Fonctionnement en régime équilibré</h2>
+    <p>
+        On suppose que le transformateur est alimenté par un système de tensions triphasées équilibrées et qu'il alimente une charge triphasée équilibrée. Dans ce cas, les courants et les flux sont également triphasés équilibrés. L'étude peut souvent se ramener à celle d'une seule phase (voir Schéma monophasé équivalent). Une caractéristique importante est le déphasage entre les tensions primaires et secondaires.
+    </p>
+
+    <h3 id="indice_horaire">3°.1- Indice horaire</h3>
+
+    <h4>3°.1.1- Définition</h4>
+    <p>
+        L'<strong>indice horaire</strong> ($I_h$) d'un transformateur triphasé est un nombre entier compris entre 0 et 11 qui caractérise le <strong>déphasage</strong> $\theta$ entre les tensions primaires et secondaires homologues (tensions simples ou composées).
+    </p>
+    <p>
+        Plus précisément, $\theta$ est l'angle dont la tension simple secondaire homologue (ex: $\vec{V}_a$) est en avance sur la tension simple primaire homologue (ex: $\vec{V}_A$).
+        $$ \theta = \text{angle}(\vec{V}_a \text{ par rapport à } \vec{V}_A) = \text{angle}(\vec{V}_b \text{ par rapport à } \vec{V}_B) = \text{angle}(\vec{V}_c \text{ par rapport à } \vec{V}_C) $$
+        L'indice horaire $I_h$ est défini par :
+        $$ I_h = \frac{\theta}{30^\circ} \quad (1) $$
+        où $\theta$ est exprimé en degrés et est un multiple de 30°. L'indice horaire correspond à la position de l'aiguille des heures sur une horloge lorsque l'aiguille des minutes (associée à la tension primaire) est à 12h.
+    </p>
+    <p>
+        <em>Remarque :</em> Le déphasage $\theta$ est le même entre les tensions composées homologues (ex: $\vec{U}_{ab}$ par rapport à $\vec{U}_{AB}$).
+        $$ \theta = \text{angle}(\vec{U}_{ab} \text{ par rapport à } \vec{U}_{AB}) = \dots $$
+    </p>
+    <p>L'indice horaire dépend uniquement des modes de couplage choisis au primaire et au secondaire.</p>
+
+    <h4>3°.1.2- Détermination de l'indice horaire à partir du schéma</h4>
+    <p>
+        Connaissant le schéma des connexions internes, on peut déterminer l'indice horaire en construisant le diagramme vectoriel des tensions.
+    </p>
+    <p><strong>Exemple 1 : Couplage Yy0</strong></p>
+    <figure>
+        <!-- Placeholder for Figure 3.7 -->
+        <img src="placeholder_figure_3_7.png" alt="Placeholder Figure 3.7">
+        <figcaption>Figure 3.7: Détermination de l'indice horaire pour un couplage Yy. Diagramme de Fresnel associé.</figcaption>
+    </figure>
+    <p>
+        Pour le couplage étoile-étoile (Yy) représenté, si les bornes homologues sont connectées de manière standard (A-a, B-b, C-c), les tensions simples $\vec{V}_A$ (entre A et N) et $\vec{V}_a$ (entre a et n) sont induites par le même flux dans la même colonne et sont donc <strong>en phase</strong> (en supposant des enroulements bobinés dans le même sens).
+        Le déphasage $\theta = (\vec{V}_A, \vec{V}_a) = 0^\circ$.
+        L'indice horaire est $I_h = 0^\circ / 30^\circ = 0$.
+        Ce couplage est noté <strong>Yy0</strong>.
+    </p>
+    <p><strong>Exemple 2 : Couplage Yd11</strong></p>
+    <figure>
+        <!-- Placeholder for Figure 3.8 -->
+        <img src="placeholder_figure_3_8.png" alt="Placeholder Figure 3.8">
+        <figcaption>Figure 3.8: Détermination de l'indice horaire pour un couplage Yd. Diagramme de Fresnel associé.</figcaption>
+    </figure>
+    <p>
+        Pour le couplage étoile-triangle (Yd) représenté, la tension simple primaire est $\vec{V}_A$. La tension composée secondaire homologue est $\vec{U}_{ac} = \vec{V}_a - \vec{V}_c$. D'après le schéma de câblage et les conventions, $\vec{V}_a$ est en phase avec $\vec{V}_A$, $\vec{V}_b$ avec $\vec{V}_B$, $\vec{V}_c$ avec $\vec{V}_C$.
+        On cherche le déphasage $\theta = (\vec{V}_A, \vec{V}_a)$. Ici $\theta=0^\circ$ par construction simple.
+        Cependant, l'indice horaire est défini conventionnellement par le déphasage entre $U_{AB}$ et $U_{ab}$.
+        $\vec{U}_{AB} = \vec{V}_A - \vec{V}_B$.
+        $\vec{U}_{ab} = \vec{V}_a - \vec{V}_b$.
+        Comme $\vec{V}_a // \vec{V}_A$ et $\vec{V}_b // \vec{V}_B$, le déphasage entre $U_{ab}$ et $U_{AB}$ est $0^\circ$. $I_h = 0$. Ce serait un Yd0.
+        Le couplage usuel Yd aboutit souvent à $I_h=11$ ou $I_h=5$. Pour obtenir $I_h=11$ (Yd11), $\vec{U}_{ab}$ doit être en retard de $330^\circ$ (ou en avance de $30^\circ$) sur $\vec{U}_{AB}$. Ceci est obtenu par un câblage spécifique du triangle secondaire. Dans la figure 3.8, on compare $V_{AN}$ et $U_{ac}$. Si $V_a$ est en phase avec $V_A$, $V_c$ en phase avec $V_C$ (décalé de -240° ou +120°), alors $U_{ac} = V_a - V_c$. $V_A$ fait un angle 0, $V_a$ fait 0. $V_C$ fait -240°, $V_c$ fait -240°. $U_{ac} = V_a - V_c$ fait un angle de -30°. Le déphasage entre $V_A$ et $U_{ac}$ est de -30°. Si on prend $U_{ac}$ comme "équivalent" de $V_a$ (tension entre borne a et c), alors $\theta = -30^\circ \equiv 330^\circ$. $I_h = 330/30 = 11$.
+    </p>
+    <p><strong>Exemple 3 : Couplage Yz11</strong></p>
+    <figure>
+        <!-- Placeholder for Figure 3.9 -->
+        <img src="placeholder_figure_3_9.png" alt="Placeholder Figure 3.9">
+        <figcaption>Figure 3.9: Détermination de l'indice horaire pour un couplage Yz. Diagramme de Fresnel associé.</figcaption>
+    </figure>
+    <p>
+        Le couplage zigzag est plus complexe. Chaque tension simple secondaire (ex: $\vec{V}_a$) est la somme vectorielle de deux tensions issues de demi-bobines sur des colonnes différentes, connectées en opposition. Pour le Yz11, on obtient également un déphasage de $330^\circ$ ($I_h=11$). $\vec{V}_a$ est en retard de $330^\circ$ (avance de $30^\circ$) sur $\vec{V}_A$.
+    </p>
+    <p>
+        <em>Remarque :</em> Des permutations circulaires des connexions au primaire ou au secondaire peuvent changer l'indice horaire (par multiples de 4, soit 120°). Un câblage inverse peut changer l'indice horaire de 6 (180°).
+    </p>
+
+    <h3 id="determination_indice">3°.2- Détermination pratique de l'indice horaire</h3>
+
+    <h4>3°.2.1- Méthode oscilloscopique</h4>
+    <p>
+        On mesure directement le déphasage $\theta$ entre une tension simple primaire ($\vec{V}_A$) et la tension simple secondaire homologue ($\vec{V}_a$) à l'aide d'un oscilloscope. On en déduit $I_h = \theta / 30^\circ$.
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 3.10 -->
+        <img src="placeholder_figure_3_10.png" alt="Placeholder Figure 3.10">
+        <figcaption>Fig 3.10: Méthode oscilloscope pour mesurer le déphasage entre $V_{AN}(t)$ et $V_{an}(t)$.</figcaption>
+    </figure>
+
+    <h4>3°.2.2- Méthode des électriciens (voltmètre)</h4>
+    <p>
+        Cette méthode ne nécessite qu'un voltmètre et est réalisable sur site.
+    </p>
+    <ol>
+        <li>Mettre le transformateur sous tension à vide.</li>
+        <li>Relier électriquement une borne primaire et sa borne secondaire homologue (ex: A et a).</li>
+        <li>Mesurer les tensions composées primaires ($U_{AB}, U_{BC}, U_{CA}$, qui doivent être égales à $U$).</li>
+        <li>Mesurer les tensions "mixtes" entre les bornes primaires et secondaires non reliées (ex: $U_{Ab}, U_{Bb}, U_{Cb}, U_{Ac}, U_{Bc}, U_{Cc}$).</li>
+        <li>Choisir une échelle et construire le diagramme vectoriel :
+            <ul>
+                <li>Tracer le triangle des tensions primaires A-B-C (équilatéral).</li>
+                <li>Le point 'a' est confondu avec 'A'.</li>
+                <li>Tracer les arcs de cercle centrés en A, B, C avec pour rayons les tensions mesurées $U_{Ab}, U_{Bb}, U_{Cb}$. L'intersection de ces arcs donne la position du point 'b'.</li>
+                <li>Faire de même pour trouver le point 'c' avec les rayons $U_{Ac}, U_{Bc}, U_{Cc}$.</li>
+                <li>Le triangle a-b-c est le triangle des tensions secondaires.</li>
+                <li>Mesurer l'angle $\theta$ entre le vecteur $\vec{V}_A$ (ou $\vec{U}_{AB}$) et le vecteur homologue $\vec{V}_a$ (ou $\vec{U}_{ab}$).</li>
+            </ul>
+        </li>
+        <li>Calculer $I_h = \theta / 30^\circ$.</li>
+    </ol>
+    <figure>
+        <!-- Placeholder for Figure 3.11 -->
+        <img src="placeholder_figure_3_11.png" alt="Placeholder Figure 3.11">
+        <figcaption>Figure 3.11: Principe de la méthode des électriciens et construction vectorielle (exemple pour Yy0, $\theta=0$).</figcaption>
+    </figure>
+    <p>Dans l'exemple de la Figure 3.11 (correspondant à Yy0), on mesure $U_{Ab}$ qui permet de positionner b. Le déphasage $\theta$ entre $U_{AB}$ et $U_{ab}$ est nul.</p>
+
+
+    <h3 id="rapport_transfo_tri">3°.3- Rapport de transformation</h3>
+
+    <h4>3°.3.1- Définition</h4>
+    <p>
+        Le rapport de transformation à vide $m$ d'un transformateur triphasé est défini comme le rapport des <strong>tensions entre phases (tensions composées)</strong> à vide primaire et secondaire :
+        $$ m = \frac{U_{ab0}}{U_{AB}} \quad (2) $$
+        où $U_{ab0}$ est la tension composée secondaire à vide et $U_{AB}$ est la tension composée primaire nominale.
+    </p>
+    <p>
+        <em>Attention :</em> Certains ouvrages définissent $m$ comme le rapport des tensions simples ($V_{a0}/V_{A0}$) ou comme le rapport du nombre de spires par phase ($N_2/N_1$). La définition utilisant les tensions composées est la plus normalisée mais il faut être vigilant. Dans ce cours, $m = U_{ab0}/U_{AB}$.
+    </p>
+    <p>
+        Le rapport $m$ dépend du rapport de transformation par phase (lié à $N_2/N_1$) ET du type de couplage au primaire et au secondaire.
+    </p>
+
+    <h4>3°.3.2- Exemples</h4>
+    <p>Soit $m_{phase} = N_2/N_1$ le rapport du nombre de spires par phase.</p>
+    <ul>
+        <li><strong>Couplage Yy :</strong>
+            $U_{ab0} = \sqrt{3} V_{a0}$ et $U_{AB} = \sqrt{3} V_{A0}$.
+            $V_{a0} = m_{phase} V_{A0}$.
+            $m = \frac{U_{ab0}}{U_{AB}} = \frac{\sqrt{3} V_{a0}}{\sqrt{3} V_{A0}} = \frac{V_{a0}}{V_{A0}} = m_{phase} = \frac{N_2}{N_1}$.
+        </li>
+        <li><strong>Couplage Dd :</strong>
+            $U_{ab0} = V_{a0}$ et $U_{AB} = V_{A0}$.
+            $V_{a0} = m_{phase} V_{A0}$.
+            $m = \frac{U_{ab0}}{U_{AB}} = \frac{V_{a0}}{V_{A0}} = m_{phase} = \frac{N_2}{N_1}$.
+             <span class="equation-number">(3)</span>
+        </li>
+        <li><strong>Couplage Yd :</strong>
+            $U_{ab0} = V_{a0}$ et $U_{AB} = \sqrt{3} V_{A0}$.
+            $V_{a0} = m_{phase} V_{A0}$.
+            $m = \frac{U_{ab0}}{U_{AB}} = \frac{V_{a0}}{\sqrt{3} V_{A0}} = \frac{m_{phase}}{\sqrt{3}} = \frac{N_2}{N_1 \sqrt{3}}$.
+             <span class="equation-number">(4)</span>
+        </li>
+        <li><strong>Couplage Dy :</strong>
+            $U_{ab0} = \sqrt{3} V_{a0}$ et $U_{AB} = V_{A0}$.
+            $V_{a0} = m_{phase} V_{A0}$.
+            $m = \frac{U_{ab0}}{U_{AB}} = \frac{\sqrt{3} V_{a0}}{V_{A0}} = \sqrt{3} m_{phase} = \frac{\sqrt{3} N_2}{N_1}$.
+        </li>
+        <li><strong>Couplage Yz :</strong>
+            Le calcul dépend de la configuration exacte du zigzag. Pour un zigzag standard, $V_{a0} = \frac{\sqrt{3}}{2} \times (N_{2total}/N_1) \times V_{A0}$. $U_{ab0}$ n'est pas directement lié à $V_{a0}$. Le rapport $m=U_{ab0}/U_{AB}$ est plus complexe. La relation (5) du document ($m=V_{a a'} / V_A = \sqrt{3} N_2 / (2 N_1)$ avec $N_2$ spires par demi-bobine) semble se référer au rapport de tensions simples $V_{a0}/V_{A0}$ pour un Yz, qui serait $m' = \sqrt{3} N_2 / (2N_1)$ si $N_2$ est le nombre de spires par demi-bobine.
+            <span class="equation-number">(5)</span>
+        </li>
+    </ul>
+
+    <h3 id="schema_mono_eq">3°.4- Schéma monophasé équivalent</h3>
+    <p>
+        Lorsque le fonctionnement est équilibré, l'étude complète du transformateur triphasé peut être simplifiée en ramenant le système à un <strong>schéma monophasé équivalent</strong>. Cela signifie que l'on étudie le comportement d'une seule phase, comme si c'était un transformateur monophasé, en utilisant les grandeurs par phase (tensions simples, courants de ligne ou de phase selon le couplage, puissance par phase).
+    </p>
+
+    <h4>3°.4.1- Méthode du transformateur colonne (adaptation de Kapp)</h4>
+    <p>Cette méthode est une extension de la méthode de Kapp pour le transformateur monophasé.</p>
+    <p><strong>Marche à suivre :</strong></p>
+    <ol>
+        <li><strong>Ramener les données à une colonne (par phase) :</strong>
+            <ul>
+                <li>Tension par colonne (primaire $V_1$, secondaire $V_2$): Utiliser les tensions simples (phase-neutre). Si couplage triangle, $V_{colonne} = U_{ligne}$. Si étoile, $V_{colonne} = U_{ligne}/\sqrt{3}$.</li>
+                <li>Courant par colonne ($J_1$, $J_2$): Utiliser les courants de phase. Si couplage étoile, $J_{colonne} = I_{ligne}$. Si triangle, $J_{colonne} = I_{ligne}/\sqrt{3}$.</li>
+                <li>Puissances par colonne : $P_{colonne} = P_{totale}/3$, $Q_{colonne} = Q_{totale}/3$, $S_{colonne} = S_{totale}/3$.</li>
+                <li>Pertes fer par colonne : $P_{f,colonne} = P_{f,totale}/3$.</li>
+                <li>Pertes Joule par colonne : $P_{j,colonne} = P_{j,totale}/3$.</li>
+            </ul>
+        </li>
+        <li><strong>Déterminer les éléments du schéma monophasé équivalent par colonne :</strong> Utiliser les résultats des essais à vide et en court-circuit (interprétés par phase) pour calculer $m_c$ (rapport par colonne $N_2/N_1$), $R_{mc}$, $X_{mc}$ (branche magnétisante par colonne), $R_{sc}$, $X_{sc}$ (impédance série par colonne ramenée au secondaire).
+            <figure>
+                <!-- Placeholder for Figure 3.12 -->
+                <img src="placeholder_figure_3_12.png" alt="Placeholder Figure 3.12">
+                <figcaption>Figure 3.12: Schéma monophasé équivalent par colonne (modèle de Kapp).</figcaption>
+            </figure>
+            Les éléments sont :
+            <ul>
+                 <li>Rapport par colonne : $ m_c = \frac{V_{20,simple}}{V_{10,simple}} = \frac{N_2}{N_1} $ (à ne pas confondre avec $m=U_{ab0}/U_{AB}$) (Eq 6 modifiée)</li>
+                 <li>Résistance série par colonne (ramenée au secondaire) : $ R_{sc} = \frac{P_{cc}}{3 J_{2cc}^2} $ (Eq 7 modifiée, $J_{2cc}$ est le courant par phase secondaire pendant l'essai CC)</li>
+                 <li>Impédance série par colonne (ramenée au secondaire) : $ Z_{sc} = \frac{V_{20,simple,cc}}{J_{2cc}} = m_c \frac{V_{1cc,simple}}{J_{2cc}} $ (Eq 8 modifiée)</li>
+                 <li>Réactance série par colonne (ramenée au secondaire) : $ X_{sc} = \sqrt{Z_{sc}^2 - R_{sc}^2} $ (Eq 9 modifiée)</li>
+            </ul>
+        </li>
+        <li><strong>Résoudre le problème au niveau d'une colonne :</strong> Calculer les grandeurs par phase (chute de tension $V_{20c}-V_{2c}$, courant $J_2$, etc.) en utilisant le schéma monophasé.</li>
+        <li><strong>Exprimer les résultats finaux en fonction des grandeurs de ligne :</strong> Convertir les tensions simples en tensions composées et les courants de phase en courants de ligne, en fonction du couplage réel.</li>
+    </ol>
+    <p>
+        <em>Remarque :</em> Cette méthode est délicate si le secondaire est en zigzag et n'est pas applicable si le couplage est inconnu.
+    </p>
+
+    <h4>3°.4.2- Méthode des dipôles équivalents de Thévenin</h4>
+    <p>
+        Cette méthode est plus générale et peut être utilisée même si le couplage est inconnu. On considère chaque phase du transformateur vue d'un côté (primaire ou secondaire) comme un dipôle de Thévenin.
+    </p>
+    <p><strong>Dipôle de Thévenin équivalent vu du secondaire (par phase) :</strong></p>
+    <p>Chaque phase secondaire peut être modélisée par une source de tension idéale $\underline{V}_{20}$ (tension simple secondaire à vide) en série avec une impédance $\underline{Z}_s$ (impédance interne par phase ramenée au secondaire).</p>
+    <figure>
+        <!-- Placeholder for Figure 3.13 -->
+        <img src="placeholder_figure_3_13.png" alt="Placeholder Figure 3.13">
+        <figcaption>Figure 3.13: Dipôle de Thévenin équivalent vu du secondaire (par phase).</figcaption>
+    </figure>
+    <p>Les éléments sont déterminés par les essais :</p>
+    <ul>
+        <li>Tension de Thévenin $\underline{V}_{20}$: C'est la tension simple secondaire à vide. Son module est $V_{20}$ (mesuré ou calculé $V_{20} = m V_{1simple}$). Sa phase dépend de l'indice horaire : $\underline{V}_{20} = m \underline{V}_{1simple} e^{-j\theta}$. (Eq 10, modifiée pour $\theta$)</li>
+        <li>Résistance de Thévenin $R_s$: C'est la résistance série par phase ramenée au secondaire. $ R_s = \frac{P_{cc}}{3 I_{2cc}^2} $. (Eq 11)</li>
+        <li>Impédance de Thévenin $Z_s$: C'est l'impédance série par phase ramenée au secondaire. $ Z_s = \frac{V_{20,cc}}{I_{2cc}} = m \frac{V_{1cc,simple}}{I_{2cc}} $ (ou directement $Z_s = V_{1cc,ligne} / (\sqrt{3} I_{2cc,ligne})$ si Yy ou Dd). $ Z_s = \frac{U_{1cc}}{ \sqrt{3} I_{2cc}} $ si $U_{1cc}$ est la tension ligne, $I_{2cc}$ le courant ligne. (Eq 12)</li>
+        <li>Réactance de Thévenin $X_s = \sqrt{Z_s^2 - R_s^2}$.</li>
+    </ul>
+    <p>
+        Une fois ce dipôle connu, on peut calculer la tension $V_2$ pour n'importe quelle charge $Z_{charge}$ connectée entre phase et neutre (ou son équivalent). La chute de tension peut être déterminée graphiquement ou par calcul.
+    </p>
+
+    <h4>Equations et diagramme (basé sur Thévenin secondaire)</h4>
+    <p>La loi des mailles appliquée au dipôle équivalent secondaire (Figure 3.13) alimentant une charge (représentée par $V_2, I_2$) donne :</p>
+    $$ \underline{V}_{20} = \underline{Z}_s \underline{I}_2 + \underline{V}_2 $$
+    où $\underline{V}_{20} = m \underline{V}_1 e^{-j\theta}$ (en prenant $\underline{V}_1$ comme référence de phase simple primaire).
+    $$ \underline{V}_2 = m \underline{V}_1 e^{-j\theta} - (R_s + jX_s) \underline{I}_2 \quad (13) $$
+    <p>La relation entre les courants (loi des nœuds adaptée) reste (en négligeant $I_{10}$):</p>
+    $$ \underline{I}_1 \approx m \underline{I}_2 e^{j\theta} \quad (14) $$
+    (Note: le signe dépend des conventions et de la définition de $m$. Si $m=N2/N1$, alors $N1 I1 + N2 I2 = 0$ pour parfait $\implies I1 = -(N2/N1) I2 = -m I2$. Ici, le $e^{j\theta}$ tient compte du déphasage entre phases, et $m$ est le rapport des tensions ligne $U_{ab0}/U_{AB}$).
+    <p>Le diagramme vectoriel peut être construit à partir de l'équation (13) pour déterminer graphiquement la chute de tension $\Delta V_2 = |\underline{V}_{20}| - |\underline{V}_2|$.</p>
+    <figure>
+        <!-- Placeholder for Figure 3.14 -->
+        <img src="placeholder_figure_3_14.png" alt="Placeholder Figure 3.14">
+        <figcaption>Figure 3.14: Diagramme vectoriel (par phase) pour le calcul de la chute de tension à partir de l'équation de Thévenin ($\underline{V}_{20} = \underline{V}_2 + R_s \underline{I}_2 + jX_s \underline{I}_2$).</figcaption>
+    </figure>
+
+    <h2 id="marche_parallele">4°- Marche en parallèle des transformateurs triphasés</h2>
+
+    <h3 id="but_parallele">4°.1- But</h3>
+    <p>Mettre des transformateurs en parallèle permet de :</p>
+    <ul>
+        <li>Répondre à une augmentation de la demande de puissance que ne peut satisfaire un seul transformateur.</li>
+        <li>Assurer la continuité de service (redondance) : si un transformateur tombe en panne ou est en maintenance, les autres peuvent continuer à alimenter la charge (éventuellement réduite).</li>
+        <li>Améliorer le rendement global : en fonctionnant plus près de leur charge optimale lorsque la demande totale est inférieure à la somme des puissances nominales.</li>
+    </ul>
+    <figure>
+        <!-- Placeholder for Figure 3.15 -->
+        <img src="placeholder_figure_3_15.png" alt="Placeholder Figure 3.15">
+        <figcaption>Figure 3.15: Schéma de principe du branchement en parallèle de deux transformateurs T1 et T2 alimentant une charge commune.</figcaption>
+    </figure>
+
+    <h3 id="eq_elec_parallele">4°.2- Equations électriques</h3>
+    <p>
+        Considérons deux transformateurs T1 et T2 mis en parallèle. Pour analyser la répartition de la charge, on utilise leur schéma équivalent ramené au secondaire (par phase).
+    </p>
+    <p>Paramètres de T1: $\underline{V}_{20,1} = m_1 \underline{V}_1 e^{-j\theta_1}$, $\underline{Z}_{s1} = R_{s1} + jX_{s1}$.</p>
+    <p>Paramètres de T2: $\underline{V}_{20,2} = m_2 \underline{V}_1 e^{-j\theta_2}$, $\underline{Z}_{s2} = R_{s2} + jX_{s2}$.</p>
+    <figure>
+        <!-- Placeholder for Figure 3.16 -->
+        <img src="placeholder_figure_3_16.png" alt="Placeholder Figure 3.16">
+        <figcaption>Figure 3.16: Schéma équivalent (par phase) de deux transformateurs en parallèle.</figcaption>
+    </figure>
+    <p>Les tensions secondaires $\underline{V}_2$ sont communes. En appliquant la loi des mailles (ou la loi d'Ohm généralisée) à chaque transformateur :</p>
+    $$ \underline{V}_2 = \underline{V}_{20,1} - \underline{Z}_{s1} \underline{I}_{21} \quad (15) $$
+    $$ \underline{V}_2 = \underline{V}_{20,2} - \underline{Z}_{s2} \underline{I}_{22} \quad (16) $$
+    <p>Si les conditions de couplage sont idéales ($m_1=m_2=m$, $\theta_1=\theta_2=\theta$, donc $\underline{V}_{20,1} = \underline{V}_{20,2} = \underline{V}_{20}$), alors en égalant les expressions de $\underline{V}_2$: </p>
+    $$ \underline{V}_{20} - \underline{Z}_{s1} \underline{I}_{21} = \underline{V}_{20} - \underline{Z}_{s2} \underline{I}_{22} $$
+    $$ \underline{Z}_{s1} \underline{I}_{21} = \underline{Z}_{s2} \underline{I}_{22} \quad (17) $$
+    <p>Cette relation montre comment le courant total $\underline{I}_2 = \underline{I}_{21} + \underline{I}_{22}$ se répartit entre les deux transformateurs :</p>
+    $$ \frac{\underline{I}_{21}}{\underline{I}_{22}} = \frac{\underline{Z}_{s2}}{\underline{Z}_{s1}} $$
+    Les courants sont inversement proportionnels aux impédances internes. Le transformateur ayant la plus faible impédance $\underline{Z}_s$ fournira le plus de courant.
+    <p>En termes de modules et phases :
+       $ Z_{s1} I_{21} = Z_{s2} I_{22} \implies \frac{I_{21}}{I_{22}} = \frac{Z_{s2}}{Z_{s1}} = k \quad (18, 19) $
+    </p>
+    <p>Le déphasage entre $\underline{I}_{21}$ et $\underline{I}_{22}$ est $\Psi = \arg(\underline{Z}_{s2}) - \arg(\underline{Z}_{s1}) = \varphi_{cc2} - \varphi_{cc1}$.
+       $ \underline{I}_{21} = k \underline{I}_{22} e^{j\Psi} $ (ou $\underline{I}_{22} = (1/k) \underline{I}_{21} e^{-j\Psi}$) (Eq 20 modifiée).
+    </p>
+    <p>Le courant total est $\underline{I}_2 = \underline{I}_{21} + \underline{I}_{22}$. On peut exprimer $I_{21}$ et $I_{22}$ en fonction de $I_2$:
+       $ \underline{I}_{21} = \underline{I}_2 \frac{\underline{Z}_{s2}}{\underline{Z}_{s1} + \underline{Z}_{s2}} $
+       $ \underline{I}_{22} = \underline{I}_2 \frac{\underline{Z}_{s1}}{\underline{Z}_{s1} + \underline{Z}_{s2}} \quad (21) $
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 3.17 -->
+        <img src="placeholder_figure_3_17.png" alt="Placeholder Figure 3.17">
+        <figcaption>Figure 3.17: Relation linéaire entre les modules des courants $I_{22}$ et $I_{21}$ si les tensions à vide sont égales ($I_{22} = (Z_{s1}/Z_{s2}) I_{21}$).</figcaption>
+    </figure>
+    <p><strong>Répartition des puissances apparentes :</strong></p>
+    La puissance apparente fournie par chaque transformateur (par phase) est $\underline{S}_{21} = \underline{V}_2 \underline{I}_{21}^*$ et $\underline{S}_{22} = \underline{V}_2 \underline{I}_{22}^*$.
+    De $\underline{Z}_{s1} \underline{I}_{21} = \underline{Z}_{s2} \underline{I}_{22}$, on tire $\underline{I}_{21} = (\underline{Z}_{s2}/\underline{Z}_{s1})\underline{I}_{22}$.
+    $$ \frac{\underline{S}_{21}}{\underline{S}_{22}} = \frac{\underline{V}_2 \underline{I}_{21}^*}{\underline{V}_2 \underline{I}_{22}^*} = \frac{\underline{I}_{21}^*}{\underline{I}_{22}^*} = \left( \frac{\underline{I}_{21}}{\underline{I}_{22}} \right)^* = \left( \frac{\underline{Z}_{s2}}{\underline{Z}_{s1}} \right)^* = \frac{\underline{Z}_{s2}^*}{\underline{Z}_{s1}^*} $$
+    La répartition des puissances apparentes complexes se fait en raison inverse des impédances conjuguées. Pour les modules, $S_{21}/S_{22} = I_{21}/I_{22} = Z_{s2}/Z_{s1}$. La puissance apparente se répartit inversement aux modules des impédances. Pour une répartition proportionnelle aux puissances nominales ($S_{n1}, S_{n2}$), il faut que $S_{21}/S_{22} \approx S_{n1}/S_{n2}$, ce qui implique $Z_{s1}/Z_{s2} \approx S_{n2}/S_{n1}$, ou encore $S_{n1} Z_{s1} \approx S_{n2} Z_{s2}$. Ceci est équivalent à dire que les <strong>impédances relatives (ou pourcentages d'impédance)</strong> $Z_{s1\%} \approx Z_{s2\%}$ doivent être égales.
+
+    <h3 id="mise_parallele">4°.3- Mise en parallèle des transformateurs triphasés</h3>
+    <p>Pour connecter deux (ou plusieurs) transformateurs triphasés en parallèle sans risque de surcourants ou de fonctionnement anormal, plusieurs conditions doivent être impérativement respectées :</p>
+    <ul>
+        <li><strong>Même tension primaire nominale :</strong> Les primaires doivent être connectés au même réseau.</li>
+        <li><strong>Même rapport de transformation (à vide) :</strong> $m_1 = m_2$. Sinon, même à vide, $\underline{V}_{20,1} \neq \underline{V}_{20,2}$, ce qui crée une tension différentielle $\Delta \underline{V} = \underline{V}_{20,1} - \underline{V}_{20,2}$ aux bornes de la boucle formée par les secondaires et les impédances $Z_{s1}+Z_{s2}$. Cette tension ferait circuler un courant $\underline{I}_{circ} = \Delta \underline{V} / (\underline{Z}_{s1} + \underline{Z}_{s2})$ même sans charge externe, entraînant des échauffements inutiles.</li>
+        <li><strong>Même indice horaire :</strong> $\theta_1 = \theta_2$. Sinon, les tensions secondaires à vide $\underline{V}_{20,1}$ et $\underline{V}_{20,2}$ seraient déphasées, créant une tension différentielle importante et un fort courant de circulation. Les transformateurs ne peuvent être mis en parallèle que s'ils appartiennent au <strong>même groupe d'indice horaire</strong>.
+            <table>
+                <caption>Groupes d'indices horaires pour le couplage en parallèle</caption>
+                <thead>
+                    <tr><th>Groupes</th><th>Indices</th><th>Couplages typiques</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>I</td><td>0, 4, 8</td><td>Yy0, Dd0, Dz0, Yy4, ...</td></tr>
+                    <tr><td>II</td><td>1, 5, 9</td><td>Dy1, Yz1, Yd5, Dy5, ...</td></tr>
+                    <tr><td>III</td><td>2, 6, 10</td><td>Dd6, Yy6, Dz6, ...</td></tr>
+                    <tr><td>IV</td><td>3, 7, 11</td><td>Yd11, Dy11, Yz11, ...</td></tr>
+                </tbody>
+            </table>
+        </li>
+        <li><strong>Même ordre de succession des phases.</strong></li>
+        <li><strong>Impédances de court-circuit (relatives) très voisines :</strong> $Z_{s1\%} \approx Z_{s2\%}$. L'écart ne devrait idéalement pas dépasser 10%. Cela assure une répartition de la charge proportionnelle aux puissances nominales des transformateurs.</li>
+        <li><strong>Même rapport $X_s/R_s$ (même angle $\varphi_{cc}$) :</strong> $\varphi_{cc1} \approx \varphi_{cc2}$. Si ce n'est pas le cas, les courants $\underline{I}_{21}$ et $\underline{I}_{22}$ ne seront pas en phase (voir $\Psi = \varphi_{cc2} - \varphi_{cc1}$), ce qui signifie qu'un transformateur pourrait fournir de la puissance active pendant que l'autre en fournit moins ou même en absorbe (partie réactive), conduisant à une mauvaise utilisation des capacités.</li>
+    </ul>
+    <p>Les conditions les plus strictes sont l'égalité des tensions nominales, des rapports de transformation et des indices horaires. Une légère différence sur $Z_{s\%}$ et $X_s/R_s$ est tolérable mais affecte la répartition optimale de la charge.</p>
+    <figure>
+        <!-- Placeholder for Figure 4.18 -->
+        <img src="placeholder_figure_4_18.png" alt="Placeholder Figure 4.18">
+        <figcaption>Fig 4.18: Exemple de connexion physique de transformateurs en parallèle (Groupe I).</figcaption>
+    </figure>
+
+    <h2 id="td2">TD N°2 : Transformateur triphasé & marche en parallèle</h2>
+    <p>
+        (Le contenu du TD N°2 n'est pas fourni dans le document.)
+    </p>
+
+
+    <footer class="footer">
+        <span>Année Universitaire 2011-2012</span>
+        <span>(Conversion HTML du document original)</span>
+    </footer>
+
+</body>
+</html>
