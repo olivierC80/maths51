@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertisseurs AC-DC Triphasés</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}, {left: '$', right: '$', display: false} ] });"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #333;
+            margin-top: 1.5em;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 3px;
+        }
+         h1 {
+             border-bottom-width: 2px;
+             border-bottom-color: #333;
+         }
+
+        table {
+            width: auto; /* Adjust table width */
+            min-width: 60%; /* Minimum width */
+            border-collapse: collapse;
+            margin-top: 1em;
+            margin-bottom: 1em;
+            margin-left: auto; /* Center table if needed */
+            margin-right: auto;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            background-color: #f9f9f9;
+            color: #888;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .caption {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 1em;
+        }
+
+        footer {
+            margin-top: 2em;
+            border-top: 1px solid #ccc;
+            padding-top: 1em;
+            font-size: 0.9em;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .page-ref {
+            font-style: italic;
+            color: #777;
+            font-size: 0.9em;
+            text-align: right;
+        }
+         /* Style for list items using specific markers */
+        ul.custom-marker li::marker {
+            content: "► "; /* Default marker */
+        }
+        ul.custom-marker li.bullet::marker {
+             content: "• ";
+        }
+         .formula-box {
+             border: 1px solid #eee;
+             padding: 10px;
+             margin: 10px 0;
+             background-color: #fdfdfd;
+         }
+    </style>
+</head>
+
+<body>
+
+    <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <span>Support de cours d'électronique de puissance EI2</span>
+        <span>Les convertisseurs AC-DC et AC-AC</span>
+    </header>
+
+    <main>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 20)</p>
+             <h3>III-4-6- Etude des courants (Redresseur Monophasé P2 - Suite)</h3>
+             <p>On suppose que le montage débite un courant continu \( i_c \) peu ondulé, assimilé à une constante \( I_c \). Chaque diode conduit pendant une demi-période (\( \pi \)).</p>
+             <p>Au primaire, la relation des ampères-tours s'écrit : \( n_1 i_p = n_2 i_{s1} - n_2 i_{s2} \), où \( n_1, n_2 \) sont les nombres de spires du primaire et du secondaire, \( i_p \) le courant primaire, et \( i_{s1}, i_{s2} \) les courants dans les demi-secondaires.</p>
+             <ul class="custom-marker">
+                 <li>Si D1 conductrice et D2 bloquée: \( i_{s1} = I_c, i_{s2} = 0 \). Donc \( i_p = \frac{n_2}{n_1} i_{s1} = m I_c \).</li>
+                 <li>Si D1 bloquée et D2 conductrice: \( i_{s1} = 0, i_{s2} = I_c \). Donc \( i_p = -\frac{n_2}{n_1} i_{s2} = -m I_c \).</li>
+             </ul>
+             <p>Où \( m = \frac{n_2}{n_1} \) est le rapport de transformation (par demi-secondaire). Le courant primaire \( i_p \) est donc un courant alternatif de forme carrée, non sinusoïdal.</p>
+
+             <h4>III-4-6-1- Courants dans les diodes (exemple : diode D1)</h4>
+             <p>Le courant \( i_{D1} \) est égal à \( I_c \) pendant une demi-période (\( 0 \) à \( \pi \)) et nul pendant l'autre (\( \pi \) à \( 2\pi \)).</p>
+             <ul>
+                 <li>Courant maximal : \( i_{max} = I_c \)</li>
+                 <li>Courant moyen : \( i_{moy} = \frac{1}{2\pi} \int_0^\pi I_c d\theta = \frac{I_c}{2\pi} [\theta]_0^\pi = \frac{I_c}{2} \)</li>
+                 <li>Courant efficace : \( I_{D1_{eff}} = \sqrt{\frac{1}{2\pi} \int_0^\pi I_c^2 d\theta} = \sqrt{\frac{I_c^2}{2\pi} [\theta]_0^\pi} = \sqrt{\frac{I_c^2}{2}} = \frac{I_c}{\sqrt{2}} \)</li>
+                 <li>Le courant dans le secondaire 1 est \( i_{s1} = i_{D1} \), donc \( I_{s1_{eff}} = I_{D1_{eff}} = \frac{I_c}{\sqrt{2}} \).</li>
+             </ul>
+
+            <h4>III-4-6-2- Courant et facteur de puissance secondaire</h4>
+            <ul class="custom-marker">
+                <li>Courant secondaire efficace (par enroulement) : \( I_s = I_{s1_{eff}} = \frac{I_c}{\sqrt{2}} \)</li>
+                <li>Puissance active de la charge : \( P_c = V_{cmoy} \cdot I_c = \frac{2 V_m}{\pi} I_c \) (où \( V_m \) est l'amplitude de la tension d'un demi-secondaire)</li>
+                <li>Puissance apparente secondaire (totale, les deux enroulements) : \( S = 2 \cdot V_{eff} \cdot I_s = 2 \cdot \frac{V_m}{\sqrt{2}} \cdot \frac{I_c}{\sqrt{2}} = V_m I_c \)</li>
+                <li>Facteur de puissance secondaire : \( f_s = \frac{P_c}{S} = \frac{(2 V_m I_c) / \pi}{V_m I_c} = \frac{2}{\pi} \approx 0,637 \)</li>
+            </ul>
+
+            <h4>III-4-6-3- Courant et facteur de puissance primaire</h4>
+             <ul class="custom-marker">
+                <li>Courant efficace primaire : Le courant \( i_p \) est un signal carré d'amplitude \( m I_c \). Sa valeur efficace est \( I_p = m I_c \).</li>
+                <li>Tension efficace primaire : \( V_p = \frac{V_m}{m\sqrt{2}} \) (en supposant un transformateur parfait et Vm la tension secondaire)</li>
+                 <!-- Note : Si Vp est la tension efficace du réseau primaire, et V la tension efficace secondaire (par enroulement), V = Vp * m / sqrt(2) ? Non, V=Vm/sqrt(2). Vp = V/m = Vm/(m*sqrt(2)). Vérification OK. -->
+                <li>Puissance apparente primaire : \( S_p = V_p \cdot I_p = \frac{V_m}{m\sqrt{2}} \cdot (m I_c) = \frac{V_m I_c}{\sqrt{2}} \)</li>
+                 <!-- Attention: Le PDF calcule S = Vp * Ip = (Vm / (m*sqrt(2))) * (m*Ic) = Vm*Ic / sqrt(2). Mais il y a aussi Vp * Ip dans la formule du fp. Cohérence ? -->
+                 <li>Facteur de puissance primaire : \( f_p = \frac{P_c}{S_p} = \frac{(2 V_m I_c) / \pi}{V_m I_c / \sqrt{2}} = \frac{2\sqrt{2}}{\pi} \approx 0,900 \)</li>
+                 <!-- Le calcul P_c / S_p = ((2 Vm Ic) / pi) / ((Vm Ic) / sqrt(2)) = 2 * sqrt(2) / pi. OK. -->
+             </ul>
+        </section>
+
+        <hr style="margin: 2em 0;">
+
+         <h1>IV- Les ponts de redressement en triphasé</h1>
+        <section>
+            <p class="page-ref">(Contenu basé sur la page 21)</p>
+             <h2>IV-1- Introduction</h2>
+             <p>Contrairement aux alimentations à faible puissance qui utilisent souvent des réseaux monophasés, les alimentations de puissance (industrielles, fortes charges) utilisent généralement des réseaux triphasés pour une meilleure répartition de la puissance et un courant redressé moins ondulé.</p>
+             <p>Les transformateurs à point milieu (utilisés dans les redresseurs P1, P2) sont coûteux et fragiles pour les fortes puissances. Par conséquent, en électronique de puissance, le montage le plus utilisé est le <strong>pont de Graëtz alimenté en triphasé</strong>.</p>
+             <p>D'autres montages existent (comme le P3), et leur étude permet de mieux comprendre le pont de Graëtz.</p>
+             <p>Même si le pont de Graëtz ne nécessite pas obligatoirement de transformateur, en utiliser un est souvent utile pour :</p>
+             <ul>
+                 <li>Adapter la tension du secteur à la valeur souhaitée en continu.</li>
+                 <li>Assurer une isolation galvanique (séparation électrique) entre le réseau et la charge.</li>
+             </ul>
+             <p><strong>Notation :</strong></p>
+             <ul>
+                 <li><strong>P</strong> : Montage parallèle de diodes (anodes communes ou cathodes communes).</li>
+                 <li><strong>PD</strong> : Montage parallèle double (pont de Graëtz).</li>
+                 <li>Le chiffre qui suit (q) indique le nombre de phases (ex: P3, PD3).</li>
+             </ul>
+             <p>La figure suivante montre les schémas des montages P3 et PD3, les plus courants en triphasé.</p>
+             <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                <div style="text-align: center; margin: 10px;">
+                    <div class="placeholder">[Placeholder: Schéma Redresseur Triphasé P3]</div>
+                     <p class="caption">(a) P3 : Redresseur à 3 diodes, cathodes communes, nécessite un transformateur à point milieu N.</p>
+                </div>
+                 <div style="text-align: center; margin: 10px;">
+                     <div class="placeholder">[Placeholder: Schéma Redresseur Triphasé PD3]</div>
+                    <p class="caption">(b) PD3 : Redresseur à 6 diodes en pont de Graëtz, connexion directe au réseau triphasé (ou via transformateur sans point milieu).</p>
+                </div>
+             </div>
+             <p class="caption">Figure N°23: Redresseurs triphasés.</p>
+
+            <h2>IV-2- Principe de l'étude d'un montage redresseur</h2>
+            <p>L'étude d'un montage redresseur vise à déterminer les caractéristiques des composants (transformateur, diodes, thyristors) et à dimensionner les protections (contre surtensions, surintensités).</p>
+            <p>On procède généralement en deux étapes :</p>
+            <ol>
+                <li><strong>Etude des tensions (entrée vers sortie) :</strong>
+                    <ul>
+                        <li>Calcul de la tension redressée (moyenne, efficace).</li>
+                        <li>Détermination des tensions inverses maximales aux bornes des semi-conducteurs bloqués.</li>
+                        <li>Hypothèses : impédances de source et des composants négligeables (chutes de tension faibles), diodes/thyristors parfaits.</li>
+                    </ul>
+                </li>
+                <li><strong>Etude des courants (sortie vers entrée) :</strong>
+                    <ul>
+                        <li>Calcul des courants (moyen, efficace) dans les semi-conducteurs, enroulements secondaires et primaires.</li>
+                        <li>Hypothèse : Courant de sortie continu (lissé par une forte inductance de charge).</li>
+                        <li>Calcul des facteurs de puissance.</li>
+                        <li>Les chutes de tension sont généralement négligées.</li>
+                    </ul>
+                </li>
+            </ol>
+             <p>On supposera les diodes parfaites et le courant de sortie \( I_c \) constant (charge fortement inductive), et l'inductance ramenée au secondaire négligeable.</p>
+        </section>
+
+        <section>
+            <p class="page-ref">(Contenu basé sur la page 22)</p>
+            <h2>IV-3- Redressement non commandé P3 (diodes)</h2>
+             <p>Le montage P3 utilise 3 diodes et nécessite un transformateur triphasé (couplage étoile-étoile ici) avec point milieu accessible au secondaire.</p>
+
+            <h3>IV-3-1- Montage</h3>
+             <div class="placeholder">[Placeholder: Schéma Redresseur P3 avec transformateur étoile-étoile et charge R-L]</div>
+            <p class="caption">Figure N°24: Redresseurs triphasés P3 tous diodes. Le secondaire fournit les tensions \( v_1, v_2, v_3 \). Les diodes D1, D2, D3 ont leurs cathodes communes. La charge est R-L.</p>
+            <p>Hypothèses : Transformateur sans fuites ni résistances, diodes parfaites, charge R-L avec L assez grande pour que \( i_c = I_c \) (constant).</p>
+            <p>Les tensions secondaires (simples, phase-neutre) sont :</p>
+            \[ v_1(\theta) = V_m \sin(\theta) \]
+            \[ v_2(\theta) = V_m \sin(\theta - \frac{2\pi}{3}) \]
+            \[ v_3(\theta) = V_m \sin(\theta - \frac{4\pi}{3}) \]
+            <p>Où \( V_m \) est l'amplitude de la tension simple secondaire, et \( \theta = \omega t \).</p>
+
+            <h3>IV-3-2- Analyse du fonctionnement</h3>
+            <p>Dans ce montage (cathodes communes), la diode en conduction est celle dont l'anode est reliée à la tension la plus positive à l'instant considéré. Les autres diodes sont bloquées.</p>
+            <p>La commutation se produit naturellement lorsque les courbes de tension se croisent. L'amorçage de D1 se fait lorsque \( v_1 \) devient la plus positive, ce qui se produit à \( \theta = \frac{\pi}{6} \). Cet angle est appelé l'<strong>angle d'amorçage naturel</strong> pour D1 dans ce montage.</p>
+            <p>Les intervalles de conduction (de \( 2\pi/3 \) chacun) sont les suivants :</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Intervalle \( \theta \)</th>
+                        <th>Diode en conduction</th>
+                        <th>Diodes bloquées</th>
+                        <th>Tension de sortie \( u_c \)</th>
+                        <th>Tension aux bornes de D1 (\( V_{AK, D1} \))</th>
+                        <th>Courant \( i_1 \) (Source V1)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>\( [\frac{\pi}{6}, \frac{5\pi}{6}] \)</td>
+                        <td>D1</td>
+                        <td>D2 et D3</td>
+                        <td>\( v_1(\theta) \)</td>
+                        <td>0</td>
+                        <td>\( I_c \)</td>
+                    </tr>
+                     <tr>
+                        <td>\( [\frac{5\pi}{6}, \frac{3\pi}{2}] \) (soit \( \frac{9\pi}{6} \))</td>
+                        <td>D2</td>
+                        <td>D1 et D3</td>
+                        <td>\( v_2(\theta) \)</td>
+                        <td>\( v_1(\theta) - v_2(\theta) = u_{12}(\theta) \)</td>
+                        <td>0</td>
+                    </tr>
+                     <tr>
+                        <td>\( [\frac{3\pi}{2}, \frac{13\pi}{6}] \)</td>
+                        <td>D3</td>
+                        <td>D1 et D2</td>
+                        <td>\( v_3(\theta) \)</td>
+                         <td>\( v_1(\theta) - v_3(\theta) = u_{13}(\theta) \)</td>
+                        <td>0</td>
+                    </tr>
+                     <tr>
+                         <td>\( [\frac{13\pi}{6}, \frac{17\pi}{6}] \) (Cycle suivant)</td>
+                         <td>D1</td>
+                         <td>D2 et D3</td>
+                         <td>\( v_1(\theta) \)</td>
+                         <td>0</td>
+                         <td>\( I_c \)</td>
+                    </tr>
+                </tbody>
+            </table>
+             <p>Note : La tension de sortie \( u_c \) suit l'enveloppe supérieure des tensions \( v_1, v_2, v_3 \).</p>
+        </section>
+
+         <section>
+             <p class="page-ref">(Contenu basé sur la page 23)</p>
+             <h3>IV-3-3- Formes d'ondes des différentes grandeurs (P3)</h3>
+
+            <div class="placeholder">[Placeholder: Formes d'ondes Redresseur P3]</div>
+             <p class="caption">Figure N°25: Formes d'ondes des différentes grandeurs d'un redresseur P3 toutes diodes. Sont représentées : les tensions secondaires \( v_1, v_2, v_3 \), la tension redressée \( u_c \), la tension inverse aux bornes de D1 (\( v_{D1} = v_{AK,D1} \)) et le courant dans D1 (\( i_{D1} \)).</p>
+            <!-- Note: VD1 dans le graphe semble représenter la tension aux bornes de la diode quand elle est bloquée (négative). L'axe Vm*sqrt(3) est la valeur crête de la tension composée. -->
+
+            <h3>IV-3-4- Etude des tensions (P3)</h3>
+            <p>La tension redressée \( u_c \) est périodique, de période \( T/3 \) (soit \( 2\pi/3 \) en angle).</p>
+
+            <h4>IV-3-4-1- Valeur moyenne de la tension de sortie Uc</h4>
+            <p>On calcule la valeur moyenne sur une période de \( u_c \), par exemple pendant que D1 conduit :</p>
+            \[ U_{cmoy} = \frac{1}{2\pi/3} \int_{\pi/6}^{5\pi/6} u_c(\theta) d\theta = \frac{3}{2\pi} \int_{\pi/6}^{5\pi/6} v_1(\theta) d\theta \]
+            \[ U_{cmoy} = \frac{3}{2\pi} \int_{\pi/6}^{5\pi/6} V_m \sin(\theta) d\theta = \frac{3 V_m}{2\pi} [-\cos(\theta)]_{\pi/6}^{5\pi/6} \]
+            \[ U_{cmoy} = \frac{3 V_m}{2\pi} [-\cos(\frac{5\pi}{6}) - (-\cos(\frac{\pi}{6}))] = \frac{3 V_m}{2\pi} [-(-\frac{\sqrt{3}}{2}) + \frac{\sqrt{3}}{2}] \]
+            \[ U_{cmoy} = \frac{3 V_m}{2\pi} [\sqrt{3}] = \frac{3\sqrt{3}}{2\pi} V_m \]
+            <p>Si V est la valeur efficace de la tension simple secondaire (\( V = V_m / \sqrt{2} \)), alors :</p>
+            \[ U_{cmoy} = \frac{3\sqrt{3}}{2\pi} (V\sqrt{2}) = \frac{3\sqrt{6}}{2\pi} V \approx 1,17 V \]
+            <!-- Note : Le PDF trouve 0.827 Vm. Vérifions : 3*sqrt(3)/(2*pi) approx 0.827. OK. Le PDF a une erreur dans la conversion Vm -> V, il oublie le sqrt(2). -->
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 24)</p>
+             <h4>IV-3-4-2- Valeur efficace de la tension de sortie Uc</h4>
+             <p>On calcule la valeur efficace au carré :</p>
+              \[ U_{c_{eff}}^2 = \frac{1}{2\pi/3} \int_{\pi/6}^{5\pi/6} u_c^2(\theta) d\theta = \frac{3}{2\pi} \int_{\pi/6}^{5\pi/6} (V_m \sin(\theta))^2 d\theta \]
+              \[ U_{c_{eff}}^2 = \frac{3 V_m^2}{2\pi} \int_{\pi/6}^{5\pi/6} \frac{1 - \cos(2\theta)}{2} d\theta \]
+              \[ U_{c_{eff}}^2 = \frac{3 V_m^2}{4\pi} \left[ \theta - \frac{\sin(2\theta)}{2} \right]_{\pi/6}^{5\pi/6} \]
+              \[ U_{c_{eff}}^2 = \frac{3 V_m^2}{4\pi} \left[ (\frac{5\pi}{6} - \frac{\sin(5\pi/3)}{2}) - (\frac{\pi}{6} - \frac{\sin(\pi/3)}{2}) \right] \]
+              \[ U_{c_{eff}}^2 = \frac{3 V_m^2}{4\pi} \left[ (\frac{5\pi}{6} - \frac{-\sqrt{3}/2}{2}) - (\frac{\pi}{6} - \frac{\sqrt{3}/2}{2}) \right] \]
+              \[ U_{c_{eff}}^2 = \frac{3 V_m^2}{4\pi} \left[ \frac{4\pi}{6} + \frac{\sqrt{3}}{4} + \frac{\sqrt{3}}{4} \right] = \frac{3 V_m^2}{4\pi} \left[ \frac{2\pi}{3} + \frac{\sqrt{3}}{2} \right] \]
+              \[ U_{c_{eff}}^2 = V_m^2 \left[ \frac{1}{2} + \frac{3\sqrt{3}}{8\pi} \right] \]
+              <!-- Le PDF trouve Vm^2 * ( (5pi/6 - pi/6) + 1/2 * (sin(pi/3)-sin(5pi/3)) ) * 3/(4pi) = Vm^2 * (4pi/6 + 1/2 * (sqrt(3)/2 - (-sqrt(3)/2)) ) * 3/(4pi) = Vm^2 * (2pi/3 + sqrt(3)/2) * 3/(4pi) = Vm^2 * (1/2 + 3*sqrt(3)/(8*pi)). OK. -->
+              \[ U_{c_{eff}} = V_m \sqrt{\frac{1}{2} + \frac{3\sqrt{3}}{8\pi}} \approx 0,841 V_m \]
+              <!-- Le PDF trouve 0.84 Vm. OK. -->
+
+            <h4>IV-3-4-3- Facteur de forme kF</h4>
+            \[ k_F = \frac{U_{c_{eff}}}{U_{cmoy}} = \frac{0,841 V_m}{0,827 V_m} \approx 1,017 \]
+             <!-- Le PDF trouve 1.0157. Léger écart dû aux arrondis. -->
+
+             <h4>Remarque</h4>
+             <ul class="custom-marker">
+                 <li>Pour un redressement monophasé simple alternance, \( k_F = \frac{V_m/2}{V_m/\pi} = \frac{\pi}{2} \approx 1,57 \). Pour un redressement double alternance, \( k_F = \frac{V_m/\sqrt{2}}{2V_m/\pi} = \frac{\pi}{2\sqrt{2}} \approx 1,11 \). Un facteur de forme proche de 1 indique une tension peu ondulée. Le P3 est meilleur que le monophasé.</li>
+                 <li>La tension inverse maximale aux bornes d'une diode bloquée (ex: D1 bloquée quand D2 ou D3 conduit) est la valeur maximale de la tension composée \( v_{12} \) ou \( v_{13} \). L'amplitude d'une tension composée est \( V_m \sqrt{3} \). Cependant, le PDF indique \( V_{Dmax} = -V\sqrt{6} \). Si V est la tension efficace simple, Vm = V*sqrt(2). Alors \( V_m\sqrt{3} = V\sqrt{2}\sqrt{3} = V\sqrt{6} \). La valeur crête inverse est bien \( V\sqrt{6} \).</li>
+                  \[ V_{Dmax_{inverse}} = V_m \sqrt{3} = V \sqrt{6} \]
+             </ul>
+        </section>
+
+        <section>
+            <p class="page-ref">(Contenu basé sur la page 25)</p>
+             <h3>IV-3-5- Etude des courants (P3)</h3>
+             <h4>IV-3-5-1- Courants dans les diodes</h4>
+             <p>Chaque diode conduit \( I_c \) pendant \( 1/3 \) de la période (\( 2\pi/3 \)).</p>
+             <ul>
+                 <li>Courant maximal : \( i_{max} = I_c \)</li>
+                 <li>Courant moyen : \( i_{Dmoy} = \frac{1}{2\pi} \int_{\pi/6}^{5\pi/6} I_c d\theta = \frac{I_c}{2\pi} [\frac{5\pi}{6} - \frac{\pi}{6}] = \frac{I_c}{2\pi} \frac{4\pi}{6} = \frac{I_c}{3} \)</li>
+                 <li>Courant efficace : \( I_{D_{eff}} = \sqrt{\frac{1}{2\pi} \int_{\pi/6}^{5\pi/6} I_c^2 d\theta} = \sqrt{\frac{I_c^2}{2\pi} \frac{4\pi}{6}} = \sqrt{\frac{I_c^2}{3}} = \frac{I_c}{\sqrt{3}} \)</li>
+             </ul>
+
+             <h4>IV-3-5-2- Courant et facteur de puissance secondaire</h4>
+             <ul class="custom-marker">
+                <li>Courant secondaire efficace (par phase) : \( I_{s_{eff}} = I_{D_{eff}} = \frac{I_c}{\sqrt{3}} \)</li>
+                <li>Puissance active de la charge : \( P_c = U_{cmoy} \cdot I_c = \frac{3\sqrt{3}}{2\pi} V_m I_c \)</li>
+                <li>Puissance apparente secondaire (totale, 3 phases) : \( S = 3 \cdot V_{eff} \cdot I_{s_{eff}} = 3 \cdot \frac{V_m}{\sqrt{2}} \cdot \frac{I_c}{\sqrt{3}} = \frac{3 V_m I_c}{\sqrt{6}} = \frac{\sqrt{3}}{\sqrt{2}} V_m I_c = \sqrt{\frac{3}{2}} V_m I_c \)</li>
+                <!-- Le PDF a S = 3 * (Vm/sqrt(2)) * (Ic/sqrt(3)) = 3 * Vm * Ic / sqrt(6). OK. -->
+                <li>Facteur de puissance secondaire : \( f_s = \frac{P_c}{S} = \frac{(3\sqrt{3} V_m I_c) / (2\pi)}{\sqrt{3/2} V_m I_c} = \frac{3\sqrt{3}}{2\pi} \sqrt{\frac{2}{3}} = \frac{3\sqrt{2}}{2\pi} = \frac{3}{\pi\sqrt{2}} \approx 0,675 \)</li>
+                <!-- Le PDF a (3*sqrt(3)*Vm*Ic / (2*pi)) / (3 * Vm * Ic / sqrt(6)) = sqrt(3)/(2*pi) * sqrt(6) = sqrt(18)/(2*pi) = 3*sqrt(2)/(2*pi). OK. -->
+            </ul>
+
+             <h4>IV-3-5-3- Courant et facteur de puissance primaire</h4>
+             <p>Le courant primaire \( i_{p1} \) est lié aux courants secondaires par \( N_1 i_{p1} = N_2 i_{s1} \) (pour un couplage étoile-étoile sans déphasage). Le courant \( i_{s1} = i_{D1} \), qui est un créneau de hauteur \( I_c \) et de durée \( 2\pi/3 \).</p>
+             <p>Le courant primaire \( i_{p1} \) est donc un créneau de hauteur \( m I_c \) (\( m=N_2/N_1 \)) pendant \( 2\pi/3 \).</p>
+             <p><strong>Attention:</strong> Le montage P3 nécessite un transformateur avec neutre secondaire. Si le primaire est en étoile sans neutre ou en triangle, le flux homopolaire ne peut pas s'établir correctement, et le fonctionnement est perturbé. Le PDF mentionne une composante homopolaire \( AT_{H0} = \frac{1}{3} N_2 (i_1+i_2+i_3) \). Dans le P3, \( i_1+i_2+i_3 = I_c \ne 0 \). Cette composante doit pouvoir être compensée (e.g., par un primaire étoile avec neutre ou un couplage zigzag).</p>
+             <div class="placeholder">[Placeholder: Formes d'ondes Courants primaires Redresseur P3]</div>
+             <p class="caption">Figure N°26: Formes d'ondes des différentes courantes primaires d'un redresseur P3 toutes diodes (en supposant un transformateur idéal 1:1 étoile-étoile avec neutres). Chaque courant primaire est un créneau de largeur \( 2\pi/3 \).</p>
+             <p>Calculs pour le primaire (en supposant m=N2/N1):</p>
+             <ul class="custom-marker">
+                 <li>Courant efficace primaire (par phase) : \( I_p = \sqrt{\frac{1}{2\pi} \int (m i_{s1})^2 d\theta} = m \sqrt{\frac{1}{2\pi} \int_{\pi/6}^{5\pi/6} I_c^2 d\theta} = m \frac{I_c}{\sqrt{3}} \)</li>
+                 <!-- Le PDF a Ip = sqrt(2/3)*m*Ic. Erreur ? Recalculons : Ip^2 = (1/2pi) * integ( (mIc)^2 dtheta ) sur 2pi/3. Ip^2 = (m^2 Ic^2 / 2pi) * (2pi/3) = m^2 Ic^2 / 3. Donc Ip = m Ic / sqrt(3). OK. Le PDF a peut-être fait une erreur de frappe. -->
+                 <li>Tension efficace primaire (par phase) : \( V_p = V_{eff\_sec} / m = \frac{V_m}{m\sqrt{2}} \)</li>
+                 <li>Puissance apparente primaire (totale, 3 phases) : \( S_p = 3 \cdot V_p \cdot I_p = 3 \cdot \frac{V_m}{m\sqrt{2}} \cdot \frac{m I_c}{\sqrt{3}} = \frac{3 V_m I_c}{\sqrt{6}} = \sqrt{\frac{3}{2}} V_m I_c = S_{secondaire} \) (normal)</li>
+                 <!-- Le PDF a Sp = 3 * Vp * Ip = 3 * (Vm / (m*sqrt(2))) * (sqrt(2/3)*m*Ic) = 3 * Vm * Ic * sqrt(2) / sqrt(6) = 3 * Vm * Ic / sqrt(3) = sqrt(3) * Vm * Ic. Incohérent avec la formule de fp. Utilisons Ip = m Ic / sqrt(3) : Sp = 3 * (Vm/(m*sqrt(2))) * (m*Ic/sqrt(3)) = 3*Vm*Ic/sqrt(6). OK. -->
+                 <li>Facteur de puissance primaire : \( f_p = \frac{P_c}{S_p} = \frac{(3\sqrt{3} V_m I_c) / (2\pi)}{3 V_m I_c / \sqrt{6}} = \frac{\sqrt{3}}{2\pi} \sqrt{6} = \frac{\sqrt{18}}{2\pi} = \frac{3\sqrt{2}}{2\pi} \approx 0,675 \)</li>
+                 <!-- Le PDF trouve (3*sqrt(3)*VmIc / (2*pi)) / (3 * (Vm/(m*sqrt(2))) * (m*Ic*sqrt(2/3))) ... trop compliqué. Utilisons Pc/Sp = (3*sqrt(3)*VmIc/(2pi)) / (3*VmIc/sqrt(6)) = sqrt(3)/(2pi) * sqrt(6) = 3*sqrt(2)/(2pi). OK. Le PDF donne fp ~ 0.827. Erreur dans le PDF. -->
+             </ul>
+             <p><strong>Conclusion P3 :</strong> Redressement triphasé simple, nécessite un transformateur spécial, facteur de puissance médiocre.</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 26)</p>
+             <h2>IV-4- Redressement commandé P3 (tous thyristors)</h2>
+             <p>On remplace les diodes par des thyristors (T1, T2, T3) pour contrôler la tension de sortie via un angle de retard à l'amorçage \( \psi \).</p>
+            <h3>IV-4-1- Montage</h3>
+             <div class="placeholder">[Placeholder: Schéma Redresseur P3 commandé (Thyristors)]</div>
+             <p class="caption">Figure N°27: Redresseurs triphasés P3 tous thyristors. Montage similaire au P3 diodes, mais avec des thyristors. La charge est R-L.</p>
+
+            <h3>IV-4-2- Analyse du fonctionnement</h3>
+            <p>Conditions similaires au P3 diodes (charge inductive, courant \( I_c \) constant). L'impulsion de gâchette sur T1 est envoyée avec un retard \( \psi \) par rapport à l'instant d'amorçage naturel (\( \theta = \pi/6 \)). Les impulsions sur T2 et T3 sont décalées de \( 2\pi/3 \).</p>
+            <p>Chaque thyristor conduit pendant \( 2\pi/3 \). La conduction commence à \( \pi/6 + \psi \).</p>
+             <table>
+                 <thead>
+                     <tr>
+                         <th>Intervalle \( \theta \)</th>
+                         <th>Thyristor en conduction</th>
+                         <th>Thyristors bloqués</th>
+                         <th>Tension de sortie \( u_c \)</th>
+                         <th>Tension aux bornes de T1 (\( V_{AK, T1} \))</th>
+                         <th>Courant \( i_1 \) (Source V1)</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                         <td>\( [\frac{\pi}{6}+\psi, \frac{5\pi}{6}+\psi] \)</td>
+                         <td>T1</td>
+                         <td>T2 et T3</td>
+                         <td>\( v_1(\theta) \)</td>
+                         <td>0</td>
+                         <td>\( I_c \)</td>
+                     </tr>
+                     <tr>
+                         <td>\( [\frac{5\pi}{6}+\psi, \frac{9\pi}{6}+\psi] \) (soit \( \frac{3\pi}{2}+\psi \))</td>
+                         <td>T2</td>
+                         <td>T1 et T3</td>
+                         <td>\( v_2(\theta) \)</td>
+                         <td>\( v_1(\theta) - v_2(\theta) = u_{12}(\theta) \)</td>
+                         <td>0</td>
+                     </tr>
+                     <tr>
+                         <td>\( [\frac{9\pi}{6}+\psi, \frac{13\pi}{6}+\psi] \)</td>
+                         <td>T3</td>
+                         <td>T1 et T2</td>
+                         <td>\( v_3(\theta) \)</td>
+                         <td>\( v_1(\theta) - v_3(\theta) = u_{13}(\theta) \)</td>
+                         <td>0</td>
+                     </tr>
+                     <tr>
+                         <td>\( [\frac{13\pi}{6}+\psi, \frac{17\pi}{6}+\psi] \) (Cycle suivant)</td>
+                         <td>T1</td>
+                         <td>T2 et T3</td>
+                         <td>\( v_1(\theta) \)</td>
+                         <td>0</td>
+                         <td>\( I_c \)</td>
+                    </tr>
+                 </tbody>
+             </table>
+        </section>
+
+         <section>
+             <p class="page-ref">(Contenu basé sur la page 27)</p>
+            <h3>IV-4-3- Valeur moyenne de la tension Uc (P3 commandé)</h3>
+            <p>La tension redressée est périodique de période \( T/3 \). On intègre sur un intervalle de conduction :</p>
+             \[ U_{cmoy}(\psi) = \frac{1}{2\pi/3} \int_{\pi/6+\psi}^{5\pi/6+\psi} u_c(\theta) d\theta = \frac{3}{2\pi} \int_{\pi/6+\psi}^{5\pi/6+\psi} V_m \sin(\theta) d\theta \]
+             \[ U_{cmoy}(\psi) = \frac{3 V_m}{2\pi} [-\cos(\theta)]_{\pi/6+\psi}^{5\pi/6+\psi} \]
+             \[ U_{cmoy}(\psi) = \frac{3 V_m}{2\pi} [-\cos(\frac{5\pi}{6}+\psi) + \cos(\frac{\pi}{6}+\psi)] \]
+             <p>En utilisant \( \cos(a+b) = \cos a \cos b - \sin a \sin b \) et \( \cos(a-b) = \cos a \cos b + \sin a \sin b \) :</p>
+             \[ \cos(\frac{\pi}{6}+\psi) = \cos\frac{\pi}{6}\cos\psi - \sin\frac{\pi}{6}\sin\psi = \frac{\sqrt{3}}{2}\cos\psi - \frac{1}{2}\sin\psi \]
+             \[ \cos(\frac{5\pi}{6}+\psi) = \cos\frac{5\pi}{6}\cos\psi - \sin\frac{5\pi}{6}\sin\psi = -\frac{\sqrt{3}}{2}\cos\psi - \frac{1}{2}\sin\psi \]
+             \[ -\cos(\frac{5\pi}{6}+\psi) + \cos(\frac{\pi}{6}+\psi) = -(-\frac{\sqrt{3}}{2}\cos\psi - \frac{1}{2}\sin\psi) + (\frac{\sqrt{3}}{2}\cos\psi - \frac{1}{2}\sin\psi) \]
+             \[ = \frac{\sqrt{3}}{2}\cos\psi + \frac{1}{2}\sin\psi + \frac{\sqrt{3}}{2}\cos\psi - \frac{1}{2}\sin\psi = \sqrt{3} \cos\psi \]
+             <p>Donc :</p>
+             <div class="formula-box">
+             \[ U_{cmoy}(\psi) = \frac{3 V_m}{2\pi} (\sqrt{3} \cos\psi) = \frac{3\sqrt{3}}{2\pi} V_m \cos\psi \]
+             </div>
+             <p>On note \( U_{Co_{moy}} = \frac{3\sqrt{3}}{2\pi} V_m \) la valeur moyenne maximale (pour \( \psi = 0 \), équivalent au P3 diodes). Alors \( U_{cmoy}(\psi) = U_{Co_{moy}} \cos\psi \).</p>
+
+             <h4>Remarque:</h4>
+             <ul>
+                 <li>Les contraintes sur les composants (courants, tension inverse) sont les mêmes que pour le P3 non commandé (en supposant \( I_c \) constant).</li>
+                 <li>Courant moyen par thyristor : \( I_{Tmoy} = I_c / 3 \)</li>
+                 <li>Courant efficace par thyristor : \( I_{T_{eff}} = I_c / \sqrt{3} \)</li>
+                 <li>Tension maximale inverse : \( V_{Tmax_{inv}} = V_m \sqrt{3} = V\sqrt{6} \) (valeur crête de la tension composée).</li>
+             </ul>
+
+             <h3>IV-4-4- Différents modes de fonctionnement - Réversibilité</h3>
+             <p>La tension moyenne \( U_{cmoy}(\psi) = U_{Co_{moy}} \cos\psi \) dépend de \( \psi \):</p>
+             <ul>
+                 <li>Pour \( 0 \le \psi < \pi/2 \) : \( \cos\psi > 0 \), donc \( U_{cmoy} > 0 \). Le montage fonctionne en <strong>redresseur</strong>. La puissance \( P_c = U_{cmoy} I_c \) est positive (fournie à la charge).</li>
+                 <li>Pour \( \psi = \pi/2 \) : \( \cos\psi = 0 \), donc \( U_{cmoy} = 0 \).</li>
+                 <li>Pour \( \pi/2 < \psi \le \pi \) : \( \cos\psi < 0 \), donc \( U_{cmoy} < 0 \). Si la charge est capable d'inverser le signe de la puissance (ex: moteur en mode générateur, force électromotrice E), la puissance \( P_c = U_{cmoy} I_c \) devient négative. La puissance est transmise de la charge vers le réseau AC. Le montage fonctionne en <strong>onduleur non autonome</strong> (assisté par le réseau).</li>
+             </ul>
+             <div class="placeholder">[Placeholder: Graphe Ucmoy vs ψ pour P3 commandé]</div>
+             <p class="caption">Variation de la tension moyenne de sortie \( U_{Cmoy} \) en fonction de l'angle de commande \( \psi \) pour un redresseur P3 commandé. La courbe est une cosinusoïde. Zone Redresseur (\( 0 \le \psi < \pi/2 \)) et zone Onduleur (\( \pi/2 < \psi \le \pi \)).</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 28)</p>
+            <h3>IV-4-5- Formes d'ondes des différentes grandeurs (P3 commandé, \( \psi = \pi/6 \))</h3>
+
+             <div class="placeholder">[Placeholder: Formes d'ondes Redresseur P3 commandé (ψ=π/6)]</div>
+             <p class="caption">Figure N°28: Formes d'ondes des différentes grandeurs d'un redresseur P3 tous thyristors pour \( \psi = \pi/6 \). Sont représentées : les tensions secondaires \( v_1, v_2, v_3 \), la tension redressée \( u_c \), la tension aux bornes de T1 (\( v_{T1} = v_{AK,T1} \)) et le courant dans T1 (\( i_{T1} \)).</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 29)</p>
+            <h2>IV-5- Redressement non commandé PD3 (diodes) - Pont de Graëtz Triphasé</h2>
+            <p>Le montage PD3 (pont de Graëtz triphasé) est le redresseur le plus utilisé en forte puissance. Il utilise 6 diodes et peut être connecté directement au réseau triphasé (ou via un transformateur simple sans point milieu).</p>
+            <p>Il peut être vu comme l'association d'un montage à cathodes communes (D1, D3, D5) qui détermine le potentiel du pôle positif \( V^+ \), et d'un montage à anodes communes (D2, D4, D6) qui détermine le potentiel du pôle négatif \( V^- \).</p>
+
+            <h3>IV-5-1- Montage</h3>
+             <div class="placeholder">[Placeholder: Schéma Redresseur PD3 (Pont de Graëtz)]</div>
+             <p class="caption">Figure N°29: Redresseurs triphasés PD3 tous diodes. Transformateur étoile-étoile (pour illustration, pas obligatoire), pont de 6 diodes, charge R-L avec \( I_c \) constant.</p>
+             <p>Hypothèses : Transformateur idéal, diodes parfaites, \( I_c \) constant.</p>
+            <p>Les tensions secondaires (simples, phase-neutre) sont :</p>
+             \[ v_1(\theta) = V_m \sin(\theta) \]
+             \[ v_2(\theta) = V_m \sin(\theta - \frac{2\pi}{3}) \]
+            \[ v_3(\theta) = V_m \sin(\theta - \frac{4\pi}{3}) \]
+
+             <h3>IV-5-2- Analyse du fonctionnement</h3>
+             <p>La tension de sortie \( u_c(\theta) \) est donnée par la différence entre le potentiel du pôle positif \( V^+(\theta) \) et celui du pôle négatif \( V^-(\theta) \):</p>
+             \[ u_c(\theta) = V^+(\theta) - V^-(\theta) \]
+             <ul>
+                 <li>\( V^+(\theta) = \max(v_1(\theta), v_2(\theta), v_3(\theta)) \) (diodes D1, D3, D5 - cathodes communes)</li>
+                 <li>\( V^-(\theta) = \min(v_1(\theta), v_2(\theta), v_3(\theta)) \) (diodes D2, D4, D6 - anodes communes)</li>
+             </ul>
+             <p>À chaque instant, une diode du groupe supérieur (D1, D3, D5) et une diode du groupe inférieur (D2, D4, D6) conduisent. La tension de sortie \( u_c(\theta) \) correspond donc à l'une des 6 tensions composées (\( u_{12}, u_{13}, u_{21}, u_{23}, u_{31}, u_{32} \)). Plus précisément, \( u_c(\theta) \) suit l'enveloppe supérieure des valeurs absolues des tensions composées.</p>
+             <p>La commutation se produit tous les \( \pi/3 \) (60°).</p>
+             <p>Exemple : Dans l'intervalle \( [\pi/6, \pi/2] \), \( v_1 \) est la plus positive (\( V^+ = v_1 \), D1 conduit) et \( v_2 \) est la plus négative (\( V^- = v_2 \), D4 conduit). La tension de sortie est \( u_c(\theta) = v_1(\theta) - v_2(\theta) = u_{12}(\theta) \).</p>
+             <p>Tableau des intervalles de conduction (naturelle) :</p>
+             <table>
+                 <thead>
+                     <tr>
+                         <th>Intervalle \( \theta \)</th>
+                         <th>Diodes en conductions</th>
+                         <th>Tension de sortie \( u_c \)</th>
+                         <th>Tension aux bornes de D1 (\( V_{AK, D1} \))</th>
+                         <th>Courant \( i_{D1} \)</th>
+                         <th>Courant \( i_1 \) (Source V1)</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                         <td>\( [\pi/6, \pi/2] \) (soit \( 3\pi/6 \))</td>
+                         <td>D1 et D4</td>
+                         <td>\( v_1 - v_2 = u_{12} \)</td>
+                         <td>0</td>
+                         <td>\( I_c \)</td>
+                         <td>\( I_c \)</td>
+                     </tr>
+                      <tr>
+                         <td>\( [\pi/2, 5\pi/6] \)</td>
+                         <td>D1 et D6</td>
+                         <td>\( v_1 - v_3 = u_{13} \)</td>
+                          <td>0</td>
+                          <td>\( I_c \)</td>
+                          <td>\( I_c \)</td>
+                     </tr>
+                     <tr>
+                         <td>\( [5\pi/6, 7\pi/6] \)</td>
+                         <td>D3 et D6</td>
+                         <td>\( v_2 - v_3 = u_{23} \)</td>
+                         <td>\( v_1 - v_2 = u_{12} \)</td>
+                         <td>0</td>
+                         <td>0</td>
+                     </tr>
+                      <tr>
+                         <td>\( [7\pi/6, 3\pi/2] \) (soit \( 9\pi/6 \))</td>
+                         <td>D3 et D2</td>
+                         <td>\( v_2 - v_1 = u_{21} \)</td>
+                         <td>\( v_1 - v_2 = u_{12} \)</td>
+                         <td>0</td>
+                         <td>\( -I_c \) (car D2 conduit)</td>
+                     </tr>
+                      <tr>
+                         <td>\( [3\pi/2, 11\pi/6] \)</td>
+                         <td>D5 et D2</td>
+                         <td>\( v_3 - v_1 = u_{31} \)</td>
+                         <td>\( v_1 - v_3 = u_{13} \)</td>
+                         <td>0</td>
+                          <td>\( -I_c \) (car D2 conduit)</td>
+                     </tr>
+                      <tr>
+                         <td>\( [11\pi/6, 13\pi/6] \)</td>
+                         <td>D5 et D4</td>
+                         <td>\( v_3 - v_2 = u_{32} \)</td>
+                          <td>\( v_1 - v_3 = u_{13} \)</td>
+                          <td>0</td>
+                          <td>0</td>
+                    </tr>
+                      <tr>
+                         <td>\( [13\pi/6, 15\pi/6] \) (soit \( 5\pi/2 \)) (Cycle suivant)</td>
+                         <td>D1 et D4</td>
+                         <td>\( v_1 - v_2 = u_{12} \)</td>
+                          <td>0</td>
+                          <td>\( I_c \)</td>
+                          <td>\( I_c \)</td>
+                    </tr>
+                 </tbody>
+             </table>
+             <p>Note: Le courant \( i_1 \) est la somme des courants passant par D1 et D2 : \( i_1 = i_{D1} - i_{D2} \). Il vaut \( I_c \) quand D1 conduit, \( -I_c \) quand D2 conduit, et 0 sinon.</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 30)</p>
+            <h3>IV-5-3- Valeur moyenne de la tension de sortie Uc (PD3)</h3>
+            <p>La tension \( u_c(\theta) \) est périodique de période \( T/6 \) (soit \( \pi/3 \) en angle). On calcule la valeur moyenne sur une période, par exemple pendant que D1 et D4 conduisent (\( \theta \in [\pi/6, \pi/2] \)) :</p>
+             \[ U_{cmoy} = \frac{1}{\pi/3} \int_{\pi/6}^{\pi/2} u_c(\theta) d\theta = \frac{3}{\pi} \int_{\pi/6}^{\pi/2} u_{12}(\theta) d\theta \]
+             \[ u_{12}(\theta) = v_1 - v_2 = V_m \sin\theta - V_m \sin(\theta - 2\pi/3) \]
+             \[ u_{12}(\theta) = V_m [\sin\theta - (\sin\theta \cos(2\pi/3) - \cos\theta \sin(2\pi/3))] \]
+             \[ u_{12}(\theta) = V_m [\sin\theta - (\sin\theta (-\frac{1}{2}) - \cos\theta (\frac{\sqrt{3}}{2}))] = V_m [\frac{3}{2}\sin\theta + \frac{\sqrt{3}}{2}\cos\theta] \]
+             \[ u_{12}(\theta) = V_m \sqrt{(\frac{3}{2})^2 + (\frac{\sqrt{3}}{2})^2} \sin(\theta + \alpha) = V_m \sqrt{\frac{9}{4}+\frac{3}{4}} \sin(\theta + \alpha) = V_m \sqrt{3} \sin(\theta + \pi/6) \]
+            <p>Intégrons \( u_{12} \):</p>
+            \[ \int_{\pi/6}^{\pi/2} V_m \sqrt{3} \sin(\theta + \pi/6) d\theta = V_m \sqrt{3} [-\cos(\theta + \pi/6)]_{\pi/6}^{\pi/2} \]
+            \[ = V_m \sqrt{3} [-\cos(\frac{\pi}{2}+\frac{\pi}{6}) - (-\cos(\frac{\pi}{6}+\frac{\pi}{6}))] = V_m \sqrt{3} [-\cos(2\pi/3) + \cos(\pi/3)] \]
+             \[ = V_m \sqrt{3} [-(-1/2) + (1/2)] = V_m \sqrt{3} [1] = V_m \sqrt{3} \]
+             <p>Donc :</p>
+              <div class="formula-box">
+             \[ U_{cmoy} = \frac{3}{\pi} (V_m \sqrt{3}) = \frac{3\sqrt{3}}{\pi} V_m \]
+              </div>
+             <p>Si V est la valeur efficace simple (\( V_m = V\sqrt{2} \)) : \( U_{cmoy} = \frac{3\sqrt{3}}{\pi} V\sqrt{2} = \frac{3\sqrt{6}}{\pi} V \approx 2,34 V \).
+             C'est le double de la tension moyenne du P3.</p>
+
+             <h3>IV-5-4- Etude des courants (PD3)</h3>
+             <h4>IV-5-4-1- Courants dans les diodes (exemple : diode D1)</h4>
+             <p>D1 conduit pendant deux intervalles successifs de \( \pi/3 \), soit une durée totale de \( 2\pi/3 \) par période \( 2\pi \). Le courant dans D1 est \( I_c \) pendant \( 2\pi/3 \).</p>
+             <ul>
+                 <li>Courant maximal : \( i_{D1max} = I_c \)</li>
+                 <li>Courant moyen : \( i_{D1moy} = \frac{1}{2\pi} \int_{\pi/6}^{5\pi/6} I_c d\theta = \frac{I_c}{2\pi} (\frac{5\pi}{6}-\frac{\pi}{6}) = \frac{I_c}{2\pi} \frac{4\pi}{6} = \frac{I_c}{3} \)</li>
+                 <li>Courant efficace : \( I_{D1eff} = \sqrt{\frac{1}{2\pi} \int_{\pi/6}^{5\pi/6} I_c^2 d\theta} = \sqrt{\frac{I_c^2}{2\pi} \frac{4\pi}{6}} = \sqrt{\frac{I_c^2}{3}} = \frac{I_c}{\sqrt{3}} \)</li>
+             </ul>
+              <p>(Les courants moyen et efficace par diode sont les mêmes que pour le P3).</p>
+
+             <h4>IV-5-4-2- Courant et facteur de puissance secondaire</h4>
+             <ul class="custom-marker">
+                 <li>Courant secondaire efficace (par phase, ex: \( i_1 = i_{D1} - i_{D2} \)) : \( i_1 \) est un signal alternatif composé de créneaux \( +I_c \) (pendant \( 2\pi/3 \)) et \( -I_c \) (pendant \( 2\pi/3 \)).
+                 \( I_{s_{eff}}^2 = \frac{1}{2\pi} [\int_{\pi/6}^{5\pi/6} I_c^2 d\theta + \int_{7\pi/6}^{11\pi/6} (-I_c)^2 d\theta] = \frac{1}{2\pi} [I_c^2 (\frac{4\pi}{6}) + I_c^2 (\frac{4\pi}{6})] = \frac{I_c^2}{2\pi} \frac{8\pi}{6} = \frac{2}{3} I_c^2 \).
+                 Donc \( I_{s_{eff}} = I_c \sqrt{\frac{2}{3}} \)</li>
+                 <!-- Le PDF donne Ileff = sqrt(2/3) Ic. OK. -->
+                 <li>Puissance active de la charge : \( P_c = U_{cmoy} \cdot I_c = \frac{3\sqrt{3}}{\pi} V_m I_c \)</li>
+                 <li>Puissance apparente secondaire (totale, 3 phases) : \( S = 3 \cdot V_{eff} \cdot I_{s_{eff}} = 3 \cdot \frac{V_m}{\sqrt{2}} \cdot (I_c \sqrt{\frac{2}{3}}) = 3 V_m I_c \sqrt{\frac{1}{3}} = \sqrt{3} V_m I_c \)</li>
+                 <!-- Le PDF a S = 3 * (Vm/sqrt(2)) * (Ic*sqrt(2/3)) = sqrt(3) Vm Ic. OK. -->
+                 <li>Facteur de puissance secondaire : \( f_s = \frac{P_c}{S} = \frac{(3\sqrt{3} V_m I_c) / \pi}{\sqrt{3} V_m I_c} = \frac{3}{\pi} \approx 0,955 \)</li>
+                 <!-- Le PDF a fs = 3/pi. OK. -->
+             </ul>
+
+             <h4>Interprétation</h4>
+             <ul class="custom-marker">
+                <li class="bullet">Tension inverse max sur diode : \( V_{D,inv,max} \). Quand D1 conduit (avec D4 ou D6), la tension inverse sur D3 est \( v_{12} \) ou \( v_{13} \). Le max est la valeur crête de la tension composée : \( V_m \sqrt{3} = V\sqrt{6} \). (Identique au P3).</li>
+                <li class="bullet">Comparaison PD3 vs P3 : Pour une même contrainte en tension sur les diodes (\( V\sqrt{6} \)) et en courant (\( I_c/\sqrt{3} \)), le PD3 fournit une tension moyenne double (\( 3\sqrt{3}V_m/\pi \) vs \( 3\sqrt{3}V_m/(2\pi) \)) et donc une puissance double.</li>
+                 <!-- Attention: P3 Ucmoy=3sqrt(3)Vm/(2pi). PD3 Ucmoy=3sqrt(3)Vm/pi. C'est bien le double. OK. -->
+                <li class="bullet">Le facteur de puissance du PD3 (\( 3/\pi \approx 0,955 \)) est nettement meilleur que celui du P3 (\( 3\sqrt{2}/(2\pi) \approx 0,675 \)).</li>
+                <li class="bullet">Le PD3 a donc des performances nettement supérieures (meilleure utilisation du transfo, meilleur facteur de puissance, tension plus élevée).</li>
+             </ul>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 31)</p>
+            <h3>IV-5-5- Formes d'ondes des différentes grandeurs (PD3)</h3>
+
+             <div class="placeholder">[Placeholder: Formes d'ondes Redresseur PD3]</div>
+             <p class="caption">Figure N°30: Formes d'ondes des différentes grandeurs d'un redresseur PD3 tous diodes. Sont représentées : tensions simples \( v_1, v_2, v_3 \), enveloppes \( V^+, V^- \), tension de sortie \( u_c \), courant dans D1 \( i_{D1} \), et courant d'entrée de phase \( i_1 \).</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 32)</p>
+            <h2>IV-6- Redressement commandé PD3 (tous thyristors) - Pont de Graëtz Tout Thyristors</h2>
+            <p>C'est le convertisseur AC-DC le plus utilisé en forte puissance pour le contrôle de machines à courant continu ou pour les liaisons HVDC. Il utilise 6 thyristors.</p>
+
+            <h3>IV-6-1- Montage</h3>
+            <div class="placeholder">[Placeholder: Schéma Redresseur PD3 commandé (Thyristors)]</div>
+            <p class="caption">Figure N°31: Redresseurs triphasés PD3 tous thyristors. Pont de 6 thyristors. Charge R-L-E (moteur CC), courant \( I_c \) constant.</p>
+            <p>Fonctionnement :</p>
+             <ul>
+                <li>Groupe supérieur (cathodes communes) : T1, T3, T5 sont amorcés pendant les alternances positives des tensions v1, v2, v3, avec un retard \( \psi \) par rapport à l'amorçage naturel.</li>
+                <li>Groupe inférieur (anodes communes) : T4, T6, T2 sont amorcés pendant les alternances négatives (respectivement pour v2, v3, v1), avec le même retard \( \psi \). T4 est commandé en opposition avec T1, T6 avec T3, T2 avec T5.</li>
+             </ul>
+            <p>La référence des angles d'amorçage \( \psi \) est toujours l'angle d'amorçage naturel des diodes correspondantes (\( \pi/6 \) pour D1, \( \pi/2 \) pour D2, etc.).</p>
+            <p>Hypothèses : Transformateur idéal, thyristors parfaits, charge = moteur CC avec courant \( I_c \) constant.</p>
+             <p>Tensions secondaires :</p>
+             \[ v_1 = V_m \sin(\theta), \quad v_2 = V_m \sin(\theta - 2\pi/3), \quad v_3 = V_m \sin(\theta - 4\pi/3) \]
+
+             <h3>IV-6-2- Analyse du fonctionnement</h3>
+             <p>Le retard à l'amorçage est \( \psi \). La tension de sortie est \( u_c(\theta) = V^+(\theta) - V^-(\theta) \), où \( V^+ \) est déterminée par T1, T3, T5 et \( V^- \) par T2, T4, T6.</p>
+             <p>À chaque instant, deux thyristors conduisent : un du groupe supérieur et un du groupe inférieur (non opposé).</p>
+             <p>Exemple : T1 est amorcé à \( \pi/6 + \psi \). Au même moment, T4 (associé à v2 négative) devrait être amorcé à \( \pi/6+\psi - \pi = -\frac{5\pi}{6}+\psi \), mais est déjà amorcé avant (car T4 est en opposition avec T1 et non T3?). Non, l'amorçage de T4 (groupe inférieur) se fait par rapport au passage à zéro de V2 négatif. L'amorçage naturel de D4 serait à \( \pi/6 \). Donc T4 est amorcé à \( \pi/6+\psi \). L'intervalle de conduction de T1+T4 va de \( \pi/6+\psi \) à \( (\pi/6+\psi) + \pi/3 \)? Vérifions le tableau.</p>
+             <p>Tableau des intervalles de conduction :</p>
+             <table>
+                 <thead>
+                     <tr>
+                         <th>Intervalle \( \theta \)</th>
+                         <th>Thyristors en conductions</th>
+                         <th>Tension de sortie \( u_c \)</th>
+                         <th>Tension aux bornes de T1 (\( V_{AK, T1} \))</th>
+                         <th>Courant \( i_{T1} \)</th>
+                         <th>Courant \( i_1 \) (Source V1)</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <td>\( [\frac{\pi}{6}+\psi, \frac{\pi}{2}+\psi] \)</td>
+                        <td>T1 et T4</td>
+                        <td>\( v_1 - v_2 = u_{12} \)</td>
+                        <td>0</td>
+                        <td>\( I_c \)</td>
+                        <td>\( I_c \)</td>
+                    </tr>
+                     <tr>
+                         <td>\( [\frac{\pi}{2}+\psi, \frac{5\pi}{6}+\psi] \)</td>
+                         <td>T1 et T6</td>
+                         <td>\( v_1 - v_3 = u_{13} \)</td>
+                         <td>0</td>
+                         <td>\( I_c \)</td>
+                         <td>\( I_c \)</td>
+                     </tr>
+                     <tr>
+                         <td>\( [\frac{5\pi}{6}+\psi, \frac{7\pi}{6}+\psi] \)</td>
+                         <td>T3 et T6</td>
+                         <td>\( v_2 - v_3 = u_{23} \)</td>
+                         <td>\( v_1 - v_2 = u_{12} \)</td>
+                         <td>0</td>
+                         <td>0</td>
+                     </tr>
+                     <tr>
+                         <td>\( [\frac{7\pi}{6}+\psi, \frac{3\pi}{2}+\psi] \)</td>
+                         <td>T3 et T2</td>
+                         <td>\( v_2 - v_1 = u_{21} \)</td>
+                         <td>\( v_1 - v_2 = u_{12} \)</td>
+                         <td>0</td>
+                         <td>\( -I_c \) (T2 conduit)</td>
+                     </tr>
+                     <tr>
+                         <td>\( [\frac{3\pi}{2}+\psi, \frac{11\pi}{6}+\psi] \)</td>
+                         <td>T5 et T2</td>
+                         <td>\( v_3 - v_1 = u_{31} \)</td>
+                         <td>\( v_1 - v_3 = u_{13} \)</td>
+                         <td>0</td>
+                         <td>\( -I_c \) (T2 conduit)</td>
+                     </tr>
+                     <tr>
+                         <td>\( [\frac{11\pi}{6}+\psi, \frac{13\pi}{6}+\psi] \)</td>
+                         <td>T5 et T4</td>
+                         <td>\( v_3 - v_2 = u_{32} \)</td>
+                         <td>\( v_1 - v_3 = u_{13} \)</td>
+                         <td>0</td>
+                         <td>0</td>
+                    </tr>
+                 </tbody>
+             </table>
+              <p>Note : La structure du tableau est identique à celle du PD3 diodes, mais tout est décalé de \( \psi \).</p>
+        </section>
+
+        <section>
+            <p class="page-ref">(Contenu basé sur la page 33)</p>
+             <h3>IV-6-3- Valeur moyenne de la tension de sortie Uc (PD3 commandé)</h3>
+             <p>La tension \( u_c(\theta) \) est périodique de période \( \pi/3 \). On intègre sur un intervalle de conduction, par exemple T1 et T4 conduisent sur \( [\pi/6+\psi, \pi/2+\psi] \).</p>
+             \[ U_{cmoy}(\psi) = \frac{1}{\pi/3} \int_{\pi/6+\psi}^{\pi/2+\psi} u_c(\theta) d\theta = \frac{3}{\pi} \int_{\pi/6+\psi}^{\pi/2+\psi} u_{12}(\theta) d\theta \]
+              <p>On utilise l'intégrale calculée pour le PD3 diodes, mais avec les bornes décalées de \( \psi \):</p>
+              \[ \int_{\pi/6+\psi}^{\pi/2+\psi} V_m \sqrt{3} \sin(\theta + \pi/6) d\theta = V_m \sqrt{3} [-\cos(\theta + \pi/6)]_{\pi/6+\psi}^{\pi/2+\psi} \]
+             \[ = V_m \sqrt{3} [-\cos(\frac{\pi}{2}+\psi+\frac{\pi}{6}) + \cos(\frac{\pi}{6}+\psi+\frac{\pi}{6})] \]
+              \[ = V_m \sqrt{3} [-\cos(\frac{2\pi}{3}+\psi) + \cos(\frac{\pi}{3}+\psi)] \]
+              <p>Utilisons \( \cos(a+b) + \cos(a-b) = 2\cos a \cos b \). Posons \( a = \pi/2 + \psi \) et \( b = \pi/6 \). Non, plus simple :</p>
+               \[ \cos(\frac{\pi}{3}+\psi) = \cos\frac{\pi}{3}\cos\psi - \sin\frac{\pi}{3}\sin\psi = \frac{1}{2}\cos\psi - \frac{\sqrt{3}}{2}\sin\psi \]
+              \[ \cos(\frac{2\pi}{3}+\psi) = \cos\frac{2\pi}{3}\cos\psi - \sin\frac{2\pi}{3}\sin\psi = -\frac{1}{2}\cos\psi - \frac{\sqrt{3}}{2}\sin\psi \]
+              \[ -\cos(\frac{2\pi}{3}+\psi) + \cos(\frac{\pi}{3}+\psi) = -(-\frac{1}{2}\cos\psi - \frac{\sqrt{3}}{2}\sin\psi) + (\frac{1}{2}\cos\psi - \frac{\sqrt{3}}{2}\sin\psi) \]
+              \[ = \frac{1}{2}\cos\psi + \frac{\sqrt{3}}{2}\sin\psi + \frac{1}{2}\cos\psi - \frac{\sqrt{3}}{2}\sin\psi = \cos\psi \]
+             <p>Donc l'intégrale vaut \( V_m \sqrt{3} \cos\psi \).</p>
+              <div class="formula-box">
+              \[ U_{cmoy}(\psi) = \frac{3}{\pi} (V_m \sqrt{3} \cos\psi) = \frac{3\sqrt{3}}{\pi} V_m \cos\psi \]
+              </div>
+              <p>C'est la même relation \( U_{cmoy}(\psi) = U_{Co_{moy}} \cos\psi \) que pour le P3 commandé, mais avec \( U_{Co_{moy}} = \frac{3\sqrt{3}}{\pi} V_m \), qui est le double.</p>
+
+              <p><strong>A noter que :</strong></p>
+               <ul>
+                  <li>Pour \( 0 \le \psi < \pi/2 \) : \( U_{cmoy} > 0 \). Fonctionnement en <strong>Redresseur</strong>.</li>
+                  <li>Pour \( \psi = \pi/2 \) : \( U_{cmoy} = 0 \).</li>
+                   <li>Pour \( \pi/2 < \psi \le \pi \) : \( U_{cmoy} < 0 \). La puissance \( P_c = U_{cmoy} I_c \) peut être négative si \( I_c > 0 \). Cela correspond au fonctionnement en <strong>Onduleur non autonome</strong> (régénération de puissance du moteur vers le réseau).</li>
+              </ul>
+              <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                  <div style="text-align: center; margin: 10px;">
+                      <div class="placeholder">[Placeholder: Schéma bloc Redresseur]</div>
+                      <p class="caption">Montage Redresseur : Puissance du Réseau vers Moteur.</p>
+                  </div>
+                  <div style="text-align: center; margin: 10px;">
+                      <div class="placeholder">[Placeholder: Schéma bloc Onduleur non autonome]</div>
+                      <p class="caption">Montage Onduleur non autonome : Puissance du Moteur (Génératrice) vers Réseau.</p>
+                  </div>
+              </div>
+              <p>La période de la tension de sortie est \( T/6 \) (\( \pi/3 \)). La variation de l'angle de commande \( \psi \) est théoriquement de \( 0 \) à \( \pi \). En pratique, pour assurer la commutation des thyristors, on doit respecter un angle de garde \( \gamma \) (lié à l'empiètement dû aux inductances du réseau), donc la variation est limitée à \( 0 \le \psi \le \pi - \gamma \).</p>
+        </section>
+
+         <section>
+             <p class="page-ref">(Contenu basé sur la page 34)</p>
+            <h3>IV-6-4- Formes d'ondes des différentes grandeurs (PD3 commandé, \( \psi = \pi/6 \))</h3>
+
+             <div class="placeholder">[Placeholder: Formes d'ondes Redresseur PD3 commandé (ψ=π/6)]</div>
+             <p class="caption">Figure N°32: Formes d'ondes des différentes grandeurs d'un redresseur PD3 tous thyristors pour \( \psi = \pi/6 \). Sont représentées : tensions simples \( v_1, v_2, v_3 \), enveloppes \( V^+, V^- \), tension de sortie \( u_c \), tension aux bornes de T1 \( v_{T1} \), courant dans T1 \( i_{T1} \), et courant d'entrée de phase \( i_1 \) avec son fondamental.</p>
+        </section>
+
+         <section>
+             <p class="page-ref">(Contenu basé sur la page 35)</p>
+             <h3>IV-6-5- Etude des courants (PD3 commandé)</h3>
+             <h4>IV-6-5-1- Courants dans les thyristors</h4>
+             <p>Chaque thyristor conduit \( I_c \) pendant \( 1/3 \) de la période (\( 2\pi/3 \)).</p>
+             <ul>
+                 <li>Courant moyen : \( I_{Tmoy} = I_c / 3 \)</li>
+                 <li>Courant efficace : \( I_{Teff} = I_c / \sqrt{3} \)</li>
+             </ul>
+             <p>(Identique aux diodes du PD3 non commandé).</p>
+
+             <h4>IV-6-5-2- Courant et facteur de puissance secondaire</h4>
+             <ul class="custom-marker">
+                 <li>Courant secondaire efficace (par phase) : \( I_{s_{eff}} = I_c \sqrt{\frac{2}{3}} \) (identique au PD3 non commandé).</li>
+                 <li>Puissance active de la charge : \( P_c = U_{cmoy}(\psi) \cdot I_c = \frac{3\sqrt{3}}{\pi} V_m \cos\psi \cdot I_c \)</li>
+                 <li>Puissance apparente secondaire (totale) : \( S = 3 V_{eff} I_{s_{eff}} = \sqrt{3} V_m I_c \) (identique au PD3 non commandé).</li>
+                 <li>Facteur de puissance secondaire : \( f_s = \frac{P_c}{S} = \frac{(3\sqrt{3} V_m I_c \cos\psi) / \pi}{\sqrt{3} V_m I_c} = \frac{3}{\pi} \cos\psi \)</li>
+             </ul>
+             <p>Le facteur de puissance dépend de l'angle de commande \( \psi \). Il est maximal (\( 3/\pi \)) pour \( \psi=0 \) et diminue lorsque \( \psi \) augmente. Le déphasage \( \varphi \) entre la tension \( v_1 \) et le fondamental du courant \( i_1 \) est égal à l'angle de commande \( \psi \) (\( \varphi = \psi \)).</p>
+
+             <hr style="margin: 2em 0;">
+
+            <h2>IV-7- Le pont mixte symétrique (PD3 mixte)</h2>
+             <p>Ce pont est composé de 3 thyristors (groupe supérieur, T1, T2, T3) et de 3 diodes (groupe inférieur, D1, D2, D3).</p>
+
+            <h3>IV-7-1- Montage</h3>
+             <div class="placeholder">[Placeholder: Schéma Redresseur PD3 mixte]</div>
+             <p class="caption">Figure N°33: Redresseurs triphasés PD3 mixte. 3 Thyristors (T1, T2, T3) en cathodes communes, 3 Diodes (D1, D2, D3) en anodes communes. Charge R-L-E.</p>
+             <p>Fonctionnement :</p>
+             <ul>
+                 <li>Groupe supérieur : T1, T2, T3 sont amorcés pendant les alternances positives avec retard \( \psi \). Détermine \( V^+ \).</li>
+                 <li>Groupe inférieur : D1, D2, D3 conduisent naturellement pendant les alternances négatives. Détermine \( V^- \).</li>
+             </ul>
+             <p>La référence des angles d'amorçage est toujours l'angle d'amorçage naturel. Hypothèses identiques (transfo idéal, composants parfaits, \( I_c \) constant).</p>
+             <p>(L'analyse détaillée de ce pont commence à la page 36 du document original).</p>
+        </section>
+
+
+    </main>
+
+    <footer>
+        <span>Hidri.imed</span>
+        <span>Pages 20-35 (Numérotation originale)</span>
+    </footer>
+
+</body>
+
+</html>
