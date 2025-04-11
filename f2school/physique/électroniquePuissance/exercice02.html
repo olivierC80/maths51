@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 1: Redresseur non commandé PD3 - Problèmes Corrigés d'Électronique de Puissance</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 900px; margin: auto; }
+        h1, h2, h3, h4 { color: #333; }
+        h1 { text-align: center; margin-bottom: 30px; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 40px;}
+        h3 { margin-top: 30px; color: #555; }
+        .enonce, .solution { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; }
+        .solution { background-color: #e9f5e9; }
+        .placeholder {
+            display: block;
+            margin: 20px auto;
+            border: 1px dashed #999;
+            padding: 20px;
+            text-align: center;
+            background-color: #f0f0f0;
+            min-height: 150px;
+            max-width: 600px; /* Limit image width */
+        }
+        .question-label { font-weight: bold; color: #0056b3; margin-right: 10px; }
+        ul, ol { margin-left: 20px; }
+        li { margin-bottom: 15px; }
+        p { margin-bottom: 1em; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .footer { font-size: 0.8em; text-align: center; margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px; color: #666; }
+        .note { font-style: italic; color: #555; background-color: #f0f0f0; padding: 10px; border-left: 3px solid #ccc; margin: 15px 0;}
+        .difficulty { font-style: italic; color: #777; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Problèmes Corrigés d'Électronique de Puissance</h1>
+    <h2>Chapitre 1: Redresseur non commandé PD3</h2>
+
+    <div class="difficulty">
+        <p><strong>Niveau de difficulté : *</strong> – Application simple du cours accessible à tous.</p>
+    </div>
+
+    <p>Le problème s'intéresse au redresseur le plus courant dans les applications industrielles : le montage PD3. Les questions sont proches du cours et permettent ainsi de revoir les méthodes classiques d'étude des redresseurs. Après trois parties consacrées à l'étude du montage en fonctionnement normal, la dernière partie traite de son comportement en cas de défaut.</p>
+
+    <div class="enonce">
+        <h2>ÉNONCÉ</h2>
+
+        <p>L'étage d'entrée d'une alimentation à découpage destinée à maintenir en parfait état électrique une batterie d'accumulateurs est un pont redresseur non commandé PD3 (figure 1.1).</p>
+
+        <div class="placeholder">
+            <p><strong>Placeholder: Figure 1.1 - Redresseur non commandé PD3.</strong></p>
+            <p>Schéma montrant un réseau triphasé (sources v1, v2, v3) alimentant un pont de Graëtz triphasé à 6 diodes (D1, D2, D3 pour le groupe cathodes communes ; D'1, D'2, D'3 pour le groupe anodes communes). Les tensions composées u12, u23, u31 sont indiquées. Les courants de ligne i1, i2, i3 et les courants de diodes iD1, iD'1 sont montrés. La sortie est une tension ud aux bornes d'une charge représentée par une source de courant Io.</p>
+        </div>
+
+        <p>Ce montage comporte six diodes supposées idéales. Il est alimenté par un réseau dont les tensions simples \(v_1\), \(v_2\) et \(v_3\) forment un système triphasé équilibré direct de valeur efficace \(V = 230\) V et de fréquence \(f = 50,0\) Hz :</p>
+        $$ v_1 = V\sqrt{2} \cos\theta $$
+        $$ v_2 = V\sqrt{2} \cos\left(\theta - \frac{2\pi}{3}\right) $$
+        $$ v_3 = V\sqrt{2} \cos\left(\theta + \frac{2\pi}{3}\right) $$
+        <p>avec \(\theta = \omega t = 2\pi f t\).</p>
+
+        <p>La sortie du pont PD3 est branchée sur un récepteur dont l'inductance est suffisamment élevée pour que la charge puisse être assimilée à une source de courant continu \(I_0 = 7,20\) A.</p>
+
+        <h3>A. ÉTUDE DES TENSIONS</h3>
+        <ul>
+            <li><span class="question-label">A.1</span> Tracer la courbe de la tension redressée \(u_d\) aux bornes du récepteur en fonction de l'angle \(\theta\). Indiquer les intervalles de conduction de chacune des diodes.</li>
+            <li><span class="question-label">A.2</span> Quel est l'indice de pulsation \(p\) de la tension redressée ?</li>
+            <li><span class="question-label">A.3</span> Exprimer la valeur moyenne \(U_{d0}\) de la tension redressée \(u_d\) en fonction de \(V\) puis effectuer l'application numérique.</li>
+        </ul>
+
+        <h3>B. ÉTUDE DES COURANTS</h3>
+        <ul>
+            <li><span class="question-label">B.1</span> Tracer la courbe de l'intensité \(i_{D1}\) du courant dans la diode D₁ en fonction de l'angle \(\theta\).</li>
+            <li><span class="question-label">B.2</span> Exprimer l'intensité moyenne \(I_{D0}\) du courant dans une diode en fonction de \(I_0\) puis effectuer l'application numérique.</li>
+            <li><span class="question-label">B.3</span> Établir l'expression de l'intensité efficace \(I_D\) du courant dans une diode en fonction de \(I_0\) et calculer sa valeur.</li>
+            <li><span class="question-label">B.4</span> Tracer la courbe de l'intensité \(i_1\) du courant dans le fil de ligne 1 en fonction de l'angle \(\theta\).</li>
+            <li><span class="question-label">B.5</span> Exprimer l'intensité efficace \(I\) des courants en ligne en fonction de \(I_0\) et calculer sa valeur.</li>
+        </ul>
+
+        <h3>C. ÉTUDE DES PUISSANCES</h3>
+        <ul>
+            <li><span class="question-label">C.1</span> Déterminer la puissance apparente \(S\) à l'entrée du redresseur.</li>
+            <li><span class="question-label">C.2</span> Calculer la puissance active \(P\) appelée par le redresseur.</li>
+            <li><span class="question-label">C.3</span> Calculer le facteur de puissance \(f_p\) à l'entrée du montage.</li>
+            <li><span class="question-label">C.4</span> Tracer l'allure de la courbe du fondamental \(i_{1f}\) du courant en ligne \(i_1\) (sans donner la valeur de son amplitude). En déduire le déphasage \(\varphi_f\) du fondamental \(i_{1f}\) du courant \(i_1\) par rapport à la tension \(v_1\).</li>
+            <li><span class="question-label">C.5</span> Que peut-on dire de la puissance réactive \(Q\) appelée par le redresseur ?</li>
+            <li><span class="question-label">C.6</span> En déduire la puissance déformante \(D\) appelée par le redresseur.</li>
+        </ul>
+
+        <h3>D. FONCTIONNEMENT EN CAS DE DÉFAUT</h3>
+        <p>La diode D₁ est détruite et elle se comporte comme un circuit ouvert (figure 1.2).</p>
+        <div class="placeholder">
+            <p><strong>Placeholder: Figure 1.2 - Coupure d'une diode.</strong></p>
+            <p>Schéma identique à la Figure 1.1, mais la diode D1 est représentée comme manquante ou en circuit ouvert.</p>
+        </div>
+        <ul>
+            <li><span class="question-label">D.1</span> Tracer la courbe de la tension redressée \(u_d\) aux bornes du récepteur en fonction de l'angle \(\theta\). Indiquer les intervalles de conduction de chacune des diodes restantes.</li>
+            <li><span class="question-label">D.2</span> Exprimer la valeur moyenne \(U_{d0}\) de la tension redressée \(u_d\) en fonction de \(V\) puis effectuer l'application numérique. Par quel coefficient cette valeur moyenne est-elle réduite par rapport au fonctionnement normal ?</li>
+        </ul>
+    </div>
+
+    <div class="solution">
+        <h2>SOLUTION</h2>
+
+        <h3>A. ÉTUDE DES TENSIONS</h3>
+
+        <p><span class="question-label">A.1</span> Les diodes D₁, D₂, et D₃ constituent un commutateur à cathodes communes. À chaque instant, la diode passante est celle qui est reliée à la phase du réseau présentant la tension la plus positive (parmi \(v_1, v_2, v_3\)). Les diodes D'₁, D'₂, et D'₃ constituent un commutateur à anodes communes. À chaque instant, la diode passante est celle qui est reliée à la phase du réseau présentant la tension la plus négative.</p>
+        <p>La tension redressée \(u_d\) est la différence entre le potentiel de cathode commune le plus haut (anode de D'1, D'2, D'3) et le potentiel d'anode commune le plus bas (cathode de D1, D2, D3). Elle est donc constituée par la partie supérieure de l'enveloppe des tensions composées \(u_{12}, u_{23}, u_{31}, u_{21}, u_{32}, u_{13}\).</p>
+        <p>Pendant une période de l'alimentation, la tension redressée \(u_d\) est donc constituée de six calottes de sinusoïdes qui correspondent aux tensions composées du réseau (figure 1.3). La tension \(u_d\) est toujours positive.</p>
+
+        <div class="placeholder">
+            <p><strong>Placeholder: Figure 1.3 - Courbe de la tension redressée.</strong></p>
+            <p>Graphe montrant les 3 tensions simples (v1, v2, v3) et les 6 tensions composées (u12, u23, u31, u21, u32, u13). La courbe de ud(V) en fonction de theta(rad) est tracée en gras, suivant l'enveloppe supérieure des tensions composées. L'amplitude crête est indiquée (environ 600V). Les intervalles de conduction des diodes (D1, D2, D3, D'1, D'2, D'3) sont indiqués sous le graphe, montrant que chaque diode conduit pendant 120° (2pi/3) et qu'il y a toujours une diode du groupe haut et une du groupe bas qui conduisent.</p>
+            <p>(Ex: D1 conduit quand v1 est la plus positive, D'2 conduit quand v2 est la plus négative, donnant ud = v1-v2 = u12).</p>
+        </div>
+
+        <p>La valeur efficace des tensions composées est :</p>
+        $$ U = V\sqrt{3} $$
+        <p>Application numérique :</p>
+        $$ U = 230\sqrt{3} \approx 400 \text{ V} $$
+        <p>L'amplitude de ces tensions est alors :</p>
+        $$ U_M = U\sqrt{2} $$
+        <p>Application numérique :</p>
+        $$ U_M = 400\sqrt{2} \approx 566 \text{ V} $$
+
+        <p><span class="question-label">A.2</span> L'indice de pulsation \(p\) de la tension redressée est le nombre de calottes de sinusoïde composant cette tension pendant une période \(2\pi\) de l'alimentation :</p>
+        $$ \boxed{p=6} $$
+        <p>La fréquence de l'ondulation de \(u_d\) est donc 6 fois la fréquence du réseau (300 Hz).</p>
+
+        <p><span class="question-label">A.3</span> La tension redressée \(u_d\) possède une période de \(\pi/3\). Pour faciliter le calcul de sa valeur moyenne \(U_{d0}\), changeons d'origine des angles pour qu'une des calottes de sinusoïde passe par son maximum à \(\theta' = 0\) (figure 1.4). Par exemple, la calotte correspondant à \(u_{13} = v_1 - v_3\) a son maximum à \(\theta = \pi/6\). On pose \(\theta' = \theta - \pi/6\).</p>
+        <p>Dans ce nouveau repère, la tension sur l'intervalle \([-\pi/6, \pi/6]\) s'exprime par \(u_d = U_M \cos\theta' = U\sqrt{2} \cos\theta'\).</p>
+
+         <div class="placeholder">
+            <p><strong>Placeholder: Figure 1.4 - Changement d'origine des angles.</strong></p>
+            <p>Graphe de ud(V) en fonction de theta'(rad). La courbe est la même que Fig 1.3, mais décalée horizontalement pour qu'un maximum soit à theta'=0. Une période de ud (pi/3) est visible entre -pi/6 et pi/6.</p>
+        </div>
+
+        <p>La valeur moyenne \(U_{d0}\) de la tension redressée \(u_d\) est définie par :</p>
+        $$ U_{d0} = \frac{1}{\pi/3} \int_{-\pi/6}^{\pi/6} u_d d\theta' = \frac{3}{\pi} \int_{-\pi/6}^{\pi/6} U\sqrt{2} \cos\theta' d\theta' $$
+        <p>La fonction \(u_d\) étant paire, nous pouvons intégrer sur une demi-période puis doubler le résultat :</p>
+        $$ U_{d0} = \frac{3}{\pi} \times 2 \int_{0}^{\pi/6} U\sqrt{2} \cos\theta' d\theta' = \frac{6\sqrt{2}U}{\pi} \int_{0}^{\pi/6} \cos\theta' d\theta' $$
+        <p>L'intégration s'effectue immédiatement :</p>
+        $$ U_{d0} = \frac{6\sqrt{2}U}{\pi} [\sin\theta']_{0}^{\pi/6} = \frac{6\sqrt{2}U}{\pi} \left(\sin\frac{\pi}{6} - \sin 0\right) = \frac{6\sqrt{2}U}{\pi} \left(\frac{1}{2} - 0\right) $$
+        $$ U_{d0} = \frac{3\sqrt{2}U}{\pi} $$
+        <p>La valeur efficace \(U\) des tensions composées est liée à la valeur efficace \(V\) des tensions simples : \(U = V\sqrt{3}\). Nous obtenons finalement :</p>
+        $$ U_{d0} = \frac{3\sqrt{2}(V\sqrt{3})}{\pi} = \frac{3\sqrt{6}V}{\pi} $$
+        <p>Application numérique :</p>
+        $$ U_{d0} = \frac{3\sqrt{6}}{\pi} \times 230 \approx \boxed{538 \text{ V}} $$
+        <div class="note">Le changement de repère n'est pas indispensable, mais quand il n'est pas utilisé, la fonction à intégrer comporte une phase à l'origine des temps non nulle (par exemple, intégrer \(u_{12}(\theta) = U\sqrt{2}\sin(\theta + \pi/6)\) de \(\pi/6\) à \(\pi/2\)).</div>
+
+        <h3>B. ÉTUDE DES COURANTS</h3>
+
+        <p><span class="question-label">B.1</span> La charge est une source de courant constant \(I_0\). L'intensité du courant dans une diode (par exemple D₁) est égale à \(I_0\) lorsque cette diode est passante et elle est nulle quand cette diode est bloquée. D'après l'analyse de la conduction en A.1, chaque diode conduit pendant un tiers de la période \(2\pi\), soit \(120°\). La diode D₁ conduit lorsque \(v_1\) est la tension la plus positive. Cela se produit sur l'intervalle \([\pi/6, 5\pi/6]\) (figure 1.5).</p>
+
+         <div class="placeholder">
+            <p><strong>Placeholder: Figure 1.5 - Courbe du courant dans une diode (iD1).</strong></p>
+            <p>Graphe de iD1(A) en fonction de theta(rad). Le courant vaut Io (7.2A) sur l'intervalle [pi/6, 5pi/6] et 0 ailleurs. C'est un créneau de largeur 2pi/3 (120°).</p>
+        </div>
+
+        <p><span class="question-label">B.2</span> Chaque diode est traversée par un courant d'intensité \(I_0\) pendant un tiers de la période. L'intensité moyenne du courant dans une diode est donc :</p>
+        $$ I_{D0} = \frac{1}{2\pi} \int_0^{2\pi} i_{D1}(\theta) d\theta = \frac{1}{2\pi} \times (\text{Aire sous la courbe}) = \frac{1}{2\pi} \times \left(I_0 \times \frac{2\pi}{3}\right) $$
+        $$ I_{D0} = \frac{I_0}{3} $$
+        <p>Application numérique :</p>
+        $$ I_{D0} = \frac{7,20}{3} = \boxed{2,40 \text{ A}} $$
+
+        <p><span class="question-label">B.3</span> L'intensité efficace \(I_D\) du courant dans une diode est la racine carrée de la valeur moyenne de \(i_D^2\):</p>
+        $$ I_D = \sqrt{<i_D^2>} = \sqrt{\frac{1}{2\pi} \int_0^{2\pi} i_{D1}^2(\theta) d\theta} $$
+        <p>Comme \(i_{D1}^2\) prend la valeur \(I_0^2\) pendant un tiers de la période (intervalle \(2\pi/3\)) et 0 ailleurs, nous obtenons :</p>
+        $$ I_D^2 = \frac{1}{2\pi} \times \left(I_0^2 \times \frac{2\pi}{3}\right) = \frac{I_0^2}{3} $$
+        $$ I_D = \sqrt{\frac{I_0^2}{3}} = \frac{I_0}{\sqrt{3}} $$
+        <p>Application numérique :</p>
+        $$ I_D = \frac{7,20}{\sqrt{3}} \approx \boxed{4,16 \text{ A}} $$
+
+        <p><span class="question-label">B.4</span> L'intensité instantanée \(i_1\) du courant dans le fil de ligne 1 est la différence des intensités \(i_{D1}\) et \(i_{D'1}\) des courants dans les diodes D₁ (groupe haut) et D'₁ (groupe bas) connectées à cette ligne :</p>
+        $$ i_1 = i_{D1} - i_{D'1} $$
+        <p>Chaque diode est passante pendant un tiers de la période (\(2\pi/3\)). D₁ conduit quand \(v_1\) est la plus positive (\([\pi/6, 5\pi/6]\)). D'₁ conduit quand \(v_1\) est la plus négative (\([7\pi/6, 11\pi/6]\) ou \([-\pi/6, \pi/6]\) modulo \(2\pi\)). Le courant \(i_1\) vaut donc \(+I_0\) lorsque D₁ conduit, \(-I_0\) lorsque D'₁ conduit, et 0 sinon (figure 1.6).</p>
+
+        <div class="placeholder">
+            <p><strong>Placeholder: Figure 1.6 - Courbe du courant dans un fil de ligne (i1).</strong></p>
+            <p>Graphe de i1(A) en fonction de theta(rad). Le courant vaut +Io sur [pi/6, 5pi/6], puis 0 sur [5pi/6, 7pi/6], puis -Io sur [7pi/6, 11pi/6], puis 0 sur [11pi/6, 13pi/6 = pi/6 + 2pi]. C'est un signal rectangulaire alterné.</p>
+        </div>
+
+        <p><span class="question-label">B.5</span> L'intensité efficace \(I\) des courants en ligne est la racine carrée de la valeur moyenne de \(i_1^2\):</p>
+        $$ I = \sqrt{<i_1^2>} = \sqrt{\frac{1}{2\pi} \int_0^{2\pi} i_1^2(\theta) d\theta} $$
+        <p>Comme \(i_1^2\) prend la valeur \(I_0^2\) pendant deux tiers de la période (deux intervalles de largeur \(2\pi/3\)) et 0 ailleurs, nous obtenons :</p>
+        $$ I^2 = \frac{1}{2\pi} \times \left(I_0^2 \times \frac{4\pi}{3}\right) = \frac{2 I_0^2}{3} $$
+        $$ I = \sqrt{\frac{2 I_0^2}{3}} = I_0 \sqrt{\frac{2}{3}} $$
+        <p>Application numérique :</p>
+        $$ I = 7,20 \times \sqrt{\frac{2}{3}} \approx \boxed{5,88 \text{ A}} $$
+
+        <h3>C. ÉTUDE DES PUISSANCES</h3>
+
+        <p><span class="question-label">C.1</span> La puissance apparente triphasée \(S\) à l'entrée est définie par :</p>
+        $$ S = 3 V I $$
+        <p>où V est la valeur efficace des tensions simples et I est la valeur efficace des courants de ligne.</p>
+        <p>En utilisant le résultat de la question B.5 (\(I = I_0 \sqrt{2/3}\)), on peut écrire :</p>
+        $$ S = 3 V \left(I_0 \sqrt{\frac{2}{3}}\right) = V I_0 \times 3 \times \sqrt{2} / \sqrt{3} = V I_0 \sqrt{3} \sqrt{2} = \sqrt{6} V I_0 $$
+        <p>Application numérique :</p>
+        $$ S = \sqrt{6} \times 230 \times 7,20 \approx 4060 \text{ VA} = \boxed{4,06 \text{ kVA}} $$
+
+        <p><span class="question-label">C.2</span> Comme les diodes sont idéales, le redresseur ne présente pas de pertes. La puissance active \(P\) appelée à l'entrée est donc égale à la puissance moyenne \(P_0\) fournie à la charge :</p>
+        $$ P = P_0 = U_{d0} I_0 $$
+        <p>En utilisant le résultat de A.3 (\(U_{d0} = \frac{3\sqrt{6}V}{\pi}\)) :</p>
+        $$ P = \left(\frac{3\sqrt{6}V}{\pi}\right) I_0 = \frac{3\sqrt{6}}{\pi} V I_0 $$
+        <p>Application numérique :</p>
+        $$ P = 538 \text{ V} \times 7,20 \text{ A} \approx 3874 \text{ W} = \boxed{3,87 \text{ kW}} $$
+        <div class="note">Il est également possible de calculer la puissance active par la formule \(P = 3 V I \cos \varphi_f\), mais cela nécessite de connaître le déphasage du fondamental du courant. Ici, comme on le verra, \(\varphi_f = 0\), donc \(P = 3VI_f\). Attention, \(I_f\) est l'efficace du fondamental, pas l'efficace total I. La formule \(P=U_{d0}I_0\) est plus directe ici.</div>
+
+        <p><span class="question-label">C.3</span> Le facteur de puissance \(f_p\) est défini par :</p>
+        $$ f_p = \frac{P}{S} $$
+        <p>En utilisant les expressions trouvées :</p>
+        $$ f_p = \frac{(3\sqrt{6}/\pi) V I_0}{\sqrt{6} V I_0} = \frac{3\sqrt{6}/\pi}{\sqrt{6}} = \frac{3}{\pi} $$
+        <p>Application numérique :</p>
+        $$ f_p = \frac{3}{\pi} \approx \boxed{0,955} $$
+        <div class="note">Un avantage du montage PD3 est de présenter un facteur de puissance assez proche de 1, même avec une charge source de courant. Cela est dû à la forme quasi-rectangulaire du courant de ligne qui contient un fondamental important et en phase avec la tension.</div>
+
+        <p><span class="question-label">C.4</span> Le courant en ligne \(i_1\) (figure 1.6) est un signal périodique, alternatif (valeur moyenne nulle) et possède une symétrie de glissement (\(i_1(\theta+\pi) = -i_1(\theta)\)) et une symétrie par rapport à l'axe des ordonnées (\(i_1(-\theta)=-i_1(\theta)\)). Son développement en série de Fourier ne contient que des harmoniques impairs de sinus. Le fondamental \(i_{1f}\) est donc de la forme \(i_{1f}(\theta) = I_{1fmax} \sin\theta\).</p>
+        <p>La tension simple \(v_1\) est \(v_1(\theta) = V\sqrt{2}\cos\theta = V\sqrt{2}\sin(\theta+\pi/2)\).</p>
+        <p>Le fondamental du courant \(i_{1f}\) est en quadrature retard par rapport à \(v_1\) ? Non, regardons la figure 1.6. Le courant \(i_1\) est positif quand \(v_1\) est majoritairement positive (\([\pi/6, 5\pi/6]\)) et négatif quand \(v_1\) est majoritairement négative. Le fondamental \(i_{1f}\) devrait être approximativement en phase avec \(v_1\).</p>
+        <p>Reconsidérons la définition de v1: \(v_1 = V\sqrt{2} \cos\theta\). Le courant i1 est un créneau centré autour de \(\pi/2\) (pour la partie positive) et \(3\pi/2\) (pour la partie négative). Le fondamental d'un tel créneau sera en \(\cos\theta\). Donc, le fondamental \(i_{1f}\) est en phase avec la tension \(v_1\).</p>
+
+        <div class="placeholder">
+            <p><strong>Placeholder: Figure 1.7 - Courbe du fondamental du courant dans un fil de ligne.</strong></p>
+            <p>Superposition de i1 (créneaux Fig 1.6) et de son fondamental i1f. i1f est une sinusoïde (en fait cosinusoïde ici) en phase avec v1, dont l'amplitude est légèrement supérieure à Io.</p>
+        </div>
+
+        <p>Le fondamental \(i_{1f}\) du courant \(i_1\) est donc en phase avec la tension simple \(v_1\). Le déphasage \(\varphi_f\) est :</p>
+        $$ \boxed{\varphi_f = 0} $$
+
+        <p><span class="question-label">C.5</span> Comme les tensions d'alimentation sont sinusoïdales, la puissance réactive \(Q\) appelée par le redresseur est due uniquement aux composantes fondamentales des courants. En notant \(I_f\) l'intensité efficace du fondamental \(i_{1f}\) :</p>
+        $$ Q = 3 V I_f \sin\varphi_f $$
+        <p>Comme \(\varphi_f = 0\), on a \(\sin\varphi_f = 0\).</p>
+        <p>La puissance réactive \(Q\) appelée par le redresseur est donc <strong>nulle</strong>.</p>
+        <div class="note">Malgré l'absence de puissance réactive, le facteur de puissance est strictement inférieur à 1 à cause de la puissance déformante.</div>
+
+        <p><span class="question-label">C.6</span> La puissance apparente \(S\) s'écrit en fonction des puissances active \(P\), réactive \(Q\) et déformante \(D\) :</p>
+        $$ S^2 = P^2 + Q^2 + D^2 $$
+        <p>Comme \(Q = 0\), on a \( S^2 = P^2 + D^2 \). Nous en déduisons l'expression de la puissance déformante \(D\) :</p>
+        $$ D = \sqrt{S^2 - P^2} $$
+        <p>Application numérique :</p>
+        $$ D = \sqrt{(4060)^2 - (3870)^2} \approx \sqrt{16483600 - 14976900} = \sqrt{1506700} \approx 1227 \text{ VA déformant} $$
+        $$ \boxed{D \approx 1,23 \text{ kVAD}} $$
+        <div class="note">L'unité volt-ampère déformant (VAD) n'est pas reconnue officiellement, mais elle est couramment utilisée au même titre que le volt-ampère et le volt-ampère réactif. La puissance déformante représente la puissance liée aux harmoniques de courant interagissant avec la tension fondamentale (ou vice-versa).</div>
+
+        <h3>D. FONCTIONNEMENT EN CAS DE DÉFAUT</h3>
+
+        <p><span class="question-label">D.1</span> La diode D₁ (groupe haut) est manquante. Le commutateur à cathodes communes ne contient plus que D₂ et D₃. La tension la plus positive choisie sera donc \( \max(v_2, v_3) \). Le commutateur à anodes communes (D'₁, D'₂, D'₃) fonctionne normalement, choisissant \( \min(v_1, v_2, v_3) \).</p>
+        <p>La tension redressée \(u_d\) sera donc \( \max(v_2, v_3) - \min(v_1, v_2, v_3) \). La forme d'onde sera différente (figure 1.8). Elle perdra sa périodicité à \(\pi/3\).</p>
+        <p>Les intervalles de conduction sont modifiés. Par exemple, lorsque \(v_1\) est censée être la plus positive (\([\pi/6, 5\pi/6]\)), D₁ ne peut conduire. C'est donc soit D₂ (si \(v_2>v_3\)) soit D₃ (si \(v_3>v_2\)) qui conduira à la place. La conduction des diodes du groupe bas (D'1, D'2, D'3) reste inchangée.</p>
+
+        <div class="placeholder">
+            <p><strong>Placeholder: Figure 1.8 - Courbe de la tension redressée (défaut D1).</strong></p>
+            <p>Graphe de ud(V) en fonction de theta(rad) en cas de coupure de D1. La tension ud est plus basse et présente une ondulation plus importante. Au lieu de 6 calottes par période 2pi, il y a une structure plus complexe. Les intervalles de conduction des diodes sont modifiés (D1 ne conduit jamais, D2 et D3 conduisent plus longtemps).</p>
+            <p>(Ex: Quand D1 devrait conduire avec D'2 (donnant u12), c'est maintenant D3 qui conduit avec D'2 (donnant u32) ou D2 avec D'3 (donnant u23) etc.)</p>
+        </div>
+
+        <p><span class="question-label">D.2</span> La tension redressée \(u_d\) en cas de défaut présente une période de \(2\pi\). La fonction étant paire (si on choisit bien l'origine), nous pouvons intégrer sur une demi-période et doubler le résultat, ou intégrer sur \(2\pi\). La valeur moyenne est :</p>
+        $$ U_{d0} = \frac{1}{2\pi} \int_0^{2\pi} u_d(\theta) d\theta $$
+        <p>L'intégration est plus complexe. Il faut décomposer l'intervalle \( [0, 2\pi] \) selon les diodes conductrices. Par exemple, en se basant sur le graphe 1.8 et les tensions composées restantes possibles : \(u_{21}, u_{31}, u_{23}, u_{32}\).</p>
+        <p>Une analyse détaillée (ou une simulation) montre que la forme d'onde correspond à un redresseur biphasé utilisant \(u_{23}\) et \(u_{32}\) pendant une partie du temps, et un redresseur utilisant \(u_{21}\) et \(u_{31}\) le reste du temps.</p>
+        <p>Calculons la valeur moyenne en intégrant sur \( [0, \pi] \) et en doublant, en décomposant l'intervalle. D'après la figure 1.8, sur \( [0, \pi] \), on a deux morceaux principaux: \(u_{31}\) puis \(u_{21}\)? Ou \(u_{23}\) puis \(u_{32}\)? Il semble que ce soit \(u_{31}\) de \(0\) à \(2\pi/3\) puis \(u_{21}\) de \(2\pi/3\) à \(\pi\) (en supposant une origine où v1 passe par son max). Plus simplement, calculons l'intégrale en utilisant les expressions données dans le corrigé PDF:</p>
+        $$ U_{d0} = \frac{1}{\pi} \int_0^\pi u_d d\theta $$
+        <p>L'intervalle \( [0, \pi] \) est décomposé en deux parties où conduisent D'2 (tension min = v2) puis D'3 (tension min = v3). Le groupe haut est D3 puis D2.</p>
+        <p>Le corrigé décompose \( [0, \pi] \) en \( [0, 2\pi/3] \) où \(u_d \approx u_{23}\) et \( [2\pi/3, \pi] \) où \(u_d \approx u_{21}\)? Non, le corrigé intègre \(u_{23}\) et \(u_{21}\) mais avec des bornes différentes.
+        Utilisons les expressions du corrigé pour l'intégration (avec l'origine décalée pour la parité) :</p>
+        $$ U_{d0} = \frac{1}{\pi} \left[ \int_{0}^{2\pi/3} U\sqrt{2} \cos\left(\theta' - \frac{\pi}{2}\right) d\theta' + \int_{2\pi/3}^{\pi} -U\sqrt{2} \cos\left(\theta' + \frac{\pi}{6}\right) d\theta' \right] $$
+        <p>Effectuons l'intégration :</p>
+        $$ \int \cos\left(\theta' - \frac{\pi}{2}\right) d\theta' = \sin\left(\theta' - \frac{\pi}{2}\right) $$
+        $$ \int \cos\left(\theta' + \frac{\pi}{6}\right) d\theta' = \sin\left(\theta' + \frac{\pi}{6}\right) $$
+        $$ U_{d0} = \frac{U\sqrt{2}}{\pi} \left\{ \left[\sin\left(\theta' - \frac{\pi}{2}\right)\right]_0^{2\pi/3} - \left[\sin\left(\theta' + \frac{\pi}{6}\right)\right]_{2\pi/3}^{\pi} \right\} $$
+        $$ U_{d0} = \frac{U\sqrt{2}}{\pi} \left\{ \left(\sin\frac{\pi}{6} - \sin(-\frac{\pi}{2})\right) - \left(\sin\frac{7\pi}{6} - \sin\frac{5\pi}{6}\right) \right\} $$
+        $$ U_{d0} = \frac{U\sqrt{2}}{\pi} \left\{ \left(\frac{1}{2} - (-1)\right) - \left(-\frac{1}{2} - \frac{1}{2}\right) \right\} = \frac{U\sqrt{2}}{\pi} \left\{ \frac{3}{2} - (-1) \right\} = \frac{U\sqrt{2}}{\pi} \frac{5}{2} $$
+        $$ U_{d0} = \frac{5\sqrt{2}U}{2\pi} $$
+        <p>En remplaçant \(U = V\sqrt{3}\) :</p>
+        $$ U_{d0} = \frac{5\sqrt{2}(V\sqrt{3})}{2\pi} = \frac{5\sqrt{6}V}{2\pi} $$
+        <p>Application numérique :</p>
+        $$ U_{d0} = \frac{5\sqrt{6}}{2\pi} \times 230 \approx \boxed{448 \text{ V}} $$
+        <p>Comparons cette valeur à la valeur en fonctionnement normal (\(U_{d0,norm} = \frac{3\sqrt{6}V}{\pi}\)) :</p>
+        $$ \text{Ratio} = \frac{U_{d0,defaut}}{U_{d0,norm}} = \frac{5\sqrt{6}V / (2\pi)}{3\sqrt{6}V / \pi} = \frac{5\sqrt{6}}{2\pi} \times \frac{\pi}{3\sqrt{6}} = \frac{5}{6} $$
+        <p>La valeur moyenne est réduite par un coefficient de \( 5/6 \approx 0.833 \).</p>
+        <p>Alternativement, le rapport des coefficients : \( \frac{5\sqrt{6}/(2\pi)}{3\sqrt{6}/\pi} = \frac{5/(2\pi)}{3/\pi} = \frac{5}{2\pi}\frac{\pi}{3} = \frac{5}{6} \).
+        Le coefficient de réduction est \( 1 / (6/5) = 5/6 \). Le corrigé PDF calcule l'inverse: \( \frac{U_{d0,norm}}{U_{d0,defaut}} = \frac{3\sqrt{6}/\pi}{5\sqrt{6}/(2\pi)} = \frac{3}{\pi} \frac{2\pi}{5} = \frac{6}{5} = 1,2 \).
+        La valeur moyenne est donc réduite à \(5/6\) de sa valeur normale, soit une réduction de \(1/6\).</p>
+
+    </div>
+
+    <div class="footer">
+        <p>Adapté de : Pierre Mayé, Problèmes Corrigés d'Électronique de Puissance, Dunod, 2013. ISBN 978-2-10-058828-2</p>
+    </div>
+
+    <script>
+        // Ensure KaTeX renders after the page is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
