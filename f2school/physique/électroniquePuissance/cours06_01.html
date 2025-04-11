@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronique de puissance : Alimentations à découpage - B. Multon</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                // • auto-render specific keys, e.g.:
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #333; }
+        h1 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 30px; }
+        figure { text-align: center; margin: 20px 0; }
+        figcaption { font-size: 0.9em; color: #555; margin-top: 5px; }
+        img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            background-color: #f9f9f9;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .katex-display { overflow-x: auto; overflow-y: hidden; /* Handle wide equations */ }
+        .toc { border: 1px solid #ddd; background-color: #f9f9f9; padding: 15px; margin-bottom: 20px; }
+        .toc ul { padding-left: 20px; }
+        .correction { background-color: #e0ffe0; padding: 10px; border: 1px solid #b0ddb0; margin-top: 15px;}
+        .note { font-style: italic; color: #666; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        dt { font-weight: bold; }
+        dd { margin-left: 20px; margin-bottom: 10px; }
+        .slide-ref { font-size: 0.8em; color: #888; float: right; }
+    </style>
+</head>
+<body>
+
+<header>
+    <figure style="text-align:center;">
+        <div class="placeholder">HAL Logo Placeholder (archives-ouvertes.fr)</div>
+    </figure>
+
+    <h1>Electronique de puissance :</h1>
+    <h2>Bernard Multon</h2>
+
+    <hr>
+
+    <section id="citation">
+        <h3>To cite this version:</h3>
+        <p>Bernard Multon. Electronique de puissance:: alimentations à découpage. Master. France. 2017. cel-01847437</p>
+        <p><strong>HAL Id:</strong> cel-01847437<br>
+        <a href="https://cel.archives-ouvertes.fr/cel-01847437">https://cel.archives-ouvertes.fr/cel-01847437</a></p>
+        <p>Submitted on 23 Jul 2018</p>
+    </section>
+
+    <section id="hal-description">
+        <p><strong>HAL</strong> is a multi-disciplinary open access archive for the deposit and dissemination of scientific research documents, whether they are published or not. The documents may come from teaching and research institutions in France or abroad, or from public or private research centers.</p>
+        <p>L'archive ouverte pluridisciplinaire <strong>HAL</strong>, est destinée au dépôt et à la diffusion de documents scientifiques de niveau recherche, publiés ou non, émanant des établissements d'enseignement et de recherche français ou étrangers, des laboratoires publics ou privés.</p>
+    </section>
+    <hr>
+</header>
+
+<main>
+    <article id="course-overview">
+        <header>
+            <h2>Informations sur le Cours</h2>
+            <p><strong>Ecole normale supérieure de Rennes / Université de Rennes 1</strong></p>
+            <p><strong>Master 1 (S1) Ingénierie des Systèmes Complexes</strong></p>
+            <p><strong>UE ENER 2a – Conversion d'énergie 2a (4 ECTS)</strong></p>
+        </header>
+
+        <section id="prerequisites">
+            <h3>Prérequis</h3>
+            <p>Cette unité d'enseignement fait suite à deux UE (année de Licence 3) concernant les bases de l'électrotechnique et de l'électronique de puissance (hacheurs et redresseurs).</p>
+        </section>
+
+        <section id="evaluation">
+            <h3>Évaluation</h3>
+            <p>Elle comprend <strong>7 séances de 2h</strong> de cours et TD, puis une <strong>évaluation écrite de 2h</strong> dont la note compte pour la moitié de la note totale de l'UE.</p>
+            <p>L'autre moitié résulte de la moyenne des notes des <strong>deux séances de TP</strong> (Travaux Pratiques). Les notes de TP sont fondées sur la préparation, le travail en séance et le compte rendu.</p>
+        </section>
+
+        <section id="content">
+            <h3>Contenu du Document</h3>
+            <p>Le présent document contient :</p>
+            <ul>
+                <li><strong>Le diaporama de ce cours en 2 parties :</strong>
+                    <ul>
+                        <li>Alimentation à découpage forward et flyback</li>
+                        <li>Composants (semiconducteurs et passifs) de l'électronique de puissance</li>
+                    </ul>
+                </li>
+                <li><strong>4 sujets de TD (Travaux Dirigés) :</strong>
+                    <ul>
+                        <li>Alimentation forward</li>
+                        <li>Alimentation flyback</li>
+                        <li>Composants semiconducteurs de puissance</li>
+                        <li>Composants passifs</li>
+                    </ul>
+                </li>
+                <li><strong>2 sujets de TP (4h chacun) :</strong>
+                    <ul>
+                        <li>Alimentations à découpage forward et flyback</li>
+                        <li>Composants semiconducteurs et passifs</li>
+                    </ul>
+                </li>
+            </ul>
+            <p><em>(Le diaporama complet contient 90 diapositives)</em></p>
+        </section>
+
+        <section id="syllabus">
+            <h3>Plan Détaillé du Cours (Diaporama)</h3>
+
+            <h4>Partie 1: Alimentations à découpage (3,5 séances de 2h)</h4>
+            <dl>
+                <dt>Séance 1:</dt>
+                <dd>Introduction aux alimentations électroniques. Structure forward en demi-pont asymétrique avec interrupteurs parfaits : principe de fonctionnement (pas de dimensionnement).</dd>
+
+                <dt>Séance 2:</dt>
+                <dd>Structure forward à un seul interrupteur commandé et enroulement de démagnétisation : principe. TD forward.</dd>
+
+                <dt>Séance 3:</dt>
+                <dd>Flyback en régimes continu et discontinu, incluant une introduction au fonctionnement auto-oscillant : principes.</dd>
+
+                <dt>Séance 3,5:</dt>
+                <dd>TD flyback (1h).</dd>
+            </dl>
+
+            <h4>Partie 2: Composants de l'électronique de puissance (3,5 séances de 2h)</h4>
+            <dl>
+                <dt>½ Séance 4:</dt>
+                <dd>Introductions aux composants semiconducteurs, jusqu'à la fonction interrupteur.</dd>
+
+                <dt>Séance 5:</dt>
+                <dd>Formes d'onde génériques courant tension, notions de pertes de conduction et de commutation. Calculs simplifiés d'échauffement en régime permanent. Fonctionnement des diodes en commutation : diodes PiN.</dd>
+
+                <dt>Séance 6:</dt>
+                <dd>Recouvrement inverse, influence sur les pertes. Fonctionnement des transistors MOSFET et IGBT en commutation, calcul de leurs pertes. TD Composants SC (Semi-Conducteurs).</dd>
+
+                <dt>Séance 7:</dt>
+                <dd>Composants magnétiques. Condensateurs de puissance. ½ séance TD composants passifs.</dd>
+            </dl>
+        </section>
+    </article>
+
+    <hr>
+
+    <article id="diaporama-content">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <figure style="margin:0;">
+                    <div class="placeholder">ENS Rennes Logo Placeholder</div>
+                </figure>
+                <div>
+                    <p style="text-align: center; margin: 0;">Master Ingénierie des Systèmes Complexes (M1 S1 2017-2018)</p>
+                    <p style="text-align: center; margin: 0;">UE Conversion d'énergie 2a</p>
+                    <p style="text-align: center; margin: 0;">Bernard MULTON</p>
+                    <p style="text-align: center; margin: 0;">Département de Mécatronique - Ecole Normale Supérieure de Rennes</p>
+                </div>
+                <figure style="margin:0;">
+                     <div class="placeholder">Mécatronique Logo Placeholder</div>
+                </figure>
+            </div>
+            <h1>Électronique de puissance</h1>
+             <span class="slide-ref">Slide 1</span>
+        </header>
+
+        <section id="main-topics">
+            <h2>Alimentations à découpage</h2>
+            <ul>
+                <li>Alimentations électroniques</li>
+                <li>Structures forward</li>
+                <li>Structure flyback</li>
+            </ul>
+            <h2>Composants de l'électronique de puissance</h2>
+            <ul>
+                <li>Semi-conducteurs de puissance</li>
+                <li>Composants magnétiques</li>
+                <li>Condensateurs</li>
+            </ul>
+             <span class="slide-ref">Slide 2</span>
+        </section>
+
+        <section id="topic-alimentation-decoupage">
+            <h2>Alimentations à découpage</h2>
+            <h3>Introduction, alimentations électroniques</h3>
+            <!-- Following topics listed but greyed out -->
+            <!-- <ul>
+                <li>Structures forward</li>
+                <li>Structure flyback</li>
+            </ul> -->
+        </section>
+
+         <section id="topic-composants">
+            <!-- <h2>Composants de l'électronique de puissance</h2> -->
+            <!-- Listed but greyed out -->
+           <!--  <ul>
+                <li>Semi-conducteurs de puissance</li>
+                <li>Composants magnétiques</li>
+                <li>Condensateurs</li>
+            </ul> -->
+        </section>
+
+
+        <section id="power-sources">
+             <span class="slide-ref">Slide 3</span>
+            <h2>Principales sources d'énergie électrique</h2>
+
+            <h3>Sources de tension alternatives (mono ou triphasées) :</h3>
+            <figure class="placeholder" style="float: right; width: 100px; height: 100px;">Power Component Icon</figure>
+            <p><strong>Exemples :</strong></p>
+            <ul>
+                <li><strong>Monophasé :</strong> domestique 110 V-60 Hz, 230 V-50 Hz; traction ferroviaire 25 kV-50 Hz, 15 kV-16 Hz 2/3</li>
+                <li><strong>Triphasé 50 Hz :</strong> 400 V, 690 V... 400 kV</li>
+            </ul>
+            <p><strong>Définitions (Niveaux de tension):</strong></p>
+            <dl>
+                <dt>TBT (Très Basse Tension):</dt> <dd>< 50 V</dd>
+                <dt>BTA (Basse Tension A):</dt> <dd>50 à 500 V</dd>
+                <dt>BTB (Basse Tension B):</dt> <dd>500 à 1000 V</dd>
+                <dt>HTA (Haute Tension A):</dt> <dd>1000 V à 50 kV, réseau de répartition (ex: 20 kV); $P_{max} \approx 40$ MW</dd>
+                <dt>HTB (Haute Tension B):</dt> <dd>> 50 kV, réseau de transport (63, 90 kV: $P_{max} \approx 100$ MW; 225 kV et 400 kV: $P_{max} \ge 400$ MW et plus)</dd>
+            </dl>
+            <figure>
+                 <div class="placeholder">Image Placeholder: World map showing typical voltages and frequencies (e.g., 220-240V/50Hz, 100-127V/60Hz)</div>
+                 <figcaption>Source: http://www.worldstandards.eu/electricite.htm. Note: Mains voltage typically has a tolerance range, e.g., 230 V +/-10%.</figcaption>
+            </figure>
+
+
+            <span class="slide-ref">Slide 4</span>
+             <h3>Sources de tension continues :</h3>
+             <figure class="placeholder" style="float: right; width: 100px; height: 100px;">Power Component Icon</figure>
+             <p>À l'origine, les sources électrochimiques (piles et accumulateurs), mais aussi des générateurs électromécaniques, ou plus récemment, des systèmes de générations eux-mêmes associés à des convertisseurs électroniques de puissance.</p>
+             <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+                 <div>
+                     <p><strong>Exemples:</strong></p>
+                     <ul>
+                         <li><strong>Piles :</strong> 1,5 V ...</li>
+                         <li><strong>Accumulateurs :</strong>
+                             <ul>
+                                 <li>1,2 V (NiCd et NiMH) par élément + multiples</li>
+                                 <li>2 V (plomb-acide)</li>
+                                 <li>3,6 V (lithium), variantes entre 2,1 V à 3,8 V</li>
+                             </ul>
+                         </li>
+                     </ul>
+                     <p><strong>Applications :</strong></p>
+                     <ul>
+                        <li>Automobiles : 14 V (typiquement 6 éléments plomb-acide maintenus en charge par l'alternateur)</li>
+                        <li>Télécom : 48 V (souvent avec secours par 24 éléments plomb-acide)</li>
+                        <li>Réseaux ferroviaires :
+                            <ul>
+                                <li>Tram, métros : 750 V (gamme 500 à 900 V)</li>
+                                <li>Trains : 1500 V, 3000 V...</li>
+                            </ul>
+                            <span class="note">(Ces réseaux continus sont aujourd'hui alimentés via des sous-stations qui convertissent un réseau alternatif en continu via des convertisseurs électroniques.)</span>
+                        </li>
+                    </ul>
+                 </div>
+                 <div>
+                    <figure>
+                        <div class="placeholder" style="width: 250px;">Image Placeholder: Various batteries (AA, coin cell, Li-ion pack, car battery)</div>
+                    </figure>
+                 </div>
+             </div>
+        </section>
+
+        <section id="electronic-power-supplies">
+             <span class="slide-ref">Slide 5</span>
+            <h2>Alimentations électroniques</h2>
+            <p>Le but est la <strong>conversion</strong> de la tension d'une source d'entrée (alternative, ex: 230 V – 50 Hz, ou continue, ex: 1,5 V) en une <strong>tension de sortie continue régulée</strong> (ex: 5 V).</p>
+
+            <h3>Cas 1: Entrée continue, pas d'isolation galvanique nécessaire, écart de tension réduit</h3>
+            <p>Lorsque la tension d'entrée est continue, qu'il n'y a pas besoin d'isolation galvanique entre entrée et sortie, et/ou que l'écart de tension est relativement réduit (moins d'un facteur 3 à 5), on utilise des <strong>régulateurs à découpage</strong> (ou hacheurs / choppers).</p>
+            <p>Ce sont les topologies de base : <strong>buck</strong> (abaisseur), <strong>boost</strong> (élévateur), <strong>buck-boost</strong> (abaisseur-élévateur inverseur).</p>
+            <p>Ces convertisseurs utilisent un interrupteur commandé (transistor BJT ou MOSFET), une diode, une inductance et un condensateur pour lisser la tension/courant de sortie.</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Simplified schematics for Buck, Boost, and Buck-Boost converters.</div>
+                 <figcaption>Source images: http://www.electronics-tutorials.ws/power/switch-mode-power-supply.html</figcaption>
+            </figure>
+
+            <h3>Cas 2: Isolation galvanique nécessaire et/ou écart de tension élevé</h3>
+            <p>Lorsque la tension d'entrée est alternative ou continue, qu'il y a besoin d'isolation galvanique entre entrée et sortie, et/ou que l'écart de tension est élevé, on utilise des <strong>alimentations à découpage</strong> (SMPS - Switching Mode Power Supplies) avec transformateur haute fréquence.</p>
+            <p>Les topologies courantes incluent le <strong>forward</strong> et le <strong>flyback</strong>.</p>
+
+             <span class="slide-ref">Slide 6</span>
+             <h3>Alimentations à découpage (Switch Mode Power Supplies - SMPS)</h3>
+             <p>Typiquement, si l'entrée est alternative, elle est d'abord redressée et filtrée pour obtenir une tension continue. Cette tension continue est ensuite découpée à haute fréquence par un interrupteur pilotant le primaire d'un transformateur.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Block diagram of an isolated SMPS (Rectifier+Filter -> Switching -> Transformer -> Rectifier -> DC Out) with feedback loop (Optoisolator, PWM Driver, Reference/Error Amp). Also show a photo of a typical SMPS board.</div>
+                 <figcaption>Source images: https://electronics.stackexchange.com/</figcaption>
+            </figure>
+            <ul>
+                <li><strong>Partie puissance :</strong> Comprend les semi-conducteurs de puissance (diodes, transistors), les condensateurs (filtrage), et les composants magnétiques (transformateur pour l'isolation et l'adaptation de tension, inductance pour le lissage).</li>
+                <li><strong>Partie commande :</strong> Utilise la Modulation de Largeur d'Impulsion (MLI ou PWM - Pulse Width Modulation) et un asservissement (boucle de régulation) pour maintenir la ou les tension(s) de sortie constante(s) malgré les variations du courant de sortie et de la tension d'entrée.</li>
+            </ul>
+        </section>
+
+        <section id="applications">
+            <span class="slide-ref">Slide 7</span>
+            <h2>Applications des Alimentations Électroniques</h2>
+            <p>Une large palette d'applications (avec 1 ou plusieurs sorties):</p>
+            <ul>
+                <li>Appareils électroniques portables ou non (TV, PC...)</li>
+                <li>Adaptateurs secteurs (chargeurs)</li>
+                <li>Éclairages modernes (fluorescent, LEDs)</li>
+            </ul>
+            <p>Puissances typiques : Quelques watts à quelques centaines de watts.</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Photos of various power adapters and an LED lamp.</div>
+                 <figcaption>Source image Lampe : http://www.photomacrography.net/forum/viewtopic.php?t=22033</figcaption>
+            </figure>
+
+             <p>Alimentations diverses :</p>
+             <ul>
+                 <li>Télécom (ex: 48 V - 300 A = 15 kW)</li>
+                 <li>Serveurs informatiques (ex: 920 W, sorties 12V/75A et 5V/4A)</li>
+                 <li>Soudure</li>
+                 <li>...</li>
+             </ul>
+             <p>Puissances typiques : Quelques centaines de watts à quelques centaines de kilowatts.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Photos of a high-power server PSU and a telecom rectifier module.</div>
+             </figure>
+        </section>
+
+         <hr>
+
+        <section id="forward-converter">
+             <span class="slide-ref">Slide 8</span>
+            <h2>Structures forward</h2>
+             <!-- This topic was implicitly selected on slide 8 -->
+            <!-- <ul>
+                <li>Introduction, alimentations électroniques</li>
+                <li><strong>Structures forward</strong></li>
+                <li>Structure flyback</li>
+            </ul> -->
+
+            <h3>Principe des structures forward (transfert direct)</h3>
+            <p>Utilisation d'un transformateur pour adapter le niveau de tension et/ou pour isoler galvaniquement l'entrée de la sortie. L'énergie est transférée du primaire au secondaire pendant que l'interrupteur principal est fermé (conducteur). Le transformateur fonctionne "en direct", sans stockage significatif d'énergie.</p>
+
+            <h4>Structure en demi-pont asymétrique (Asymmetric Half-Bridge)</h4>
+             <p>Cette structure utilise deux interrupteurs (généralement des transistors MOSFET) et deux diodes (ou les diodes de body des MOSFETs si approprié) côté primaire, ainsi que deux condensateurs formant un demi-pont. Elle permet de n'appliquer que la moitié de la tension d'entrée redressée au transformateur.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Circuit diagram of the asymmetric half-bridge forward converter. Show input $V_I$, bridge legs (KH/DL, KL/DH implicitly via caps C1/C2), transformer (V1, i1 primary; V2, i2 secondary), output rectifier (D_RL), inductor L, capacitor C, load (Vo, Io).</div>
+            </figure>
+            <p><strong>Schéma équivalent du transformateur à fréquence élevée (effets résistifs négligés) :</strong></p>
+            <p>Le transformateur réel peut être modélisé par un transformateur idéal avec un rapport de transformation $m = n_2/n_1$, en parallèle avec une inductance magnétisante $L_\mu$ au primaire, qui représente le courant nécessaire pour magnétiser le noyau.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Equivalent circuit of the transformer showing ideal transformer with ratio m and magnetizing inductance $L_\mu$ with current $i_\mu$. Primary voltage $V_1$, secondary voltage $V_2 = m \cdot V_1$. Primary current $i_1$, secondary current $i_2$. Reflected secondary current is $m \cdot i_2$. Total primary current $i_1 = i_\mu + m \cdot i_2$.</div>
+            </figure>
+
+            <span class="slide-ref">Slide 10 (referenced from slide 8)</span>
+             <h4>Structure forward en demi-pont asymétrique à vide (No Load)</h4>
+             <p>Analyse du fonctionnement sans charge ($I_o = 0$), donc le courant secondaire $i_2 = 0$. Le courant primaire $i_1$ se réduit au courant magnétisant $i_\mu$. On s'intéresse à l'évolution de $i_\mu$ et aux tensions.</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: No-load circuit diagram (same as above but Io=0). Equivalent circuit showing primary side components (KH, DH, DL, KL, V1), magnetizing inductance $L_\mu$, and ideal transformer with $m \cdot i_2 = 0$ and $i_2 = 0$. $V_2 = m \cdot V_1$.</div>
+            </figure>
+            <p><strong>Formes d'onde à vide ($I_o = 0$ et $i_2 = 0$) :</strong></p>
+            <p>On considère les signaux de commande des interrupteurs $K_H$ et $K_L$ (complémentaires avec temps morts, ou ici de façon simplifiée, $K_H$ fermé de 0 à $\alpha T$, $K_L$ fermé de $\alpha T$ à $T$, avec $\alpha$ le rapport cyclique). On suppose $K_L$ et $D_L$ assurent la démagnétisation.</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Waveforms for control signal (KH=1 for $0 < t < \alpha T$), primary voltage $V_1$ (equals $V_I/2$ when KH on, $-V_I/2$ when KL on for demagnetization), and magnetizing current $i_\mu$ (ramps up during $\alpha T$, ramps down afterwards).</div>
+                 <figcaption>Formes d'onde pour la commande de $K_H$ et $K_L$, $V_1$, $i_1 = i_\mu$.</figcaption>
+            </figure>
+            <ul>
+                <li>Courant magnétisant maximal : $I_{\mu Max} = ?$</li>
+                <li>Condition de démagnétisation complète (annulation de $i_\mu$ à chaque cycle) : $\alpha < ?$</li>
+                <li>Valeur maximale de l'énergie magnétique stockée (parasite) : $E_{\mu Max} = ?$</li>
+            </ul>
+            <p class="note">(Corrigé voir diapo 22)</p>
+
+
+            <span class="slide-ref">Slide 9</span>
+            <h4>Structure forward en demi-pont asymétrique en charge (Under Load)</h4>
+            <p>Le fonctionnement en charge est obtenu par superposition du fonctionnement à vide (lié à $i_\mu$) et du transfert de puissance vers la charge (lié à $i_2$).</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Waveforms under load. Show $V_2$ (proportional to $V_1$), $i_\mu$ (same as no-load), $i_L$ (output inductor current, ramps up/down around $I_o$ with ripple $\Delta i_L$), $V_{DRL}$ (output rectifier voltage), $i_2$ (secondary current, proportional to $i_L$ when $D_{RL}$ conducts), $i_1$ (sum of $i_\mu$ and reflected $i_2$).</div>
+                 <figcaption>Formes d'onde en charge : superposition avec le fonctionnement à vide.</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 12</span>
+            <p><strong>Comportement :</strong> Identique à celui d'un hacheur série (buck), mais avec un rapport de transformation $m$ et un rapport cyclique $\alpha$ limité à $\frac{1}{2}$ (pour garantir la démagnétisation complète du transformateur dans chaque cycle).</p>
+            <p><strong>Caractéristique de sortie $V_o = f(I_o)$ :</strong></p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Output characteristic Vo vs Io. Shows flat line at $V_o = m \cdot V_1 \cdot \alpha$ in Continuous Conduction Mode (CCM), dropping off in Discontinuous Conduction Mode (DCM) at low currents. The limit between CCM/DCM depends on L, F, V1, m. Maximum voltage is $m \cdot V_1 / 2$ (since $\alpha_{max}=0.5$). Indicate zone de conduction continue and zone de conduction discontinue.</div>
+            </figure>
+            <ul>
+                <li>Tension de sortie moyenne (CCM, idéal) : $V_o = m \cdot \alpha \cdot V_1$ (avec $V_1$ la tension appliquée au primaire, ici $V_I/2$)</li>
+                <li>Ondulation de courant dans l'inductance de lissage $L$: $\Delta i_L = \alpha \cdot (1 - \alpha) \cdot \frac{m \cdot V_1}{L \cdot F}$ (où $F=1/T$ est la fréquence de découpage)</li>
+                <li>Ondulation de tension de sortie $V_o$: $\Delta v_o \approx \frac{\Delta i_L}{8 \cdot C \cdot F}$ ou $\Delta v_o \approx ESR \cdot \Delta i_L$ (selon que la capacité $C$ ou sa résistance série équivalente ESR domine).</li>
+            </ul>
+            <p class="note">En pratique, il faut prendre en compte les chutes de tension dans les semi-conducteurs, le transformateur, et l'inductance de lissage.</p>
+
+
+            <span class="slide-ref">Slide 10</span>
+            <h4>Structure forward à un seul interrupteur et enroulement de démagnétisation</h4>
+            <p>Pour des puissances plus faibles (quelques centaines de watts ou moins), une simplification consiste à utiliser un seul interrupteur commandé ($K$) au primaire.</p>
+            <p>Un enroulement tertiaire ($n_3$) est ajouté au transformateur, connecté en opposition avec une diode ($D_3$), pour assurer la démagnétisation du noyau lorsque $K$ s'ouvre. L'énergie magnétisante est renvoyée vers la source d'entrée $V_I$. Comparé à la structure demi-pont, celle-ci est plus simple mais l'interrupteur doit tenir une tension plus élevée.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Circuit diagram of the single-switch forward converter with demagnetization winding. Input $V_I$, switch K, transformer (primary n1: V1, i1; secondary n2: V2, i2; demagnetization n3: V3, i3), output rectifier D2, freewheeling diode (implicit or separate), inductor L, capacitor C, load (Vo, Io). Demagnetization diode D3 connects n3 back to $V_I$.</div>
+                 <figcaption>Comparaison avec la structure demi-pont (slide 8).</figcaption>
+            </figure>
+
+             <span class="slide-ref">Slide 14 (referenced from slide 10)</span>
+             <h5>Analyse à vide</h5>
+             <p>On analyse le fonctionnement sans charge ($I_o=0 \implies i_2=0$).</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: No-load circuit diagram. Simplified equivalent circuit with 3 windings (n1, n2, n3). Further simplified equivalent circuit when i2=0, showing only primary (n1, V1, i1=i_mu) and demagnetization (n3, V3, i3) windings coupled through magnetizing inductance $L_\mu$.</div>
+             </figure>
+            <p><strong>Relation d'Hopkinson du transformateur</strong> (loi des ampère-tours, en négligeant la réluctance $\mathcal{R}$ du circuit magnétique, $\phi$ est le flux):
+            $$n_1 \cdot i_1 - n_2 \cdot i_2 + n_3 \cdot i_3 = \mathcal{R} \cdot \phi \approx n_1 \cdot i_\mu$$
+            (Le signe de $n_2$ et $n_3$ dépend des conventions de bobinage et de courant). Dans la convention du schéma : $n_1 i_1 - n_2 i_2 + n_3 i_3 = n_1 i_\mu$.
+            Avec $i_2=0$ à vide, on a : $n_1 i_1 + n_3 i_3 = n_1 i_\mu$.
+            </p>
+            <p><strong>Relations sur les tensions (hypothèses idéales) :</strong>
+            $$v_2 = \frac{n_2}{n_1} v_1 \quad ; \quad v_3 = \frac{n_3}{n_1} v_1$$</p>
+
+
+            <span class="slide-ref">Slide 11, Slide 15</span>
+            <h5>Analyse à vide (suite)</h5>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Simplified equivalent circuit for no-load condition focusing on primary (n1, $L_\mu$, K) and demagnetization (n3, D3) windings.</div>
+            </figure>
+            <ul>
+                <li>Lorsque $i_3 = 0$ (diode $D_3$ bloquée, typiquement quand $K$ est fermé): $i_1 = i_\mu$.</li>
+                <li>Lorsque $i_1 = 0$ (interrupteur $K$ bloqué): $i_3 = \frac{n_1}{n_3} i_\mu$.</li>
+            </ul>
+            <p><strong>Formes d'onde à vide ($I_o = 0, i_2 = 0$) avec $n_3 = n_1$ (cas fréquent pour limiter la tension aux bornes de K):</strong></p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Waveforms for control signal K (on for $0 < t < \alpha T$), magnetizing current $i_\mu$ (ramps up to $I_{\mu Max}$ then ramps down to 0), primary current $i_1$ (equals $i_\mu$ when K on, 0 otherwise), demagnetization current $i_3$ (equals $i_\mu$ when K off, 0 otherwise), primary voltage $V_1$ (equals $V_I$ when K on, $-V_I$ when K off and D3 conducts), demagnetization voltage $V_3$ (equals $V_1$).</div>
+                 <figcaption>Formes d'onde pour commande K, $i_\mu$, $i_1$, $i_3$, $V_1$, $V_3$.</figcaption>
+            </figure>
+            <ul>
+                <li>Condition de démagnétisation complète (annulation de $i_\mu$ à chaque cycle): $\alpha < \frac{1}{1 + n_1/n_3}$. Si $n_1=n_3$, alors $\alpha < \frac{1}{2}$.</li>
+            </ul>
+            <p class="note">En charge, les formes d'onde de $i_2$, $i_L$, $V_{DRL}$ etc. sont qualitativement les mêmes que celles du montage en demi-pont asymétrique. Idem pour les calculs d'ondulation et les caractéristiques de sortie $V_o = f(I_o, \alpha)$.</p>
+            <p>(Corrigé voir diapo 23)</p>
+
+            <span class="slide-ref">Slide 16</span>
+            <h4>Architecture globale avec régulation</h4>
+            <p>Une alimentation forward complète inclut une boucle de régulation pour maintenir la tension de sortie $V_o$ constante.</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Block diagram of a regulated forward converter. Shows error amplifier comparing $V_o$ (measured, possibly isolated) to a reference, feeding a controller (e.g., PWM modulator), which drives the power transistor(s) of the forward power stage. May include current sensing feedback. Output is $V_o$ to the Charge (Load).</div>
+            </figure>
+
+
+            <span class="slide-ref">Slide 17</span>
+            <h4>Exemple de schéma : Forward demi-pont asymétrique 300 W</h4>
+            <p>Exemple concret utilisant un circuit intégré de contrôle dédié (L5991A).</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Detailed schematic of a 300W asymmetric half-bridge forward converter based on ST Microelectronics AN1621.</div>
+                 <figcaption>Source: ST Microelectronics 300 W secondary controlled two-switch forward converter with L5991A, AN1621, 2004</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 18</span>
+            <h4>Exemple de schéma : Forward à 1 interrupteur multi-sortie (+5V, +15V, -15V)</h4>
+            <p>Exemple avec plusieurs sorties. Ici, la démagnétisation n'utilise pas d'enroulement dédié mais un circuit dissipatif (snubber RCD). Seule la sortie +5V est régulée (via optocoupleur U2), les autres tensions dépendent du couplage et de la charge.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Detailed schematic of a multi-output single-switch forward converter from Unitrode Application Note U-135. Highlight the RCD snubber across the primary (R15, C6, D5) and the feedback loop from the +5V output (U2 optocoupler, U3 error amp).</div>
+                 <figcaption>Source: Application Note Unitrode U-135. Note : Circuit RCD (R15, C6, D5) pour la dissipation de l'énergie magnétisante.</figcaption>
+            </figure>
+
+             <span class="slide-ref">Slide 19, 20, 21</span>
+            <h4>Autres architectures Forward</h4>
+            <p>D'autres topologies existent pour des besoins spécifiques (puissance, tension d'entrée...).</p>
+            <ul>
+                <li><strong>Push-Pull:</strong> Utilise un transformateur à point milieu au primaire et deux interrupteurs.</li>
+                 <figure>
+                     <div class="placeholder">Image Placeholder: Push-Pull forward converter schematic and key waveforms (IT1, IT2, ID1, ID2, IL, VT1, VT2).</div>
+                     <figcaption>Source: Application ST Microelectronics AN513/0393</figcaption>
+                </figure>
+
+                <li><strong>Full Bridge (Pont complet):</strong> Utilise quatre interrupteurs au primaire. Permet d'appliquer $+V_{in}$ ou $-V_{in}$ au primaire. Adapté aux fortes puissances.</li>
+                 <figure>
+                     <div class="placeholder">Image Placeholder: Full Bridge forward converter schematic and key waveforms (IT1/3, IT2/4, ID1, ID2, IL, VT1/3, VT2/4).</div>
+                     <figcaption>Source: Application ST Microelectronics AN513/0393</figcaption>
+                </figure>
+
+                <li><strong>Half Bridge (Demi-pont):</strong> Utilise deux interrupteurs et deux condensateurs au primaire. Similaire au demi-pont asymétrique mais symétrique.</li>
+                 <figure>
+                     <div class="placeholder">Image Placeholder: Half Bridge forward converter schematic and key waveforms (IT1, IT2, ID1, ID2, IL, VT1, VT2).</div>
+                     <figcaption>Source: Application ST Microelectronics AN513/0393</figcaption>
+                </figure>
+            </ul>
+
+
+            <span class="slide-ref">Slide 22</span>
+            <div class="correction">
+                <h4>Correction Diapo 10 : Forward demi-pont asymétrique à vide</h4>
+                <p>Avec $V_1 = V_I / 2$ appliquée pendant $\alpha T$.</p>
+                <figure>
+                     <div class="placeholder">Image Placeholder: Completed waveforms from slide 10. $V_1$ pulses between $+V_I/2$ and $-V_I/2$. $i_\mu$ ramps up linearly during $\alpha T$ from 0 to $I_{\mu Max}$ and ramps down linearly from $I_{\mu Max}$ to 0 during the next $(1-\alpha)T$ (if $\alpha=0.5$, takes $0.5T$ to demagnetize).</div>
+                </figure>
+                <p>Courant magnétisant maximal :
+                $$ V_1 = L_\mu \frac{d i_\mu}{dt} \implies I_{\mu Max} = \frac{V_1 \cdot \alpha T}{L_\mu} = \frac{(V_I / 2) \cdot \alpha T}{L_\mu} $$</p>
+                <p>Condition de démagnétisation complète : La descente de courant est due à $-V_1$. Pour que $i_\mu$ revienne à zéro avant la fin du cycle, il faut que la durée de descente soit inférieure ou égale à $(1-\alpha)T$. La pente de descente est $-V_1 / L_\mu$. Durée descente = $I_{\mu Max} / (V_1/L_\mu) = \alpha T$. Il faut $\alpha T \le (1-\alpha)T \implies \alpha \le 1-\alpha \implies 2\alpha \le 1 \implies \boldsymbol{\alpha < \frac{1}{2}}$ (strictement pour éviter saturation).</p>
+                 <p>Valeur maximale de l'énergie magnétique stockée :
+                 $$ E_{\mu Max} = \frac{1}{2} L_\mu I_{\mu Max}^2 = \frac{1}{2} L_\mu \left( \frac{V_1 \cdot \alpha T}{L_\mu} \right)^2 = \frac{1}{2} \frac{[V_1 \cdot \alpha T]^2}{L_\mu} $$</p>
+            </div>
+
+            <span class="slide-ref">Slide 23</span>
+             <div class="correction">
+                 <h4>Correction Diapo 15 : Forward 1 interrupteur à vide ($n_3 = n_1$)</h4>
+                 <figure>
+                     <div class="placeholder">Image Placeholder: Completed waveforms from slide 15. $V_1$ is $V_I$ during $\alpha T$, then $-V_I$ during demagnetization. $i_\mu$ ramps up during $\alpha T$, ramps down when K off. $i_1 = i_\mu$ when K on. $i_3 = i_\mu$ when K off (since n1=n3).</div>
+                 </figure>
+                <p>Courant magnétisant maximal :
+                $$ I_{\mu Max} = \frac{V_I \cdot \alpha T}{L_\mu} $$</p>
+                <p>Condition de démagnétisation complète : Pendant la phase off, $V_1 = -V_I$ (car $V_3=V_I$ et $n_3=n_1$). La durée de descente est $\Delta t_{down} = I_{\mu Max} / |-V_I/L_\mu| = \alpha T$. Il faut $\Delta t_{down} \le (1-\alpha)T \implies \alpha T \le (1-\alpha)T \implies \boldsymbol{\alpha < \frac{1}{2}}$.</p>
+                 <p class="note">Le comportement en charge et les caractéristiques de sortie sont similaires à ceux du demi-pont (en tenant compte que $V_1=V_I$ ici au lieu de $V_I/2$, mais la limite sur $\alpha$ est la même).</p>
+             </div>
+        </section>
+
+        <hr>
+
+         <section id="flyback-converter">
+             <span class="slide-ref">Slide 24</span>
+            <h2>Structure flyback</h2>
+             <!-- <ul>
+                 <li>Introduction, alimentations électroniques</li>
+                 <li>Structures forward</li>
+                 <li><strong>Structure flyback</strong></li>
+             </ul> -->
+
+             <span class="slide-ref">Slide 16</span>
+            <h3>Principe de la structure flyback (à stockage inductif)</h3>
+            <p>Le flyback est basé sur le principe du convertisseur <strong>buck-boost</strong> non isolé, mais utilise un composant magnétique à deux enroulements (ou plus pour multi-sorties) pour assurer l'isolation galvanique.</p>
+            <p>Contrairement au forward, l'énergie est d'abord stockée dans l'inductance magnétisante du "transformateur" pendant que l'interrupteur primaire ($K$) est fermé, puis transférée au secondaire lorsque $K$ s'ouvre.</p>
+
+            <div style="display: flex; justify-content: space-around; align-items: center;">
+                <div>
+                    <h4>Structure buck-boost</h4>
+                    <figure>
+                         <div class="placeholder">Image Placeholder: Buck-boost circuit diagram (K, L, D, C, Load). Show currents iK, iL, iD.</div>
+                    </figure>
+                    <p><strong>Fonctionnement :</strong></p>
+                    <ul>
+                        <li>Phase 1 (K fermé, D bloquée) : Accumulation d'énergie dans L ($V_L = V_{in}$).</li>
+                        <li>Phase 2 (K ouvert, D passante) : Transfert d'énergie de L vers C et la charge ($V_L = -V_o$).</li>
+                    </ul>
+                    <p>Tension de sortie : $V_o = - \frac{\alpha}{1-\alpha} V_1$</p>
+                </div>
+                <div>
+                    <h4>Structure flyback</h4>
+                     <figure>
+                         <div class="placeholder">Image Placeholder: Flyback circuit diagram (K, coupled inductor n1:n2, D, C, Load). Show currents i1, i2, i_D, i_C.</div>
+                    </figure>
+                     <p>Utilise un composant magnétique couplé (transformateur flyback).</p>
+                    <p>Tension de sortie : $V_o = m \cdot \frac{\alpha}{1-\alpha} V_1$ (avec $m=n_2/n_1$)</p>
+                </div>
+            </div>
+
+            <span class="slide-ref">Slide 26</span>
+            <h4>Comparaison Forward vs Flyback</h4>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Side-by-side simplified schematics of single-switch Forward (with demagnetization winding) and Flyback.</div>
+            </figure>
+            <p>La structure flyback a moins de composants (pas d'inductance de sortie dédiée, souvent pas de diode de roue libre explicite si D assure cette fonction), mais les composants (interrupteur, diode, transformateur) sont généralement plus contraints en tension et/ou courant, et l'ondulation de sortie est plus difficile à filtrer.</p>
+            <p><strong>Intérêt :</strong> Très utilisée en petite puissance (quelques watts à quelques dizaines de watts, typique des adaptateurs secteurs, chargeurs) en raison de sa simplicité et de son coût réduit.</p>
+
+             <p><strong>Schéma équivalent du composant magnétique :</strong></p>
+             <p>Bien qu'on l'appelle souvent "transformateur", il fonctionne fondamentalement comme une inductance de stockage. On peut le modéliser comme une inductance magnétisante $L_1$ (ou $L_\mu$) au primaire, couplée à un transformateur idéal $m=n_2/n_1$. Les équations de transformation de tension/courant restent valables instantanément.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Equivalent circuit of the flyback 'transformer', showing primary magnetizing inductance $L_1$ and an ideal transformer n1:n2.</div>
+            </figure>
+
+            <span class="slide-ref">Slide 17, Slide 27</span>
+             <h4>Fonctionnement en régime continu (CCM - Continuous Conduction Mode)</h4>
+             <p>Le courant dans l'inductance magnétisante ($i_\mu$) ne s'annule jamais.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Flyback equivalent circuit showing primary (V1, L1, n1, i1=i_mu) and secondary (n2, V2, i2, D, C, Vo).</div>
+            </figure>
+            <p><strong>Phases de fonctionnement :</strong></p>
+            <ul>
+                <li><strong>De 0 à $\alpha T$: Interrupteur K passant, Diode D bloquée.</strong><br>
+                Le primaire est connecté à $V_1$. $v_1 = V_1$. Le courant magnétisant $i_\mu = i_1$ augmente linéairement. $v_2 = m \cdot v_1 = m V_1$. La diode D est bloquée car $V_D = -V_o - v_2 = -V_o - m V_1 < 0$. Le secondaire est isolé.
+                $$ V_1 = L_1 \frac{di_\mu}{dt} $$
+                </li>
+                 <li><strong>De $\alpha T$ à $T$: Interrupteur K bloqué, Diode D passante.</strong><br>
+                 Le primaire est ouvert ($i_1=0$). La continuité de l'énergie stockée impose la circulation du courant $i_2$ au secondaire via la diode D. $v_2 = -V_o$. La tension au primaire devient $v_1 = v_2 / m = -V_o / m$. Le courant magnétisant (vu du secondaire comme $i_2 = (n_1/n_2) i_\mu$) diminue.
+                 $$ v_1 = -\frac{V_o}{m} = L_1 \frac{di_\mu}{dt} \quad \text{ou} \quad v_2 = -V_o = L_2 \frac{di_2}{dt} \quad (L_2 = m^2 L_1) $$
+                </li>
+            </ul>
+             <p><strong>Formes d'onde en régime continu (CCM) :</strong></p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: CCM waveforms. Control signal K (on for $\alpha T$). Magnetizing current $i_\mu$ (ramps up/down, never reaches zero). Magnetic flux $\phi$ (proportional to $i_\mu$). Secondary voltage $v_2$ (equals $mV_1$ then $-V_o$). Secondary current $i_2$ (pulses when K is off, proportional to $i_\mu$).</div>
+            </figure>
+             <p><strong>Relation tension entrée/sortie (CCM) :</strong> En régime permanent, la variation moyenne de $i_\mu$ sur un cycle est nulle. L'intégrale de la tension $v_1$ sur un cycle doit être nulle.
+             $$ \int_0^T v_1(t) dt = V_1 \cdot \alpha T + (-\frac{V_o}{m}) \cdot (1-\alpha)T = 0 $$
+             $$ V_1 \alpha = \frac{V_o}{m} (1-\alpha) \implies \boxed{V_o = m \cdot \frac{\alpha}{1-\alpha} V_1} $$</p>
+            <p>(Corrigé voir diapo 34)</p>
+
+            <span class="slide-ref">Slide 28</span>
+             <h4>Fonctionnement en régime discontinu (DCM - Discontinuous Conduction Mode)</h4>
+             <p>Le courant magnétisant $i_\mu$ s'annule pendant une partie du cycle (avant que K ne se referme).</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: DCM waveform for secondary current $i_2$. Shows the current ramping down to zero before the end of the cycle $(1-\alpha)T$. Also show $V_1$ during this phase (oscillates or clamps depending on snubber/parasitics).</div>
+            </figure>
+             <p>Le régime discontinu est atteint lorsque le courant de charge $I_o$ est faible.</p>
+            <p><strong>Courant de sortie critique (limite CCM/DCM) :</strong> C'est le courant moyen $I_o = \langle i_2 \rangle$ lorsque le courant $i_2$ (et $i_\mu$) atteint juste zéro à $t=T$.</p>
+             <p>Le courant $i_2$ a une forme triangulaire de hauteur $I_{2,peak} = \frac{n_1}{n_2} I_{\mu,peak} = \frac{1}{m} \frac{V_1 \alpha T}{L_1}$ et de durée $(1-\alpha)T$.
+            $$ I_{o,critique} = \frac{1}{2} I_{2,peak} \cdot (1-\alpha) = \frac{1}{2} \frac{V_1 \alpha T}{m L_1} (1-\alpha) = \frac{V_1 T}{2 m L_1} \alpha (1-\alpha) $$</p>
+            <p>Le courant critique maximal est obtenu pour $\alpha=1/2$:
+            $$ I_{o,c,max} = \frac{V_1 T}{8 m L_1} = \frac{V_1}{8 m L_1 F} $$</p>
+            <p><strong>Comportement à vide ($I_o = 0$) en DCM :</strong> La tension $V_o$ tend théoriquement vers l'infini car l'énergie stockée à chaque cycle ($ \frac{1}{2} L_1 I_{\mu,peak}^2 $) n'est pas évacuée. En pratique, elle est limitée par les pertes, les capacités parasites, ou la régulation. Cela impose une <strong>nécessité impérative d'une régulation</strong> (qui réduira $\alpha$ à très faible valeur) ou d'une <strong>charge minimale</strong> pour éviter les surtensions.</p>
+
+            <span class="slide-ref">Slide 29</span>
+             <h4>Énergie stockée et dimensionnement</h4>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Waveforms for $i_\mu$ and $V_1$ in CCM, highlighting $I_{\mu Max}$ and $I_{\mu Min}$.</div>
+            </figure>
+             <p>Énergie maximale stockée dans l'inductance primaire :
+             $$ E_{magMax} = \frac{1}{2} L_1 i_{\mu Max}^2 $$</p>
+             <p>En l'absence de pertes, la puissance transmise $P$ est égale à la puissance d'entrée et de sortie :
+             $$ P = \frac{1}{T} \int_0^{\alpha T} V_1 \cdot i_1(t) dt = \frac{1}{T} \int_{\alpha T}^{T} V_o \cdot i_D(t) dt \quad \text{(avec } i_D = i_2 \text{)} $$
+             On trouve aussi que la puissance transférée par cycle est l'énergie stockée/délivrée :
+             $$ P = F \cdot [E_{magMax} - E_{magMin}] $$
+             Où $F=1/T$ est la fréquence. L'idéal pour minimiser le courant RMS est le régime critique (DCM limite), où $E_{magMin}=0$.
+             $$ P_{DCM} = F \cdot E_{magMax} = F \cdot \frac{1}{2} L_1 i_{\mu Max}^2 $$</p>
+             <p>Le flux maximal dans le noyau $\Phi_{1M}$ est lié à l'intégrale de la tension $V_1$:
+             $$ \Phi_{1M} = \int_0^{\alpha T} v_1 dt = V_1 \cdot \alpha \cdot T $$
+             Le dimensionnement du composant magnétique dépend de cette énergie maximale et du flux maximal. Pour une puissance donnée, on peut choisir $L_1$ (qui fixe $i_{\mu Max}$) et $F$. Un flux maximal imposé nécessite une section de noyau suffisante. Une valeur de $L_1$ plus faible (pour une même puissance et fréquence) implique un courant $i_{\mu Max}$ plus élevé mais permet potentiellement un noyau plus petit si $\Phi_{1M}$ est respecté. On utilise souvent un <strong>entrefer (air gap)</strong> dans le noyau pour contrôler $L_1$ et éviter la saturation, même si cela augmente légèrement les pertes.</p>
+
+            <span class="slide-ref">Slide 30</span>
+            <h4>Commande en mode auto-oscillant (RCC - Ringing Choke Converter)</h4>
+            <p>C'est un moyen simple d'obtenir un fonctionnement proche du régime critique (limite CCM/DCM) quelle que soit la charge, sans utiliser de circuit PWM complexe.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Block diagram/schematic of an RCC flyback. Shows the main switch K, coupled inductor (n1, n2, auxiliary n3), output diode D, capacitor C. Feedback from an auxiliary winding n3 (voltage V3) controls the ON/OFF state of K, possibly via a simple comparator or transistor logic. Current sense might be involved for peak current limiting.</div>
+            </figure>
+             <p><strong>Principe :</strong></p>
+            <ul>
+                <li><strong>Coupure de K (OFF) :</strong> L'interrupteur K est ouvert lorsque le courant primaire $i_1$ (ou une image via $I_{1M}$) atteint un seuil $I_M^*$.</li>
+                <li><strong>Mise en conduction de K (ON) :</strong> L'interrupteur K est refermé lorsque le courant secondaire $i_2$ s'annule. L'annulation de $i_2$ provoque souvent une oscillation (ringing) sur les tensions, notamment sur la tension $V_3$ d'un enroulement auxiliaire $n_3$, dont le passage par zéro (ou un seuil bas) est détecté pour ré-enclencher K.</li>
+            </ul>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Waveforms for RCC operation. $i_\mu$ ramps up to $I_M^*$, then ramps down to zero. $V_1$ is $V_I$ then $-V_o/m$. $V_3$ mirrors $V_1$ (scaled by $n_3/n_1$) and shows ringing after $i_2$ reaches zero. K turns on again at the zero-crossing/valley of $V_3$. The period T becomes variable.</div>
+            </figure>
+            <p>Ce mode de fonctionnement conduit à une <strong>fréquence variable</strong> qui dépend de la charge et de la tension d'entrée.</p>
+
+            <span class="slide-ref">Slide 31</span>
+             <h4>Caractéristiques du Flyback auto-oscillant (RCC)</h4>
+             <figure>
+                 <div class="placeholder">Image Placeholder: RCC schematic recap.</div>
+            </figure>
+             <p>Énergie magnétique maximale stockée (fixée par le seuil $I_M^*$) et puissance convertie (en DCM) :
+             $$ E_{magMax} = \frac{1}{2} L_1 (I_M^*)^2 \quad ; \quad P = F \cdot E_{magMax} = F \cdot \frac{1}{2} L_1 (I_M^*)^2 $$
+             Si $\Phi_{1M} = V_1 \cdot \alpha \cdot T$, on peut aussi écrire $P = \frac{1}{2} \frac{(\Phi_{1M})^2}{\mathcal{R}_m T} = \frac{1}{2} \frac{(V_1 \alpha T)^2}{L_1 T^2} F = \frac{1}{2} \frac{(V_1 \alpha)^2}{L_1 F}$.
+             Avec $I_M^*$ (donc $\alpha$) et $V_1$ constants, la puissance convertie $P$ est <strong>inversement proportionnelle à la période $T$</strong> (donc proportionnelle à la fréquence $F$). La fréquence s'ajuste naturellement pour fournir la puissance demandée par la charge.</p>
+             <p>On peut montrer que (approximativement) :</p>
+             <ul>
+                 <li>Le courant de seuil $I_{1M} (=I_M^*)$ est lié au courant de sortie $I_o$ par : $I_{1M} \approx 2 \left( m + \frac{V_o}{V_1} \right) I_o$ (formule plus complexe en réalité).</li>
+                 <li>La période $T$ (et donc $F=1/T$) dépend de $I_o$ : $T = F^{-1} \approx 2 L_1 \frac{(m V_1 + V_o)^2}{V_1 V_o^2} I_o$.</li>
+             </ul>
+
+             <span class="slide-ref">Slide 32</span>
+             <h4>Exemple de schéma : Flyback AC/DC (85-265 V AC in -> 5 V / 2 A DC out)</h4>
+             <p>Exemple utilisant un contrôleur intégré (NCP1055P100) qui inclut le MOSFET de puissance et la logique de contrôle (souvent de type fréquence fixe ou quasi-résonant, pas forcément RCC pur, mais illustre une implémentation compacte).</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Detailed schematic of an AC-DC flyback converter using ON Semiconductor NCP1055P100 from AND8099/D application note. Highlight input rectification, bulk capacitor, flyback stage (IC1 with integrated switch, transformer T1), output rectification (D6), output filter (C7-C9, L2), feedback loop (IC3 TL431 reference, IC2 optocoupler). Snubber circuit R1, C3, D2 for leakage inductance.</div>
+                 <figcaption>Source: Application Note ON semiconductor AND8099/D. Le TL431 (IC3) est une référence de tension programmable utilisée avec l'optocoupleur (IC2) pour la régulation.</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 33</span>
+             <h4>Exemple de schéma : Flyback auto-oscillant (RCC) complet</h4>
+             <p>Exemple détaillé d'un RCC "classique" utilisant des composants discrets pour la logique de contrôle ON/OFF basée sur la détection de courant crête et de l'annulation du courant secondaire via l'enroulement auxiliaire.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Detailed schematic of a self-oscillating (RCC) flyback converter from ST Application Note ST 2228. Input AC 85-265V, Output DC 5V/0.4A. Highlight the main switch Q1 (STD1LNK60-1), transformer T1 with primary, secondary and auxiliary windings. Feedback via optocoupler U1A/U1B, TL431 reference U2. RCC control logic around Q2, Q3, Z1, R9-R14, C6. Auxiliary winding powers the control circuit and provides zero-current detection signal.</div>
+                 <figcaption>Source: Application Note ST 2228. Flyback auto-oscillant (self-oscillating flyback converter or ringing choke converter RCC). Entrée AC 85-265 V (50-60 Hz) – sortie DC : 5 V – 0,4 A. $F_{min} = 50$ kHz, $\alpha \approx 0,5$.</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 34</span>
+            <div class="correction">
+                 <h4>Correction Diapo 27 : Flyback Principe - Formes d'onde CCM</h4>
+                 <p>Reprise des formes d'onde et dérivation de la tension de sortie.</p>
+                 <figure>
+                     <div class="placeholder">Image Placeholder: Completed waveforms from slide 27. Control K (on 0 to $\alpha T$). $V_1$ (equals $V_I$ when K on, $-V_o/m$ when K off). $i_\mu$ ramps up from $I_{min}$ to $I_{max}$ during $\alpha T$, ramps down from $I_{max}$ to $I_{min}$ during $(1-\alpha)T$. $V_2$ (equals $m V_I$ then $-V_o$). $i_2$ (pulses when K off, shape follows $i_\mu$).</div>
+                 </figure>
+                 <p>En régime permanent, l'intégrale de la tension aux bornes de l'inductance magnétisante ($L_1$ vue du primaire, ou $L_2$ vue du secondaire) sur une période $T$ est nulle.</p>
+                 <p>Vue du primaire (tension $v_1$):
+                 $$ \int_0^T v_1(t) dt = (V_1) \cdot (\alpha T) + \left(-\frac{V_o}{m}\right) \cdot ((1-\alpha)T) = 0 $$
+                 $$ V_1 \alpha T = \frac{V_o}{m} (1-\alpha) T $$
+                 $$ \implies \boxed{V_o = m \cdot \frac{\alpha}{1-\alpha} V_1} $$
+                 (où $V_1$ est la tension d'entrée appliquée au primaire, et $m=n_2/n_1$).
+                 </p>
+                 <p>Vue du secondaire (tension $v_2$ aux bornes de $n_2$):
+                 Pendant que K est ON ($\alpha T$): $v_2 = m V_1$.
+                 Pendant que K est OFF ($(1-\alpha)T$): $v_2 = -V_o$.
+                 L'intégrale de la tension aux bornes de l'inductance $L_2 = m^2 L_1$ vue du secondaire doit être nulle:
+                 $$ \int_0^T v_{L2}(t) dt = \int_{\alpha T}^T (-V_o - v_{diode}) dt + \dots \neq 0 $$
+                 Attention, c'est l'intégrale de la tension aux bornes de l'inductance $L_2$ qui est nulle, pas $v_2$. La tension aux bornes de $L_2$ est $v_2$ quand D est bloquée, et $v_2 - (-V_o) = 0$ quand D conduit (si $V_D=0$). Ce n'est pas la bonne approche.
+                 Il faut utiliser le bilan Volt-seconde sur $L_1$ (primaire) ou $L_2$ (secondaire).
+                 Pour $L_1$: $V_1 \cdot \alpha T = \frac{V_o}{m} \cdot (1-\alpha) T \implies V_o = m \frac{\alpha}{1-\alpha} V_1$. C'est correct.
+                 </p>
+             </div>
+        </section>
+        <!-- End of Diaporama Content -->
+    </article>
+    <hr>
+    <footer>
+        <p>Fin du document basé sur le PDF fourni.</p>
+        <p>B. Multon ENS Rennes</p>
+    </footer>
+</main>
+
+</body>
+</html>
