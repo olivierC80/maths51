@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 02 : Transformateur Monophasé</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX Auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding-bottom: 50px; /* Space for footer */
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #666;
+            padding-bottom: 10px;
+        }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p, ul, ol {
+            margin-bottom: 1em;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        figure {
+            text-align: center;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            max-width: 600px; /* Adjust as needed */
+        }
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc; /* Border around the placeholder */
+            background-color: #f0f0f0; /* Background for placeholder */
+            display: inline-block; /* Prevents extra space below */
+        }
+        figcaption {
+            font-style: italic;
+            color: #555;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        .placeholder-text {
+            display: block;
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f8f8f8;
+            border-top: 1px solid #ddd;
+            padding: 5px 20px;
+            font-size: 0.8em;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+        }
+        .header-info {
+             display: flex;
+             justify-content: space-between;
+             padding: 5px 0;
+             border-bottom: 1px solid #eee;
+             margin-bottom: 20px;
+             font-size: 0.9em;
+        }
+        .equation-number {
+            float: right;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header-info">
+        <span>Cours Electrotechnique</span>
+        <span>GE 2</span>
+        <span>AMARI.Mansour</span>
+    </header>
+
+    <h1>CHAPITRE : 02 <br> TRANSFORMATEUR MONOPHASE</h1>
+
+    <h2>Contenu :</h2>
+    <ul>
+        <li><a href="#generalites">1°- Généralités</a>
+            <ul>
+                <li><a href="#role">1°.1- Rôle</a></li>
+                <li><a href="#constitution_transfo">1°.2- Constitution</a></li>
+                <li><a href="#principe">1°.3- Principe de fonctionnement</a></li>
+            </ul>
+        </li>
+        <li><a href="#transfo_parfait">2°- Transformateur parfait</a>
+            <ul>
+                <li><a href="#hypotheses_parfait">2°.1- Hypothèses</a></li>
+                <li><a href="#equations_parfait">2°.2- Equations de fonctionnement</a></li>
+                <li><a href="#schema_parfait">2°.3- Schéma équivalent et diagramme</a></li>
+                <li><a href="#proprietes_parfait">2°.4- Propriétés du transformateur parfait</a></li>
+            </ul>
+        </li>
+        <li><a href="#transfo_reel">3°- Transformateur monophasé réel</a>
+            <ul>
+                <li><a href="#equations_reel">3°.1- Equations de Fonctionnement</a></li>
+                <li><a href="#schema_reel">3°.2- Schéma équivalent</a></li>
+            </ul>
+        </li>
+        <li><a href="#kapp">4°- Transformateur monophasé dans l'hypothèse de Kapp</a>
+            <ul>
+                <li><a href="#hypothese_kapp">4°.1- Hypothèse</a></li>
+                <li><a href="#schema_kapp">4°.2- Schéma équivalent</a></li>
+                <li><a href="#determination_elements">4°.3- Détermination des éléments du schéma équivalent</a></li>
+                <li><a href="#chute_tension">4°.4- Chute de tension</a></li>
+                <li><a href="#rendement">4°.5- Rendement</a></li>
+            </ul>
+        </li>
+        <li><a href="#td1">TD N°1</a></li>
+    </ul>
+
+    <h2 id="generalites">1°- Généralités</h2>
+
+    <h3 id="role">1°.1- Rôle</h3>
+    <p>
+        Le transformateur est un convertisseur statique d'énergie électrique. Il a pour rôle principal de <strong>modifier les amplitudes</strong> (les valeurs efficaces) des tensions et des courants alternatifs, tout en conservant la <strong>fréquence</strong>. Son but est d'adapter les caractéristiques d'un récepteur (charge) aux caractéristiques d'un réseau électrique d'alimentation. Par exemple, abaisser la haute tension du réseau de transport pour l'adapter aux appareils domestiques, ou élever la tension à la sortie d'un générateur.
+    </p>
+
+    <figure>
+        <!-- Placeholder for Schematic block diagram page 13 -->
+        <img src="placeholder_figure_transfo_block.png" alt="Placeholder Schéma bloc transformateur">
+        <figcaption>Schéma bloc fonctionnel d'un transformateur monophasé. Entrée (primaire) : $U_1, I_1, \cos(\phi_1)$, $f_1$. Sortie (secondaire) : $U_2, I_2, \cos(\phi_2)$, $f_2=f_1$. $W_{élect}$ (ou $P_1$) est la puissance électrique absorbée, $\eta$ est le rendement, $W'_{élect}$ (ou $P_2$) est la puissance électrique fournie. Des pertes (chaleur) existent : Pertes Fer ($P_f$) et Pertes Joule ($P_j$).</figcaption>
+    </figure>
+
+    <p>
+        Le bilan de puissance s'écrit : Puissance de sortie = Puissance d'entrée - Pertes totales.
+        $$ P_2 = P_1 - \sum \text{Pertes} $$
+        Les pertes principales sont les pertes fer ($P_f$, dans le circuit magnétique) et les pertes Joule ($P_j$, par effet Joule dans les enroulements, aussi appelées pertes cuivre).
+        $$ P_2 = P_1 - P_f - P_j \quad (1) $$
+    </p>
+    <p>
+        On adopte les indices suivants pour distinguer les grandeurs relatives aux deux circuits électriques :
+        <ul>
+            <li>Indice <strong>1</strong> : pour le circuit <strong>primaire</strong> (côté alimentation).</li>
+            <li>Indice <strong>2</strong> : pour le circuit <strong>secondaire</strong> (côté charge/récepteur).</li>
+        </ul>
+    </p>
+
+    <h3 id="constitution_transfo">1°.2- Constitution</h3>
+    <p>
+        Le transformateur est constitué essentiellement de deux parties principales :
+    </p>
+    <ul>
+        <li>
+            <strong>Un circuit magnétique fermé :</strong>
+            Similaire à celui de la bobine à noyau de fer (voir Chapitre 1), il est généralement constitué de tôles ferromagnétiques feuilletées et isolées pour minimiser les courants de Foucault. Son rôle est de canaliser le flux magnétique généré par le primaire vers le secondaire avec le minimum de pertes et de fuites.
+        </li>
+        <li>
+            <strong>Deux ou plusieurs enroulements (bobines) :</strong>
+            Enroulés autour du circuit magnétique mais isolés électriquement les uns des autres et du noyau.
+            <ul>
+                <li><strong>L'enroulement primaire :</strong> Celui qui est connecté à la source d'énergie alternative. On lui applique la convention récepteur (le courant entre par la borne positive de la tension). Il comporte $N_1$ spires.</li>
+                <li><strong>L'enroulement secondaire :</strong> Celui qui est connecté à la charge (récepteur). Il est le siège d'une force électromotrice (f.e.m.) induite par le flux variable. On lui applique la convention générateur (le courant sort par la borne positive de la tension). Il comporte $N_2$ spires.</li>
+            </ul>
+            (Il peut y avoir plusieurs enroulements secondaires).
+        </li>
+    </ul>
+
+    <figure>
+        <!-- Placeholder for Figure 2.1 -->
+        <img src="placeholder_figure_2_1.png" alt="Placeholder Figure 2.1">
+        <figcaption>Figure 2.1: Schéma de principe d'un transformateur monophasé. On voit le noyau magnétique (circuit fermé), l'enroulement primaire ($N_1$ spires, tension $\vec{V}_1$, courant $\vec{I}_1$) relié à la source, et l'enroulement secondaire ($N_2$ spires, tension $\vec{V}_2$, courant $\vec{I}_2$) relié au récepteur. Le flux $\phi$ circule dans le noyau.</figcaption>
+    </figure>
+
+    <h3 id="principe">1°.3- Principe de fonctionnement</h3>
+    <p>
+        Le fonctionnement du transformateur est basé sur le phénomène d'<strong>induction électromagnétique</strong> (loi de Faraday-Lenz).
+    </p>
+    <ol>
+        <li>La tension alternative $v_1(t)$ appliquée au primaire fait circuler un courant alternatif $i_1(t)$.</li>
+        <li>Ce courant $i_1(t)$ crée une force magnétomotrice (f.m.m.) $N_1 i_1(t)$ qui génère un flux magnétique $\phi(t)$ variable et alternatif dans le circuit magnétique.</li>
+        <li>Ce flux variable $\phi(t)$ traverse également les spires de l'enroulement secondaire.</li>
+        <li>Conformément à la loi de Faraday, la variation de ce flux induit une force électromotrice (f.e.m.) $e_2(t) = -N_2 \frac{d\phi(t)}{dt}$ aux bornes de l'enroulement secondaire.</li>
+        <li>Si le secondaire est connecté à une charge, cette f.e.m. $e_2(t)$ fait circuler un courant secondaire $i_2(t)$ et fournit de la puissance à la charge.</li>
+        <li>Le courant secondaire $i_2(t)$ crée à son tour une f.m.m. $N_2 i_2(t)$ qui tend à s'opposer à la variation du flux (loi de Lenz). Pour maintenir le flux imposé par la tension primaire (en négligeant les chutes de tension internes), le courant primaire $i_1(t)$ doit s'ajuster pour compenser l'effet de $i_2(t)$.</li>
+    </ol>
+    <p>
+        <strong>Remarques importantes :</strong>
+    </p>
+    <ul>
+        <li>
+            <strong>Réversibilité :</strong> Le transformateur est une machine réversible. Si on alimente l'enroulement initialement prévu comme secondaire (avec $N_2$ spires) par une source et qu'on connecte une charge à l'enroulement initialement primaire (avec $N_1$ spires), il fonctionnera de manière analogue. Le rapport de transformation sera inversé.
+            <figure>
+                <!-- Placeholder for Figure 2.2 -->
+                <img src="placeholder_figure_2_2.png" alt="Placeholder Figure 2.2">
+                <figcaption>Figure 2.2: Exemple de réversibilité d'un transformateur monophasé. Un transformateur 220V/12V peut fonctionner en 12V/220V.</figcaption>
+            </figure>
+        </li>
+        <li>
+            <strong>Machine statique :</strong> Le transformateur ne comporte aucune partie mobile. C'est une machine statique, ce qui contribue à son excellent rendement et à sa grande fiabilité.
+        </li>
+        <li>
+            <strong>Fonctionnement à vide :</strong> Lorsque le secondaire est ouvert ($i_2 = 0$), le transformateur se comporte comme une simple bobine à noyau de fer (étudiée au chapitre 1) vue du primaire. Le courant primaire $i_1$ est alors appelé courant à vide $i_{10}$. Il sert à magnétiser le noyau et à compenser les pertes fer. Il est généralement faible par rapport au courant nominal.
+        </li>
+    </ul>
+
+    <h2 id="transfo_parfait">2°- Transformateur parfait</h2>
+    <p>
+        Pour simplifier l'étude et dégager les relations fondamentales, on définit un modèle idéal appelé "transformateur parfait".
+    </p>
+
+    <h3 id="hypotheses_parfait">2°.1- Hypothèses</h3>
+    <p>
+        Le transformateur est dit parfait si :
+    </p>
+    <ul>
+        <li><strong>Les pertes fer et les pertes Joule sont nulles :</strong>
+            Cela signifie que le circuit magnétique n'a pas d'hystérésis ni de courants de Foucault ($P_f = 0$), et que la résistance des enroulements est nulle ($r_1 = r_2 = 0$, donc $P_j = 0$). Le rendement est donc de 100%.
+        </li>
+        <li><strong>Les fuites magnétiques sont négligeables :</strong>
+            Tout le flux $\phi$ créé par le primaire traverse intégralement le secondaire, et vice-versa. Il n'y a pas de flux de fuite ($\phi_{f1} = \phi_{f2} = 0$).
+        </li>
+        <li><strong>La réluctance du circuit magnétique est nulle (perméabilité infinie) :</strong>
+            Cela implique qu'il ne faut aucune force magnétomotrice (aucun courant magnétisant) pour établir le flux $\phi$ dans le noyau. Le courant primaire à vide $i_{10}$ est donc nul.
+        </li>
+    </ul>
+
+    <figure>
+        <!-- Placeholder for Figure 2.3 -->
+        <img src="placeholder_figure_2_3.png" alt="Placeholder Figure 2.3">
+        <figcaption>Figure 2.3: Schéma d'un transformateur monophasé parfait. Pas de pertes, pas de fuites, perméabilité infinie.</figcaption>
+    </figure>
+
+    <h3 id="equations_parfait">2°.2- Equations de fonctionnement</h3>
+
+    <h4>Equations aux tensions</h4>
+    <p>
+        On applique la loi des mailles aux circuits primaire et secondaire, en utilisant les conventions de la Figure 2.1 et les hypothèses du transformateur parfait ($r_1=r_2=0$, pas de fuites). La seule tension interne est la f.e.m. induite par le flux principal $\phi(t)$.
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.4 -->
+        <img src="placeholder_figure_2_4.png" alt="Placeholder Figure 2.4">
+        <figcaption>Figure 2.4: Circuit électrique équivalent simplifié pour les tensions du transformateur parfait. $e_1$ et $e_2$ sont les f.e.m induites.</figcaption>
+    </figure>
+    <ul>
+        <li><strong>Au primaire (convention récepteur) :</strong>
+            $v_1(t) + e_1(t) = 0$, où $e_1(t)$ est la f.e.m. induite dans le primaire.
+            Selon Faraday, $e_1(t) = -N_1 \frac{d\phi(t)}{dt}$.
+            Donc : $v_1(t) = -e_1(t) = N_1 \frac{d\phi(t)}{dt}$.
+        </li>
+        <li><strong>Au secondaire (convention générateur) :</strong>
+            $v_2(t) - e_2(t) = 0$, où $e_2(t)$ est la f.e.m. induite dans le secondaire.
+            Selon Faraday, $e_2(t) = -N_2 \frac{d\phi(t)}{dt}$.
+            Donc : $v_2(t) = e_2(t) = -N_2 \frac{d\phi(t)}{dt}$.
+        </li>
+    </ul>
+    <p>
+        En régime sinusoïdal, on utilise les phaseurs (grandeurs complexes). La dérivation $d/dt$ correspond à la multiplication par $j\omega$.
+        $$ \underline{V}_1 = j\omega N_1 \underline{\Phi} $$
+        $$ \underline{V}_2 = -j\omega N_2 \underline{\Phi} $$
+        En faisant le rapport de ces deux équations, on élimine $j\omega\underline{\Phi}$:
+        $$ \frac{\underline{V}_2}{\underline{V}_1} = \frac{-j\omega N_2 \underline{\Phi}}{j\omega N_1 \underline{\Phi}} = -\frac{N_2}{N_1} $$
+        On définit le <strong>rapport de transformation</strong> $m$ par :
+        $$ m = \frac{N_2}{N_1} $$
+        La relation entre les tensions complexes devient :
+        $$ \frac{\underline{V}_2}{\underline{V}_1} = -m \quad \text{ou} \quad \underline{V}_2 = -m \underline{V}_1 \quad (2) $$
+        Le signe négatif indique une opposition de phase entre $\underline{V}_1$ et $\underline{V}_2$ si les enroulements sont bobinés dans le même sens et les conventions de la Figure 2.1 sont utilisées.
+    </p>
+    <p>
+        En considérant les valeurs efficaces (modules des phaseurs), on a :
+        $$ \frac{V_2}{V_1} = \left| -\frac{N_2}{N_1} \right| = \frac{N_2}{N_1} = m $$
+        $$ V_2 = m V_1 \quad (3) $$
+        C'est la relation fondamentale du transformateur parfait pour les tensions efficaces.
+    </p>
+    <p><strong>Remarque :</strong> Selon la valeur de $m$:</p>
+    <ul>
+        <li>Si $m = 1$ ($N_2 = N_1$) $\implies V_2 = V_1$. Le transformateur est dit <strong>isolateur</strong> (il assure l'isolation galvanique sans changer la tension).</li>
+        <li>Si $m < 1$ ($N_2 < N_1$) $\implies V_2 < V_1$. Le transformateur est dit <strong>abaisseur</strong> de tension.</li>
+        <li>Si $m > 1$ ($N_2 > N_1$) $\implies V_2 > V_1$. Le transformateur est dit <strong>élévateur</strong> de tension.</li>
+    </ul>
+
+    <h4>Equations aux intensités</h4>
+    <p>
+        On applique la loi d'Hopkinson (ou le théorème d'Ampère généralisé) au circuit magnétique. La somme des forces magnétomotrices est égale à la réluctance $\mathcal{R}_m$ multipliée par le flux $\phi$.
+        $$ N_1 \underline{I}_1 + N_2 \underline{I}_2 = \mathcal{R}_m \underline{\Phi} $$
+        Avec l'hypothèse de réluctance nulle ($\mathcal{R}_m = 0$) pour le transformateur parfait :
+        $$ N_1 \underline{I}_1 + N_2 \underline{I}_2 = 0 $$
+        Ce qui donne la relation entre les courants complexes :
+        $$ \frac{\underline{I}_1}{\underline{I}_2} = -\frac{N_2}{N_1} = -m \quad \text{ou} \quad \underline{I}_1 = -m \underline{I}_2 \quad (4) $$
+        Attention au signe et aux indices. On peut aussi écrire $\underline{I}_2 = -\frac{1}{m} \underline{I}_1$.
+    </p>
+    <p>
+        En considérant les valeurs efficaces (modules) :
+        $$ \frac{I_1}{I_2} = \left| -\frac{N_2}{N_1} \right| = m $$
+        $$ I_1 = m I_2 \quad \text{ou} \quad I_2 = \frac{1}{m} I_1 \quad (5) $$
+        Un transformateur qui élève la tension ($m>1$) abaisse le courant ($I_2 < I_1$), et vice-versa, de manière à conserver (idéalement) la puissance.
+    </p>
+
+    <h3 id="schema_parfait">2°.3- Schéma équivalent et diagramme</h3>
+
+    <h4>Schéma équivalent</h4>
+    <p>
+        Les relations (2) et (4) (ou 3 et 5 pour les valeurs efficaces) définissent le comportement externe du transformateur parfait. On peut le représenter par un quadripôle idéal (Figure 2.5) qui impose ces relations entre les grandeurs d'entrée et de sortie.
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.5 -->
+        <img src="placeholder_figure_2_5.png" alt="Placeholder Figure 2.5">
+        <figcaption>Figure 2.5: Schéma équivalent du transformateur parfait. Représente les relations $\underline{V}_2 = -m \underline{V}_1$ et $\underline{I}_1 = -m \underline{I}_2$.</figcaption>
+    </figure>
+
+    <h4>Diagramme vectoriel (Fresnel)</h4>
+    <p>
+        Le diagramme de Fresnel traduit graphiquement les relations complexes (2) et (4). Supposons que la charge impose un déphasage $\phi_2$ entre $\underline{V}_2$ et $\underline{I}_2$.
+        $$ \underline{V}_2 = -m \underline{V}_1 \implies \underline{V}_1 = -\frac{1}{m} \underline{V}_2 $$
+        $$ \underline{I}_1 = -m \underline{I}_2 $$
+        Les vecteurs $\underline{V}_1$ et $\underline{V}_2$ sont en opposition de phase. Les vecteurs $\underline{I}_1$ et $\underline{I}_2$ sont également en opposition de phase.
+        Le déphasage $\phi_1$ entre $\underline{V}_1$ et $\underline{I}_1$ est le même que $\phi_2$ entre $\underline{V}_2$ et $\underline{I}_2$.
+        $$ \phi_1 = \arg(\underline{V}_1) - \arg(\underline{I}_1) = (\arg(\underline{V}_2) + \pi) - (\arg(\underline{I}_2) + \pi) = \arg(\underline{V}_2) - \arg(\underline{I}_2) = \phi_2 $$
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.6 -->
+        <img src="placeholder_figure_2_6.png" alt="Placeholder Figure 2.6">
+        <figcaption>Figure 2.6: Diagramme vectoriel (Fresnel) pour un transformateur parfait. $\vec{V}_1$ et $\vec{V}_2$ sont en opposition. $\vec{I}_1$ et $\vec{I}_2$ sont en opposition. L'angle $\phi_1$ entre $\vec{V}_1$ et $\vec{I}_1$ est égal à l'angle $\phi_2$ entre $\vec{V}_2$ et $\vec{I}_2$.</figcaption>
+    </figure>
+
+    <h3 id="proprietes_parfait">2°.4- Propriétés du transformateur parfait</h3>
+
+    <h4 id="energie_parfait">2°.4.1- Comportement énergétique</h4>
+    <p>
+        Calculons les puissances complexes au primaire et au secondaire.
+        <ul>
+            <li>Puissance complexe absorbée au primaire : $\underline{S}_1 = \underline{V}_1 \underline{I}_1^*$</li>
+            <li>Puissance complexe fournie par le secondaire : $\underline{S}_2 = \underline{V}_2 \underline{I}_2^*$</li>
+        </ul>
+        Exprimons $\underline{S}_1$ en fonction des grandeurs secondaires en utilisant (2) et (4) :
+        $$ \underline{V}_1 = -\frac{1}{m} \underline{V}_2 $$
+        $$ \underline{I}_1 = -m \underline{I}_2 \implies \underline{I}_1^* = (-m \underline{I}_2)^* = -m \underline{I}_2^* \quad \text{(car m est réel)} $$
+        $$ \underline{S}_1 = \left(-\frac{1}{m} \underline{V}_2\right) (-m \underline{I}_2^*) = \underline{V}_2 \underline{I}_2^* = \underline{S}_2 $$
+        Donc :
+        $$ \underline{S}_1 = \underline{S}_2 \quad (6) $$
+        Les puissances complexes sont égales. En séparant les parties réelle et imaginaire :
+        $$ P_1 + j Q_1 = P_2 + j Q_2 $$
+        On en déduit que :
+        <ul>
+            <li>La puissance active est conservée : $P_1 = P_2$</li>
+            <li>La puissance réactive est conservée : $Q_1 = Q_2$</li>
+        </ul>
+        <span class="equation-number">(7)</span>
+    </p>
+    <p>
+        <strong>Conclusion :</strong> Dans un transformateur parfait, les puissances active, réactive et apparente ($S = |\underline{S}|$) sont intégralement transmises du primaire au secondaire. Il n'y a pas de pertes. Le rendement $\eta = P_2 / P_1$ est donc égal à 1 (ou 100%).
+    </p>
+
+    <h4 id="impedance_parfait">2°.4.2- Transformateur d'impédance</h4>
+    <p>
+        Considérons un transformateur parfait de rapport $m$, alimentant une impédance de charge $\underline{Z}$ au secondaire. Quelle impédance $\underline{Z}'$ voit-on depuis le primaire ?
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.7 -->
+        <img src="placeholder_figure_2_7.png" alt="Placeholder Figure 2.7">
+        <figcaption>Figure 2.7: Transfert d'impédance par un transformateur parfait.</figcaption>
+    </figure>
+    <p>
+        Au secondaire, la loi d'Ohm s'écrit : $\underline{V}_2 = \underline{Z} \underline{I}_2$.
+        L'impédance vue du primaire est $\underline{Z}' = \frac{\underline{V}_1}{\underline{I}_1}$.
+        Utilisons les relations du transformateur parfait :
+        $$ \underline{V}_1 = -\frac{1}{m} \underline{V}_2 $$
+        $$ \underline{I}_1 = -m \underline{I}_2 $$
+        Donc :
+        $$ \underline{Z}' = \frac{\underline{V}_1}{\underline{I}_1} = \frac{-\frac{1}{m} \underline{V}_2}{-m \underline{I}_2} = \frac{1}{m^2} \frac{\underline{V}_2}{\underline{I}_2} = \frac{1}{m^2} \underline{Z} $$
+        $$ \underline{Z}' = \frac{\underline{Z}}{m^2} $$
+        L'impédance vue du primaire ($\underline{Z}'$) est égale à l'impédance secondaire ($\underline{Z}$) divisée par le carré du rapport de transformation. On dit que l'on a "ramené" l'impédance secondaire au primaire.
+    </p>
+    <p>
+        <strong>Conclusion :</strong> Le transformateur parfait agit comme un adaptateur d'impédance.
+    </p>
+    <ul>
+        <li><strong>Règle 1 :</strong> Une impédance $\underline{Z}$ située au secondaire est vue depuis le primaire comme une impédance $\underline{Z}' = \underline{Z}/m^2$.</li>
+        <li><strong>Règle 2 :</strong> Inversement, une impédance $\underline{Z}'$ située au primaire serait vue depuis le secondaire comme une impédance $\underline{Z} = m^2 \underline{Z}'$.</li>
+    </ul>
+    <p>
+        Cette propriété est très utilisée pour adapter une charge à une source afin de maximiser le transfert de puissance ou pour d'autres raisons d'adaptation.
+    </p>
+
+    <h2 id="transfo_reel">3°- Transformateur monophasé réel</h2>
+    <p>
+        Pour modéliser le comportement d'un transformateur réel, il faut abandonner les hypothèses simplificatrices du transformateur parfait et tenir compte :
+        <ul>
+            <li>Des résistances des enroulements ($r_1, r_2$).</li>
+            <li>Des flux de fuite ($\phi_{f1}, \phi_{f2}$), modélisés par des inductances de fuite ($l_1, l_2$).</li>
+            <li>Des pertes fer (hystérésis, courants de Foucault) et du courant magnétisant nécessaire pour établir le flux principal $\phi$.</li>
+        </ul>
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.8 -->
+        <img src="placeholder_figure_2_8.png" alt="Placeholder Figure 2.8">
+        <figcaption>Figure 2.8: Schéma illustrant les flux dans un transformateur réel avec charge $Z_u$. $\phi$ est le flux commun, $\phi_{f1}$ et $\phi_{f2}$ sont les flux de fuite.</figcaption>
+    </figure>
+
+    <h3 id="equations_reel">3°.1- Equations de Fonctionnement</h3>
+
+    <h4 id="tensions_reel">3°.1.1- Equations aux tensions</h4>
+    <p>
+        Le flux total embrassé par chaque enroulement inclut le flux commun $\phi$ et son propre flux de fuite :
+        <ul>
+            <li>Flux total primaire : $\Phi_1 = \phi + \phi_{f1}$</li>
+            <li>Flux total secondaire : $\Phi_2 = \phi + \phi_{f2}$</li>
+        </ul>
+        Les inductances de fuite sont définies (en supposant une relation linéaire pour les fuites qui se ferment principalement dans l'air) par :
+        <ul>
+            <li>$l_1 = N_1 \frac{d\phi_{f1}}{di_1}$ (ou plus simplement $N_1 \phi_{f1} = l_1 i_1$)</li>
+            <li>$l_2 = N_2 \frac{d\phi_{f2}}{di_2}$ (ou plus simplement $N_2 \phi_{f2} = l_2 i_2$)</li>
+        </ul>
+        Appliquons la loi des mailles (KVL) :
+    </p>
+    <ul>
+        <li><strong>Au primaire (récepteur) :</strong>
+            $v_1(t) = r_1 i_1(t) + N_1 \frac{d\Phi_1(t)}{dt}$
+            $v_1(t) = r_1 i_1(t) + N_1 \frac{d(\phi(t) + \phi_{f1}(t))}{dt}$
+            $v_1(t) = r_1 i_1(t) + N_1 \frac{d\phi(t)}{dt} + N_1 \frac{d\phi_{f1}(t)}{dt}$
+            En posant $e_1(t) = -N_1 \frac{d\phi(t)}{dt}$ (f.e.m. due au flux commun) et $N_1 \frac{d\phi_{f1}(t)}{dt} = l_1 \frac{di_1(t)}{dt}$ (tension due aux fuites primaires), on obtient :
+            $$ v_1(t) = r_1 i_1(t) + l_1 \frac{di_1(t)}{dt} - e_1(t) \quad (8) $$
+            En régime sinusoïdal (phaseurs) :
+            $$ \underline{V}_1 = r_1 \underline{I}_1 + j\omega l_1 \underline{I}_1 - \underline{E}_1 = (r_1 + jX_1)\underline{I}_1 - \underline{E}_1 \quad (8') $$
+            où $X_1 = \omega l_1$ est la réactance de fuite primaire et $\underline{E}_1 = -j\omega N_1 \underline{\Phi}$ est la f.e.m. complexe due au flux commun.
+        </li>
+        <li><strong>Au secondaire (générateur) :</strong>
+            La f.e.m. totale induite est $e_{tot2}(t) = -N_2 \frac{d\Phi_2(t)}{dt} = -N_2 \frac{d\phi(t)}{dt} - N_2 \frac{d\phi_{f2}(t)}{dt}$.
+            Posons $e_2(t) = -N_2 \frac{d\phi(t)}{dt}$ (f.e.m. due au flux commun) et $-N_2 \frac{d\phi_{f2}(t)}{dt} = -l_2 \frac{di_2(t)}{dt}$ (terme lié aux fuites secondaires).
+            La loi des mailles donne : $v_2(t) = e_{tot2}(t) - r_2 i_2(t)$.
+            $$ v_2(t) = e_2(t) - l_2 \frac{di_2(t)}{dt} - r_2 i_2(t) \quad (9) $$
+            En régime sinusoïdal (phaseurs) :
+            $$ \underline{V}_2 = \underline{E}_2 - l_2 (j\omega \underline{I}_2) - r_2 \underline{I}_2 = \underline{E}_2 - (r_2 + jX_2)\underline{I}_2 \quad (9') $$
+            où $X_2 = \omega l_2$ est la réactance de fuite secondaire et $\underline{E}_2 = -j\omega N_2 \underline{\Phi}$ est la f.e.m. complexe due au flux commun.
+            Notez que $\underline{E}_2 / \underline{E}_1 = N_2 / N_1 = m$.
+        </li>
+    </ul>
+
+    <h4 id="amperes_tours_reel">3°.1.2- Equations aux ampères-tours</h4>
+    <p>
+        Le flux commun $\phi(t)$ est créé par la force magnétomotrice (f.m.m.) résultante des courants primaire et secondaire. La relation $\mathcal{F} = \mathcal{R}_m \phi$ tient toujours compte de la réluctance $\mathcal{R}_m$ du noyau, qui n'est plus nulle.
+        $$ N_1 i_1(t) + N_2 i_2(t) = \mathcal{F}_{tot}(t) $$
+        Cette f.m.m. totale $\mathcal{F}_{tot}(t)$ est responsable de la création du flux commun $\phi(t)$.
+    </p>
+    <ul>
+        <li><strong>A vide ($i_2 = 0$) :</strong> Le courant primaire est $i_{10}$ (courant à vide).
+           $N_1 i_{10}(t) = \mathcal{F}_{tot}(t)$. Ce courant $i_{10}$ crée le flux $\phi(t)$ et compense les pertes fer. Il n'est pas nul et n'est pas sinusoïdal si on tient compte de l'hystérésis.
+        </li>
+        <li><strong>En charge ($i_2 \neq 0$) :</strong> Pour maintenir (approximativement) le même flux $\phi(t)$ qu'à vide (car $\phi(t)$ est principalement déterminé par $v_1(t)$), la f.m.m. totale doit rester la même.
+           $N_1 i_1(t) + N_2 i_2(t) \approx N_1 i_{10}(t)$.
+        </li>
+    </ul>
+    <p>
+        En régime sinusoïdal et en ne considérant que les fondamentaux (on néglige la distorsion harmonique de $i_{10}$), on écrit la relation avec les phaseurs :
+        $$ N_1 \underline{I}_1 + N_2 \underline{I}_2 = N_1 \underline{I}_{10} $$
+        où $\underline{I}_{10}$ est le phaseur du courant primaire à vide (appelé courant magnétisant).
+        En divisant par $N_1$ :
+        $$ \underline{I}_1 + \frac{N_2}{N_1} \underline{I}_2 = \underline{I}_{10} $$
+        $$ \underline{I}_1 + m \underline{I}_2 = \underline{I}_{10} \quad \text{ou} \quad \underline{I}_1 = -m \underline{I}_2 + \underline{I}_{10} \quad (10) $$
+        Le courant primaire $\underline{I}_1$ est la somme vectorielle de deux composantes :
+        <ul>
+            <li>$-m \underline{I}_2$ : Composante qui compense l'effet magnétisant du courant secondaire (correspond au courant du transformateur parfait).</li>
+            <li>$\underline{I}_{10}$ : Courant à vide, nécessaire pour magnétiser le noyau et couvrir les pertes fer. Il est absorbé même si le secondaire est ouvert.</li>
+        </ul>
+    </p>
+
+    <h3 id="schema_reel">3°.2- Schéma équivalent</h3>
+    <p>
+        Pour représenter l'ensemble de ces phénomènes (résistances, fuites, courant à vide, pertes fer), on utilise un schéma électrique équivalent plus complexe. Le schéma le plus courant est le schéma en T (Figure 2.9).
+    </p>
+    <p>Les éléments de ce schéma représentent :</p>
+    <ul>
+        <li>$r_1$ : Résistance de l'enroulement primaire.</li>
+        <li>$l_1$ (ou $X_1 = \omega l_1$) : Inductance (ou réactance) de fuite primaire.</li>
+        <li>$r_2$ : Résistance de l'enroulement secondaire.</li>
+        <li>$l_2$ (ou $X_2 = \omega l_2$) : Inductance (ou réactance) de fuite secondaire.</li>
+        <li>La branche "shunt" ou "parallèle" connectée aux bornes de la f.e.m. idéale $\underline{E}_1$ (ou $\underline{E}_2$) modélise le comportement du noyau :
+            <ul>
+                <li>$R_f$ (ou $R_{Fe}$) : Résistance représentant les pertes fer $P_f$. Le courant qui la traverse est en phase avec $\underline{E}_1$. $P_f = E_1^2 / R_f$.</li>
+                <li>$X_m$ (ou $X_{\mu}$) : Réactance magnétisante, représentant la nécessité du courant magnétisant pour créer le flux $\phi$. Elle est associée à l'inductance magnétisante $L_m$ ($X_m = \omega L_m$). Le courant qui la traverse est en quadrature retard sur $\underline{E}_1$.</li>
+            </ul>
+            Le courant total dans la branche shunt est le courant à vide $\underline{I}_{10}$.
+        </li>
+        <li>Le "transformateur idéal" au milieu du schéma représente le changement de tension et de courant $\underline{E}_2 = m \underline{E}_1$ et $\underline{I}_{2}' = - \underline{I}_{10} / m$ (si on ramenait $I_{10}$ au secondaire, ce qui n'est pas usuel). Plus simplement, il relie les f.e.m. $\underline{E}_1$ et $\underline{E}_2$.</li>
+    </ul>
+
+    <figure>
+        <!-- Placeholder for Figure 2.9 -->
+        <img src="placeholder_figure_2_9.png" alt="Placeholder Figure 2.9">
+        <figcaption>Figure 2.9: Schéma équivalent complet (en T) du transformateur réel monophasé.</figcaption>
+    </figure>
+
+    <h2 id="kapp">4°- Transformateur monophasé dans l'approximation de Kapp</h2>
+    <p>
+        L'approximation (ou hypothèse) de Kapp est une simplification du modèle du transformateur réel, souvent utilisée pour l'étude en charge, notamment pour calculer la chute de tension et le rendement.
+    </p>
+
+    <h3 id="hypothese_kapp">4°.1- Hypothèse</h3>
+    <p>
+        L'hypothèse de Kapp consiste à <strong>négliger le courant à vide $\underline{I}_{10}$</strong> devant le courant primaire en charge $\underline{I}_1$ (et aussi devant le courant secondaire $\underline{I}_2$ ramené au primaire $-m\underline{I}_2$).
+        $$ \underline{I}_{10} \approx 0 $$
+        Cette hypothèse est généralement justifiée car $I_{10}$ représente quelques pourcents du courant nominal $I_{1n}$.
+    </p>
+    <p>Conséquence : La relation (10) devient $\underline{I}_1 \approx -m \underline{I}_2$, comme pour le transformateur parfait.</p>
+    <p>Cette approximation revient à considérer la branche magnétisante ($R_f // X_m$) comme une impédance infinie (circuit ouvert) par rapport aux autres impédances du circuit en charge.</p>
+
+    <h3 id="schema_kapp">4°.2- Schéma équivalent (Kapp)</h3>
+    <p>
+        En supprimant la branche magnétisante du schéma de la Figure 2.9, on obtient le schéma équivalent simplifié de Kapp (Figure 2.10).
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.10 -->
+        <img src="placeholder_figure_2_10.png" alt="Placeholder Figure 2.10">
+        <figcaption>Figure 2.10: Schéma équivalent du transformateur dans l'approximation de Kapp (branche magnétisante supprimée). Le transformateur idéal a un rapport $m$. $\underline{V}_{20}$ représente la tension secondaire à vide ($m \underline{V}_1$ si $V_1$ est constante).</figcaption>
+    </figure>
+    <p>
+        Ce schéma consiste simplement en l'impédance série primaire ($r_1, X_1$), un transformateur idéal de rapport $m$, et l'impédance série secondaire ($r_2, X_2$).
+    </p>
+    <p>
+        Pour simplifier encore l'analyse, on "ramène" toutes les impédances d'un seul côté (primaire ou secondaire) en utilisant les règles de transformation d'impédance.
+    </p>
+    <ul>
+        <li>
+            <strong>Schéma équivalent ramené au secondaire :</strong>
+            On transfère l'impédance primaire $(r_1 + jX_1)$ au secondaire en la multipliant par $m^2$. Elle s'ajoute à l'impédance secondaire $(r_2 + jX_2)$. On obtient une impédance série totale vue du secondaire $ \underline{Z}_s = R_s + jX_s$.
+            $$ R_s = r_2 + m^2 r_1 \quad \text{(Résistance totale ramenée au secondaire)} $$
+            $$ X_s = X_2 + m^2 X_1 \quad \text{(Réactance totale ramenée au secondaire)} $$
+            La tension primaire $V_1$ devient une tension $V_{20} = m V_1$ au secondaire (tension secondaire à vide).
+            <figure>
+                <!-- Placeholder for Figure 2.11 -->
+                <img src="placeholder_figure_2_11.png" alt="Placeholder Figure 2.11">
+                <figcaption>Figure 2.11: Schéma équivalent de Kapp ramené au secondaire.</figcaption>
+            </figure>
+            La loi des mailles appliquée à ce schéma donne :
+            $$ \underline{V}_{20} = (R_s + jX_s) \underline{I}_2 + \underline{V}_2 \quad (11) $$
+        </li>
+        <li>
+            <strong>Schéma équivalent ramené au primaire :</strong>
+            On transfère l'impédance secondaire $(r_2 + jX_2)$ au primaire en la divisant par $m^2$. Elle s'ajoute à l'impédance primaire $(r_1 + jX_1)$. On obtient une impédance série totale vue du primaire $ \underline{Z}_p = R_p + jX_p$.
+            $$ R_p = r_1 + \frac{r_2}{m^2} \quad \text{(Résistance totale ramenée au primaire)} $$
+            $$ X_p = X_1 + \frac{X_2}{m^2} \quad \text{(Réactance totale ramenée au primaire)} $$
+            La tension secondaire $V_2$ devient une tension $V'_1 = V_2 / m$ au primaire. Le courant secondaire $I_2$ devient $I'_1 = -I_2 / m$ (attention, le courant $I_1$ dans ce schéma est $I_1 \approx -m I_2$). Le courant qui traverse $Z_p$ est $I_1$.
+            <figure>
+                <!-- Placeholder for Figure 2.12 -->
+                <img src="placeholder_figure_2_12.png" alt="Placeholder Figure 2.12">
+                <figcaption>Figure 2.12: Schéma équivalent de Kapp ramené au primaire.</figcaption>
+            </figure>
+            La loi des mailles appliquée à ce schéma donne :
+            $$ \underline{V}_1 = (R_p + jX_p) \underline{I}_1 + \underline{V}'_1 \quad (12) $$
+        </li>
+    </ul>
+
+    <h3 id="determination_elements">4°.3- Détermination des éléments du schéma équivalent</h3>
+    <p>
+        Les paramètres du schéma équivalent ($R_s, X_s$ ou $R_p, X_p$ pour le modèle de Kapp, et $R_f, X_m$ pour le modèle complet) sont déterminés expérimentalement par deux essais principaux : l'essai à vide et l'essai en court-circuit.
+    </p>
+
+    <h4>Essai à vide (Open-circuit test)</h4>
+    <p>
+        Cet essai vise principalement à déterminer les caractéristiques de la branche magnétisante ($R_f, X_m$) et le rapport de transformation $m$.
+        <ul>
+            <li><strong>Conditions :</strong> On alimente le primaire sous sa tension nominale $V_{1n}$. Le secondaire est laissé en circuit ouvert ($I_2 = 0$).</li>
+            <li><strong>Mesures :</strong> On mesure la tension primaire $V_{10} (=V_{1n})$, le courant primaire à vide $I_{10}$ (faible), la puissance active absorbée à vide $P_{10}$ (correspond aux pertes fer $P_f$), et la tension secondaire à vide $V_{20}$.</li>
+        </ul>
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.13 -->
+        <img src="placeholder_figure_2_13.png" alt="Placeholder Figure 2.13">
+        <figcaption>Figure 2.13: Montage pour l'essai à vide.</figcaption>
+    </figure>
+    <p><strong>Exploitation :</strong></p>
+    <ul>
+        <li><strong>Rapport de transformation à vide :</strong> $ m \approx \frac{V_{20}}{V_{10}} \quad (13) $</li>
+        <li><strong>Pertes Fer :</strong> $ P_{10} = P_f $ (On néglige les pertes Joule à vide car $I_{10}$ est faible: $r_1 I_{10}^2 \approx 0$).</li>
+        <li><strong>Paramètres de la branche magnétisante :</strong> En négligeant la chute de tension $(r_1+jX_1)I_{10}$, on a $E_1 \approx V_{10}$.
+            <br>Résistance des pertes fer : $ R_f \approx \frac{V_{10}^2}{P_{10}} \quad (14) $
+            <br>Puissance apparente à vide : $ S_{10} = V_{10} I_{10} $
+            <br>Puissance réactive magnétisante : $ Q_{10} = \sqrt{S_{10}^2 - P_{10}^2} $
+            <br>Réactance magnétisante : $ X_m \approx \frac{V_{10}^2}{Q_{10}} \quad (15) $
+        </li>
+    </ul>
+    <p><i>Note : Bien que cet essai détermine $R_f$ et $X_m$, ces éléments sont ignorés dans l'approximation de Kapp. Cependant, la mesure de $P_{10}$ (pertes fer) est essentielle pour le calcul du rendement.</i></p>
+
+    <h4>Essai en court-circuit (Short-circuit test)</h4>
+    <p>
+        Cet essai vise à déterminer les paramètres série globaux ($R_s, X_s$ ou $R_p, X_p$).
+        <ul>
+            <li><strong>Conditions :</strong> On court-circuite le secondaire ($V_2 = 0$). On alimente le primaire sous une tension réduite $V_{1cc}$, que l'on augmente progressivement à partir de zéro jusqu'à ce que le courant secondaire $I_{2cc}$ atteigne sa valeur nominale $I_{2n}$ (ou le courant primaire $I_{1cc}$ atteint $I_{1n}$). La tension $V_{1cc}$ est alors très faible devant $V_{1n}$.</li>
+            <li><strong>Mesures :</strong> On mesure la tension primaire $V_{1cc}$ (faible), le courant secondaire $I_{2cc} (=I_{2n})$ (ou le courant primaire $I_{1cc} \approx m I_{2n}$), et la puissance active absorbée $P_{1cc}$ (correspond aux pertes Joule totales $P_j$ au courant nominal).</li>
+        </ul>
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.14 -->
+        <img src="placeholder_figure_2_14.png" alt="Placeholder Figure 2.14">
+        <figcaption>Figure 2.14: Montage pour l'essai en court-circuit.</figcaption>
+    </figure>
+    <p><strong>Exploitation :</strong></p>
+    <ul>
+        <li><strong>Pertes Joule nominales :</strong> Comme $V_{1cc}$ est très faible, le flux $\phi$ est très faible, et les pertes fer $P_f$ sont négligeables pendant cet essai. La puissance $P_{1cc}$ mesurée correspond donc essentiellement aux pertes Joule dans les résistances $r_1$ et $r_2$ lorsque le courant nominal circule : $ P_{1cc} = P_{j,nom} $.</li>
+        <li><strong>Paramètres ramenés au secondaire :</strong>
+            <br>Résistance totale $R_s$ : $ P_{1cc} = R_s I_{2cc}^2 \implies R_s = \frac{P_{1cc}}{I_{2cc}^2} \quad (16) $
+            <br>Tension secondaire de court-circuit (fictive) : $V_{2cc} = m V_{1cc}$ (ou 0 si on considère le circuit ramené au secondaire avec $V_{20}$ comme source et $V_2=0$). L'impédance $Z_s$ se calcule à partir de $V_{20}$ (qui serait $mV_{1cc}$ dans ce cas) et $I_{2cc}$. Plus directement, $V_{2cc} = Z_s I_{2cc}$.
+            <br>Impédance totale $Z_s$ : $ \underline{V}_{20} = (R_s + jX_s)\underline{I}_{2cc} $ (car $\underline{V}_2=0$). Module : $ V_{20} = m V_{1cc} = Z_s I_{2cc} \implies Z_s = \frac{m V_{1cc}}{I_{2cc}} \quad (17) $
+            <br>Réactance totale $X_s$ : $ X_s = \sqrt{Z_s^2 - R_s^2} \quad (18) $
+        </li>
+         <li><strong>Paramètres ramenés au primaire :</strong> On peut aussi calculer $R_p = P_{1cc} / I_{1cc}^2$, $Z_p = V_{1cc} / I_{1cc}$, et $X_p = \sqrt{Z_p^2 - R_p^2}$.</li>
+    </ul>
+
+    <h3 id="chute_tension">4°.4- Chute de tension</h3>
+    <p>
+        La chute de tension $\Delta V_2$ est la différence entre la tension secondaire à vide $V_{20}$ (obtenue lorsque $I_2 = 0$) et la tension secondaire en charge $V_2$ (lorsque le transformateur débite un courant $I_2$ dans une charge).
+        $$ \Delta V_2 = V_{20} - V_2 \quad (19) $$
+        Cette grandeur mesure la baisse de tension aux bornes du secondaire due aux impédances internes du transformateur lorsqu'il passe de l'état à vide à l'état en charge.
+    </p>
+    <p><strong>Remarques :</strong></p>
+    <ul>
+        <li>$\Delta V_2$ dépend du courant de charge $I_2$ et du facteur de puissance de la charge $\cos(\phi_2)$.</li>
+        <li>$\Delta V_2$ est une grandeur algébrique. Pour des charges capacitives, $\Delta V_2$ peut être négative ($V_2 > V_{20}$), phénomène appelé "surtension" ou "effet Ferranti" (bien que ce terme soit plus spécifique aux lignes longues).</li>
+        <li>On exprime souvent la chute de tension en pourcentage de la tension nominale (ou à vide) : <strong>Chute de tension relative</strong>
+            $$ \epsilon \% = \frac{\Delta V_2}{V_{20}} \times 100 = \frac{V_{20} - V_2}{V_{20}} \times 100 \quad (20) $$
+        </li>
+    </ul>
+    <p>Pour déterminer $\Delta V_2$, on peut utiliser soit une méthode graphique (diagramme de Kapp), soit une formule approchée.</p>
+
+    <h4 id="kapp_diag">4°.4.1- Diagramme de Kapp (solution graphique)</h4>
+    <p>
+        Cette méthode est une application graphique de la relation vectorielle (11) ramenée au secondaire : $\underline{V}_{20} = \underline{V}_2 + (R_s + jX_s)\underline{I}_2$.
+    </p>
+    <p><strong>Données nécessaires :</strong> $V_{20}$ (tension secondaire à vide), $R_s$, $X_s$ (déterminés par les essais), $I_2$ (courant de charge), $\phi_2$ (déphasage tension-courant imposé par la charge).</p>
+    <p><strong>Étapes de construction :</strong></p>
+    <ol>
+        <li>Choisir une échelle pour les tensions.</li>
+        <li>Tracer le vecteur $\underline{V}_2$ (souvent pris comme référence horizontale ou verticale).</li>
+        <li>Tracer le vecteur $\underline{I}_2$ avec le déphasage $\phi_2$ par rapport à $\underline{V}_2$.</li>
+        <li>Construire le vecteur chute de tension résistive $R_s \underline{I}_2$ (en phase avec $\underline{I}_2$).</li>
+        <li>Construire le vecteur chute de tension réactive $jX_s \underline{I}_2$ (en quadrature avance sur $\underline{I}_2$).</li>
+        <li>Additionner vectoriellement $\underline{V}_2 + R_s \underline{I}_2 + jX_s \underline{I}_2$ pour obtenir le vecteur $\underline{V}_{20}$.</li>
+        <li>Mesurer la longueur du vecteur $\underline{V}_{20}$ et/ou la différence $V_{20} - V_2 = \Delta V_2$.</li>
+    </ol>
+    <figure>
+        <!-- Placeholder for Figure 2.15 -->
+        <img src="placeholder_figure_2_15.png" alt="Placeholder Figure 2.15">
+        <figcaption>Figure 2.15: Diagramme vectoriel de Kapp pour déterminer la chute de tension. On construit $\vec{V}_{20}$ à partir de $\vec{V}_2$ et des chutes de tension $R_s \vec{I}_2$ et $X_s \vec{I}_2$. La chute de tension $\Delta V_2$ est approximativement la projection de la chute d'impédance $\vec{OB}$ sur $\vec{V}_{20}$.</figcaption>
+    </figure>
+    <p><i>(Note : La figure 2.15 montre une construction légèrement différente où $\vec{V}_{20}$ est tracé comme un arc de cercle et $\vec{V}_2$ est trouvé. La méthode usuelle est de calculer $\vec{V}_{20}$ à partir de $\vec{V}_2$ et $\vec{I}_2$. L'illustration fournie trace $\vec{V}_2$ comme $\vec{OC}$, $\vec{I}_2$ est la référence de direction, $\vec{OA} = R_s \vec{I}_2$, $\vec{AB} = jX_s \vec{I}_2$. Le point $B$ correspond à la tension $\vec{V}_{20}$ si l'origine était $O$. L'arc de cercle de centre O et rayon $V_{20}$ coupe la droite issue de B (faisant l'angle $\phi_2$ avec $\vec{I}_2$) au point C, donnant $V_2=OC$. $\Delta V_2$ est la différence entre le rayon $V_{20}$ et $OC$.)</i></p>
+
+
+    <h4 id="formule_approx">4°.4.2- Formule approchée (solution algébrique)</h4>
+    <p>
+        Pour des chutes de tension faibles (ce qui est généralement le cas, $\epsilon \% < 5-10\%$), on peut obtenir une bonne approximation de $\Delta V_2$ en projetant la chute de tension totale $(R_s + jX_s)\underline{I}_2$ sur l'axe de $\underline{V}_{20}$ (qui est proche de l'axe de $\underline{V}_2$).
+        $$ \Delta V_2 = V_{20} - V_2 \approx R_s I_2 \cos(\phi_2) + X_s I_2 \sin(\phi_2) $$
+        $$ \Delta V_2 \approx I_2 (R_s \cos \phi_2 + X_s \sin \phi_2) \quad (21) $$
+        où $\phi_2$ est le déphasage de $\underline{I}_2$ par rapport à $\underline{V}_2$ (positif pour charge inductive, négatif pour charge capacitive).
+    </p>
+    <p>
+        On peut réécrire cette formule en utilisant l'impédance totale $Z_s = \sqrt{R_s^2 + X_s^2}$ et l'angle de court-circuit $\varphi_{sc} = \arctan(X_s/R_s)$ (déphasage interne du transformateur).
+        $$ \Delta V_2 \approx I_2 Z_s \cos(\phi_2 - \varphi_{sc}) \quad (22) $$
+    </p>
+    <p><strong>Remarques :</strong></p>
+    <ul>
+        <li>La chute de tension est nulle ($\Delta V_2 = 0$) si $\cos(\phi_2 - \varphi_{sc}) = 0$, soit $\phi_2 - \varphi_{sc} = \pm \pi/2$. Puisque $\varphi_{sc}$ est positif (inductif), $\Delta V_2 = 0$ pour $\phi_2 = \varphi_{sc} - \pi/2$ (charge capacitive).</li>
+        <li>La chute de tension est maximale ($\Delta V_2 = I_2 Z_s$) si $\cos(\phi_2 - \varphi_{sc}) = 1$, soit $\phi_2 = \varphi_{sc}$ (charge inductive ayant le même déphasage que l'impédance interne du transformateur).</li>
+    </ul>
+    <figure>
+        <!-- Placeholder for Figure 2.16 -->
+        <img src="placeholder_figure_2_16.png" alt="Placeholder Figure 2.16">
+        <figcaption>Figure 2.16: Allure de la chute de tension $\Delta V_2$ en fonction du déphasage $\phi_2$ de la charge (pour $I_2$ constant). La courbe montre un maximum pour $\phi_2 = \varphi_{sc}$ et un passage par zéro pour $\phi_2 = \varphi_{sc} - \pi/2$.</figcaption>
+    </figure>
+
+    <h4 id="caract_charge">4°.4.3- Caractéristiques en charge</h4>
+    <p>
+        Les caractéristiques en charge décrivent comment la tension secondaire $V_2$ varie en fonction du courant de charge $I_2$, pour une tension primaire $V_1$ et un facteur de puissance $\cos(\phi_2)$ constants.
+        $$ V_2 = f(I_2) \quad \text{à } V_1 = V_{1n}, \cos(\phi_2) = \text{cste} $$
+        Ces courbes $V_2(I_2)$ dépendent de la nature de la charge (résistive, inductive, capacitive) car $\phi_2$ influence la chute de tension.
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.17 -->
+        <img src="placeholder_figure_2_17.png" alt="Placeholder Figure 2.17">
+        <figcaption>Figure 2.17: Allure de la tension secondaire $V_2$ en fonction du courant de charge $I_2$ (caractéristiques externes) pour différents types de charge (Résistive, Inductive, Capacitive). La tension chute généralement avec la charge, sauf pour les charges très capacitives.</figcaption>
+    </figure>
+
+    <h3 id="rendement">4°.5- Rendement</h3>
+    <p>
+        Le rendement $\eta$ d'un transformateur est le rapport entre la puissance active utile $P_u$ fournie au secondaire et la puissance active $P_a$ absorbée au primaire.
+        $$ \eta = \frac{P_u}{P_a} = \frac{P_2}{P_1} $$
+    </p>
+
+    <h4>Bilan des puissances</h4>
+    <p>
+        La puissance absorbée $P_1$ couvre la puissance utile $P_2$ et les pertes totales $\sum P_{pertes}$.
+        $$ P_1 = P_2 + \sum P_{pertes} = P_2 + P_f + P_j $$
+        où :
+        <ul>
+            <li>$P_f$ : Pertes fer (hystérésis + courants de Foucault). Elles dépendent principalement de la tension $V_1$ (donc de $B_{max}$) et de la fréquence $f$. On les suppose constantes et égales à la puissance mesurée à vide $P_{10}$, tant que $V_1 \approx V_{1n}$. $P_f \approx P_{10}$. (Equation 25)</li>
+            <li>$P_j$ : Pertes Joule (cuivre) dans les résistances des enroulements. Elles dépendent du carré du courant. $P_j = P_{j1} + P_{j2} = r_1 I_1^2 + r_2 I_2^2$. En utilisant la résistance totale ramenée au secondaire $R_s$, on peut écrire : $ P_j = R_s I_2^2 $. (Equation 24)</li>
+        </ul>
+    </p>
+    <figure>
+        <!-- Placeholder for Figure 2.18 -->
+        <img src="placeholder_figure_2_18.png" alt="Placeholder Figure 2.18">
+        <figcaption>Figure 2.18: Bilan de puissance schématique dans un transformateur réel.</figcaption>
+    </figure>
+
+    <h4>Expression du rendement</h4>
+    <p>
+        La puissance absorbée au primaire est :
+        $$ P_a = P_1 = V_1 I_1 \cos(\phi_1) \quad (22) $$
+        La puissance utile fournie par le secondaire est :
+        $$ P_u = P_2 = V_2 I_2 \cos(\phi_2) \quad (23) $$
+        Le rendement peut donc s'écrire :
+        $$ \eta = \frac{P_2}{P_1} = \frac{P_2}{P_2 + P_f + P_j} $$
+        $$ \eta = \frac{V_2 I_2 \cos(\phi_2)}{V_2 I_2 \cos(\phi_2) + P_f + R_s I_2^2} \quad (26, 27) $$
+        Cette formule est très utilisée car elle permet de calculer le rendement à n'importe quelle charge ($I_2, \cos\phi_2$) si on connaît les paramètres du transformateur déterminés par les essais à vide ($P_f \approx P_{10}$) et en court-circuit ($R_s = P_{1cc}/I_{2n}^2$).
+    </p>
+
+    <h4>Courbe de rendement</h4>
+    <p>
+        Pour un facteur de puissance $\cos(\phi_2)$ donné, le rendement $\eta$ varie en fonction du courant de charge $I_2$ (ou du taux de charge $I_2/I_{2n}$).
+    </p>
+    <ul>
+        <li>A très faible charge ($I_2 \approx 0$), $P_2 \approx 0$ et $P_j \approx 0$, mais $P_f$ subsiste. Le rendement est nul $\eta \approx 0 / (0 + P_f + 0) = 0$.</li>
+        <li>Lorsque $I_2$ augmente, $P_2$ augmente (proportionnellement à $I_2$ si $V_2$ est cste) et $P_j$ augmente (proportionnellement à $I_2^2$).</li>
+        <li>Le rendement augmente, passe par un maximum, puis diminue à forte charge car les pertes Joule ($ \propto I_2^2$) deviennent prépondérantes par rapport à la puissance utile ($ \propto I_2$).</li>
+    </ul>
+    <figure>
+        <!-- Placeholder for Figure 2.19 -->
+        <img src="placeholder_figure_2_19.png" alt="Placeholder Figure 2.19">
+        <figcaption>Figure 2.19: Allure de la courbe de rendement $\eta$ en fonction du courant de charge $I_2$ pour différents facteurs de puissance $\cos(\phi)$. Le rendement est maximal pour $\cos(\phi)=1$.</figcaption>
+    </figure>
+
+    <h4>Rendement maximal</h4>
+    <p>
+        Pour trouver la condition de rendement maximal, on dérive l'expression de $\eta$ par rapport à $I_2$ (en supposant $V_2$ et $\cos\phi_2$ constants, approximation valable près du nominal) et on annule la dérivée $d\eta / dI_2 = 0$.
+    </p>
+    <p>
+        Le calcul montre que le rendement est maximal lorsque les <strong>pertes Joule sont égales aux pertes fer</strong> :
+        $$ P_j = P_f $$
+        Soit : $ R_s I_{2,opt}^2 = P_f $
+        Le courant $I_{2,opt}$ pour lequel le rendement est maximal est donc :
+        $$ I_{2,opt} = \sqrt{\frac{P_f}{R_s}} \quad (28) $$
+    </p>
+    <p><strong>Remarques :</strong></p>
+    <ul>
+        <li>Le transformateur statique a un excellent rendement par rapport aux machines tournantes (pas de pertes mécaniques).</li>
+        <li>Le rendement nominal (à pleine charge $I_2 = I_{2n}$ et $\cos\phi_2$ nominal) est généralement élevé, souvent supérieur à 90% (et même 98-99% pour les gros transformateurs de puissance).</li>
+        <li>Le rendement maximal est obtenu pour une charge résistive ($\cos\phi_2 = 1$), car pour une même puissance active $P_2$, le courant $I_2$ est minimal, minimisant ainsi les pertes Joule.</li>
+        <li>Les transformateurs sont souvent conçus pour que le rendement maximal se situe autour de 50% à 75% de la charge nominale, zone où ils fonctionnent statistiquement le plus souvent.</li>
+    </ul>
+
+    <h2 id="td1">TD N°1</h2>
+    <p>
+        (Le contenu du TD N°1 n'est pas fourni dans le document.)
+    </p>
+
+    <footer class="footer">
+        <span>Année Universitaire 2011-2012</span>
+        <span>(Conversion HTML du document original)</span>
+    </footer>
+
+</body>
+</html>
