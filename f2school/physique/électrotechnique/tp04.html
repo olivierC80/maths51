@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T.P 4: Etude du moteur asynchrone triphasé</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .tp-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .tp-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        h1, h2, h3 { color: #333; }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 1.8em; }
+        h2 { border-bottom: 2px solid #444; padding-bottom: 5px; margin-top: 30px; font-size: 1.5em;}
+        h3 { border-bottom: 1px solid #ddd; padding-bottom: 3px; margin-top: 25px; font-size: 1.3em; }
+        .section { margin-bottom: 20px; }
+        ul, ol { margin-top: 10px; padding-left: 25px; }
+        li { margin-bottom: 10px; }
+        .sub-list > li { margin-bottom: 5px; }
+        .placeholder { background-color: #eee; border: 1px dashed #ccc; text-align: center; padding: 20px; margin: 15px auto; font-style: italic; color: #666; display: block; max-width: 600px; }
+        .formula { margin: 15px auto; display: block; text-align: center; font-size: 1.1em; max-width: 90%; }
+        .explanation { font-size: 0.95em; color: #444; margin-bottom: 10px; padding-left: 15px; }
+        .explanation-title { font-weight: bold; color: #333; display: block; margin-bottom: 5px; }
+        .note { font-size: 0.9em; color: #555; font-style: italic; margin-top: 5px; }
+        .centered { text-align: center; }
+        .check-mark { color: green; font-weight: bold; margin-right: 5px;}
+        .bullet { margin-right: 5px; }
+        .model-box { border: 1px solid #ddd; padding: 15px; margin-top: 15px; border-radius: 5px; background-color: #f9f9f9; }
+    </style>
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="tp-header">
+        T.P 4: Etude du moteur asynchrone triphasé
+    </div>
+
+    <h1>T.P 4: Etude du moteur asynchrone triphasé à rotor bobiné</h1>
+
+    <!-- ==================== Page 16 ==================== -->
+    <div class="section" id="buts-constitution-principe">
+        <h2>1. Buts</h2>
+        <p>Étude du moteur asynchrone triphasé en régime sinusoïdal par le modèle linéaire. Cette étude comprend :</p>
+        <ul>
+            <li><span class="bullet">•</span> L'identification des paramètres du modèle équivalent (à partir des essais à puissance réduite : essai à vide, essai à rotor calé/bloqué).</li>
+            <li><span class="bullet">•</span> Essai en charge et relevé des caractéristiques du moteur (couple-vitesse, rendement...).</li>
+        </ul>
+        <p class="note">(Le texte mentionne "essai au synchronisme", ce qui n'est pas standard pour l'identification des paramètres classiques mais pourrait se référer à une mesure spécifique.)</p>
+
+        <h2>2. Constitution</h2>
+        <p>Le moteur asynchrone comprend:</p>
+        <ul>
+            <li><span class="check-mark">✓</span> Un <strong>Stator</strong>: partie fixe, armature portant un bobinage triphasé alimenté par un système équilibré de tensions à la fréquence $f_s$ (pulsation $\omega_s = 2\pi f_s$).</li>
+            <li><span class="check-mark">✓</span> Un <strong>Rotor</strong>: partie mobile, constitue le "secondaire" de la machine et il n'est connecté à aucune source d'énergie externe (sauf pour certains types de contrôle ou démarrage). On distingue :
+                <ul>
+                    <li>Rotor à <strong>cage d'écureuil</strong> (squirrel cage) : Les conducteurs sont des barres court-circuitées par deux anneaux aux extrémités. C'est le type le plus courant.</li>
+                    <li>Rotor <strong>bobiné</strong> (wound rotor) : Possède un enroulement triphasé similaire à celui du stator, dont les bornes sont accessibles via des bagues et balais. Permet d'insérer des résistances externes au démarrage ou pour le réglage de la vitesse. Ce TP concerne ce type.</li>
+                </ul>
+             </li>
+        </ul>
+
+        <h2>3. Principe</h2>
+        <p>Si on alimente le circuit statorique (primaire) par un système de tensions triphasées équilibrées de fréquence $f_s$ (pulsation $\omega_s$), on obtient un <strong>champ magnétique tournant</strong> dans l'entrefer à la vitesse de synchronisme $\Omega_s$ (vitesse angulaire mécanique).</p>
+        <div class="formula"> \Omega_s = \frac{\omega_s}{p} = \frac{2\pi f_s}{p} </div>
+        <p class="note">(où $p$ est le nombre de paires de pôles du moteur).</p>
+
+        <!-- ==================== Page 17 ==================== -->
+        <p>Ce flux tournant balaye les conducteurs du circuit rotorique et y induit des f.é.m. (Loi de Faraday). Comme le rotor est en court-circuit (ou fermé sur des résistances externes pour un rotor bobiné), ces f.é.m. y produisent des courants rotoriques.</p>
+        <p>Du fait de la loi de Lenz, ces courants rotoriques induits s'opposent par leurs effets à la cause qui leur a donné naissance. La cause est la rotation relative du champ tournant par rapport au rotor. L'effet est l'interaction entre les courants rotoriques et le champ magnétique statorique (Loi de Laplace), créant un couple électromagnétique qui tend à réduire cette rotation relative en entraînant le rotor dans le même sens que le champ tournant.</p>
+        <p>Le rotor tourne donc à une vitesse mécanique $\Omega$ (vitesse angulaire $\Omega_m$ liée à la fréquence électrique rotorique $\omega_m = p \Omega_m$) inférieure à la vitesse de synchronisme $\Omega_s$.</p>
+
+        <p>On définit le paramètre <strong>glissement (slip)</strong> $g$, qui caractérise la diminution relative de vitesse du rotor par rapport à la vitesse de synchronisme :</p>
+        <div class="formula"> g = \frac{\Omega_s - \Omega}{\Omega_s} = \frac{\omega_s - \omega_m}{\omega_s} = \frac{\omega_r}{\omega_s} </div>
+        <p class="note">(où $\Omega, \omega_m$ sont les vitesses mécanique et électrique du rotor, $\omega_r = \omega_s - \omega_m = g \omega_s$ est la pulsation relative ou pulsation des courants rotoriques).</p>
+
+        <p>En régime sinusoïdal établi, toutes les grandeurs rotoriques (courants, flux, f.é.m.) varient à la fréquence rotorique $f_r = g f_s$.</p>
+        <ul>
+            <li>Condition électrique de synchronisme (relation entre pulsations): $\omega_s = \omega_m + \omega_r$</li>
+            <li>Condition mécanique de synchronisme (relation entre vitesses): $\Omega_s = \Omega + \Omega_r$ (où $\Omega_r = \omega_r/p$ est la vitesse relative).</li>
+        </ul>
+
+        <h2>4. Bilan des puissances actives en fonctionnement moteur</h2>
+        <ul>
+            <li><span class="bullet">■</span> La <strong>puissance active absorbée</strong> par le moteur (au stator) est : $P_a = \sqrt{3} V_s I_s \cos(\phi_s)$ (si $V_s$ est la tension composée et $I_s$ le courant de ligne) ou $P_a = 3 V_{s,ph} I_{s,ph} \cos(\phi_s)$ (par phase).</li>
+            <li><span class="bullet">■</span> Les <strong>pertes ferromagnétiques au stator ($p_{fs}$)</strong> (hystérésis et Foucault) sont mesurées lors d'un essai à vide. Elles dépendent principalement de la tension et de la fréquence statorique.
+                <br>Essai à vide (rotor tournant librement, $g \approx 0$) : $P_{a0} \approx p_{fs} + p_{js0} + p_{méc}$. Souvent on néglige $p_{js0}$ (pertes Joule stator à vide) et on approxime $p_{fs} + p_{méc} \approx P_{a0}$.</li>
+            <li><span class="bullet">■</span> Les <strong>pertes par effet Joule statoriques ($p_{js}$)</strong> sont définies par : $p_{js} = 3 R_s I_s^2$ (où $R_s$ est la résistance d'une phase statorique et $I_s$ le courant efficace par phase).</li>
+            <li><span class="bullet">■</span> On appelle <strong>puissance transmise</strong> au rotor (ou puissance électromagnétique $P_e$, puissance du champ tournant) l'expression :
+                <div class="formula"> P_e = P_a - p_{fs} - p_{js} = T_e \Omega_s </div>
+                (où $T_e$ est le couple électromagnétique).
+            </li>
+            <li><span class="bullet">■</span> Les <strong>pertes ferromagnétiques au rotor ($p_{fr}$)</strong> sont généralement négligeables car elles sont liées à la fréquence rotorique $f_r = g f_s$, qui est très faible en fonctionnement normal (g petit).</li>
+            <li><span class="bullet">■</span> Les <strong>pertes par effet Joule rotoriques ($p_{jr}$)</strong> sont définies par : $p_{jr} = 3 R_r I_r^2$ (où $R_r$ est la résistance d'une phase rotorique et $I_r$ le courant efficace par phase rotorique). Il est fondamental de noter que :
+                <div class="formula"> p_{jr} = g P_e </div>
+            </li>
+            <li><span class="bullet">■</span> Les <strong>pertes mécaniques ($p_{méc}$)</strong> sont dues aux frottements et à la ventilation. Elles dépendent de la vitesse $\Omega$. Elles sont souvent mesurées à vide avec les pertes fer stator.</li>
+            <li><span class="bullet">■</span> On appelle <strong>puissance mécanique totale</strong> (développée par le couple $T_e$ à la vitesse $\Omega$) l'expression $P_{m} = P_e - p_{jr} = (1-g) P_e = T_e \Omega$.</li>
+             <li><span class="bullet">■</span> On appelle <strong>puissance mécanique sur l'arbre (puissance utile $P_u$)</strong>, l'expression définie par :
+                 <div class="formula"> P_u = P_{m} - p_{méc} = (1-g) P_e - p_{méc} = T_u \Omega </div>
+                (où $T_u$ est le couple utile disponible sur l'arbre).
+             </li>
+        </ul>
+
+        <!-- ==================== Page 18 ==================== -->
+        <h3>❖ Bilan de puissances (Diagramme)</h3>
+        <div class="placeholder">Placeholder: Diagramme du bilan de puissance (Flux de puissance de Pa vers Pu avec les différentes pertes : Pfs, Pjs, Pjr, Pmec).
+        Pa --(Pfs, Pjs)--> Pe --(Pjr)--> Pm --(Pmec)--> Pu
+        </div>
+
+        <p>A partir du bilan des puissances actives en fonctionnement moteur, on peut définir le <strong>rendement</strong> de la machine :</p>
+        <ul>
+            <li><span class="bullet">➡</span> En fonctionnement <strong>moteur</strong> :
+                <div class="formula">\eta_M = \frac{P_u}{P_a} = \frac{(1-g)(P_a - p_{fs} - p_{js}) - p_{méc}}{P_a}</div>
+            </li>
+             <li><span class="bullet">➡</span> En fonctionnement <strong>générateur</strong> :
+                 <div class="formula">\eta_G = \frac{P_a}{P_u} = \frac{P_a}{(1-g)(P_a + p_{fs} + p_{js}) + p_{méc}}</div>
+                 <p class="note">(Les signes des pertes changent par rapport à la puissance utile/absorbée).</p>
+             </li>
+        </ul>
+
+        <h2>5. Modèles du moteur asynchrone en régime sinusoïdale</h2>
+        <p>La description de la machine asynchrone par un modèle permet d'estimer le couple électromagnétique développé et de montrer comment varient la vitesse et le courant absorbé en fonction du couple demandé.</p>
+        <p><strong>Hypothèses :</strong> Saturation négligée, répartition sinusoïdale du flux dans l'entrefer.</p>
+
+        <!-- ==================== Page 19 ==================== -->
+        <div class="model-box">
+            <h3> Modèle 1 : Schéma équivalent monophasé ramené au stator</h3>
+            <p>Le schéma équivalent d'une phase statorique et d'une phase rotorique (ramenée au stator) est donné par :</p>
+            <div class="placeholder">Placeholder: Schéma équivalent monophasé (Modèle 1 initial avec deux circuits couplés par m).</div>
+            <div class="placeholder">Placeholder: Schéma équivalent monophasé ramené au stator (Vs, Rs, jXs, Branche parallèle Rf || jXf avec courant I0, jX'r, R'r/g, Courant I'r, Courant Is=I0+I'r).</div>
+            <p>La f.é.m. et la pulsation du rotor sont données respectivement par :</p>
+             <div class="formula"> E_r = g E_{r0} \quad (\text{où } E_{r0} \text{ est la fem à l'arrêt}) \quad ; \quad \omega_r = g \omega_s </div>
+            <p>Si l'on considère l'approximation $I_s \gg I_0$ (courant statorique >> courant à vide, valable en charge), ou plus généralement en ramenant le circuit rotorique au stator (rapport $m=N1/N2$ approprié), le schéma équivalent par phase, vu du stator et fonctionnant à la pulsation statorique $\omega_s$, devient celui ci-dessus.</p>
+
+            <p><strong>Avec :</strong></p>
+            <ul>
+                <li>$V_s$ : Tension simple statorique (phase-neutre).</li>
+                <li>$I_s$ : Courant de ligne statorique (supposé égal au courant par phase si couplage étoile).</li>
+                <li>$R_s$ : Résistance d'une phase statorique.</li>
+                <li>$X_s = L_s \omega_s$ : Réactance de fuite d'une phase statorique.</li>
+                <li>$R_f$ : Résistance modélisant les pertes fer statoriques.</li>
+                <li>$X_f = L_m \omega_s$ : Réactance magnétisante (due à l'inductance magnétisante $L_m$).</li>
+                <li>$I_0$ : Courant absorbé à vide par la branche parallèle ($R_f || jX_f$).</li>
+                <li>$R'_r = m^2 R_r$ : Résistance d'une phase rotorique ramenée au stator.</li>
+                <li>$X'_r = m^2 X_r = m^2 L_r \omega_s$ : Réactance de fuite d'une phase rotorique (à $\omega_s$) ramenée au stator.</li>
+                <li>$I'_r$ : Courant rotorique ramené au stator.</li>
+                <li>$g$ : Glissement.</li>
+            </ul>
+             <p class="note">La résistance $R'_r/g$ peut être décomposée en $R'_r + R'_r (1-g)/g$. $R'_r$ représente les pertes Joule rotoriques et $R'_r (1-g)/g$ la résistance équivalente à la puissance mécanique $P_m / 3$.</p>
+        </div>
+
+         <div class="model-box">
+            <h3> Modèle 2 : Equations de Park</h3>
+            <p>Les équations d'une phase (statorique et rotorique) dans un repère de Park tournant à la vitesse $\omega_a$ sont :</p>
+            <div class="formula"> \vec{v}_s = R_s \vec{i}_s + \frac{d\vec{\phi}_s}{dt} + j\omega_a \vec{\phi}_s </div>
+            <div class="formula"> \vec{v}_r = R_r \vec{i}_r + \frac{d\vec{\phi}_r}{dt} + j(\omega_a - \omega_m)\vec{\phi}_r \quad (\text{Note: } \vec{v}_r = 0 \text{ pour cage/rotor bobiné CC})</div>
+            <p>Avec $\omega_m$ : pulsation électrique mécanique ($p\Omega$).</p>
+
+            <!-- ==================== Page 20 ==================== -->
+            <p>Les équations précédentes dans un repère synchrone (lié au champ tournant, $\omega_a = \omega_s$) deviennent en régime permanent:</p>
+             <div class="formula"> \bar{V}_s = R_s \bar{I}_s + j\omega_s \bar{\phi}_s </div>
+             <div class="formula"> 0 = R_r \bar{I}_r + j(\omega_s - \omega_m) \bar{\phi}_r = R_r \bar{I}_r + j\omega_r \bar{\phi}_r = R_r \bar{I}_r + j g \omega_s \bar{\phi}_r </div>
+             <p>Sachant que les équations des flux s'écrivent :</p>
+              <div class="formula"> \bar{\phi}_s = L_s \bar{I}_s + M \bar{I}_r </div>
+              <div class="formula"> \bar{\phi}_r = L_r \bar{I}_r + M \bar{I}_s </div>
+              <p>(Ls, Lr: inductances propres; M: mutuelle)</p>
+
+              <p>On obtient, après manipulations et introduction du courant rotorique ramené $\bar{I}'_r = -(M/L_r)\bar{I}_s ? Non, \bar{I}'_r \propto \bar{I}_r$) et du courant magnétisant $\bar{I}_0 = \bar{I}_s - \bar{I}'_r$ :</p>
+              <div class="formula"> \bar{V}_s = (R_s + j l_s \omega_s) \bar{I}_s + j X_f \bar{I}_0 </div>
+              <div class="formula"> j X_f \bar{I}_0 = \frac{R'_r}{g} \bar{I}'_r + j l'_r \omega_s \bar{I}'_r </div>
+
+               <p>On dénote les expressions par :</p>
+               <ul>
+                   <li>$l_s = L_s - M^2/L_r$ (approx) : Inductance cyclique de fuites du stator.</li>
+                   <li>$l'_r = L'_r - M'^2/L'_s$ (approx) : Inductance cyclique de fuites d'une phase rotorique ramenée au stator.</li>
+                   <li>$X_f = \omega_s M'$ (approx) : Réactance magnétisante.</li>
+                   <li>$R'_r = m^2 R_r$ : Résistance d'une phase rotorique ramenée au stator.</li>
+                </ul>
+                 <p>On obtient finalement le circuit équivalent vu précédemment.</p>
+        </div>
+
+        <!-- ==================== Page 21 ==================== -->
+         <div class="model-box">
+            <h3> Modèle 3 : Schéma simplifié (Pertes fer négligées)</h3>
+             <p>Ces équations traduisent le schéma monophasé équivalent. Si l'on néglige les pertes fer ($R_f \to \infty$), le schéma se simplifie légèrement.</p>
+             <div class="placeholder">Placeholder: Schéma équivalent monophasé sans Rf (Vs, Rs, jXs, Branche parallèle jXf avec courant I0, jX'r, R'r/g, Courant I'r, Courant Is=I0+I'r).</div>
+
+            <p>Si on considère de plus que l'impédance du circuit statorique ($R_s, X_s$) est négligeable ($V_s \approx E_s$), le schéma équivalent précédent devient :</p>
+            <div class="placeholder">Placeholder: Schéma équivalent très simplifié (Source Vs, Branche parallèle jXf avec courant I0, jX'r, R'r/g, Courant I'r).</div>
+        </div>
+
+        <h2>6. Expressions et caractéristique du couple Te</h2>
+        <p>A partir du schéma équivalent du circuit précédent (Modèle 1, ou simplifié), on peut définir plusieurs expressions du couple électromagnétique $T_e$.</p>
+        <p>Rappel : $P_e = T_e \Omega_s = 3 \frac{R'_r}{g} (I'_r)^2$.</p>
+        <p>Expression $F_1$ (en fonction de $V_s$, en utilisant le modèle simplifié de la fin de la page 20) :</p>
+         <div class="formula"> T_e = \frac{P_e}{\Omega_s} = \frac{3}{\Omega_s} \frac{R'_r}{g} (I'_r)^2 = \frac{3}{\Omega_s} \frac{R'_r}{g} \frac{V_s^2}{(R'_r/g)^2 + (X_s + X'_r)^2} \quad (\text{Approx. } X_f \gg Z_{rotor})</div>
+         <p class="note">(Le document donne une formule légèrement différente, potentiellement issue d'une simplification ou d'une définition différente de $V_s$ ou $X'_r$)</p>
+
+        <p>Expression $F_2$ (le document donne une formule en $p (V_s/\omega_r)^2$, qui semble incorrecte ou très spécifique).</p>
+
+        <!-- ==================== Page 22 ==================== -->
+        <p>Avec $X'_r = l'_r \omega_s$ (Réactance de fuite rotorique ramenée).</p>
+        <p>Le couple électromagnétique maximum $T_{emax}$ est obtenu pour un glissement critique $g_k$ :</p>
+        <div class="formula"> g_k = \frac{R'_r}{X_{tot}} \approx \frac{R'_r}{X_s + X'_r} \quad (\text{Formule approchée}) </div>
+        <p class="note">(La formule exacte dépend du modèle, souvent $g_k = R'_r / \sqrt{R_s^2 + (X_s+X'_r)^2}$ si on utilise le modèle Thévenin vu du rotor).</p>
+
+        <p>Expression $F_3$ (Couple maximum, approximé en négligeant $R_s$) :</p>
+        <div class="formula"> T_{emax} \approx \frac{3 p}{\omega_s} \frac{V_s^2}{2(X_s + X'_r)} = \frac{3}{\Omega_s} \frac{V_s^2}{2(X_s + X'_r)} </div>
+
+        <p>On voit que le couple maximum est indépendant de la résistance du circuit rotorique $R'_r$ (mais $g_k$ en dépend).</p>
+        <p>Le couple électromagnétique peut être exprimé en fonction du couple maximum (Formule de Kloss) :</p>
+        <div class="formula"> T_e = \frac{2 T_{emax}}{\frac{g}{g_k} + \frac{g_k}{g}} \quad (F_4)</div>
+
+        <p>Le couple de démarrage $T_{ed}$ (obtenu pour $g=1$) :</p>
+         <div class="formula"> T_{ed} = \frac{3}{\Omega_s} \frac{R'_r}{(R'_r)^2 + (X_s+X'_r)^2} V_s^2 = \frac{2 T_{emax}}{\frac{1}{g_k} + g_k} \quad (F_5 \text{ modifiée})</div>
+
+        <h3>❖ Caractéristique normalisée du couple $T_e(g)$ :</h3>
+        <div class="placeholder">Placeholder: Graphique de la caractéristique Couple-Glissement normalisée (Te/Temax en fonction de g ou g/gk). Montrant zone moteur (0 < g < 1), zone génératrice (g < 0), zone freinage (g > 1), couple max Temax à g=gk, couple de démarrage Ted à g=1.</div>
+    </div>
+
+    <!-- ==================== Page 23 ==================== -->
+    <div class="section" id="travail-demande-mas">
+        <h2>7. Travail demandé (Manipulations)</h2>
+        <h3>7.1. Essais à puissances réduites</h3>
+        <ol class="sub-list">
+            <li><strong>7.1.1. Essai à vide</strong>
+                <ol type="a">
+                    <li>Prévoir le montage pour cet essai (Alimentation triphasée variable, Voltmètre, Ampèremètre, Wattmètre(s)). Le moteur tourne sans charge mécanique.</li>
+                    <li>Mesurer $U_{1n}, I_{10}, P_{10}$ (tension nominale, courant et puissance à vide).</li>
+                    <li>En déduire le facteur de puissance à vide $\cos \phi_{10}$, les pertes fer (+ mécaniques) $P_{fer+mec} \approx P_{10}$ (car pertes joule $3R_sI_{10}^2$ faibles) et les éléments de la branche magnétisante ($R_f, X_f$ du modèle équivalent).</li>
+                </ol>
+            </li>
+             <li><strong>7.1.2. Essai en courant continu</strong>
+                 <ol type="a">
+                    <li>Prévoir le montage pour cet essai (Source DC, Ampèremètre, Voltmètre pour mesurer la résistance entre deux bornes du stator).</li>
+                    <li>Mesurer la résistance $R_{dc}$ entre deux bornes statoriques. En déduire la résistance par phase $R_s$ (Pour couplage étoile $R_s = R_{dc}/2$, pour triangle $R_s = 3 R_{dc}/2$). Répéter éventuellement pour le rotor si bobiné ($R_r$).</li>
+                 </ol>
+            </li>
+             <li><strong>7.1.3. Essai à rotor calé (bloqué)</strong>
+                  <ol type="a">
+                    <li>Prévoir le montage pour cet essai (Alimentation triphasée variable basse tension, Voltmètre, Ampèremètre, Wattmètre(s)). Le rotor est immobilisé.</li>
+                    <li>Appliquer une tension réduite $U_{1cc}$ pour obtenir le courant nominal $I_{1n}$ (ou $I_{2n}$). Mesurer $U_{1cc}, I_{1cc}=I_{1n}, P_{1cc}$.</li>
+                    <li>En déduire les valeurs de la résistance totale ramenée $R_{tot} = R_s + R'_r = P_{1cc} / (3 I_{1cc}^2)$, de l'impédance totale $Z_{tot} = (U_{1cc}/\sqrt{3}) / I_{1cc}$ et de la réactance de fuite totale $X_{tot} = X_s + X'_r = \sqrt{Z_{tot}^2 - R_{tot}^2}$. En déduire $X_s$ et $X'_r$ (souvent on suppose $X_s \approx X'_r = X_{tot}/2$).</li>
+                 </ol>
+            </li>
+        </ol>
+
+        <h3>7.2. Essais en charge</h3>
+        <p class="explanation">(Manipulations non détaillées dans le document mais typiquement :)</p>
+        <ul>
+            <li>Prévoir le montage (Alimentation nominale, Appareils de mesure électrique au stator, Frein ou charge mécanique couplé à l'arbre, Mesure de couple et vitesse).</li>
+            <li>Faire varier la charge mécanique et relever $U_1, I_1, P_1, n$ (ou $\Omega$), $T_u$.</li>
+            <li>Tracer les caractéristiques $n(T_u)$, $I_1(T_u)$, $\eta(T_u)$, $\cos \phi_1(T_u)$.</li>
+        </ul>
+    </div>
+
+    <div class="tp-footer">
+        <span>T.P: Electrotechnique</span>
+        <span>Pages: 16-23</span>
+        <span>Proposé par M : SOYED_Abdessami</span>
+    </div>
+
+</div><!-- /.container -->
+
+</body>
+</html>
