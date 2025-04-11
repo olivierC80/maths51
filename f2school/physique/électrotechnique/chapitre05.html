@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 05 : Les Génératrices à Courant Continu</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX Auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+     <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding-bottom: 50px; /* Space for footer */
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #666;
+            padding-bottom: 10px;
+        }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p, ul, ol {
+            margin-bottom: 1em;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        figure {
+            text-align: center;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            max-width: 600px; /* Adjust as needed */
+        }
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc; /* Border around the placeholder */
+            background-color: #f0f0f0; /* Background for placeholder */
+            display: inline-block; /* Prevents extra space below */
+        }
+        figcaption {
+            font-style: italic;
+            color: #555;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        .placeholder-text {
+            display: block;
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f8f8f8;
+            border-top: 1px solid #ddd;
+            padding: 5px 20px;
+            font-size: 0.8em;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+        }
+        .header-info {
+             display: flex;
+             justify-content: space-between;
+             padding: 5px 0;
+             border-bottom: 1px solid #eee;
+             margin-bottom: 20px;
+             font-size: 0.9em;
+        }
+        .equation-number {
+            float: right;
+            margin-right: 10px;
+        }
+         .formula-block {
+            margin: 1em 0;
+            padding: 0.5em;
+            border-left: 3px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header-info">
+        <span>Cours Electrotechnique</span>
+        <span>GE 2</span>
+        <span>AMARI.Mansour</span>
+    </header>
+
+    <h1>LES GENERATRICES A COURANT CONTINU</h1>
+    <h2>CHAPITRE : 05</h2>
+
+    <h3>Contenu</h3>
+    <ul>
+        <li><a href="#intro_gen">1°- Introduction</a></li>
+        <li><a href="#carac_usuelles">2°- Caractéristiques usuelles</a></li>
+        <li><a href="#gen_sep">3°- Génératrice à excitation séparée</a>
+            <ul>
+                <li><a href="#schema_eq_sep">3°.1- Schéma et équations de fonctionnement</a></li>
+                <li><a href="#carac_vide_sep">3°.2- Caractéristique à vide</a></li>
+                <li><a href="#carac_charge_sep">3°.3- Caractéristique en charge</a></li>
+                <li><a href="#carac_reglage_sep">3°.4- Caractéristique de réglage</a></li>
+            </ul>
+        </li>
+        <li><a href="#gen_shunt">4°- Génératrice à excitation shunt</a>
+            <ul>
+                <li><a href="#schema_eq_shunt">4°.1- Schéma et équations de fonctionnement</a></li>
+                <li><a href="#amorcage_shunt">4°.2- Problème d'amorçage</a></li>
+                <li><a href="#pt_fonct_vide_shunt">4°.3- Point de fonctionnement à vide</a></li>
+                <li><a href="#carac_charge_shunt">4°.4- Caractéristique en charge</a></li>
+            </ul>
+        </li>
+        <li><a href="#td3">TD N° 3 : Génératrice à courant continu</a></li>
+    </ul>
+
+    <h2 id="intro_gen">1°- Introduction</h2>
+    <p>
+        Les machines à courant continu (MCC) sont aujourd'hui principalement utilisées comme moteurs. La fonction génératrice (production de courant continu) a été largement supplantée par les systèmes électroniques de puissance (redresseurs) qui convertissent le courant alternatif du réseau en courant continu.
+    </p>
+    <p>
+        Cependant, l'étude du fonctionnement en génératrice reste pertinente pour au moins deux raisons :
+    </p>
+    <ul>
+        <li>
+            <strong>Compréhension du moteur :</strong> La MCC étant réversible, comprendre son fonctionnement en génératrice aide à mieux assimiler son comportement en moteur (notamment la force contre-électromotrice).
+        </li>
+        <li>
+            <strong>Freinage par récupération :</strong> Dans certaines applications (traction électrique, levage, etc.), le moteur peut fonctionner temporairement en génératrice pour freiner la charge tout en récupérant de l'énergie (renvoyée vers la source ou dissipée dans des résistances). C'est le cas par exemple d'un métro en descente ou lors du freinage.
+        </li>
+    </ul>
+    <p>Pour qu'une machine à courant continu fonctionne en génératrice et produise une f.e.m, deux conditions sont nécessaires :</p>
+    <ul>
+        <li>La machine doit être <strong>entraînée en rotation</strong> à une certaine vitesse $n$ (par un moteur auxiliaire, une turbine, etc.).</li>
+        <li>L'inducteur doit être alimenté pour créer un <strong>champ magnétique</strong> (flux $\Phi$).</li>
+    </ul>
+    <p>Comme vu au chapitre précédent, il existe principalement 4 modes d'excitation (modes d'alimentation de l'inducteur) : excitation séparée (indépendante), excitation shunt (parallèle), excitation série, et excitation compound (composée).</p>
+
+    <h2 id="carac_usuelles">2°- Caractéristiques usuelles</h2>
+    <p>Le fonctionnement d'une génératrice à courant continu est décrit par les relations entre ses principales variables :</p>
+    <ul>
+        <li>La vitesse de rotation $n$ (tr/mn).</li>
+        <li>Le courant d'excitation $j$ (A).</li>
+        <li>La tension aux bornes de l'induit $U$ (V).</li>
+        <li>Le courant débité par l'induit $I$ (A) (courant de charge).</li>
+    </ul>
+    <p>Les caractéristiques usuelles sont des courbes représentant la variation d'une grandeur en fonction d'une autre, les autres étant maintenues constantes :</p>
+    <ul>
+        <li>
+            <strong>Caractéristique à vide (ou interne) :</strong> $E_v = f(j)$ à vitesse $n$ constante ($I=0$). $E_v$ est la f.e.m à vide.
+        </li>
+        <li>
+            <strong>Caractéristique en charge (ou externe) :</strong> $U = f(I)$ à vitesse $n$ constante et courant d'excitation $j$ constant (pour l'excitation séparée) ou pour des conditions d'excitation données (shunt, série).
+        </li>
+        <li>
+            <strong>Caractéristique de réglage :</strong> $I = f(j)$ (ou $j=f(I)$) à vitesse $n$ constante et tension aux bornes $U$ constante. Montre comment ajuster l'excitation pour maintenir la tension constante lorsque la charge varie.
+        </li>
+    </ul>
+
+    <h2 id="gen_sep">3°- Génératrice à excitation séparée</h2>
+    <p>Dans ce mode, l'enroulement inducteur (excitation) est alimenté par une source de tension continue indépendante de l'induit.</p>
+
+    <h3 id="schema_eq_sep">3°.1- Schéma et équations de fonctionnement</h3>
+    <figure>
+        <!-- Placeholder for Figure 5.1 -->
+        <img src="placeholder_figure_5_1.png" alt="Placeholder Figure 5.1">
+        <figcaption>Figure 5.1: Schéma d'une génératrice à excitation séparée (essai à vide, Q ouvert ; essai en charge, Q fermé sur R:Charge).</figcaption>
+    </figure>
+    <p>Symboles :</p>
+    <ul>
+        <li>$U_d$ : Source de tension d'excitation.</li>
+        <li>$R_h$ : Rhéostat d'excitation (pour régler $j$).</li>
+        <li>$r_d$ : Résistance de l'enroulement d'excitation.</li>
+        <li>$j$ : Courant d'excitation.</li>
+        <li>$M$ : Moteur d'entraînement (vitesse $n$).</li>
+        <li>$E_v$ : F.e.m. (à vide ou en charge selon contexte $E_{ch}$).</li>
+        <li>$R_a$ : Résistance totale de l'induit (enroulement + balais).</li>
+        <li>$U$ : Tension aux bornes de l'induit (charge).</li>
+        <li>$I$ : Courant débité par l'induit (charge).</li>
+        <li>$R_{Charge}$ : Résistance de charge.</li>
+    </ul>
+    <p>Lois des mailles :</p>
+    <ul>
+        <li><strong>Circuit d'excitation :</strong> $U_d = (R_h + r_d) j$. Le courant $j = \frac{U_d}{R_h + r_d}$ est indépendant de ce qui se passe dans l'induit. <span class="equation-number">(1)</span></li>
+        <li><strong>Circuit d'induit (en charge) :</strong> La f.e.m. en charge $E_{ch}$ se répartit entre la chute de tension interne $R_a I$ et la tension aux bornes $U$. En tenant compte de la chute due à la réaction d'induit $\varepsilon(I) = E_v - E_{ch}$ :
+            $ U = E_{ch} - R_a I = (E_v - \varepsilon(I)) - R_a I $ <span class="equation-number">(2)</span>
+        </li>
+    </ul>
+
+    <h3 id="carac_vide_sep">3°.2- Caractéristique à vide ($E_v = f(j)$ à $n=cte$)</h3>
+    <p>
+        Pour tracer cette caractéristique, on réalise un essai à vide : la charge $R_{Charge}$ est déconnectée (interrupteur $Q$ ouvert, $I=0$). On entraîne la génératrice à vitesse constante $n$. On fait varier le courant d'excitation $j$ (en agissant sur $R_h$ ou $U_d$) et on mesure la tension aux bornes de l'induit, qui est égale à la f.e.m. à vide $E_v$ (puisque $I=0$).
+    </p>
+    <p><strong>Allure de la courbe $E_v = f(j)$ :</strong></p>
+    <ul>
+        <li>On a vu au chapitre 4 que $E_v = K \Phi_v n$. À vitesse $n$ constante, $E_v = K' \Phi_v$.</li>
+        <li>Le flux à vide $\Phi_v$ est créé par le courant d'excitation $j$. La relation $\Phi_v = f(j)$ est déterminée par la courbe de magnétisation $B=f(H)$ du circuit magnétique de la machine.</li>
+        <li>Par conséquent, la courbe $E_v = f(j)$ a la même allure que la courbe de magnétisation $\Phi_v = f(j)$.</li>
+    </ul>
+     <figure>
+        <!-- Placeholder for Figure 5.2 -->
+        <img src="placeholder_figure_5_2.png" alt="Placeholder Figure 5.2">
+        <figcaption>Figure 5.2: Caractéristique à vide $E_v = f(j)$ à $n=cte$.</figcaption>
+    </figure>
+    <p>Observations sur la courbe :</p>
+    <ul>
+        <li>Pour $j=0$, on observe une f.e.m. rémanente $E_r$ (due au flux rémanent $\Phi_r$). Elle est généralement faible par rapport à la tension nominale $U_n$.</li>
+        <li>Pour les faibles valeurs de $j$, le circuit magnétique n'est pas saturé. Le flux $\Phi_v$ est approximativement proportionnel à $j$. La caractéristique $E_v(j)$ est donc quasi linéaire (droite passant près de l'origine).</li>
+        <li>Pour des valeurs de $j$ plus importantes, le circuit magnétique commence à saturer. L'augmentation du flux $\Phi_v$ (et donc de $E_v$) est moins rapide que celle de $j$. La courbe présente un "coude de saturation".</li>
+        <li>À la saturation, même si on augmente $j$, le flux $\Phi_v$ (et donc $E_v$) n'augmente quasiment plus ($E_v \approx constante$).</li>
+    </ul>
+    <p><strong>Prédétermination de la caractéristique à une autre vitesse $n_2$ :</strong></p>
+    <p>Si on a relevé la caractéristique $E_{v1} = f(j)$ à une vitesse $n_1$, on peut déterminer la caractéristique $E_{v2} = f(j)$ à une vitesse $n_2$ par affinité, car $E = K \Phi n$. Pour un même courant $j$ (donc même $\Phi$), on a :</p>
+    $$ \frac{E_{v1}}{n_1} = K \Phi \quad \text{et} \quad \frac{E_{v2}}{n_2} = K \Phi $$
+    Donc :
+    $$ \frac{E_{v1}}{n_1} = \frac{E_{v2}}{n_2} \implies E_{v2} = E_{v1} \frac{n_2}{n_1} \quad (3) $$
+    Pour chaque point $(j, E_{v1})$ de la première courbe, le point correspondant sur la seconde courbe est $(j, E_{v1} \times n_2/n_1)$.
+    <figure>
+        <!-- Placeholder for Figure 5.3 -->
+        <img src="placeholder_figure_5_3.png" alt="Placeholder Figure 5.3">
+        <figcaption>Figure 5.3: Caractéristique à vide pour deux vitesses $n_1$ et $n_2$.</figcaption>
+    </figure>
+
+    <h3 id="carac_charge_sep">3°.3- Caractéristique en charge ($U = f(I)$ à $n=cte, j=cte$)</h3>
+    <p>
+        C'est la courbe qui montre comment la tension $U$ aux bornes de la génératrice varie lorsque le courant $I$ qu'elle débite augmente, la vitesse $n$ et le courant d'excitation $j$ étant maintenus constants.
+    </p>
+    <p>
+        On réalise un essai en charge : la génératrice est entraînée à $n=cte$, le courant d'excitation est fixé à $j=cte$ (ce qui fixe la f.e.m. à vide $E_v$). On fait varier le courant de charge $I$ en agissant sur la résistance de charge $R_{Charge}$ (de $I=0$ à $I=I_{nominal}$ ou plus) et on mesure la tension $U$ correspondante.
+    </p>
+    <p>L'équation de fonctionnement est $U = E_v - \varepsilon(I) - R_a I$. On peut aussi l'écrire $U = E_v - h(I)$, où $h(I) = \varepsilon(I) + R_a I$ représente la chute de tension totale interne.</p>
+     <figure>
+        <!-- Placeholder for Figure 5.4 -->
+        <img src="placeholder_figure_5_4.png" alt="Placeholder Figure 5.4">
+        <figcaption>Figure 5.4: Essai en charge et allure de la caractéristique $U=f(I)$.</figcaption>
+    </figure>
+    <p>Observations sur la courbe $U=f(I)$ :</p>
+    <ul>
+        <li>À vide ($I=0$), $U = E_v$ (point $U_0$ sur la figure).</li>
+        <li>Lorsque le courant $I$ augmente, la tension $U$ diminue. Cette diminution est due à deux causes :
+            <ul>
+                <li>La chute de tension ohmique $R_a I$, qui est proportionnelle à $I$.</li>
+                <li>La chute de tension $\varepsilon(I)$ due à la réaction magnétique d'induit, qui augmente avec $I$ (souvent plus rapidement que $I$ à cause de la saturation).</li>
+            </ul>
+        </li>
+        <li>La courbe $U(I)$ est donc décroissante et s'incurve de plus en plus vers le bas à mesure que $I$ augmente, principalement à cause de l'effet de la RMI $\varepsilon(I)$.</li>
+    </ul>
+    <p>On peut noter aussi que :</p>
+    <ul>
+        <li>Puisque $j=cte$, la f.e.m. à vide $E_v$ est constante. La courbe $E_v(I)$ serait une droite horizontale (partant de $U_0$).</li>
+        <li>La courbe de la chute de tension totale $h(I) = E_v - U(I)$ peut être tracée.</li>
+        <li>La courbe de la chute ohmique $R_a I$ est une droite passant par l'origine.</li>
+        <li>La chute due à la RMI $\varepsilon(I)$ peut être obtenue par différence : $\varepsilon(I) = h(I) - R_a I$.</li>
+        <li>La courbe $h(I)$ est symétrique de $U(I)$ par rapport à la droite horizontale $U = U_0 / 2$. (Note: Cette affirmation du document original est probablement incorrecte. $h(I)$ est la différence $E_v - U(I)$).</li>
+    </ul>
+
+    <h3 id="carac_reglage_sep">3°.4- Caractéristique de réglage ($j = f(I)$ à $n=cte, U=cte$)</h3>
+    <p>
+        Cette caractéristique indique comment il faut ajuster le courant d'excitation $j$ pour maintenir la tension de sortie $U$ constante lorsque le courant de charge $I$ varie, la vitesse $n$ étant constante.
+    </p>
+    <p>
+        On peut l'obtenir expérimentalement : on maintient $n=cte$ et $U=cte$ (généralement $U=U_n$, tension nominale). Pour différents courants de charge $I$ (obtenus en variant $R_{Charge}$), on ajuste le courant d'excitation $j$ (via $R_h$) pour ramener la tension à la valeur constante $U$, et on note la valeur de $j$ correspondante.
+    </p>
+     <figure>
+        <!-- Placeholder for Figure 5.5 -->
+        <img src="placeholder_figure_5_5.png" alt="Placeholder Figure 5.5">
+        <figcaption>Figure 5.5: Caractéristique de réglage $j=f(I)$ à $n=cte, U=cte$.</figcaption>
+    </figure>
+    <p>Observations :</p>
+    <ul>
+        <li>À vide ($I=0$), il faut un courant d'excitation $j_0$ pour obtenir la tension $U_0 (=U)$.</li>
+        <li>Lorsque la charge $I$ augmente, la tension $U$ tend à diminuer (d'après la caractéristique en charge). Pour la maintenir constante, il faut compenser la chute de tension interne $h(I) = R_a I + \varepsilon(I)$ en augmentant la f.e.m. $E_v$. Comme $E_v = K \Phi_v n$ et que $n$ est constante, il faut augmenter le flux $\Phi_v$, donc augmenter le courant d'excitation $j$.</li>
+        <li>La courbe $j=f(I)$ est donc croissante. Elle monte de plus en plus vite à forte charge, car il faut compenser une chute $h(I)$ qui augmente rapidement et car le circuit magnétique peut être saturé (il faut une plus grande augmentation de $j$ pour obtenir une augmentation donnée de $E_v$).</li>
+    </ul>
+    <p>On peut aussi tracer cette caractéristique graphiquement à partir des caractéristiques à vide et en charge si elles sont connues (voir méthode de Picou plus loin).</p>
+
+    <h2 id="gen_shunt">4°- Génératrice à excitation shunt</h2>
+    <p>
+        Dans ce mode d'auto-excitation, l'enroulement inducteur (shunt) est connecté en parallèle avec l'induit. C'est l'induit lui-même qui fournit le courant d'excitation $j$.
+    </p>
+
+    <h3 id="schema_eq_shunt">4°.1- Schéma et équations de fonctionnement</h3>
+     <figure>
+        <!-- Placeholder for Figure 5.6 -->
+        <img src="placeholder_figure_5_6.png" alt="Placeholder Figure 5.6">
+        <figcaption>Figure 5.6: Schéma d'une génératrice shunt.</figcaption>
+    </figure>
+    <p>Le circuit inducteur ($R_h, r_d$) est branché en parallèle avec l'induit ($E, R_a$). La charge $R_{Charge}$ est également en parallèle.</p>
+    <p>Lois des mailles et des nœuds :</p>
+    <ul>
+        <li><strong>Circuit inducteur :</strong> La tension $U$ aux bornes de l'induit est aussi appliquée à l'inducteur.
+            $ U = (R_h + r_d) j \implies j = \frac{U}{R_h + r_d} $ <span class="equation-number">(5)</span>
+            Le courant d'excitation $j$ dépend maintenant de la tension de sortie $U$.
+        </li>
+        <li><strong>Circuit d'induit :</strong> Comme pour l'excitation séparée :
+            $ U = E_v - \varepsilon(I_a) - R_a I_a $ (en utilisant $I_a$, le courant total induit) <span class="equation-number">(6)</span>
+        </li>
+         <li><strong>Loi des nœuds :</strong> Le courant total $I_a$ produit par l'induit se divise entre le courant d'excitation $j$ et le courant de charge $I$.
+             $ I_a = I + j $
+             Comme $j$ est généralement faible devant $I$ en charge nominale ($j \approx 1-5\% I_n$), on a souvent $I_a \approx I$.
+         </li>
+    </ul>
+
+    <h3 id="amorcage_shunt">4°.2- Problème d'amorçage</h3>
+    <p>
+        Comment la tension peut-elle s'établir au démarrage puisque $j=U/(R_h+r_d)$ et qu'initialement $U=0$ (donc $j=0$)?
+    </p>
+    <p>
+        La génératrice est entraînée à sa vitesse nominale $n$. L'interrupteur de charge $Q$ est ouvert ($I=0$).
+    </p>
+    <ol>
+        <li>Grâce au <strong>flux rémanent $\Phi_r$</strong>, une petite f.e.m. rémanente $E_r$ apparaît aux bornes de l'induit ($U=E_r$).</li>
+        <li>Cette faible tension $E_r$ est appliquée à l'inducteur et fait circuler un petit courant d'excitation initial $j = E_r / (R_h+r_d)$.</li>
+        <li>Deux cas possibles (voir Figure 4.6a, sens de $\phi_r$ et $\phi_j$):
+            <ul>
+                <li>Si le flux $\phi_j$ créé par ce courant $j$ s'ajoute au flux rémanent $\phi_r$ (bon sens de connexion), le flux total augmente ($\Phi \nearrow$).</li>
+                <li>Cela augmente la f.e.m. ($E_v = K \Phi n \nearrow$).</li>
+                <li>La tension aux bornes $U \approx E_v$ augmente aussi ($U \nearrow$).</li>
+                <li>Ce qui augmente le courant d'excitation ($j=U/(R_h+r_d) \nearrow$).</li>
+                <li>Ce processus cumulatif continue : $\uparrow j \implies \uparrow \Phi \implies \uparrow E_v \implies \uparrow U \implies \uparrow j ...$ La tension monte et la génératrice <strong>s'amorce</strong>. L'augmentation s'arrête lorsque le point de fonctionnement atteint la zone de saturation de la caractéristique à vide (voir section suivante).</li>
+            </ul>
+            <ul>
+                <li>Si le flux $\phi_j$ créé par le courant $j$ initial s'oppose au flux rémanent $\phi_r$ (mauvais sens de connexion), le flux total diminue ($\Phi \searrow$).</li>
+                <li>La f.e.m. diminue ($E_v \searrow$), la tension $U$ diminue ($U \searrow$), le courant $j$ diminue ($j \searrow$).</li>
+                <li>Le processus conduit à l'annulation du flux et de la tension. La génératrice <strong>ne s'amorce pas</strong>.</li>
+            </ul>
+        </li>
+    </ol>
+    <p>
+        En cas de non-amorçage, il faut inverser les connexions de l'inducteur (ou le sens de rotation, ou réaimanter dans le bon sens si le flux rémanent est perdu).
+    </p>
+    <p>Conditions d'amorçage (résumé) :</p>
+    <ul>
+        <li>Existence d'un flux rémanent $\Phi_r$.</li>
+        <li>Vitesse de rotation suffisante ($n \ge n_{critique}$).</li>
+        <li>Résistance totale du circuit d'excitation $(R_h+r_d)$ inférieure à une valeur critique $R_{hc}$.</li>
+        <li>Bon sens relatif du flux rémanent et du flux d'excitation.</li>
+    </ul>
+
+    <h3 id="pt_fonct_vide_shunt">4°.3- Point de fonctionnement à vide</h3>
+    <p>
+        À vide ($I=0$, donc $I_a = j$), la tension $U_0$ aux bornes de l'induit doit satisfaire simultanément deux équations :
+    </p>
+    <ol>
+        <li>$U_0 = E_v(j)$ : Relation donnée par la caractéristique à vide de la machine à la vitesse $n$ (en négligeant $R_a j$ et $\varepsilon(j)$ qui sont très faibles à vide).</li>
+        <li>$U_0 = (R_h + r_d) j$ : Relation imposée par le circuit d'excitation (loi d'Ohm). C'est l'équation d'une droite passant par l'origine, de pente $(R_h + r_d)$, appelée <strong>droite d'excitation</strong> ou droite des inducteurs.</li>
+    </ol>
+    <p>
+        Le point de fonctionnement à vide $P_0 (j_0, U_0)$ est donc l'<strong>intersection</strong> de la caractéristique à vide $E_v = f(j)$ et de la droite d'excitation $U = (R_h + r_d) j$.
+    </p>
+     <figure>
+        <!-- Placeholder for Figure 5.8 -->
+        <img src="placeholder_figure_5_8.png" alt="Placeholder Figure 5.8">
+        <figcaption>Figure 5.8: Détermination du point de fonctionnement à vide $P_0$ de la génératrice shunt.</figcaption>
+    </figure>
+    <p>Influence des paramètres sur le point à vide $P_0$ :</p>
+    <ul>
+        <li><strong>Action sur le rhéostat d'excitation $R_h$ :</strong>
+             <figure>
+                <!-- Placeholder for Figure 5.9 -->
+                <img src="placeholder_figure_5_9.png" alt="Placeholder Figure 5.9">
+                <figcaption>Figure 5.9: Déplacement du point de fonctionnement par action sur $R_h$.</figcaption>
+            </figure>
+            <ul>
+                <li>Si on augmente $R_h$, la pente de la droite d'excitation $(R_h + r_d)$ augmente. La droite pivote vers le haut. Le point d'intersection $P_0$ se déplace vers le bas sur la caractéristique à vide : $j_0$ et $U_0$ diminuent.</li>
+                <li>Si $R_h$ est augmentée jusqu'à une valeur critique $R_{hc}$ telle que la droite d'excitation devienne tangente à la partie quasi linéaire de la caractéristique à vide, l'intersection stable se produit près de l'origine (tension rémanente). Au-delà de $R_{hc}$, la machine se <strong>désamorce</strong>. La résistance critique $R_c = R_{hc} + r_d$ correspond à la pente de la tangente à l'origine de $E_v(j)$. $R_c = (\Delta E_v / \Delta j)_{\text{origine}}$.</li>
+            </ul>
+        </li>
+         <li><strong>Action sur la vitesse de rotation $n$ :</strong>
+            <figure>
+                <!-- Placeholder for Figure 5.10 -->
+                <img src="placeholder_figure_5_10.png" alt="Placeholder Figure 5.10">
+                <figcaption>Figure 5.10: Action sur la vitesse $n$.</figcaption>
+            </figure>
+            <ul>
+                <li>Si on diminue la vitesse $n$, la caractéristique à vide $E_v(j)$ s'abaisse par affinité (proportionnellement à $n$). La droite d'excitation ne change pas. Le point d'intersection $P_0$ se déplace vers le bas : $j_0$ et $U_0$ diminuent.</li>
+                <li>Si la vitesse diminue jusqu'à une valeur critique $n_c$, la caractéristique à vide devient tangente à la droite d'excitation. En dessous de $n_c$, la machine se désamorce. On peut montrer que $n_c = n_{nominal} \times \frac{R_h + r_d}{R_c}$.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3 id="carac_charge_shunt">4°.4- Caractéristique en charge ($U = f(I)$ à $n=cte$)</h3>
+    <p>
+        C'est la courbe $U=f(I)$ lorsque la génératrice shunt, amorcée et tournant à vitesse $n$ constante, débite un courant de charge $I$. La résistance d'excitation $(R_h+r_d)$ est constante.
+    </p>
+    <p>On peut obtenir cette caractéristique :</p>
+    <ul>
+        <li><strong>Soit directement par essai :</strong> On règle la tension à vide $U_0$ (en ajustant $R_h$), puis on ferme l'interrupteur $Q$ sur la charge $R_{Charge}$ et on fait varier $I$ (en variant $R_{Charge}$) tout en maintenant $n$ constante. On mesure $U$ pour chaque $I$.
+             <figure>
+                <!-- Placeholder for Figure 5.11 -->
+                <img src="placeholder_figure_5_11.png" alt="Placeholder Figure 5.11">
+                <figcaption>Figure 5.11: Caractéristique en charge $U=f(I)$ pour une génératrice shunt comparée à l'excitation séparée.</figcaption>
+            </figure>
+        </li>
+        <li><strong>Soit graphiquement par la construction de Picou</strong> (si on connaît $E_v=f(j)$ et la chute interne $h(I)=R_a I + \varepsilon(I)$ de la machine fonctionnant en excitation séparée).</li>
+    </ul>
+    <p>Observations sur la courbe $U=f(I)$ shunt :</p>
+    <ul>
+        <li>Elle part du point à vide $U_0$ (déterminé par l'intersection vue précédemment).</li>
+        <li>Elle est <strong>plus tombante</strong> que la caractéristique en charge à excitation séparée (tracée pour $j=j_0$ constant). Pourquoi ? Parce que lorsque la charge $I$ augmente, $U$ diminue (à cause de $R_a I_a + \varepsilon(I_a)$), mais cette diminution de $U$ provoque aussi une diminution du courant d'excitation $j=U/(R_h+r_d)$. La diminution de $j$ entraîne une diminution supplémentaire de la f.e.m $E_v$, ce qui accentue la chute de tension $U$.</li>
+        <li>Le courant débité présente un <strong>maximum $I_{Max}$</strong>. Au-delà de ce point, si l'on diminue encore la résistance de charge, le courant $I$ et la tension $U$ diminuent tous les deux.</li>
+        <li>La mise en <strong>court-circuit</strong> ($R_{Charge}=0 \implies U=0$) est possible sans danger (contrairement à l'excitation séparée). Si $U=0$, alors $j=0$. Le courant de court-circuit $I_{cc}$ n'est dû qu'à la f.e.m. rémanente $E_r$: $I_{cc} = E_r / R_a$. Il est généralement faible (bien inférieur au courant nominal $I_n$).</li>
+    </ul>
+    <p><strong>Prédétermination par construction de Picou :</strong></p>
+    <p>Cette méthode permet de tracer $U_{shunt}(I)$ si on connaît $E_v(j)$ et $h(I)$ (ou $U_{sep}(I)$) à la même vitesse $n$.</p>
+     <figure>
+        <!-- Placeholder for Figure 5.12 -->
+        <img src="placeholder_figure_5_12.png" alt="Placeholder Figure 5.12">
+        <figcaption>Figure 5.12: Construction de Picou.</figcaption>
+    </figure>
+    <ol>
+        <li>Tracer $E_v(j)$ et $h(I)$ de part et d'autre de l'axe des tensions $U$.</li>
+        <li>Tracer la droite d'excitation $U=(R_h+r_d)j$. Son intersection avec $E_v(j)$ donne le point à vide $P_0 (U_0, j_0)$.</li>
+        <li>Pour un courant d'induit $I_{a1}$ donné (point $M'$ sur l'axe des courants de $h(I)$), lire la chute $h_1 = h(I_{a1})$ (point $M_1$ sur la courbe $h(I)$).</li>
+        <li>La tension aux bornes serait $U_1 = E_{v1} - h_1$. Il faut trouver le courant d'excitation $j_1$ qui correspond à cette tension $U_1$ via la droite d'excitation.</li>
+        <li>Reporter la chute $h_1$ sur la droite d'excitation à partir de l'origine (segment $OM=h_1$). Tracer une parallèle à la droite d'excitation passant par $M_1$. L'intersection $E_{v1}$ de cette parallèle avec la courbe $E_v(j)$ donnerait la f.e.m. correspondante. La tension $U_1$ est la projection de $E_{v1}$ sur l'axe des tensions. Le courant $j_1$ est lu en abscisse de $E_{v1}$. Le courant de charge est $I_1 = I_{a1} - j_1$. On obtient un point $(I_1, U_1)$ de la caractéristique shunt.</li>
+        <li>Refaire pour plusieurs $I_a$.</li>
+    </ol>
+    *(Note: La description exacte de la construction de Picou peut varier, celle ci-dessus tente d'interpréter la figure 5.12. L'idée est de trouver les points $(I, U)$ qui satisfont $U = E_v(j) - h(I+j)$ et $U = (R_h+r_d)j$ simultanément).*
+
+
+    <h2 id="td3">TD N° 3 : Génératrice à courant continu</h2>
+    <p>(Contenu non disponible)</p>
+
+
+    <footer class="footer">
+        <span>Année Universitaire 2011-2012</span>
+        <span>(Conversion HTML du document original)</span>
+    </footer>
+
+</body>
+</html>
