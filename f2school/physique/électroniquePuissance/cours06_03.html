@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronique de puissance : Composants Passifs et TDs - B. Multon</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4 { color: #333; }
+        h1 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 30px; }
+        h3 { margin-top: 25px; }
+        h4 { margin-top: 20px; }
+        figure { text-align: center; margin: 20px 0; }
+        figcaption { font-size: 0.9em; color: #555; margin-top: 5px; }
+        img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            background-color: #f9f9f9;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .katex-display { overflow-x: auto; overflow-y: hidden; }
+        .slide-ref { font-size: 0.8em; color: #888; float: right; }
+        .note { font-style: italic; color: #666; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+        .biblio-item { margin-bottom: 10px; }
+        .td-section { border: 1px solid #eee; padding: 15px; margin-top: 20px; }
+        .td-title { font-weight: bold; font-size: 1.1em; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<main>
+    <article id="passive-components-detail">
+        <header>
+            <h1>Composants Passifs (Suite)</h1>
+        </header>
+
+        <section id="inductors">
+            <span class="slide-ref">Slide 75</span>
+            <h2>Inductances</h2>
+            <figure class="placeholder" style="float: right; width: 150px;">Image Placeholder: Simple inductor circuit diagram (L, iL, vL).</figure>
+            <p>Relation tension-courant et énergie stockée :</p>
+            $$ v_L = L \frac{di_L}{dt} \quad \text{et} \quad E = \frac{1}{2} L i_L^2 = \frac{1}{2L} \phi^2 $$
+            où $\phi = L \cdot i_L$ est le flux magnétique.</p>
+            <p>Une inductance sert à stocker de l'énergie dans un milieu de perméabilité magnétique $\mu$.</p>
+            <p><strong>Énergie volumique :</strong> $v = \frac{B^2}{2\mu}$ (J/m³)</p>
+            <p>L'énergie maximale stockée est limitée par la saturation du matériau magnétique ($B_{Max}$) :</p>
+            $$ E_{Max} \approx \frac{B_{Max}^2}{2\mu} V \quad (\text{J}) $$
+            où $V$ est le volume du circuit magnétique. À induction maximale $B_{Max}$ donnée, l'énergie stockée est proportionnelle au volume $V$ et inversement proportionnelle à la perméabilité $\mu$.</p>
+
+            <p><strong>Circuit magnétique avec entrefer (air gap) :</strong></p>
+            <figure class="placeholder" style="float: right; width: 200px;">Image Placeholder: Photo of an inductor with a visible air gap in the core.</figure>
+            <p>La partie ferromagnétique (haute $\mu$) sert à canaliser le champ magnétique.</p>
+            <p>L'énergie est principalement stockée dans l'entrefer (où $\mu = \mu_0$, faible perméabilité).</p>
+            <p>Alternative : utiliser un matériau de faible perméabilité intrinsèque (ex: poudres ferromagnétiques).</p>
+            <p>Paradoxalement, pour stocker de l'énergie, il faut une <strong>réluctance $\mathcal{R}$ élevée</strong>. L'inductance est $L = n^2 / \mathcal{R}$ et le flux $\phi = n i_L$. L'énergie stockée est :</p>
+            $$ E_{Max} = \frac{1}{2} L i_{L,Max}^2 = \frac{1}{2} \frac{n^2}{\mathcal{R}} \left( \frac{\phi_{Max}}{n} \right)^2 = \frac{1}{2} \mathcal{R} \frac{\phi_{Max}^2}{n^2} $$
+            Une réluctance élevée (due à l'entrefer ou au matériau) permet de stocker plus d'énergie pour un flux maximal $\phi_{Max}$ donné (limité par $B_{Max}$).</p>
+        </section>
+
+        <section id="transformers">
+            <span class="slide-ref">Slide 76</span>
+            <h2>Transformateurs</h2>
+
+            <h3>Modèle du transfo parfait :</h3>
+            <figure class="placeholder" style="float: right; width: 250px;">Image Placeholder: Ideal transformer equivalent circuit (Primary V1, i1; Secondary V2, i2; turns ratio m). Show dots for polarity.</figure>
+            <ul>
+                <li>Perméabilité du matériau magnétique infinie ($\mu \to \infty \implies \mathcal{R} \to 0$).</li>
+                <li>Couplage parfait entre les bobinages primaire et secondaire.</li>
+                <li>Pas de pertes par effet Joule (résistances nulles).</li>
+            </ul>
+            <p>Relations :</p>
+            <ul>
+                <li>Rapport de transformation : $m = n_2 / n_1$</li>
+                <li>Tensions : $v_2 = m \cdot v_1$ (car $v_1 = n_1 \frac{d\phi}{dt}$, $v_2 = n_2 \frac{d\phi}{dt}$)</li>
+                <li>Courants (Ampère-tours) : $n_1 i_1 - n_2 i_2 = \mathcal{R} \phi \approx 0 \implies n_1 i_1 = n_2 i_2$</li>
+            </ul>
+            <p>Un transformateur parfait <strong>ne stocke pas d'énergie</strong> (car $\mathcal{R} \to 0$, l'inductance propre $L = n^2/\mathcal{R} \to \infty$, mais le courant magnétisant $i_\mu = \mathcal{R}\phi/n \to 0$). Il ne fait que transférer la puissance instantanément.</p>
+
+            <h3>Modèle avec stockage d'énergie (inductance magnétisante) :</h3>
+             <figure class="placeholder" style="float: right; width: 250px;">Image Placeholder: Transformer model with magnetizing inductance L_mu in parallel with the ideal primary. Primary current i1 splits into magnetizing current i_mu and reflected load current m*i2.</figure>
+             <p>Le circuit magnétique a une réluctance $\mathcal{R}$ finie. L'équation des Ampère-tours devient :</p>
+             $$ n_1 i_1 - n_2 i_2 = \mathcal{R} \phi = n_1 i_\mu $$
+             où $i_\mu$ est le courant magnétisant nécessaire pour créer le flux $\phi$. L'inductance magnétisante vue du primaire est $L_\mu = n_1^2 / \mathcal{R}$. L'énergie est stockée dans $L_\mu$. C'est le modèle utilisé pour les convertisseurs Forward/Flyback.</p>
+
+            <h3>Modèle avec pertes Joule et fuites :</h3>
+            <figure class="placeholder" style="float: right; width: 250px;">Image Placeholder: More complete transformer model including primary resistance r1, primary leakage inductance l1, magnetizing inductance L_mu, secondary resistance r2, secondary leakage inductance l2.</figure>
+            <p>Modèle plus complet incluant :</p>
+            <ul>
+                <li>Résistances des enroulements ($r_1, r_2$) : causent les pertes Joule.</li>
+                <li>Inductances de fuite ($l_{f1}, l_{f2}$ ou $e_1, e_2$): représentent le flux qui ne couple pas les deux enroulements (stockage d'énergie "parasite").</li>
+                <li>Inductance magnétisante ($L_\mu$) : stockage d'énergie utile (Flyback) ou parasite (Forward).</li>
+            </ul>
+            <p>(On peut aussi ajouter les pertes fer modélisées par une résistance en parallèle avec $L_\mu$).</p>
+        </section>
+
+        <section id="magnetic-components-summary">
+            <span class="slide-ref">Slide 77</span>
+            <h2>Constituants des composants magnétiques pour l'électronique de puissance</h2>
+            <figure class="placeholder" style="float: right; width: 200px;">Image Placeholder: Exploded view or photo of a typical ferrite core transformer/inductor showing core halves, bobbin, windings. Indicate key geometric parameters Ae, Le, Aw, Lw.</figure>
+            <p>Un composant magnétique est constitué :</p>
+            <ul>
+                <li>D'un <strong>circuit magnétique (noyau)</strong> : en matériau ferromagnétique (ferrite, poudres, tôles feuilletées...) caractérisé par sa courbe $B(H)$ et sa perméabilité $\mu$. Définit la géométrie ($A_e$: aire section efficace, $L_e$: longueur moyenne).</li>
+                <li>D'un <strong>circuit électrique (bobinage)</strong> : enroulement(s) de fil de cuivre sur une carcasse (bobine), caractérisé par le nombre de spires $n$. Occupe une aire de fenêtre $A_w$ avec une longueur de spire moyenne $L_w$.</li>
+            </ul>
+            <p><strong>Du matériau au composant magnétique :</strong></p>
+            <div style="display: flex; justify-content: space-around; text-align: center;">
+                <div>
+                    <p><strong>Matériau B(H), $\mu$</strong></p>
+                    <figure class="placeholder" style="width: 150px; height: 100px;">B(H) curve</figure>
+                </div>
+                <div>
+                    <p><strong>Circuit magnétique $\phi(Ni), \mathcal{R}$</strong></p>
+                    <figure class="placeholder" style="width: 150px; height: 100px;">$\phi(Ni)$ curve</figure>
+                    <p>$\phi = B \cdot A_e$ (Wb)</p>
+                    <p>$Ni = H \cdot L_e = \mathcal{R} \cdot \phi$ (A.tr)</p>
+                </div>
+                <div>
+                    <p><strong>Composant magnétique $\Phi(I), L$</strong></p>
+                    <figure class="placeholder" style="width: 150px; height: 100px;">$\Phi(I)$ curve</figure>
+                    <p>$\Phi = n \cdot \phi$ (V.s ou Wb)</p>
+                    <p>$I = Ni / n$ (A)</p>
+                    <p>$L = \Phi / I = n^2 / \mathcal{R}$ (H)</p>
+                </div>
+            </div>
+
+            <span class="slide-ref">Slide 78</span>
+            <h2>Composants magnétiques, principe de dimensionnement</h2>
+            <p><strong>Contraintes principales :</strong></p>
+            <ul>
+                <li><strong>Températures maximales des matériaux :</strong> Liées aux pertes Joule (cuivre) et fer (noyau). Contraintes d'échauffement.</li>
+                <li><strong>Contraintes magnétiques éventuelles :</strong> Induction à saturation ($B_{sat}$), surtout limitante à basse fréquence ou pour les inductances de stockage.</li>
+            </ul>
+            <p><strong>Présélection d'un noyau magnétique : la méthode du produit des aires $A_p = A_e \cdot A_w$</strong></p>
+            <p>Cette méthode relie les performances électriques (énergie stockée $E_{Max}$ pour une inductance, puissance apparente $P$ pour un transformateur) aux caractéristiques géométriques du noyau ($A_e, A_w$) et aux limites technologiques ($B_M$: induction max, $J_M$: densité de courant max).</p>
+            <ul>
+                <li><strong>Pour une inductance :</strong> Énergie maximale stockée</li>
+                    $$ E_{Max} = \frac{1}{2} L I_{Max}^2 \approx \frac{1}{2} k_w k_i B_M J_M [A_e \cdot A_w] $$
+                    où $k_w$ est le coefficient de remplissage en cuivre, $k_i$ un facteur de forme du courant.
+                <li><strong>Pour un transformateur :</strong> Puissance (apparente)</li>
+                    $$ P \approx K k_f F B_M J_M [A_e \cdot A_w] $$
+                     où $K$ est un coefficient fonction de la structure, $k_f$ le facteur de forme de la tension, $F$ la fréquence.
+            </ul>
+            <p>Le produit des aires $[A_e \cdot A_w]$ caractérise la "taille" ou la capacité énergétique/puissance d'un noyau. Les catalogues de fabricants classent souvent les noyaux par cette valeur.</p>
+            <p><strong>L'énergie maximale à stocker (inductance) ou la puissance convertie (transformateur) est dimensionnante.</strong></p>
+            <figure class="placeholder">Image Placeholder: Diagram illustrating the factors involved in the Area Product method, linking electrical specs (Emax, P) to material limits (Bm, Jm), winding factor (kw), form factors (ki, kf), frequency (F), and geometry (Ae, Aw).</figure>
+        </section>
+
+        <section id="capacitors">
+            <span class="slide-ref">Slide 79</span>
+            <h2>Condensateurs</h2>
+             <!-- Outline repeated for context -->
+             <!-- <h2>Alimentations à découpage</h2> ... -->
+             <!-- <h2>Composants de l'électronique de puissance</h2>
+             <ul>
+                 <li>Semi-conducteurs de puissance</li>
+                 <li>Composants magnétiques</li>
+                 <li><strong>Condensateurs</strong></li>
+             </ul> -->
+
+            <span class="slide-ref">Slide 80</span>
+             <h2>Condensateurs de puissance</h2>
+             <figure class="placeholder" style="float: right; width: 150px;">Image Placeholder: Simple capacitor circuit diagram (C, ic, vc). Photo of a power capacitor.</figure>
+             <p>Relation courant-tension et énergie stockée :</p>
+             $$ i_C = C \frac{dv_C}{dt} \quad \text{et} \quad E = \frac{1}{2} C v_C^2 $$
+             <p><strong>3 grandes familles :</strong></p>
+            <ul>
+                <li>Condensateurs à <strong>films</strong> (diélectriques plastiques, papier ou mixtes)</li>
+                <li>Condensateurs <strong>céramiques</strong></li>
+                <li>Condensateurs <strong>électrolytiques</strong> (aluminium, tantale)</li>
+            </ul>
+             <p><strong>Énergie volumique</strong>, cas des condensateurs à diélectrique film métallisé (encombrement du diélectrique dominant) :</p>
+             <figure class="placeholder" style="width: 400px;">Image Placeholder: Diagram of a metallized film capacitor construction (rolled layers of dielectric film with thin metal electrodes). Formula relating stored energy Emax to dielectric properties (permittivity $\epsilon_0 \epsilon_r$, disruptive field Ed) and geometry (area S, thickness e, volume V=S*e).</figure>
+             $$ E_{Max} = \frac{1}{2} C U_{Max}^2 = \frac{1}{2} (\epsilon_0 \epsilon_r \frac{S}{e}) (E_d \cdot e)^2 = \frac{1}{2} \epsilon_0 \epsilon_r E_d^2 (S \cdot e) = \frac{1}{2} \epsilon_0 \epsilon_r E_d^2 \cdot V $$
+             L'énergie maximale stockée est proportionnelle au volume $V$ du diélectrique et dépend du matériau ($\epsilon_r$, $E_d$).</p>
+             <p>Si le <strong>courant efficace $I_{rms}$</strong> circulant dans les armatures est élevé, elles doivent être renforcées (ex: ajout de feuilles métalliques - "foil"), alors l'énergie volumique globale diminue.</p>
+
+            <span class="slide-ref">Slide 81</span>
+             <h2>Condensateurs de puissance : schéma équivalent, impédance</h2>
+             <p>Le schéma équivalent d'un condensateur réel inclut des éléments parasites :</p>
+             <figure class="placeholder" style="width: 80%;">Image Placeholder: Equivalent circuit models for a real capacitor. Basic: C in series with ESR (Equivalent Series Resistance) and ESL (Equivalent Series Inductance). More complete: includes parallel resistance Rp for leakage losses and dielectric losses within C. Simplified version often used: C, ESR, ESL in series.</figure>
+             <ul>
+                 <li>$C$ : Capacité nominale</li>
+                 <li>$ESR$ : Résistance Série Équivalente (représente les pertes dans les armatures, les connexions, et diélectriques)</li>
+                 <li>$ESL$ : Inductance Série Équivalente (due à la géométrie des enroulements/couches et des connexions)</li>
+                 <li>$R_p$ : Résistance parallèle (représente le courant de fuite, souvent négligeable sauf pour le stockage long terme)</li>
+            </ul>
+             <p>La <strong>résistance équivalente série ESR</strong> est un paramètre clé car elle cause l'échauffement par effet Joule ($P = ESR \cdot I_{rms}^2$) et limite la capacité du condensateur à filtrer les ondulations haute fréquence.</p>
+             <p>L'ESR n'est pas constante, elle dépend de la fréquence et de la température. Elle peut être modélisée approximativement comme $ESR \approx R_s + \beta / \omega$ (où $R_s$ sont les pertes séries et $\beta/\omega$ représente les pertes diélectriques).</p>
+             <p>Le <strong>courant efficace admissible ($I_{rms\_MAX}$)</strong> est limité par l'échauffement maximal $\Delta T_{MAX}$ que le condensateur peut supporter :</p>
+             $$ \Delta T = P \cdot R_{th} = ESR \cdot I_{rms}^2 \cdot R_{th} \implies I_{rms\_MAX} = \sqrt{\frac{\Delta T_{MAX}}{ESR \cdot R_{th}}} $$
+             où $R_{th}$ est la résistance thermique du condensateur vers l'ambiant.</p>
+             <figure class="placeholder" style="float: right; width: 300px;">Image Placeholder: Graph showing permissible ripple current vs frequency for an electrolytic capacitor. Current rating typically decreases at higher frequencies due to increased losses/ESR behavior. Source: TDK-EPCOS.</figure>
+             <p class="note">Pour les condensateurs électrolytiques, les basses fréquences (ex: 100/120 Hz après redressement secteur) sont souvent les plus contraignantes pour le courant RMS.</p>
+
+            <span class="slide-ref">Slide 82</span>
+             <h3>Impédance en fonction de la fréquence</h3>
+             <figure class="placeholder" style="float: right; width: 400px;">Image Placeholder: Impedance |Z| vs Frequency (log-log scale) for different capacitor types. Electrolytic (aluminum): high Z at low f (capacitive 1/wC), minimum Z at resonance Fo determined by ESL, then rises (inductive wESL). Ceramic (multilayer): lower ESR/ESL, higher Fo, flatter impedance minimum. Source: EPCOS, AVX.</div>
+             <figcaption>Courbes d'impédance typiques :
+                <ul>
+                    <li>À basse fréquence : comportement capacitif, $|Z| \approx 1/(\omega C)$.</li>
+                    <li>À la résonance série ($F_0 = 1 / (2\pi \sqrt{ESL \cdot C})$) : l'impédance est minimale et égale à l'ESR. $|Z|_{min} = ESR$.</li>
+                    <li>À haute fréquence (au-delà de $F_0$) : comportement inductif, $|Z| \approx \omega ESL$.</li>
+                </ul>
+             Les condensateurs céramiques multicouches ont généralement une ESR et une ESL plus faibles que les électrolytiques ou films, les rendant plus efficaces pour le filtrage haute fréquence.
+             </figcaption>
+             </figure>
+             <p>Schéma équivalent série : $Z = ESR + j (\omega ESL - \frac{1}{\omega C})$.</p>
+             <p>Le facteur de qualité à la résonance est lié à l'ESR : $Q_0 = \frac{1}{ESR} \sqrt{\frac{ESL}{C}}$. Une faible ESR donne une résonance "sélective" (pic étroit).</p>
+             <p class="note">Au-delà de $F_0$, l'impédance remonte, le condensateur devient moins efficace pour le filtrage.</p>
+
+            <span class="slide-ref">Slide 83</span>
+             <h3>Condensateurs de puissance : spécificités des principales technologies</h3>
+             <h4>Films plastiques, papier ou mixtes</h4>
+             <figure class="placeholder" style="float: right; width: 300px;">Image Placeholder: Different film capacitor constructions (single-sided metallized, double-sided metallized, film/foil). Standard designations (MKT, MKP, MFT, MFP, MKN). Example: MFP (Metallized Polypropylene + Foil). Source: Elcap-Wikipedia, Epcos.</figure>
+             <p>Constitués d'une fine feuille de diélectrique (polypropylène, polyester, papier...) sur laquelle les électrodes sont déposées (film métallisé) ou ajoutées (feuilles/foils).</p>
+             <ul>
+                 <li><strong>Métallisé :</strong> Auto-cicatrisant (un défaut local vaporise le métal fin, isolant le défaut). Plus compact.</li>
+                 <li><strong>Film/Foil :</strong> Feuilles métalliques comme électrodes. Meilleure tenue en courant RMS (faible résistance des armatures). Non auto-cicatrisant.</li>
+                 <li><strong>Métallisé + Foil (ex: MFP) :</strong> Combine les avantages.</li>
+             </ul>
+             <p><strong>Appellations standards (DIN 41379) :</strong></p>
+            <ul>
+                <li>MKT: Polyester métallisé</li>
+                <li>MKP: Polypropylène métallisé</li>
+                <li>MKN: Naphtalate de polyéthylène métallisé</li>
+                <li>MFT, MFP: Avec feuille (Foil)</li>
+            </ul>
+             <p>Avantages : Faible ESR/ESL (surtout PP), bonne stabilité, haute tension d'isolement, longue durée de vie. Utilisés pour DC-link, snubbers, filtrage AC.</p>
+
+            <span class="slide-ref">Slide 84</span>
+             <h4>Technologies céramiques pour l'électronique de puissance</h4>
+             <figure class="placeholder" style="float: right; width: 250px;">Image Placeholder: Structure of a multilayer ceramic capacitor (MLCC). Graph showing capacitance change vs temperature for different ceramic classes (X7R, X5R, Z5U, Y5V). Photo of MLCCs. Example: 47uF/50V MLCC. Source: Johanson Dielectrics, Rhom, API Technologies.</figure>
+             <p>Technologies multicouches (MLCC) permettant d'obtenir de grandes capacités dans de petits volumes, avec très faible ESR et ESL.</p>
+             <p><strong>Céramiques de classe 2 :</strong> Ferroélectriques (ex: BaTiO₃), permittivité très élevée (1000 à 20 000), mais capacité sensible à la température, à la tension DC appliquée, et au vieillissement.</p>
+             <p><strong>Appellations (EIA) :</strong> Codent la gamme de température et la variation de capacité admise. Exemples courants :</p>
+            <ul>
+                <li><strong>X7R :</strong> -55°C à +125°C, $\Delta C = \pm 15\%$</li>
+                <li><strong>X5R :</strong> -55°C à +85°C, $\Delta C = \pm 15\%$</li>
+                <li><strong>Z5U :</strong> +10°C à +85°C, $\Delta C = +22\% / -56\%$</li>
+                <li><strong>Y5V :</strong> -30°C à +85°C, $\Delta C = +22\% / -82\%$</li>
+            </ul>
+             <p>Avantages : Très faible ESR/ESL, haute fréquence de résonance, compacité, coût compétitif pour petites/moyennes capacités, tenue en température. Utilisés pour découplage HF, snubbers, résonance.</p>
+             <p>Inconvénients : Stabilité (classe 2), sensibilité mécanique (fissures), coût pour grandes capacités/hautes tensions.</p>
+
+            <span class="slide-ref">Slide 85</span>
+             <h4>Condensateurs Électrolytiques (aluminium, tantale et même niobium)</h4>
+             <figure class="placeholder" style="float: right; width: 250px;">Image Placeholder: Cutaway views of Aluminum electrolytic capacitor (rolled foil structure) and Tantalum electrolytic capacitor (sintered pellet structure). Source: EPCOS, ELCAP.</figure>
+             <p>Nécessitent d'être <strong>polarisés</strong> : une tension positive sur l'anode forme (ou maintient) une fine couche d'oxyde isolant (Al₂O₃ ou Ta₂O₅) qui sert de diélectrique.</p>
+             <p>L'électrolyte (liquide, gel, ou polymère conducteur solide) sert de cathode "liquide", assurant un bon contact avec la couche d'oxyde sur une anode de grande surface (feuille gravée pour Al, poudre frittée pour Ta).</p>
+             <p><strong>Avantages :</strong> Très forte capacité volumique (énergie volumique élevée), coût faible par µF.</p>
+             <p><strong>Inconvénients :</strong></p>
+            <ul>
+                <li>Polarisation stricte requise.</li>
+                <li>ESR et ESL relativement élevés (surtout Al liquide).</li>
+                <li>Durée de vie limitée (séchage de l'électrolyte liquide, dégradation chimique).</li>
+                <li>Performances dégradées à basse température (ESR augmente, C diminue) et à haute température (courant de fuite augmente, durée de vie diminue).</li>
+                <li>Tensions maximales limitées (surtout Tantale, < 100 V typ.). Aluminium jusqu'à 600 V env.</li>
+            </ul>
+             <p>Utilisés pour le filtrage basse fréquence (DC link, sortie SMPS), stockage d'énergie.</p>
+
+            <span class="slide-ref">Slide 86</span>
+             <h4>Domaines de prédilection par technologie</h4>
+             <figure class="placeholder" style="width: 90%;">Image Placeholder: Chart plotting Capacitance (1pF to 1F) vs Voltage Rating (1V to 50kV) showing the typical application domains for different capacitor technologies (Ceramic, Tantalum, Aluminum Electrolytic, Film). Source: TDK, Electronique International Hebdo 22 janvier 2004.</div>
+             <figcaption>Source: TDK, Electronique International Hebdo 22 janvier 2004. Ce diagramme montre schématiquement où chaque technologie est la plus compétitive en termes de couple Capacité/Tension.</figcaption>
+            </figure>
+             <ul>
+                 <li><strong>Céramiques :</strong> Basses/moyennes capacités, large gamme de tensions.</li>
+                 <li><strong>Tantale :</strong> Moyennes capacités, basses tensions.</li>
+                 <li><strong>Aluminium électrolytique :</strong> Grandes capacités, basses/moyennes tensions.</li>
+                 <li><strong>Film :</strong> Moyennes capacités, moyennes/hautes tensions.</li>
+             </ul>
+        </section>
+
+        <section id="capacitor-lifetime">
+            <span class="slide-ref">Slide 87</span>
+            <h2>Condensateurs de puissance : durée de vie</h2>
+            <p>Deux mécanismes de vieillissement dominants :</p>
+            <ul>
+                <li>Le <strong>champ électrique</strong> (tension appliquée).</li>
+                <li>La <strong>température</strong> (ambiante + auto-échauffement).</li>
+            </ul>
+            <p>Des lois exponentielles (ou loi puissance) décrivent la dégradation avec la tension et la température (modèle d'Arrhenius pour la température).</p>
+            <p><strong>Modèle d'Eyring</strong> (combine les effets tension et température) :</p>
+            $$ A_L = \frac{L_N}{L_A} = \left( \frac{V_A}{V_N} \right)^n \cdot \exp \left\{ \frac{E_a}{k_B} \left( \frac{1}{T_N} - \frac{1}{T_A} \right) \right\} $$
+            où $A_L$ est le facteur d'accélération, $L_N/L_A$ le rapport des durées de vie (Nominale/Accélérée), $V$ la tension, $T$ la température absolue, $n$ l'exposant de tension, $E_a$ l'énergie d'activation.</p>
+            <p>Règle empirique courante : durée de vie divisée par 2 pour chaque augmentation de 8 à 10°C de la température, et divisée par 2 (ou plus) si la tension double (dépend de $n$).</p>
+            <p><strong>Effets macroscopiques du vieillissement :</strong> la capacité diminue avec le temps et l'ESR augmente.</p>
+
+            <span class="slide-ref">Slide 88</span>
+             <h3>Exemple sur condensateurs films plastiques métallisés</h3>
+             <p>Effets de la température et de la tension sur le facteur d'accélération du vieillissement (données expérimentales).</p>
+             <div style="display: flex; justify-content: space-around;">
+                 <figure class="placeholder" style="width: 45%;">
+                     <figcaption>Effet de la température</figcaption>
+                     Image Placeholder: Graph of Acceleration Factor (log scale) vs Temperature (°C). Shows roughly linear decrease on log-linear scale, consistent with Arrhenius law. "Lifetime halved every 10°C approx." (Nominal life given at 70°C here).
+                 </figure>
+                 <figure class="placeholder" style="width: 45%;">
+                     <figcaption>Effet de la tension</figcaption>
+                     Image Placeholder: Graph of Acceleration Factor (log scale) vs Voltage Ratio (Vapplied/Vnominal). Shows decrease following power law or exponential. "Lifetime increased by factor 6 if operated at 0.6 * Vnominal".
+                 </figure>
+             </div>
+             <figcaption>Source: R. Gallay, "Metallized Film Capacitor Lifetime Evaluation and Failure Mode Analysis", CERN 2015.</figcaption>
+
+            <span class="slide-ref">Slide 89</span>
+             <h3>Condensateurs de puissance : durée de vie, exemple</h3>
+             <p>Exemple de spécifications pour un condensateur électrolytique aluminium (SIC SAFCO FELSIC 85 LP).</p>
+             <figure class="placeholder" style="width: 90%;">Image Placeholder: Datasheet excerpt for SIC SAFCO FELSIC 85 LP capacitor. Shows specifications (e.g., 680-330000 uF, up to 630V). Graph showing Expected Life (hours, log scale) vs Ambient Temperature (°C) for different normalized RMS currents (I/I_rated). Shows base lifetime (e.g., 3500h @ 105°C, I=Irated) increasing significantly at lower temperatures and lower currents (e.g., 300,000h @ 40°C, I=Irated).</div>
+                 <figcaption>Source: Sic Safco. La durée de vie dépend fortement de la température ambiante et du courant RMS appliqué (qui cause l'auto-échauffement).
+                    Ex: Condensateur 10V - 330 000 µF. $I_{rms}$ nominal = 150 A @ 40°C donne 300 000 h. Si $T_{amb}=105°C$, $I_{rms}$ max = 58 A pour 3500 h.
+                    La résistance thermique est de 4 K/W (sans dissipateur) à 0,6 K/W (avec échangeur à eau).
+                 </figcaption>
+            </figure>
+        </section>
+
+        <hr>
+
+        <section id="bibliography">
+            <span class="slide-ref">Slide 90</span>
+            <h2>Bibliographie</h2>
+
+            <h3>Livres (accessibles en bibliothèque de l'ENS) :</h3>
+            <div class="biblio-item">J. LAROCHE, « Électronique de puissance – Convertisseurs », Cours et exercices corrigés, Dunod, 2005.</div>
+            <div class="biblio-item">J.P. FERRIEUX, F. FOREST, « Alimentations à découpage, convertisseurs à résonance: Principes, composants, modélisation », Dunod 3ème édit. 2006.</div>
+
+            <h3>Techniques de l'Ingénieur :</h3>
+            <div class="biblio-item">H. FOCH, R. ARCHES, Y.. CHÉRON, B. ESCAUT, P. MARTY, M. METZ,
+                <ul>
+                    <li>« Alimentations à découpage- Le transformateur », D3164, juin 1991.</li>
+                    <li>« Alimentations à découpage- Convertisseurs continu-continu isolés », D3165, mars 1992.</li>
+                </ul>
+            </div>
+            <div class="biblio-item">P. LETURCQ,
+                 <ul>
+                    <li>« Physique des semi-conducteurs de puissance», D3102, Nov. 1999.</li>
+                    <li>« Composants semi-conducteurs de puissance, caractères propres », D3100, sept. 1999.</li>
+                    <li>« Composants semi-conducteurs de puissance, partie 2 », D3107, 05-2001.</li>
+                </ul>
+            </div>
+             <div class="biblio-item">S. LEFEBVRE et B. MULTON,
+                 <ul>
+                    <li>« Commande des semi-conducteurs de puissance: contexte », D3230, août 2002, 8p.</li>
+                    <li>« Commande des semi-conducteurs de puissance: principes », D3231, novembre 2002, 23p.</li>
+                    <li>« Circuits de commande pour composants bipolaires de puissance », D3232, mai 2003, 14p.</li>
+                    <li>« MOSFET et IGBT: circuits de commande », D3233, août 2003, 16p.</li>
+                </ul>
+            </div>
+            <div class="biblio-item">G. MOURIÈS, «Condensateurs utilisés en électronique de puissance », D3010v1, août 2007.</div>
+        </section>
+
+        <hr>
+
+        <section id="td-forward">
+            <header>
+                <h2>TD - STRUCTURES DE CONVERSION A DECOUPAGE FORWARD</h2>
+                <p>Ecole Normale Supérieure de Rennes - UE Conversion d'énergie 2a (M1-S1)</p>
+                <p>1 H TD + 1 H DE TRAVAIL PERSONNEL</p>
+            </header>
+
+            <div class="td-section">
+                <div class="td-title">Structure forward étudiée :</div>
+                <figure class="placeholder">Image Placeholder: Circuit diagram of the asymmetric half-bridge forward converter (same as slide 8).</figure>
+                <p><strong>Données :</strong> $V_I = 320$ V et $V_o = 48$ V (supposée lissée et régulée), courant maximal de sortie : $I_o = 100$ A.<br>
+                Fréquence de découpage : $F = 200$ kHz.<br>
+                Les deux interrupteurs commandés sont pilotés ensemble à fréquence fixe avec un rapport cyclique $\alpha$.<br>
+                <strong>Hypothèse principale :</strong> on néglige les effets de toutes les pertes sur toutes les formes d'ondes.</p>
+            </div>
+
+            <div class="td-section">
+                <div class="td-title">1- Etude du transformateur</div>
+                <p>Principales dimensions du noyau (circuit EC70) en ferrite PC40 (TDK) et de la carcasse support du bobinage.</p>
+                 <figure class="placeholder">Image Placeholder: Dimensions of EC70 core and bobbin. Photo of an assembled EC core transformer. Source: www.highfrequencytransformer.net.</figure>
+                 <p>(Prix indicatif...)</p>
+                 <p><strong>Caractéristiques du transformateur</strong> (noyau + carcasse + bobinages primaire et secondaire)</p>
+                 <ul>
+                     <li>$n_1 = 14$ spires, $n_2 = 5$ spires</li>
+                     <li>$L_\mu = 0,94$ mH</li>
+                     <li>$R_1 = 5,4$ m$\Omega$, $R_2 = 0,7$ m$\Omega$</li>
+                     <li>Masses de ferrite : 250 g, de cuivre : 120 g, de carcasse : 20 g</li>
+                 </ul>
+            </div>
+
+             <div class="td-section">
+                <div class="td-title">1.1- Fonctionnement à vide à 200 kHz et $\alpha = 1/2$</div>
+                <p>Après avoir rappelé le schéma équivalent du transformateur permettant de faire cette analyse, tracer les formes d'ondes des tensions $v_1$ et $v_2$ et du courant $i_1 = i_\mu$ à vide.</p>
+                <p>Préciser leurs valeurs maximales des grandeurs électriques et les valeurs remarquables du temps.</p>
+                <p>Calculer sa valeur efficace $I_{\mu rms}$ du courant $i_\mu$. (Indication: $X_{rms} = X_{Max} \cdot \sqrt{\alpha/3}$ pour un triangle de 0 à $\alpha T$).</p>
+                <p>Calculer la valeur de la valeur maximale $E_{\mu Max}$ de l'énergie stockée dans le circuit magnétique.</p>
+             </div>
+
+            <div class="td-section">
+                <div class="td-title">1.2- Fonctionnement en charge</div>
+                 <p>On suppose les mêmes conditions que précédemment, mais la sortie est chargée au courant nominal. On considère que l'ondulation $\Delta i_L$ (crête à crête) du courant dans l'inductance de lissage est égale à 40 A.</p>
+                 <p><strong>1.2.1-</strong> Déterminer les formes d'ondes des courants secondaire $i_2$ et primaire $i_1$, préciser leurs valeurs numériques particulières.</p>
+                 <p><strong>1.2.2-</strong> Calculer la valeur efficace $I_{2rms}$ du courant secondaire en prenant en compte les effets de l'ondulation de courant et montrer que l'ondulation du courant a un impact complètement négligeable sur cette valeur. (Indication: $X_{rms} = X_{Max} \sqrt{\alpha [1 + (\Delta X / (X_{Max}\sqrt{12}))^2]}$ pour un créneau avec ondulation linéaire).</p>
+                 <p>Montrer que cette approximation reste largement vraie pour le courant primaire et calculer sa valeur efficace $I_{1rms}$.</p>
+                 <p><strong>1.2.3-</strong> Sur la base des approximations précédentes, calculer les pertes Joule au primaire et au secondaire.</p>
+            </div>
+
+             <div class="td-section">
+                <div class="td-title">2- Dimensionnement du filtre de sortie</div>
+                 <p><strong>2.1- Inductance de lissage</strong><br>
+                 Déterminer la valeur de l'inductance $L$ nécessaire pour que l'ondulation $\Delta i_L$ de courant ne dépasse pas 40 A.<br>
+                 Calculer ses principales contraintes : $I_{Lmax}$, $I_{Lrms}$ et $U_{Lmax}$ ainsi que la valeur maximale de l'énergie stockée.</p>
+                <p><strong>2.2- Condensateur de filtrage</strong><br>
+                 Déterminer la valeur du condensateur idéal (capacité pure) $C$ qui permettra de maintenir une ondulation de la tension de sortie $\Delta v_o$ inférieure à 1 V crête à crête.<br>
+                 Calculer ses principales contraintes : $I_{Crms}$ et $U_{CMax}$.</p>
+                 <p><strong>2.3- Tension de sortie</strong><br>
+                 En négligeant toutes chutes de tension dans le montage, vérifier qu'avec un rapport cyclique égal à 1/2, on pourra obtenir une tension de sortie conforme aux attentes.<br>
+                 Si l'inductance de lissage a une résistance de 1 m$\Omega$ et que les diodes Schottky présentent une chute de tension, notée $V_F$, de 0,7 V, évaluer la chute de tension moyenne répercutée en sortie par ces composants.</p>
+             </div>
+
+            <div class="td-section">
+                <div class="td-title">3- Semi-conducteurs de puissance</div>
+                <p><strong>3.1- Transistor de puissance</strong><br>
+                 On utilise des MOSFET SiC. Calculer la tension maximale $U_{kMax}$ qu'ils devront supporter ainsi que leur courant efficace $I_{Krms}$ au régime nominal.</p>
+                <p><strong>3.2- Diodes de sortie</strong><br>
+                 On utilise des diodes Schottky au silicium. Calculer la tension inverse maximale $U_{RMax}$ de la diode de redressement, la valeur moyenne $I_{FAV}$ et la valeur efficace $I_{Frms}$ de son intensité.</p>
+            </div>
+            <!-- Note: Le corrigé commence sur les pages suivantes du PDF, je ne l'inclus pas ici sauf si demandé. -->
+        </section>
+
+        <hr>
+
+        <section id="td-flyback">
+            <header>
+                <h2>TD - STRUCTURE DE CONVERSION A DECOUPAGE FLYBACK</h2>
+                 <p>Ecole Normale Supérieure de Rennes - UE Conversion d'énergie 2a (M1-S1)</p>
+                <p>1 H TD + 1H DE TRAVAIL PERSONNEL</p>
+            </header>
+
+            <div class="td-section">
+                <div class="td-title">Structure étudiée :</div>
+                <figure class="placeholder">Image Placeholder: Circuit diagram of the Flyback converter (same as slide 16).</figure>
+                 <p><strong>Données :</strong> $V_I = 320$ V et $V_o = 5$ V (supposée lissée et régulée), courant maximale de sortie : $I_o = 0,4$ A.<br>
+                 Fréquence de découpage nominale (supposée fixe, sauf indication contraire) : $F = 50$ kHz.<br>
+                 Rapport cyclique $\alpha$, valeur nominale : 0,5.<br>
+                 <strong>Hypothèses principales :</strong> Effets négligeables de toutes les pertes sur toutes les formes d'ondes. Fonctionnement à la limite des régimes continu et discontinu.</p>
+                <p><strong>Notations :</strong> Celles indiquées sur la figure; $L_1$ inductance propre vue du primaire; $m$ = rapport de transformation.</p>
+            </div>
+
+            <div class="td-section">
+                <div class="td-title">1- Prédimensionnement du composant magnétique</div>
+                 <p><strong>1.1- Formes d'onde à la limite des régimes continu et discontinu</strong><br>
+                 Tracer, avec un rapport cyclique de 0,5 (qualitativement en amplitude, mais en indiquant les valeurs de temps): Les tensions $v_1$ et $v_2$; Les courants $i_1$, $i_2$ et $i_C$ (relativement à $I_o$).<br>
+                 Préciser les valeurs numériques (lorsque c'est possible), sinon les expressions des valeurs crêtes. Les expressions seront données en fonction de $V_I, L_1, \alpha, F, V_o$.</p>
+                 <p><strong>1.2- Rapport de transformation</strong><br>
+                 Déterminer le rapport de transformation $m$ pour obtenir une tension de sortie de 6 V (permettant de considérer des chutes de tension par rapport à la tension souhaitée de 5 V) dans les conditions précédemment précisées.</p>
+                 <p><strong>1.3- Energie à stocker</strong><br>
+                 En supposant que toute l'énergie stockée dans le composant magnétique est transférée à chaque cycle (fonctionnement à la limite DCM), déterminer la valeur de l'énergie inductive maximale $E_{max}$ à stocker pour obtenir une puissance convertie de 3 W.<br>
+                 Calculer la valeur de l'inductance $L_1$ correspondante.</p>
+                 <p><strong>1.4- Courants primaire et secondaire</strong><br>
+                 Déterminer les valeurs crêtes et efficaces des courants primaire et secondaire. (Indication: $X_{rms} = X_{Max} \cdot \sqrt{\alpha/3}$ pour un triangle de 0 à $\alpha T$).</p>
+            </div>
+
+            <div class="td-section">
+                <div class="td-title">2- Contraintes sur les semi-conducteurs de puissance</div>
+                <p><strong>2.1- Transistor</strong><br>
+                 Sur la base des conditions précédemment énoncées (tension de sortie de 6 V), déterminer la valeur maximale de la tension appliquée aux bornes du transistor ainsi que la valeur efficace du courant qui le traverse.</p>
+                 <p><strong>2.2- Diode</strong><br>
+                 Déterminer la valeur maximale de la tension appliquée aux bornes de la diode ainsi que les valeurs moyenne et efficace du courant qui la traverse.</p>
+            </div>
+
+            <div class="td-section">
+                <div class="td-title">3- Contraintes sur le condensateur de sortie</div>
+                 <p><strong>3.1- Calcul de l'ondulation de tension</strong><br>
+                 Déterminer les formes d'onde du courant dans le condensateur (supposé idéal) et de la tension de sortie (incluant son ondulation) pour mettre en évidence la variation de charge $\Delta Q$ associée à l'ondulation crête à crête.<br>
+                 Calculer la valeur de la capacité $C$ requise pour que l'ondulation capacitive reste inférieure à 200 mV.<br>
+                 Déterminer l'expression $\Delta V_o$ de l'ondulation crête à crête de la tension de sortie en fonction de $I_o, C$ et $F$.</p>
+                 <p><strong>3.2- Calcul des contraintes électriques</strong><br>
+                 Toujours, sur la base des conditions précédemment énoncées (tension de sortie de 6 V), déterminer la valeur maximale $V_{CMax}$ de la tension aux bornes du condensateur ainsi que la valeur efficace $I_{Crms}$ de son courant.</p>
+             </div>
+             <!-- Note: Le corrigé commence sur les pages suivantes du PDF, je ne l'inclus pas ici sauf si demandé. -->
+        </section>
+
+    </article>
+</main>
+
+<footer>
+    <p>Fin du document HTML.</p>
+    <p>B. Multon ENS Rennes</p>
+</footer>
+
+</body>
+</html>
