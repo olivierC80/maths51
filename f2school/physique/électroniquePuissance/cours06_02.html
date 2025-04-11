@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronique de puissance : Composants - B. Multon</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #333; }
+        h1 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 30px; }
+        figure { text-align: center; margin: 20px 0; }
+        figcaption { font-size: 0.9em; color: #555; margin-top: 5px; }
+        img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            background-color: #f9f9f9;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .katex-display { overflow-x: auto; overflow-y: hidden; }
+        .slide-ref { font-size: 0.8em; color: #888; float: right; }
+        table { border-collapse: collapse; margin: 15px 0; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .component-evolution { display: flex; flex-wrap: wrap; justify-content: space-around; }
+        .component-category { border: 1px solid #ccc; padding: 10px; margin: 10px; min-width: 200px; }
+        .note { font-style: italic; color: #666; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+<main>
+    <article id="power-components">
+        <header>
+            <h1>Composants de l'électronique de puissance</h1>
+            <span class="slide-ref">Slide 35</span>
+        </header>
+         <!-- Outline repeated from previous section for context -->
+         <!-- <h2>Alimentations à découpage</h2>
+         <ul>
+             <li>Introduction, alimentations électroniques</li>
+             <li>Structures forward</li>
+             <li>Structure flyback</li>
+         </ul> -->
+         <h2>Composants de l'électronique de puissance</h2>
+         <ul>
+             <li><strong>Semi-conducteurs de puissance</strong></li>
+             <li>Composants magnétiques</li>
+             <li>Condensateurs</li>
+         </ul>
+
+        <section id="application-domains">
+            <span class="slide-ref">Slide 36</span>
+            <h2>Domaines d'application de la conversion statique, dans le plan puissance – fréquence de commutation</h2>
+            <p>Ce diagramme montre la relation entre la capacité en puissance des convertisseurs et la fréquence de commutation typique des semi-conducteurs utilisés.</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Graph showing Power Capacity (100W to 1GW) vs Switching Frequency (10Hz to 100kHz). Different semiconductor types (MOSFET, IGBT, GTO, Thyristor) occupy different regions. Trend lines show technology evolution (Year 2005). Higher power generally means lower frequency.</div>
+                 <figcaption>Source: Lorentz, Infineon, 2010. Domaines typiques : MOSFET (Low power, high freq), IGBT (Medium/High power, medium freq), GTO (High power, low freq), Thyristor (Ultra high power, very low freq). Exemples d'applications : SMPS, Electric cars, Locomotives, Solar plants, HVDC...</figcaption>
+            </figure>
+        </section>
+
+        <section id="semiconductor-technologies">
+            <span class="slide-ref">Slide 37</span>
+            <h2>Technologies de semi-conducteurs commandés</h2>
+
+            <h3>MOSFET de puissance (Metal Oxide Semiconductor Field Effect Transistor)</h3>
+            <figure class="placeholder" style="float: right; width: 250px;">Image Placeholder: Pictures of different MOSFET packages (e.g., TO-220, TO-247, surface mount HSOF/LFPAK). Diagram showing pinout (Gate, Drain, Source). Example specs for Si and SiC MOSFETs.</figure>
+            <ul>
+                <li>Tensions/Courants typiques : 30 V - 300 A ; 100 V - 300 A</li>
+                <li>Disponibles en SiC (Carbure de Silicium) : jusqu'à 1700 V - 100 A</li>
+            </ul>
+            <p>Les mieux adaptés aux <strong>basses tensions</strong> (moins de 48 V). Existent jusqu'à 1000 V (technologie Superjonction silicium) et jusqu'à 1700 V en SiC.</p>
+            <p>Ce sont les composants <strong>les plus rapides</strong> (fréquences de commutation élevées).</p>
+            <p>Exemples :</p>
+            <ul>
+                <li>Silicium : Infineon IPT004N03L (30 V, 0.4 m$\Omega$, 300 A)</li>
+                <li>SiC : CREE C2M0045170D (1700 V, 45 m$\Omega$, 72 A)</li>
+            </ul>
+
+            <h3>IGBT (Insulated Gate Bipolar Transistor)</h3>
+            <figure class="placeholder" style="float: right; width: 250px;">Image Placeholder: Pictures of high-power IGBT modules (e.g., 190x140mm). Example specs for a 6.5kV/1000A module.</figure>
+            <ul>
+                <li>Tensions/Courants typiques :
+                    <ul>
+                        <li>600 V - quelques A à 600 A</li>
+                        <li>1700 V – 2,4 kA</li>
+                        <li>3300 V - 1,5 kA</li>
+                        <li>6500 V - 1000 A</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Bien adaptés aux <strong>moyennes et hautes tensions</strong> (de 500 V à environ 6.5 kV).</p>
+            <p>Offre très étendue, avec des possibilités de compromis entre la chute de tension à l'état passant et la rapidité (pertes de commutation).</p>
+            <p>Exemple : Mitsubishi CM1000HG-130XA (IGBT 6,5kV - 1000 A)</p>
+
+            <h3>Thyristors (SCR: Silicon Controlled Rectifiers)</h3>
+            <figure class="placeholder" style="float: right; width: 150px;">Image Placeholder: Picture of a large press-pack Thyristor (hockey puck type). Example specs for an 8.5kV/4.24kA device.</figure>
+             <ul>
+                <li>Tensions/Courants typiques : 5 à 10 kV - 2 à 7 kA</li>
+            </ul>
+            <p>Seulement commandables à l'amorçage (pas au blocage, sauf GTO/IGCT).</p>
+            <p>Bien adaptés aux <strong>très hautes tensions et très fortes puissances</strong>, comme les transmissions haute tension à courant continu (HVDC).</p>
+            <p>Technologie en fort recul pour les applications commandées, mais toujours utilisée pour le redressement non commandé ou semi-commandé à forte puissance.</p>
+             <p>Exemple : ABB 5STP 45Y8500 (8,5 kV - 4,24 kA moyen)</p>
+        </section>
+
+        <section id="semiconductor-evolution">
+            <span class="slide-ref">Slide 38</span>
+            <h2>Évolution des semi-conducteurs de puissance</h2>
+            <figure>
+                 <div class="placeholder" style="width: 90%;">Image Placeholder: Timeline diagram (1960-2020) showing the evolution of power semiconductor devices. Categories: Bipolar (Diode, Thyristor, BJT, GTO, IGCT) and Unipolar/Field Effect (MOSFET, IGBT, SiC devices, GaN devices). Show key milestones and device types emerging over time. Highlight Silicon vs Wide Band Gap (SiC, GaN) eras.</div>
+                 <figcaption>Source: Hong LIN, YOLE, PCIM Asia 2015.
+                    <ul>
+                        <li>BJT = Bipolar Junction Transistor</li>
+                        <li>GTO = Gate Turn Off Thyristor</li>
+                        <li>IGCT = Integrated Gate Controlled Thyristor</li>
+                        <li>SJ MOSFET = SuperJunction MOSFET</li>
+                        <li>SiC = Carbure de Silicium</li>
+                        <li>GaN = Nitrure de Gallium</li>
+                        <li>WBG = Wide Band Gap (Matériaux à large bande interdite)</li>
+                    </ul>
+                 </figcaption>
+            </figure>
+            <p>Le diagramme montre une évolution depuis les composants bipolaires (Thyristor, BJT) vers les composants à effet de champ (MOSFET) et hybrides (IGBT), puis l'émergence des matériaux à large bande interdite (SiC, GaN) qui permettent de meilleures performances (tensions plus élevées, fréquences plus rapides, températures de fonctionnement supérieures).</p>
+        </section>
+
+        <section id="packaging">
+            <span class="slide-ref">Slide 39</span>
+            <h2>Assemblage puce(s)-boitier : technologie DBC (Direct Bond Copper)</h2>
+            <p>Technologie couramment utilisée dans les modules de puissance pour assurer une bonne isolation électrique et un bon transfert thermique entre la puce de silicium (Si) et le système de refroidissement.</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Cross-section diagram of a DBC substrate assembly. Shows layers: Baseplate (Semelle Cu or MMC), Thermal Interface Material, DBC (Cu / Ceramic / Cu), Solder (Brasure), Silicon Die (Puce Si), Aluminum Wire Bonds (Bonding Al), Silicone Gel, Plastic Housing (Boitier plastique), Power Terminals (Connexion de puissance). Also show a photo of an open power module with multiple chips on a DBC substrate.</div>
+                 <figcaption>Source: INRETS. Le substrat DBC est constitué d'une céramique isolante (Al₂O₃, AlN...) sur laquelle des couches de cuivre (Cu) sont directement liées. La puce est brasée sur le cuivre supérieur, et le substrat est brasé sur une semelle qui assure le contact avec le dissipateur.</figcaption>
+            </figure>
+            <p>Exemple de module : 3 bras (demi-ponts) 200 A – 600 V (contenant 6 transistors IGBT + 6 diodes anti-parallèle).</p>
+        </section>
+
+        <section id="switch-function">
+            <span class="slide-ref">Slide 40</span>
+            <h2>Fonction interrupteur semi-conducteur (statique) de puissance</h2>
+            <p>Un interrupteur de puissance idéal a deux états : ON (fermé, résistance nulle) et OFF (ouvert, courant nul). Les semi-conducteurs réalisent cette fonction de manière approchée.</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Diagram illustrating the concept of a power switch. Shows the power path through the silicon die mounted on a heatsink. A driver circuit receives a control signal (Cde 0/1) and provides the necessary gate/base drive to the power device. Protection functions might be included. The output is the switching state (état). Include a photo of a gate driver board connected to a power module.</div>
+                 <figcaption>L'interrupteur est constitué de la "puce" silicium, de son boitier, et d'un circuit de commande ("driver"). Le driver adapte le signal de commande logique (Cde, ex: 0/5V) pour fournir le courant/tension nécessaire à la commande du semi-conducteur (ex: VGS pour un MOSFET). Il assure aussi l'isolation galvanique si nécessaire et peut intégrer des protections. Source photo driver: AgileSwitch.</figcaption>
+            </figure>
+        </section>
+
+        <section id="ideal-waveforms-losses">
+            <span class="slide-ref">Slide 41</span>
+            <h2>Formes d'ondes idéalisées dans un SC de puissance lors d'une période de découpage et pertes associées</h2>
+            <p>Considérons une cellule de commutation simple (ex: hacheur série avec charge inductive, diode de roue libre).</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Circuit diagram of a basic commutation cell (Switch controlled by $V_k$, Freewheeling Diode, Inductive Load $I_o$, Source $U_{dc}$). Idealized waveforms over one period T: Control signal $V_{KON}$ (high for $t_{on} = \alpha T$), Switch Voltage $V_k$ (equals $U_{dc}$ when OFF, $V_{KON}$ (small) when ON), Switch Current $i_k$ (equals $I_o$ when ON, leakage $I_{dc0}$ (small) when OFF). Highlight switching intervals $t_{swON}$, $t_{swOFF}$. Show instantaneous power $P_k = V_k \cdot i_k$ with peaks during switching and flat level during conduction.</div>
+            </figure>
+            <p><strong>Hypothèses simplifiées :</strong> Diodes parfaites, zéro inductance parasite, commutations linéaires (rampes de courant/tension).</p>
+            <ul>
+                <li><strong>État OFF (bloqué) :</strong> $i_k \approx I_{dc0}$ (courant de fuite, souvent négligeable), $V_k \approx U_{dc}$. Pertes à l'état bloqué généralement négligeables.</li>
+                <li><strong>État ON (passant) :</strong> $i_k \approx I_o$, $V_k = V_{KON}$ (chute de tension directe, ex: $R_{dson} \cdot I_o$ pour MOSFET, $V_{CEsat}$ pour IGBT/BJT). Pertes par conduction : $P_{cond} = V_{KON} \cdot I_o$.</li>
+                <li><strong>Commutations (ON $\to$ OFF et OFF $\to$ ON) :</strong> Pendant les transitions ($t_{swON}$, $t_{swOFF}$), tension et courant sont simultanément non nuls, entraînant des pics de puissance dissipée instantanée. L'énergie dissipée à chaque commutation est $E_{swON}$ et $E_{swOFF}$.</li>
+            </ul>
+            <p>L'énergie totale dissipée par cycle est $E_{tot} = E_{swON} + E_{cond} + E_{swOFF} + E_{block}$, où $E_{cond} = P_{cond} \cdot t_{on}$.</p>
+
+            <span class="slide-ref">Slide 42</span>
+            <h2>Décomposition en pertes de conduction et de commutation</h2>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Same waveforms as slide 41, highlighting the energy areas: $E_{swON}$ during $t_{swON}$, $E_{cond} = V_{KON} \cdot I_o \cdot t_{on}$ during the ON state, $E_{swOFF}$ during $t_{swOFF}$.</div>
+            </figure>
+            <p><strong>Puissance dissipée (instantanée) :</strong> $p_k(t) = v_k(t) \cdot i_k(t)$.</p>
+            <p><strong>Valeur moyenne glissante des pertes (puissance moyenne sur une période $T$) :</strong></p>
+            $$ P_k = \frac{1}{T} \int_0^T p_k(t) dt = \frac{1}{T} \int_0^T v_k(t) \cdot i_k(t) dt $$
+            $$ P_k = \frac{1}{T} \left[ \int_{t_{swON}} v_k i_k dt + \int_{t_{on}} v_k i_k dt + \int_{t_{swOFF}} v_k i_k dt \right] $$
+            $$ P_k = \frac{1}{T} [ E_{swON} + E_{cond} + E_{swOFF} ] $$
+             <p>Avec $F=1/T$ la fréquence de découpage, et en supposant $U_{dc}$ et $I_o$ constants pendant la période :</p>
+            <ul>
+                 <li>$E_{cond} = V_{KON} \cdot I_o \cdot t_{on} = V_{KON} \cdot I_o \cdot \alpha T$</li>
+                 <li>Pour des commutations linéaires (triangles de puissance) :
+                    $E_{swON} \approx \frac{1}{2} U_{dc} \cdot I_o \cdot t_{swON}$
+                    et $E_{swOFF} \approx \frac{1}{2} U_{dc} \cdot I_o \cdot t_{swOFF}$
+                 </li>
+            </ul>
+            $$ P_k = F \cdot (E_{swON} + E_{swOFF}) + \alpha \cdot (V_{KON} \cdot I_o) $$
+            $$ \boxed{ P_k = P_{sw} + P_{cond} } $$
+            <ul>
+                <li><strong>Pertes de commutation ($P_{sw}$):</strong> Proportionnelles à la fréquence $F$, à $U_{dc}$, $I_o$, et aux temps de commutation ($t_{swON}, t_{swOFF}$).</li>
+                <li><strong>Pertes de conduction ($P_{cond}$):</strong> Proportionnelles au rapport cyclique $\alpha$ et à la chute de tension directe $V_{KON}$ pour le courant $I_o$.</li>
+            </ul>
+        </section>
+
+        <section id="thermal-evaluation">
+            <span class="slide-ref">Slide 43</span>
+            <h2>Évaluation de l'échauffement</h2>
+            <p>La puissance dissipée ($P_k$) par le semi-conducteur se transforme en chaleur, qui doit être évacuée pour maintenir la température de la jonction silicium ($T_j$) en dessous de sa limite maximale (typiquement 125°C, 150°C ou 175°C).</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Diagram showing heat flow path from the silicon die (puce) through the package (boitier), thermal interface material (e.g., grease), to the heatsink (dissipateur/radiateur), and finally to the ambient air. Include detailed views of die attach, wire bonds, and package layers. Associate thermal resistances ($R_{th}$) with each step.</div>
+                 <figcaption>Source: ON semi. Le chemin thermique peut être modélisé par une chaîne de résistances thermiques :
+                    <ul>
+                        <li>$R_{\theta jc}$ (ou $R_{th,jc}$): Résistance thermique jonction-boîtier</li>
+                        <li>$R_{\theta ch}$ (ou $R_{th,ch}$): Résistance thermique boîtier-dissipateur (inclut l'interface thermique)</li>
+                        <li>$R_{\theta ha}$ (ou $R_{th,ha}$): Résistance thermique dissipateur-ambiant</li>
+                    </ul>
+                 </figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 44</span>
+            <h2>Echauffement, schéma thermique en régime permanent</h2>
+            <p>En régime permanent, l'analogie avec la loi d'Ohm électrique ($V=R \cdot I$) s'applique : l'écart de température ($\Delta T$) est égal à la puissance thermique ($P$) multipliée par la résistance thermique ($R_{th}$).</p>
+            $$ \Delta T = P \cdot R_{th} \quad [\text{Unités: K ou °C ; W ; K/W ou °C/W}] $$
+            <figure>
+                 <div class="placeholder">Image Placeholder: Thermal equivalent circuit model. Shows power P injected at junction temperature Tj, flowing through Rth_jc to case temperature Tc, through Rth_ch to heatsink temperature Th, and through Rth_h (same as Rth_ha) to ambient temperature Tamb.</div>
+                 <figcaption>Le schéma thermique en série permet de calculer la température de jonction :
+                 $$ T_j - T_{amb} = P \cdot (R_{th,jc} + R_{th,ch} + R_{th,ha}) = P \cdot \sum R_{th} $$
+                 $$ \boxed{ T_j = T_{amb} + P \cdot \sum R_{th} } $$
+                 Il faut s'assurer que $T_j < T_{j,max}$.
+                 </figcaption>
+            </figure>
+            <p><strong>En l'absence de dissipateur externe :</strong> Le fabricant donne parfois une résistance thermique jonction-ambiance ($R_{th,j-amb}$), qui dépend fortement des conditions de montage (surface de cuivre sur le PCB, flux d'air...).</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Simplified thermal circuit without heatsink: P flowing from Tj through Rth_j-amb to Tamb.</div>
+                 <figcaption>$$ T_j = T_{amb} + P \cdot R_{th,j-amb} $$
+                 Même les pistes du circuit imprimé peuvent jouer un rôle significatif dans la dissipation thermique pour les composants de surface.
+                 </figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 45</span>
+            <h3>Cas des composants directement soudés sur un circuit imprimé (PCB)</h3>
+            <p>Pour les boîtiers de surface (SMD), comme le LFPAK de NXP, la dissipation thermique se fait principalement via les couches de cuivre du PCB.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Cross-section of a PCB with vias under a power component (e.g., LFPAK) showing heat spreading into copper layers (power, ground, signal). Photo of an LFPAK device. Graph showing Rth_j-amb vs copper area size ("x") for different PCB layer configurations (1-layer, 2-layer, 4-layer).</div>
+                 <figcaption>Source: NXP. La résistance thermique jonction-ambiance ($R_{th, j-amb}$) diminue significativement avec l'augmentation de la surface de cuivre dédiée sur la couche 1 ("Layer 1 side length 'x'") et avec le nombre de couches et l'utilisation de vias thermiques.</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 46</span>
+            <h2>Importance de la température sur la durée de vie</h2>
+            <p>La température de jonction affecte directement la fiabilité et la durée de vie des semi-conducteurs.</p>
+            <p><strong>Vieillissement et probabilité de vie (Reliability Function) :</strong></p>
+            $$ R(t) = e^{-\lambda(t)} \approx e^{-t/MTBF} $$
+            où $\lambda(t)$ est le taux de défaillance instantané et MTBF (Mean Time Between Failures) est le temps moyen entre pannes (pour un taux de défaillance supposé constant $\lambda = 1/MTBF$).
+            À $t = MTBF$, la probabilité de survie $R(MTBF) = e^{-1} \approx 0.37$ (soit 37%).</p>
+            <p><strong>Loi d'Arrhenius :</strong> Relie le taux de défaillance (et donc l'inverse du MTBF) à la température absolue ($T_j$ en Kelvin) via une énergie d'activation ($E_G$ ou $E_a$).</p>
+            $$ \text{Taux de défaillance} \propto e^{-E_G / (k_B \cdot T_j)} \quad \implies \quad MTBF \propto e^{E_G / (k_B \cdot T_j)} $$
+            $$ \log(MTBF) = A + \frac{E_G}{k_B \cdot T_j} $$
+            où:
+             <ul>
+                 <li>$E_G$ est l'énergie d'activation du mécanisme de défaillance dominant (eV).</li>
+                 <li>$k_B = 8.617 \times 10^{-5}$ eV/K est la constante de Boltzmann.</li>
+                 <li>$T_j$ est la température absolue de jonction (K).</li>
+                 <li>$A$ est une constante.</li>
+             </ul>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Graph showing relative lifetime vs junction temperature (°C) on a log-linear scale for different activation energies (e.g., 0.7 eV, 1.0 eV, 1.3 eV). Lines show rapid decrease in lifetime as temperature increases. Reference point often taken at 125°C.</div>
+                 <figcaption>Exemple : Pour $E_G = 0.7$ eV, la durée de vie est divisée par 2 pour chaque augmentation de $T_j$ d'environ 11°C. Pour $E_G = 1.0$ eV, elle est divisée par 2 tous les 8°C environ. <strong>Conclusion : Une faible augmentation de température réduit drastiquement la durée de vie.</strong></figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 47</span>
+             <h2>Tenue au cyclage thermique (fatigue thermo-mécanique)</h2>
+             <p>Les variations répétées de température ($\Delta T_j$) dues aux cycles de fonctionnement (marche/arrêt, variations de charge) provoquent des contraintes mécaniques dans l'assemblage (différences de coefficients de dilatation thermique entre Si, Cu, brasures, etc.), conduisant à la fatigue et à la défaillance (ex: décollement des fils de bonding, fissures dans les brasures).</p>
+            <p><strong>Vieillissement en cyclage thermique (loi simplifiée de Coffin-Manson modifiée) :</strong></p>
+            $$ N_f \approx K \cdot (\Delta T_j)^{-\alpha} \cdot e^{E_a / (k_B T_{j,min})} $$
+             Une forme encore plus simplifiée est souvent utilisée :
+             $$ \boxed{ N_f \approx K' \cdot e^{-\beta \cdot \Delta T_j} } $$
+             où $N_f$ est le nombre de cycles à la rupture.
+             <figure>
+                 <div class="placeholder">Image Placeholder: Graph showing Number of cycles to failure (log scale) vs delta Tj (°C) for power modules (e.g., Eupec IGBT modules). Show experimental data points and trend lines for different failure rates (e.g., <10%, 50%). Include example points for $\Delta T_j = 40°C \implies N \approx 4 \times 10^6$ cycles and $\Delta T_j = 80°C \implies N \approx 30 \times 10^3$ cycles. Show a photo illustrating damage due to thermal cycling (e.g., bond wire lift-off).</div>
+                 <figcaption>Exemple pour des modules Eupec. On voit que le nombre de cycles admissibles chute très rapidement quand l'amplitude de la variation de température $\Delta T_j$ augmente.</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 48</span>
+            <h2>Moyens de dissipation de la chaleur</h2>
+            <p>Différentes solutions existent en fonction de la puissance à dissiper et de l'environnement.</p>
+            <ul>
+                <li><strong>Dissipateurs dédiés et profilés à air en convection naturelle :</strong> Pour faibles et moyennes puissances. La chaleur est transférée du boîtier au dissipateur (souvent en aluminium extrudé avec ailettes), puis à l'air ambiant par convection et rayonnement.</li>
+                 <figure class="placeholder">Image Placeholder: Photos of various heatsink profiles for natural convection.</figure>
+                <li><strong>Composants directement soudés sur circuit imprimé :</strong> La chaleur est évacuée par les plans de cuivre du PCB, éventuellement aidés par des vias thermiques. Pour faibles puissances ou composants très performants (faible $R_{dson}$).</li>
+                 <figure class="placeholder">Image Placeholder: Diagram showing heat flow path for SMD components on PCB (as in slide 45). Photo of components on a PCB. Sources: Texas Instrument, NXP.</figure>
+                <li><strong>Convection forcée air :</strong> Utilisation de ventilateurs pour augmenter le débit d'air sur le dissipateur, ce qui réduit la résistance thermique $R_{th,ha}$ et permet de dissiper plus de puissance pour un dissipateur donné. Courant dans les modules de puissance moyenne à élevée.</li>
+                 <figure class="placeholder">Image Placeholder: Photos of power modules with large finned heatsinks and integrated fans. Source: powerguru.org.</figure>
+                <li><strong>Refroidissement liquide (eau, huile...) :</strong> Pour les très fortes densités de puissance. Le liquide circule dans des plaques froides (cold plates) en contact avec les composants/modules. Permet les résistances thermiques les plus faibles.</li>
+                 <figure class="placeholder">Image Placeholder: Photo of liquid-cooled power modules/inverter stage. Source: DAU Liquid Cooled.</figure>
+            </ul>
+        </section>
+
+        <section id="packaging-types">
+            <span class="slide-ref">Slide 49</span>
+            <h2>Boitiers de type TO (Transistor Outline) : évolution, conseils de montage</h2>
+            <p>Boîtiers traversants classiques (TO220, TO218, TO247) et leurs équivalents de surface (D-PAK/TO252, D²-PAK/TO263).</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Photos of various TO-xxx packages (TO218, TO220, TO247, TO220FP, DPAK, D2PAK) with dimensions. Internal assembly views for TO220 and D2PAK showing die attach and wire bonding. Sources: Infineon, NXP.</div>
+            </figure>
+            <p><strong>Assemblage avec le dissipateur (pour boîtiers TO traversants) :</strong></p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Exploded views showing mounting hardware for standard TO-220 (screw, washer, insulating bushing/pad, nut) and clip-mounted isolated packages. Diagram illustrating the importance of thermal grease and proper screw torque/clip pressure to minimize Rth_ch. Show examples of good and bad thermal contact. Sources: ON semi, Infineon.</div>
+                 <figcaption><strong>Conseils :</strong>
+                    <ul>
+                        <li>Utiliser de la <strong>graisse thermique</strong> (ou un pad thermique) pour remplir les micro-aspérités entre le boîtier et le dissipateur et améliorer le contact.</li>
+                        <li>Respecter la <strong>pression de serrage</strong> (couple de la vis, force du clip) recommandée par le fabricant pour assurer un bon contact sans déformer/casser le boîtier.</li>
+                    </ul>
+                 </figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 50</span>
+             <h2>Boitiers SO (Small Outline) et SON (Small Outline Non-leaded)</h2>
+             <p>Boîtiers de surface de plus en plus utilisés pour leur compacité et leurs performances améliorées (faible inductance).</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Photos of SO8, SO8FL (flat lead), and various other modern SMD packages (SuperSO8, TDSON-8, LFPAK56, etc.). Close-up photo of MOSFETs in SO8 on a PCB. Sources: Infineon, NXP.</div>
+            </figure>
+             <p>Exemple : MOSFETs de 1 m$\Omega$ en boîtier SO8.</p>
+             <p><strong>Boîtier LFPAK56 (NXP) :</strong></p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Cutaway view and features of LFPAK56 package. Shows copper clip replacing wire bonds for low resistance/inductance, exposed leads for inspection, Power-SO8 footprint compatibility. Graph comparing package resistance contribution for LFPAK, D2PAK, TO220, DPAK. Sources: NXP.</div>
+                 <figcaption>Capable de commuter jusqu'à 100 A, plus petit qu'un D-PAK. Offre une faible résistance thermique et une faible inductance grâce à l'utilisation d'un clip en cuivre interne ("copper clip") au lieu de fils de bonding.</figcaption>
+            </figure>
+             <p>La part de résistance due au boîtier diminue avec ces nouvelles technologies.</p>
+
+             <span class="slide-ref">Slide 51</span>
+            <h2>Les variantes d'un boitier selon les fabricants : le SO8FL</h2>
+            <p>Le boîtier "SO8 Flat Lead" (ou équivalents) est un standard très populaire pour les MOSFETs de puissance faible/moyenne tension.</p>
+            <figure>
+                 <div class="placeholder" style="width: 250px; float: left; margin-right: 20px;">Image Placeholder: Photos showing different internal connection technologies for SO8FL-type packages: Al Wire bonding, Ribbon bonding, Copper Clip, Flip Chip (Au Bump). Source: ON semi, AND9137/D.</div>
+                 <div class="placeholder" style="overflow-x: auto;">
+                     <figcaption>Ses dénominations et spécificités technologiques selon les fabricants :</figcaption>
+                     <table>
+                         <thead><tr><th>Fabricant</th><th>Dénomination</th></tr></thead>
+                         <tbody>
+                             <tr><td>Vishay</td><td>PowerPAK SO-8</td></tr>
+                             <tr><td>International Rectifier</td><td>PQFN</td></tr>
+                             <tr><td>Texas Instrument</td><td>SON 5 x 6 mm (Q5A)</td></tr>
+                             <tr><td>Alpha and Omega</td><td>DFN 5 x 6</td></tr>
+                             <tr><td>ST Microelectronics</td><td>PowerFLAT™ 5x6</td></tr>
+                             <tr><td>Toshiba</td><td>SOP Advance</td></tr>
+                             <tr><td>Infineon</td><td>Super SO8</td></tr>
+                             <tr><td>NXP</td><td>LFPAK (SOT669)</td></tr>
+                             <tr><td>Renesas</td><td>WPAK(3F) / LFPAK</td></tr>
+                             <tr><td>Fairchild</td><td>Power 56</td></tr>
+                             <tr><td>APEC</td><td>PMPAK 5x6</td></tr>
+                             <tr><td>MagnaChip</td><td>PowerDFN56</td></tr>
+                             <tr><td>ROHM</td><td>HSOP8</td></tr>
+                             <tr><td>UBIQ</td><td>PRPAK56</td></tr>
+                             <tr><td>NIKO-SEM</td><td>PDFN 5 x 6</td></tr>
+                             <tr><td>NEC</td><td>8-pin HVSON</td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+            </figure>
+        </section>
+
+        <section id="switching-waveforms">
+            <span class="slide-ref">Slide 52</span>
+            <h2>Formes d'onde courant et tension dans le transistor d'une cellule de commutation de type bras de pont</h2>
+            <p>Observation des formes d'ondes réelles lors de la commutation d'un transistor (ici, probablement un IGBT d'après la source et les tensions/courants) dans une configuration de demi-pont, en tenant compte des inductances parasites ($L_\sigma$) et du comportement de la diode anti-parallèle.</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Half-bridge circuit (KH, KL with antiparallel diodes, parasitic inductance Ls). Waveforms for Turn-on: Vce drops, Ic rises with overshoot due to diode reverse recovery current (Irr). Waveforms for Turn-off: Vce rises with overshoot due to Ls * di/dt, Ic falls. Highlight key phenomena: diode recovery peak current, voltage overshoot. Photo of a power module.</div>
+                 <figcaption>Source: ABB, ISPSD, May 2006, Napoli, Italy. Conditions: $I_c=1500A, V_{DC} = 1800V, L_s= 120nH, T_j = 125 °C$.
+                    <ul>
+                        <li><strong>Turn-on (Amorçage) :</strong> Le courant $I_c$ monte rapidement. La diode de l'autre interrupteur (KL) entre en recouvrement inverse, provoquant un pic de courant ($I_{rr}$) qui s'ajoute à $I_o$. La tension $V_{CE}$ chute.</li>
+                        <li><strong>Turn-off (Blocage) :</strong> Le courant $I_c$ chute ($di/dt$ élevé). L'inductance parasite $L_s$ (connexions, boîtier) provoque une <strong>surtension</strong> aux bornes de l'interrupteur : $V_{overshoot} = L_s \cdot |di/dt|$. La tension $V_{CE}$ monte au-delà de $U_{dc}$.</li>
+                    </ul>
+                 </figcaption>
+            </figure>
+        </section>
+
+        <section id="diode-characteristics">
+            <span class="slide-ref">Slide 53</span>
+            <h2>Les diodes rapides</h2>
+
+            <h3>Caractéristiques statiques</h3>
+            <figure class="placeholder" style="float: right; width: 300px;">Image Placeholder: Static I-V curve for a diode (IF vs VF). Show forward conduction (low voltage drop), reverse blocking (small leakage current IR), avalanche breakdown (at VR). Include an example characteristic curve from a datasheet (e.g., Semikron SKN 4000, 600V-4000A).</div>
+             <figcaption>Exemple diode Semikron 600 V - 4000 A. La courbe $I_F(V_F)$ montre la chute de tension directe. La zone de polarisation inverse montre le courant de fuite $I_R$. L'avalanche se produit à la tension $V_R$.</figcaption>
+            </figure>
+             <ul>
+                 <li><strong>Polarisation directe :</strong> Chute de tension $V_F$ faible (ex: 0.7V - 2V selon technologie et courant). Modèle direct simple : $V_F = V_0 + R_0 \cdot I_F$.</li>
+                 <li><strong>Polarisation inverse :</strong> Courant de fuite $I_R$ très faible, jusqu'à la tension d'avalanche $V_R$. $I_R$ augmente avec la température (ex: x2 / 10°C).</li>
+             </ul>
+             <p><strong>Pertes de conduction :</strong>
+             $$ P_{cond} = \frac{1}{T} \int_{t_{on}} V_F(t) \cdot I_F(t) dt \approx \overline{V_F} \cdot \overline{I_F} $$
+             Si on utilise le modèle linéaire $V_F = V_0 + R_0 I_F$:
+             $$ P_{cond} = V_0 \cdot \overline{I_F} + R_0 \cdot I_{F,rms}^2 $$
+             où $\overline{I_F}$ est le courant moyen et $I_{F,rms}$ le courant efficace.</p>
+
+            <span class="slide-ref">Slide 54</span>
+             <h2>Blocage : phénomène de recouvrement inverse (Reverse Recovery)</h2>
+             <p>Lorsqu'une diode passante est bloquée (tension inverse appliquée), elle ne cesse pas instantanément de conduire. Les porteurs minoritaires stockés dans la jonction doivent être évacués, ce qui entraîne un courant inverse transitoire ($I_{rr}$).</p>
+            <figure>
+                 <div class="placeholder">Image Placeholder: Waveform illustrating diode reverse recovery. Shows forward current IF dropping, becoming negative (reverse current -IrrM) before decaying back to zero leakage current. Voltage VD across the diode stays near zero, then rises rapidly (possibly with overshoot) to the reverse voltage VR. Highlight the reverse recovery charge Qrr (area under the negative current curve) and peak reverse recovery current IrrM. Show associated power dissipation peak.</div>
+            </figure>
+            <ul>
+                 <li>Le $di/dt$ de descente du courant est généralement imposé par le circuit externe (ex: l'interrupteur qui s'amorce).</li>
+                 <li>Le courant devient négatif jusqu'à un pic $I_{rrM}$ (Peak Reverse Recovery Current).</li>
+                 <li>Le courant revient ensuite vers zéro (phase de recombinaison).</li>
+                 <li>Pendant ce temps, la diode supporte la tension inverse $V_R$.</li>
+                 <li>La charge évacuée est $Q_{rr}$ (Reverse Recovery Charge).</li>
+                 <li>Ce phénomène cause des <strong>pertes de commutation au blocage de la diode</strong> ($E_{rr}$).</li>
+             </ul>
+             <p><strong>Pertes de recouvrement inverse :</strong></p>
+             $$ P_{d\_off} \approx k \cdot F \cdot V_R \cdot Q_{rr} $$
+             où $F$ est la fréquence de commutation et $k$ est un facteur dépendant de la forme d'onde (typiquement $k \approx 1/6$ à $1/3$, souvent pris autour de 1/4). $Q_{rr}$ et $I_{rrM}$ augmentent avec $I_F$, $di/dt$ et la température.</p>
+
+            <span class="slide-ref">Slide 55</span>
+             <h2>Recouvrement inverse dans cellule de commutation forcée (mise en conduction du transistor)</h2>
+             <p>Le recouvrement inverse de la diode anti-parallèle (D) se produit lorsque l'interrupteur principal (K) se met en conduction.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Waveforms comparing turn-on of switch K with an ideal diode vs a real fast recovery diode (e.g., PiN). Show switch current Ik, switch voltage Vk. With ideal diode, Ik rises directly to Io. With real diode, Ik rises above Io to Io+IrrM due to diode recovery, causing a significant increase in the turn-on energy loss EswON in the switch K.</div>
+            </figure>
+             <p>Le courant de recouvrement inverse $I_{rrM}$ de la diode s'ajoute au courant de charge $I_o$ dans l'interrupteur K pendant sa mise en conduction.</p>
+             <p>Cela provoque une <strong>très forte augmentation de l'énergie dissipée à l'amorçage ($E_{swON}$) dans l'interrupteur K</strong> par rapport au cas avec une diode parfaite.</p>
+             <p>C'est pourquoi le choix de la diode anti-parallèle (rapide, faible $Q_{rr}$) est crucial, surtout à haute fréquence. Les diodes SiC Schottky sont avantageuses car elles n'ont quasiment pas de charge recouvrée ($Q_{rr} \approx 0$).</p>
+        </section>
+
+        <section id="mosfet-characteristics">
+            <span class="slide-ref">Slide 56</span>
+            <h2>MOSFET de puissance</h2>
+             <figure class="placeholder" style="float: right; width: 250px;">Image Placeholder: MOSFET symbol (N-channel enhancement) showing Drain, Source, Gate, and Body Diode. Static characteristics ID vs VDS for different VGS values. Output curve ID vs VGS (transfer characteristic). Highlight saturation region, linear/ohmic region, threshold voltage VT.</div>
+            </figure>
+            <p><strong>Particularités :</strong></p>
+            <ul>
+                 <li><strong>Entrée capacitive :</strong> La grille est isolée, le courant de grille statique est nul ($I_G=0$), mais il faut charger/décharger les capacités parasites (Cgs, Cgd, Cds) pour commuter. Le courant de grille peut être élevé pendant les commutations.</li>
+                 <li><strong>Grande rapidité</strong> de commutation (piloté en tension).</li>
+                 <li><strong>Diode interne anti-parallèle (Body Diode) :</strong> Existe naturellement entre Source et Drain. Sa performance (rapidité, $Q_{rr}$) peut être limitante.</li>
+            </ul>
+             <p><strong>Caractéristiques statiques $I_D = f(V_{DS}, V_{GS})$ :</strong></p>
+            <ul>
+                 <li><strong>Zone bloquée :</strong> $V_{GS} < V_{GS(th)}$ (tension de seuil), $I_D$ très faible.</li>
+                 <li><strong>Zone saturée (ou active) :</strong> $V_{GS} > V_{GS(th)}$ et $V_{DS} > V_{GS} - V_{GS(th)}$. $I_D$ dépend principalement de $V_{GS}$ (fonctionnement en source de courant). Non utilisée en commutation.</li>
+                 <li><strong>Zone ohmique (ou linéaire/triode) :</strong> $V_{GS} > V_{GS(th)}$ et $V_{DS} < V_{GS} - V_{GS(th)}$. Le MOSFET se comporte comme une résistance $R_{dson}$ contrôlée par $V_{GS}$. C'est la zone utilisée pour l'état ON. $I_D \approx V_{DS} / R_{dson}(V_{GS})$.</li>
+             </ul>
+             <p><strong>État ON :</strong> purement résistif, $V_{DS} = R_{dson} \cdot I_D$.</p>
+
+            <span class="slide-ref">Slide 57</span>
+             <h3>MOSFET caractéristiques à l'état passant</h3>
+             <figure class="placeholder" style="float: right; width: 300px;">Image Placeholder: Graph of RDS vs VGS, showing rapid decrease of RDS as VGS increases above VGSth. Example output characteristics ID vs VDS focused on the ohmic region for VGS=5V, 5.4V, 5.7V, 6V, 6.2V, 10V, 20V from BUK7Y12-55B datasheet.</div>
+                 <figcaption>Source: NXP MOSFET (BUK7Y12-55B) 55 V - 60 A</figcaption>
+             </figure>
+            <p>À l'état passant, la résistance <strong>$R_{dson}$</strong> diminue lorsque $V_{GS}$ augmente (au-delà de $V_{GS(th)}$). Il faut appliquer une tension $V_{GS}$ suffisante (ex: 10-15V) pour obtenir la $R_{dson}$ minimale spécifiée.</p>
+             <p><strong>Pertes de conduction :</strong></p>
+             $$ P_{cond} = R_{dson} \cdot I_{D,rms}^2 $$
+             <p><strong>Coefficient de température de $R_{dson}$ :</strong> Positif pour le silicium (environ +0.5% à +1% par °C). $R_{dson}$ augmente avec la température $T_j$. (Attention, $R_{dson}$ est spécifiée à 25°C dans les datasheets, il faut la corriger pour la température de fonctionnement réelle).</p>
+             <p><strong>Conduction inverse :</strong> Le canal peut conduire en inverse ($V_{DS} < 0$). Si $V_{GS}$ est suffisant pour ouvrir le canal, le courant passe par la faible résistance $R_{dson}$ plutôt que par la diode interne (qui a une chute de tension plus élevée). C'est la conduction "synchrone".</p>
+             <figure class="placeholder">Image Placeholder: MOSFET symbol showing current flow through the channel when VGS is high and VDS is negative.</figure>
+
+            <span class="slide-ref">Slide 58</span>
+             <h3>MOSFET aire de sécurité (SOA - Safe Operating Area)</h3>
+             <p>Le graphique SOA définit les limites de tension $V_{DS}$ et de courant $I_D$ que le composant peut supporter sans dommage, en fonction de la durée de l'impulsion ($t_p$).</p>
+             <figure class="placeholder">Image Placeholder: SOA graph for NXP BUK7Y12-55B. Log-log scale: ID (A) vs VDS (V). Shows limits due to: Max current (package limit), Rdson limit (at low VDS), Max power dissipation limit (slope -1, depends on pulse duration tp: 10us, 100us, 1ms, 10ms, 100ms, DC), Max voltage limit (avalanche breakdown).</div>
+                 <figcaption>Source: NXP MOSFET (BUK7Y12-55B) 55 V - 60 A. Les limites sont :
+                    <ul>
+                        <li>Courant maximal $I_{Dmax}$ (limité par le boîtier/fils de bonding).</li>
+                        <li>Limite $R_{dson}$ ($V_{DS} = R_{dson} \cdot I_D$).</li>
+                        <li>Limite de puissance dissipée ($P_{max} = V_{DS} \cdot I_D$, varie avec la durée $t_p$).</li>
+                        <li>Tension maximale $V_{DSmax}$ (tension d'avalanche).</li>
+                    </ul>
+                    Le point de fonctionnement $(V_{DS}, I_D)$ doit rester à l'intérieur de l'aire de sécurité pour la durée considérée.
+                 </figcaption>
+             </figure>
+
+            <span class="slide-ref">Slide 59</span>
+             <h3>MOSFET : commutations</h3>
+             <p>Analyse de la commutation (ici, amorçage/turn-on) avec une diode de roue libre supposée idéale, et pilotage de la grille par une source de courant $I_{GM}$.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Circuit for MOSFET turn-on analysis (Half-bridge leg with inductive load Lo, ideal diode DRL). Gate driven by current source IGM. Internal capacitances Cgs, Cgd, Cds shown. Waveforms: Gate voltage VGS (shows plateau due to Miller effect), Drain voltage VDS (falls), Drain current ID (rises), Gate current IG (constant IGM then drops). Highlight switching phases 1, 2, 3, 4. Plot of device capacitances Ciss, Coss, Crss vs VDS.</div>
+                 <figcaption>Variation réelle des capacités (ex: IRF 250 N). $C_{iss} = C_{gs} + C_{gd}$, $C_{oss} = C_{ds} + C_{gd}$, $C_{rss} = C_{gd}$. La capacité $C_{gd}$ (Miller) joue un rôle crucial.</figcaption>
+            </figure>
+             <p><strong>Phases de l'amorçage (Turn-on) :</strong></p>
+            <ol>
+                <li><strong>Delay time ($t_{d(on)}$) :</strong> $I_G=I_{GM}$ charge $C_{gs}$ et $C_{gd}$. $V_{GS}$ monte jusqu'à $V_{GS(th)}$. $I_D$ commence à monter. $V_{DS}$ reste à $U_{dc}$.</li>
+                <li><strong>Montée du courant ($t_{ri}$) :</strong> $V_{GS}$ continue de monter. $I_D$ monte jusqu'à $I_o$. $V_{DS}$ reste à $U_{dc}$. La grille continue de charger $C_{gs}$.</li>
+                <li><strong>Plateau Miller ($t_{fv}$) :</strong> $I_D = I_o$. $V_{DS}$ commence à chuter. $I_{GM}$ charge maintenant principalement $C_{gd}$ (effet Miller). $V_{GS}$ reste quasi-constant ("plateau Miller").</li>
+                <li><strong>Fin de commutation :</strong> $V_{DS}$ atteint $R_{dson} \cdot I_o$. $V_{GS}$ remonte jusqu'à la tension de commande finale $V_{GM}$. $I_G$ diminue.</li>
+            </ol>
+             <p>Les durées de ces phases dépendent du courant de grille $I_{GM}$ et des charges des capacités ($Q_G$, $Q_{gd}$, $Q_{gs}$). <strong>Tous les temps de commutation, et donc les pertes associées, sont sensiblement inversement proportionnels au courant maximal de grille $I_{GM}$</strong> (plus $I_{GM}$ est grand, plus la commutation est rapide).</p>
+
+             <span class="slide-ref">Slide 60</span>
+             <h3>MOSFET : commande de grille et consommation d'énergie</h3>
+             <p>Cas réel : la grille est commandée via une résistance $R_G$ par une source de tension (driver) $V_{CC}$ (ou $V_{DRV}$).</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Circuit for gate drive analysis with resistor RG. Shows driver output voltage Us, gate resistor RG, MOSFET input capacitances. Waveforms: Us (pulse), VGS (charges/discharges exponentially with plateau), IG (spikes then decays). Gate charge curve VGS vs QG from datasheet, showing Qgs, Qgd, QG_total.</div>
+                 <figcaption>Exemple de courbe de charge de grille ($V_{GS}$ vs $Q_G$) pour $I_D=18A$ et différentes $V_{DS}$.</figcaption>
+            </figure>
+             <p><strong>Consommation de la commande de grille :</strong></p>
+            <ul>
+                 <li><strong>Charge de grille ($Q_G$) :</strong> C'est la charge totale (en Coulombs ou nC) qu'il faut fournir à la grille pour faire passer $V_{GS}$ de 0 à $V_{CC}$ (ex: 15V). Elle est donnée dans la datasheet et dépend des conditions ($V_{CC}$, $V_{DS}$, $I_D$). $Q_G = \int i_g(t) dt$.</li>
+                 <li><strong>Énergie fournie par le driver à chaque cycle :</strong> $W_G = \int u_s(t) \cdot i_g(t) dt = V_{CC} \cdot Q_G$. (Cette énergie est dissipée dans $R_G$ et la résistance interne de la grille pendant la charge et la décharge).</li>
+                 <li><strong>Puissance consommée par la commande :</strong></li>
+            </ul>
+            $$ \boxed{ P_G = F \cdot W_G = F \cdot V_{CC} \cdot Q_G } $$
+             <p>La puissance consommée par le driver peut devenir significative à haute fréquence.</p>
+
+            <span class="slide-ref">Slide 61</span>
+             <h3>MOSFET de puissance : pertes de commutation</h3>
+             <p>Calcul approché des pertes d'amorçage $E_{swON}$ (le blocage $E_{swOFF}$ est similaire).</p>
+             <figure class="placeholder" style="float: right; width: 300px;">Image Placeholder: Gate charge curve VGS vs QG, highlighting the charge $\Delta Q_G$ corresponding to the Miller plateau.</div>
+            </figure>
+             <figure class="placeholder">Image Placeholder: Idealized turn-on waveforms: VDS (falls linearly during $t_{fv}$), ID (rises linearly during $t_{ri}$), VGS (shows plateau $V_{plateau}$). Highlight duration $t_{swON} = t_{ri} + t_{fv}$.</div>
+             </figcaption>
+             <p>La durée de la commutation $t_{swON}$ est dominée par le temps de chute de tension ($t_{fv}$) et le temps de montée du courant ($t_{ri}$). Ces temps dépendent de la charge/décharge des capacités via le courant de grille $I_{GM}$.</p>
+             <p>Durée du plateau Miller (temps de chute de $V_{DS}$) : $t_{fv} \approx \frac{Q_{gd}}{I_{GM}}$. La charge Miller $Q_{gd}$ peut être estimée par $\Delta Q_G$ sur la courbe de charge.
+             $$ t_{swON} \approx \frac{\Delta Q_G}{I_{GM}} $$
+             où $I_{GM} \approx \frac{V_{CC} - V_{plateau}}{R_G}$ est le courant de grille moyen pendant le plateau.
+             $V_{plateau} \approx V_{T}$ (tension de seuil).</p>
+             <p><strong>Énergie de commutation à l'amorçage (approximation) :</strong></p>
+             $$ E_{swON} \approx \frac{1}{2} U_{dc} \cdot I_o \cdot t_{swON} \approx \frac{1}{2} U_{dc} \cdot I_o \cdot \frac{\Delta Q_G}{I_{GM}} $$
+             (Formule très simplifiée, néglige la montée du courant et le recouvrement de diode).</p>
+             <p>Les pertes de commutation ($E_{swON}, E_{swOFF}$) dépendent donc fortement de $U_{dc}$, $I_o$, $Q_G$ (et $Q_{gd}$), et $R_G$.</p>
+
+            <span class="slide-ref">Slide 62</span>
+             <h3>MOSFET en commutation : conseil de câblage</h3>
+             <p>L'inductance parasite $L_s$ dans la maille de commutation Source-Commande est critique car elle provoque une contre-réaction négative qui ralentit la commutation.</p>
+             <figure class="placeholder">Image Placeholder: Diagrams showing effect of source inductance Ls. Left: Ls in series with source pin creates a voltage drop $Ls \cdot di_D/dt$ opposing the applied gate voltage VG. Right: Separate "Kelvin Source" connection for the gate return path minimizes this effect. Source: J. Zhang, International Rectifier, 2004.</div>
+            </figure>
+             <p>La tension réelle Grille-Source est : $V_{GS} = V_G - L_s \frac{di_D}{dt}$. Lors de l'amorçage ($di_D/dt > 0$), $V_{GS}$ est réduite, ralentissant la commutation. Lors du blocage ($di_D/dt < 0$), $V_{GS}$ est augmentée, pouvant causer un ré-amorçage parasite.</p>
+             <p><strong>Solution :</strong> Utiliser des boîtiers à <strong>4 pattes ("Kelvin Source")</strong> où la connexion de puissance de la source est séparée de la connexion de référence pour le driver de grille. Cela minimise l'inductance commune $L_s$ vue par le circuit de commande.</p>
+             <figure class="placeholder">Image Placeholder: Schematic and photo of a 4-pin TO-247 package. Shows separate Power Source and Kelvin Source (Lsource) pins. Source: Infineon, 4 pin TO247.</div>
+             <figcaption>Particulièrement important en forte puissance et/ou haute tension (au-delà de 100 V).</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 63</span>
+             <h3>Importance des boitiers dans les performances électriques ($R_{dson}$) et thermique ($R_{thjc}$)</h3>
+             <p>Comparaison de différents boîtiers SMD pour MOSFETs.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Photos of SO-8, Copperstrap, PowerPak, DirectFET packages. Table comparing Package Resistance (mOhm), Source Inductance (nH), Thermal Resistance Rth_junction_pcb (°C/W), Thermal Rth_junction_case_top (°C/W) for these packages.</div>
+                 <figcaption>Source: J. Zhang, International Rectifier, Choosing The Right Power MOSFET Package, 2004. On voit que les boîtiers plus évolués (Copperstrap, PowerPak, DirectFET) offrent des résistances et inductances parasites plus faibles, ainsi qu'une meilleure performance thermique que le SO-8 standard.</figcaption>
+             </figure>
+        </section>
+
+        <section id="igbt-characteristics">
+            <span class="slide-ref">Slide 64</span>
+            <h2>L'IGBT (Insulated Gate Bipolar Transistor)</h2>
+            <figure class="placeholder" style="float: left; margin-right: 20px; width: 100px;">Image Placeholder: IGBT symbol (combines MOSFET gate input with BJT output structure: Collector, Emitter, Gate).</div>
+             <figure class="placeholder" style="float: right; width: 300px;">Image Placeholder: Static output characteristics IC vs VCE for different VGE values (e.g., 7V, 8V, 9V, 10V, 15V, 20V) for Toshiba MG100Q2YS50 IGBT (100A-1200V).</div>
+                 <figcaption>IGBT Toshiba MG100Q2YS50 (100 A - 1200 V)</figcaption>
+            </figure>
+            <p>Combine une entrée de type MOSFET (commande en tension, haute impédance) avec une sortie de type BJT (transistor bipolaire, bonne capacité en courant et tension).</p>
+             <p><strong>Caractéristique à l'état passant :</strong></p>
+            <ul>
+                 <li>Seuil de tension : Comme un BJT, l'IGBT présente une chute de tension $V_{CEsat}$ qui a une composante de seuil ($V_T \approx 0.7-1V$) et une composante résistive ($R_T$).</li>
+                 <li>Modèle simple : $\boxed{V_{CEsat} \approx V_T + R_T \cdot i_C}$</li>
+                 <li>La valeur de $V_{CEsat}$ diminue légèrement quand $V_{GE}$ augmente (au-delà d'un certain seuil, ex: 15V).</li>
+            </ul>
+             <p><strong>Pertes de conduction :</strong></p>
+             $$ P_{cond} = \frac{1}{T} \int_{t_{on}} V_{CEsat}(t) \cdot i_C(t) dt \approx \overline{V_{CEsat}} \cdot \overline{I_C} $$
+             $$ P_{cond} \approx V_T \cdot \overline{I_C} + R_T \cdot I_{C,rms}^2 $$
+             <p><strong>État bloqué :</strong> Comme un MOSFET, commandé par $V_{GE} < V_{GEth}$ (tension de seuil grille-émetteur).</p>
+
+            <span class="slide-ref">Slide 65</span>
+             <h3>IGBT : caractéristiques statiques et aire de sécurité</h3>
+             <p><strong>Influence de la température sur la chute de tension :</strong></p>
+             <figure class="placeholder" style="width: 80%;">Image Placeholder: Comparison of IC vs VCE curves at Tc=25°C and Tc=125°C for Toshiba 1200V/100A IGBT. Shows VCEsat increases with temperature at high currents (positive tempco, like Rdson) but decreases at low currents (negative tempco, like Vbe).</div>
+             <p>Le coefficient de température de $V_{CEsat}$ peut être positif (à fort courant, domine $R_T$) ou négatif (à faible courant, domine $V_T$). Cela complique la mise en parallèle directe des puces IGBT.</p>
+             <p><strong>Aire de sécurité en court-circuit (SCSOA - Short Circuit SOA) :</strong></p>
+             <figure class="placeholder" style="width: 80%;">Image Placeholder: SCSOA graphs for 600V class and 1200V class IGBTs. Shows maximum collector current (normalized) vs VCE during a short circuit event, limited by time (e.g., 10µs). Source: Powerex.</div>
+             <figcaption>Les IGBTs sont généralement spécifiés pour tenir un court-circuit pendant une durée limitée (ex: 10 µs), le temps que la protection par le driver réagisse.</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 66</span>
+             <h3>IGBT : pertes de commutation</h3>
+             <p>Les formes d'ondes de commutation sont qualitativement similaires à celles des MOSFETs (même caractéristiques de charge de grille $Q_G$). Les pertes $E_{on}$ (amorçage) et $E_{off}$ (blocage) sont mesurées et données dans les datasheets en fonction du courant $I_C$ et de la résistance de grille $R_G$.</p>
+             <figure>
+                 <div class="placeholder" style="width: 48%; float: left;">Image Placeholder: Graph of switching energy losses (Eon, Eoff, Ets=Eon+Eoff) vs Collector Current IC for Infineon SGW30N60 IGBT (600V, 30A). Conditions: Tj=150C, VCE=400V, VGE=0/+15V, RG=11 Ohm. Note: Losses include diode recovery.</div>
+                 <div class="placeholder" style="width: 48%; float: right;">Image Placeholder: Graph of switching energy losses (Eon, Eoff, Ets) vs Gate Resistor RG for the same IGBT at IC=30A. Shows losses decrease as RG decreases (faster switching).</div>
+                 <figcaption>Energies de commutation pour IGBT Infineon SGW30N60 (600V, 30A).
+                 Exemple : à $I_C=30A$, $R_G=11\Omega$, $E_{on} \approx 1.2$ mJ, $E_{off} \approx 0.8$ mJ.
+                 Total $E_{sw} = E_{on} + E_{off} = 2$ mJ.
+                 Si $F=10$ kHz, $P_{sw} = F \cdot E_{sw} = 10^4 \times 2 \times 10^{-3} = 20$ W.
+                 Pertes de conduction à $I_C=30A, T_j=150°C$: $V_{CEsat} \approx 1.7V$. Si $\alpha=0.5$, $\overline{I_C} = 15A$. $P_{cond} \approx \alpha \cdot V_{CEsat} \cdot I_C \approx 0.5 \times 1.7 \times 30 \approx 25.5$ W (calcul plus précis nécessaire). Ici $P_{cond} = \alpha (V_T \overline{I_C} + R_T I_{C,rms}^2) \approx 35W$.
+                 </figcaption>
+             </figure>
+
+            <span class="slide-ref">Slide 67</span>
+             <h3>IGBT : Compromis de conception (chute de tension / pertes de commutation)</h3>
+             <p>Les fabricants proposent souvent différentes générations ou séries d'IGBTs optimisées soit pour les faibles pertes de conduction (chute $V_{CEsat}$ réduite), soit pour les faibles pertes de commutation (rapidité accrue).</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Graph showing Switching Energy Loss (Wswitch in mJ) vs Saturation Voltage (Vcesat in V) for different IGBT series (standard, rapides, ultra-rapides, "warp-speed"). Shows a trade-off curve: lower Vcesat generally means higher switching losses, and vice versa. Example for IGBT 600 V, 1.3 A/mm² @ 150°C. Source: International Rectifier.</div>
+                 <figcaption>Exemple International Rectifier. Il y a une possibilité de choisir le composant le mieux adapté à l'application :
+                    <ul>
+                        <li><strong>Basses fréquences :</strong> Privilégier faibles pertes de conduction (faible $V_{CEsat}$, type "standard").</li>
+                        <li><strong>Hautes fréquences :</strong> Privilégier faibles pertes de commutation (types "rapides", "ultra-rapides").</li>
+                    </ul>
+                 </figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 68</span>
+             <h3>Commande des composants à « grille isolée » (MOS, IGBT)</h3>
+             <p>La grille étant isolée, elle doit être pilotée en tension par un circuit "driver".</p>
+             <h4>Interrupteur « low side » (côté bas)</h4>
+             <p>L'émetteur (IGBT) ou la source (MOSFET) est référencé à la masse commune.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Schematic of a low-side gate driver. Shows input signal (ON/OFF), driver IC powered by Vcc/-Vee (or ground). Output stage controlling gate voltage via separate turn-on (RGon) and turn-off (RGoff) resistors (using transistors TA, TB). Allows separate control of switching speeds.</div>
+                 <figcaption>Exemple avec contrôle séparé des vitesses de commutation à l'amorçage ($R_{Gon}$) et au blocage ($R_{Goff}$) via deux transistors (TA, TB) ou diodes.</figcaption>
+            </figure>
+             <h4>Exemple avec isolation galvanique par optocoupleur</h4>
+             <p>L'isolation est nécessaire si le circuit de commande (microcontrôleur) n'est pas référencé au même potentiel que l'émetteur/source, ou pour des raisons de sécurité.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Schematic of an isolated gate driver using an optocoupler (e.g., HCPL-J314). Shows the optocoupler transmitting the logic signal across the isolation barrier. The output side requires a separate, isolated power supply (Vcc) to power the driver stage connected to the gate.</div>
+                 <figcaption>L'alimentation ($V_{CC}$) du circuit de commande de grille doit également être isolée.</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 69</span>
+             <h3>Bras de pont et/ou interrupteur « high side » (côté haut)</h3>
+             <p>Dans un bras de pont (demi-pont), l'émetteur/source du transistor du haut ("high side") n'est pas à un potentiel fixe, mais commute entre $U_{dc}$ et 0. Sa commande nécessite une référence flottante.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Schematic of a half-bridge leg showing high-side and low-side transistors. Driver circuit block diagram for the high-side transistor, indicating the need for an isolated/floating power supply and level shifting/isolation for the control signal. Example IC: IR2110 high/low side driver. Block diagram and typical connection for IR2110.</div>
+                 <figcaption>Source: International Rectifier. Des circuits intégrés spécifiques ("high-side drivers" ou "half-bridge drivers", ex: IR2110) intègrent les fonctions de décalage de niveau (level shifting) et parfois une alimentation flottante (générée par "bootstrap").</figcaption>
+            </figure>
+             <p>L'alimentation flottante peut être générée par une petite alimentation isolée dédiée, ou par une technique "bootstrap" utilisant une diode et un condensateur pour stocker l'énergie lorsque le transistor bas est passant.</p>
+
+        </section>
+
+        <hr>
+
+        <section id="passive-components">
+            <span class="slide-ref">Slide 70</span>
+             <h2>Composants magnétiques et Condensateurs</h2>
+             <!-- Outline repeated for context -->
+             <!-- <h2>Alimentations à découpage</h2> ... -->
+             <!-- <h2>Composants de l'électronique de puissance</h2>
+             <ul>
+                 <li>Semi-conducteurs de puissance</li>
+                 <li><strong>Composants magnétiques</strong></li>
+                 <li><strong>Condensateurs</strong></li>
+             </ul> -->
+
+            <span class="slide-ref">Slide 71</span>
+             <h2>Composants « passifs » (magnétiques, capacitifs...)</h2>
+             <p>Bien que appelés "passifs", ces composants jouent un rôle essentiel et sont souvent dimensionnants en termes de volume, coût et pertes.</p>
+             <h3>Magnétiques : transformateurs de puissance, inductances, transformateurs de signal (impulsion, courant)</h3>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Photos of various magnetic components used in power electronics: Toroidal transformer (laminated core), Pot core transformer (ferrite), Toroidal inductor (powder core), Ferrite core inductor (with air gap), Current transformer, Pulse transformer.</div>
+            </figure>
+             <h3>Condensateurs (« de puissance »)</h3>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Photos of various capacitor types: Film capacitors (polypropylene, box type), Ceramic capacitors (high voltage discs), Electrolytic capacitors (aluminum cans). Indicate typical voltage/capacitance ranges.</div>
+                 <figcaption>Différentes technologies :
+                    <ul>
+                        <li>Film plastique (polypropylène, polyester) : Bonnes performances en fréquence, faible ESR, pour filtrage AC, DC-link. (ex: 0.1-100 nF, 100-600V ; ou plus gros pour DC-link)</li>
+                        <li>Céramiques : Petits, pour haute fréquence, snubbers, découplage. Hautes tensions possibles. (ex: 0.1-10 nF, 10-40 kV)</li>
+                        <li>Électrochimiques (aluminium, tantale) : Grande capacité volumique, pour filtrage DC basse fréquence, stockage d'énergie. Polarisation à respecter, durée de vie limitée, ESR/ESL plus élevés. (ex: µF à mF)</li>
+                    </ul>
+                 </figcaption>
+            </figure>
+             <h3>Protections : fusibles, écrêteurs de surtensions (VDR, TVS diodes)...</h3>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Photos of fuses, varistors (VDR), TVS diodes, gas discharge tubes.</div>
+            </figure>
+
+            <span class="slide-ref">Slide 72</span>
+             <p>Appelés passifs par opposition aux composants semi-conducteurs de puissance, supposés « actifs » (car commandés).</p>
+             <h3>Où se trouvent-ils dans une alimentation à découpage typique ?</h3>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Block diagram of a typical SMPS with PFC. Highlight passive components in each stage: Input Protection (fuse, VDR), Input Filtering (inductors L, capacitors C - X and Y types), PFC & DC Link (Boost inductor, PFC diode, DC link capacitor), Conversion & Control (transformer, output inductors, output capacitors), Output Filtering/Protection. Source: EPCOS.</div>
+                 <figcaption>Source: EPCOS. On les retrouve dans :
+                    <ul>
+                        <li>Filtrage d'entrée (EMI filter) : Inductances de mode commun, condensateurs X et Y.</li>
+                        <li>Correction du facteur de puissance (PFC) : Inductance de boost.</li>
+                        <li>Liaison DC (DC Link) : Gros condensateur de stockage d'énergie.</li>
+                        <li>Convertisseur DC/DC : Transformateur d'isolation, inductance(s) de lissage, condensateurs de sortie.</li>
+                        <li>Filtrage de sortie.</li>
+                        <li>Circuits auxiliaires (commande, snubbers...).</li>
+                    </ul>
+                 </figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 73</span>
+             <p>Ils occupent généralement une part importante de l'encombrement global d'un convertisseur électronique de puissance, aux côtés des systèmes de refroidissement.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Photo of an open-frame power supply (e.g., 220W forward converter). Highlight bulky passive components (input filter inductors/caps, main transformer, output inductors, large electrolytic capacitors) and heatsinks for semiconductors. Indicate approximate dimensions (e.g., 23cm x 18cm).</div>
+                 <figcaption>Exemple : forward 220 W. Les composants magnétiques (transformateur, inductances) et les condensateurs (surtout électrolytiques pour le DC link et la sortie) sont très visibles et volumineux.</figcaption>
+            </figure>
+
+            <span class="slide-ref">Slide 74</span>
+             <h2>Principe du filtrage (un stockage d'énergie à l'échelle de la période de découpage)</h2>
+             <p>Pour récupérer la valeur moyenne d'une tension/courant découpé(e), il faut filtrer les harmoniques haute fréquence liés au découpage. Le filtre le plus simple est le filtre LC passe-bas du second ordre.</p>
+             <figure>
+                 <div class="placeholder">Image Placeholder: Waveform of a chopped DC voltage (e.g., output of a buck converter before filtering) between 0 and Udc with duty cycle alpha. Circuit diagram of an LC filter (Inductor L in series, Capacitor C in parallel) fed by the chopped voltage, outputting smoothed voltage Vo. Frequency response F(p)=1/(1+LCp²) of the LC filter.</div>
+            </figure>
+             <p>Le filtre LC stocke l'énergie pendant une partie du cycle et la restitue pendant l'autre pour lisser la sortie.</p>
+             <p>Tension moyenne en sortie (idéal) : $\overline{v_o} = \alpha \cdot U_{dc}$</p>
+             <p>Fonction de transfert : $F(p) = \frac{V_o(p)}{V_{in}(p)} = \frac{1}{1 + L C p^2}$. La fréquence de coupure est $f_c = 1/(2\pi\sqrt{LC})$. Pour bien filtrer, on choisit $f_c \ll F_{decoupage}$.</p>
+
+             <p><strong>La quantité d'énergie maximale à stocker (dimensionnante) dans L et C est proportionnelle à la période de découpage $T=1/F$, d'où la recherche de fréquences élevées pour réduire la taille de ces composants.</strong></p>
+
+             <p>Les grandeurs dimensionnantes seront donc :</p>
+            <ul>
+                <li><strong>Pour les inductances :</strong> $L$, $I_{max}$ (courant crête pour éviter la saturation). L'énergie maximale stockée est $\frac{1}{2} L I_{max}^2$. Mais aussi $I_{rms}$ (courant efficace pour les pertes Joule $R \cdot I_{rms}^2$) et $U_{max}$ (tension maximale pour l'isolement).</li>
+                <li><strong>Pour les condensateurs :</strong> $C$, $U_{max}$ (tension maximale). L'énergie maximale stockée est $\frac{1}{2} C U_{max}^2$. Mais aussi $I_{rms}$ (courant efficace pour l'échauffement dû à l'ESR : $ESR \cdot I_{rms}^2$).</li>
+            </ul>
+        </section>
+
+    </article>
+</main>
+
+<footer>
+    <p>Fin de la section sur les composants.</p>
+    <p>B. Multon ENS Rennes</p>
+</footer>
+
+</body>
+</html>
