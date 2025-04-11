@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertisseurs AC-DC et AC-AC : Gradateurs</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}, {left: '$', right: '$', display: false} ] });"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            color: #333;
+            margin-top: 1.5em;
+        }
+
+        h1 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+        }
+
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 3px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            background-color: #f9f9f9;
+            color: #888;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .caption {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 1em;
+        }
+
+        footer {
+            margin-top: 2em;
+            border-top: 1px solid #ccc;
+            padding-top: 1em;
+            font-size: 0.9em;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .page-ref {
+            font-style: italic;
+            color: #777;
+        }
+         /* Style for list items using specific markers */
+        ul.custom-marker li::marker {
+            content: "▲ "; /* Default marker */
+        }
+        ul.custom-marker li.disadvantage::marker {
+            content: "▼ ";
+        }
+        ul.custom-marker li.bullet::marker {
+             content: "* ";
+        }
+        ul.custom-marker li.square::marker {
+             content: "■ ";
+        }
+    </style>
+</head>
+
+<body>
+
+    <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <span>Support de cours d'électronique de puissance EI2</span>
+        <span>Les convertisseurs AC-DC et AC-AC</span>
+    </header>
+
+    <main>
+
+        <section>
+            <p class="page-ref">(Contenu basé sur la page 36)</p>
+            <h2>Redresseur Triphasé Mixte (Suite)</h2>
+
+            <p>Le réseau de tensions secondaires du transformateur est noté de la façon suivante (avec \( V_m \) l'amplitude maximale de la tension phase-neutre et \( \theta = \omega t \) l'angle électrique) :</p>
+            \[ v_1 = V_m \sin(\theta) \]
+            \[ v_2 = V_m \sin(\theta - \frac{2\pi}{3}) \]
+            \[ v_3 = V_m \sin(\theta - \frac{4\pi}{3}) \]
+
+            <h3>IV-7-2 - Analyse du fonctionnement (Cas \( \psi = \pi/2 \))</h3>
+            <p>Le retard à l'amorçage (angle de commande) est noté \( \psi \). On détermine la tension de l'enveloppe supérieure \( V^+(\theta) \) et la tension de l'enveloppe inférieure \( V^-(\theta) \) des tensions composées pour cet angle d'amorçage. Cela permet de déterminer les grandeurs caractéristiques de ce pont redresseur (pont mixte PD3, c'est-à-dire 3 thyristors et 3 diodes).</p>
+            <p>En opérant par intervalles successifs pour le cas spécifique où l'angle de retard à l'amorçage est \( \psi = \frac{\pi}{2} \), on peut établir le tableau suivant décrivant la conduction des interrupteurs (Thyristors T1, T2, T3 et Diodes D1, D2, D3), la tension de sortie \( u_c \) et le courant de sortie \( i_i \) (supposé parfaitement lissé à \( I_c \) en raison d'une forte inductance de charge) :</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Intervalle \( \theta \)</th>
+                        <th>Interrupteurs en conductions</th>
+                        <th>Tension de sortie \( u_c \)</th>
+                        <th>Courant \( i_i \)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>\( [\frac{2\pi}{3}, \frac{7\pi}{6}] \)</td>
+                        <td>T1 et D3</td>
+                        <td>\( v_1 - v_2 = u_{12} \) (Erreur dans le PDF, T1+D3 -> V1-V3=u13?) (PDF dit V1-V3=u12, incohérent)</td>
+                        <td>\( I_c \)</td>
+                    </tr>
+                     <tr>
+                        <td>\( [\frac{7\pi}{6}, \frac{4\pi}{3}] \)</td>
+                        <td>T1 et D1</td>
+                        <td>0 (Roue libre)</td>
+                        <td>0 (PDF dit 0, mais courant devrait être Ic?)</td>
+                    </tr>
+                    <tr>
+                        <td>\( [\frac{4\pi}{3}, \frac{11\pi}{6}] \)</td>
+                        <td>T2 et D1</td>
+                        <td>\( v_2 - v_1 = u_{21} \) (PDF dit V2-V1=u23, incohérent)</td>
+                        <td>\( -I_c \) (PDF dit -Ic)</td>
+                    </tr>
+                    <tr>
+                        <td>\( [\frac{11\pi}{6}, 2\pi] \)</td>
+                        <td>T2 et D2</td>
+                        <td>0 (Roue libre)</td>
+                        <td>0</td>
+                    </tr>
+                     <tr>
+                        <td>\( [2\pi, 2\pi + \frac{\pi}{6}] \) (Début cycle suivant, soit \( [0, \frac{\pi}{6}] \))</td>
+                        <td>T3 et D2</td>
+                         <td>\( v_3 - v_2 = u_{32} \) (PDF dit V3-V2=u31, incohérent)</td>
+                        <td>0 (PDF dit 0)</td>
+                    </tr>
+                     <tr>
+                        <td>\( [\frac{5\pi}{2}, \frac{8\pi}{3}] \) (Soit \( [\frac{\pi}{6}, \frac{2\pi}{3}] \) dans le cycle suivant)</td>
+                        <td>T3 et D3</td>
+                        <td>0 (Roue libre)</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+                 <!-- Note: Il semble y avoir des incohérences dans le tableau du PDF concernant les tensions (ex: u12 vs u13) et le courant pendant la roue libre. Typiquement, en roue libre, le courant Ic circule via T1+D1, T2+D2, T3+D3, mais la tension uc est nulle. Le courant ne peut pas être nul si Ic est constant. -->
+            </table>
+
+            <h3>IV-7-3 - Valeur moyenne de la tension de sortie Uc</h3>
+            <p>On remarque que sur une période \( 2\pi \), la forme d'onde de la tension de sortie présente une périodicité avec 3 arches (ou motifs) identiques, mais décalées. La relation \( u_c(\theta) = V^+(\theta) - V^-(\theta) \) permet de calculer la tension instantanée, mais pour la valeur moyenne, on intègre sur une période \( T = 2\pi \). En raison de la structure (pont mixte), la tension moyenne dépend de l'angle de commande \( \psi \).</p>
+            <p>On a :</p>
+            \[ U_{cmoy} = \frac{1}{2\pi} \int_0^{2\pi} u_c(\theta) d\theta \]
+             <p>Le calcul de l'intégrale, en tenant compte des phases de conduction et de roue libre, conduit à :</p>
+            <!-- Le PDF donne directement les résultats des intégrales des enveloppes, ce qui est un peu rapide. -->
+             <!-- \[ \frac{1}{2\pi} \int V^+(\theta) d\theta = \frac{3\sqrt{3} V_m}{2\pi} \cos(\psi) \quad \text{et} \quad \frac{1}{2\pi} \int V^-(\theta) d\theta = -\frac{3\sqrt{3} V_m}{2\pi} \] -->
+            <!-- Note: La deuxième intégrale (pour V-) ne devrait pas dépendre de psi dans un pont mixte (diodes non commandées). La formule finale semble plus standard pour un pont mixte. -->
+            <p>La tension moyenne de sortie pour un pont mixte triphasé est donnée par :</p>
+            \[ U_{cmoy} = \frac{3\sqrt{3} V_m}{2\pi} (1 + \cos(\psi)) \]
+            <p>On remarque que \( U_{cmoy} \) est positive quel que soit \( \psi \) (car \( \cos(\psi) \ge -1 \)).</p>
+            <ul>
+                <li>Pour \( \psi = 0 \) (retard nul, correspond à un pont à diodes) : \( U_{cmoy} = \frac{3\sqrt{3} V_m}{\pi} \) (Attention: facteur 2 de différence avec le PDF. La formule standard pour pont mixte à psi=0 est \( \frac{3\sqrt{3} V_m}{2\pi} (1+1) = \frac{3\sqrt{3} V_m}{\pi} \). Le PDF a une erreur ici).</li>
+                <li>Pour \( \psi = \pi \) (retard maximal) : \( U_{cmoy} = \frac{3\sqrt{3} V_m}{2\pi} (1 + (-1)) = 0 \)</li>
+            </ul>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 37)</p>
+             <p>La figure suivante représente la variation de la tension de sortie moyenne \( U_{Cmoy} \) aux bornes de la charge en fonction de l'angle de commande \( \psi \), pour le pont mixte et pour le pont tout thyristors (pour comparaison).</p>
+
+             <div class="placeholder">[Placeholder: Graphique Ucmoy vs ψ pour pont mixte et pont tout thyristors]</div>
+             <p class="caption">Comparaison des caractéristiques de commande \( U_{cmoy}(\psi) \) pour un pont redresseur triphasé mixte et un pont tout thyristors. L'axe vertical montre \( U_{Cmoy} \). L'axe horizontal montre \( \psi \) de 0 à \( \pi \). La courbe supérieure correspond au pont tout thyristors (\( U_{cmoy} = \frac{3\sqrt{3} V_m}{\pi} \cos(\psi) \)), la courbe inférieure au pont mixte (\( U_{cmoy} = \frac{3\sqrt{3} V_m}{2\pi} (1 + \cos(\psi)) \)).</p>
+
+            <h3>IV-7-4 - Formes d'ondes des différentes grandeurs pour \( \psi = \frac{\pi}{2} \)</h3>
+            <p>La figure ci-dessous illustre les formes d'ondes temporelles (en fonction de \( \theta = \omega t \)) pour le redresseur PD3 mixte fonctionnant avec un angle de commande \( \psi = \frac{\pi}{2} \) et une charge fortement inductive (courant \( I_c \) constant).</p>
+
+            <div class="placeholder">[Placeholder: Formes d'ondes pour redresseur PD3 mixte avec ψ = π/2]</div>
+            <p class="caption">Figure N°34: Formes d'ondes des différentes grandeurs d'un redresseur PD3 mixte. Sont représentées : les tensions d'alimentation \( v_1, v_2, v_3 \), les enveloppes des tensions composées \( V^+, V^- \), la tension de sortie \( u_c \), les intervalles de conduction des thyristors (T1, T2, T3) et des diodes (D1, D2, D3), et le courant de sortie \( i_i \) (alternant entre \( I_c, 0, -I_c \) selon le tableau précédent, avec les corrections potentielles mentionnées).</p>
+        </section>
+
+        <hr style="margin: 2em 0;">
+
+        <h1>LES GRADATEURS</h1>
+         <p class="page-ref">(Contenu basé sur la page 38)</p>
+
+        <section>
+            <h2>I- Introduction</h2>
+            <p>Les gradateurs (ou variateurs de tension alternative / AC voltage controllers) sont des convertisseurs statiques AC/AC qui permettent de commander et de régler la valeur efficace de la tension et/ou du courant fournis par une source de tension alternative à un récepteur. Ils fonctionnent en modulant le moment où la liaison entre la source et la charge est établie à chaque demi-cycle (commande de phase) ou en alternant des périodes de conduction complète et de blocage (commande par train d'ondes, non abordée ici).</p>
+            <p>Leur fonction principale est de faire varier la puissance transférée à la charge. L'élément de base d'un gradateur monophasé est constitué de deux thyristors montés en anti-parallèle (tête-bêche), placés entre la source et le récepteur.</p>
+        </section>
+
+        <section>
+            <h2>II- Marche en interrupteur</h2>
+            <p>Le gradateur peut être utilisé comme un simple interrupteur statique (sans pièces mobiles), capable d'établir ou de couper la liaison entre la source et la charge.</p>
+
+            <h3>II-1- Principe</h3>
+            <p>La figure suivante montre le schéma de principe d'un gradateur monophasé utilisé comme interrupteur.</p>
+
+            <div class="placeholder">[Placeholder: Schéma d'un gradateur monophasé (interrupteur)]</div>
+            <p class="caption">Figure N°2.1: Interrupteur de puissance monophasé. Le circuit comprend une source de tension alternative \( v(t) \), le gradateur (Thyristors Th1 et Th1' en anti-parallèle), et une charge (ici, une résistance R). La tension aux bornes de la charge est \( u(t) \) et le courant est \( i(t) \).</p>
+
+            <p><strong>Fermeture de l'interrupteur :</strong> Si on envoie un signal de déblocage (impulsion de gâchette) sur Th1 dès le début de l'alternance positive de \( v(t) \) et un signal similaire sur Th1' dès le début de l'alternance négative, le courant alternatif \( i(t) \) passe tantôt par Th1, tantôt par Th1'. L'interrupteur est fermé. En négligeant la chute de tension directe dans les thyristors, la tension aux bornes de la charge est égale à la tension d'alimentation : \( u(t) \approx v(t) \).</p>
+            <p><strong>Prise en compte du déphasage (charge inductive) :</strong> Pour une charge non purement résistive, le courant \( i(t) \) est déphasé par rapport à la tension \( v(t) \) d'un angle \( \varphi_R \) (argument du récepteur). Pour que le courant puisse effectivement s'établir et se maintenir, le signal de gâchette doit être appliqué pendant toute la durée potentielle de conduction. Par exemple, pour Th1, le signal doit être présent au moins jusqu'à ce que le courant \( i(t) \) s'annule naturellement, même si cela se produit après que \( v(t) \) soit devenue négative. Cela suppose :</p>
+            <ul class="custom-marker">
+                <li class="bullet">Soit l'emploi de signaux de déblocage très larges (par exemple, couvrant presque 180°), surtout si l'argument \( \varphi_R \) est variable (cas des moteurs).</li>
+                <li class="bullet">Soit l'envoi en permanence sur les gâchettes d'impulsions à haute fréquence rapprochées (train d'impulsions).</li>
+                <li class="bullet">Soit l'alimentation des gâchettes à partir des tensions anodiques (auto-alimentation, moins courant).</li>
+            </ul>
+            <p><strong>Ouverture de l'interrupteur :</strong> Si on supprime les signaux de déblocage des gâchettes, le thyristor qui était en conduction se bloque dès que le courant \( i(t) \) qui le traverse s'annule (passage par zéro naturel du courant). L'autre thyristor ne peut pas s'amorcer car il ne reçoit plus de signal de gâchette. L'interrupteur est alors ouvert : \( i(t) = 0 \). La tension aux bornes des thyristors bloqués est égale à la tension d'alimentation \( v(t) \) ( \( V_{TH1} = -V_{TH1'} = v(t) \) ).</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 39)</p>
+            <h3>II-2- Formes d'ondes des différentes grandeurs (Mode Interrupteur)</h3>
+            <p>Les formes d'ondes ci-dessous illustrent le fonctionnement en interrupteur pour une charge inductive (courant \( i \) déphasé en retard sur la tension \( v \)).</p>
+
+             <div class="placeholder">[Placeholder: Formes d'ondes pour gradateur en mode interrupteur (charge inductive)]</div>
+             <p class="caption">Figure N°2.2: Formes d'ondes des différentes grandeurs pour une charge inductive en mode interrupteur. Sont tracées : la tension d'alimentation \( v \) et la tension aux bornes de la charge \( u_R \), les courants de gâchette \( i_{G1} \) et \( i_{G1'} \) (ici larges), le courant de charge \( i(t) \) (déphasé de \( \varphi \)) et la tension aux bornes de Th1 \( V_{Th1} \). On voit le passage de l'état fermé (\( u_R(t) = v(t) \)) à l'état ouvert (\( u_R(t) = 0 \)).</p>
+
+            <h3>II-3- Avantages et inconvénients (Mode Interrupteur)</h3>
+            <p>Les avantages de l'interrupteur statique (gradateur en mode ON/OFF) sont :</p>
+            <ul class="custom-marker">
+                <li>Absence de pièces mobiles, donc pas de risque de rebondissement des contacts, usure mécanique nulle.</li>
+                <li>Établissement quasi instantané du courant si la commande est réalisée par signaux H.F ou par tension anodique (commutation rapide).</li>
+                <li>Possibilité de cadences de fonctionnement (ON/OFF) très rapides.</li>
+                <li>Ouverture sans rupture de courant (au passage par zéro naturel), donc sans surtension d'induction dangereuse pour une charge inductive.</li>
+            </ul>
+             <p>Mais cet interrupteur présente aussi des inconvénients :</p>
+             <ul class="custom-marker"> <!-- Continued on next page -->
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 40)</p>
+            <ul class="custom-marker"> <!-- Continuation from previous page -->
+                <li class="disadvantage">Il est plus fragile en cas de surcharge (surintensité ou surtension) qu'un interrupteur électromécanique.</li>
+                <li class="disadvantage">Il ne présente pas de coupure visible (isolation galvanique), un sectionneur est souvent nécessaire en amont pour la sécurité.</li>
+                <li class="disadvantage">Il produit une chute de tension en conduction (typiquement 1 à 2 Volts par thyristor), ce qui entraîne des pertes par effet Joule (échauffement).</li>
+            </ul>
+            <p>Ce sont surtout l'absence de surtension de rupture et la possibilité de cycles ouverture-fermeture rapides et calibrés qui conduisent le plus souvent à adopter ces interrupteurs statiques.</p>
+
+            <h2>II-4- Interrupteurs tripolaires</h2>
+            <p>En triphasé, il n'est pas nécessaire d'utiliser trois interrupteurs unipolaires (comme celui décrit précédemment avec deux thyristors par phase). On peut se contenter d'une structure plus simple utilisant un thyristor et une diode par phase pour la fonction d'interrupteur ON/OFF.</p>
+
+            <div class="placeholder">[Placeholder: Schéma d'un interrupteur de puissance triphasé (Thyristor/Diode)]</div>
+            <p class="caption">Figure N°2.3: Interrupteur de puissance triphasé. Chaque phase (Ph1, Ph2, Ph3) est connectée via un thyristor (Th1, Th2, Th3) pour le contrôle de l'amorçage et une diode (D1, D2, D3) en anti-parallèle pour assurer le retour du courant. Le circuit est placé entre l'alimentation triphasée et le récepteur triphasé.</p>
+
+            <div class="placeholder">[Placeholder: Formes d'ondes des courants i1, i2, i3 pour interrupteur triphasé]</div>
+            <p class="caption">Figure N°2.4: Formes d'ondes des courants de phase \( i_1, i_2, i_3 \) dans la charge lors du fonctionnement en interrupteur fermé. On voit les intervalles de conduction des thyristors et des diodes.</p>
+
+            <p>Dans cette configuration, les thyristors commandent l'aller des courants \( i_1, i_2, i_3 \) lorsque leur gâchette est alimentée et leur tension anode-cathode est positive. Les diodes assurent le retour du courant lorsque la polarité s'inverse. Lorsqu'on supprime l'envoi des signaux de déblocage aux gâchettes des thyristors, la coupure se termine lorsque le courant dans le dernier thyristor qui était conducteur s'annule naturellement.</p>
+        </section>
+
+         <hr style="margin: 2em 0;">
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 41)</p>
+            <h2>III- Marche en gradateur monophasé (Commande de Phase)</h2>
+
+            <h3>III-1- Principe</h3>
+            <p>Le gradateur monophasé permet le réglage continu de la valeur efficace du courant (et donc de la puissance) qu'une source de tension alternative débite dans un récepteur. Il est constitué, comme pour l'interrupteur, de deux thyristors en anti-parallèle, placés entre la source et le récepteur. Le réglage s'effectue en contrôlant l'instant d'amorçage des thyristors à chaque demi-alternance (commande par angle de phase).</p>
+
+            <h3>III-2- Cas d'un récepteur purement résistif</h3>
+            <p>Supposons d'abord que le récepteur soit une résistance pure R.</p>
+            <p>Au lieu de débloquer le thyristor Th1 dès le début de l'alternance positive (\( \theta = 0 \)), on retarde l'impulsion de gâchette jusqu'à un angle \( \psi \) ( \( t = \psi / \omega \) ). Th1 ne sera donc conducteur que pendant l'intervalle \( \psi \le \omega t \le \pi \). De même, en retardant l'impulsion de gâchette de Th1' à l'angle \( \pi + \psi \), on ampute le début de l'alternance négative du courant. Th1' sera conducteur pour \( \pi + \psi \le \omega t \le 2\pi \).</p>
+            <p>En agissant sur l'angle de retard \( \psi \) (de 0 à \( \pi \)), on peut régler le temps de conduction des thyristors et, par là, la valeur efficace I du courant alternatif \( i(t) \) dans la charge.</p>
+            <p>Si on néglige la chute de tension dans le thyristor conducteur, on a :</p>
+             <ul>
+                <li>\( i(t) = \frac{V_m \sin(\omega t)}{R} \) pour \( \psi \le \omega t \le \pi \) et \( \pi + \psi \le \omega t \le 2\pi \)</li>
+                <li>\( i(t) = 0 \) pendant le reste de la période.</li>
+            </ul>
+            <p>D'où le calcul de la valeur efficace I du courant :</p>
+            \[ I^2 = \frac{1}{2\pi} \int_0^{2\pi} i^2(t) d(\omega t) = \frac{1}{2\pi} \left[ \int_\psi^\pi \left(\frac{V_m \sin\theta}{R}\right)^2 d\theta + \int_{\pi+\psi}^{2\pi} \left(\frac{V_m \sin\theta}{R}\right)^2 d\theta \right] \]
+            <p>Par symétrie, les deux intégrales sont égales :</p>
+             \[ I^2 = \frac{1}{\pi} \int_\psi^\pi \left(\frac{V_m \sin\theta}{R}\right)^2 d\theta = \frac{V_m^2}{\pi R^2} \int_\psi^\pi \sin^2\theta d\theta \]
+            <p>En utilisant \( \sin^2\theta = \frac{1 - \cos(2\theta)}{2} \), l'intégrale vaut \( \int_\psi^\pi \sin^2\theta d\theta = \left[ \frac{\theta}{2} - \frac{\sin(2\theta)}{4} \right]_\psi^\pi = (\frac{\pi}{2} - 0) - (\frac{\psi}{2} - \frac{\sin(2\psi)}{4}) = \frac{\pi - \psi}{2} + \frac{\sin(2\psi)}{4} \).</p>
+             \[ I^2 = \frac{V_m^2}{\pi R^2} \left( \frac{\pi - \psi}{2} + \frac{\sin(2\psi)}{4} \right) = \frac{V_m^2}{2 R^2} \left( 1 - \frac{\psi}{\pi} + \frac{\sin(2\psi)}{2\pi} \right) \]
+            <p>Donc la valeur efficace du courant est :</p>
+            \[ I = \sqrt{I^2} = \frac{V_m}{R\sqrt{2}} \sqrt{1 - \frac{\psi}{\pi} + \frac{\sin(2\psi)}{2\pi}} \]
+             <p>La valeur efficace de la tension aux bornes de la résistance R est \( U_{eff} = R \times I \). Soit \( V_{eff\_source} = V_m / \sqrt{2} \) la valeur efficace de la tension source, alors :</p>
+             \[ U_{eff} = V_{eff\_source} \sqrt{1 - \frac{\psi}{\pi} + \frac{\sin(2\psi)}{2\pi}} \]
+            <p>En faisant varier l'angle \( \psi \) de \( 0 \) à \( \pi \), on fait varier \( U_{eff} \) (et I) de sa valeur maximale \( V_{eff\_source} \) (pour \( \psi=0 \)) à zéro (pour \( \psi=\pi \)).</p>
+
+             <div class="placeholder">[Placeholder: Graphique Ueff vs ψ pour gradateur monophasé (charge résistive)]</div>
+             <p class="caption">Variation de la tension efficace de sortie \( U_{eff} \) en fonction de l'angle de commande \( \psi \) pour un gradateur monophasé alimentant une charge purement résistive. \( U_{eff} \) diminue de \( V_m/\sqrt{2} \) à 0 lorsque \( \psi \) augmente de 0 à \( \pi \).</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 42)</p>
+            <h4>Formes d'ondes des différentes grandeurs (Charge Résistive)</h4>
+
+            <div class="placeholder">[Placeholder: Formes d'ondes pour gradateur monophasé (charge résistive)]</div>
+            <p class="caption">Figure N°2.5: Formes d'ondes des grandeurs électriques d'un gradateur monophasé avec charge résistive. Sont montrées : la tension source \( v(t) \), la tension charge \( u_R(t) \) (qui est \( v(t) \) pendant la conduction, 0 sinon), les impulsions de gâchette \( i_G \) (à \( \psi \) et \( \pi+\psi \)), et la tension aux bornes d'un thyristor \( V_{Th} \).</p>
+
+            <h4>Remarque</h4>
+            <p>Le courant \( i(t) \) dans la charge n'est plus sinusoïdal lorsque \( \psi > 0 \). Il est possible de décomposer son allure en une onde fondamentale (première harmonique) et une série d'harmoniques d'ordre supérieur. On constate que l'onde fondamentale du courant \( i_1 \) est déphasée d'un angle \( \varphi_1 \) par rapport à la tension d'alimentation \( v(t) \). Il en découle que le réseau d'alimentation doit fournir une certaine puissance réactive, même si la charge est purement ohmique. Le facteur de puissance est dégradé.</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 43)</p>
+            <h3>III-3- Cas d'un récepteur résistant et inductif (R-L)</h3>
+            <p>Lorsque la charge est inductive (R-L série), son argument (angle de déphasage courant/tension en régime sinusoïdal établi) \( \varphi_R = \arctan(\frac{L\omega}{R}) \) joue un rôle important. L'angle \( \varphi_R \) réduit la plage de variation possible de l'angle de commande \( \psi \) pour un fonctionnement correct en gradateur. Le contrôle n'est généralement possible que pour \( \psi > \varphi_R \).</p>
+
+            <h4>III-3-1- Fonctionnement pour \( \varphi_R < \psi < \pi \)</h4>
+            <p>Le thyristor Th1 est débloqué à \( t=t_0 \), tel que \( \omega t_0 = \psi \). À partir de cet instant, l'équation régissant le courant \( i(t) \) dans le circuit R-L est :</p>
+            \[ L \frac{di}{dt} + Ri = V_m \sin(\omega t) \]
+            <p>C'est une équation différentielle linéaire du premier ordre avec second membre sinusoïdal.</p>
+            <p>La solution générale est la somme de la solution du régime permanent (forcé) \( i_f(t) \) et de la solution du régime libre (transitoire) \( i_l(t) \): \( i(t) = i_f(t) + i_l(t) \).</p>
+             <ul>
+                <li>Régime forcé : \( i_f(t) = I_{m\_f} \sin(\omega t - \varphi_R) = \frac{V_m}{Z} \sin(\omega t - \varphi_R) \)</li>
+                <li>Régime libre : \( i_l(t) = K e^{-t/\tau} \)</li>
+            </ul>
+             <p>Où :</p>
+             <ul>
+                <li>\( Z = \sqrt{R^2 + (L\omega)^2} \) est l'impédance de la charge.</li>
+                <li>\( \tau = \frac{L}{R} \) est la constante de temps électrique du circuit.</li>
+                <li>\( \varphi_R = \arctan(\frac{L\omega}{R}) \) est l'argument de l'impédance.</li>
+                <li>\( K \) est une constante d'intégration.</li>
+            </ul>
+            <p>Donc, en posant \( \theta = \omega t \), la solution s'écrit :</p>
+            \[ i(\theta) = \frac{V_m}{Z} \sin(\theta - \varphi_R) + K e^{-\theta/(\omega\tau)} \]
+             <p>On détermine \( K \) en utilisant la condition initiale : Th1 commence à conduire à \( \theta = \psi \), instant auquel le courant est nul \( i(\psi) = 0 \).</p>
+             \[ 0 = \frac{V_m}{Z} \sin(\psi - \varphi_R) + K e^{-\psi/(\omega\tau)} \]
+             \[ K = - \frac{V_m}{Z} \sin(\psi - \varphi_R) e^{\psi/(\omega\tau)} \]
+            <p>En substituant \( K \) dans l'expression de \( i(\theta) \) et en notant que \( \omega \tau = \omega L / R = \tan(\varphi_R) \), mais il est plus simple de garder \( \tau \):</p>
+             \[ i(\theta) = \frac{V_m}{Z} \left[ \sin(\theta - \varphi_R) - \sin(\psi - \varphi_R) e^{-(\theta - \psi)/(\omega\tau)} \right] \]
+             <!-- Le PDF utilise une notation simplifiée pour l'exponentielle. Retranscrivons la forme du PDF -->
+              <p>Soit, en utilisant la notation \( \tau \) comme constante de temps (\( t/\tau = \theta / (\omega \tau) \)) comme dans le PDF:</p>
+             \[ i(\theta) = \frac{V_m}{Z} \sin(\theta - \varphi_R) + K e^{-\theta/\tau'} \quad \text{(où } \tau' = \omega \tau \text{ est l'angle caractéristique)} \]
+             \[ K = - \frac{V_m}{Z} \sin(\psi - \varphi_R) e^{\psi/\tau'} \]
+             \[ i(\theta) = \frac{V_m}{Z} \left[ \sin(\theta - \varphi_R) - \sin(\psi - \varphi_R) e^{-(\theta - \psi)/\tau'} \right] \]
+
+             <h4>III-3-1-1- Analyse du fonctionnement (pour \( \varphi_R < \psi < \pi \))</h4>
+             <ul class="custom-marker">
+                <li class="square">Th1 reste conducteur entre l'angle d'amorçage \( \psi \) et l'angle d'extinction \( \theta_1 \), où le courant \( i(\theta_1) = 0 \). Comme \( \psi > \varphi_R \), la composante transitoire est négative au début et la composante forcée est positive. L'angle \( \theta_1 \) est supérieur à \( \pi \) mais inférieur à \( \pi + \psi \). Il faut résoudre numériquement \( i(\theta_1) = 0 \) pour trouver \( \theta_1 \). Th1 se bloque naturellement à \( \theta_1 \).</li>
+                <li class="square">Si \( \theta \in [\theta_1, \pi + \psi] \), aucun thyristor n'est passant. Le courant \( i(\theta) = 0 \), la tension aux bornes de la charge \( u_R(\theta) = 0 \), et la tension aux bornes de Th1 est \( V_{Th1}(\theta) = v(\theta) \) (et \( V_{Th1'}(\theta) = -v(\theta) \)).</li>
+                <li class="square">Pour \( \theta \in [\pi + \psi, \theta_1 + \pi] \), Th1' est amorcé à \( \pi + \psi \) et devient passant. Le courant suit une équation similaire mais pour l'alternance négative. Th1' se bloque à \( \theta_1 + \pi \).</li>
+                 <li class="square">À \( \theta = \psi + 2\pi \), Th1 est à nouveau amorcé. Le phénomène devient périodique. Le réglage du courant (et de la tension efficace) est possible en faisant varier \( \psi \) dans l'intervalle \( [\varphi_R, \pi] \).</li>
+             </ul>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 44)</p>
+            <h4>III-3-1-2- Formes d'ondes (pour \( \varphi_R < \psi < \pi \))</h4>
+
+            <div class="placeholder">[Placeholder: Formes d'ondes pour gradateur monophasé (charge R-L, φR < ψ < π)]</div>
+            <p class="caption">Figure N°2.6 : Formes d'ondes des grandeurs électriques d'un gradateur monophasé avec charge R-L pour \( \varphi_R < \psi < \pi \). Sont montrées : \( v(t) \), \( u_R(t) \) (tension aux bornes de la charge R-L), \( i(t) \) (courant de charge, s'annulant à \( \theta_1 > \pi \)), et \( V_{Th1} \) (tension aux bornes de Th1).</p>
+
+            <h4>III-3-2- Fonctionnement pour \( \psi < \varphi_R \)</h4>
+            <p>Lorsque l'angle d'amorçage \( \psi \) devient inférieur à l'angle de déphasage naturel de la charge \( \varphi_R \), le fonctionnement dépend de la nature (durée) des signaux appliqués aux gâchettes.</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 45)</p>
+            <h4>III-3-2-1- Cas d'impulsion de gâchette de courte durée</h4>
+            <p>Si Th1 est le premier à recevoir une impulsion utile (courte) à \( \theta = \psi \), il entre en conduction. Le courant \( i(\theta) \) est toujours donné par l'équation :</p>
+            \[ i(\theta) = i_f(\theta) + i_l(\theta) = \frac{V_m}{Z} \left[ \sin(\theta - \varphi_R) - \sin(\psi - \varphi_R) e^{-(\theta - \psi)/\tau'} \right] \]
+            <p>On remarque que, comme \( \psi < \varphi_R \), le terme \( \sin(\psi - \varphi_R) \) est négatif. Les deux composantes \( i_f(\theta) \) (initialement négative puis positive) et \( i_l(\theta) \) (positive et décroissante) sont maintenant de signe opposé au début, mais la résultante \( i(\theta) \) sera positive. Le courant s'annule pour un angle \( \theta_1 \) qui, dans ce cas (\( \psi < \varphi_R \)), est supérieur à \( \pi + \psi \).</p>
+            <p>L'impulsion (courte) envoyée sur la gâchette de Th1' à \( \theta = \pi + \psi \) trouve ce thyristor avec une tension anode-cathode négative (car \( v(\pi+\psi) \) est négative et Th1 est encore conducteur ou vient juste de se bloquer). L'impulsion est donc sans effet. Même lorsque la tension aux bornes de Th1' devient positive (après que \( v(\theta) \) redevienne positive, ou plus précisément, après que Th1 se soit bloqué à \( \theta_1 \)), il n'y a plus de courant de gâchette pour amorcer Th1'.</p>
+            <p>Le montage fonctionne alors en redresseur simple alternance commandé. Le courant de sortie \( i(\theta) \) est unidirectionnel (seulement pendant les alternances positives), ce qui est un fonctionnement anormal pour un gradateur AC. Au passage de \( \psi \) par la valeur \( \varphi_R \), une alternance du courant \( i(\theta) \) disparaît brusquement.</p>
+            <!-- La mention "faisant passer I de V/Z à V√2/Z" dans le PDF semble peu claire ou erronée dans ce contexte. Il s'agit plutôt d'une transition vers un fonctionnement non souhaité. -->
+
+            <h5>Formes d'ondes (impulsions courtes, \( \psi < \varphi_R \))</h5>
+            <div class="placeholder">[Placeholder: Formes d'ondes pour gradateur monophasé (charge R-L, ψ < φR, impulsions courtes)]</div>
+            <p class="caption">Figure N°2.7 : Formes d'ondes pour \( \psi < \varphi_R \) avec impulsions de gâchette courtes. Sont montrées : \( u, v \), les impulsions courtes \( i_{G1}, i_{G2} \), le courant \( i(t) \) (unidirectionnel, conduction de \( \psi \) à \( \theta_1 \)), et la tension \( V_{Th1} \).</p>
+        </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 46)</p>
+            <h4>III-3-2-2- Cas d'impulsion de gâchette de largeur suffisante (ou train d'impulsions)</h4>
+            <p>Supposons à nouveau que Th1 entre le premier en conduction à \( \theta = \psi < \varphi_R \). Il reste passant jusqu'à l'instant \( \theta_1 \) où le courant s'annule, comme précédemment (\( \theta_1 > \pi + \psi \)).</p>
+            <p>L'impulsion de gâchette pour Th1' est envoyée à partir de \( \theta = \pi + \psi \) et est supposée de largeur suffisante (elle dure au moins jusqu'à \( \theta_1 \)). Lorsque Th1 se bloque à \( \theta_1 \), la tension aux bornes de Th1' devient positive (\( v(\theta_1) \) est généralement positive car \( \theta_1 \) est dans la deuxième alternance positive). Comme le signal de gâchette est toujours présent sur Th1', celui-ci s'amorce immédiatement à \( \theta_1 \).</p>
+            <p>Au bout de quelques périodes, le régime transitoire \( i_l(\theta) \) disparaît, et le courant \( i(\theta) \) devient purement sinusoïdal, identique au régime forcé :</p>
+             \[ i(\theta) \approx i_f(\theta) = \frac{V_m}{Z} \sin(\theta - \varphi_R) \]
+            <p>Le gradateur fonctionne alors en interrupteur fermé en permanence. La valeur efficace du courant reste égale à \( I = \frac{V_{eff\_source}}{Z} \). Le passage de l'angle \( \psi \) à une valeur inférieure à \( \varphi_R \) est maintenant sans inconvénient si les impulsions de gâchette sont suffisamment larges.</p>
+
+            <h5>Formes d'ondes (impulsions larges, \( \psi < \varphi_R \))</h5>
+             <div class="placeholder">[Placeholder: Formes d'ondes pour gradateur monophasé (charge R-L, ψ < φR, impulsions larges)]</div>
+             <p class="caption">Figure N°2.8 : Formes d'ondes pour \( \psi < \varphi_R \) avec impulsions de gâchette larges. Sont montrées : \( v(t) \), \( u_R(t) \approx v(t) \), les impulsions larges \( i_{G1}, i_{G2} \), le courant \( i(t) \) (sinusoïdal déphasé de \( \varphi_R \)), et la tension \( V_{Th} \).</p>
+
+            <h4>Conclusion (Gradateur Monophasé R-L)</h4>
+            <p>Le fonctionnement en gradateur (réglage continu de la puissance par commande de phase) n'est possible que si l'angle de commande \( \psi \) est compris dans l'intervalle \( \varphi_R < \psi < \pi \). Pour \( \psi < \varphi_R \), le fonctionnement dépend de la durée des impulsions de gâchette : fonctionnement anormal en demi-redresseur si elles sont courtes, ou fonctionnement en interrupteur fermé si elles sont larges.</p>
+        </section>
+
+         <hr style="margin: 2em 0;">
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 47)</p>
+            <h2>IV- Les gradateurs triphasés tous thyristors</h2>
+
+            <h3>IV-1- Montage</h3>
+            <p>Pour obtenir de meilleures performances et contrôler des puissances plus importantes, on utilise des gradateurs triphasés. Ils sont généralement constitués de trois groupes de deux thyristors (un groupe par phase, chaque groupe ayant deux thyristors en anti-parallèle).</p>
+            <p>Les vrais gradateurs triphasés sont formés de ces trois ensembles de thyristors montés entre le réseau triphasé et la charge triphasée, qui peut être couplée en triangle ou en étoile.</p>
+
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                <div style="text-align: center; margin: 10px;">
+                     <div class="placeholder">[Placeholder: Gradateur triphasé avec charge résistive en étoile]</div>
+                     <p class="caption">Figure N°2.9: Charge résistive couplée en étoile. Chaque phase de la charge (V1, V2, V3) est connectée à la phase correspondante du réseau (VA, VB, VC) via une paire de thyristors (Th1/Th1', Th2/Th2', Th3/Th3').</p>
+                </div>
+                 <div style="text-align: center; margin: 10px;">
+                    <div class="placeholder">[Placeholder: Gradateur triphasé avec charge résistive en triangle]</div>
+                     <p class="caption">Figure N°2.10: Charge résistive couplée en triangle. Chaque branche de la charge (U1, U2, U3) est connectée entre deux phases du réseau via une paire de thyristors.</p>
+                 </div>
+            </div>
+
+            <h3>IV-2- Analyse de fonctionnement</h3>
+            <p>Leur étude est un peu plus complexe que celle du gradateur monophasé. Suivons par exemple les régimes successifs rencontrés dans le cas d'un récepteur en étoile constitué de trois résistances égales R. On prend la tension de la phase A comme référence d'origine des phases : \( v_A(\theta) = V \sqrt{2} \sin(\theta) \), où V est la valeur efficace de la tension simple (phase-neutre) et \( \theta = \omega t \).</p>
+
+            <h4>IV-2-1- 1er Cas : \( 0 \le \psi \le \frac{\pi}{3} \)</h4>
+            <p>Dans cette plage d'angle de commande \( \psi \), il y a toujours 3 ou 2 thyristors conducteurs simultanément, selon l'intervalle de \( \theta \).</p>
+            <ul class="custom-marker">
+                <li class="square">Pour \( \psi \le \theta \le \frac{\pi}{3} \) : Les thyristors Th1 (phase A), Th2' (phase B, négative) et Th3' (phase C, négative) sont amorcés (ou déjà conducteurs). Les tensions aux bornes des résistances sont égales aux tensions simples du réseau : \( v_1(\theta) = v_A(\theta), v_2(\theta) = v_B(\theta), v_3(\theta) = v_C(\theta) \). (Ici v1, v2, v3 désignent les tensions aux bornes des résistances de charge).</li>
+                 <li class="square">Pour \( \frac{\pi}{3} \le \theta \le \frac{\pi}{3} + \psi \) : Th1 (phase A) et Th2' (phase B) restent conducteurs, mais Th3' se bloque et Th3 ne s'amorce pas encore. Seuls Th1 et Th2' conduisent. Le neutre de la charge n'est plus connecté au neutre source. On a \( v_1(\theta) = \frac{1}{2} (v_A(\theta) - v_B(\theta)) = -v_2(\theta) \) et \( v_3(\theta) = 0 \).</li>
+                 <li class="square">Pour \( \frac{\pi}{3} + \psi \le \theta \le \frac{2\pi}{3} \) : Th1 (phase A), Th2' (phase B) et Th3 (phase C, positive) conduisent. On retrouve \( v_1(\theta) = v_A(\theta), v_2(\theta) = v_B(\theta), v_3(\theta) = v_C(\theta) \).</li>
+                <li class="square">etc. (Le motif se répète tous les \( \pi/3 \)).</li>
+            </ul>
+            <p>Les tensions de sortie (aux bornes des résistances de charge) ont pour valeur efficace \( V_1 \) donnée par :</p>
+            \[ V_1 = V \sqrt{1 - \frac{3\psi}{2\pi} + \frac{3}{4\pi} \sin(2\psi)} \]
+            <p>(Où V est la tension efficace simple du réseau).</p>
+        </section>
+
+         <section>
+             <p class="page-ref">(Contenu basé sur la page 48)</p>
+            <p><strong>Exemple :</strong> Allure de la tension \( v_1(\theta) \) (tension aux bornes de la résistance de la phase 1) pour \( \psi = 0 \).</p>
+             <div class="placeholder">[Placeholder: Allure de V1(θ) pour ψ = 0 (gradateur triphasé)]</div>
+            <p class="caption">Pour \( \psi=0 \), le gradateur se comporte comme un interrupteur fermé. La tension \( v_1(\theta) \) suit exactement la tension de phase \( v_A(\theta) \). Les autres tensions \( v_2(\theta) \) et \( v_3(\theta) \) suivent \( v_B(\theta) \) et \( v_C(\theta) \). Les intervalles de conduction des thyristors sont indiqués.</p>
+
+            <p><strong>Exemple :</strong> Allure de \( v_1(\theta) \) pour \( \psi = \frac{\pi}{6} \) (soit 30°, dans la plage \( [0, \pi/3] \)).</p>
+             <div class="placeholder">[Placeholder: Allure de V1(θ) pour ψ = π/6 (gradateur triphasé)]</div>
+             <p class="caption">Pour \( \psi=\pi/6 \), la forme d'onde de \( v_1(\theta) \) est découpée. Elle suit \( v_A(\theta) \) pendant certains intervalles, et \( \frac{1}{2} v_{AB}(\theta) \) ou \( \frac{1}{2} v_{AC}(\theta) \) pendant d'autres, selon les thyristors conducteurs.</p>
+
+            <h4>IV-2-2- 2ème Cas : \( \frac{\pi}{3} \le \psi \le \frac{\pi}{2} \)</h4>
+            <p>Dans cette plage d'angle de commande, il y a toujours exactement 2 thyristors conducteurs simultanément (un d'une paire positive, un d'une paire négative, appartenant à des phases différentes).</p>
+             <ul class="custom-marker">
+                <li class="square">Pour \( \psi \le \theta \le \frac{2\pi}{3} \) : Th1 (phase A) et Th2' (phase B) conduisent. On a \( v_1(\theta) = \frac{1}{2} (v_A(\theta) - v_B(\theta)) = \frac{1}{2} v_{AB}(\theta) \), \( v_2(\theta) = -\frac{1}{2} v_{AB}(\theta) \), et \( v_3(\theta) = 0 \).</li>
+                <li class="square">Pour \( \frac{2\pi}{3} \le \theta \le \psi + \frac{\pi}{3} \) : Th1 se bloque, Th3 s'amorce. Th3 et Th2' conduisent. \( v_1(\theta) = 0 \), \( v_2(\theta) = \frac{1}{2} (v_B(\theta) - v_C(\theta)) = \frac{1}{2} v_{BC}(\theta) \), \( v_3(\theta) = -\frac{1}{2} v_{BC}(\theta) \). (Erreur dans PDF: V1=1/2(VA-VB)=-V3 et V2=0 ?)</li>
+                <!-- Note: Il semble y avoir une erreur d'indices ou de description dans le PDF pour le second intervalle. Si Th1 et Th2' conduisent, v3=0. Si Th3 et Th2' conduisent, v1=0. La description V1=1/2(VA-VB)=-V3 et V2=0 ne correspond à aucune combinaison simple. -->
+                <li class="square">etc. (Le motif se répète tous les \( \pi/3 \)).</li>
+             </ul>
+             <p>Les tensions de sortie ont pour valeur efficace \( V_1 \) donnée par :</p>
+             <!-- Attention à la formule du PDF, elle semble inhabituelle -->
+             \[ V_1 = V \sqrt{\frac{1}{2} + \frac{3\sqrt{3}}{4\pi} \sin(\frac{\pi}{6} + 2\psi)} \]
+         </section>
+
+         <section>
+             <p class="page-ref">(Contenu basé sur la page 49)</p>
+            <p><strong>Exemple :</strong> Allure de \( v_1(\theta) \) pour \( \psi = \frac{2.5\pi}{6} = \frac{5\pi}{12} \) (soit 75°, dans la plage \( [\pi/3, \pi/2] \)).</p>
+             <div class="placeholder">[Placeholder: Allure de V1(θ) pour ψ = 2.5π/6 (gradateur triphasé)]</div>
+             <p class="caption">Pour \( \psi=5\pi/12 \), la forme d'onde de \( v_1(\theta) \) est encore plus découpée, composée de segments de tensions composées divisées par 2, et de segments nuls.</p>
+
+            <h4>IV-2-3- 3ème Cas : \( \frac{\pi}{2} \le \psi \le \frac{5\pi}{6} \)</h4>
+             <p>Dans cette plage, il y a toujours 2 ou 0 thyristors conducteurs. Le fonctionnement devient discontinu. Il faut envoyer des "impulsions de conformation" : quand on débloque un redresseur (thyristor), il faut en même temps envoyer une impulsion sur la gâchette de celui qui était entré en conduction un sixième de période auparavant (pour assurer la continuité si nécessaire, surtout avec charge inductive).</p>
+             <ul class="custom-marker">
+                 <li class="square">Pour \( \psi \le \theta \le \frac{5\pi}{6} \) : Th1 (phase A) et Th2' (phase B) conduisent. \( v_1(\theta) = \frac{1}{2} v_{AB}(\theta) \), \( v_2(\theta) = -\frac{1}{2} v_{AB}(\theta) \), \( v_3(\theta) = 0 \).</li>
+                 <li class="square">Pour \( \frac{5\pi}{6} \le \theta \le \psi + \frac{\pi}{3} \) : Pas de thyristors conducteurs. Le courant s'est annulé dans la paire précédente, et la nouvelle paire n'est pas encore amorcée. \( v_1(\theta) = v_2(\theta) = v_3(\theta) = 0 \).</li>
+                 <li class="square">Pour \( \psi + \frac{\pi}{3} \le \theta \le \psi + \frac{2\pi}{3} \) : Th1 et Th3' (phase C) conduisent. \( v_1(\theta) = \frac{1}{2} v_{AC}(\theta) \), \( v_3(\theta) = -\frac{1}{2} v_{AC}(\theta) \), \( v_2(\theta) = 0 \).</li>
+                 <li class="square">etc.</li>
+             </ul>
+             <p>Les tensions de sortie ont pour valeur efficace \( V_1 \) donnée par :</p>
+             <!-- Attention à la formule du PDF -->
+             \[ V_1 = V \sqrt{\frac{5}{4} - \frac{3\psi}{2\pi} + \frac{3}{4\pi} \sin(\frac{\pi}{3} + 2\psi)} \]
+         </section>
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 50)</p>
+            <p><strong>Exemple :</strong> Allure de \( v_1(\theta) \) pour \( \psi = \frac{4\pi}{6} = \frac{2\pi}{3} \) (soit 120°, dans la plage \( [\pi/2, 5\pi/6] \)).</p>
+            <div class="placeholder">[Placeholder: Allure de V1(θ) pour ψ = 4π/6 (gradateur triphasé)]</div>
+            <p class="caption">Pour \( \psi=2\pi/3 \), la forme d'onde de \( v_1(\theta) \) présente des intervalles de conduction encore plus courts, séparés par des intervalles où la tension est nulle (conduction discontinue).</p>
+
+            <h2>V- Applications des variateurs de courant alternatif (gradateurs)</h2>
+            <p>Le variateur de courant monophasé (gradateur monophasé) est utilisé pour :</p>
+            <ul>
+                <li><strong>Faire varier la luminosité de lampes d'éclairage</strong> (lampes à incandescence, halogènes) : C'est l'application la plus connue (dimmers), dans un domaine de puissance allant de quelques centaines de watts (domestique) jusqu'à 10 kW environ (éclairage scénique, industriel).</li>
+                <li><strong>Régler le courant dans d'autres appareils monophasés</strong> :
+                    <ul>
+                        <li>Régulation de température pour des appareils de chauffage électrique (radiateurs, fours...).</li>
+                        <li>Certaines cuisinières électriques.</li>
+                        <li>Démarrage progressif de moteurs monophasés (en réduisant la tension au démarrage).</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>On utilise le variateur triphasé pour les mêmes applications, mais à des puissances plus élevées. De plus, on peut l'utiliser pour :</p>
+            <ul>
+                <li><strong>Alimenter des moteurs asynchrones à tension statorique variable</strong> : En faisant varier la tension efficace appliquée au stator, on modifie le couple moteur. Cela permet de faire varier, dans une certaine mesure, la vitesse de ces moteurs, bien que cette méthode soit peu efficace et génère beaucoup d'harmoniques. Elle est surtout utilisée pour le démarrage progressif (soft starter) ou pour des applications à couple variable (pompes, ventilateurs) sur une plage de vitesse limitée.</li>
+            </ul>
+        </section>
+
+         <hr style="margin: 2em 0;">
+
+        <section>
+             <p class="page-ref">(Contenu basé sur la page 51)</p>
+            <h1>BIBLIOGRAPHIE</h1>
+
+            <ul>
+                <li>A.Cunière, G.Feld, M.Lavabre : (2012) : <em>Electronique de Puissance</em> (Casteilla)</li>
+                <li>Jacques Laroche : (2005) : <em>Electronique de Puissance Convertisseur</em> (Dunod)</li>
+                <li>Lavabre.M : (2001) : <em>Electronique de puissance conversion de l'énergie</em> (Casteilla)</li>
+                <li>Gy .Seguier : (1999) : <em>Electronique de puissance</em> 7ème édition (Dunod)</li>
+                <li>Alain Hebert, Claude Naudet et Michel Pinard : (1997) : <em>Machines Electriques Electronique de Puissance</em> (DUNOD)</li>
+                <li>Gy.Chateiger, Michel Boês, Daniel Bouix, Jaque Vaillant : (2006) : <em>Manuel de Génie Electrique</em> (Dunod)</li>
+                <li>Gy.Seguier : (1995) : <em>Les convertisseurs de l'électronique de puissance Tom 1</em> (TEC&DOC)</li>
+                <li>Gy.Seguier : (1995) : <em>Les convertisseurs de l'électronique de puissance Tom 2</em> (TEC&DOC)</li>
+                <li>Francis Milsant : (1995) : <em>Machines synchrones et asynchrones Commande électronique</em> (ellipses)</li>
+                <li>Jean Louis DALMASSO : <em>Electronique de puissance - commutation.</em> (DIA-BELIN)</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer>
+        <span>Hidri.imed</span>
+        <span>Pages 36-51 (Numérotation originale)</span>
+    </footer>
+
+</body>
+
+</html>
