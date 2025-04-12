@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanique Analytique - SMP5 - Chapitres 2 & 3</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                // • auto-render specific keys, e.g.:
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #a02c2c; /* Dark red color similar to slides */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #a02c2c;
+            padding-bottom: 10px;
+        }
+        h2 {
+             text-align: center;
+        }
+        h3.chapter-title {
+             background-color: #a02c2c;
+             color: white;
+             padding: 10px;
+             border-radius: 5px;
+             text-align: center;
+        }
+        h4.subtitle {
+             text-align: center;
+             color: #802020;
+        }
+         h5 {
+             color: #601010;
+             margin-top: 1.5em;
+         }
+         h6 {
+             color: #601010;
+             margin-top: 1em;
+             font-size: 1.1em;
+         }
+        .image-placeholder {
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px auto; /* Centered */
+            color: #777;
+            font-style: italic;
+            min-height: 50px; /* Ensure placeholder is visible */
+            max-width: 80%; /* Control image size */
+        }
+         .image-placeholder.inline {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px;
+         }
+         .image-placeholder.float-right {
+             width: 150px;
+             float: right;
+             margin-left: 15px;
+             margin-bottom: 10px;
+         }
+         .clear-float {
+            clear: both;
+         }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        blockquote {
+            border-left: 4px solid #a02c2c;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            background-color: #f9f2f2;
+        }
+        strong {
+            color: #601010;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+        }
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 25px;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .contact-info p {
+             margin: 5px 0;
+        }
+         .centered-text {
+             text-align: center;
+         }
+         .boxed-formula {
+             background-color: #e0e8f0;
+             padding: 10px 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+         }
+         .boxed-text {
+             background-color: #e0e8f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+         }
+         /* Torseur notation style */
+         .torseur {
+             display: inline-block;
+             text-align: center;
+             vertical-align: middle;
+             margin: 0 0.2em;
+         }
+         .torseur-content {
+             display: block;
+             border-left: 1px solid;
+             border-right: 1px solid;
+             padding: 0 0.3em;
+         }
+         .torseur-element {
+             display: block;
+         }
+         .torseur-point {
+             font-size: 0.7em;
+             margin-top: -0.3em;
+         }
+         .comoment {
+            display: inline-block;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 0.9em;
+            height: 0.9em;
+            line-height: 0.9em;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 0.2em;
+            font-weight: bold;
+            vertical-align: middle;
+         }
+         .pointer-icon {
+            display: inline-block; /* Prevents block behavior */
+            font-size: 1.5em; /* Adjust size */
+            margin-right: 5px; /* Space from text */
+            vertical-align: middle; /* Align with text */
+             /* Using a simple Unicode character */
+             content: "☞";
+         }
+         .arrow-up {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 2L2 12h5v10h10V12h5L12 2z"/></svg>');
+         }
+         .arrow-down {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 22L22 12h-5V2H7v10H2l10 10z"/></svg>');
+          }
+          .arrow-label {
+             text-align: center;
+             font-weight: bold;
+             color: #a02c2c;
+             margin-top: -5px;
+             margin-bottom: 10px;
+         }
+         .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+         }
+         table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            width: auto;
+         }
+         th, td {
+             border: 1px solid #ccc;
+             padding: 8px;
+             text-align: center;
+         }
+         th {
+             background-color: #f2f2f2;
+             color: #601010;
+         }
+         caption {
+             caption-side: bottom;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-top: 5px;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- START PREVIOUSLY GENERATED CONTENT -->
+    <!-- Chapitre 2: Slide 1 to 89 -->
+     <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p><p>Professeur de l'enseignement supérieur</p><p>Bureau 37 département de physique</p><p>Faculté des sciences</p><p>Agadir</p><p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... other slides Chap 2 ... -->
+     <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 2</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+    <hr style="border-top: 3px solid #a02c2c; margin: 40px 0;">
+
+    <!-- Page 90 (OCR 1) : Chap 3 Title Slide -->
+    <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p>
+            <p>Professeur de l'enseignement supérieur</p>
+            <p>Bureau 37 département de physique</p>
+            <p>Faculté des sciences</p>
+            <p>Agadir</p>
+            <p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+
+    <!-- Page 91 (OCR 2) : Chap 3 Objectives -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 3 : INTEGRALES PREMIERES</h3>
+
+        <h5>Objectifs pédagogiques</h5>
+        <p>Ce chapitre vise à ce que l'étudiant puisse :</p>
+        <ul>
+            <li><span class="pointer-icon"></span>Introduire la notion d'intégrale première.</li>
+             <li class="explanation">Comprendre ce qu'est une intégrale première du mouvement : une fonction des positions, des vitesses et éventuellement du temps qui reste constante le long de toute trajectoire réelle du système. Elles sont liées aux lois de conservation.</li>
+            <li><span class="pointer-icon"></span>Décomposer l'énergie cinétique.</li>
+             <li class="explanation">Analyser la structure de l'énergie cinétique en fonction des vitesses généralisées (termes quadratiques, linéaires, constants).</li>
+            <li><span class="pointer-icon"></span>Etudier les intégrales premières linéaires.</li>
+             <li class="explanation">Identifier les conditions d'existence d'intégrales premières linéaires dans les moments généralisés (liées aux coordonnées cycliques et à la conservation des moments généralisés).</li>
+            <li><span class="pointer-icon"></span>Etudier les intégrales premières quadratiques.</li>
+             <li class="explanation">Identifier les conditions d'existence d'intégrales premières quadratiques dans les vitesses (liées à la conservation de l'énergie ou à l'intégrale de Jacobi).</li>
+        </ul>
+    </section>
+
+    <!-- Page 92 (OCR 3) : Chap 3 Concepts 1 -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 3 : INTEGRALES PREMIERES</h3>
+
+        <h5>Notions abordées</h5>
+        <ul>
+            <li><span class="pointer-icon"></span><strong>Intégrale première linéaire</strong></li>
+             <li class="explanation">Une intégrale première qui est une fonction linéaire des moments généralisés $p_i = \partial L / \partial \dot{q}_i$ (ou des vitesses généralisées $\dot{q}_i$). Typiquement liée à la conservation d'un moment généralisé $p_k = \text{Cte}$ lorsque $q_k$ est cyclique.</li>
+            <li><span class="pointer-icon"></span><strong>Intégrale première de Jacobi</strong></li>
+             <li class="explanation">Une intégrale première qui existe pour les systèmes dont le Lagrangien ne dépend pas explicitement du temps ($L(q, \dot{q})$). Elle est égale à $H = \sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i} - L$. Pour les systèmes conservatifs standards, elle coïncide avec l'énergie mécanique totale $T+V$.</li>
+            <li><span class="pointer-icon"></span><strong>Décomposition de l'énergie cinétique</strong></li>
+             <li class="explanation">Exprimer $T$ comme une somme $T = T_2 + T_1 + T_0$ où $T_2$ est quadratique en $\dot{q}_i$, $T_1$ est linéaire, et $T_0$ est indépendant des $\dot{q}_i$.</li>
+            <li><span class="pointer-icon"></span><strong>Convention d'Einstein</strong></li>
+             <li class="explanation">Règle de sommation implicite sur les indices répétés pour simplifier l'écriture des sommes.</li>
+            <li><span class="pointer-icon"></span><strong>Théorème d'Euler</strong> (sur les fonctions homogènes)</li>
+             <li class="explanation">Théorème reliant une fonction homogène à ses dérivées partielles.</li>
+            <li><span class="pointer-icon"></span><strong>Fonction homogène</strong></li>
+             <li class="explanation">Une fonction $f(x_1,...,x_n)$ est homogène de degré $k$ si $f(\lambda x_1,...,\lambda x_n) = \lambda^k f(x_1,...,x_n)$.</li>
+        </ul>
+    </section>
+
+    <!-- Page 93 (OCR 4) : Chap 3 Concepts 2 -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 3 : INTEGRALES PREMIERES</h3>
+
+        <h5>Notions abordées - suite</h5>
+        <ul>
+            <li><span class="pointer-icon"></span><strong>Degré d'homogénéité</strong></li>
+             <li class="explanation">L'exposant $k$ dans la définition d'une fonction homogène.</li>
+            <li><span class="pointer-icon"></span><strong>Identité d'Euler</strong></li>
+             <li class="explanation">Relation découlant du théorème d'Euler pour une fonction $f(x_1,...,x_n)$ homogène de degré $k$: $\sum_i x_i \frac{\partial f}{\partial x_i} = k f$.</li>
+            <li><span class="pointer-icon"></span><strong>Intégrale première quadratique</strong></li>
+             <li class="explanation">Une intégrale première qui est une fonction quadratique des vitesses généralisées $\dot{q}_i$. L'énergie cinétique $T$ (sous conditions) ou l'intégrale de Jacobi $H$ en sont des exemples.</li>
+            <li><span class="pointer-icon"></span><strong>Théorème de l'énergie cinétique</strong></li>
+             <li class="explanation">Rappel du théorème $\frac{dT}{dt} = P_e + P_i$.</li>
+            <li><span class="pointer-icon"></span><strong>Intégrale première de Painlevé</strong></li>
+             <li class="explanation">Intégrale première $T_2 - T_0 - U = \text{Cte}$ qui existe sous les hypothèses H1 (force dérive de U), H2 (liaisons parfaites), H3 (Lagrangien indépendant du temps).</li>
+            <li><span class="pointer-icon"></span><strong>Intégrale première de l'énergie cinétique</strong></li>
+             <li class="explanation">Cas particulier de l'intégrale de Painlevé $T-U=Cte$ lorsque le paramétrage est indépendant du temps (T=T2). Équivaut à la conservation de l'énergie mécanique $T+V=Cte$.</li>
+        </ul>
+    </section>
+
+    <!-- Page 94 (OCR 5) : Chap 3 Plan -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 3 : INTEGRALES PREMIERES</h3>
+
+        <h5>PLAN DU CHAPITRE 3</h5>
+        <ol>
+            <li><strong>Intégrale première linéaire</strong> : Liée aux coordonnées cycliques.</li>
+            <li><strong>Intégrale première de Jacobi</strong> : Liée à l'indépendance temporelle du Lagrangien.</li>
+            <li><strong>Décomposition de l'énergie cinétique</strong> : En termes quadratique, linéaire et constant par rapport aux vitesses généralisées.</li>
+            <li><strong>Théorème d'Euler - Identité d'Euler</strong> : Propriétés des fonctions homogènes appliquées à l'énergie cinétique.</li>
+            <li><strong>Intégrales premières quadratiques</strong> : Conservation de l'énergie, intégrale de Jacobi, intégrale de Painlevé.</li>
+        </ol>
+    </section>
+
+    <!-- Page 95 (OCR 6) : Chap 3 Preamble -->
+    <section class="slide">
+        <h5>Préambule</h5>
+        <blockquote class="boxed-text">
+            « Nous connaissons le grand intérêt de rechercher des intégrales premières lorsqu' on a étudié les théorèmes généraux. Les équations de Lagrange permettent leur recherche quasi systématique »
+        </blockquote>
+        <p class="explanation">Les intégrales premières (quantités conservées) simplifient grandement l'étude du mouvement car elles réduisent l'ordre du système d'équations différentielles à résoudre. Le formalisme Lagrangien, en mettant en évidence les symétries (via les coordonnées cycliques) ou les propriétés globales (comme l'indépendance temporelle), fournit une méthode puissante pour les identifier.</p>
+    </section>
+
+    <!-- Page 96 (OCR 7) : Definition First Integral -->
+    <section class="slide">
+        <h5>Définition</h5>
+        <div class="boxed-text">
+            On appelle <strong>intégrale première du mouvement</strong> toute fonction $f(q_i, \dot{q}_i, t)$ des coordonnées généralisées, des vitesses généralisées et éventuellement du temps, qui reste <strong>constante</strong> le long de toute trajectoire réelle $q_i(t)$ du système:
+        </div>
+        <div class="boxed-formula">
+            $$ f(q_i(t), \dot{q}_i(t), t) = Cte $$
+        </div>
+        <p class="explanation">Cela signifie que sa dérivée totale par rapport au temps est nulle : $df/dt = 0$ lorsque $q_i(t)$ est une solution des équations du mouvement.</p>
+    </section>
+
+    <!-- Page 97 (OCR 8) : Section 1 Title -->
+    <section class="slide centered-text">
+        <h4>§-1-</h4>
+        <h3>Intégrale première linéaire</h3>
+        <p class="explanation">Cas où une quantité conservée dépend linéairement des vitesses (ou moments) généralisées.</p>
+    </section>
+
+    <!-- Page 98 (OCR 9) : Linear First Integral / Cyclic Coordinate -->
+    <section class="slide">
+        <h5>1- Intégrale première linéaire en $\dot{q}_i$</h5>
+        <p>S'il existe un indice $i$ tel que :</p>
+        <ul>
+            <li>La force généralisée correspondante (des forces appliquées non conservatives et des liaisons non parfaites) est nulle : $Q_i = 0$.</li>
+            <li>Le Lagrangien $L=T-V$ ne dépend pas explicitement de la coordonnée $q_i$ : $\frac{\partial L}{\partial q_i} = 0$.</li>
+        </ul>
+         <p class="explanation">Note: La condition $\partial T / \partial q_i = 0$ sur la slide est suffisante si $V$ ne dépend pas de $q_i$ non plus. La condition générale est $\partial L / \partial q_i = 0$.</p>
+        <p>Alors la coordonnée $q_i$ est appelée <strong>coordonnée cyclique</strong> (ou ignorable, ou cachée).</p>
+        <p>L'équation d'Euler-Lagrange relative à $q_i$ :</p>
+        $$ \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) - \underbrace{\frac{\partial L}{\partial q_i}}_{0} = \underbrace{Q_i}_{0} $$
+         <p>(En supposant $Q_i$ représente $Q_i^{nc}$)</p>
+        <p>se réduit à :</p>
+        <div class="boxed-formula">
+             $$ \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) = 0 $$
+        </div>
+        <p>Ce qui donne par intégration par rapport au temps :</p>
+        <div class="boxed-formula">
+             $$ p_i = \frac{\partial L}{\partial \dot{q}_i} = Cte $$
+        </div>
+        <div class="boxed-text">
+             C'est une intégrale première. Comme $L=T-V$ et $V$ ne dépend généralement pas des $\dot{q}_k$, $p_i = \partial T / \partial \dot{q}_i$. Puisque T est au plus quadratique en $\dot{q}_k$, $p_i$ est linéaire en $\dot{q}_k$. C'est donc une <strong>intégrale première linéaire</strong> en $\dot{q}_i$.
+        </div>
+    </section>
+
+    <!-- Page 99 (OCR 10) : Section 2 Title -->
+    <section class="slide centered-text">
+        <h4>§-2-</h4>
+        <h3>Intégrale première de Jacobi</h3>
+        <p class="explanation">Une autre intégrale première, souvent liée à l'énergie, qui apparaît lorsque le Lagrangien ne dépend pas explicitement du temps.</p>
+    </section>
+
+    <!-- Page 100 (OCR 11) : Jacobi Integral -->
+    <section class="slide">
+        <h5>2- Intégrale première de Jacobi</h5>
+         <div class="image-placeholder float-right">[Image: Portrait de Carl Gustav Jacob Jacobi?]</div>
+        <p>Dans le cas d'un système où le Lagrangien $L=L(q_i, \dot{q}_i)$ ne dépend pas explicitement du temps, c'est-à-dire :</p>
+        <div class="boxed-formula">
+            $$ \frac{\partial L}{\partial t} = 0 $$
+        </div>
+        <p>on a l'intégrale première suivante, appelée <strong>intégrale de Jacobi</strong>, notée $H$ :</p>
+        <div class="boxed-formula">
+             $$ H = \sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i} - L = \sum_i \dot{q}_i p_i - L = Cte $$
+        </div>
+        <div class="boxed-text" style="background-color: #f0fff0;">
+            <strong>Intégrale première de Jacobi</strong>
+        </div>
+
+        <p><strong>En effet :</strong> Calculons la dérivée totale de $L$ par rapport au temps :</p>
+        $$ \frac{dL}{dt} = \sum_i \frac{\partial L}{\partial q_i} \dot{q}_i + \sum_i \frac{\partial L}{\partial \dot{q}_i} \ddot{q}_i + \underbrace{\frac{\partial L}{\partial t}}_{0} $$
+        <p>En utilisant les équations d'Euler-Lagrange $\frac{\partial L}{\partial q_i} = \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right)$ (supposant $Q_i^{nc}=0$):</p>
+        $$ \frac{dL}{dt} = \sum_i \left( \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) \right) \dot{q}_i + \sum_i \frac{\partial L}{\partial \dot{q}_i} \ddot{q}_i $$
+        $$ \frac{dL}{dt} = \sum_i \left( \frac{d}{dt}(p_i) \dot{q}_i + p_i \ddot{q}_i \right) = \sum_i \frac{d}{dt} (p_i \dot{q}_i) $$
+        <p>Donc :</p>
+        $$ \frac{d}{dt} \left( L - \sum_i p_i \dot{q}_i \right) = 0 \implies \frac{d}{dt} (-H) = 0 $$
+        <p>Ce qui montre que $H = \sum_i p_i \dot{q}_i - L$ est une constante du mouvement.</p>
+
+        <p style="text-align: center; font-weight: bold; color: #a02c2c;">CQFD</p>
+         <div class="clear-float"></div>
+    </section>
+
+    <!-- Page 101 (OCR 12) : Section 3 Title -->
+    <section class="slide centered-text">
+        <h4>§-3-</h4>
+        <h3>Décomposition de l'énergie cinétique</h3>
+        <p class="explanation">Analyse de la structure de l'énergie cinétique $T$ en fonction des vitesses généralisées $\dot{q}_i$.</p>
+    </section>
+
+    <!-- Page 102 (OCR 13) : Einstein Convention 1 -->
+    <section class="slide">
+        <h5>1- Convention d'Einstein</h5>
+        <ul>
+            <li>L'espace est $\mathbb{R}^3$.</li>
+            <li>$\implies$ les indices de coordonnées varient toujours de 1 à 3 (par exemple, $x_1, x_2, x_3$).</li>
+            <li>$\implies$ le signe $\sum_{i=1}^3$ est inutile lors d'une sommation sur un indice répété.</li>
+        </ul>
+        <div class="boxed-text" style="border-color: red; border-width: 2px;">
+             <p><strong>Convention de sommation sur les indices répétés (= convention d'Einstein) :</strong></p>
+             <p>Si un indice apparaît <strong>deux fois</strong> dans un terme (une fois en indice supérieur et une fois en indice inférieur, ou deux fois en indice inférieur/supérieur si usage d'une métrique implicite), on <strong>somme</strong> sur toutes les valeurs possibles de cet indice (ici 1, 2, 3).</p>
+        </div>
+        <ul>
+            <li>Exemple: (L'exemple $a_i b_j c_j = \sum \sum a_i b_j c_j$ de la slide est incorrectement interprété)
+                 <p>Correctement: $a_i b_j c_j$ signifie $\sum_{j=1}^3 a_i b_j c_j$ (sommation sur $j$).</p>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Page 103 (OCR 14) : Einstein Convention 2 -->
+    <section class="slide">
+        <h6>Convention d'Einstein (suite)</h6>
+        <ul>
+            <li>Indice répété = indice <strong>muet</strong>, il peut changer de nom ($a_i b_i = a_k b_k$).</li>
+
+            <li>Exemple : position du point $\vec{OM}$
+                 <div class="boxed-formula">
+                     $$ \vec{OM} = x_i \vec{e}_i \equiv \sum_{i=1}^3 x_i \vec{e}_i = x_1 \vec{e}_1 + x_2 \vec{e}_2 + x_3 \vec{e}_3 $$
+                 </div>
+            </li>
+
+            <li>Exemple : produit scalaire $\vec{x} \cdot \vec{y}$ (en base orthonormée $\vec{e}_i \cdot \vec{e}_j = \delta_{ij}$)
+                 <div class="boxed-formula">
+                     $$ \vec{x} \cdot \vec{y} = (x_i \vec{e}_i) \cdot (y_j \vec{e}_j) = x_i y_j (\vec{e}_i \cdot \vec{e}_j) = x_i y_j \delta_{ij} = x_i y_i $$
+                     $$ \equiv x_1 y_1 + x_2 y_2 + x_3 y_3 $$
+                 </div>
+             </li>
+
+            <li>Exemple : norme d'un vecteur $\|\vec{x}\|^2$
+                 <div class="boxed-formula">
+                     $$ \|\vec{x}\|^2 = \vec{x} \cdot \vec{x} = x_i x_i \equiv x_1^2 + x_2^2 + x_3^2 $$
+                 </div>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Page 104 (OCR 15) : Kinetic Energy Decomposition -->
+    <section class="slide">
+        <h5>2- Décomposition de l'énergie cinétique T</h5>
+        <p>Rappel : $T = \int_{P\in(S)} \frac{1}{2} V^2(P) dm$ avec $\vec{V}(P) = \sum_i \frac{\partial \vec{OP}}{\partial q_i} \dot{q}_i + \frac{\partial \vec{OP}}{\partial t}$.</p>
+        <p>En développant $V^2 = \vec{V} \cdot \vec{V}$ et en intégrant, on obtient :</p>
+        <div class="boxed-formula">
+         $$ T = \underbrace{\frac{1}{2} \sum_{i,j} \left( \int_{P\in(S)} \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j} dm \right) \dot{q}_i \dot{q}_j}_{T_2} + \underbrace{\sum_i \left( \int_{P\in(S)} \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial t} dm \right) \dot{q}_i}_{T_1} + \underbrace{\int_{P\in(S)} \frac{1}{2} \left\| \frac{\partial \vec{OP}}{\partial t} \right\|^2 dm}_{T_0} $$
+         $$ T = T_2 + T_1 + T_0 $$
+        </div>
+         <p>Notation de la slide (avec sommation d'Einstein implicite):</p>
+         <div class="boxed-formula">
+            $$ T = \frac{1}{2} a_{ij} \dot{q}_i \dot{q}_j + b_i \dot{q}_i + c = T_2 + T_1 + T_0 $$
+         </div>
+    </section>
+
+    <!-- Page 105 (OCR 16) : Coefficients aij, bi, c -->
+     <section class="slide">
+         <p>Les coefficients sont définis comme suit (avec $a_{ij} = a_{ji}$):</p>
+         <div class="boxed-formula">
+              $$ a_{ij}(q,t) = \int_{P\in(S)} \left( \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j} \right) dm $$
+         </div>
+         <div class="boxed-formula">
+             $$ b_i(q,t) = \int_{P\in(S)} \left( \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial t} \right) dm $$
+         </div>
+         <div class="boxed-formula">
+              $$ c(q,t) = T_0 = \int_{P\in(S)} \frac{1}{2} \left\| \frac{\partial \vec{OP}}{\partial t} \right\|^2 dm $$
+         </div>
+     </section>
+
+    <!-- Page 106 (OCR 17) : T2, T1, T0 summary -->
+    <section class="slide">
+        <p>Ainsi</p>
+        <div class="boxed-formula">
+             $$ T_2 = \frac{1}{2} a_{ij} \dot{q}_i \dot{q}_j $$
+             <p class="explanation">(Sommation sur i et j)</p>
+        </div>
+        <div class="boxed-formula">
+             $$ T_1 = b_i \dot{q}_i $$
+             <p class="explanation">(Sommation sur i)</p>
+        </div>
+        <div class="boxed-formula">
+             $$ T_0 = c $$
+        </div>
+        <div class="boxed-text">
+            Déterminons à présent, le degré d'homogénéité de $T_2, T_1$ et $T_0$ par rapport aux vitesses $\dot{q}_k$.
+        </div>
+    </section>
+
+    <!-- Page 107 (OCR 18) : Homogeneity degree -->
+    <section class="slide">
+        <h5>B- Degré d'homogénéité de $T_2, T_1$ et $T_0$</h5>
+        <span class="pointer-icon"></span>
+        <p>On teste en remplaçant $\dot{q}_k$ par $\lambda \dot{q}_k$ :</p>
+        <div class="boxed-formula">
+             $$ T_2(\lambda \dot{q}) = \frac{1}{2} a_{ij} (\lambda \dot{q}_i) (\lambda \dot{q}_j) = \lambda^2 \left( \frac{1}{2} a_{ij} \dot{q}_i \dot{q}_j \right) = \lambda^2 T_2 $$
+             $$ \implies T_2 \text{ est une fonction homogène de degré 2} $$
+        </div>
+        <span class="pointer-icon"></span>
+         <div class="boxed-formula">
+              $$ T_1(\lambda \dot{q}) = b_i (\lambda \dot{q}_i) = \lambda (b_i \dot{q}_i) = \lambda T_1 $$
+              $$ \implies T_1 \text{ est une fonction homogène de degré 1} $$
+         </div>
+         <span class="pointer-icon"></span>
+         <div class="boxed-formula">
+             $$ T_0(\lambda \dot{q}) = c = \lambda^0 c = \lambda^0 T_0 $$
+             $$ \implies T_0 \text{ est une fonction homogène de degré 0} $$
+         </div>
+    </section>
+
+    <!-- Page 108 (OCR 19) : Euler's Identity -->
+    <section class="slide">
+        <h5>C- Identité d'Euler</h5>
+        <p>D'après le théorème d'Euler appliqué aux fonctions homogènes $T_2, T_1, T_0$ (variables $\dot{q}_k$):</p>
+        $$ \sum_k \dot{q}_k \frac{\partial T_2}{\partial \dot{q}_k} = 2 T_2 $$
+        $$ \sum_k \dot{q}_k \frac{\partial T_1}{\partial \dot{q}_k} = 1 T_1 $$
+        $$ \sum_k \dot{q}_k \frac{\partial T_0}{\partial \dot{q}_k} = 0 T_0 = 0 $$
+        <p>Pour l'énergie cinétique totale $T = T_2 + T_1 + T_0$ :</p>
+        <div class="boxed-formula">
+             $$ \sum_i \dot{q}_i \frac{\partial T}{\partial \dot{q}_i} = \sum_i \dot{q}_i \left( \frac{\partial T_2}{\partial \dot{q}_i} + \frac{\partial T_1}{\partial \dot{q}_i} + \frac{\partial T_0}{\partial \dot{q}_i} \right) $$
+             $$ = \underbrace{\sum_i \dot{q}_i \frac{\partial T_2}{\partial \dot{q}_i}}_{2T_2} + \underbrace{\sum_i \dot{q}_i \frac{\partial T_1}{\partial \dot{q}_i}}_{T_1} + \underbrace{\sum_i \dot{q}_i \frac{\partial T_0}{\partial \dot{q}_i}}_{0} $$
+        </div>
+        <p>Soit:</p>
+        <div class="boxed-formula">
+             $$ \sum_i \dot{q}_i \frac{\partial T}{\partial \dot{q}_i} = 2T_2 + T_1 \quad \text{(I)} $$
+        </div>
+        <div class="boxed-text">
+             Cette relation est connue sous le nom d'<strong>identité d'Euler</strong> appliquée à l'énergie cinétique.
+        </div>
+    </section>
+
+    <!-- Page 109 (OCR 20) : Section 5 Title -->
+    <section class="slide centered-text">
+        <h4>§-4-</h4> <!-- Correction: Section 4 based on slide title -->
+        <h3>Théorème d’Euler<br>Degré d’homogénéité<br>Identité d’Euler</h3>
+        <p class="explanation">Application des concepts de fonctions homogènes à l'énergie cinétique.</p>
+    </section>
+
+    <!-- Page 110 (OCR 1) : Conditions Painleve -->
+    <section class="slide">
+         <h5>Conditions d'existence de l'IP de Painlevé</h5>
+         <span class="pointer-icon"></span>
+         <div style="border-left: 3px solid #a02c2c; padding-left: 10px;">
+             <p><strong>H1-</strong> Les liaisons sont parfaites ($Q_i^{Le}=0, Q_i^{Li}=0$)</p>
+             <p><strong>H2-</strong> Les forces dérivent d'une fonction de force U ($Q_i = Q_i^D = \partial U / \partial q_i$)</p>
+             <p><strong>H3-</strong> Lagrangien indépendant explicitement du temps:</p>
+         </div>
+          <div class="boxed-formula">
+              $$ \frac{\partial L}{\partial t} = \frac{\partial}{\partial t}(T+U) = 0 $$
+              <p class="explanation">(Note: $L=T-V=T+U$ si $U=-V$)</p>
+          </div>
+          <p class="explanation">Sous ces trois conditions, l'intégrale $T_2 - T_0 - U$ est conservée.</p>
+    </section>
+
+    <!-- Page 111 (OCR 2) : Exercise Painleve -->
+    <section class="slide">
+        <h5>Exercice d'application</h5>
+        <p>Les énergies cinétique et la fonction de force d'un système mécanique (S) sont données par :</p>
+        <div class="boxed-formula">
+         $$
+         \begin{cases}
+         T(S/R) = \frac{1}{2}m(\dot{x}^2 + \dot{y}^2 + a^2\dot{\psi}^2\cos^2\psi) + \frac{A}{2}(\dot{\psi}^2 + \dot{\theta}^2\sin^2\psi) + \frac{C}{2}(\dot{\phi}+\dot{\theta}\cos\psi)^2 \\
+         U(S) = mg(a\sin\theta - x\cos\theta) + K
+         \end{cases}
+         $$
+        </div>
+        <div class="boxed-text">
+            <strong>On suppose que toutes les liaisons sont parfaites.</strong>
+        </div>
+        <div>
+            <h6>1- Le système possède-t-il l'intégrale première de Painlevé? Si oui donner son expression.</h6>
+        </div>
+         <div class="boxed-text" style="background-color: #fff0f0;">
+            <h6>2- On impose $\theta = \omega t$ et $x=a$, où $\omega$ est une constante positive. Existe-t-il, dans ce cas une intégrale première de Painlevé? Si oui donner son expression.</h6>
+         </div>
+    </section>
+
+    <!-- Page 112 (OCR 3) : Exercise Painleve Sol 1 -->
+    <section class="slide">
+         <h5>1-</h5>
+         <ul>
+             <li>Toutes les liaisons sont parfaites (H1 ok).</li>
+             <li>Toutes les forces dérivent d' une fonction de force U (H2 ok, $Q_i = \partial U / \partial q_i$).</li>
+             <li>Vérifions H3 : Le Lagrangien $L = T+U$ (en prenant $U$ comme opposé du potentiel) dépend-il explicitement de $t$ ?
+                 <br>T ne dépend pas explicitement de $t$.
+                 <br>U ne dépend pas explicitement de $t$.
+                 <br>Donc $\partial L / \partial t = 0$. (H3 ok).
+             </li>
+         </ul>
+         <div class="boxed-formula">
+              $$ \frac{\partial L}{\partial t} = \frac{\partial}{\partial t}(T+U) = 0 $$
+         </div>
+         <p><strong>Donc l'I.P de Painlevé existe bien et son expression est : $T_2 - T_0 - U = K' = \text{Cte}$</strong></p>
+         <p>Identifions $T_2, T_1, T_0$ à partir de T:</p>
+         <p>Tous les termes de T sont quadratiques en $(\dot{x}, \dot{y}, \dot{\psi}, \dot{\theta}, \dot{\phi})$. Il n'y a pas de termes linéaires ou constants.</p>
+         $$ T = T_2, \quad T_1 = 0, \quad T_0 = 0 $$
+         <p>L'intégrale première de Painlevé est donc $T_2 - 0 - U = T - U = \text{Cte}$.</p>
+          <div class="boxed-formula">
+             $$ T - U = \frac{1}{2}m(\dot{x}^2 + \dot{y}^2 + a^2\dot{\psi}^2\cos^2\psi) + \frac{A}{2}(\dot{\psi}^2 + \dot{\theta}^2\sin^2\psi) + \frac{C}{2}(\dot{\phi}+\dot{\theta}\cos\psi)^2 $$
+             $$ - mg(a\sin\theta - x\cos\theta) - K = K' = \text{Cte} $$
+             $$ \implies T - U = \text{Cte} $$
+             <p>(Avec $T_0 = 0$)</p>
+         </div>
+          <p class="explanation">Ici, l'intégrale de Painlevé coïncide avec l'intégrale de l'énergie $T+V = T-U = \text{Cte}$.</p>
+    </section>
+
+    <!-- Page 113 (OCR 4) : Exercise Painleve Sol 2 -->
+    <section class="slide">
+         <h5>2- Dans ce cas on n' a plus l'intégrale première de Painlevé, en effet :</h5>
+         <p>On impose $\theta = \omega t$ et $x=a$. Les liaisons sont maintenant $f_1=\theta-\omega t = 0$ et $f_2=x-a=0$. Ce sont des liaisons holonomes, mais $f_1$ est <strong>rhéonome</strong>.</p>
+         <p>La fonction de force U devient :</p>
+         <div class="boxed-formula">
+             $$ U(S) = mg(a\sin(\omega t) - a\cos(\omega t)) + K $$
+         </div>
+         <p>Vérifions la condition H3 pour l'intégrale de Painlevé : $\partial L / \partial t = 0$ ?</p>
+         $$ L = T(..., \dot{\theta}=\omega, \dot{x}=0) + U(t) $$
+         <p>Puisque U dépend maintenant explicitement de $t$ :</p>
+         <div class="boxed-formula">
+             $$ \frac{\partial U}{\partial t} = mg(a\omega\cos(\omega t) + a\omega\sin(\omega t)) \neq 0 $$
+         </div>
+         <p>Et T peut aussi dépendre de $t$ via $\theta=\omega t$ dans les coefficients. Donc $T=T(q, \dot{q}, t)$.</p>
+         <p>Donc $\partial L / \partial t \neq 0$.</p>
+         <div class="boxed-formula">
+            $$ \frac{\partial L}{\partial t} = \frac{\partial}{\partial t}(T+U) \neq 0 $$
+         </div>
+         <p>Puisque la condition H3 n'est pas satisfaite, l'intégrale première de Painlevé $T_2-T_0-U$ n'est plus conservée.</p>
+    </section>
+
+    <!-- Page 114 (OCR 5) : Kinetic Energy Integral -->
+    <section class="slide">
+         <h5>3- Intégrale première de l'énergie cinétique</h5>
+         <span class="pointer-icon"></span>
+         <p>On suppose que les hypothèses de l'intégrale première de Painlevé sont satisfaites (H1, H2, H3) et on ajoute une hypothèse supplémentaire:</p>
+         <div style="border-left: 3px solid #a02c2c; padding-left: 10px;">
+            <p><strong>H4-</strong> Paramétrage indépendant du temps:</p>
+         </div>
+         <div class="boxed-formula">
+            $$ \frac{\partial \vec{OP}}{\partial t} = \vec{0} $$
+         </div>
+          <p class="explanation">Cela signifie que les liaisons sont scléronomes et le repère utilisé pour $\vec{OP}$ est fixe par rapport au référentiel galiléen.</p>
+         <p>Dans ce cas:</p>
+         <p>$T_1 = 0$ et $T_0 = 0$. L'énergie cinétique se réduit à sa partie quadratique $T=T_2$.</p>
+         <div class="boxed-formula">
+            $$ T_0 = T_1 = 0 \implies T = T_2 $$
+         </div>
+    </section>
+
+    <!-- Page 115 (OCR 6) : Kinetic Energy Integral Result -->
+    <section class="slide">
+         <p>alors, l'intégrale première de Painlevé ($T_2 - T_0 - U = Cte$) s'écrit:</p>
+         <div class="boxed-formula">
+            $$ T - U = Cte $$
+         </div>
+         <div class="boxed-text center-img" style="position: relative;">
+            <strong>C'est l'intégrale première de l'énergie cinétique</strong>
+            <span class="arrow-up" style="position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%);"></span>
+        </div>
+        <br><br>
+         <p class="explanation">Ce nom est un peu trompeur. Il s'agit en fait de la conservation de $T-U$. Si $U=-V$, cela correspond à la conservation de l'énergie mécanique $T+V$. C'est le cas le plus fréquent où l'énergie est conservée: liaisons parfaites, forces dérivant d'un potentiel V, système scléronome.</p>
+    </section>
+
+    <!-- Page 116 (OCR 7) : Remark Kinetic Energy Integral -->
+     <section class="slide">
+        <h5>Remarque</h5>
+        <div class="boxed-text">
+            l'intégrale première de l'énergie cinétique ($T-U=Cte$) traduit la <strong>conservation de l'énergie mécanique</strong>, en effet:
+        </div>
+         <p>Si $U = -V$ (fonction de force = opposé de l'énergie potentielle), alors :</p>
+         <div class="boxed-formula">
+             $$ T - U = T - (-V) = T + V = E_m = Cte $$
+         </div>
+         <p class="explanation">Où $E_m$ est l'énergie mécanique totale.</p>
+    </section>
+
+    <!-- Page 117 (OCR 8) : Exercise Application Rattrapage 2016 -->
+    <section class="slide">
+        <h5>Exercice d'application</h5>
+        <h6>Session de rattrapage de 2016</h6>
+        <div class="image-placeholder">[Image: Pendule double avec un ressort reliant le point de suspension O au point A (première articulation). Masse en A (m1?), masse en B (m2?). Angles theta1(t) et theta2(t).]</div>
+        <p class="explanation">Description du système : Un pendule double plan (OAB), avec O fixe. La tige OA (longueur $l_1$) a une masse $m_1$ (?), la tige AB (longueur $l_2$) a une masse $m_2$ (?). Les angles avec la verticale sont $\theta_1(t)$ et $\theta_2(t)$. Un ressort horizontal est attaché en A et à un point fixe C sur la verticale passant par O.</p>
+    </section>
+
+    <!-- Page 118 (OCR 9) : Exercise Data -->
+    <section class="slide">
+        <h5>Données du problème:</h5>
+        <p>Energie cinétique du système $\Sigma$ dans $R_0$:</p>
+        <div class="boxed-formula">
+         $$ T(\Sigma/R_0) = T(A/R_0) + T(B/R_0) $$
+         $$ = \frac{m_1+m_2}{2} l_1^2 \dot{\theta}_1^2 + \frac{m_2}{2} l_2^2 \dot{\theta}_2^2 + m_2 l_1 l_2 \dot{\theta}_1 \dot{\theta}_2 \cos(\theta_1 - \theta_2) $$
+        </div>
+         <p class="explanation">Cette expression correspond à l'énergie cinétique d'un pendule double avec des masses ponctuelles $m_1$ en A et $m_2$ en B.</p>
+        <p>Energie potentielle totale (pesanteur + élastique):</p>
+        <div class="boxed-formula">
+         $$ V_{tot}(\Sigma) = V_{pes}(\Sigma) + V_{el} $$
+         $$ = -(m_1+m_2) g l_1 \cos\theta_1 - m_2 g l_2 \cos\theta_2 + \frac{1}{2} k(l_1 \sin\theta_1 - l_0)^2 $$
+        </div>
+         <p class="explanation">Le terme élastique suppose que le ressort est horizontal, attaché à la verticale en $x=0$, et que sa longueur à vide est $l_0$. L'élongation est $x_A = l_1 \sin\theta_1$. Donc $V_{el} = \frac{1}{2} k (x_A - x_C)^2$? Si C est à $x=l_0$? La formule donnée $(l_1 \sin\theta_1 - l_0)^2$ suggère que $l_0$ est une position ou longueur de référence.</p>
+
+        <h6>A-t-on l'intégrale première de l'énergie cinétique? Si oui l'écrire.</h6>
+    </section>
+
+    <!-- Page 119 (OCR 10) : Exercise Solution -->
+    <section class="slide">
+        <h5>Solution</h5>
+        <p><strong>Oui on a l'I.P. de l'énergie cinétique car le système est conservatif</strong> (toutes les forces dérivent d'un potentiel V) et le paramétrage (via $\theta_1, \theta_2$) est <strong>indépendant du temps</strong> ($\partial \vec{OP}/\partial t = 0$ pour A et B, donc $T_0=T_1=0$, $T=T_2$).</p>
+         <p class="explanation">Vérification des conditions H1-H4:</p>
+         <ul>
+             <li>H1: Liaisons (pivots en O et A) supposées parfaites. Ok.</li>
+             <li>H2: Forces (poids, ressort) dérivent d'un potentiel V. Ok. ($U=-V$)</li>
+             <li>H3: Lagrangien $L=T-V$. T ne dépend pas de t. V ne dépend pas de t. Donc $\partial L / \partial t = 0$. Ok.</li>
+             <li>H4: Paramétrage indépendant du temps. Les positions de A et B ne dépendent que de $\theta_1, \theta_2$. Ok.</li>
+         </ul>
+        <p>D'où:</p>
+        <p>L'intégrale première de l'énergie cinétique ($T-U=Cte$) s'écrit $T+V=Cte$ :</p>
+        <div class="boxed-formula">
+         $$ T+V = \frac{m_1+m_2}{2} l_1^2 \dot{\theta}_1^2 + \frac{m_2}{2} l_2^2 \dot{\theta}_2^2 + m_2 l_1 l_2 \dot{\theta}_1 \dot{\theta}_2 \cos(\theta_1 - \theta_2) $$
+         $$ -(m_1+m_2) g l_1 \cos\theta_1 - m_2 g l_2 \cos\theta_2 + \frac{1}{2} K(l_1 \sin\theta_1 - l_0)^2 = Cte $$
+        </div>
+         <p class="explanation">(En notant $K$ la raideur du ressort k).</p>
+         <div class="boxed-text">
+             <h6>Remarque</h6>
+             Cette I.P. peut remplacer avantageusement une des deux équations du mouvement (qui sont toutes les deux des équations différentielles d'ordre 2). Obtenir une intégrale première permet de réduire l'ordre du système ou d'éliminer une variable.
+         </div>
+    </section>
+
+    <!-- Page 120 (OCR 11) : Synthesis 2 Title -->
+    <section class="slide centered-text">
+        <h5>Fiche de synthèse 2</h5>
+        <div class="image-placeholder" style="width: 150px;">[Image: Portrait of Lagrange]</div>
+        <span class="pointer-icon"></span>
+        <h3>Ce qu'il faut absolument savoir</h3>
+    </section>
+
+    <!-- Page 121 (OCR 12) : Summary Table 4 First Integrals -->
+    <section class="slide">
+         <h5>Les 4 intégrales premières à connaître absolument</h5>
+         <table>
+            <thead>
+                <tr>
+                    <th>Intégrale première</th>
+                    <th>Conditions</th>
+                    <th>Forme</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Intégrale première linéaire</strong></td>
+                    <td>$\frac{\partial L}{\partial q_i} = 0$ et $Q_i^{nc} = 0$<br>(Coordonnée $q_i$ cyclique)</td>
+                    <td class="boxed-formula" style="margin: 5px;">$\frac{\partial L}{\partial \dot{q}_i} = Cte$</td>
+                </tr>
+                <tr>
+                    <td><strong>Intégrale première de Jacobi</strong></td>
+                    <td>$\frac{\partial L}{\partial t} = 0$ <br>(Lagrangien indépendant du temps)</td>
+                    <td class="boxed-formula" style="margin: 5px;">$H = \sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i} - L = Cte$</td>
+                </tr>
+                <tr>
+                    <td><strong>Intégrale première de Painlevé</strong></td>
+                    <td>
+                        - Forces dérivent de U ($Q_i = \partial U / \partial q_i$) <br>
+                        - Liaisons sont parfaites<br>
+                        - $\frac{\partial L}{\partial t} = 0$ ($L=T+U$)
+                    </td>
+                    <td class="boxed-formula" style="margin: 5px;">$T_2 - T_0 - U = Cte$</td>
+                </tr>
+                 <tr>
+                    <td><strong>Intégrale première de l'énergie cinétique</strong></td>
+                    <td>Conditions de Painlevé ET Liaisons indépendantes du temps ($\partial \vec{OP}/\partial t = 0 \implies T_0=T_1=0$)</td>
+                    <td class="boxed-formula" style="margin: 5px;">$T - U = Cte$ <br> $( \iff T+V = Cte )$</td>
+                </tr>
+            </tbody>
+         </table>
+    </section>
+
+    <!-- Page 122 (OCR 13) : Implementation Painleve/Energy -->
+     <section class="slide centered-text">
+         <h5>Mise en œuvre</h5>
+         <span class="pointer-icon"></span>
+         <h4>Voir application pédagogique</h4>
+         <div style="display: flex; justify-content: space-around; align-items: center;">
+             <div style="width: 40%; text-align: center;">
+                 <div class="boxed-formula">
+                     $$ T_2 - T_0 - U = Cte $$
+                 </div>
+                 <p><strong>Intégrale première de Painlevé</strong></p>
+             </div>
+             <div style="width: 15%; text-align: center;">
+                 <div class="image-placeholder" style="width: 100px;">[Image: Portrait de Paul Painlevé?]</div>
+             </div>
+             <div style="width: 40%; text-align: center;">
+                 <div class="boxed-formula">
+                      $$ T - U = Cte $$
+                 </div>
+                 <p><strong>Intégrale première de l'énergie cinétique</strong><br>(Cas particulier)</p>
+             </div>
+         </div>
+    </section>
+
+    <!-- Page 123 (OCR 14) : Transition slide -->
+    <section class="slide centered-text">
+         <div style="display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center;">
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Lagrange?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Euler?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait D'Alembert?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Hamilton?]</div>
+         </div>
+         <div class="boxed-text" style="margin-top: 20px;">
+            <h4>Et maintenant, c'est à vous de jouer,</h4>
+            <h4>à vos dossiers pédagogiques.</h4>
+         </div>
+          <span class="pointer-icon"></span>
+    </section>
+
+    <!-- Page 124 (OCR 15) : End slide Chap 3 -->
+    <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 3</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
