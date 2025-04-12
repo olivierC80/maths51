@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanique Analytique - SMP5 - Chapitre 2</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                // • auto-render specific keys, e.g.:
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #a02c2c; /* Dark red color similar to slides */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #a02c2c;
+            padding-bottom: 10px;
+        }
+        h2 {
+             text-align: center;
+        }
+        h3.chapter-title {
+             background-color: #a02c2c;
+             color: white;
+             padding: 10px;
+             border-radius: 5px;
+             text-align: center;
+        }
+        h4.subtitle {
+             text-align: center;
+             color: #802020;
+        }
+         h5 {
+             color: #601010;
+             margin-top: 1.5em;
+         }
+         h6 {
+             color: #601010;
+             margin-top: 1em;
+             font-size: 1.1em;
+         }
+        .image-placeholder {
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px auto; /* Centered */
+            color: #777;
+            font-style: italic;
+            min-height: 50px; /* Ensure placeholder is visible */
+            max-width: 80%; /* Control image size */
+        }
+         .image-placeholder.inline {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px;
+         }
+         .image-placeholder.float-right {
+             width: 150px;
+             float: right;
+             margin-left: 15px;
+             margin-bottom: 10px;
+         }
+         .clear-float {
+            clear: both;
+         }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        blockquote {
+            border-left: 4px solid #a02c2c;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            background-color: #f9f2f2;
+        }
+        strong {
+            color: #601010;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+        }
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 25px;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .contact-info p {
+             margin: 5px 0;
+        }
+         .centered-text {
+             text-align: center;
+         }
+         .boxed-formula {
+             background-color: #e0e8f0;
+             padding: 10px 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+         }
+         .boxed-text {
+             background-color: #e0e8f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+         }
+         /* Torseur notation style */
+         .torseur {
+             display: inline-block;
+             text-align: center;
+             vertical-align: middle;
+             margin: 0 0.2em;
+         }
+         .torseur-content {
+             display: block;
+             border-left: 1px solid;
+             border-right: 1px solid;
+             padding: 0 0.3em;
+         }
+         .torseur-element {
+             display: block;
+         }
+         .torseur-point {
+             font-size: 0.7em;
+             margin-top: -0.3em;
+         }
+         .comoment {
+            display: inline-block;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 0.9em;
+            height: 0.9em;
+            line-height: 0.9em;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 0.2em;
+            font-weight: bold;
+            vertical-align: middle;
+         }
+         .pointer-icon {
+            display: inline-block; /* Prevents block behavior */
+            font-size: 1.5em; /* Adjust size */
+            margin-right: 5px; /* Space from text */
+            vertical-align: middle; /* Align with text */
+         }
+         .arrow-up {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 2L2 12h5v10h10V12h5L12 2z"/></svg>');
+         }
+         .arrow-down {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 22L22 12h-5V2H7v10H2l10 10z"/></svg>');
+          }
+          .arrow-label {
+             text-align: center;
+             font-weight: bold;
+             color: #a02c2c;
+             margin-top: -5px;
+             margin-bottom: 10px;
+         }
+         .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+         }
+         table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            width: auto;
+         }
+         th, td {
+             border: 1px solid #ccc;
+             padding: 8px;
+             text-align: center;
+         }
+         th {
+             background-color: #f2f2f2;
+             color: #601010;
+         }
+         caption {
+             caption-side: bottom;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-top: 5px;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- START PREVIOUSLY GENERATED CONTENT -->
+    <!-- Slide 1 to 60 -->
+    <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p><p>Professeur de l'enseignement supérieur</p><p>Bureau 37 département de physique</p><p>Faculté des sciences</p><p>Agadir</p><p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... other slides ... -->
+    <section class="slide">
+        <p>Et en tenant compte des transformations de Lagrange (relations (1) et (2)) :</p>
+        $$ \frac{\partial \vec{OP}}{\partial q_i} = \frac{\partial \vec{V}}{\partial \dot{q}_i} \quad \text{et} \quad \frac{d}{dt} \left[ \frac{\partial \vec{OP}}{\partial q_i} \right] = \frac{\partial \vec{V}}{\partial q_i} $$
+        <p>L'expression précédente devient :</p>
+        <div class="boxed-formula">
+             $$ \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} = \frac{d}{dt} \left[ \vec{V}(P) \cdot \frac{\partial \vec{V}(P)}{\partial \dot{q}_i} \right] - \vec{V}(P) \cdot \frac{\partial \vec{V}(P)}{\partial q_i} $$
+        </div>
+         <p>On reconnait les dérivées de $V^2/2$ : $\vec{V} \cdot \frac{\partial \vec{V}}{\partial \dot{q}_i} = \frac{\partial (V^2/2)}{\partial \dot{q}_i}$ et $\vec{V} \cdot \frac{\partial \vec{V}}{\partial q_i} = \frac{\partial (V^2/2)}{\partial q_i}$.</p>
+        $$ \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} = \frac{d}{dt} \left[ \frac{\partial (\frac{1}{2}V^2)}{\partial \dot{q}_i} \right] - \frac{\partial (\frac{1}{2}V^2)}{\partial q_i} $$
+        <p>Ce qui permet d'écrire pour $A_i$ (en intégrant sur $dm$) :</p>
+        <div class="boxed-formula">
+             $$ A_i = \int_{P\in(S)} \left( \frac{d}{dt} \left[ \frac{\partial (\frac{1}{2}V^2)}{\partial \dot{q}_i} \right] - \frac{\partial (\frac{1}{2}V^2)}{\partial q_i} \right) dm $$
+             $$ A_i = \frac{d}{dt} \left[ \frac{\partial}{\partial \dot{q}_i} \left( \int_{P\in(S)} \frac{1}{2}V^2 dm \right) \right] - \frac{\partial}{\partial q_i} \left( \int_{P\in(S)} \frac{1}{2}V^2 dm \right) $$
+        </div>
+        <p>En reconnaissant l'énergie cinétique $T = \int_{P\in(S)} \frac{1}{2}V^2 dm$ :</p>
+        <p>Il vient finalement:</p>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+            $$ A_i = \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} \quad (**) $$
+        </div>
+        <div class="boxed-text">
+            Les accélérations généralisées $A_i$ s'obtiennent de manière systématique à partir de l'<strong>énergie cinétique</strong> T associée au paramétrage ($q_i, \dot{q}_i$).
+        </div>
+    </section>
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+    <!-- Page 61 (OCR 1) : Calculating P_i^* -->
+    <section class="slide">
+         <h5>3- Calcul des puissances virtuelles des efforts intérieurs $P_i^*$</h5>
+         <div class="boxed-formula" style="float: right; margin-left: 10px;">$P_i^*$</div>
+         <h6>Principe d'objectivité (ou principe de l'action et de la réaction pour les puissances virtuelles)</h6>
+         <div class="boxed-text">
+             Pour tout système matériel , la puissance virtuelle des efforts intérieurs est nulle pour tout champ de vitesse virtuel <strong>rigidifiant</strong>.
+         </div>
+         <p>D'où:</p>
+         <div class="boxed-formula">
+             $$ P_i^* = 0 $$
+         </div>
+         <div class="boxed-text">
+             <h6>Conclusion</h6>
+             Comme nous nous travaillons (dans ce cours, implicitement) qu'avec des systèmes rigidifiants (solidifiants), alors, on aura pas à se préoccuper des efforts intérieurs dont la puissance virtuelle est nulle.
+         </div>
+         <p class="explanation">Ceci est une conséquence du principe d'action-réaction et de l'hypothèse que le CVV respecte l'indéformabilité des solides. Pour des milieux déformables, ce terme ne serait pas nul.</p>
+          <div class="clear-float"></div>
+    </section>
+
+    <!-- Page 62 (OCR 2) : Section 7 Title -->
+    <section class="slide centered-text">
+        <h4>§-7-</h4>
+        <h3>Dérivation des équations de Lagrange</h3>
+        <p class="explanation">Nous allons maintenant utiliser les résultats précédents (expressions des $P_a^*, P_e^*, P_i^*$) pour établir les équations dynamiques du mouvement sous la forme de Lagrange.</p>
+    </section>
+
+    <!-- Page 63 (OCR 3) : Subsection 7-1 Title -->
+    <section class="slide centered-text">
+        <h4>§-7-1</h4>
+        <h3>Equations de Lagrange simples (ELS)</h3>
+        <p class="explanation">Ce sont les équations obtenues lorsque les coordonnées généralisées $q_i$ sont indépendantes, typiquement après avoir utilisé les liaisons holonomes pour réduire le nombre de variables.</p>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i $$
+        </div>
+        <p class="explanation">Nous allons montrer comment on aboutit à cette forme.</p>
+    </section>
+
+    <!-- Page 64 (OCR 4) : PPV for Rigidifying System -->
+    <section class="slide">
+        <p>Le PPV (Principe des Puissances Virtuelles, ou Théorème de D'Alembert) dans le cas d'un système rigidifiant (où $P_i^*=0$) s'écrit :</p>
+        <div class="boxed-formula">
+            $$ P_a^* = P_e^* $$
+        </div>
+        <p>avec :</p>
+        <div class="image-placeholder float-right">[Image: Portrait of Lagrange]</div>
+        <div class="boxed-formula" style="position: relative;">
+             $$ P_e^* = \sum_i Q_i \dot{q}_i^* $$
+            <img src="placeholder_arrow_right.png" alt="->" style="position: absolute; right: 10px; top: 25%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+        </div>
+        <p>et :</p>
+        <div class="boxed-formula" style="position: relative;">
+             $$ P_a^* = \sum_i A_i \dot{q}_i^* $$
+             <img src="placeholder_arrow_right.png" alt="->" style="position: absolute; right: 10px; top: 75%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+             <span style="position: absolute; right: 50px; top: 50%; transform: translateY(-50%); text-align: center; font-weight: bold; color: #a02c2c;">
+                 2 formes linéaires<br>de $\dot{q}_i^*$
+             </span>
+        </div>
+        <p class="explanation">Ces deux puissances virtuelles sont des formes linéaires des vitesses généralisées virtuelles $\dot{q}_i^*$.</p>
+         <div class="clear-float"></div>
+    </section>
+
+    <!-- Page 65 (OCR 5) : Deriving Ai = Qi -->
+    <section class="slide">
+         <div class="image-placeholder float-right">[Image: Portrait of Lagrange]</div>
+         <p>D'où, en égalant les deux expressions de $P_a^*$ et $P_e^*$ :</p>
+         <div class="boxed-formula" style="text-align: center;">
+             $$ \underbrace{\sum_i A_i \dot{q}_i^*}_{P_a^*} = \underbrace{\sum_i Q_i \dot{q}_i^*}_{P_e^*} $$
+         </div>
+         <div style="text-align:center; margin: 20px 0;">
+            <img src="placeholder_double_arrow.png" alt="<->" style="height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg); vertical-align: middle;">
+         </div>
+        <p>Ce qui s'écrit aussi :</p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <div class="boxed-formula">
+                $$ \sum_i (A_i - Q_i) \dot{q}_i^* = 0 \quad \text{(I)} $$
+            </div>
+            <div class="boxed-formula">
+                $$ \forall \dot{q}_i^* \text{ admissibles} $$
+            </div>
+        </div>
+        <p class="explanation">Cette équation (I) doit être vraie pour <strong>tout</strong> choix des vitesses généralisées virtuelles $\dot{q}_i^*$ compatibles avec les liaisons.</p>
+         <div class="clear-float"></div>
+    </section>
+
+    <!-- Page 66 (OCR 6) : Choosing CVV and ELS -->
+    <section class="slide">
+        <h5>Choix du champ des vitesses virtuelles (CVV)</h5>
+        <div class="boxed-text">
+             Si le système est décrit par $n$ coordonnées généralisées $q_1, ..., q_n$ qui sont <strong>indépendantes</strong> (ce qui est le cas si toutes les liaisons holonomes ont été utilisées pour réduire le nombre de coordonnées et qu'il n'y a pas d'autres liaisons), alors les vitesses généralisées virtuelles $\dot{q}_i^*$ peuvent être choisies <strong>indépendamment les unes des autres</strong>.
+        </div>
+        <p>Dans ce cas (indépendance des $\dot{q}_i^*$), l'équation (I) :</p>
+        $$ \sum_i (A_i - Q_i) \dot{q}_i^* = 0 $$
+        <p>ne peut être satisfaite pour des $\dot{q}_i^*$ arbitraires que si chaque coefficient est nul :</p>
+        <div class="boxed-formula" style="display: inline-block; margin-right: 20px;">
+           $$ A_i = Q_i $$
+        </div>
+        <img src="placeholder_arrow_right.png" alt="->" style="display: inline-block; height: 30px; vertical-align: middle; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+
+        <p>Soit, en remplaçant $A_i$ par son expression en fonction de l'énergie cinétique T :</p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <div class="boxed-formula">
+                 $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i $$
+            </div>
+            <div class="boxed-formula">
+                 $$ i = 1, ..., n \quad (**) $$
+            </div>
+        </div>
+        <div class="boxed-text">
+            Ce sont les <strong>équations de Lagrange simples (ELS)</strong>. Elles constituent un système de $n$ équations différentielles du second ordre pour les $n$ coordonnées généralisées $q_i(t)$.
+        </div>
+        <div class="boxed-text" style="background-color: #fff0f0;">
+            <strong>Valables dans le cas où les $q_i$ (et donc les $\dot{q}_i^*$) sont indépendantes.</strong>
+        </div>
+    </section>
+
+    <!-- Page 67 (OCR 7) : Generalized Force Components -->
+    <section class="slide">
+        <h5>Remarque importante</h5>
+        <p>D'autre part, les $Q_i$ sont les composantes des forces généralisées qui peuvent avoir plusieurs origines. Nous écrirons par exemple:</p>
+        <div class="boxed-formula">
+            $$ Q_i = Q_i^{Le} + Q_i^{Li} + Q_i^{D} $$
+        </div>
+        <p>avec:</p>
+        <div class="boxed-text">
+            $$
+            \begin{cases}
+            Q_i^{Le} = \text{force généralisée issue des actions de liaisons } \underline{\text{extérieures}} \\
+            Q_i^{Li} = \text{force généralisée issue des actions de liaisons } \underline{\text{intérieures}} \\
+            Q_i^{D} = \text{force généralisée issue des actions } \underline{\text{données}} \text{ (actives, appliquées)}
+            \end{cases}
+            $$
+        </div>
+        <p class="explanation">$Q_i^D$ représente les forces appliquées connues (poids, ressorts, forces externes...). Les termes $Q_i^{Le}$ et $Q_i^{Li}$ représentent l'effet des forces de liaison (inconnues a priori) sur la coordonnée $q_i$.</p>
+    </section>
+
+    <!-- Page 68 (OCR 8) : Visual Qi Decomposition -->
+    <section class="slide centered-text">
+        <div class="boxed-formula" style="width: 100px; margin: 10px auto;">$Q_i$</div>
+        <div style="display: flex; justify-content: space-around; align-items: flex-start; margin-top: 10px; position: relative;">
+             <!-- Arrows -->
+             <div style="position: absolute; top: -10px; left: 50%; width: 1px; height: 30px; background-color: #a02c2c;"></div>
+             <div style="position: absolute; top: 20px; left: 20%; width: 60%; height: 1px; background-color: #a02c2c;"></div>
+             <div style="position: absolute; top: 20px; left: 20%; width: 1px; height: 30px; background-color: #a02c2c;"> <span class="arrow-down" style="position: absolute; bottom: -30px; left: -15px;"></span></div>
+             <div style="position: absolute; top: 20px; left: 50%; width: 1px; height: 30px; background-color: #a02c2c;"> <span class="arrow-down" style="position: absolute; bottom: -30px; left: -15px;"></span></div>
+             <div style="position: absolute; top: 20px; left: 80%; width: 1px; height: 30px; background-color: #a02c2c;"> <span class="arrow-down" style="position: absolute; bottom: -30px; left: -15px;"></span></div>
+             <!-- Boxes -->
+             <div style="text-align: center; width: 30%; margin-top: 55px;">
+                 <div class="boxed-formula" style="margin-top: 5px;">$Q_i^{Le}$</div>
+                 <p>Liaisons extérieures</p>
+             </div>
+             <div style="text-align: center; width: 30%; margin-top: 55px;">
+                 <div class="boxed-formula" style="margin-top: 5px;">$Q_i^{Li}$</div>
+                 <p>Liaisons intérieures</p>
+             </div>
+             <div style="text-align: center; width: 30%; margin-top: 55px;">
+                 <div class="boxed-formula" style="margin-top: 5px;">$Q_i^{D}$</div>
+                 <p>Actions données</p>
+             </div>
+         </div>
+         <br><br>
+    </section>
+
+    <!-- Page 69 (OCR 9) : When Q_li is Zero -->
+    <section class="slide">
+        <h5>Remarque importante</h5>
+        <span class="pointer-icon">☞</span>
+        <p>Dans les deux cas suivants:</p>
+        <ul>
+            <li>si les liaisons sont <strong>parfaites</strong> (absence de frottement)</li>
+            <li>s'il y a <strong>roulement sans glissement</strong> (qui est une liaison parfaite si les surfaces sont rigides)</li>
+        </ul>
+        <p>alors, la puissance virtuelle des forces de liaison intérieures est nulle ($P_{i, liaison}^* = 0$), et donc leur contribution aux forces généralisées est nulle ($Q_i^{Li} = 0$). De même, si les liaisons extérieures sont parfaites, $Q_i^{Le}=0$.</p>
+        <p>Si <strong>toutes</strong> les liaisons (intérieures et extérieures) sont parfaites :</p>
+        <p>alors:</p>
+        <div class="boxed-formula">
+             $$ Q_i = Q_i^{D} $$
+        </div>
+        <p>car :</p>
+        <div class="boxed-formula">
+             $$ Q_i^{Li} = 0 \quad \text{et} \quad Q_i^{Le} = 0 $$
+        </div>
+        <p class="explanation">Dans ce cas, $Q_i$ ne représente que les forces généralisées associées aux forces appliquées connues. C'est la situation la plus courante pour les ELS.</p>
+    </section>
+
+    <!-- Page 70 (OCR 10) : ELS with Force Function -->
+    <section class="slide">
+        <h5>Expression des « ELS » en fonction de la fonction de force</h5>
+        <p>D'après ce qui précède, on peut écrire:</p>
+        <p>Si les forces généralisées appliquées $Q_i = Q_i^D$ dérivent d'une fonction de force $U$ (au sens strict, $U=-V$, ne dépendant pas de $\dot{q}_i$ ou $t$) : $Q_i = \partial U / \partial q_i$. Alors la puissance virtuelle $P_e^*$ (en ne considérant que les forces dérivant de U) est :</p>
+        <div class="boxed-formula">
+             $$ P_e^* = \sum_i Q_i \dot{q}_i^* = \sum_i \frac{\partial U}{\partial q_i} \dot{q}_i^* \quad \left( \approx \frac{dU}{dt} \text{ si } \dot{q}_i^* = \dot{q}_i \right) $$
+        </div>
+         <p class="explanation">Attention: La slide note $P_e^* = dU/dt = \sum (\partial U / \partial q_i) \dot{q}_i^*$. $dU/dt$ n'est pas égal à $P_e^*$. On a $P_e^* = \sum Q_i \dot{q}_i^*$. Si $Q_i = \partial U / \partial q_i$, alors $P_e^* = \sum (\partial U / \partial q_i) \dot{q}_i^*$. </p>
+        <p>D'où les équations de Lagrange deviennent ($A_i = Q_i = \partial U / \partial q_i$):</p>
+        <div class="boxed-formula">
+             $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = \frac{\partial U}{\partial q_i} \quad (**) $$
+        </div>
+    </section>
+
+    <!-- Page 71 (OCR 11) : Euler-Lagrange Equations -->
+    <section class="slide">
+        <p>Soit:</p>
+        <p>Avec $U = -V$ (potentiel ne dépendant que de $q_i$) :</p>
+        <div class="boxed-formula">
+             $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = \frac{\partial (-V)}{\partial q_i} = -\frac{\partial V}{\partial q_i} $$
+        </div>
+        <p>Sachant que $\partial V / \partial \dot{q}_i = 0$.</p>
+        <p>Introduisons le <strong>Lagrangien</strong> $L$ :</p>
+        <div class="boxed-formula">
+            $$ L = T - V $$
+        </div>
+        <p>Alors $\frac{\partial L}{\partial \dot{q}_i} = \frac{\partial T}{\partial \dot{q}_i}$ et $\frac{\partial L}{\partial q_i} = \frac{\partial T}{\partial q_i} - \frac{\partial V}{\partial q_i}$.</p>
+        <p>L'équation devient $\frac{d}{dt}(\frac{\partial L}{\partial \dot{q}_i}) - (\frac{\partial L}{\partial q_i} + \frac{\partial V}{\partial q_i}) = -\frac{\partial V}{\partial q_i}$.</p>
+        <p>Il vient:</p>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) - \frac{\partial L}{\partial q_i} = 0 $$
+        </div>
+        <div class="boxed-text">
+            On retrouve les <strong>équations d'Euler-Lagrange</strong> pour un système conservatif à liaisons parfaites.
+        </div>
+    </section>
+
+    <!-- Page 72 (OCR 12) : Application Reference -->
+    <section class="slide">
+        <h5>Voir application pédagogique page 16</h5>
+        <div class="image-placeholder">[Image: Système mécanique, sphère sur tige tournante (identique à page 58 du PDF)]</div>
+        <p class="explanation">Référence à l'application de la méthode ELS sur un exemple concret (possiblement celui page 16 du document original, ou celui des pages 36-38, ou un autre).</p>
+    </section>
+
+    <!-- Page 73 (OCR 13) : Subsection 7-2 Title -->
+    <section class="slide centered-text">
+        <h4>§-7-2</h4>
+        <h3>Equations de Lagrange avec multiplicateurs (ELM)</h3>
+        <p class="explanation">Cette méthode est utilisée lorsque les coordonnées généralisées $q_i$ ne sont pas indépendantes, à cause de liaisons non holonomes ou de liaisons holonomes non utilisées pour réduire le nombre de variables.</p>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i + \sum_{j=1}^m \mu_j a_{ji} $$
+        </div>
+        <p class="explanation">Où $Q_i$ sont les forces généralisées des actions *données* (appliquées), les $\mu_j$ sont les multiplicateurs de Lagrange et les $a_{ji}$ décrivent les équations de liaison. Attention à la notation $a_{ji}$ vs $a_{ij}$ sur la slide.</p>
+    </section>
+
+    <!-- Page 74 (OCR 14) : Constraint Equations -->
+    <section class="slide">
+        <h5>Choix du champ des vitesses virtuelles (CVV)</h5>
+        <div class="boxed-text">
+            Si le CVV est compatible à la fois avec les liaisons holonomes et les liaisons non holonomes, alors les $\dot{q}_i^*$ ne sont plus linéairement indépendantes et elles doivent vérifier $m$ équations de la forme (liaisons linéaires en $\dot{q}_i^*$) :
+        </div>
+        <div class="boxed-formula">
+            $$ \sum_i a_{ji}(q, t) \dot{q}_i^* = 0 \quad \text{pour } j = 1, ..., m $$
+        </div>
+        <p>Dans ce cas, l'équation fondamentale du PPV :</p>
+        <div class="boxed-formula">
+            $$ \sum_i (A_i - Q_i) \dot{q}_i^* = 0 $$
+        </div>
+        <p>doit s'annuler pour tout $\dot{q}_i^*$ vérifiant les contraintes ci-dessus.</p>
+        <p>Cela signifie que le vecteur $(A_i - Q_i)$ est orthogonal à l'espace des vitesses virtuelles admissibles. Cet espace étant défini par les $m$ équations de contrainte, le vecteur $(A_i - Q_i)$ doit être une combinaison linéaire des vecteurs normaux aux surfaces de contrainte, c'est-à-dire des $(a_{ji})$ :</p>
+        <div class="boxed-text">
+             $(A_i - Q_i)$ est une combinaison linéaire de $(a_{ji})$ pour $j=1...m$.
+        </div>
+    </section>
+
+    <!-- Page 75 (OCR 15) : Deriving ELM -->
+    <section class="slide">
+         <p>Il existe donc $m$ scalaires $\mu_j$ (multiplicateurs de Lagrange) tels que :</p>
+         <div class="boxed-formula">
+             $$ A_i - Q_i = \sum_{j=1}^m \mu_j a_{ji} $$
+         </div>
+         <p>Ce qui donne :</p>
+         <div class="boxed-formula">
+             $$ A_i = Q_i + \sum_{j=1}^m \mu_j a_{ji} $$
+         </div>
+         <p class="explanation">Ici, $Q_i$ représente la force généralisée associée aux forces *appliquées* (données), non aux forces de liaison qui sont maintenant représentées par le terme $\sum \mu_j a_{ji}$.</p>
+         <p>D'où, en remplaçant $A_i$ par son expression en fonction de T :</p>
+         <div style="display: flex; justify-content: space-around; align-items: center;">
+             <div class="boxed-formula">
+                  $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i + \sum_{j=1}^m \mu_j a_{ji} \quad (**) $$
+             </div>
+             <div class="boxed-formula">
+                  $$ \begin{cases} i = 1, ..., n \\ j = 1, ..., m \end{cases} $$
+             </div>
+          </div>
+         <div class="boxed-text">
+             Ce sont les <strong>équations de Lagrange avec multiplicateurs (ELM)</strong>.
+         </div>
+          <div class="boxed-text" style="background-color: #fff0f0;">
+              <strong>Valables dans le cas où les $q_i$ (et donc les $\dot{q}_i^*$) ne sont pas indépendantes.</strong>
+          </div>
+    </section>
+
+    <!-- Page 76 (OCR 1) : Summary ELS vs ELM -->
+    <section class="slide centered-text">
+        <h5>Ce qu'il faut retenir</h5>
+        <div class="image-placeholder">[Image: Flowchart starting from Sum(Ai-Qi)q*i=0. Left branch: q*i independent -> Ai=Qi -> ELS. Right branch: q*i not independent -> Ai-Qi = Sum(mu_j a_ji) -> ELM.]</div>
+        <p class="explanation">Ce diagramme résume les deux cas : si les $\dot{q}_i^*$ sont indépendants, on aboutit aux ELS ($A_i=Q_i$). S'ils ne sont pas indépendants (à cause de $m$ contraintes), on aboutit aux ELM ($A_i = Q_i + \sum \mu_j a_{ji}$).</p>
+    </section>
+
+    <!-- Page 77 (OCR 2) : Physical meaning of multipliers -->
+    <section class="slide">
+        <h5>Signification physique des multiplicateurs de Lagrange</h5>
+        <p>Considérons les ELM :</p>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i + \sum_{j=1}^m \mu_j a_{ji} $$
+        </div>
+        <p>Le terme de gauche $(A_i)$ et le terme $Q_i$ (force généralisée appliquée) sont homogènes à une force généralisée (unité dépendant de $q_i$).</p>
+        <p>On constate immédiatement que le terme $\sum_{j=1}^m \mu_j a_{ji}$ est homogène à une force généralisée.</p>
+        <p>Autrement dit ce terme représente le coefficient de $\dot{q}_i^*$ dans la puissance virtuelle développée par les actions de liaison non holonomes (ou holonomes non utilisées). On peut donc qualifier ce terme d'<strong>action de liaison généralisée</strong>.</p>
+        $$ Q_{i, liaison}^* = \sum_{j=1}^m \mu_j a_{ji} $$
+        <p class="explanation">Les multiplicateurs $\mu_j$ sont donc directement liés à l'intensité des forces de liaison nécessaires pour maintenir les contraintes.</p>
+    </section>
+
+    <!-- Page 78 (OCR 3) : What to remember about multipliers -->
+    <section class="slide">
+        <h5>Ce qu'il faut retenir</h5>
+        <div class="boxed-text">
+             <p>Les termes $\sum_{j=1}^m \mu_j a_{ji}$ représentent les forces généralisées correspondant aux actions de liaison (celles associées aux contraintes $\sum_i a_{ji} \dot{q}_i = 0$).</p>
+             <p>Par conséquent dans le calcul des $Q_i$ (le terme $Q_i$ dans les ELM), on ne tient pas compte des puissances virtuelles développées par les actions de liaisons gérées par les multiplicateurs. $Q_i$ ne contient que les forces généralisées des actions <strong>données</strong> (appliquées).</p>
+        </div>
+    </section>
+
+     <!-- Page 79 (OCR 4) : ELM Example - Hoop Rolling -->
+    <section class="slide">
+        <h5>Mise en œuvre des multiplicateurs de Lagrange</h5>
+        <div class="image-placeholder float-right" style="width: 40%;">[Image: Cerceau de rayon r, centre G, roulant sur plan horizontal xy. Angle psi pour l'orientation de l'axe de rotation, angle phi pour la rotation propre. Coordonnées de G : (xG, yG, zG=r? non, zG=a sin theta vu avant! Pb d'exemple, ici c'est un disque vertical? )]</div>
+        <p><strong>Application: Cerceau qui roule sur un plan</strong></p>
+        <p class="explanation">Attention: l'exemple et l'image semblent correspondre à un DISQUE vertical roulant sans glisser sur l'axe Ox, pas le cerceau incliné des exemples précédents. Prenons les équations données.</p>
+        <p>Paramètres: $q = (x_G, y_G, \phi, \psi)$ (Ici $\phi$ semble être la rotation propre, $\psi$ l'orientation de l'axe?). Supposons $q = (x_G, y_G, \phi)$ où $\phi$ est la rotation propre du disque.</p>
+        <p>Liaisons non-holonomes (roulement sans glissement sur plan x-y):</p>
+        <ul>
+            <li>Vitesse de glissement en $x$ nulle: $\dot{x}_G - r\dot{\phi}\cos\psi = 0$ (si $\psi$ est l'angle de l'axe x avec l'axe de roulement) ?</li>
+            <li>Vitesse de glissement en $y$ nulle: $\dot{y}_G - r\dot{\phi}\sin\psi = 0$ ?</li>
+        </ul>
+        <p>Les équations données sur la slide sont (en utilisant $\psi$ comme angle d'orientation / direction de roulement? et $\phi$ comme angle de rotation propre?):</p>
+        <div class="boxed-formula">
+            Liaison non-holonome : <br>
+            (1) $\dot{x}_G + r\dot{\phi}\cos\psi = 0$ (?) <br>
+            (2) $\dot{y}_G + r\dot{\phi}\sin\psi = 0$ (?)
+        </div>
+        <p class="explanation">Ces équations semblent étranges. Si un disque roule sans glisser dans la direction $\psi$, on s'attendrait à $\dot{x}_G = V\cos\psi$ et $\dot{y}_G = V\sin\psi$ avec $V = R\dot{\phi}$. Prenons les équations de la slide comme données.</p>
+
+        <p>L'énergie cinétique (d'un disque de rayon R, masse m, roulant sur plan x-y):</p>
+        $$ T = \frac{1}{2} m (\dot{x}_G^2 + \dot{y}_G^2) + \frac{1}{2} I_G \dot{\phi}^2 + \frac{1}{2} I_{axe} \dot{\psi}^2 \text{ ?}$$
+        <p>L'expression donnée sur la slide est (avec $R$ au lieu de $r$):</p>
+        <div class="boxed-formula">
+            L'énergie cinétique : $T = \frac{1}{2}m(\dot{x}_G^2 + \dot{y}_G^2 + R^2\dot{\phi}^2 + \frac{1}{2}R^2\dot{\psi}^2)$
+        </div>
+         <p class="explanation">Le terme $R^2\dot{\phi}^2$ ressemble à $v^2$ et $R^2\dot{\psi}^2/2$ est étrange. L'énergie cinétique d'un disque roulant (translation + rotation propre) est $T = \frac{1}{2}m v_G^2 + \frac{1}{2}I_G \dot{\phi}^2 = \frac{1}{2}m (\dot{x}_G^2 + \dot{y}_G^2) + \frac{1}{2}(\frac{1}{2}mR^2)\dot{\phi}^2$. L'expression de la slide semble incorrecte ou correspond à un système différent.</p>
+
+        <p>Les équations de Lagrange avec multiplicateurs s'écrivent :</p>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = \sum_{j=1}^m \mu_j a_{ji} $$
+        </div>
+        <p>car les $Q_i$ (forces appliquées généralisées) sont supposées nulles ici (mouvement libre hormis les liaisons).</p>
+         <div class="clear-float"></div>
+    </section>
+
+     <!-- Page 80 (OCR 5) : ELM Example - Calculation Table 1 -->
+    <section class="slide">
+        <p><strong>Calcul du premier membre des équations de Lagrange :</strong></p>
+        <p>En utilisant l'énergie cinétique $T = \frac{1}{2}m(\dot{x}_G^2 + \dot{y}_G^2 + R^2\dot{\phi}^2 + \frac{1}{2}R^2\dot{\psi}^2)$ donnée sur la slide précédente.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Terme</th>
+                    <th>$q_1 = x_G$</th>
+                    <th>$q_2 = y_G$</th>
+                    <th>$q_3 = \phi$</th>
+                    <th>$q_4 = \psi$</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>$\frac{\partial T}{\partial q_i}$</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>$\frac{\partial T}{\partial \dot{q}_i}$</td>
+                    <td>$m\dot{x}_G$</td>
+                    <td>$m\dot{y}_G$</td>
+                    <td>$mR^2\dot{\phi}$</td>
+                    <td>$\frac{1}{2}mR^2\dot{\psi}$</td>
+                </tr>
+                <tr>
+                    <td>$\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{q}_i}\right)$</td>
+                    <td>$m\ddot{x}_G$</td>
+                    <td>$m\ddot{y}_G$</td>
+                    <td>$mR^2\ddot{\phi}$</td>
+                    <td>$\frac{1}{2}mR^2\ddot{\psi}$</td>
+                </tr>
+                 <tr>
+                    <td>$\frac{d}{dt}(\frac{\partial T}{\partial \dot{q}_i}) - \frac{\partial T}{\partial q_i}$</td>
+                    <td>$m\ddot{x}_G$</td>
+                    <td>$m\ddot{y}_G$</td>
+                    <td>$mR^2\ddot{\phi}$</td>
+                    <td>$\frac{1}{2}mR^2\ddot{\psi}$</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="explanation">Ce tableau calcule le membre de gauche des ELM pour chaque coordonnée $q_i$.</p>
+    </section>
+
+    <!-- Page 81 (OCR 6) : ELM Example - Calculation Table 2 -->
+    <section class="slide">
+        <p><strong>Calcul du second membre $\sum_{j=1}^m \mu_j a_{ji}$ :</strong></p>
+        <p>Les liaisons données sont (avec $r=R$):</p>
+        <p>(j=1) $\dot{x}_G + R\dot{\phi}\cos\psi = 0 \implies \sum_i a_{1i}\dot{q}_i = 0$</p>
+        <p>(j=2) $\dot{y}_G + R\dot{\phi}\sin\psi = 0 \implies \sum_i a_{2i}\dot{q}_i = 0$</p>
+        <p>Les coefficients $a_{ji} = \partial (\text{liaison } j) / \partial \dot{q}_i$ :</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Liaison (j)</th>
+                    <th>$a_{j1}$ (coeff de $\dot{x}_G$)</th>
+                    <th>$a_{j2}$ (coeff de $\dot{y}_G$)</th>
+                    <th>$a_{j3}$ (coeff de $\dot{\phi}$)</th>
+                    <th>$a_{j4}$ (coeff de $\dot{\psi}$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>$a_{1i}$ (j=1)</td><td>1</td><td>0</td><td>$R\cos\psi$</td><td>0</td></tr>
+                <tr><td>$a_{2i}$ (j=2)</td><td>0</td><td>1</td><td>$R\sin\psi$</td><td>0</td></tr>
+                <tr>
+                    <td>$\sum_{j=1}^2 \mu_j a_{ji}$</td>
+                    <td>$\mu_1(1) + \mu_2(0) = \mu_1$</td>
+                    <td>$\mu_1(0) + \mu_2(1) = \mu_2$</td>
+                    <td>$\mu_1(R\cos\psi) + \mu_2(R\sin\psi)$</td>
+                    <td>$\mu_1(0) + \mu_2(0) = 0$</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>- Les équations de Lagrange avec multiplicateurs : (Membre de gauche) = (Membre de droite)</p>
+        <table>
+             <tr><th>Equation pour</th><th>Résultat</th></tr>
+             <tr><td>$\mathcal{L}(x_G):$</td><td>$m\ddot{x}_G = \mu_1$</td></tr>
+             <tr><td>$\mathcal{L}(y_G):$</td><td>$m\ddot{y}_G = \mu_2$</td></tr>
+             <tr><td>$\mathcal{L}(\phi):$</td><td>$mR^2\ddot{\phi} = \mu_1 R\cos\psi + \mu_2 R\sin\psi$</td></tr>
+             <tr><td>$\mathcal{L}(\psi):$</td><td>$\frac{1}{2}mR^2\ddot{\psi} = 0$</td></tr>
+        </table>
+        <p class="explanation">On a 4 équations pour 6 inconnues ($x_G, y_G, \phi, \psi, \mu_1, \mu_2$). Il faut ajouter les 2 équations de liaison (non holonomes) pour fermer le système.</p>
+    </section>
+
+    <!-- Page 82 (OCR 7) : Reference to another application -->
+     <section class="slide">
+        <h5>Voir application pédagogique page 25</h5>
+        <div class="image-placeholder">[Image: Sphère roulant sur plan horizontal (identique à page 21 du PDF)]</div>
+        <p class="explanation">Référence à une autre application, probablement la sphère roulant sur un plan, traitée avec les multiplicateurs de Lagrange.</p>
+    </section>
+
+     <!-- Page 83 (OCR 8) : Synthesis page title -->
+     <section class="slide centered-text">
+        <h5>Fiche de synthèse</h5>
+        <div class="image-placeholder" style="width: 150px;">[Image: Portrait of Lagrange]</div>
+        <span class="pointer-icon">☞</span>
+        <h3>Ce qu'il faut absolument savoir</h3>
+    </section>
+
+    <!-- Page 84 (OCR 9) : Summary flowchart PPV -> ELS/ELM -->
+    <section class="slide centered-text">
+        <div class="image-placeholder">[Image: Flowchart identical to page 76 (OCR 1)]</div>
+        <p class="explanation">Rappel du diagramme montrant comment le PPV ($P_a^*=P_e^*+P_i^*$) conduit, via l'analyse des $P_a^*, P_e^*, P_i^*$ et la dépendance/indépendance des $\dot{q}_i^*$, aux ELS ou aux ELM.</p>
+    </section>
+
+     <!-- Page 85 (OCR 10) : Implementation/Applications slide -->
+    <section class="slide centered-text">
+         <h5>Mise en œuvre</h5>
+         <span class="pointer-icon">☞</span>
+         <h4>Voir applications pédagogiques</h4>
+         <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+             <div style="width: 45%; text-align: center;">
+                 <div class="boxed-formula">
+                     $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i $$
+                 </div>
+                 <div class="boxed-formula" style="background-color: lightblue; color: black;">ELS</div>
+                 <span class="arrow-down"></span>
+                 <div class="boxed-formula" style="background-color: lightblue; color: black;">TD2</div>
+             </div>
+             <div style="width: 10%; text-align: center;">
+                 <div class="image-placeholder" style="width: 100px;">[Image: Portrait of Lagrange]</div>
+             </div>
+             <div style="width: 45%; text-align: center;">
+                 <div class="boxed-formula">
+                      $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i + \sum_{j=1}^m \mu_j a_{ji} $$
+                 </div>
+                  <div class="boxed-formula" style="background-color: lightblue; color: black;">ELM</div>
+                 <span class="arrow-down"></span>
+                 <div class="boxed-formula" style="background-color: lightblue; color: black;">TD3</div>
+             </div>
+         </div>
+    </section>
+
+    <!-- Page 86 (OCR 11) : Methodology for ELS -->
+     <section class="slide">
+        <h5>Méthodologie à suivre pour résoudre un problème en utilisant les équations de Lagrange simples (ELS) (voir TD2)</h5>
+        <div style="display: flex; align-items: center;">
+            <div style="border-left: 3px solid #a02c2c; padding-left: 10px; margin-right: 20px;">
+                <p><strong>D1-</strong> Calculer T (énergie cinétique)</p>
+                <p><strong>D2-</strong> Calculer $P_{ext}^*$ (puissance virtuelle extérieure)</p>
+                <p><strong>D3-</strong> En déduire $Q_i$ (forces généralisées) par identification: $P_{ext}^* = \sum Q_i \dot{q}_i^*$</p>
+                <p><strong>D4-</strong> Ecrire les ELS</p>
+            </div>
+            <div class="boxed-formula" style="flex-grow: 1; position: relative;">
+                 $$ \underbrace{\frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right)}_{\text{3}} - \underbrace{\frac{\partial T}{\partial q_i}}_{\text{2}} = \underbrace{Q_i}_{\text{1}} $$
+                 <img src="placeholder_arrow_left.png" alt="<-" style="position: absolute; right: -50px; top: 50%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+            </div>
+        </div>
+        <span class="pointer-icon">☞</span>
+        <strong>Les calculs se font de droite à gauche</strong>
+        <p class="explanation">1. Calculer $Q_i$ (via $P_{ext}^*$). 2. Calculer $\partial T / \partial q_i$. 3. Calculer $\partial T / \partial \dot{q}_i$ puis sa dérivée temporelle. Ensuite assembler l'équation.</p>
+    </section>
+
+    <!-- Page 87 (OCR 12) : Methodology for ELM -->
+    <section class="slide">
+        <h5>Méthodologie à suivre pour résoudre un problème en utilisant les équations de Lagrange avec multiplicateurs (ELM) (voir TD3)</h5>
+        <div style="display: flex; align-items: center;">
+            <div style="border-left: 3px solid #a02c2c; padding-left: 10px; margin-right: 20px;">
+                <p><strong>D1-</strong> Calculer T (énergie cinétique)</p>
+                <p><strong>D2-</strong> Calculer $P_{ext}^*$ (puissance virtuelle extérieure <strong>des forces données</strong>)</p>
+                <p><strong>D3-</strong> En déduire $Q_i$ (forces généralisées données) par identification: $P_{ext}^* = \sum Q_i \dot{q}_i^*$</p>
+                <p><strong>D4-</strong> Calculer $\sum_{j=1}^m \mu_j a_{ji}$ (à partir des équations de liaison $\sum_i a_{ji} \dot{q}_i = 0$)</p>
+                <p><strong>D5-</strong> Ecrire les ELM</p>
+            </div>
+            <div class="boxed-formula" style="flex-grow: 1; position: relative;">
+                 $$ \underbrace{\frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right)}_{\text{4}} - \underbrace{\frac{\partial T}{\partial q_i}}_{\text{3}} = \underbrace{Q_i}_{\text{2}} + \underbrace{\sum_{j=1}^m \mu_j a_{ji}}_{\text{1}} $$
+                 <img src="placeholder_arrow_left.png" alt="<-" style="position: absolute; right: -50px; top: 50%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+            </div>
+        </div>
+        <span class="pointer-icon">☞</span>
+        <strong>Les calculs se font de droite à gauche</strong>
+        <p class="explanation">1. Identifier $a_{ji}$ et écrire le terme $\sum \mu_j a_{ji}$. 2. Calculer $Q_i$ (forces données). 3. Calculer $\partial T / \partial q_i$. 4. Calculer $\partial T / \partial \dot{q}_i$ puis sa dérivée temporelle. Assembler l'équation. Résoudre avec les équations de liaison.</p>
+    </section>
+
+    <!-- Page 88 (OCR 13) : Transition slide -->
+    <section class="slide centered-text">
+         <div style="display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center;">
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Lagrange?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Euler?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait D'Alembert?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Hamilton?]</div>
+         </div>
+         <div class="boxed-text" style="margin-top: 20px;">
+            <h4>Et maintenant, c'est à vous de jouer,</h4>
+            <h4>à vos dossiers pédagogiques.</h4>
+         </div>
+          <span class="pointer-icon">☞</span>
+    </section>
+
+    <!-- Page 89 (OCR 14) : End slide -->
+    <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 2</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
