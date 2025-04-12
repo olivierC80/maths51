@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanique Analytique - SMP5 - Chapitre 2</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                // • auto-render specific keys, e.g.:
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #a02c2c; /* Dark red color similar to slides */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #a02c2c;
+            padding-bottom: 10px;
+        }
+        h2 {
+             text-align: center;
+        }
+        h3.chapter-title {
+             background-color: #a02c2c;
+             color: white;
+             padding: 10px;
+             border-radius: 5px;
+             text-align: center;
+        }
+        h4.subtitle {
+             text-align: center;
+             color: #802020;
+        }
+         h5 {
+             color: #601010;
+             margin-top: 1.5em;
+         }
+         h6 {
+             color: #601010;
+             margin-top: 1em;
+             font-size: 1.1em;
+         }
+        .image-placeholder {
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px 0;
+            color: #777;
+            font-style: italic;
+            min-height: 50px; /* Ensure placeholder is visible */
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        blockquote {
+            border-left: 4px solid #a02c2c;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            background-color: #f9f2f2;
+        }
+        strong {
+            color: #601010;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+        }
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 25px;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .contact-info p {
+             margin: 5px 0;
+        }
+         .centered-text {
+             text-align: center;
+         }
+         .boxed-formula {
+             background-color: #e0e8f0;
+             padding: 10px 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+         }
+         .boxed-text {
+             background-color: #e0e8f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+         }
+         /* Torseur notation style */
+         .torseur {
+             display: inline-block;
+             text-align: center;
+             vertical-align: middle;
+             margin: 0 0.2em;
+         }
+         .torseur-content {
+             display: block;
+             border-left: 1px solid;
+             border-right: 1px solid;
+             padding: 0 0.3em;
+         }
+         .torseur-element {
+             display: block;
+         }
+         .torseur-point {
+             font-size: 0.7em;
+             margin-top: -0.3em;
+         }
+         .comoment {
+            display: inline-block;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 0.9em;
+            height: 0.9em;
+            line-height: 0.9em;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 0.2em;
+            font-weight: bold;
+            vertical-align: middle;
+         }
+         .pointer-icon {
+            display: inline-block; /* Prevents block behavior */
+            font-size: 1.5em; /* Adjust size */
+            margin-right: 5px; /* Space from text */
+            vertical-align: middle; /* Align with text */
+         }
+         .arrow-up {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 2L2 12h5v10h10V12h5L12 2z"/></svg>');
+         }
+          .arrow-label {
+             text-align: center;
+             font-weight: bold;
+             color: #a02c2c;
+             margin-top: -5px;
+             margin-bottom: 10px;
+         }
+         .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- START PREVIOUSLY GENERATED CONTENT -->
+    <!-- Slide 1 to 40 -->
+     <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p>
+            <p>Professeur de l'enseignement supérieur</p>
+            <p>Bureau 37 département de physique</p>
+            <p>Faculté des sciences</p><p>Agadir</p>
+            <p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... other slides ... -->
+    <section class="slide centered-text">
+        <h4>§-5-</h4>
+        <h3>Théorème de l'énergie cinétique</h3>
+        <p class="explanation">Rappel d'un théorème fondamental reliant le travail des forces à la variation de l'énergie cinétique, qui est à la base de nombreuses approches en dynamique.</p>
+    </section>
+    <section class="slide">
+        <p>Considérons un point matériel P de masse $dm$ appartenant à un système. Le principe fondamental de la dynamique (PFD) dans un référentiel galiléen se traduit par l'équation suivante:</p>
+        <div class="boxed-formula">
+            $$ d\vec{F}_e + d\vec{F}_i = \vec{\gamma}(P) dm $$
+        </div>
+        <div style="display: flex; justify-content: space-around; align-items: flex-start; margin-top: 10px;">
+             <div style="text-align: center;">
+                 <span class="arrow-up"></span>
+                 <div class="arrow-label">Action extérieure</div>
+             </div>
+             <div style="text-align: center;">
+                 <span class="arrow-up"></span>
+                 <div class="arrow-label">Action intérieure</div>
+             </div>
+             <div style="text-align: center;">
+                 <span class="arrow-up"></span>
+                 <div class="arrow-label">Accélération de P</div>
+             </div>
+         </div>
+         <p class="explanation">$d\vec{F}_e$ est la résultante des forces extérieures s'exerçant sur $dm$. $d\vec{F}_i$ est la résultante des forces intérieures s'exerçant sur $dm$ (dues aux autres parties du système). $\vec{\gamma}(P)$ est l'accélération galiléenne de P.</p>
+    </section>
+    <section class="slide">
+        <p>Si l'on multiple scalairement les 2 membres de l'équation fondamentale par le vecteur vitesse $\vec{V}(P)$, on obtient:</p>
+        <div class="boxed-formula">
+             $$ d\vec{F}_e \cdot \vec{V}(P) + d\vec{F}_i \cdot \vec{V}(P) = \vec{\gamma}(P) \cdot \vec{V}(P) dm $$
+        </div>
+         <p class="explanation">Chaque terme représente une puissance élémentaire.</p>
+        <p>En faisant la somme (intégration) pour les différents points appartenant au système (S), il vient:</p>
+        <div class="boxed-formula">
+            $$ \int_{P\in(S)} d\vec{F}_e \cdot \vec{V}(P) + \int_{P\in(S)} d\vec{F}_i \cdot \vec{V}(P) = \int_{P\in(S)} \vec{\gamma}(P) \cdot \vec{V}(P) dm $$
+        </div>
+    </section>
+    <section class="slide">
+        <p>Identifions les termes de l'équation précédente :</p>
+        <div class="boxed-formula" style="position: relative;">
+             $$ \int_{P\in(S)} d\vec{F}_e \cdot \vec{V}(P) = P_e $$
+             <img src="placeholder_arrow_right.png" alt="->" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+        </div>
+         <div class="boxed-text">
+             $P_e$ = puissance réelle développée par les actions extérieures appliquées au système
+         </div>
+
+        <div class="boxed-formula" style="position: relative;">
+             $$ \int_{P\in(S)} d\vec{F}_i \cdot \vec{V}(P) = P_i $$
+             <img src="placeholder_arrow_right.png" alt="->" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+        </div>
+         <div class="boxed-text">
+             $P_i$ = puissance réelle développée par les actions intérieures appliquées au système
+         </div>
+
+        <div class="boxed-formula" style="position: relative;">
+             $$ \int_{P\in(S)} \vec{\gamma}(P) \cdot \vec{V}(P) dm = P_a $$
+             <img src="placeholder_arrow_right.png" alt="->" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+        </div>
+        <div class="boxed-text">
+             $P_a$ = puissance réelle développée par les quantités d'accélération (liée à la variation d'énergie cinétique)
+        </div>
+    </section>
+    <section class="slide">
+        <p>Par ailleurs, considérons le terme $P_a$. On sait que $\vec{\gamma}(P) = d\vec{V}(P)/dt$.</p>
+        <div class="boxed-formula">
+            $$ \vec{\gamma}(P) \cdot \vec{V}(P) = \frac{d\vec{V}(P)}{dt} \cdot \vec{V}(P) = \frac{1}{2} \frac{d}{dt} (\vec{V}(P) \cdot \vec{V}(P)) = \frac{1}{2} \frac{d}{dt} (V(P)^2) $$
+        </div>
+        <p>Donc :</p>
+        <div class="boxed-formula">
+            $$ P_a = \int_{P\in(S)} \vec{\gamma}(P) \cdot \vec{V}(P) dm = \int_{P\in(S)} \frac{1}{2} \frac{d}{dt} (V(P)^2) dm $$
+            $$ P_a = \frac{d}{dt} \left( \int_{P\in(S)} \frac{1}{2} V(P)^2 dm \right) $$
+        </div>
+        <p>L'intégrale $\int_{P\in(S)} \frac{1}{2} V(P)^2 dm$ est par définition l'énergie cinétique $T$ du système dans le référentiel galiléen.</p>
+        $$ P_a = \frac{dT}{dt} $$
+        <p>D'où, en reportant dans l'équation $P_e + P_i = P_a$ :</p>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+            $$ \frac{dT}{dt} = P_e + P_i \quad (**) $$
+        </div>
+
+        <div class="boxed-text">
+            <h6>Théorème de l'énergie cinétique</h6>
+            La dérivée par rapport au temps de l'énergie cinétique d'un système dans un référentiel galiléen est égale à la somme des puissances développées par toutes les actions mécaniques, tant intérieures qu'extérieures, appliquées au système.
+        </div>
+    </section>
+    <section class="slide">
+        <h5>Cas particuliers très intéressants</h5>
+
+        <h6>1- Cas où le système est formé de solides parfaits à liaisons parfaites</h6>
+        <p>Dans ce cas, la puissance des efforts intérieurs de déformation $P_{i,def}$ est nulle (solides parfaits) et la puissance des efforts intérieurs de liaison $P_{i,liaison}$ est nulle (liaisons parfaites). Donc $P_i = P_{i,def} + P_{i,liaison} = 0$.</p>
+        <p>Le théorème de l'énergie cinétique devient :</p>
+        <div class="boxed-formula">
+            $$ \frac{dT}{dt} = P_e $$
+        </div>
+        <p class="explanation">La variation d'énergie cinétique est due uniquement à la puissance des forces extérieures.</p>
+
+        <h6>2- Cas où le système est formé de solides parfaits à liaisons parfaites et où toutes les forces extérieures dérivent d'une fonction de force U (au sens strict)</h6>
+        <p>On a toujours $P_i = 0$. De plus, la puissance des forces extérieures est $P_e = dU/dt$.</p>
+        <p>Le théorème de l'énergie cinétique devient :</p>
+        <div class="boxed-formula">
+            $$ \frac{dT}{dt} = \frac{dU}{dt} $$
+        </div>
+        <p>Cette dernière équation donne alors :</p>
+        $$ \frac{d(T-U)}{dt} = 0 \implies T - U = \text{Cte} $$
+        <p>Comme $U = -V + Cte'$, où V est l'énergie potentielle, on a :</p>
+        <div class="boxed-formula">
+             $$ T - (-V + Cte') = \text{Cte} \implies T + V = H = \text{Cte} $$
+        </div>
+        <p>Où $H=T+V$ est l'énergie mécanique totale (Hamiltonien pour un système conservatif).</p>
+        <div class="boxed-text">
+            Cette relation $(T-U = \text{Cte}$ ou $T+V = \text{Cte})$ porte le nom d'<strong>intégrale première de l'énergie</strong> (ou conservation de l'énergie mécanique).
+        </div>
+    </section>
+    <section class="slide">
+        <h5>Analyse</h5>
+        <div class="boxed-text">
+            Le théorème de l'énergie cinétique que nous venons de voir montre l'intérêt de la notion de puissance. Ce théorème qui utilise le <strong>champ des vitesses réelles</strong> peut être <strong>généralisé</strong> en utilisant un <strong>champ de vitesses virtuelles (CVV)</strong> quelconque et compatible avec les liaisons. Il devient alors le <strong>théorème des puissances virtuelles</strong> ou le <strong>théorème de D'Alembert</strong>.
+        </div>
+        <p class="explanation">Le passage du réel au virtuel permet d'obtenir une formulation plus générale, applicable même si on ne connaît pas l'évolution temporelle exacte, et qui permettra d'éliminer les forces de liaison (si elles sont parfaites).</p>
+    </section>
+    <section class="slide centered-text">
+        <h4>§-6-</h4>
+        <h3>Théorème de D'Alembert</h3>
+        <p class="explanation">Ce théorème est une reformulation du PFD utilisant le concept de puissance virtuelle. Il est aussi appelé Principe des Puissances Virtuelles (PPV) appliqué à la dynamique.</p>
+    </section>
+    <section class="slide">
+        <h5>Equation de D'Alembert</h5>
+        <p>Considérons un point matériel P de masse $dm$ appartenant à un système. Le principe fondamental de la dynamique se traduit par l'équation suivante:</p>
+        <div class="boxed-formula">
+            $$ d\vec{F}_e + d\vec{F}_i = \vec{\gamma}(P) dm $$
+        </div>
+        <div style="display: flex; justify-content: space-around; align-items: flex-start; margin-top: 10px;">
+             <div style="text-align: center;">
+                 <span class="arrow-up"></span>
+                 <div class="arrow-label">Action extérieure</div>
+             </div>
+             <div style="text-align: center;">
+                 <span class="arrow-up"></span>
+                 <div class="arrow-label">Action intérieure</div>
+             </div>
+             <div style="text-align: center;">
+                 <span class="arrow-up"></span>
+                 <div class="arrow-label">Accélération de P</div>
+             </div>
+         </div>
+         <p class="explanation">On peut réécrire le PFD sous la forme dite de D'Alembert : $d\vec{F}_e + d\vec{F}_i - \vec{\gamma}(P) dm = \vec{0}$. Le terme $-\vec{\gamma}(P) dm$ est appelé force d'inertie élémentaire.</p>
+    </section>
+    <section class="slide">
+        <p>Si l'on multiple scalairement les 2 membres de l'équation fondamentale par un vecteur vitesse virtuelle $\vec{V}^*(P)$ <strong>arbitraire</strong> (mais compatible avec les liaisons), on obtient l'équation de d'Alembert pour un point matériel:</p>
+        <div class="boxed-formula">
+             $$ d\vec{F}_e \cdot \vec{V}^*(P) + d\vec{F}_i \cdot \vec{V}^*(P) = \vec{\gamma}(P) \cdot \vec{V}^*(P) dm $$
+        </div>
+         <p class="explanation">Chaque terme représente une puissance virtuelle élémentaire.</p>
+        <p>Pour tout le système, on aura l'équation de d'Alembert d'un système matériel en faisant la somme (intégration) pour les différents points appartenant au système:</p>
+        <div class="boxed-formula">
+            $$ \int_{P\in(S)} d\vec{F}_e \cdot \vec{V}^*(P) + \int_{P\in(S)} d\vec{F}_i \cdot \vec{V}^*(P) = \int_{P\in(S)} \vec{\gamma}(P) \cdot \vec{V}^*(P) dm $$
+        </div>
+    </section>
+    <section class="slide">
+        <h6>Définition</h6>
+        <p>Soit une action mécanique représentée par le vecteur $\vec{F}$. On appelle <strong>puissance virtuelle</strong> développée par $\vec{F}$ associée au champ $\vec{V}^*(P)$ le produit scalaire:</p>
+        <div class="boxed-formula">
+             $$ P^* = \vec{F} \cdot \vec{V}^*(P) $$
+        </div>
+        <p>En conséquence de cette définition, on peut donc poser pour l'équation intégrée précédente:</p>
+        <div style="margin-bottom: 15px;">
+            <div class="boxed-formula" style="display: inline-block; width: 45%; vertical-align: top;">
+                $$ \int_{P\in S} d\vec{F}_e \cdot \vec{V}^*(P) = P_e^* $$
+            </div>
+            <div style="display: inline-block; width: 50%; vertical-align: top; padding-left: 5%;">
+                <strong>Puissance virtuelle</strong> développée par les actions <strong>extérieures</strong> appliquées au système
+            </div>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <div class="boxed-formula" style="display: inline-block; width: 45%; vertical-align: top;">
+                $$ \int_{P\in S} d\vec{F}_i \cdot \vec{V}^*(P) = P_i^* $$
+            </div>
+            <div style="display: inline-block; width: 50%; vertical-align: top; padding-left: 5%;">
+                <strong>Puissance virtuelle</strong> développée par les actions <strong>intérieures</strong> appliquées au système
+            </div>
+        </div>
+        <div>
+            <div class="boxed-formula" style="display: inline-block; width: 45%; vertical-align: top;">
+                $$ \int_{P\in S} \vec{\gamma}(P) \cdot \vec{V}^*(P) dm = P_a^* $$
+            </div>
+            <div style="display: inline-block; width: 50%; vertical-align: top; padding-left: 5%;">
+                <strong>Puissance virtuelle</strong> développée par les quantités <strong>d'accélération</strong> (ou des forces d'inertie)
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <p>L'équation de D'Alembert peut s'écrire alors:</p>
+        <div class="image-placeholder" style="width: 100px; float: right; margin-left: 15px;">[Image: Portrait of d'Alembert]</div>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+             $$ P_a^* = P_e^* + P_i^* \quad (**) $$
+        </div>
+        <p class="explanation">Cela signifie que la puissance virtuelle des forces d'inertie ($P_a^*$) équilibre la puissance virtuelle des forces appliquées (extérieures $P_e^*$ et intérieures $P_i^*$) pour tout mouvement virtuel $\vec{V}^*$.</p>
+
+        <div class="boxed-text">
+            <h6>Enoncé du théorème des puissances virtuelles (ou Principe de d'Alembert)</h6>
+            Dans un référentiel galiléen, pour tout système matériel, la puissance virtuelle des quantités d'accélération est égale à la somme des puissances virtuelles des efforts extérieurs et intérieurs, pour tout champ de vitesse virtuelle $\vec{V}^*$ cinématiquement admissible (compatible avec les liaisons).
+        </div>
+
+        <span class="pointer-icon">☞</span>
+        <p>$P_a^*, P_e^*$ et $P_i^*$ sont des <strong>formes linéaires</strong> des vitesses <strong>généralisées virtuelles</strong> $\dot{q}_k^*$ comme on va le montrer.</p>
+    </section>
+    <section class="slide">
+        <h5>Equivalence entre le théorème de l'énergie cinétique et le théorème des puissances virtuelles</h5>
+        <div class="image-placeholder">[Image: Diagram showing TEC derived from PFD using Real Velocity Field (CVR), leading to dT/dt = Pe + Pi. And TPV (Theorem of Virtual Power) derived from PFD using Virtual Velocity Field (CVV), leading to P*a = P*e + P*i. A double arrow connects the final equations, indicating equivalence or generalization.]</div>
+        <div class="boxed-text">
+            Le théorème de l'énergie cinétique est un cas particulier du théorème des puissances virtuelles pour lequel le champ des vitesses virtuelles est choisi égal au champ des vitesses réelles (si les liaisons le permettent, i.e. si elles sont scléronomes).
+        </div>
+    </section>
+    <section class="slide">
+        <span class="pointer-icon">☞</span>
+        <p>Intéressons nous maintenant à chacun des termes de l'équation de D'Alembert ($P_a^* = P_e^* + P_i^*$) et montrons que ce sont des formes linéaires des vitesses généralisées virtuelles $\dot{q}_k^*$.</p>
+        <div class="boxed-formula" style="text-align: center; position: relative; padding: 20px;">
+             $$ P_a^* = P_e^* + P_i^* $$
+             <div style="position: absolute; bottom: -80px; left: 15%; transform: translateX(-50%); width: 80px;">
+                 <span class="arrow-up" style="transform: rotate(-90deg) translateX(50%); margin:0; width: 40px; height: 40px;"></span>
+                 <div class="boxed-formula" style="margin-top: 5px;">$P_a^*$</div>
+             </div>
+              <div style="position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%); width: 80px;">
+                 <span class="arrow-up" style="transform: rotate(-90deg) translateX(50%); margin:0; width: 40px; height: 40px;"></span>
+                 <div class="boxed-formula" style="margin-top: 5px;">$P_e^*$</div>
+             </div>
+              <div style="position: absolute; bottom: -80px; left: 85%; transform: translateX(-50%); width: 80px;">
+                 <span class="arrow-up" style="transform: rotate(-90deg) translateX(50%); margin:0; width: 40px; height: 40px;"></span>
+                 <div class="boxed-formula" style="margin-top: 5px;">$P_i^*$</div>
+             </div>
+        </div>
+        <br><br><br><br><br>
+        <p style="text-align: center; font-style: italic; margin-top: 20px;">« Les 3 pièces du puzzle »</p>
+    </section>
+    <section class="slide">
+        <h5>1- Calcul des puissances virtuelles des efforts extérieurs $P_e^*$</h5>
+        <div class="boxed-formula">
+             $$ P_e^* = \int_{P\in(S)} d\vec{F}_e \cdot \vec{V}^*(P) $$
+        </div>
+        <p>Or, la vitesse virtuelle $\vec{V}^*(P)$ s'exprime en fonction des vitesses généralisées virtuelles $\dot{q}_i^*$ :</p>
+        <div class="boxed-formula">
+             $$ \vec{V}^*(P) = \sum_{i=1}^n \frac{\partial \vec{OP}}{\partial q_i} \dot{q}_i^* $$
+        </div>
+        <p>D'où:</p>
+        <div class="boxed-formula">
+             $$ P_e^* = \int_{P\in(S)} d\vec{F}_e \cdot \left( \sum_{i=1}^n \frac{\partial \vec{OP}}{\partial q_i} \dot{q}_i^* \right) $$
+             $$ P_e^* = \sum_{i=1}^n \left( \int_{P\in(S)} d\vec{F}_e \cdot \frac{\partial \vec{OP}}{\partial q_i} \right) \dot{q}_i^* $$
+        </div>
+        <p>En posant $Q_i = \int_{P\in(S)} d\vec{F}_e \cdot \frac{\partial \vec{OP}}{\partial q_i}$, on obtient :</p>
+         <div class="boxed-formula">
+            $$ P_e^* = \sum_{i=1}^n Q_i \dot{q}_i^* $$
+        </div>
+    </section>
+    <section class="slide">
+        <h5>Conclusion (sur $P_e^*$)</h5>
+        <p>La puissance virtuelle développée par les efforts extérieurs <strong>est une forme linéaire des vitesses généralisées virtuelles</strong>:</p>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+             $$ P_e^* = \sum_{i=1}^n Q_i \dot{q}_i^* \quad (**) $$
+        </div>
+        <p>Les coefficients $Q_i$ sont appelées <strong>forces généralisées</strong> (associées aux coordonnées $q_i$). Elles sont définies par :</p>
+        <div class="boxed-formula">
+             $$ Q_i = \int_{P\in(S)} d\vec{F}_e \cdot \frac{\partial \vec{OP}}{\partial q_i} \quad (**) $$
+        </div>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-text">
+             Dans la pratique le calcul des $Q_i$ se fait à partir du calcul de la puissance virtuelle des forces extérieures $P_e^*$ et identification des coefficients des $\dot{q}_i^*$.
+        </div>
+    </section>
+    <section class="slide">
+        <h5>2- Calcul des puissances virtuelles des quantités d'accélération $P_a^*$</h5>
+        <div class="boxed-formula">
+             $$ P_a^* = \int_{P\in(S)} \vec{\gamma}(P) \cdot \vec{V}^*(P) dm $$
+        </div>
+        <p>Or :</p>
+        <div class="boxed-formula">
+             $$ \vec{V}^*(P) = \sum_{i=1}^n \frac{\partial \vec{OP}}{\partial q_i} \dot{q}_i^* $$
+        </div>
+        <p>D'où:</p>
+        <div class="boxed-formula">
+             $$ P_a^* = \int_{P\in(S)} \vec{\gamma}(P) \cdot \left( \sum_{i=1}^n \frac{\partial \vec{OP}}{\partial q_i} \dot{q}_i^* \right) dm $$
+             $$ P_a^* = \sum_{i=1}^n \left( \int_{P\in(S)} \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} dm \right) \dot{q}_i^* $$
+        </div>
+        <p>En posant $A_i = \int_{P\in(S)} \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} dm$, on obtient :</p>
+         <div class="boxed-formula">
+            $$ P_a^* = \sum_{i=1}^n A_i \dot{q}_i^* $$
+        </div>
+    </section>
+    <section class="slide">
+        <h5>Conclusion (sur $P_a^*$)</h5>
+        <p>La puissance virtuelle développée par les quantités d'accélération <strong>est une forme linéaire des vitesses généralisées virtuelles</strong>:</p>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+             $$ P_a^* = \sum_{i=1}^n A_i \dot{q}_i^* \quad (**) $$
+        </div>
+        <p>Les coefficients $A_i$ sont appelées <strong>accélérations généralisées</strong> (ou parfois forces d'inertie généralisées). Elles sont définies par :</p>
+        <div class="boxed-formula">
+             $$ A_i = \int_{P\in(S)} \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} dm $$
+        </div>
+        <p class="explanation">Nous allons montrer comment calculer ces $A_i$ plus facilement en utilisant l'énergie cinétique.</p>
+    </section>
+    <section class="slide">
+        <h5>Transformations de Lagrange</h5>
+        <p>Le champ des vitesses réelles $\vec{V}=\vec{V}(P/R)$ est donné par:</p>
+        <div class="boxed-formula">
+             $$ \vec{V}(P/R) = \sum_{i=1}^n \frac{\partial \vec{OP}}{\partial q_i} \dot{q}_i + \frac{\partial \vec{OP}}{\partial t} $$
+        </div>
+        <p>Ce qui permet d'écrire (en dérivant par rapport à $\dot{q}_j$) :</p>
+        <div class="boxed-formula">
+             $$ \frac{\partial \vec{V}(P)}{\partial \dot{q}_j} = \frac{\partial \vec{OP}}{\partial q_j} \quad (1) $$
+        </div>
+        <p>Par ailleurs, en utilisant l'interversion des dérivées partielles et totales (sous conditions de régularité) :</p>
+        <div class="boxed-formula">
+             $$ \frac{d}{dt} \left[ \frac{\partial \vec{OP}}{\partial q_j} \right] = \frac{\partial}{\partial q_j} \left[ \frac{d\vec{OP}}{dt} \right] = \frac{\partial \vec{V}(P)}{\partial q_j} \quad (2) $$
+        </div>
+         <p class="explanation">Ces deux relations sont fondamentales pour la suite.</p>
+    </section>
+     <section class="slide">
+        <h5>Calcul des coefficients $A_i$</h5>
+        <p>$A_i$ est défini à partir de : $A_i = \int \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} dm$.</p>
+        <p>Utilisons la relation (1) $\frac{\partial \vec{OP}}{\partial q_i} = \frac{\partial \vec{V}(P)}{\partial \dot{q}_i}$ :</p>
+        <div class="boxed-formula">
+             $$ \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} = \vec{\gamma}(P) \cdot \frac{\partial \vec{V}(P)}{\partial \dot{q}_i} = \frac{d\vec{V}(P)}{dt} \cdot \frac{\partial \vec{V}(P)}{\partial \dot{q}_i} $$
+        </div>
+        <p>Nous pouvons écrire la dérivée d'un produit :</p>
+        <div class="boxed-formula">
+             $$ \frac{d}{dt} \left[ \vec{V}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} \right] = \frac{d\vec{V}(P)}{dt} \cdot \frac{\partial \vec{OP}}{\partial q_i} + \vec{V}(P) \cdot \frac{d}{dt} \left[ \frac{\partial \vec{OP}}{\partial q_i} \right] $$
+        </div>
+        <p>Soit, en réarrangeant :</p>
+        <div class="boxed-formula">
+             $$ \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} = \frac{d}{dt} \left[ \vec{V}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} \right] - \vec{V}(P) \cdot \frac{d}{dt} \left[ \frac{\partial \vec{OP}}{\partial q_i} \right] $$
+        </div>
+    </section>
+     <section class="slide">
+        <p>Et en tenant compte des transformations de Lagrange (relations (1) et (2)) :</p>
+        $$ \frac{\partial \vec{OP}}{\partial q_i} = \frac{\partial \vec{V}}{\partial \dot{q}_i} \quad \text{et} \quad \frac{d}{dt} \left[ \frac{\partial \vec{OP}}{\partial q_i} \right] = \frac{\partial \vec{V}}{\partial q_i} $$
+        <p>L'expression précédente devient :</p>
+        <div class="boxed-formula">
+             $$ \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} = \frac{d}{dt} \left[ \vec{V}(P) \cdot \frac{\partial \vec{V}(P)}{\partial \dot{q}_i} \right] - \vec{V}(P) \cdot \frac{\partial \vec{V}(P)}{\partial q_i} $$
+        </div>
+         <p>On reconnait les dérivées de $V^2/2$ : $\vec{V} \cdot \frac{\partial \vec{V}}{\partial \dot{q}_i} = \frac{\partial (V^2/2)}{\partial \dot{q}_i}$ et $\vec{V} \cdot \frac{\partial \vec{V}}{\partial q_i} = \frac{\partial (V^2/2)}{\partial q_i}$.</p>
+        $$ \vec{\gamma}(P) \cdot \frac{\partial \vec{OP}}{\partial q_i} = \frac{d}{dt} \left[ \frac{\partial (\frac{1}{2}V^2)}{\partial \dot{q}_i} \right] - \frac{\partial (\frac{1}{2}V^2)}{\partial q_i} $$
+        <p>Ce qui permet d'écrire pour $A_i$ (en intégrant sur $dm$) :</p>
+        <div class="boxed-formula">
+             $$ A_i = \int_{P\in(S)} \left( \frac{d}{dt} \left[ \frac{\partial (\frac{1}{2}V^2)}{\partial \dot{q}_i} \right] - \frac{\partial (\frac{1}{2}V^2)}{\partial q_i} \right) dm $$
+             $$ A_i = \frac{d}{dt} \left[ \frac{\partial}{\partial \dot{q}_i} \left( \int_{P\in(S)} \frac{1}{2}V^2 dm \right) \right] - \frac{\partial}{\partial q_i} \left( \int_{P\in(S)} \frac{1}{2}V^2 dm \right) $$
+        </div>
+        <p>En reconnaissant l'énergie cinétique $T = \int_{P\in(S)} \frac{1}{2}V^2 dm$ :</p>
+        <p>Il vient finalement:</p>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+            $$ A_i = \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} \quad (**) $$
+        </div>
+        <div class="boxed-text">
+            Les accélérations généralisées $A_i$ s'obtiennent de manière systématique à partir de l'<strong>énergie cinétique</strong> T associée au paramétrage ($q_i, \dot{q}_i$).
+        </div>
+    </section>
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+    <!-- Page 61 (OCR 1) : Calculating P_i^* -->
+    <section class="slide">
+         <h5>3- Calcul des puissances virtuelles des efforts intérieurs $P_i^*$</h5>
+         <div class="boxed-formula" style="float: right; margin-left: 10px;">$P_i^*$</div>
+         <h6>Principe d'objectivité (ou principe de l'action et de la réaction pour les puissances virtuelles)</h6>
+         <div class="boxed-text">
+             Pour tout système matériel, la puissance virtuelle des efforts intérieurs est nulle pour tout champ de vitesse virtuel <strong>rigidifiant</strong>.
+         </div>
+         <p>D'où:</p>
+         <div class="boxed-formula">
+             $$ P_i^* = 0 $$
+         </div>
+         <div class="boxed-text">
+             <h6>Conclusion</h6>
+             Comme nous travaillons (dans ce cours, implicitement) qu'avec des systèmes dont les mouvements virtuels considérés sont rigidifiants (les distances relatives entre points d'un même solide ne varient pas lors du mouvement virtuel), alors, on aura pas à se préoccuper des efforts intérieurs dont la puissance virtuelle est nulle.
+         </div>
+         <p class="explanation">Ceci est une conséquence du principe d'action-réaction et de l'hypothèse que le CVV respecte l'indéformabilité des solides. Pour des milieux déformables, ce terme ne serait pas nul.</p>
+    </section>
+
+    <!-- Page 62 (OCR 2) : Section 7 Title -->
+    <section class="slide centered-text">
+        <h4>§-7-</h4>
+        <h3>Dérivation des équations de Lagrange</h3>
+        <p class="explanation">Nous allons maintenant utiliser les résultats précédents (expressions des $P_a^*, P_e^*, P_i^*$) pour établir les équations dynamiques du mouvement sous la forme de Lagrange.</p>
+    </section>
+
+    <!-- Page 63 (OCR 3) : Subsection 7-1 Title -->
+    <section class="slide centered-text">
+        <h4>§-7-1</h4>
+        <h3>Equations de Lagrange simples (ELS)</h3>
+        <p class="explanation">Ce sont les équations obtenues lorsque les coordonnées généralisées $q_i$ sont indépendantes, typiquement après avoir utilisé les liaisons holonomes pour réduire le nombre de variables.</p>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i $$
+        </div>
+        <p class="explanation">Nous allons montrer comment on aboutit à cette forme.</p>
+    </section>
+
+    <!-- Page 64 (OCR 4) : PPV for Rigidifying System -->
+    <section class="slide">
+        <p>Le PPV (Principe des Puissances Virtuelles, ou Théorème de D'Alembert) dans le cas d'un système rigidifiant (où $P_i^*=0$) s'écrit :</p>
+        <div class="boxed-formula">
+            $$ P_a^* = P_e^* $$
+        </div>
+        <p>avec :</p>
+        <div class="image-placeholder" style="width: 100px; float: right; margin-left: 15px;">[Image: Portrait of Lagrange]</div>
+        <div class="boxed-formula" style="position: relative;">
+             $$ P_e^* = \sum_i Q_i \dot{q}_i^* $$
+            <img src="placeholder_arrow_right.png" alt="->" style="position: absolute; right: 10px; top: 25%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+        </div>
+        <p>et :</p>
+        <div class="boxed-formula" style="position: relative;">
+             $$ P_a^* = \sum_i A_i \dot{q}_i^* $$
+             <img src="placeholder_arrow_right.png" alt="->" style="position: absolute; right: 10px; top: 75%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+             <span style="position: absolute; right: 50px; top: 50%; transform: translateY(-50%); text-align: center; font-weight: bold; color: #a02c2c;">
+                 2 formes linéaires<br>de $\dot{q}_i^*$
+             </span>
+        </div>
+        <p class="explanation">Ces deux puissances virtuelles sont des formes linéaires des vitesses généralisées virtuelles $\dot{q}_i^*$.</p>
+    </section>
+
+    <!-- Page 65 (OCR 5) : Deriving Ai = Qi -->
+    <section class="slide">
+         <div class="image-placeholder" style="width: 100px; float: right; margin-left: 15px;">[Image: Portrait of Lagrange]</div>
+         <p>D'où, en égalant les deux expressions de $P_a^*$ et $P_e^*$ :</p>
+         <div class="boxed-formula" style="text-align: center;">
+             $$ \underbrace{\sum_i A_i \dot{q}_i^*}_{P_a^*} = \underbrace{\sum_i Q_i \dot{q}_i^*}_{P_e^*} $$
+         </div>
+         <div style="text-align:center; margin: 20px 0;">
+            <img src="placeholder_double_arrow.png" alt="<->" style="height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+         </div>
+        <p>Ce qui s'écrit aussi :</p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <div class="boxed-formula">
+                $$ \sum_i (A_i - Q_i) \dot{q}_i^* = 0 \quad \text{(I)} $$
+            </div>
+            <div class="boxed-formula">
+                $$ \forall \dot{q}_i^* $$
+            </div>
+        </div>
+        <p class="explanation">Cette équation (I) doit être vraie pour <strong>tout</strong> choix des vitesses généralisées virtuelles $\dot{q}_i^*$ compatibles avec les liaisons.</p>
+    </section>
+
+    <!-- Page 66 (OCR 6) : Choosing CVV and ELS -->
+    <section class="slide">
+        <h5>Choix du champ des vitesses virtuelles (CVV)</h5>
+        <div class="boxed-text">
+             Si le système est décrit par $n$ coordonnées généralisées $q_1, ..., q_n$ qui sont <strong>indépendantes</strong> (ce qui est le cas si toutes les liaisons holonomes ont été utilisées pour réduire le nombre de coordonnées et qu'il n'y a pas d'autres liaisons), alors les vitesses généralisées virtuelles $\dot{q}_i^*$ peuvent être choisies <strong>indépendamment les unes des autres</strong>.
+        </div>
+         <p class="explanation">La phrase sur la slide "Si le CVV est compatible avec les liaisons holonomes et non compatible avec les liaisons non holonomes..." est une façon un peu confuse de dire qu'on travaille avec un ensemble de $q_i$ indépendants. La compatibilité avec les liaisons holonomes est implicite si les $q_i$ sont issus de leur utilisation. L'indépendance signifie qu'il n'y a pas de liaisons non holonomes (ou qu'on les ignore pour l'instant).</p>
+
+        <p>Dans ce cas (indépendance des $\dot{q}_i^*$), l'équation (I) :</p>
+        $$ \sum_i (A_i - Q_i) \dot{q}_i^* = 0 $$
+        <p>ne peut être satisfaite pour des $\dot{q}_i^*$ arbitraires que si chaque coefficient est nul :</p>
+        <div class="boxed-formula" style="display: inline-block; margin-right: 20px;">
+           $$ A_i = Q_i $$
+        </div>
+        <img src="placeholder_arrow_right.png" alt="->" style="display: inline-block; height: 30px; vertical-align: middle; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+
+        <p>Soit, en remplaçant $A_i$ par son expression en fonction de l'énergie cinétique T :</p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <div class="boxed-formula">
+                 $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i $$
+            </div>
+            <div class="boxed-formula">
+                 $$ i = 1, ..., n \quad (**) $$
+            </div>
+        </div>
+        <div class="boxed-text">
+            Ce sont les <strong>équations de Lagrange simples (ELS)</strong>. Elles constituent un système de $n$ équations différentielles du second ordre pour les $n$ coordonnées généralisées $q_i(t)$.
+        </div>
+        <div class="boxed-text" style="background-color: #fff0f0;">
+            <strong>Valables dans le cas où les $q_i$ (et donc les $\dot{q}_i^*$) sont indépendantes.</strong>
+        </div>
+    </section>
+
+    <!-- Page 67 (OCR 7) : Generalized Force Components -->
+    <section class="slide">
+        <h5>Remarque importante</h5>
+        <p>D'autre part, les $Q_i$ sont les composantes des forces généralisées qui peuvent avoir plusieurs origines. Nous écrirons par exemple:</p>
+        <div class="boxed-formula">
+            $$ Q_i = Q_i^{Le} + Q_i^{Li} + Q_i^{D} $$
+        </div>
+        <p>avec:</p>
+        <div class="boxed-text">
+            $$
+            \begin{cases}
+            Q_i^{Le} = \text{force généralisée issue des actions de liaisons } \underline{\text{extérieures}} \\
+            Q_i^{Li} = \text{force généralisée issue des actions de liaisons } \underline{\text{intérieures}} \\
+            Q_i^{D} = \text{force généralisée issue des actions } \underline{\text{données}} \text{ (actives, appliquées)}
+            \end{cases}
+            $$
+        </div>
+        <p class="explanation">$Q_i^D$ représente les forces appliquées connues (poids, ressorts, forces externes...). Les termes $Q_i^{Le}$ et $Q_i^{Li}$ représentent l'effet des forces de liaison (inconnues a priori) sur la coordonnée $q_i$.</p>
+    </section>
+
+    <!-- Page 68 (OCR 8) : Visual Qi Decomposition -->
+    <section class="slide centered-text">
+        <div class="boxed-formula" style="width: 100px; margin: 10px auto;">$Q_i$</div>
+        <div style="display: flex; justify-content: space-around; align-items: flex-start; margin-top: 10px; position: relative;">
+             <!-- Arrows -->
+             <div style="position: absolute; top: -10px; left: 50%; width: 1px; height: 30px; background-color: #a02c2c;"></div>
+             <div style="position: absolute; top: 20px; left: 20%; width: 60%; height: 1px; background-color: #a02c2c;"></div>
+             <div style="position: absolute; top: 20px; left: 20%; width: 1px; height: 30px; background-color: #a02c2c;"></div>
+             <div style="position: absolute; top: 20px; left: 50%; width: 1px; height: 30px; background-color: #a02c2c;"></div>
+             <div style="position: absolute; top: 20px; left: 80%; width: 1px; height: 30px; background-color: #a02c2c;"></div>
+             <!-- Boxes -->
+             <div style="text-align: center; width: 30%;">
+                  <span class="arrow-up" style="transform: rotate(-90deg) translateX(50%); margin:0; width: 40px; height: 40px;"></span>
+                 <div class="boxed-formula" style="margin-top: 5px;">$Q_i^{Le}$</div>
+                 <p>Liaisons extérieures</p>
+             </div>
+             <div style="text-align: center; width: 30%;">
+                  <span class="arrow-up" style="transform: rotate(-90deg) translateX(50%); margin:0; width: 40px; height: 40px;"></span>
+                 <div class="boxed-formula" style="margin-top: 5px;">$Q_i^{Li}$</div>
+                 <p>Liaisons intérieures</p>
+             </div>
+             <div style="text-align: center; width: 30%;">
+                  <span class="arrow-up" style="transform: rotate(-90deg) translateX(50%); margin:0; width: 40px; height: 40px;"></span>
+                 <div class="boxed-formula" style="margin-top: 5px;">$Q_i^{D}$</div>
+                 <p>Actions données</p>
+             </div>
+         </div>
+    </section>
+
+    <!-- Page 69 (OCR 9) : When Q_li is Zero -->
+    <section class="slide">
+        <h5>Remarque importante</h5>
+        <span class="pointer-icon">☞</span>
+        <p>Dans les deux cas suivants:</p>
+        <ul>
+            <li>si les liaisons sont <strong>parfaites</strong> (absence de frottement)</li>
+            <li>s'il y a <strong>roulement sans glissement</strong> (qui est une liaison parfaite si les surfaces sont rigides)</li>
+        </ul>
+        <p>alors, la puissance virtuelle des forces de liaison intérieures est nulle ($P_{liaison, i}^* = 0$), et donc leur contribution aux forces généralisées est nulle.</p>
+        <p>alors:</p>
+        <div class="boxed-formula">
+             $$ Q_i = Q_i^{Le} + Q_i^{D} $$
+        </div>
+        <p>car :</p>
+        <div class="boxed-formula">
+             $$ Q_i^{Li} = 0 $$
+        </div>
+        <p class="explanation">C'est une simplification majeure : on n'a pas besoin de connaître les forces internes de liaison pour écrire les équations de Lagrange si les liaisons sont parfaites.</p>
+    </section>
+
+    <!-- Page 70 (OCR 10) : ELS with Force Function -->
+    <section class="slide">
+        <h5>Expression des « ELS » en fonction de la fonction de force</h5>
+        <p>D'après ce qui précède, on peut écrire:</p>
+        <p>Si les forces extérieures données dérivent d'une fonction de force $U$ (au sens où $Q_i^D = \partial U / \partial q_i$), alors la puissance virtuelle de ces forces est :</p>
+        $$ P_{e,D}^* = \sum_i Q_i^D \dot{q}_i^* = \sum_i \frac{\partial U}{\partial q_i} \dot{q}_i^* $$
+        <p>La diapositive note aussi $P_e^* = dU/dt - \partial U / \partial t$. Ceci est vrai pour la puissance *réelle* $P_e$. Pour la puissance *virtuelle*, on a simplement:</p>
+        <div class="boxed-formula">
+             $$ P_e^* = \sum_i Q_i \dot{q}_i^* $$
+        </div>
+         <p>Si <strong>toutes</strong> les forces généralisées $Q_i$ (incluant les liaisons si elles travaillent, et les forces données) dérivent d'une fonction de force globale $U_{tot}(q, \dot{q}, t)$ telle que $Q_i = \frac{\partial U_{tot}}{\partial q_i} - \frac{d}{dt}(\frac{\partial U_{tot}}{\partial \dot{q}_i})$ (potentiel généralisé), ou plus simplement si $Q_i = \partial U / \partial q_i$ pour un potentiel $U(q, t)$ :</p>
+         <div class="boxed-formula">
+             $$ P_e^* = \sum_i Q_i \dot{q}_i^* = \sum_i \frac{\partial U}{\partial q_i} \dot{q}_i^* $$
+         </div>
+        <p>D'où les équations de Lagrange deviennent ($A_i = Q_i$):</p>
+        <div class="boxed-formula">
+             $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i = \frac{\partial U}{\partial q_i} \quad (**) $$
+        </div>
+    </section>
+
+    <!-- Page 71 (OCR 11) : Euler-Lagrange Equations -->
+    <section class="slide">
+        <p>Soit:</p>
+        <p>Si $Q_i$ dérive d'une fonction de force $U$ au sens strict ($U$ ne dépend pas de $\dot{q}_i$ ou $t$, et $U=-V$) : $Q_i = \partial U / \partial q_i = - \partial V / \partial q_i$.</p>
+        <div class="boxed-formula">
+             $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = \frac{\partial U}{\partial q_i} = -\frac{\partial V}{\partial q_i} $$
+        </div>
+        <p>Sachant que l'énergie potentielle $V$ ne dépend classiquement que des positions $q_i$ (et pas des vitesses $\dot{q}_i$), on a $\partial V / \partial \dot{q}_i = 0$.</p>
+        <p>Introduisons le <strong>Lagrangien</strong> $L$ :</p>
+        <div class="boxed-formula">
+            $$ L = T - V $$
+        </div>
+        <p>Alors :</p>
+        $$ \frac{\partial L}{\partial \dot{q}_i} = \frac{\partial T}{\partial \dot{q}_i} - \frac{\partial V}{\partial \dot{q}_i} = \frac{\partial T}{\partial \dot{q}_i} $$
+        $$ \frac{\partial L}{\partial q_i} = \frac{\partial T}{\partial q_i} - \frac{\partial V}{\partial q_i} $$
+        <p>L'équation $\frac{d}{dt}(\frac{\partial T}{\partial \dot{q}_i}) - \frac{\partial T}{\partial q_i} = -\frac{\partial V}{\partial q_i}$ devient :</p>
+        $$ \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) - \left( \frac{\partial L}{\partial q_i} + \frac{\partial V}{\partial q_i} \right) = -\frac{\partial V}{\partial q_i} $$
+        <p>Il vient:</p>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) - \frac{\partial L}{\partial q_i} = 0 $$
+        </div>
+        <div class="boxed-text">
+            On retrouve les <strong>équations d'Euler-Lagrange</strong> pour un système conservatif.
+        </div>
+        <p class="explanation">Si certaines forces $Q_i^{nc}$ ne dérivent pas d'un potentiel, elles restent au second membre : $\frac{d}{dt}(\frac{\partial L}{\partial \dot{q}_i}) - \frac{\partial L}{\partial q_i} = Q_i^{nc}$.</p>
+    </section>
+
+    <!-- Page 72 (OCR 12) : Application Reference -->
+    <section class="slide">
+        <h5>Voir application pédagogique page 16</h5>
+        <div class="image-placeholder">[Image: Système mécanique, probablement une sphère sur une tige tournante, avec des angles phi, theta, psi.]</div>
+        <p class="explanation">Référence à un exemple traité précédemment (Exemple 1 des pages 36-38) ou à un exercice spécifique page 16 du document original.</p>
+    </section>
+
+    <!-- Page 73 (OCR 13) : Subsection 7-2 Title -->
+    <section class="slide centered-text">
+        <h4>§-7-2</h4>
+        <h3>Equations de Lagrange avec multiplicateurs (ELM)</h3>
+        <p class="explanation">Cette méthode est utilisée lorsque les coordonnées généralisées $q_i$ ne sont pas indépendantes, à cause de liaisons non holonomes ou de liaisons holonomes non utilisées pour réduire le nombre de variables.</p>
+        <span class="pointer-icon">☞</span>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i + \sum_{j=1}^m \mu_j a_{ji} $$
+        </div>
+        <p class="explanation">Où $Q_i$ sont les forces généralisées des actions *données*, les $\mu_j$ sont les multiplicateurs de Lagrange et les $a_{ji}$ décrivent les équations de liaison.</p>
+    </section>
+
+    <!-- Page 74 (OCR 14) : Constraint Equations -->
+    <section class="slide">
+        <h5>Choix du champ des vitesses virtuelles (CVV)</h5>
+        <div class="boxed-text">
+            Si le CVV est compatible à la fois avec les liaisons holonomes et les liaisons non holonomes, alors les $\dot{q}_i^*$ ne sont plus linéairement indépendantes et elles peuvent vérifier $m$ équations de la forme:
+        </div>
+        <div class="boxed-formula">
+            $$ \sum_i a_{ji}(q, t) \dot{q}_i^* = 0 \quad \text{pour } j = 1, ..., m $$
+        </div>
+        <p class="explanation">Ces $m$ équations représentent les contraintes sur les vitesses virtuelles. Elles peuvent provenir de liaisons non holonomes (ex: $\dot{x}^* + R\dot{\theta}^* = 0$) ou de la différentiation de liaisons holonomes non utilisées pour réduire les $q_i$ (ex: pour $f(q,t)=0$, $\sum (\partial f/\partial q_i) \dot{q}_i^* = 0$, donc $a_{ji} = \partial f_j / \partial q_i$).</p>
+        <p>Dans ce cas, l'équation fondamentale du PPV :</p>
+        <div class="boxed-formula">
+            $$ \sum_i (A_i - Q_i) \dot{q}_i^* = 0 $$
+        </div>
+        <p>est une combinaison linéaire des $\dot{q}_i^*$ qui doit s'annuler, <strong>sachant que</strong> les $\dot{q}_i^*$ sont eux-mêmes liés par les $m$ équations de contrainte $\sum_i a_{ji} \dot{q}_i^* = 0$.</p>
+        <div class="boxed-formula">
+            est une combinaison linéaire de $\quad a_{ji}(q, t) \dot{q}_i^* $
+        </div>
+    </section>
+
+    <!-- Page 75 (OCR 15) : Deriving ELM -->
+    <section class="slide">
+        <p>Le fait que $\sum_i (A_i - Q_i) \dot{q}_i^* = 0$ pour tout ensemble de $\dot{q}_i^*$ vérifiant les $m$ contraintes $\sum_i a_{ji} \dot{q}_i^* = 0$ implique (théorème des multiplicateurs de Lagrange) qu'il existe $m$ coefficients $\mu_j$ (les multiplicateurs) tels que :</p>
+        <div class="boxed-formula">
+            $$ (A_i - Q_i) \text{ est une combinaison linéaire des } a_{ji} $$
+            $$ \implies A_i - Q_i = \sum_{j=1}^m \mu_j a_{ji} $$
+        </div>
+        <p>Ce qui donne :</p>
+        <div class="boxed-formula">
+            $$ A_i = Q_i + \sum_{j=1}^m \mu_j a_{ji} $$
+        </div>
+        <p>D'où, en remplaçant $A_i$ par son expression en fonction de T :</p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <div class="boxed-formula">
+                 $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i + \sum_{j=1}^m \mu_j a_{ji} \quad (**) $$
+            </div>
+            <div class="boxed-formula">
+                 $$ \begin{cases} i = 1, ..., n \\ j = 1, ..., m \end{cases} $$
+            </div>
+         </div>
+        <div class="boxed-text">
+            Ce sont les <strong>équations de Lagrange avec multiplicateurs (ELM)</strong>. On a $n$ équations pour $n$ inconnues $q_i(t)$ et $m$ inconnues $\mu_j(t)$. Il faut ajouter les $m$ équations de liaison (sous forme finie $f_j(q,t)=0$ ou différentielle $\sum a_{ji}\dot{q}_i = 0$) pour avoir un système complet ($n+m$ équations pour $n+m$ inconnues).
+        </div>
+         <div class="boxed-text" style="background-color: #fff0f0;">
+             <strong>Valables dans le cas où les $q_i$ (et donc les $\dot{q}_i^*$) ne sont pas indépendantes.</strong>
+         </div>
+    </section>
+
+</body>
+</html>
