@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mécanique analytique - P. Amiot et L. Marleau</title>
+    <!-- Link KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <!-- Link KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50; /* Dark blue-grey */
+        }
+        h1 {
+            color: #e67e22; /* Orange */
+            text-align: center;
+            margin-bottom: 5px;
+        }
+         h1.chapter-title {
+            color: #2c3e50; /* Dark blue-grey */
+            text-align: left;
+            border-bottom: 2px solid #e67e22; /* Orange */
+            padding-bottom: 5px;
+            margin-top: 40px;
+         }
+        h2 {
+            color: #2980b9; /* Blue */
+             border-bottom: 1px solid #bdc3c7; /* Light grey */
+             padding-bottom: 3px;
+             margin-top: 30px;
+        }
+        h2.authors {
+            text-align: center;
+            color: #8e44ad; /* Purple */
+            margin-top: 0;
+            font-style: italic;
+            border-bottom: none; /* Override */
+        }
+        .cover-images, .header-images {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-style: italic;
+            color: #555;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        .toc li {
+            margin-bottom: 5px;
+        }
+        .toc .section-number {
+            display: inline-block;
+            min-width: 40px; /* Adjust as needed */
+            font-weight: bold;
+        }
+         .toc .page-number {
+            float: right;
+            font-style: italic;
+            color: #777;
+         }
+         .toc ul ul {
+             margin-left: 30px; /* Indent sub-sections */
+         }
+        .affiliation {
+            font-size: 0.9em;
+            color: #7f8c8d; /* Grey */
+            margin-top: 10px;
+        }
+        .copyright {
+             font-size: 0.8em;
+             color: #95a5a6; /* Lighter grey */
+             margin-top: 30px;
+        }
+        .foreword-box, .updates-box {
+            border: 1px solid #bdc3c7; /* Light grey border */
+            background-color: #ecf0f1; /* Very light grey background */
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .updates-box h4 {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #34495e; /* Darker blue-grey */
+        }
+        .updates-box ul {
+            list-style: disc;
+            margin-left: 20px;
+        }
+        .chapter-intro {
+            margin-top: 40px;
+            /* border-top: 2px solid #e67e22; Orange top border */
+            padding-top: 20px;
+        }
+        .chapter-toc-sidebar {
+             float: right;
+             width: 30%; /* Adjust as needed */
+             margin-left: 20px;
+             padding: 10px;
+             border: 1px dashed #ccc;
+             background-color: #f9f9f9;
+             font-size: 0.9em;
+        }
+         .chapter-toc-sidebar h4 {
+             margin-top: 0;
+             color: #2980b9; /* Blue */
+         }
+         .chapter-toc-sidebar ul {
+             list-style: none;
+             padding-left: 0;
+         }
+         .chapter-toc-sidebar li {
+            margin-bottom: 3px;
+         }
+         .clear { clear: both; } /* To clear floats */
+
+        /* KaTeX display mode centering */
+        .katex-display { text-align: center; }
+        .katex-display .katex { text-align: center; } /* Force inner center */
+
+        /* Equation numbering */
+        .equation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .equation .eq-content {
+            flex-grow: 1;
+            text-align: center; /* Center the equation content */
+             padding: 0 20px; /* Add padding around equation */
+        }
+        .equation .eq-number {
+            min-width: 40px; /* Ensure space for number */
+            text-align: right;
+            color: #555;
+            font-style: italic;
+        }
+
+        /* Figure styling */
+        figure {
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #eee;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        figcaption {
+            font-style: italic;
+            color: #34495e;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        figure .placeholder {
+            display: block;
+            min-height: 100px; /* Placeholder height */
+            background-color: #e0e0e0;
+            border: 1px dashed #aaa;
+            color: #777;
+            padding: 20px;
+            box-sizing: border-box; /* Include padding in width/height */
+        }
+
+         /* Remarks and Examples */
+         .remark, .example {
+             border-left: 4px solid #16a085; /* Teal color */
+             background-color: #f0fdfa;
+             padding: 10px 15px;
+             margin: 15px 0;
+             font-size: 0.95em;
+         }
+         .example {
+            border-left-color: #f39c12; /* Orange */
+            background-color: #fef9e7;
+         }
+         .remark .remark-title, .example .example-title {
+             font-weight: bold;
+             color: #117a65; /* Darker Teal */
+             margin-bottom: 5px;
+         }
+         .example .example-title {
+             color: #b0720f; /* Darker Orange */
+         }
+         .remark .info-icon, .example .example-icon { /* Simple text icon for now */
+             display: inline-block;
+             background-color: #16a085;
+             color: white;
+             border-radius: 50%;
+             width: 1.2em;
+             height: 1.2em;
+             line-height: 1.2em;
+             text-align: center;
+             font-style: normal;
+             font-weight: bold;
+             margin-right: 5px;
+         }
+          .example .example-icon {
+             background-color: #f39c12; /* Orange */
+             /* Using a simple symbol instead of image */
+             content: "💡"; /* Or use FontAwesome icon */
+         }
+
+         /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .comparison-table th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+        .comparison-table td:first-child { /* Style the first column if needed */
+             /* font-family: monospace; Example: different font for formulas */
+        }
+
+        /* Exercise list */
+        .exercises ol {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .exercises li {
+            margin-bottom: 20px;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 15px;
+        }
+         .exercises .ex-number {
+            font-weight: bold;
+            color: #2980b9; /* Blue */
+            margin-right: 10px;
+         }
+         .exercises .ex-title {
+             font-weight: bold;
+             display: inline; /* Keep on same line as number */
+         }
+         .exercises ol ol { /* Sublist for parts a, b, c */
+            list-style-type: lower-alpha;
+             padding-left: 30px;
+             margin-top: 10px;
+         }
+          .exercises ol ol li {
+              border-bottom: none;
+              padding-bottom: 5px;
+              margin-bottom: 5px;
+          }
+
+    </style>
+</head>
+<body>
+
+    <!-- === Header / Title / TOC / Foreword === -->
+    <!-- Skipped for brevity, assume they are present -->
+    <hr>
+
+    <main>
+        <h1 class="chapter-title">Chapitre 1: RAPPEL</h1>
+
+        <!-- Content from previous response (Sections 1.1 to 1.5 up to Eq 1.58) -->
+        <!-- ... -->
+        <h2>1.5 Systèmes à $N$ particules et forces extérieures</h2>
+         <!-- ... (Content up to equation 1.58) ... -->
+         <p>
+             Supposons maintenant qu'au lieu de considérer un ensemble de particules de masses $m_1, m_2, ...$ nous ayons affaire à un milieu continu comme un solide. Le même raisonnement que dans les sections précédentes s'applique encore avec toutefois un traitement qui diffère quelque peu :
+         </p>
+         <ol>
+             <li>La particule de masse $m_i$ localisée à la position $\mathbf{x}_i$ est remplacée par un élément de masse $\rho(\mathbf{x}) d^3x$ à la position $\mathbf{x}$ où $\rho(\mathbf{x})$ et $d^3x$ sont la densité de masse et l'élément de volume en trois dimensions respectivement.</li>
+             <li>Les propriétés des particules $X_i$ sont remplacées par des fonctions de la position $X(\mathbf{x})$.</li>
+             <li>Les sommes $\sum_i$ sont remplacées par des intégrales.</li>
+         </ol>
+         <p>Voici quelques exemples pour des relations énoncées ci-haut :</p>
+         <table class="comparison-table">
+             <thead>
+                 <tr>
+                     <th>Propriétés globales (Discret)</th>
+                     <th>Milieu continu</th>
+                 </tr>
+             </thead>
+             <tbody>
+                 <tr>
+                     <td>$M = \sum_i m_i$</td>
+                     <td>$M = \int \rho(\mathbf{x}) d^3x$</td>
+                 </tr>
+                 <tr>
+                     <td>$M\mathbf{X} = \sum_i m_i \mathbf{x}_i$</td>
+                     <td>$M\mathbf{X} = \int \mathbf{x} \rho(\mathbf{x}) d^3x$</td>
+                 </tr>
+                 <tr>
+                     <td>$\mathbf{P} = M\mathbf{V} = M\frac{d\mathbf{X}}{dt} = \sum_i m_i \mathbf{v}_i$</td>
+                      <td>$\mathbf{P} = M\mathbf{V} = \int \mathbf{v}(\mathbf{x}) \rho(\mathbf{x}) d^3x$</td>
+                 </tr>
+                 <tr>
+                      <td>$M\mathbf{A} = M\frac{d^2\mathbf{X}}{dt^2} = \sum_i m_i \mathbf{a}_i$</td>
+                      <td>$M\mathbf{A} = \int \mathbf{a}(\mathbf{x}) \rho(\mathbf{x}) d^3x$</td>
+                 </tr>
+                 <tr>
+                     <td>$T = \frac{1}{2}M V^2 + \frac{1}{2}\sum_i m_i v_i^{\prime 2}$</td>
+                     <td>$T = \frac{1}{2}M V^2 + \frac{1}{2} \int v^{\prime 2}(\mathbf{x}) \rho(\mathbf{x}) d^3x$</td>
+                 </tr>
+                  <tr>
+                     <td>$\mathbf{L} = \sum_i \mathbf{l}_i = \sum_i m_i \mathbf{x}_i \times \mathbf{v}_i$</td>
+                     <td>$\mathbf{L} = \int \mathbf{x} \times \mathbf{v}(\mathbf{x}) \rho(\mathbf{x}) d^3x$</td>
+                 </tr>
+             </tbody>
+         </table>
+
+         <!-- == Start Content from page 22 (PDF page number) == -->
+         <div class="example">
+             <div class="example-title"><span class="example-icon">💡</span>Exemple 1.1</div>
+             <p><strong>Système simple unidimensionnel :</strong><br/>
+             Si la force $F = F(x)$ et qu'en une dimension il existe une fonction $V(x)$ telle que
+             </p>
+             <div class="equation">
+                 <div class="eq-content"> $F(x) = -\frac{\partial}{\partial x}V(x) = -\frac{dV}{dx}$ </div>
+                 <div class="eq-number">(1.59)</div>
+             </div>
+             <p>
+                 Supposons $V(x)$ comme sur la figure 1.6 et étudions une particule qui serait soumise à une telle force. Nous avons l'énergie totale $E$ conservée:
+             </p>
+              <div class="equation">
+                 <div class="eq-content"> $E = \frac{m}{2}\dot{x}^2 + V(x) = T + V.$ </div>
+                 <div class="eq-number">(1.60)</div>
+             </div>
+             <p>
+                 Évidemment $T \ge 0$ et donc $E \ge V(x)$ toujours. Donc $E \ge E_0 = \min(V(x))$. Ceci contraint le mouvement. Par exemple si $E = E_1$, alors le mouvement sera limité à la région entre $x_1^-$ et $x_1^+$. Par contre si $E = E_2$, alors non seulement la région $x_2^- \le x \le x_2^+$ est-elle possible mais aussi la région $x \ge x_2^{++}$.
+             </p>
+             <!-- Placeholder for yellow diamond icon -->
+         </div>
+         <!-- == End Content from page 22 (PDF page number) == -->
+
+         <!-- == Start Content from page 23 (PDF page number) == -->
+         <figure>
+             <div class="placeholder">[Image Placeholder: Plot of potential V(x) vs x. Potential has a minimum at x0 with value E0. Horizontal lines indicate energy levels E1 and E2. E1 intersects V(x) at x1- and x1+. E2 intersects V(x) at x2-, x2+, and x2++. Vertical dashed lines indicate these intersection points.]</div>
+             <figcaption><strong>Figure 1.6</strong> Particule dans un potentiel.</figcaption>
+         </figure>
+
+         <p>
+             En une dimension il est simple d'obtenir la solution $x(t)$ à partir de l'équation pour l'énergie ci-dessus. En effet, isolant $\frac{dx}{dt} = \dot{x}$,
+         </p>
+         <div class="equation">
+             <div class="eq-content"> $\frac{dx}{dt} = \pm \sqrt{\frac{2}{m}(E - V(x))}$ </div>
+             <div class="eq-number">(1.61)</div>
+         </div>
+         <p>Séparant les variables:</p>
+         <div class="equation">
+             <div class="eq-content"> $dt = \pm \sqrt{\frac{m}{2}} \frac{dx}{\sqrt{E - V(x)}}$ </div>
+             <div class="eq-number">(1.62)</div>
+         </div>
+         <p>Intégrant,</p>
+         <div class="equation">
+             <div class="eq-content"> $t - t_0 = \pm \sqrt{\frac{m}{2}} \int_{x_0}^{x} \frac{dx'}{\sqrt{E - V(x')}}$ </div>
+             <div class="eq-number">(1.63)</div>
+         </div>
+         <!-- == End Content from page 23 (PDF page number) == -->
+
+          <!-- == Start Content from page 24 (PDF page number) == -->
+          <p>
+              ou formellement $t - t_0 = f(x, E) - f(x_0, E)$ où on isole $x = x(t - t_0, E, x_0)$: solution unique si on connaît l'énergie totale $E$ et la position initiale $x_0 = x(t_0)$.
+          </p>
+
+         <h2>1.6 Degrés de liberté</h2>
+         <p>
+             La notion de degré de liberté jouera un rôle important dans les chapitres qui vont suivre. Cette section est consacrée à la première étape de cette notion.
+         </p>
+         <p>
+             La première caractéristique des degrés de liberté est qu'ils se comptent. Un système physique a un, deux, trois,..., $N$ degrés de liberté.
+         </p>
+
+         <figure>
+              <div class="placeholder">[Image Placeholder: Top: Arrow indicating movement along a straight horizontal line (labeled x). Bottom: Arrow indicating movement along a wavy horizontal line (labeled x).]</div>
+              <figcaption><strong>Figure 1.7</strong> Trajet d'une particule (1D examples).</figcaption>
+         </figure>
+
+         <p>
+             Le degré de liberté est la généralisation du nombre de directions indépendantes selon lesquelles une particule peut se déplacer dans l'espace physique. Ainsi, une particule ponctuelle pouvant se déplacer dans une direction possède un degré de liberté ; elle en possède deux si elle peut se déplacer dans un espace à deux dimensions, etc.... Des forces agissant selon une ou plusieurs de ces directions peuvent limiter le mouvement de la particule à un domaine fini selon ces directions sans faire disparaître le degré de liberté. Par exemple, si une particule est libre de se déplacer selon l'axe $Ox$ seulement, elle a un degré de liberté. Si une force, disons harmonique, $F_x = -kx$, agit sur la particule, le domaine de variation de la particule sera réduit de $-x_0$ à $+x_0$ selon son énergie $E = \frac{1}{2}kx_0^2$, et la particule a toujours un degré de liberté.
+         </p>
+          <!-- == End Content from page 24 (PDF page number) == -->
+
+          <!-- == Start Content from page 25 (PDF page number) == -->
+          <p>
+              Cependant si cette force est caractérisée par une tige rigide qui empêche tout mouvement, alors le domaine de variation du mouvement est réduit à zéro et la particule perd son degré de liberté. Dans l'exemple considéré ici (voir figure 1.7) la direction du mouvement est une droite (cartésienne). C'est un espace à une dimension géométrique correspondant à un degré de liberté physique. La particule pourrait ne pouvoir se déplacer que selon une courbe quelconque, disons la deuxième courbe de la figure 1.7. Encore une fois la particule n'a qu'un seul degré de liberté, une courbe étant un espace à une dimension, un seul nombre ou coordonnée étant suffisant pour déterminer la position de tout point sur la courbe, par exemple la distance orientée (+ ou −) par rapport à une origine $O$ quelconque.
+          </p>
+          <p>
+              On peut donc prendre pour règle que le nombre de degrés de liberté d'une particule est égal au nombre de coordonnées nécessaires et suffisantes pour déterminer la position de la particule. En général, compter le nombre de coordonnées nécessaires n'est pas difficile ; un système physique comptant $n$ particules pouvant toutes se déplacer dans un espace à $D$ dimensions aura $nD$ degrés de liberté même si ces particules sont en interaction à condition que ces interactions ne limitent pas à zéro les domaines de variation.
+          </p>
+
+           <figure>
+              <div class="placeholder">[Image Placeholder: Cartesian axes (x, y). Two points (particles) at (x1, y1) and (x2, y2) connected by a spring. Distance r and angle theta are indicated between them.]</div>
+              <figcaption><strong>Figure 1.8</strong> Deux particules ponctuelles reliées par un ressort.</figcaption>
+           </figure>
+
+          <p>
+              Prenons par exemple deux particules ponctuelles, 1 et 2 dans un espace à deux dimensions (voir figure 1.8). Ce système compte $2 \times 2 = 4$ degrés de liberté. Pour décrire ces 4 degrés de liberté on peut choisir les 4 coordonnées $x_1, y_1, x_2, y_2$. On peut aussi choisir $x_1, y_1, \theta$ et $r$, cette dernière coordonnée mesurant la distance entre les deux particules.
+          </p>
+           <!-- == End Content from page 25 (PDF page number) == -->
+
+           <!-- == Start Content from page 26 (PDF page number) == -->
+           <p>
+               À chaque fois, quatre coordonnées sont nécessaires et suffisantes pour décrire les directions selon lesquelles les composantes du système peuvent se déplacer, c'est-à-dire définir exactement la position des deux particules du système. Dans ce problème il existe des familles de solutions, correspondant à des conditions initiales spéciales, qui ont comme caractéristique, soit $\theta = \text{constante}$ soit que $r = \text{constante}$ et où il apparaît donc que le domaine de variation de certaines coordonnées est réduit à zéro, semblant indiquer que le nombre de degrés de liberté est maintenant de moins de quatre. Il n'en est rien, le système continue d'avoir quatre degrés de liberté, un simple changement des conditions initiales demandera quatre coordonnées encore une fois pour décrire le mouvement. Le nombre de degrés de liberté ne se compte pas dans la solution mais est une propriété intrinsèque du système physique.
+           </p>
+           <p>
+                Supposons maintenant que le ressort soit remplacé par une tige rigide sans masse de longueur $l$ (voir figure 1.9). Le domaine de variation de la distance entre les deux particules est réduit à zéro. Un degré de liberté vient de disparaître. En effet on peut écrire soit
+           </p>
+            $$ r = l \implies dr = 0 $$
+           <p>soit</p>
+           $$ \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2} = l $$
+           <!-- == End Content from page 26 (PDF page number) == -->
+
+           <!-- == Start Content from page 27 (PDF page number) == -->
+            <p>alors</p>
+            $$ dr = d\left(\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}\right) = 0. $$
+            <p>
+                Dans la première équation ($r=l$), on lit directement que $r$ est réglé à la valeur $l$. Il ne reste que les degrés de liberté décrits par $x_1, y_1, \theta$ (3 degrés de liberté). Dans la deuxième équation, on lit qu'il existe une relation de dépendance entre quatre coordonnées ($x_1, y_1, x_2, y_2$). Algébriquement cela signifie que trois seulement des quatre coordonnées sont indépendantes. Ainsi donc un degré de liberté est décrit mathématiquement par une coordonnée indépendante. Cela signifie que, physiquement, un degré de liberté correspond à une <em>direction généralisée</em> le long de laquelle le système peut se déplacer indépendamment des autres <em>directions</em>, c'est-à-dire en les gardant constantes. Clairement ici, si on varie $x_1, x_2,$ et $y_1$ par exemple, alors $y_2$ n'est pas libre de prendre n'importe quelle valeur. $y_2$ est contraint de prendre la valeur telle que $\sqrt{\dots} = l$ ci-dessus. Ce n'est pas un degré de liberté puisqu'il n'est pas indépendant des autres.
+            </p>
+
+            <figure>
+                 <div class="placeholder">[Image Placeholder: Cartesian axes (x, y). Two points (particles) at (x1, y1) and (x2, y2) connected by a rigid rod of length r=l. Angle theta is indicated.]</div>
+                 <figcaption><strong>Figure 1.9</strong> Deux particules ponctuelles reliées par une tige rigide.</figcaption>
+            </figure>
+
+            <p>
+                Nous aurons à revenir sur la notion de degré de liberté. Notons ici que nous les comptons dans l'espace physique, en général l'espace à 3 dimensions dans lequel se situe la mécanique classique (ou ses sous-espaces à 2 ou 1 dimensions). Il existe aujourd'hui des domaines d'études en physique, par exemple celui appelé <em>systèmes dynamiques</em>, où on préfère travailler dans un espace des phases qui contient les vitesses en plus des coordonnées. Par exemple, l'espace des phases correspondant à notre espace physique habituel décrit, disons par les coordonnées $x, y,$ et $z$, comprendra également les vitesses $\dot{x}, \dot{y},$ et $\dot{z}$.
+            </p>
+            <!-- == End Content from page 27 (PDF page number) == -->
+
+             <!-- == Start Content from page 28 (PDF page number) == -->
+             <p>
+                 C'est un espace à 6 dimensions et il est commun en système dynamique de compter coordonnées et vitesses comme étant des degrés de liberté. En fait, de façon plus générale, l'état d'un système à un instant $t$ peut être représenté par un point
+             </p>
+             $$ \mathbf{x}(x_1, \dots, x_n, p_1, \dots, p_n) $$
+             <p>
+                 dans un espace à $2n$ dimensions qui constitue l'espace des phases (où $p_i$ sont les moments conjugués, liés aux vitesses $\dot{x}_i$). Comme nous le verrons, la chose se justifie aisément mais nous garderons ici notre notion de degré de liberté défini dans l'espace physique seulement. Simple question de convention. Nous reviendrons sur cette question plus loin.
+             </p>
+             <!-- == End Content from page 28 (PDF page number) == -->
+
+             <!-- == Start Content from page 29 (PDF page number) == -->
+              <h2>1.7 Exercices</h2>
+              <section class="exercises">
+                  <ol>
+                      <li>
+                          <span class="ex-number">1.1</span> <div class="ex-title">Coordonnées polaires</div>
+                          <p>Considérez un vecteur en coordonnées polaires $(\rho, \phi)$: $\mathbf{R} = \rho \cos\phi \mathbf{e}_x + \rho \sin\phi \mathbf{e}_y = \rho \mathbf{e}_{\rho}$. Dérivez rigoureusement le vecteur accélération en coordonnées polaires, $\mathbf{a} = d^2\mathbf{R}/dt^2$.</p>
+                      </li>
+                       <li>
+                          <span class="ex-number">1.2</span> <div class="ex-title">Bloc sur un plan incliné</div>
+                            <figure style="float:right; width: 200px; margin-left: 15px;">
+                               <div class="placeholder">[Image Placeholder: Wedge M with angle pi/3 (60 deg). Block m on top of the wedge.]</div>
+                               <figcaption><strong>Figure 1.10</strong> Problème 1.2.</figcaption>
+                           </figure>
+                          <p>Un bloc de masse $m$ est posé sur un coin de masse $M$ incliné de $\theta = 30^{\circ}$ par rapport à l'horizontale. Le système est initialement au repos et les coefficients de friction sont tous nuls (figure 1.10).</p>
+                          <ol>
+                              <li>Quelle doit être l'accélération horizontale du coin par rapport à la table pour que le bloc $m$ demeure au repos par rapport au coin ?</li>
+                              <li>Quelle force doit-on alors appliquer sur le coin ?</li>
+                              <li>Considérons le cas où aucune force externe autre que gravitationnelle n'est appliquée sur le système, décrivez en la dynamique (solutionnez les équations de mouvement).</li>
+                          </ol>
+                          <p><em>Indice :</em> Le bloc et le coin bougent tous deux par rapport au sol. Toutefois, si on se place dans le repère du coin, le bloc glisse sur un plan incliné de $\theta = 30^{\circ}$.</p>
+                          <div class="clear"></div>
+                      </li>
+                      <li>
+                          <span class="ex-number">1.3</span> <div class="ex-title">En apesanteur</div>
+                          <p>À quelle vitesse angulaire par rapport à sa vitesse actuelle la Terre devrait-elle tourner pour que nous soyons en apesanteur à sa surface?</p>
+                       </li>
+                  </ol>
+              </section>
+              <!-- == End Content from page 29 (PDF page number) == -->
+
+              <!-- == Start Content from page 30 (PDF page number) == -->
+               <section class="exercises">
+                  <ol start="4">
+                       <li>
+                          <span class="ex-number">1.4</span> <div class="ex-title">Bille sur une sphère</div>
+                           <figure style="float:right; width: 300px; margin-left: 15px;">
+                               <div class="placeholder">[Image Placeholder: Sphere with origin at center. Coordinates x, y, z shown. A point (orange ball) on the sphere at radius r, polar angle theta from z-axis, azimuthal angle phi from x-axis in xy-plane.]</div>
+                               <figcaption><strong>Figure 1.11</strong> Problème 1.4.</figcaption>
+                           </figure>
+                           <p>Une bille glisse sans frottement sur une sphère de rayon $r$. À partir du sommet (figure 1.11). À quel angle par rapport à la verticale quittera-t-elle la surface ?</p>
+                           <div class="clear"></div>
+                      </li>
+                      <li>
+                          <span class="ex-number">1.5</span> <div class="ex-title">Bille sur un anneau mince</div>
+                           <p>Un anneau mince de masse $M$ et de rayon $R$ tourne autour de son axe vertical (figure 1.12). Une petite bille de masse $m$ peut glisser librement et sans frottement sur l'anneau. Si lorsque la bille est au sommet, la vitesse angulaire de l'anneau est $\omega_0$, quelle est la vitesse angulaire lorsque la bille se trouve à un angle $\theta = \pi/4$ rad par rapport à la verticale ?</p>
+                      </li>
+                  </ol>
+              </section>
+               <!-- == End Content from page 30 (PDF page number) == -->
+
+               <!-- == Start Content from page 31 (PDF page number) == -->
+               <section class="exercises">
+                   <ol start="6">
+                      <li>
+                          <span class="ex-number">1.6</span> <div class="ex-title">Disques concentriques</div>
+                          <p>Un disque de moment d'inertie $4 \, \text{kg} \cdot \text{m}^2$ tourne librement sur lui-même à raison de $3 \, \text{rad/s}$. Un deuxième disque, de moment d'inertie $2 \, \text{kg} \cdot \text{m}^2$ glisse sur un axe et se dépose sur le premier, puis les deux tournent ensemble.</p>
+                          <ol>
+                              <li>Quelle est la vitesse angulaire de l'ensemble ?</li>
+                              <li>Quelle est la variation d'énergie cinétique du système ?</li>
+                          </ol>
+                      </li>
+                       <li>
+                          <span class="ex-number">1.7</span> <div class="ex-title">Virage serré</div>
+                            <figure style="float:right; width: 250px; margin-left: 15px;">
+                               <div class="placeholder">[Image Placeholder: Hoop M rotating with angular velocity omega. Bead m on the hoop at angle theta from the vertical.]</div>
+                               <figcaption><strong>Figure 1.12</strong> Problème 1.5.</figcaption>
+                           </figure>
+                           <p>Une voiture de masse $m$ prend un virage de rayon $r$, incliné vers l'intérieur d'un angle $\theta$ (figure 1.13). Quelle est la vitesse maximale à laquelle la voiture peut prendre le virage sans déraper? Le coefficient de friction statique est $\mu$.</p>
+                           <div class="clear"></div>
+                       </li>
+                      <li>
+                          <span class="ex-number">1.8</span> <div class="ex-title">Une échelle</div>
+                          <p>Une échelle de longueur $L$ et de poids $p$ est posée sur un plancher rugueux et contre un mur sans frottement. Le coefficient de friction statique du plancher est $\mu = 0.6$.</p>
+                           <ol>
+                              <li>Déterminez l'angle maximal $\theta$ entre le mur et l'échelle pour que l'échelle ne glisse pas.</li>
+                              <li>Déterminez la force exercée par le mur pour cette valeur de $\theta$.</li>
+                          </ol>
+                      </li>
+                      <li>
+                          <span class="ex-number">1.9</span> <div class="ex-title">Particules</div>
+                          <p>Une particule de masse $m_1 = 4 \, \text{kg}$ se déplace à la vitesse $5 \, \mathbf{e}_x \, \text{m/s}$ tandis qu'une particule de masse $m_2 = 2 \, \text{kg}$ se déplace à $2 \, \mathbf{e}_x \, \text{m/s}$.</p>
+                           <ol>
+                              <li>Quelle est l'énergie cinétique du centre de masse ?</li>
+                              <li>Quelle est l'énergie cinétique relative ?</li>
+                          </ol>
+                      </li>
+                   </ol>
+               </section>
+               <!-- == End Content from page 31 (PDF page number) == -->
+
+               <!-- == Start Content from page 32 (PDF page number) == -->
+                <section class="exercises">
+                   <ol start="10">
+                      <li>
+                          <span class="ex-number">1.10</span> <div class="ex-title">Un obus</div>
+                          <p>Un obus de masse $M = 5 \, \text{kg}$ se déplace à une vitesse $v = 10 \, \text{m/s}$ dans l'espace explose en deux parties de masses égales.</p>
+                           <ol>
+                              <li>Si le premier fragment a une vitesse $v_1 = -2 \, \text{m/s}$ (relativement au référentiel initial), quelle est la vitesse du deuxième fragment ?</li>
+                              <li>Quelle est l'énergie cinétique totale initiale et finale ?</li>
+                              <li>Quelle est l'énergie cinétique associée au mouvement du centre de masse avant et après l'explosion ?</li>
+                              <li>Quelle est l'énergie cinétique totale initiale et finale pour un observateur dans le repère du centre de masse de l'obus?</li>
+                              <li>Discutez les résultats</li>
+                          </ol>
+                      </li>
+                       <li>
+                          <span class="ex-number">1.11</span> <div class="ex-title">Un haltère</div>
+                          <p>Un haltère est constitué de 2 masses égales reliées par une tige de masse négligeable de longueur $2a$. L'haltère est collé sur une table-tournante qui tourne à la vitesse angulaire $\omega$. L'haltère est orienté selon un rayon, son milieu étant situé à une distance $R$ du centre de la table-tournante. Quel est le moment cinétique total de l'haltère (par rapport au centre de la table)?</p>
+                       </li>
+                   </ol>
+               </section>
+                <!-- == End Content from page 32 (PDF page number) == -->
+
+                <!-- == Start Content from page 33 (PDF page number) == -->
+                 <section class="exercises">
+                   <ol start="12">
+                       <li>
+                          <span class="ex-number">1.12</span> <div class="ex-title">Potentiel unidimensionnel</div>
+                          <p>Une particule ponctuelle de masse $m$ est soumise au potentiel 1-D :
+                          $$ V(x) = 4x^2 - \frac{1}{2}x^4 + \frac{1}{50}x^6 $$
+                          Approximer au second ordre la solution $x(t)$ autour de $x = 0$.
+                          </p>
+                      </li>
+                      <li>
+                          <span class="ex-number">1.13</span> <div class="ex-title">Deux corps</div>
+                           <figure style="float:right; width: 250px; margin-left: 15px;">
+                               <div class="placeholder">[Image Placeholder: Car M on a banked turn with angle theta. Velocity v into page. Acceleration a towards center of turn.]</div>
+                               <figcaption><strong>Figure 1.13</strong> Problème 1.7.</figcaption>
+                           </figure>
+                           <p>Deux corps de masses $M$ et $m \ll M$ gravitent l'un autour de l'autre. Décrire le mouvement radial ($r(t)$) de la masse $m$ autour de la masse $M$. (Faites les approximations nécessaires en remplaçant le potentiel efficace par une série de Taylor tronquée au second ordre).</p>
+                          <div class="clear"></div>
+                       </li>
+                       <li>
+                          <span class="ex-number">1.14</span> <div class="ex-title">2<sup>e</sup> loi de Kepler</div>
+                          <p>Selon la 2<sup>e</sup> loi de Kepler relative au mouvement planétaire (trajectoire elliptique), la droite joignant le Soleil et une planète balaie des aires égales en des temps égaux. Montrer que ce phénomène découle de la conservation du moment cinétique.</p>
+                      </li>
+                      <li>
+                          <span class="ex-number">1.15</span> <div class="ex-title">Champ de force</div>
+                          <p>Un champ de force est donné par :</p>
+                           $$ \mathbf{F}_1 = \left( 2x(y-1)+ze^z, 4y+x^2, e^x - \frac{1}{z} \right) $$
+                           <p>Une particule de masse $m$ est déplacée dans ce champ par une force externe $\mathbf{F}_{\text{EXT}}$, le long de la trajectoire :
+                           $$ \mathbf{r}(t) = (\cos t, \sin t, t) \quad t \in [\pi, 3\pi/4] $$
+                           </p>
+                           <ol>
+                               <li>Cette force $\mathbf{F}_1$ est-elle dérivée d'un potentiel ? Si oui, quel est ce potentiel ?</li>
+                               <li>Quelle est la variation d'énergie cinétique du système lors du parcours de la trajectoire $\mathbf{r}(t)$ ?</li>
+                           </ol>
+                       </li>
+                   </ol>
+                </section>
+                 <!-- == End Content from page 33 (PDF page number) == -->
+
+                 <!-- == Start Content from page 34 (PDF page number) == -->
+                 <!-- Placeholder for smiley face icon -->
+                  <p style="text-align:center; font-size: 2em;">☺</p>
+                 <!-- == End Content from page 34 (PDF page number) == -->
+
+                 <!-- == Start Content from page 35 (PDF page number) == -->
+                  <h1 class="chapter-title">Chapitre 2: FORMALISME DE LAGRANGE</h1>
+
+                  <aside class="chapter-toc-sidebar">
+                       <h4>Chapitre 2</h4>
+                       <ul>
+                           <li><strong>2.1 Coordonnées généralisées ... 36</strong></li>
+                           <li><strong>2.2 Principe de base ... 38</strong></li>
+                           <li><strong>2.3 Variation fonctionnelle ... 41</strong></li>
+                           <li><strong>2.4 La fonction $L(q_i, \dot{q}_i, t)$ ... 51</strong></li>
+                           <li><strong>2.5 Coordonnées curvilignes ... 58</strong></li>
+                           <li><strong>2.6 Contraintes holonomes et non-holonomes ... 69</strong></li>
+                           <li><strong>2.7 Lois de conservation et constantes du mouvement ... 76</strong></li>
+                           <li><strong>2.8 Invariance de jauge ... 96</strong></li>
+                           <li><strong>2.9 Quelques caractéristiques, propriétés, limites... ... 104</strong></li>
+                           <li><strong>2.10 Symétrie de l'espace-temps ★★ ... 108</strong></li>
+                           <li><strong>2.11 Exercices ... 120</strong></li>
+                       </ul>
+                  </aside>
+
+                  <p>
+                      <span style="font-size:1.5em; float:left; line-height:1; margin-right:5px;">L</span>E FORMALISME DE LAGRANGE permet d'étudier une vaste gamme de problèmes en mécanique. En ce sens, il est équivalent au formalisme de Newton mais, il a sur ce dernier un certain nombre d'avantages. D'abord, il est fondé sur un principe théorique fondamental et élégant. Il utilise des quantités scalaires plutôt que vectorielles et cela permet de lui donner une forme indépendante des coordonnées utilisées.
+                  </p>
+                  <div class="clear"></div> <!-- Clear the float -->
+                  <!-- == End Content from page 35 (PDF page number) == -->
+
+                  <!-- == Start Content from page 36 (PDF page number) == -->
+                   <p>
+                       C'est également la porte d'entrée à une foule de méthodes qui forment la base de la physique moderne en mécanique quantique et dans les théories de champs classiques et quantiques.
+                  </p>
+                  <p>
+                       Nous présenterons d'abord la méthode dans un cadre assez simple pour ensuite en souligner certaines limites d'application. L'intérêt et les avantages de ce formalisme deviendront graduellement évidents.
+                  </p>
+
+                  <h2>2.1 Coordonnées généralisées</h2>
+
+                  <figure style="float:right; width: 250px; margin-left: 15px;">
+                       <div class="placeholder">[Image Placeholder: Portrait of Joseph-Louis Lagrange.]</div>
+                       <figcaption><strong>Figure 2.1</strong> (Originally 5.2) Joseph Louis, comte de Lagrange, né Giuseppe Lodovico de Lagrangia, (1736 - 1813).</figcaption>
+                  </figure>
+
+                  <p>
+                       Afin de souligner l'invariance de forme selon les types de coordonnées utilisées, nous parlerons de <em>coordonnées généralisées</em> que nous noterons $q_i$. Elles sont absolument quelconques sauf pour les limitations que nous verrons dans la section sur les contraintes.
+                  </p>
+
+                  <div class="remark">
+                       <div class="remark-title"><span class="info-icon">i</span>Remarque 2.1</div>
+                       <strong>Rappel historique : Joseph Louis de Lagrange</strong><br/>
+                       Joseph Louis, comte de Lagrange (en italien Giuseppe Lodovico de Lagrangia), né à Turin le 25 janvier 1736 et mort à Paris le 10 avril 1813 (à 77 ans), est un mathématicien, physicien mécanicien et astronome italien.<br/>
+                       <strong>En mathématiques :</strong>
+                       <ul>
+                           <li>Fondateur du calcul des variations avec Euler et de la théorie des formes quadratiques ;</li>
+                           <li>Démontre le théorème de Wilson sur les nombres premiers et la conjecture de Bachet sur la décomposition d'un entier en quatre carrés ;</li>
+                            <li>On lui doit un cas particulier du théorème auquel on donnera son nom en théorie des groupes, un autre sur les fractions continues, l'équation différentielle de Lagrange.</li>
+                       </ul>
+                       <strong>En physique :</strong>
+                       <ul>
+                           <li>Précise le principe de moindre action, avec le calcul des variations, vers 1756 ;</li>
+                           <li>Invente la fonction de Lagrange, qui vérifie les équations de Lagrange ;</li>
+                           <li>Développe la mécanique analytique, vers 1788, pour laquelle il introduit les multiplicateurs de Lagrange ;</li>
+                           <li>Entreprend aussi des recherches importantes sur le problème des trois corps en astronomie, un de ses résultats étant la mise en évidence des points de libration (dits points de Lagrange) (1772).</li>
+                       </ul>
+                  </div>
+                   <div class="clear"></div>
+                   <!-- == End Content from page 36 (PDF page number) == -->
+
+                   <!-- == Start Content from page 37 (PDF page number) == -->
+                   <figure>
+                       <div class="placeholder">[Image Placeholder: Two points P1 and P2. Multiple possible paths (C1 to C6, colored) connecting them.]</div>
+                       <figcaption><strong>Figure 2.2</strong> Trajectoires entre points $P_1$ et $P_2$.</figcaption>
+                   </figure>
+                   <!-- == End Content from page 37 (PDF page number) == -->
+
+                   <!-- == Start Content from page 38 (PDF page number) == -->
+                   <h2>2.2 Principe de base</h2>
+                   <p>
+                       Nous discutons ici d'une particule ponctuelle dont la position instantanée est donnée par les trois nombres notés $\{q_i | i = 1,2,3\}$. Cette particule suit une trajectoire qui se développe avec le temps $t$ et dont l'équation
+                   </p>
+                   <div class="equation">
+                       <div class="eq-content"> $q_i = q_i(t), \quad i = 1, 2, 3$ </div>
+                       <div class="eq-number">(2.1)</div>
+                   </div>
+                   <p>
+                       est le résultat recherché. Le long de la trajectoire, on définira les composantes de la vitesse généralisée $\{\dot{q}_i | i = 1,2,3\}$ définies par
+                   </p>
+                    <div class="equation">
+                       <div class="eq-content"> $\dot{q}_i = \frac{d}{dt}q_i(t), \quad i = 1, 2, 3.$ </div>
+                       <div class="eq-number">(2.2)</div>
+                   </div>
+                   <p>
+                       Notre expérience consiste en une source de particules (identiques, avec les mêmes conditions initiales) que nous situons au point $P_1$ et en un détecteur que nous situons en $P_2$. À un temps noté $t_1$ nous émettons une particule en $P_1$ (de coordonnée $q_i(t_1)$). Nous ne nous intéressons qu'aux particules détectées en $P_2$ à un temps $t_2$ tel que $t_2 - t_1$ est le même pour toutes les expériences. Nous répétons l'expérience un bon nombre de fois. À priori, il y a un nombre infini de trajectoires possibles pour les particules satisfaisant les paramètres de l'expérience : $\mathcal{C}_0, \mathcal{C}_1, \mathcal{C}_2, \mathcal{C}_3, ...$ (voir figure 2.2). Pour les distinguer les unes des autres, utilisons le paramètre $\alpha$ tel que la trajectoire $\mathcal{C}_{\alpha}$ obéit aux équations
+                   </p>
+                    <div class="equation">
+                       <div class="eq-content"> $q_i = q_i^{(\alpha)}(t)$ </div>
+                       <div class="eq-number">(2.3)</div>
+                   </div>
+                   <!-- == End Content from page 38 (PDF page number) == -->
+
+                   <!-- == Start Content from page 39 (PDF page number) == -->
+                   <p>
+                       où, pour un $i$ donné $q_i^{(\alpha)}(t) \neq q_i^{(\alpha')}(t)$ pour $\alpha \neq \alpha'$ (deux trajectoires différentes). Cependant, ayant observé l'expérience à de multiples reprises, nous constatons que les particules ayant satisfait les paramètres de l'expérience ont <em>toutes</em> utilisé la même trajectoire, disons $\mathcal{C}_0$. La nature semble donc préférer cette trajectoire et la choisit toujours.
+                   </p>
+                   <p>
+                       La méthode de Lagrange compare les trajectoires possibles entre elles, assigne une quantité à chaque trajectoire et nous donne un critère pour choisir la bonne. Pour ce faire, nous calculerons (en principe) une quantité, notée $S(\alpha)$, qui caractérise la trajectoire $\alpha$
+                   </p>
+                    <div class="equation">
+                       <div class="eq-content"> $S(\alpha) = \int_{t_1}^{t_2} L(q_i^{(\alpha)}(t), \dot{q}_i^{(\alpha)}(t), t) dt$ </div>
+                       <div class="eq-number">(2.4)</div>
+                   </div>
+                   <p>
+                       où la fonction $L$, qui reste à déterminer, dépend des $q_i(t)$, des $\dot{q}_i(t)$ et, possiblement, explicitement de $t$ lui-même. On aurait pu prévoir que $L$ ait une dépendance en $\ddot{q}_i$— mais l'expérience nous indique que ce n'est pas nécessaire (pour la plupart des systèmes physiques fondamentaux). Ayant calculé (en principe) $S(\alpha)$ pour toutes les trajectoires, nous décidons de la bonne en comparant les différentes valeurs obtenues pour $S$. Pour pouvoir choisir un $\alpha$ donné, il s'offre à nous une variété de critère de sélection : On peut choisir que $S$ prenne une valeur particulière en ce point (cette méthode est un peu trop arbitraire et se généralise mal) ou que $S$ ait un comportement particulier. Le comportement le plus simple à identifier, c'est celui d'un point stationnaire, là où $S$ est un extremum.
+                   </p>
+                   <!-- == End Content from page 39 (PDF page number) == -->
+
+                   <!-- == Start Content from page 40 (PDF page number) == -->
+                   <p>
+                       C'est le cas de $\bar{\alpha}$ sur la figure 2.3, mais également de $\alpha'$. Dans ce qui suit, nous supposerons toujours qu'il s'agit d'un minimum $\bar{\alpha}$ (bien que ce soit difficilement démontrable en général, c'est le Principe de Moindre Action). Nous écrirons donc la condition qui décrit le minimum de $S(\alpha)$
+                   </p>
+                   <div class="equation">
+                       <div class="eq-content"> $\left.\frac{dS(\alpha)}{d\alpha}\right|_{\bar{\alpha}} = 0 \implies \delta S|_{\bar{\alpha}} = 0$ </div>
+                       <div class="eq-number">(2.5 - Condition de stationnarité)</div>
+                   </div>
+                    <p>
+                       et qui définit $\bar{\alpha}$ et fixe ainsi la <em>bonne</em> trajectoire (la trajectoire physique) sur laquelle $S$ prend la valeur extrême (minimale) $S(\bar{\alpha})$.
+                   </p>
+
+                    <figure>
+                       <div class="placeholder">[Image Placeholder: Plot of Action S vs path parameter alpha. The curve has a minimum at alpha-bar (S_alpha_bar) and another local minimum/extremum at alpha_1 (S_alpha_1).]</div>
+                       <figcaption><strong>Figure 2.3</strong> Minimisation de l'action.</figcaption>
+                   </figure>
+                    <!-- == End Content from page 40 (PDF page number) == -->
+
+                    <!-- == Start Content from page 41 (PDF page number) == -->
+                     <h2>2.3 Variation fonctionnelle</h2>
+                    <p>
+                        La quantité $S$ s'appelle l'<strong>action</strong> et le principe énoncé ci-dessus est le <strong>principe de moindre action</strong>. C'est un principe variationnel, c'est-à-dire nous recherchons un point fixe (stationnaire) de $S$ tel que la variation $\delta S = 0$. Aujourd'hui, on tend à baser toutes les lois de la physique sur de tels principes.
+                    </p>
+                     <p>Ci-dessus nous avons écrit</p>
+                     <div class="equation">
+                        <div class="eq-content"> $\delta S = 0$ </div>
+                        <div class="eq-number">(2.6)</div>
+                    </div>
+                    <p>
+                        comme si la variation de $S$ en était une au sens habituel, c'est-à-dire le long d'une trajectoire ($dS$). Or, ce n'est pas le cas du tout, la variation est faite en comparant des trajectoires, c'est-à-dire en variant selon les fonctions $q_i^{(\alpha)}(t)$ (voir figure 2.4). On notera de telles variations à l'aide du symbole $\delta$ (variation fonctionnelle) plutôt que du symbole $d$ qui est utilisé pour le calcul différentiel ordinaire. La distinction est claire
+                    </p>
+                    <div class="equation">
+                       <div class="eq-content"> $\text{différence } d \quad : \quad dq_i^{(\alpha)}(t) = q_i^{(\alpha)}(t+dt) - q_i^{(\alpha)}(t)$ </div>
+                       <div class="eq-number">(2.7)</div>
+                   </div>
+                    <div class="equation">
+                       <div class="eq-content"> $\text{variation } \delta \quad : \quad \delta q_i^{(\alpha)}(t) = q_i^{(\alpha')}(t) - q_i^{(\alpha)}(t).$ </div>
+                       <div class="eq-number">(2.8)</div>
+                   </div>
+                    <!-- == End Content from page 41 (PDF page number) == -->
+
+    </main>
+
+    <footer>
+        <!-- Potential footer content like page numbers or navigation could go here -->
+    </footer>
+
+    <script>
+        // Optional: Configure KaTeX auto-render
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                // Trust the input, useful for environments like \begin{equation}
+                 trust: true,
+                 // Enable macros if needed, e.g., \mathbf
+                 macros: {
+                    "\\vb": "\\mathbf{#1}"
+                 }
+            });
+        });
+    </script>
+
+</body>
+</html>
