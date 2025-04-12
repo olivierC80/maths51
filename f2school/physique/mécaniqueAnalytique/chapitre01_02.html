@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mécanique Analytique - SMP5 - Lagrangien</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX Auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; padding: 15px; max-width: 900px; margin-left: auto; margin-right: auto; background-color: #f8f9fa; }
+        .slide { border: 1px solid #ccc; border-radius: 8px; background-color: #fff; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1, h2, h3, h4, h5, h6 { color: #343a40; margin-top: 1.5em; }
+        h1 { text-align: center; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 10px; }
+        h2 { color: #880e4f; border-bottom: 1px solid #880e4f; padding-bottom: 5px; }
+        h3 { color: #0d47a1; }
+        .placeholder { border: 2px dashed #e74c3c; padding: 20px; text-align: center; color: #c0392b; margin: 20px 0; background-color: #fdedec; font-weight: bold; border-radius: 5px;}
+        .page-break { text-align: center; font-style: italic; color: #7f8c8d; margin: 40px 0; border-top: 1px dashed #bdc3c7; padding-top: 10px; }
+        code { background-color: #e9ecef; padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #c7254e;}
+        .definition { border-left: 4px solid #17a2b8; background-color: #e0f7fa; padding: 15px; margin: 1em 0; border-radius: 4px;}
+        .definition strong { color: #007bff; }
+        ul { list-style-type: disc; margin-left: 25px; }
+        li { margin-bottom: 0.8em; }
+        .important-quote { border: 2px solid #007bff; padding: 20px; text-align: center; font-size: 1.1em; color: #0056b3; background-color: #cfe2ff; border-radius: 5px; margin: 20px 0;}
+        .math-block { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 4px; margin: 1em 0; overflow-x: auto; }
+        .example-box { border: 1px solid #28a745; padding: 20px; margin-top: 15px; background-color: #e9f7ef; border-radius: 5px; }
+        .centered-text { text-align: center; }
+        .coordinate-box { border: 1px solid #6c757d; background-color: #e9ecef; padding: 5px 10px; display: inline-block; border-radius: 4px; }
+        .highlight { background-color: #fff3cd; padding: 2px 5px; border-radius: 3px; }
+        .note { font-style: italic; color: #6c757d; margin-top: 10px; }
+        .formula-box { background-color: #e9ecef; border: 1px solid #adb5bd; padding: 20px; margin: 15px 0; border-radius: 5px; text-align: center; }
+        .formula-box span { font-size: 1.5em; }
+    </style>
+</head>
+<body>
+
+<!-- Page 1 -->
+<div class="slide">
+    <div class="page-break">Page 1</div>
+    <h2>Lagrangien d'un système</h2>
+    <p>L' élément central du formalisme lagrangien est la <strong>fonction de Lagrange</strong> notée L et définie par :</p>
+    <div style="display: flex; align-items: center;">
+        <div style="flex-grow: 1;">
+            <div class="placeholder">[Placeholder: Icône "pointer"]</div>
+            <div class="formula-box">
+                <span>$ L = T - V $</span>
+            </div>
+            <div style="display: flex; justify-content: space-around; text-align: center; margin-top: 10px;">
+                <div><strong>Lagrangien</strong></div>
+                <div><strong>Energie cinétique</strong><br>($T$)</div>
+                <div><strong>Energie potentielle</strong><br>($V$)</div>
+            </div>
+            <p class="note">Pour la petite histoire Lagrange notait : $Z = T - V$.</p>
+        </div>
+        <div class="placeholder" style="margin-left: 20px; width: 150px;">[Placeholder: Portrait de Lagrange]</div>
+    </div>
+</div>
+
+<!-- Page 2 -->
+<div class="slide">
+    <div class="page-break">Page 2</div>
+    <h3>Attention</h3>
+    <div class="placeholder">[Placeholder: Icône "pointer"]</div>
+    <div class="formula-box">
+        <span>$ L = L(q_i, \dot{q}_i, t) $</span>
+    </div>
+    <p>Les coordonnées généralisées $q_i$, les vitesses généralisées $\dot{q}_i$ et le temps $t$ sont des <strong>variables indépendantes</strong> dans l'expression du Lagrangien.</p>
+
+    <div class="placeholder">[Placeholder: Icône "pointer"]</div>
+    <div class="important-quote" style="width: fit-content; margin: 10px auto;">Le lagrangien est une fonction d'état</div>
+
+    <div class="placeholder">[Placeholder: Flèche vers le bas]</div>
+
+    <div class="math-block centered-text">
+        (Cela signifie que l'on peut calculer ses dérivées partielles) <br>
+        $ \frac{\partial L}{\partial q_i}\bigg|_{\dot{q}_i, t} $ et $ \frac{\partial L}{\partial \dot{q}_i}\bigg|_{q_i, t} $
+    </div>
+</div>
+
+<!-- Page 3 -->
+<div class="slide">
+    <div class="page-break">Page 3</div>
+    <div class="placeholder">[Placeholder: Icône "pointer"]</div>
+    <h3>N.B.</h3>
+    <div class="important-quote" style="text-align: left; border-color: #dc3545; background-color: #f8d7da; color: #842029;">
+        Pour pouvoir déterminer le lagrangien d'un système mécanique quel qu'il soit, il est impératif de maitriser le calcul de l'énergie cinétique et celui de l'énergie potentielle.
+    </div>
+    <div class="important-quote" style="text-align: left; border-color: #0dcaf0; background-color: #cff4fc; color: #055160;">
+        Faisons le point sur ces deux grandeurs ô combien importantes en mécanique analytique.
+    </div>
+</div>
+
+<!-- Page 4 -->
+<div class="slide">
+    <div class="page-break">Page 4</div>
+    <div class="centered-text">
+        <div style="display: inline-block; background-color: #0d6efd; color: white; border-radius: 50%; width: 50px; height: 50px; line-height: 50px; font-size: 1.5em; margin-bottom: 20px;">1</div>
+    </div>
+    <div class="formula-box" style="background-color: #d1e7ff; border-color: #0d6efd;">
+        <h2 style="color: #0a58ca; border: none;">Energie cinétique</h2>
+    </div>
+</div>
+
+<!-- Page 5 -->
+<div class="slide">
+    <div class="page-break">Page 5</div>
+    <h3>Définition et calcul de l'énergie cinétique d'un solide</h3>
+    <ul>
+        <li>L'énergie cinétique s'exprime en Joules (J = W.s = N.m = kg.m²/s²). Elle est définie par l'intégrale sur le volume $S$ du solide :
+            <div class="math-block">
+            $ T(S/R_g) = \frac{1}{2} \iiint_{M \in S} \vec{V}^2(M/R_g) \rho dV $
+            </div>
+            où $\vec{V}(M/R_g)$ est la vitesse du point $M$ par rapport au référentiel $R_g$, $\rho$ est la masse volumique, et $dV$ l'élément de volume.
+        </li>
+        <li>Elle se calcule par la formule suivante (Théorèmes de König) :
+            <ul>
+                <li><strong>Si A est un point quelconque de S :</strong> (Théorème de Huygens généralisé)
+                    <div class="math-block">
+                    $ T(S/R_g) = \frac{1}{2} M \vec{V}^2(A \in S / R_g) + \frac{1}{2} \vec{\Omega}(S/R_g) \cdot [J_A(S)] \cdot \vec{\Omega}(S/R_g) + M \vec{V}(A \in S / R_g) \cdot (\vec{\Omega}(S/R_g) \land \vec{AG}) $
+                    </div>
+                    <em>(Terme de translation de A + Terme de rotation autour de A + Terme de couplage lié au centre de masse G)</em><br>
+                    ($M$: masse totale, $\vec{\Omega}(S/R_g)$: vecteur rotation de S/Rg, $[J_A(S)]$: tenseur d'inertie de S en A, $\vec{AG}$: vecteur position de G par rapport à A)
+                </li>
+                <li><strong>Si G est le centre d'inertie de S :</strong> (Premier théorème de König)
+                    <div class="math-block">
+                    $ T(S/R_g) = \frac{1}{2} M \vec{V}^2(G \in S / R_g) + \frac{1}{2} \vec{\Omega}(S/R_g) \cdot [J_G(S)] \cdot \vec{\Omega}(S/R_g) $
+                    </div>
+                     <em>(Energie cinétique de translation du centre de masse + Energie cinétique de rotation propre autour de G)</em>
+                </li>
+                 <li><strong>Si O est un point << fixe >> de S dans $R_g$ :</strong> ($\vec{V}(O \in S / R_g) = \vec{0}$) (Second théorème de König)
+                    <div class="math-block">
+                    $ T(S/R_g) = \frac{1}{2} \vec{\Omega}(S/R_g) \cdot [J_O(S)] \cdot \vec{\Omega}(S/R_g) $
+                    </div>
+                    <em>(Energie cinétique de rotation autour du point fixe O)</em>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!-- Page 6 -->
+<div class="slide">
+    <div class="page-break">Page 6</div>
+    <h3>Démonstration (Esquisse pour le théorème généralisé en A)</h3>
+    <ul>
+        <li>On obtient la relation utile de la planche précédente en développant la vitesse de M dans l'intégrale :
+            La vitesse d'un point M du solide s'écrit (formule de Varignon) : $\vec{V}(M/R_g) = \vec{V}(A/R_g) + \vec{\Omega}(S/R_g) \land \vec{AM}$.
+            <div class="math-block">
+            $ 2T(S/R_g) = \iiint_{S} \vec{V}^2(M/R_g) \rho dV = \iiint_{S} \left\| \vec{V}(A/R_g) + \vec{\Omega}(S/R_g) \land \vec{AM} \right\|^2 \rho dV $
+            </div>
+            On développe le carré scalaire: $\| \vec{a} + \vec{b} \|^2 = \|\vec{a}\|^2 + 2\vec{a}\cdot\vec{b} + \|\vec{b}\|^2$.
+            <div class="math-block">
+            $ 2T(S/R_g) = \iiint_{S} \left( \|\vec{V}(A/R_g)\|^2 + 2 \vec{V}(A/R_g) \cdot (\vec{\Omega} \land \vec{AM}) + \|\vec{\Omega} \land \vec{AM}\|^2 \right) \rho dV $
+            </div>
+            On sépare l'intégrale en trois termes.
+            <ul>
+                <li>Terme 1 : $\iiint \|\vec{V}(A/R_g)\|^2 \rho dV = \|\vec{V}(A/R_g)\|^2 \iiint \rho dV = M \vec{V}^2(A/R_g)$.</li>
+                <li>Terme 2 : $\iiint 2 \vec{V}(A/R_g) \cdot (\vec{\Omega} \land \vec{AM}) \rho dV = 2 \vec{V}(A/R_g) \cdot \left( \vec{\Omega} \land \iiint \vec{AM} \rho dV \right)$. Par définition du centre de masse G, $\iiint \vec{AM} \rho dV = M \vec{AG}$. Donc le terme est $2 M \vec{V}(A/R_g) \cdot (\vec{\Omega} \land \vec{AG})$.</li>
+                <li>Terme 3 : $\iiint \|\vec{\Omega} \land \vec{AM}\|^2 \rho dV$. Cette intégrale est liée au tenseur d'inertie en A et vaut $\vec{\Omega} \cdot [J_A(S)] \cdot \vec{\Omega}$.</li>
+            </ul>
+            En combinant :
+             <div class="math-block">
+             $ 2T(S/R_g) = M \vec{V}^2(A/R_g) + 2 M \vec{V}(A/R_g) \cdot (\vec{\Omega} \land \vec{AG}) + \vec{\Omega}(S/R_g) \cdot [J_A(S)] \cdot \vec{\Omega}(S/R_g) $
+             </div>
+        </li>
+        <li>Les 2 premiers termes ne dépendent pas explicitement de la géométrie de la masse (via l'intégration), mais de sa masse totale $M$ et de la position de son centre de masse $G$.</li>
+        <li>Le 3<sup>ème</sup> terme fait apparaître l'opérateur (tenseur) d'inertie $[J_A(S)]$ (voir cours de L2/Mécanique du solide).</li>
+        <li>Pour les 2 cas particuliers (A=G ou A=O fixe) il suffit de prendre A=G ou A=O et certains termes disparaissent logiquement (car $\vec{AG}=0$ si A=G, et $\vec{V}(A/R_g)=0$ si A=O fixe).</li>
+    </ul>
+</div>
+
+<!-- Page 7 -->
+<div class="slide">
+    <div class="page-break">Page 7</div>
+    <h3>Organigramme de calcul de l'énergie cinétique</h3>
+    <div class="placeholder">[Placeholder: Flowchart showing the decision process for calculating T(S/R)]
+        Calcul de T(S/R) -> [Decision: Si (S) possède un point fixe O?]
+        -> Oui -> Calculer T(S/R) = 1/2 Omega . Jo . Omega
+        -> Non -> Calculer T(S/R) = 1/2 M Vg^2 + 1/2 Omega . Jg . Omega
+    </div>
+    <p class="note">Cet organigramme simplifie en ne montrant que les deux cas les plus fréquents (point fixe ou utilisation du centre de masse). La formule générale avec un point A quelconque est moins utilisée en pratique mais reste la base théorique.</p>
+</div>
+
+<!-- Page 8 -->
+<div class="slide">
+    <div class="page-break">Page 8</div>
+    <h3>Exemple 1: session de rattrapage de mars 2015</h3>
+    <p><strong>Barre de longueur 2a, de masse m et de centre d'inertie G</strong></p>
+    <div class="placeholder">[Placeholder: Diagramme d'une barre AB avec G au milieu, un ressort entre C (fixe sur Oy) et G, la barre pivote autour de O ? Non, l'extrémité A glisse sur Ox, B glisse sur Oy. Theta est l'angle avec l'axe Ox.]</div>
+    <p class="note">Le système semble être une barre AB dont l'extrémité A glisse sans frottement sur l'axe Ox et l'extrémité B sur l'axe Oy. Le centre G est relié à un point C sur l'axe Oy par un ressort. $\theta$ est l'angle entre la barre et l'axe Ox.</p>
+</div>
+
+<!-- Page 9 -->
+<div class="slide">
+    <div class="page-break">Page 9</div>
+    <p>Calcul de l'énergie cinétique $T(AB/R)$ pour l'Exemple 1.</p>
+    <p>Le solide n'a pas de point fixe. On utilise le premier théorème de König (calcul en G).</p>
+    $$ T(AB/R) = \frac{1}{2} M \vec{V}^2(G/R) + \frac{1}{2} \vec{\Omega}(AB/R) \cdot [J_G(AB)] \cdot \vec{\Omega}(AB/R) $$
+    <ul>
+        <li><strong>Position de G :</strong> G est le milieu de AB. Si A=(xA, 0) et B=(0, yB), avec $x_A^2 + y_B^2 = (2a)^2$. On peut aussi utiliser l'angle $\theta$. $x_A = 2a \cos \theta$, $y_B = 2a \sin \theta$. Le centre G a pour coordonnées :
+            <div class="math-block">
+            $ \vec{OG} = \begin{pmatrix} x_G \\ y_G \end{pmatrix} = \begin{pmatrix} a \cos \theta \\ a \sin \theta \end{pmatrix} $
+            </div>
+        </li>
+        <li><strong>Vitesse de G :</strong> On dérive $\vec{OG}$ par rapport au temps.
+            <div class="math-block">
+            $ \vec{V}(G/R) = \begin{pmatrix} \dot{x}_G \\ \dot{y}_G \end{pmatrix} = \begin{pmatrix} -a \dot{\theta} \sin \theta \\ a \dot{\theta} \cos \theta \end{pmatrix} $
+            </div>
+            Le carré de la vitesse de G est : $\vec{V}^2(G/R) = (\dot{x}_G)^2 + (\dot{y}_G)^2 = (-a\dot{\theta}\sin\theta)^2 + (a\dot{\theta}\cos\theta)^2 = a^2\dot{\theta}^2(\sin^2\theta + \cos^2\theta) = a^2\dot{\theta}^2$.
+        </li>
+        <li><strong>Rotation :</strong> Le mouvement est plan, le vecteur rotation est perpendiculaire au plan (Oxy) : $\vec{\Omega}(AB/R) = \dot{\theta} \vec{e}_z$.</li>
+        <li><strong>Terme de rotation :</strong> $\frac{1}{2} \vec{\Omega} \cdot [J_G] \cdot \vec{\Omega} = \frac{1}{2} \dot{\theta} \vec{e}_z \cdot [J_G] \cdot \dot{\theta} \vec{e}_z = \frac{1}{2} I_{Gz} \dot{\theta}^2$, où $I_{Gz}$ est le moment d'inertie de la barre par rapport à l'axe $(\text{G}, \vec{e}_z)$.</li>
+        <li><strong>Moment d'inertie $I_{Gz}$ :</strong> Pour une barre homogène de masse $m$ et de longueur $2a$, le moment d'inertie par rapport à un axe perpendiculaire passant par G est $I_{Gz} = \frac{1}{12} m (2a)^2 = \frac{1}{3} m a^2$.
+            <em>(Note: La diapo calcule $I_{Gz}$ par intégration $\int r^2 dm$. Soit $\lambda = m/(2a)$ la masse linéique. $dm = \lambda dr$. L'axe est Gz. On intègre de $r=-a$ à $r=+a$.
+            <div class="math-block">
+            $ I_{Gz} = \int_{-a}^{+a} r^2 (\lambda dr) = \lambda \int_{-a}^{+a} r^2 dr = \lambda \left[ \frac{r^3}{3} \right]_{-a}^{+a} = \lambda \left( \frac{a^3}{3} - \frac{(-a)^3}{3} \right) = \lambda \frac{2a^3}{3} = \frac{m}{2a} \frac{2a^3}{3} = \frac{ma^2}{3} $
+            </div>
+            Le résultat est cohérent.)</em>
+        </li>
+        <li><strong>Energie cinétique totale :</strong>
+            <div class="math-block">
+            $ T(AB/R) = \frac{1}{2} m (a^2\dot{\theta}^2) + \frac{1}{2} \left( \frac{ma^2}{3} \right) \dot{\theta}^2 $
+            </div>
+            <div class="math-block">
+            $ T(AB/R) = \frac{1}{2} ma^2 \dot{\theta}^2 \left( 1 + \frac{1}{3} \right) = \frac{1}{2} ma^2 \dot{\theta}^2 \left( \frac{4}{3} \right) = \frac{2}{3} ma^2 \dot{\theta}^2 $
+            </div>
+        </li>
+    </ul>
+    <p class="note">Calcul effectué en G car le solide n'admet pas de point fixe.</p>
+</div>
+
+<!-- Page 10 -->
+<div class="slide">
+    <div class="page-break">Page 10</div>
+    <h3>Exemple 2: un ancien examen de mécanique du solide (Janvier 2012)</h3>
+    <div class="placeholder">[Placeholder: Diagramme d'un solide (disque ou toupie?) en rotation, avec des angles d'Euler (psi, theta, phi) et des repères (Xo,Yo,Zo) et (x,y,z)]</div>
+    <p class="note">Le diagramme montre un solide (S) (peut-être un disque ou une toupie) avec son centre C. Il y a un point O qui semble être un point fixe. Le mouvement est décrit par les angles d'Euler: précession $\psi$, nutation $\theta$, rotation propre $\varphi$.</p>
+</div>
+
+<!-- Page 11 -->
+<div class="slide">
+    <div class="page-break">Page 11</div>
+    <p>Calcul de l'énergie cinétique pour l'Exemple 2.</p>
+    <div class="math-block">
+     Au cours du mouvement, on a toujours $ \tan \theta = \frac{l}{r} \implies \theta = \text{Arc tan}\left(\frac{l}{r}\right) = \text{Cte} $
+    </div>
+    <p class="note">Cette relation $\tan \theta = l/r = \text{Cte}$ suggère qu'il s'agit peut-être d'un cône roulant sans glisser sur un plan, où $\theta$ est le demi-angle au sommet constant. Cela simplifie le problème car $\dot{\theta}=0$.</p>
+    <p>Le solide (S) a un point fixe O. On utilise le second théorème de König :</p>
+    <div class="math-block">
+    $ T(S/R_0) = \frac{1}{2} \vec{\Omega}(S/R_0)^T \cdot [J_O(S)] \cdot \vec{\Omega}(S/R_0) $
+    </div>
+    <p>Le vecteur rotation $\vec{\Omega}$ en termes d'angles d'Euler est (convention ZXZ ou autre à préciser): $\vec{\Omega} = \dot{\psi}\vec{k}_0 + \dot{\theta}\vec{u} + \dot{\varphi}\vec{k}$, où $\vec{k}_0$ est l'axe Z fixe, $\vec{u}$ l'axe des nœuds, $\vec{k}$ l'axe de rotation propre.</p>
+    <p>Si le solide est de révolution autour de l'axe $(\text{O}, \vec{k})$ (axe $z$ lié au solide), le tenseur d'inertie en O est diagonal dans le repère lié au solide $(O, \vec{i}, \vec{j}, \vec{k})$: $[J_O(S)] = \text{diag}(A, A, C)$.</p>
+    <p>Les composantes de $\vec{\Omega}$ dans ce repère sont ($\Omega_x, \Omega_y, \Omega_z$). Avec la convention ZXZ : $\Omega_x = \dot{\psi}\sin\theta\sin\varphi + \dot{\theta}\cos\varphi$, $\Omega_y = \dot{\psi}\sin\theta\cos\varphi - \dot{\theta}\sin\varphi$, $\Omega_z = \dot{\psi}\cos\theta + \dot{\varphi}$.</p>
+    <p>L'énergie cinétique devient $T = \frac{1}{2}(A\Omega_x^2 + A\Omega_y^2 + C\Omega_z^2) = \frac{1}{2} A(\Omega_x^2 + \Omega_y^2) + \frac{1}{2} C\Omega_z^2$.</p>
+    <p>$\Omega_x^2 + \Omega_y^2 = (\dot{\psi}\sin\theta)^2 + \dot{\theta}^2$.</p>
+    <p>$\Omega_z = \dot{\psi}\cos\theta + \dot{\varphi}$.</p>
+    <p>Donc $ T = \frac{1}{2} A(\dot{\psi}^2\sin^2\theta + \dot{\theta}^2) + \frac{1}{2} C(\dot{\psi}\cos\theta + \dot{\varphi})^2 $. C'est l'expression générale pour une toupie.</p>
+    <p>Si, comme suggéré par $\theta=\text{Cte}$, on a $\dot{\theta}=0$, l'expression se simplifie :</p>
+     <div class="math-block">
+     $ T(S/R_0) = \frac{1}{2} A \dot{\psi}^2 \sin^2\theta + \frac{1}{2} C (\dot{\varphi} + \dot{\psi} \cos\theta)^2 $
+     </div>
+     <p class="note">La diapo montre cette formule. A et C sont les moments d'inertie principaux en O. </p>
+    <p class="note">Calcul effectué en O qui est un point fixe.</p>
+</div>
+
+<!-- Page 12 -->
+<div class="slide">
+    <div class="page-break">Page 12</div>
+     <div class="centered-text">
+        <div style="display: inline-block; background-color: #6f42c1; color: white; border-radius: 50%; width: 50px; height: 50px; line-height: 50px; font-size: 1.5em; margin-bottom: 20px;">2</div>
+    </div>
+    <div class="formula-box" style="background-color: #f0eaff; border-color: #6f42c1;">
+        <h2 style="color: #491f8f; border: none;">Energie potentielle</h2>
+    </div>
+</div>
+
+<!-- Page 13 -->
+<div class="slide">
+    <div class="page-break">Page 13</div>
+    <h3>Définition et calcul de l'énergie potentielle</h3>
+    <p>L'énergie potentielle mécanique $V$ est une énergie qui est échangée par un corps lorsqu'il se déplace tout en étant soumis à une force <strong>conservative</strong> $\vec{F}$.</p>
+    <p>Elle est exprimée en joules (J).</p>
+    <p>Cette énergie potentielle, définie à une <strong>constante arbitraire près</strong>, ne dépend que de la position du corps dans l'espace (configuration $q$). Cette énergie est appelée potentielle car elle peut être emmagasinée par un corps et peut ensuite être transformée par exemple en énergie cinétique lorsque le corps est mis en mouvement.</p>
+    <p>De manière plus précise, la variation d'énergie potentielle $dV$ d'un corps lorsqu'il se déplace entre deux points infiniment voisins est l'opposé du travail $dW$ fourni par la force conservative $\vec{F}$ à laquelle il est soumis entre ces deux points. Ainsi le travail élémentaire d'une force conservative vérifie la relation:</p>
+    <div class="formula-box">
+        <span>$ dW = \vec{F} \cdot d\vec{r} = -dV $</span>
+    </div>
+    <p>Cela implique que la force conservative dérive d'un potentiel : $\vec{F} = -\vec{\nabla} V$.</p>
+</div>
+
+<!-- Page 14 -->
+<div class="slide">
+    <div class="page-break">Page 14</div>
+    <p>Chaque force conservative donne naissance à une énergie potentielle. On peut ainsi distinguer :</p>
+    <ul>
+        <li>Énergie potentielle de pesanteur (champ uniforme $\vec{g}$),</li>
+        <li>Énergie potentielle gravitationnelle (champ en $1/r^2$),</li>
+        <li>Énergie potentielle élastique (force de rappel $k\Delta l$),</li>
+        <li>Énergie potentielle électrostatique,</li>
+        <li>Énergie potentielle magnétique,</li>
+        <li>Énergie potentielle de pression (thermodynamique).</li>
+    </ul>
+</div>
+
+<!-- Page 15 -->
+<div class="slide">
+    <div class="page-break">Page 15</div>
+    <h4>1- Calcul de l'énergie potentielle de pesanteur</h4>
+    <p>Dans un champ de pesanteur uniforme $\vec{g}$, la force est $\vec{P}=m\vec{g}$. Si $\vec{g}=-g\vec{e}_z$ (axe z ascendant), $dW = m\vec{g}\cdot d\vec{r} = -mg dz$. Comme $dW = -dV$, on a $dV = mg dz \implies V_{pes} = mgz + \text{cte}$.</p>
+    <p>Si $\vec{g}=+g\vec{e}_z$ (axe z descendant), $dW = mg dz = -dV \implies V_{pes} = -mgz + \text{cte}$.</p>
+    <div class="formula-box">
+        <span>$ V_{pes} = \pm mgz + \text{cte} $</span><br>
+        $ = \begin{cases} +mgz + \text{cte} & \text{si l'axe de projection } z \text{ est ascendant } \uparrow \\ -mgz + \text{cte} & \text{si l'axe de projection } z \text{ est descendant } \downarrow \end{cases} $
+    </div>
+
+    <p><strong>Exemple (Pendule simple) :</strong></p>
+    <div style="display: flex; justify-content: space-around;">
+        <div class="placeholder">[Placeholder: Diagramme pendule simple avec axe z descendant]</div>
+        <div class="placeholder">[Placeholder: Diagramme pendule simple avec axe z ascendant]</div>
+    </div>
+    <p>Dans le cas de la figure de gauche (axe z descendant depuis O), l'altitude $z$ de la masse $m$ est $z = l \cos \theta$. La formule donne $V_{pes} = -mgz + \text{cte} = -mgl \cos \theta + \text{cte}$. Si on choisit $V=0$ pour $\theta=\pi/2$ (point le plus bas si origine en O), alors cte=0.</p>
+    <div class="formula-box">
+        <span>$ V = -mgl \cos \theta $</span> (avec axe z descendant et V=0 à $\theta=\pi/2$)
+    </div>
+</div>
+
+<!-- Page 16 -->
+<div class="slide">
+    <div class="page-break">Page 16</div>
+    <h4>2- Calcul de l'énergie potentielle élastique</h4>
+    <p>Pour un ressort idéal de raideur $k$ et de longueur à vide $l_0$, la force de rappel est $F = -k(l-l_0)$ (en considérant l'allongement $x=l-l_0$). Le travail élémentaire est $dW = F dl = -k(l-l_0) dl$. Comme $dW=-dV_{ela}$, on a $dV_{ela} = k(l-l_0) dl$. En intégrant :</p>
+    <div class="formula-box">
+        <span>$ V_{ela} = \frac{1}{2}k(l-l_0)^2 + \text{cte} $</span>
+    </div>
+    <p>Pour calculer l'énergie potentielle élastique, il suffit de déterminer la longueur $l$ du ressort à un instant $t$ donné.</p>
+</div>
+
+<!-- Page 17 -->
+<div class="slide">
+    <div class="page-break">Page 17</div>
+    <h3>Organigramme de calcul de l'énergie potentielle</h3>
+     <div class="placeholder">[Placeholder: Flowchart pour le calcul de V]
+        Calcul de l'énergie potentielle -> [Split]
+        -> Branche Pesanteur: V_pes = +/- mgz -> [Decision: Axe z?] -> +si Ascendant / -si Descendant
+        -> Branche Elastique: V_ela = 1/2 k(l-l0)^2 -> Il suffit de déterminer l
+     </div>
+     <p class="note">L'énergie potentielle totale est la somme des différentes contributions : $V = V_{pes} + V_{ela} + \dots$</p>
+</div>
+
+<!-- Page 18 -->
+<div class="slide">
+    <div class="page-break">Page 18</div>
+    <h3>Exemple: session de rattrapage de mars 2015</h3>
+    <div class="placeholder">[Placeholder: Reprise du diagramme de la barre AB glissant sur les axes, avec ressort entre C et G]</div>
+    <p>Calcul de l'énergie potentielle totale $V = V_{pes} + V_{el}$.</p>
+    <ul>
+        <li><strong>Pesanteur :</strong> $V_{pes} = mg y_G$. On choisit l'axe y ascendant. D'après la page 9, $y_G = a \sin \theta$.
+            <div class="math-block">$ V_{pes} = mga \sin \theta $</div>
+        </li>
+        <li><strong>Élastique :</strong> $V_{el} = \frac{1}{2}k(l-l_0)^2$, où $l$ est la longueur instantanée du ressort CG. C a pour coordonnées $(0, y_C)$ (fixe). G a pour coordonnées $(a\cos\theta, a\sin\theta)$. La longueur $l$ est la distance CG.
+            $l^2 = (x_G - x_C)^2 + (y_G - y_C)^2 = (a\cos\theta - 0)^2 + (a\sin\theta - y_C)^2$.
+            <em>(Note: La diapo semble supposer que la longueur utile pour l'énergie est $l=a\cos\theta$? Cela paraît incorrect. Si C est à l'origine O, $l=a$. Si le ressort est horizontal, $l = x_G = a\cos\theta$. Il faut clarifier la géométrie du ressort).</em>
+            En supposant que le ressort est horizontal et que son allongement est lié à la coordonnée $x_G$, avec une longueur à vide $l_0'$, alors $l = x_G = a\cos\theta$? Ou peut-être le ressort agit sur la longueur $l$ de la barre ? Non, $l$ est la longueur du ressort.
+            La diapo écrit : $V_{el} = \frac{1}{2}k(l-l_0)^2$ où $l=a\cos\theta$. Ceci suppose que le ressort relie C=(0, a sin theta) à G=(a cos theta, a sin theta) et que $l_0$ est la longueur à vide? Ou que le ressort relie O à A et $l=x_A$? Ou que le ressort est horizontal C(0,yG) G(xG,yG) et $l = xG = a \cos\theta$? Adoptons cette dernière hypothèse compatible avec la diapo.
+             <div class="math-block">
+             $ V_{el} = \frac{1}{2}k(a \cos \theta - l_0)^2 $
+             </div>
+        </li>
+        <li><strong>Potentiel Total :</strong>
+             <div class="math-block">
+             $ V = V_{pes} + V_{el} = mga \sin \theta + \frac{1}{2}k(a \cos \theta - l_0)^2 $
+             </div>
+        </li>
+    </ul>
+</div>
+
+<!-- Page 19 -->
+<div class="slide">
+    <div class="page-break">Page 19</div>
+    <h3>Remarque importante concernant la constante</h3>
+    <p>L'énergie potentielle est définie à une constante additive près.</p>
+    <p>Celle-ci n'a <strong>aucune influence</strong> sur les résultats puisque l'énergie potentielle est utilisée dans des opérations de dérivation (calcul d'une force conservative $\vec{F}=-\vec{\nabla}V$) ou de variation (calcul d'un travail $W_{AB}=V(A)-V(B)$). Ces deux opérations faisant disparaître la constante, le choix de cette dernière est donc purement arbitraire et sa détermination se fait généralement de façon à simplifier les calculs (par exemple, $V=0$ à l'infini ou à une position d'équilibre).</p>
+    <div class="placeholder">[Placeholder: Icône "pointer"]</div>
+    <p><strong>N.B.</strong></p>
+    <p class="important-quote" style="border-color: #ffc107; background-color: #fff3cd; color: #664d03;">
+        En mécanique analytique, on ne se préoccupe pas de la constante sauf mention contraire.
+    </p>
+</div>
+
+<!-- Page 20 -->
+<div class="slide">
+    <div class="page-break">Page 20</div>
+    <h2>§-1-3</h2>
+    <h3>Lagrangien de quelques systèmes simples</h3>
+    <p class="note">Cette section va probablement présenter des exemples concrets de calcul de $L=T-V$.</p>
+</div>
+
+</body>
+</html>
