@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanique Analytique - SMP5 - Chapitres 2, 3 & 4</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #a02c2c; /* Dark red color similar to slides */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #a02c2c;
+            padding-bottom: 10px;
+        }
+        h2 {
+             text-align: center;
+        }
+        h3.chapter-title {
+             background-color: #a02c2c;
+             color: white;
+             padding: 10px;
+             border-radius: 5px;
+             text-align: center;
+        }
+        h4.subtitle {
+             text-align: center;
+             color: #802020;
+        }
+         h5 {
+             color: #601010;
+             margin-top: 1.5em;
+         }
+         h6 {
+             color: #601010;
+             margin-top: 1em;
+             font-size: 1.1em;
+         }
+        .image-placeholder {
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px auto; /* Centered */
+            color: #777;
+            font-style: italic;
+            min-height: 50px; /* Ensure placeholder is visible */
+            max-width: 80%; /* Control image size */
+        }
+         .image-placeholder.inline {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px;
+         }
+         .image-placeholder.float-right {
+             width: 150px;
+             float: right;
+             margin-left: 15px;
+             margin-bottom: 10px;
+         }
+         .clear-float {
+            clear: both;
+         }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        blockquote {
+            border-left: 4px solid #a02c2c;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            background-color: #f9f2f2;
+        }
+        strong {
+            color: #601010;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+        }
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 25px;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .contact-info p {
+             margin: 5px 0;
+        }
+         .centered-text {
+             text-align: center;
+         }
+         .boxed-formula {
+             background-color: #e0e8f0;
+             padding: 10px 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+         }
+         .boxed-text {
+             background-color: #e0e8f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+         }
+         /* Torseur notation style */
+         .torseur {
+             display: inline-block;
+             text-align: center;
+             vertical-align: middle;
+             margin: 0 0.2em;
+         }
+         .torseur-content {
+             display: block;
+             border-left: 1px solid;
+             border-right: 1px solid;
+             padding: 0 0.3em;
+         }
+         .torseur-element {
+             display: block;
+         }
+         .torseur-point {
+             font-size: 0.7em;
+             margin-top: -0.3em;
+         }
+         .comoment {
+            display: inline-block;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 0.9em;
+            height: 0.9em;
+            line-height: 0.9em;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 0.2em;
+            font-weight: bold;
+            vertical-align: middle;
+         }
+         .pointer-icon {
+            display: inline-block; /* Prevents block behavior */
+            font-size: 1.5em; /* Adjust size */
+            margin-right: 5px; /* Space from text */
+            vertical-align: middle; /* Align with text */
+             /* Using a simple Unicode character */
+             content: "☞";
+         }
+         .arrow-up {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 2L2 12h5v10h10V12h5L12 2z"/></svg>');
+         }
+         .arrow-down {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 22L22 12h-5V2H7v10H2l10 10z"/></svg>');
+          }
+          .arrow-label {
+             text-align: center;
+             font-weight: bold;
+             color: #a02c2c;
+             margin-top: -5px;
+             margin-bottom: 10px;
+         }
+         .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+         }
+         table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            width: auto;
+         }
+         th, td {
+             border: 1px solid #ccc;
+             padding: 8px;
+             text-align: center;
+         }
+         th {
+             background-color: #f2f2f2;
+             color: #601010;
+         }
+         caption {
+             caption-side: bottom;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-top: 5px;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- START PREVIOUSLY GENERATED CONTENT -->
+    <!-- Chapitre 2 & 3: Slides 1 to 117 -->
+     <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p><p>Professeur de l'enseignement supérieur</p><p>Bureau 37 département de physique</p><p>Faculté des sciences</p><p>Agadir</p><p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... other slides Chap 2 & 3 ... -->
+     <section class="slide">
+        <h5>Remarque importante</h5>
+        <div class="boxed-text">
+            L'intégrale première de Painlevé $(T_2 - T_0 - U)$ ne contient jamais explicitement le temps.
+        </div>
+        <p class="explanation">Cela vient du fait que l'hypothèse H3 impose $\partial L / \partial t = 0$, ce qui élimine toute dépendance temporelle explicite des coefficients $a_{ij}, b_i, c$ et de $U$. L'intégrale est donc une fonction de $q_i, \dot{q}_i$ seulement.</p>
+    </section>
+
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+     <hr style="border-top: 3px solid #a02c2c; margin: 40px 0;">
+
+     <!-- CHAPTER 4 START -->
+
+     <!-- Page 118 (OCR 1) : Chap 4 Title Slide -->
+    <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p>
+            <p>Professeur de l'enseignement supérieur</p>
+            <p>Bureau 37 département de physique</p>
+            <p>Faculté des sciences</p>
+            <p>Agadir</p>
+            <p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+
+    <!-- Page 119 (OCR 2) : Chap 4 Objectives -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 4 : EQUILIBRE ET STABILITE</h3>
+
+        <h5>Objectifs pédagogiques</h5>
+        <ul>
+            <li><span class="pointer-icon"></span>Introduire la notion d'équilibre.</li>
+             <li class="explanation">Définir mathématiquement ce qu'est une position d'équilibre d'un système mécanique (vitesses et accélérations nulles, forces généralisées nulles).</li>
+            <li><span class="pointer-icon"></span>Introduire la notion de stabilité.</li>
+             <li class="explanation">Définir la stabilité d'un équilibre (stabilité de Liapunov) : si le système est légèrement perturbé autour d'une position d'équilibre, reste-t-il au voisinage de cette position ?</li>
+            <li><span class="pointer-icon"></span>Etudier le cas des systèmes conservatifs.</li>
+             <li class="explanation">Analyser la stabilité des équilibres en utilisant l'énergie potentielle (théorème de Lejeune-Dirichlet).</li>
+            <li><span class="pointer-icon"></span>Etudier le cas des systèmes dissipatifs.</li>
+             <li class="explanation">Analyser la stabilité en présence de forces dissipatives (amortissement), souvent en utilisant les fonctions de Liapunov.</li>
+        </ul>
+    </section>
+
+    <!-- Page 120 (OCR 3) : Chap 4 Concepts -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 4 : EQUILIBRE ET STABILITE</h3>
+
+        <h5>Notions abordées</h5>
+        <ul>
+            <li><span class="pointer-icon"></span><strong>Notion d'équilibre paramétrique</strong></li>
+             <li class="explanation">Une configuration $q_i = q_{ie}$ telle que si le système est placé dans cette configuration avec des vitesses nulles ($\dot{q}_i=0$), il y reste ($\ddot{q}_i=0$).</li>
+            <li><span class="pointer-icon"></span><strong>Notion d'équilibre strict</strong></li>
+             <li class="explanation">Un équilibre paramétrique qui ne dépend pas explicitement du temps.</li>
+            <li><span class="pointer-icon"></span><strong>Système conservatif</strong></li>
+             <li class="explanation">Système où les forces appliquées dérivent d'une énergie potentielle $V(q)$ (ou fonction de force $U(q)$) et où les liaisons sont parfaites. L'énergie mécanique est conservée.</li>
+            <li><span class="pointer-icon"></span><strong>Théorème de Lejeune-Dirichlet</strong></li>
+             <li class="explanation">Théorème donnant une condition suffisante pour la stabilité d'un équilibre d'un système conservatif basée sur les extrema de l'énergie potentielle.</li>
+            <li><span class="pointer-icon"></span><strong>Système dissipatif</strong></li>
+             <li class="explanation">Système comportant des forces qui dissipent l'énergie mécanique (frottements, amortissements).</li>
+            <li><span class="pointer-icon"></span><strong>Théorème de Liapunov</strong></li>
+             <li class="explanation">Méthode générale (directe) pour étudier la stabilité d'un équilibre (même pour des systèmes non conservatifs) en utilisant une fonction auxiliaire (fonction de Liapunov). Aussi, méthode indirecte par linéarisation.</li>
+        </ul>
+    </section>
+
+    <!-- Page 121 (OCR 4) : Chap 4 Plan -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 4 : EQUILIBRE ET STABILITE</h3>
+
+        <h5>PLAN DU CHAPITRE 4</h5>
+        <ol>
+            <li><strong>Notion d'équilibre</strong></li>
+            <li><strong>Notion de stabilité</strong></li>
+            <li><strong>Systèmes conservatifs</strong>
+                <ul><li>Théorème de Lejeune-Dirichlet</li></ul>
+            </li>
+            <li><strong>Linéarisation des équations de Lagrange</strong> (pour l'étude de la stabilité près de l'équilibre - méthode de Liapunov indirecte)</li>
+            <li><strong>Systèmes dissipatifs</strong>
+                 <ul><li>Théorème de Liapunov (méthode directe)</li></ul>
+            </li>
+        </ol>
+    </section>
+
+    <!-- Page 122 (OCR 5) : Equilibrium and Stability Intro -->
+    <section class="slide centered-text">
+        <h4>Equilibre et stabilité</h4>
+        <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+            <div>
+                <div class="image-placeholder" style="width: 180px;">[Image: Portrait de Lejeune Dirichlet]</div>
+                <p>Lejeune Dirichlet (1805-1859)</p>
+                <p><u>Approche énergétique</u></p>
+            </div>
+            <div>
+                 <div class="image-placeholder" style="width: 180px;">[Image: Portrait de Aleksandr Lyapunov]</div>
+                 <p>Mikhailovich Lyapunov (1857-1918)</p>
+                 <p><u>Approche dynamique</u></p>
+            </div>
+        </div>
+        <p class="explanation">Deux approches principales pour étudier la stabilité : l'approche énergétique (basée sur l'analyse de l'énergie potentielle, principalement pour les systèmes conservatifs) et l'approche dynamique (basée sur l'analyse des équations du mouvement ou l'utilisation de fonctions de Liapunov, plus générale).</p>
+    </section>
+
+    <!-- Page 123 (OCR 6) : Methods overview -->
+    <section class="slide">
+        <p>L'objectif de ce chapitre est de présenter les différentes méthodes permettant de définir et d'étudier la stabilité d'une position d'équilibre. Deux méthodes peuvent être envisagées:</p>
+        <div class="boxed-text">
+             <strong>Méthode directe: théorème de Lejeune-Dirichlet</strong>
+             <p>Ce théorème permet de définir les positions d'équilibre indépendamment des équations de mouvement (en cherchant où les forces généralisées s'annulent, souvent où le potentiel est stationnaire).</p>
+             <p>Ce théorème est particulièrement bien adapté aux systèmes dont les forces données dérivent d'un potentiel indépendant du temps (systèmes conservatifs scléronomes).</p>
+             <p class="explanation">Il permet de conclure à la stabilité en examinant la nature de l'extremum du potentiel.</p>
+        </div>
+        <div class="boxed-text">
+            <strong>Méthode générale: écriture des équations du mouvement linéarisées</strong>
+             <p>On écrit les équations de Lagrange, on les linéarise au voisinage d'une position d'équilibre, puis on analyse la stabilité du système linéaire obtenu (par exemple, en étudiant les valeurs propres de la matrice du système).</p>
+             <p>Permet de conclure sur la stabilité (théorème de Liapunov par linéarisation).</p>
+              <p class="explanation">Cette méthode est plus générale (applicable aux systèmes non conservatifs) mais nécessite d'écrire et d'analyser les équations du mouvement.</p>
+        </div>
+    </section>
+
+    <!-- Page 124 (OCR 7) : Section 1 Title -->
+    <section class="slide centered-text">
+        <h4>§-1-</h4>
+        <h3>Notion d'équilibre</h3>
+    </section>
+
+    <!-- Page 125 (OCR 8) : Equilibrium Definition -->
+    <section class="slide">
+        <p>Un système est en <strong>équilibre</strong> lorsqu' il est <strong>immobile</strong> par rapport à un repère galiléen. Dans ce cas, ses vitesses $\dot{q}_i$ et ses accélérations $\ddot{q}_i$ sont nulles.</p>
+        <p>Si les forces appliquées dérivent d'une fonction de force $U$, la puissance virtuelle des efforts extérieurs $P^*(F_{ext})$ doit être nulle pour tout déplacement virtuel $\delta q_i$ (ou vitesse virtuelle $\dot{q}_i^*$) compatible avec la position d'équilibre. Or $P^*(F_{ext}) = \sum Q_i \dot{q}_i^*$. Si les $\dot{q}_i^*$ sont indépendants, cela implique que toutes les forces généralisées $Q_i$ doivent être nulles à l'équilibre.</p>
+        <p>Si $Q_i = \partial U / \partial q_i$, la condition d'équilibre $Q_i=0$ s'écrit :</p>
+        <div class="boxed-formula">
+             $$ Q_i = \frac{\partial U}{\partial q_i} = 0 $$
+        </div>
+        <p class="explanation">La slide lie cela à $P^*(F_{ext}) = dU/dt - \partial U/\partial t = 0$? Non, c'est $P_{reelle} = dU/dt - \partial U/\partial t$. La condition d'équilibre vient de $Q_i=0$.</p>
+         <div class="boxed-formula" style="margin-top: 20px;">
+            $$ Q_i = \frac{\partial U}{\partial q_i} = 0 $$
+             <img src="placeholder_double_arrow_white.png" alt="<->" style="position: absolute; left: -50px; top: 50%; transform: translateY(-50%); height: 30px; filter: invert(100%);">
+         </div>
+        <p>Les positions d'équilibre $q_i^e$ sont donc obtenues pour les valeurs des paramètres qui annulent les forces généralisées :</p>
+        <div class="boxed-formula">
+             $$ q_i = q_i^e = Cte $$
+             <p>(configuration constante)</p>
+        </div>
+        <p class="explanation">La condition est $Q_i(q^e) = 0$ pour tout $i$.</p>
+    </section>
+
+    <!-- Page 126 (OCR 9) : Equilibrium Theorem / Example -->
+    <section class="slide">
+        <h5>Théorème</h5>
+        <div class="boxed-text">
+            Les positions d'équilibre sont obtenues pour les valeurs des paramètres $q_i^e$ qui rendent la fonction de force U (ou l'énergie potentielle V) <strong>stationnaire</strong>.
+            $$ \left. \frac{\partial U}{\partial q_i} \right|_{q=q^e} = 0 \quad \left( \text{ou } \left. \frac{\partial V}{\partial q_i} \right|_{q=q^e} = 0 \right) \quad \forall i $$
+        </div>
+
+        <h5>Exemple classique : pendule double voir TD1</h5>
+        <div class="image-placeholder">[Image: Pendule double plan, angles alpha et beta avec la verticale descendante.]</div>
+        <p class="explanation">Référence à un exercice où les positions d'équilibre d'un pendule double sont déterminées.</p>
+    </section>
+
+    <!-- Page 127 (OCR 10) : Example Calculation Equilibrium -->
+    <section class="slide">
+        <p>Pour l'exemple du pendule double (avec masses égales $m$, longueurs égales $l$), la fonction de force (opposé du potentiel gravitationnel, à une constante près) est :</p>
+        <div class="boxed-formula">
+             $$ U(\alpha, \beta) = mgl(3\cos\alpha + \cos\beta) + Cte $$
+        </div>
+         <p class="explanation">Attention : Cette fonction de force $U$ semble avoir un signe positif, elle correspondrait donc à $-V$. Vérifions. $V = -mgy_A - mgy_B = -mgl\cos\alpha - mg(l\cos\alpha + l\cos\beta) = -mgl(2\cos\alpha + \cos\beta)$. Si $U = -V$, on devrait avoir $U = mgl(2\cos\alpha + \cos\beta)$. La fonction $U = mgl(3\cos\alpha + \cos\beta)$ est peut-être issue d'un autre problème (e.g., centre de masse de la 1ere barre?). Utilisons la fonction donnée.</p>
+        <p>Les positions d'équilibre sont données par $\partial U / \partial \alpha = 0$ et $\partial U / \partial \beta = 0$ :</p>
+        <div class="boxed-formula">
+            $$ \frac{\partial U}{\partial \alpha} = -3mgl \sin\alpha = 0 \implies \sin\alpha = 0 \implies \alpha = 0 \text{ ou } \alpha = \pi $$
+            $$ \frac{\partial U}{\partial \beta} = -mgl \sin\beta = 0 \implies \sin\beta = 0 \implies \beta = 0 \text{ ou } \beta = \pi $$
+        </div>
+         <p class="explanation">Note: la slide indique $-3mgl \sin\beta$ pour $\partial U / \partial \beta$, ce qui est incorrect pour la fonction $U$ donnée. Avec $U = mgl(3\cos\alpha + \cos\beta)$, on a $\partial U / \partial \beta = -mgl \sin\beta$.</p>
+        <p>D'où les 4 positions d'équilibre :</p>
+        <div class="boxed-formula">
+             $$ (\alpha, \beta) = (0, 0) $$
+             $$ (\alpha, \beta) = (0, \pi) $$
+             $$ (\alpha, \beta) = (\pi, 0) $$
+             $$ (\alpha, \beta) = (\pi, \pi) $$
+        </div>
+    </section>
+
+    <!-- Page 128 (OCR 11) : Section 2 Title -->
+    <section class="slide centered-text">
+        <h4>§-2-</h4>
+        <h3>Notion de stabilité</h3>
+    </section>
+
+    <!-- Page 129 (OCR 12) : Stability Definition -->
+    <section class="slide">
+        <p>Une position d'équilibre d'un système matériel est dite <strong>stable</strong> (au sens de Liapunov) si, pour toute petite perturbation initiale (en position et/ou vitesse) par rapport à la position d'équilibre, le système reste indéfiniment dans un voisinage de cette position.</p>
+         <p class="explanation">Formellement : $q^e$ est stable si $\forall \epsilon > 0$, $\exists \delta > 0$ tel que si $\|q(0)-q^e\| < \delta$ et $\|\dot{q}(0)\| < \delta$, alors $\|q(t)-q^e\| < \epsilon$ pour tout $t > 0$.</p>
+        <p>Si le mouvement induit par une perturbation n'a aucun effet (le système reste à l'équilibre) ou si le système reste au voisinage de cette position, l'équilibre est stable.</p>
+        <p>Si le système s'éloigne de la position d'équilibre après une petite perturbation, l'équilibre est <strong>instable</strong>.</p>
+        <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+            <div style="text-align: center;">
+                <div class="image-placeholder">[Image: Bol concave avec une bille au fond.]</div>
+                <p>équilibre stable</p>
+            </div>
+             <div style="text-align: center;">
+                <div class="image-placeholder">[Image: Bol convexe (retourné) avec une bille en équilibre au sommet.]</div>
+                <p>équilibre instable</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page 130 (OCR 13) : Parametric Equilibrium -->
+    <section class="slide">
+        <h5>Equilibre paramétrique</h5>
+        <p>Soit (Σ) un système de solides en mouvement dans un repère galiléen $R_0$. Sa position est repérée par $n$ paramètres $q_i$ (coordonnées généralisées) et le temps $t$. Le mouvement de (Σ) est régi par $n$ équations de Lagrange de la forme :</p>
+        <div class="boxed-formula">
+             $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i $$
+        </div>
+        <p>Une configuration $(q)_e = (q_{1e}, ..., q_{ne})$ définit une position d'<strong>équilibre paramétrique</strong> si :</p>
+        <div class="boxed-text">
+            Ayant placé le système au repos dans la configuration $(q)_e$ à l'instant $t_0$ :
+            $$ \forall i, \quad q_i(t_0) = q_{ie} $$
+            $$ \forall i, \quad \dot{q}_i(t_0) = 0 $$
+            le système y demeure pour $t > t_0$ : $q_i(t) = q_{ie}$ (constante) pour $t \ge t_0$.
+        </div>
+        <p>Cela implique $\dot{q}_i(t) = 0$ et $\ddot{q}_i(t) = 0$ pour $t \ge t_0$. En reportant dans les équations de Lagrange, la condition d'équilibre est :</p>
+        $$ \left. \left( \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} \right) \right|_{q=q_e, \dot{q}=0} = Q_i(q_e, 0, t) $$
+        $$ A_i(q_e, 0, 0) = Q_i(q_e, 0, t) $$
+         <p class="explanation">Si $T=T_2+T_1+T_0$, le terme $A_i$ évalué à $\dot{q}=0$ peut être non nul si $T_1$ ou $T_0$ dépendent de $q_i$. La condition simplifiée $Q_i(q_e)=0$ vue précédemment suppose $T=T_2$. La condition générale est $A_i(q_e, 0, \ddot{q}=0) = Q_i(q_e, 0, t)$.</p>
+         <p>La condition donnée sur la slide est juste $q_i = q_{ie}$ et $\dot{q}_i = 0$, ce qui définit l'état initial.</p>
+    </section>
+
+    <!-- Page 131 (OCR 14) : Strict Equilibrium -->
+    <section class="slide">
+        <h5>Equilibre strict ou absolu</h5>
+        <p>Si la position de (S) [dans la configuration d'équilibre] ne dépend pas du temps t, l'équilibre paramétrique est un <strong>équilibre strict</strong>.</p>
+        <p>Une position d'équilibre strict $q_i=q_{ie}$ se traduit par l'annulation des forces généralisées (calculées pour $\dot{q}=0$ et $\ddot{q}=0$):</p>
+        <p>Souvent, cela revient à annuler les forces généralisées $Q_i$ qui ne dépendent que de la position :</p>
+        <div class="boxed-formula">
+             $$ Q_i(q_e) = 0 $$
+        </div>
+         <p>Si toutes les forces dérivent d'une fonction de force U (indépendante du temps, $U(q)$), alors la position d'équilibre est donnée par:</p>
+         <div class="boxed-formula">
+             $$ (Q_i)_{q=q_e} = 0 $$
+         </div>
+         <p>soit :</p>
+         <div class="boxed-formula">
+             $$ \left( \frac{\partial U}{\partial q_i} \right)_{q=q_e} = 0 $$
+         </div>
+          <p class="explanation">L'équilibre strict correspond à un point stationnaire de la fonction de force U (ou du potentiel V).</p>
+    </section>
+
+    <!-- Page 132 (OCR 15) : Section 3 Title -->
+    <section class="slide centered-text">
+        <h4>§-3-</h4>
+        <h3>Systèmes conservatifs (cas particulier)</h3>
+        <h3>Théorème de Lejeune-Dirichlet</h3>
+    </section>
+
+    <!-- Page 133 (OCR 16) : Dirichlet Theorem -->
+    <section class="slide">
+        <h5>Théorème de Lejeune Dirichlet</h5>
+        <h6>Théorème de Lejeune Dirichlet - Stabilité des positions d'équilibre</h6>
+        <p>Ce théorème est une condition <strong>suffisante</strong> de stabilité et est considéré comme un cas particulier du théorème de Liapunov.</p>
+        <p><strong>Hypothèses :</strong></p>
+        <ul>
+            <li>L'énergie cinétique $T(\Sigma/R_g)$ ne dépend pas explicitement du temps. (Système scléronome).</li>
+            <li>Les liaisons sont parfaites.</li>
+            <li>Les efforts (forces appliquées) dérivent d'une fonction de force U <strong>schléronome</strong> (indépendante du temps, $U(q)$).</li>
+        </ul>
+        <p class="explanation">Ces hypothèses définissent un système conservatif scléronome, où l'énergie mécanique $E_m = T + V = T - U$ est conservée.</p>
+        <div class="boxed-text">
+            <h6>Théorème</h6>
+            Etant donné un système conservatif (scléronome à liaisons parfaites), tout <strong>maximum local strict</strong> de la fonction de force U (ce qui correspond à un <strong>minimum local strict</strong> du potentiel V = -U) définit une position d'équilibre <strong>stable</strong>.
+        </div>
+    </section>
+
+    <!-- Page 134 (OCR 17) : Single Parameter System Equilibrium -->
+    <section class="slide">
+        <h5>1- Système à un paramètre q :</h5>
+        <h6>a- Positions d'équilibre</h6>
+        <p>Elles sont obtenues en résolvant l'équation $Q=0$, soit $\partial U / \partial q = 0$ (ou $\partial V / \partial q = 0$):</p>
+        <div class="boxed-formula">
+            $$ \frac{dU}{dq} = 0 $$
+        </div>
+        <p>La résolution de cette équation donne les positions d'équilibre $q^*$. Il y a en général plusieurs solutions.</p>
+
+        <h6>b- Stabilité</h6>
+        <p>La stabilité s'étudie en calculant la dérivée seconde de U (ou V) à la position d'équilibre $q_e = q^*$ :</p>
+         <div class="boxed-formula">
+            $$ \left( \frac{d^2 U}{dq^2} \right)_{q=q_e} $$
+            <p class="explanation">Ou de manière équivalente : $\left( \frac{d^2 V}{dq^2} \right)_{q=q_e}$</p>
+         </div>
+    </section>
+
+    <!-- Page 135 (OCR 18) : Single Parameter Stability Condition -->
+    <section class="slide">
+        <p>- Si</p>
+        <div class="boxed-formula">
+            $$ \left( \frac{d^2 U}{dq^2} \right)_{q=q_e} < 0 $$
+             <p class="explanation">(Maximum local strict de U)</p>
+        </div>
+        <p>Alors l'équilibre est <strong>stable</strong>.</p>
+        <p class="explanation">(Cela correspond à $\left( \frac{d^2 V}{dq^2} \right)_{q=q_e} > 0$, un minimum local strict de V).</p>
+
+        <hr style="margin: 30px 0;">
+
+        <p>- Si</p>
+         <div class="boxed-formula">
+            $$ \left( \frac{d^2 U}{dq^2} \right)_{q=q_e} > 0 $$
+             <p class="explanation">(Minimum local strict de U)</p>
+        </div>
+        <p>Alors l'équilibre est <strong>instable</strong>.</p>
+        <p class="explanation">(Cela correspond à $\left( \frac{d^2 V}{dq^2} \right)_{q=q_e} < 0$, un maximum local strict de V).</p>
+
+        <p class="explanation">Si la dérivée seconde est nulle, le test n'est pas concluant et il faut examiner les dérivées d'ordre supérieur.</p>
+    </section>
+
+    <!-- Page 136 (OCR 19) : Example Two-Mass Pendulum -->
+    <section class="slide">
+        <h5>Exemple : équilibre et stabilité d'un pendule à deux masses</h5>
+        <div class="image-placeholder">[Image: Pendule simple (O-m2) avec une masse m1 fixée au point de suspension O. Angle phi avec la verticale descendante.]</div>
+        <p class="explanation">Attention, l'image montre un pendule simple ($m_2$ au bout de $l_2$) avec une masse $m_1$ ajoutée en O. Ce n'est pas un pendule double standard. $l_1=0$ dans ce cas? S'agit-il de deux masses $m_1, m_2$ sur la même tige de longueur $l_2$ articulée en O?</p>
+        <p>Le texte dit "pendule menu de 2 balanciers articulé en O". Cela suggère deux tiges indépendantes $Ol_1$ et $Ol_2$ ? Mais l'image ne montre qu'un angle $\phi$. Hypothèse la plus probable basée sur l'image et le calcul suivant : deux masses $m_1$ et $m_2$ sur la même tige rigide, articulée en O, avec $m_1$ à distance $l_1$ et $m_2$ à distance $l_2$. L'angle avec la verticale est $\phi$.</p>
+        <p>Un pendule menu de 2 balanciers est articulé en O sans frottement. Trouver la condition de stabilité pour la position verticale $\phi = 0$.</p>
+    </section>
+
+    <!-- Page 137 (OCR 20) : Example Calculation Stability -->
+    <section class="slide">
+        <p>Fonction de force U (opposé du potentiel V) :</p>
+        <p>$V = -m_1 g l_1 \cos\phi - m_2 g l_2 \cos\phi = -g(m_1 l_1 + m_2 l_2)\cos\phi$.</p>
+        <p>$U = -V = g(m_1 l_1 + m_2 l_2)\cos\phi + C$.</p>
+        <p class="explanation">La fonction U donnée sur la slide $U = m_2gl_2 \cos\phi - m_1gl_1 \cos\phi + C = g(m_2l_2 - m_1l_1)\cos\phi + C$ est différente. Elle correspondrait à une masse négative $m_1$ ou à une force $m_1g$ dirigée vers le haut? Utilisons la fonction de la slide.</p>
+        <div class="boxed-formula">
+             $$ U = g(m_2 l_2 - m_1 l_1) \cos\phi + C $$
+        </div>
+        <p>- Cas où :</p>
+        <div class="boxed-formula">
+             $$ m_2 l_2 - m_1 l_1 \neq 0 $$
+        </div>
+        <p><strong>a- Positions d'équilibre</strong></p>
+        <div class="boxed-formula">
+             $$ \frac{dU}{d\phi} = -g(m_2 l_2 - m_1 l_1) \sin\phi = 0 $$
+        </div>
+        $$ \implies \sin\phi = 0 \implies \phi = 0 \text{ ou } \phi = \pi $$
+         <div class="boxed-formula">
+             $$ \frac{dU}{d\phi} = 0 \iff
+             \begin{cases} \phi = 0 \\ \text{ou } \phi = \pi \end{cases}
+              $$
+             <p>(position verticale)</p>
+         </div>
+    </section>
+
+
+</body>
+</html>
