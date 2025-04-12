@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mécanique analytique - P. Amiot et L. Marleau</title>
+    <!-- Link KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <!-- Link KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50; /* Dark blue-grey */
+        }
+        h1 {
+            color: #e67e22; /* Orange */
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        h2.authors {
+            text-align: center;
+            color: #8e44ad; /* Purple */
+            margin-top: 0;
+            font-style: italic;
+        }
+        .cover-images, .header-images {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-style: italic;
+            color: #555;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        .toc li {
+            margin-bottom: 5px;
+        }
+        .toc .section-number {
+            display: inline-block;
+            min-width: 40px; /* Adjust as needed */
+            font-weight: bold;
+        }
+         .toc .page-number {
+            float: right;
+            font-style: italic;
+            color: #777;
+         }
+         .toc ul ul {
+             margin-left: 30px; /* Indent sub-sections */
+         }
+        .affiliation {
+            font-size: 0.9em;
+            color: #7f8c8d; /* Grey */
+            margin-top: 10px;
+        }
+        .copyright {
+             font-size: 0.8em;
+             color: #95a5a6; /* Lighter grey */
+             margin-top: 30px;
+        }
+        .foreword-box, .updates-box {
+            border: 1px solid #bdc3c7; /* Light grey border */
+            background-color: #ecf0f1; /* Very light grey background */
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .updates-box h4 {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #34495e; /* Darker blue-grey */
+        }
+        .updates-box ul {
+            list-style: disc;
+            margin-left: 20px;
+        }
+        .chapter-intro {
+            margin-top: 40px;
+            border-top: 2px solid #e67e22; /* Orange top border */
+            padding-top: 20px;
+        }
+        .chapter-toc-sidebar {
+             float: right;
+             width: 30%; /* Adjust as needed */
+             margin-left: 20px;
+             padding: 10px;
+             border: 1px dashed #ccc;
+             background-color: #f9f9f9;
+             font-size: 0.9em;
+        }
+         .chapter-toc-sidebar h4 {
+             margin-top: 0;
+             color: #2980b9; /* Blue */
+         }
+         .chapter-toc-sidebar ul {
+             list-style: none;
+             padding-left: 0;
+         }
+         .chapter-toc-sidebar li {
+            margin-bottom: 3px;
+         }
+         .clear { clear: both; } /* To clear floats */
+
+        /* KaTeX display mode centering */
+        .katex-display { text-align: center; }
+        .katex-display .katex { text-align: center; } /* Force inner center */
+
+        /* Equation numbering */
+        .equation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .equation .eq-content {
+            flex-grow: 1;
+            text-align: center; /* Center the equation content */
+             padding: 0 20px; /* Add padding around equation */
+        }
+        .equation .eq-number {
+            min-width: 40px; /* Ensure space for number */
+            text-align: right;
+            color: #555;
+            font-style: italic;
+        }
+
+        /* Figure styling */
+        figure {
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #eee;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        figcaption {
+            font-style: italic;
+            color: #34495e;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        figure .placeholder {
+            display: block;
+            min-height: 100px; /* Placeholder height */
+            background-color: #e0e0e0;
+            border: 1px dashed #aaa;
+            color: #777;
+            padding: 20px;
+            box-sizing: border-box; /* Include padding in width/height */
+        }
+
+         /* Remarks */
+         .remark {
+             border-left: 4px solid #16a085; /* Teal color */
+             background-color: #f0fdfa;
+             padding: 10px 15px;
+             margin: 15px 0;
+             font-size: 0.95em;
+         }
+         .remark .remark-title {
+             font-weight: bold;
+             color: #117a65; /* Darker Teal */
+             margin-bottom: 5px;
+         }
+         .remark .info-icon { /* Simple text icon for now */
+             display: inline-block;
+             background-color: #16a085;
+             color: white;
+             border-radius: 50%;
+             width: 1.2em;
+             height: 1.2em;
+             line-height: 1.2em;
+             text-align: center;
+             font-style: normal;
+             font-weight: bold;
+             margin-right: 5px;
+         }
+
+         /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .comparison-table th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+        .comparison-table td:first-child { /* Style the first column if needed */
+             font-family: monospace; /* Example: different font for formulas */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- === Page 1: Cover === -->
+    <header>
+        <h1>Mécanique analytique</h1>
+        <h2 class="authors">P. Amiot et L. Marleau</h2>
+    </header>
+
+    <div class="cover-images">
+        [Image Placeholder: Composite of several diagrams illustrating concepts in analytical mechanics]
+        <br>
+        * Top Left: Plot of generalized coordinates $q_i(t)$ vs time $t$, showing two possible paths ($\alpha$, $\alpha'$) between $t$ and $t+dt$.
+        * Top Middle: A spinning top illustrating Euler angles ($\psi, \theta, \phi$) and body-fixed ($x_1, x_2, x_3$) vs space-fixed ($X, Y, Z$) axes.
+        * Top Right: A point P described in spherical coordinates ($r, \theta, \phi$) relative to a Cartesian frame ($x, y, z$).
+        * Bottom Left: A simple pendulum of mass $m$ and length $l$, angle $\theta$, under gravity $\vec{g}$.
+        * Bottom Middle: An Atwood machine with masses $m_1, m_2, m_3$.
+        * Bottom Right: A flexible cable hanging between two points A and B (catenary) under gravity $\vec{g}$, length L.
+    </div>
+    <hr>
+
+    <!-- === Page 3: Title Page === -->
+    <!-- Skipped for brevity, assume it's present -->
+    <!-- === Page 4: Copyright/Colophon === -->
+    <!-- Skipped for brevity, assume it's present -->
+    <hr>
+
+    <!-- === Pages 5-13: Table of Contents (Sommaire) === -->
+    <!-- Skipped for brevity, assume it's present -->
+    <hr>
+
+     <!-- === Pages 15-19: Avant-propos (Foreword) === -->
+    <!-- Skipped for brevity, assume it's present -->
+    <hr>
+
+     <!-- === Page 20: Chapter 1 Start === -->
+    <main class="chapter-intro">
+        <!-- Sidebar removed for clarity in this combined view, assume it was there -->
+        <h1>Chapitre 1: RAPPEL</h1>
+
+        <p>
+            <strong>N</strong>OUS COMMENÇONS par un rappel de la mécanique newtonienne. Ceci nous permettra de mettre en perspective comment les approches lagrangienne et hamiltonienne se distinguent de par leur concepts même si le but ultime est de retrouver les mêmes équations de mouvement et les mêmes résultats physiques. Ce chapitre revoit les notions de base de cinématique, dynamique, travail, énergie et degrés de liberté pour des particules ponctuelles et des systèmes de particules.
+        </p>
+        <div class="clear"></div>
+
+        <!-- == Start Content from page 2 (PDF page number) == -->
+        <h2>1.1 Trajectoire et cinématique d'une particule ponctuelle</h2>
+
+        <p>
+            La particule ponctuelle est sans dimension. C'est une création de l'esprit, un modèle, représentant un objet physique qui n'est animé que d'un mouvement de translation (pas de rotation sur lui-même). On admet ici que notre espace physique est à trois dimensions auquel on adjoint le temps qui n'est pas ici une dimension mais un paramètre immuable et indépendant des objets physiques et de leur évolution dont il sert à mesurer le taux.
+        </p>
+        <p>
+            Nous représentons l'espace physique par un espace à trois dimensions à l'échelle, doté d'une origine notée $O$ et de trois axes orientés. La position instantanée de la particule est notée par un point $P$ dont la position est entièrement définie par un triplet de nombres appelés coordonnées du point et qui mesurent généralement des longueurs ou des angles (voir figure 1.1). Ces coordonnées seront souvent notées $x_i$ ou $q_i$. Il est souvent pratique de parler du vecteur position de la particule, noté $\mathbf{x}$ ou $\mathbf{r}$ qui va de l'origine $O$ au point $P$.
+        </p>
+
+        <figure>
+             <div class="placeholder">[Image Placeholder: 3D Cartesian axes (x, y, z) with origin O. A curve C represents the path of a particle, starting somewhere and ending at point P.]</div>
+             <figcaption><strong>Figure 1.1</strong> Trajet d'une particule</figcaption>
+        </figure>
+
+        <p>
+            L'évolution du système physique sera décrite par une courbe ou trajectoire $\mathcal{C}$, décrivant le déplacement continu du point $P$ dans notre espace de configuration. On conçoit cette évolution comme résultant d'un paramètre invariant qui augmente. On le choisit généralement et pour des raisons pratiques comme étant le temps, noté $t$, mais ce choix n'est pas unique. Le point $P$ se déplaçant avec le temps sa position, $\mathbf{x}$, variera dans le temps et la trajectoire sera décrite par $\mathbf{x} = \mathbf{x}(t)$ en terme des composantes par :
+        </p>
+        <!-- == End Content from page 2 (PDF page number) == -->
+
+        <!-- == Start Content from page 3 (PDF page number) == -->
+         <div class="equation">
+             <div class="eq-content"> $x_i = x_i(t), \quad i = 1, 2, 3.$ </div>
+             <div class="eq-number">(1.1)</div>
+         </div>
+
+        <p>
+            Qui dit mouvement pense intuitivement à une rapidité de mouvement. Cette notion, ce concept est quantifié par la définition de la vitesse $\mathbf{V}$
+        </p>
+        <div class="equation">
+            <div class="eq-content"> $\mathbf{V}(t) = \frac{d}{dt}\mathbf{x}(t) \equiv \dot{\mathbf{x}}(t).$ </div>
+            <div class="eq-number">(1.2)</div>
+        </div>
+
+        <p>
+            Notons par la lettre $u$ le paramètre (arbitraire) dont la variation génère la trajectoire (il peut être ou non le temps). Alors la longueur $s$ de la trajectoire entre $u_0$ et $u_1$, est donnée par :
+        </p>
+         <div class="equation">
+             <div class="eq-content"> $s(u_0, u_1) = \int_{u_0}^{u_1} du \sqrt{\sum_i \left(\frac{dx_i}{du}\right)^2}$ </div>
+             <div class="eq-number">(1.3)</div>
+         </div>
+        <p>
+             où $u$ varie de façon monotone entre $u_0$ et $u_1$. Alors on peut écrire (voir figure 1.2) :
+        </p>
+         <div class="equation">
+             <div class="eq-content"> $\mathbf{V} = \frac{d\mathbf{x}}{dt} = \frac{ds}{dt} \frac{d\mathbf{x}}{ds} = v \frac{d\mathbf{x}}{ds}$ </div>
+             <div class="eq-number">(1.4)</div>
+         </div>
+         <!-- == End Content from page 3 (PDF page number) == -->
+
+         <!-- == Start Content from page 4 (PDF page number) == -->
+         <p>
+             On voit immédiatement que :
+         </p>
+          <div class="equation">
+             <div class="eq-content"> $\frac{d\mathbf{x}}{ds} = \mathbf{e}_{||}$ </div>
+             <div class="eq-number">(1.5)</div>
+         </div>
+         <p>
+              un vecteur unitaire dans la direction du vecteur $\mathbf{T}$ qui donne la tangente à la trajectoire au point $P$. En effet
+         </p>
+           <div class="equation">
+             <div class="eq-content"> $\mathbf{e}_{||} = \lim_{\Delta s \to 0} \frac{\Delta \mathbf{x}}{\Delta s} = \frac{d\mathbf{x}}{ds}$ </div>
+             <div class="eq-number">(1.6)</div>
+         </div>
+
+         <p>
+              On obtient ainsi $\mathbf{V} = v \mathbf{e}_{||}$ où $\mathbf{e}_{||}$ donne la direction et $v$ la grandeur de la vitesse (vectorielle) $\mathbf{V}$. Par abus de langage, $v$ s'appelle aussi la vitesse. Ce qu'il faut souligner, c'est que $\mathbf{V}$ est toujours tangent (c'est un vecteur) à la trajectoire. D'ailleurs, pourvu que le paramètre $p$ varie de façon monotone (et continue) le vecteur $\frac{d\mathbf{x}}{dp}$ est tangent à la trajectoire, le cas $\mathbf{V} = \frac{d\mathbf{x}}{dt}$ n'est qu'un cas particulier.
+         </p>
+
+         <figure>
+              <div class="placeholder">[Image Placeholder: 3D axes (x, y, z). A curve C representing a trajectory. A point X on the curve. Another point x + Δx slightly further along the curve. The vector Δx = Δs * e_|| points along the tangent T from X to x + Δx.]</div>
+              <figcaption><strong>Figure 1.2</strong> Déplacement le long d'une trajectoire courbe.</figcaption>
+         </figure>
+
+         <p>
+              Intuitivement la vitesse $\mathbf{V}$ peut varier le long de la trajectoire (voir figure 1.3). Pour quantifier cet effet nous définissons l'accélération $\mathbf{a}$
+         </p>
+         <div class="equation">
+             <div class="eq-content"> $\mathbf{a} = \frac{d\mathbf{V}}{dt} = \frac{d^2\mathbf{x}}{dt^2} \equiv \ddot{\mathbf{V}} \equiv \ddot{\mathbf{x}}$ </div>
+             <div class="eq-number">(1.7)</div>
+         </div>
+         <p>et clairement</p>
+          <div class="equation">
+             <div class="eq-content"> $\mathbf{a} = \frac{d(v\mathbf{e}_{||})}{dt} = \frac{dv}{dt}\mathbf{e}_{||} + v\frac{d\mathbf{e}_{||}}{dt}$ </div>
+             <div class="eq-number">(1.8)</div>
+         </div>
+         <!-- == End Content from page 4 (PDF page number) == -->
+
+         <!-- == Start Content from page 5 (PDF page number) == -->
+         <p>
+             Parce que $\mathbf{e}_{||} \cdot \mathbf{e}_{||} = 1$ alors $\frac{d}{dt}(\mathbf{e}_{||} \cdot \mathbf{e}_{||}) = 2\mathbf{e}_{||} \cdot \frac{d\mathbf{e}_{||}}{dt} = 0$. Ainsi $\frac{d\mathbf{e}_{||}}{dt}$ est perpendiculaire à $\mathbf{e}_{||}$ qui est tangent à la trajectoire. Donc $\frac{d\mathbf{e}_{||}}{dt}$ est normal à cette trajectoire. Appelons $\mathbf{e}_{\perp}$ le vecteur unitaire normal à la trajectoire (dans la direction de $\frac{d\mathbf{e}_{||}}{dt}$, c'est-à-dire dans le plan instantané de la trajectoire). On calcule
+         </p>
+          <div class="equation">
+             <div class="eq-content"> $\frac{d\mathbf{e}_{||}}{dt} = \left|\frac{d\mathbf{e}_{||}}{dt}\right| \mathbf{e}_{\perp} = \frac{ds}{dt} \frac{d\mathbf{e}_{||}}{ds} = v \left|\frac{d\mathbf{e}_{||}}{ds}\right| \mathbf{e}_{\perp}.$ </div>
+             <div class="eq-number">(1.9)</div>
+         </div>
+         <p>
+             On écrit par définition, $\rho^{-1} = \left|\frac{d\mathbf{e}_{||}}{ds}\right|$. On a donc pour $\mathbf{a}$
+         </p>
+          <div class="equation">
+             <div class="eq-content"> $\mathbf{a} = \frac{dv}{dt}\mathbf{e}_{||} + \frac{v^2}{\rho}\mathbf{e}_{\perp} = \frac{d^2s}{dt^2}\mathbf{e}_{||} + \frac{v^2}{\rho}\mathbf{e}_{\perp}.$ </div>
+             <div class="eq-number">(1.10)</div>
+         </div>
+
+         <figure>
+             <div class="placeholder">[Image Placeholder: 3D axes (x, y, z). A curve C. A point on the curve with velocity vector v tangent to C. The acceleration vector a has two components: one tangent (along e_||) and one normal (along e_perp). The normal component points towards the center of curvature, with magnitude related to radius of curvature rho.]</div>
+             <figcaption><strong>Figure 1.3</strong> Accélération sur une trajectoire courbe.</figcaption>
+         </figure>
+
+         <p>
+             Ainsi l'accélération $\mathbf{a}$ a une composante tangente à la trajectoire ($\mathbf{e}_{||}$) de valeur $\frac{d^2s}{dt^2}$ et une composante normale à la trajectoire ($\mathbf{e}_{\perp}$) de valeur $\frac{v^2}{\rho}$. On peut montrer que $\rho$ est le rayon de courbure de la trajectoire. En effet, dans le voisinage immédiat du point $P$, la trajectoire peut être approximée par un arc de cercle, $\rho$ serait alors le rayon de ce cercle. Plus la trajectoire est courbée autour de $P$, plus la vitesse changera rapidement selon $\mathbf{e}_{\perp}$. De fait, plus $\rho$ sera petit et plus la composante normale de $\mathbf{a}$, $\frac{v^2}{\rho}$, sera grande.
+         </p>
+        <!-- == End Content from page 5 (PDF page number) == -->
+
+        <!-- == Start Content from page 6 (PDF page number) == -->
+        <h2>1.2 Plusieurs particules ponctuelles</h2>
+        <p>
+            Pour représenter la position de $N$ particules dans notre espace de configuration à 3 dimensions nous avons besoin de $N$ triplets de nombres (total $3N$)
+        </p>
+        <div class="equation">
+            <div class="eq-content"> $\mathbf{r}_{\nu} = (x_{\nu 1}, x_{\nu 2}, x_{\nu 3}) \quad ; \quad \nu = 1, 2, ..., N.$ </div>
+            <div class="eq-number">(1.11)</div>
+        </div>
+        <p>
+            L'évolution d'un tel système sera représentée par $N$ trajectoires (une par particule) dans cet espace.
+        </p>
+        <p>
+            Il est souvent utile d'imaginer un espace abstrait comptant $3N$ dimensions, $3N$ coordonnées y sont nécessaires pour décrire la position d'un point de cet espace qui donne à lui seul la position instantanée des $N$ particules. Par un léger abus de notation on note les coordonnées de ce point $\{ x_i ; i = 1, 2, ..., n = 3N \}$ et on peut parler de la trajectoire du système dans cet espace.
+        </p>
+        <p>
+            Ainsi, assez typiquement on écrira alors des expressions comme la force par exemple :
+        </p>
+        <div class="equation">
+            <div class="eq-content"> $F_i(x_j, t) \quad (i^{\text{ème}} \text{ composante}) \quad ; \quad i, j = 1, 2, ..., n.$ </div>
+            <div class="eq-number">(1.12)</div>
+        </div>
+        <!-- == End Content from page 6 (PDF page number) == -->
+
+        <!-- == Start Content from page 7 (PDF page number) == -->
+         <h2>1.3 Éléments de dynamique</h2>
+         <p>
+             Trois postulats proposés par Newton permettent de décrire la dynamique (mouvement) d'un système quelconque de $N$ particules.
+         </p>
+         <ol>
+             <li><strong>Première loi de Newton ou principe de l'inertie :</strong> le mouvement d'un corps isolé est rectiligne uniforme dans un référentiel galiléen.</li>
+             <li><strong>Deuxième loi de Newton ou principe fondamental de la dynamique de translation :</strong> Ce principe relie la force à la masse et l'accélération par l'équation fondamentale du mouvement
+                 <div class="equation">
+                     <div class="eq-content"> $\mathbf{F} = m\mathbf{a}.$ </div>
+                     <div class="eq-number">(1.13)</div>
+                 </div>
+                 où $\mathbf{F}$ désigne la somme des forces extérieures exercées sur l'objet, $m$ est sa masse et $\mathbf{a}$ correspond à l'accélération de son centre d'inertie.
+             </li>
+             <li><strong>Troisième loi de Newton ou principe des actions réciproques :</strong> Tout corps $A$ exerçant une force sur un corps $B$ subit une force d'intensité égale, de même direction mais de sens opposé, exercée par le corps $B$.</li>
+         </ol>
+         <p>
+              L'équation fondamentale du mouvement prend plusieurs formes (pas nécessairement équivalentes)
+         </p>
+         <div class="equation">
+             <div class="eq-content"> $m\frac{d^2\mathbf{r}}{dt^2} = \mathbf{F} \quad ; \quad m\frac{d\mathbf{v}}{dt} = \mathbf{F} \quad ; \quad \frac{d\mathbf{p}}{dt} = \mathbf{F}.$ </div>
+             <div class="eq-number">(1.14)</div>
+         </div>
+         <p>
+             La quantité $\mathbf{F}$ est la force. Elle détermine le système et est déterminée empiriquement, c'est-à-dire c'est l'expérience qui nous en donne l'expression.
+         </p>
+         <!-- == End Content from page 7 (PDF page number) == -->
+
+         <!-- == Start Content from page 8 (PDF page number) == -->
+         <p>Cette expression qui est vraie pour</p>
+         <div class="equation">
+             <div class="eq-content"> $\mathbf{r} = \mathbf{x} = (x_1, x_2, x_3)$ </div>
+             <div class="eq-number">(1.15)</div>
+         </div>
+         <p>le demeure pour un nombre $n$ de degrés de liberté. Pour alléger, écrivons</p>
+          <div class="equation">
+             <div class="eq-content"> $\mathbf{x} = (x_1, x_2, x_3, x_4, ..., x_n)$ </div>
+             <div class="eq-number">(1.16)</div>
+         </div>
+         <p>
+             un vecteur à $n$ composantes. Intégrant $m$ dans $\mathbf{F}$ (qui n'aura plus les dimensions d'une force mais celles d'une accélération) écrivons l'opération de Newton :
+         </p>
+          <div class="equation">
+             <div class="eq-content"> $\ddot{\mathbf{x}} = \mathbf{f}(\mathbf{x}, \dot{\mathbf{x}}, t) \quad ; \quad \text{(1 équation vectorielle à } n \text{ composantes, } n=3N)$ </div>
+             <div class="eq-number">(1.17)</div>
+         </div>
+         <div class="equation">
+             <div class="eq-content"> $\ddot{x}_i = f_i(x_j, \dot{x}_j, t) \quad ; \quad (n \text{ équations scalaires, } i = 1, 2, ..., 3N)$ </div>
+             <div class="eq-number">(1.18)</div>
+         </div>
+         <p>ou encore</p>
+          <div class="equation">
+             <div class="eq-content"> $\ddot{\mathbf{x}}_{\nu} = \mathbf{f}_{\nu}(\mathbf{x}_{\mu}, \dot{\mathbf{x}}_{\mu}, t) \quad ; \quad \nu, \mu = 1, 2, ..., N \text{ particules.}$ </div>
+             <div class="eq-number">(1.19)</div>
+         </div>
+         <div class="equation">
+             <div class="eq-content"> $\text{(N équations vectorielles à 3 composantes)}$ </div>
+             <div class="eq-number">(1.20)</div>
+         </div>
+
+         <p>
+             L'équation de Newton, en tant que loi physique se doit d'obéir à certaines symétries que nous fait découvrir l'observation de la nature. On dit alors que la mécanique classique doit être invariante par rapport aux transformations de Galilée. Cette invariance est valable pour les systèmes physiques fermés.
+         </p>
+          <!-- == End Content from page 8 (PDF page number) == -->
+
+          <!-- == Start Content from page 9 (PDF page number) == -->
+          <p>
+               Il n'y a qu'un seul tel système, c'est l'Univers mais en pratique les effets des corps éloignés sont souvent négligeables et on fait l'approximation que le système est fermé. Cela signifie que tous les corps qui jouent un rôle significatif sur le système sont inclus dans le système. Il n'y a pas de <em>force extérieure</em>. Cette dernière notion de force extérieure peut également être utile, mais nous y reviendrons.
+          </p>
+          <p>
+              L'étude d'un système physique peut se faire entre $t_0$ et $t$ ou entre $t_0 + s$ et $t + s$ (on peut refaire aujourd'hui une expérience faite hier et obtenir les mêmes résultats). Ainsi,
+          </p>
+          <div class="equation">
+              <div class="eq-content"> $\ddot{x}_i = f_i(x_j, \dot{x}_j, t) = f_i(x_j, \dot{x}_j, t + s)$ </div>
+              <div class="eq-number">(1.21)</div>
+          </div>
+          <p>
+              où $s$ est quelconque. On en conclut que $\mathbf{f}$ ne peut dépendre du temps et donc
+          </p>
+           <div class="equation">
+              <div class="eq-content"> $\ddot{x}_i = f_i(x_j, \dot{x}_j) \quad ; \quad n = 3N \text{ équations.}$ </div>
+              <div class="eq-number">(1.22)</div>
+          </div>
+          <p>
+              Postulons que les résultats d'une expérience sont indépendants de l'endroit où elle est faite. Si je déplace d'une même distance orientée, $\mathbf{a}$, chaque particule du système physique alors sa position passe de $\mathbf{x}_{\nu}$ à $\mathbf{x}_{\nu} + \mathbf{a}$ ($\nu$ compte les particules) alors que $\ddot{\mathbf{x}}_{\nu}$ demeure $\ddot{\mathbf{x}}_{\nu}$ puisque $\ddot{\mathbf{a}} = 0$. La loi de Newton $\ddot{\mathbf{x}}_{\nu} = \mathbf{f}_{\nu}(\mathbf{x}_{\mu}, \dot{\mathbf{x}}_{\mu})$ doit être indépendante de $\mathbf{a}$, ce qui impose que $\mathbf{f}_{\nu}$ dépende de $\mathbf{x}_{\mu}$ sous la forme $\mathbf{x}_{\mu} - \mathbf{x}_{\lambda}$ puisque
+          </p>
+           <div class="equation">
+              <div class="eq-content"> $\mathbf{x}_{\mu} - \mathbf{x}_{\lambda} \rightarrow (\mathbf{x}_{\mu} + \mathbf{a}) - (\mathbf{x}_{\lambda} + \mathbf{a}) = \mathbf{x}_{\mu} - \mathbf{x}_{\lambda}$ </div>
+              <div class="eq-number">(1.23)</div>
+          </div>
+          <!-- == End Content from page 9 (PDF page number) == -->
+
+           <!-- == Start Content from page 10 (PDF page number) == -->
+           <p>donc</p>
+           <div class="equation">
+              <div class="eq-content"> $\ddot{\mathbf{x}}_{\nu} = \mathbf{f}_{\nu}(\mathbf{x}_{\mu} - \mathbf{x}_{\lambda}, \dot{\mathbf{x}}_{\mu}).$ </div>
+              <div class="eq-number">(1.24)</div>
+          </div>
+          <p>
+              On sait également par expérience que la physique est la même pour deux observateurs se déplaçant l'un par rapport à l'autre avec une vitesse constante (<em>translation</em> de vitesses). Cela impose soit
+          </p>
+           <div class="equation">
+               <div class="eq-content">
+                   $\mathbf{f}_{\nu} =
+                   \begin{cases}
+                       \mathbf{f}_{\nu}(\mathbf{x}_{\mu} - \mathbf{x}_{\lambda}) \\
+                       \text{ou} \\
+                       \mathbf{f}_{\nu}(\mathbf{x}_{\mu} - \mathbf{x}_{\lambda}, \dot{\mathbf{x}}_{\mu} - \dot{\mathbf{x}}_{\lambda}).
+                   \end{cases}$
+               </div>
+              <div class="eq-number">(1.25)</div>
+          </div>
+          <p>
+              On admet également que la physique au Canada est la même qu'en Australie, même s'ils ont la tête en bas. Par conséquent les lois physiques, comme l'équation de Newton ne peuvent pas dépendre de l'orientation de notre système de référence. Un tel changement d'un angle $\phi$ autour d'un axe $\mathbf{e}_{\perp}$ se note, en coordonnées cartésiennes
+          </p>
+           <div class="equation">
+              <div class="eq-content"> $\mathbf{r} \rightarrow \mathbf{r}' = \mathbf{r} \cos\phi + (\mathbf{e}_{\perp} \times \mathbf{r}) \sin\phi + \mathbf{e}_{\perp} (\mathbf{e}_{\perp} \cdot \mathbf{r}) (1-\cos\phi)$ (Rotation de Rodrigues)</div>
+              <div class="eq-number">(1.26 - Formule générale de rotation)</div>
+          </div>
+          <p>
+              ou, si on écrit $\mathbf{r}$ sous forme (matricielle) d'un vecteur où les éléments sont les composantes de $\mathbf{r}$,
+          </p>
+          <div class="equation">
+              <div class="eq-content"> $\mathbf{r} \rightarrow \mathbf{G}\mathbf{r} \quad ; \text{ où } \mathbf{G} = \text{ matrice } 3 \times 3 \text{ (orthogonale) pour une particule}$ </div>
+              <div class="eq-number">(1.27)</div>
+          </div>
+           <!-- == End Content from page 10 (PDF page number) == -->
+
+           <!-- == Start Content from page 11 (PDF page number) == -->
+           <p>Clairement, si</p>
+           <div class="equation">
+               <div class="eq-content"> $\mathbf{r} \rightarrow \mathbf{G}\mathbf{r}$ </div>
+               <div class="eq-number">(1.28)</div>
+           </div>
+           <p>alors</p>
+            <div class="equation">
+               <div class="eq-content"> $\dot{\mathbf{r}} \rightarrow \mathbf{G}\dot{\mathbf{r}} \quad \text{et} \quad \ddot{\mathbf{r}} \rightarrow \mathbf{G}\ddot{\mathbf{r}}$ </div>
+               <div class="eq-number">(1.29)</div>
+           </div>
+           <p>donc l'invariance de</p>
+           <div class="equation">
+               <div class="eq-content"> $\ddot{\mathbf{r}} = \mathbf{f}(\mathbf{r}, \dot{\mathbf{r}}) \quad \implies \quad \mathbf{G}\ddot{\mathbf{r}} = \mathbf{f}(\mathbf{G}\mathbf{r}, \mathbf{G}\dot{\mathbf{r}})$ </div>
+               <div class="eq-number">(1.30)</div>
+           </div>
+           <p>implique</p>
+           <div class="equation">
+               <div class="eq-content"> $\mathbf{f}(\mathbf{G}\mathbf{r}, \mathbf{G}\dot{\mathbf{r}}) = \mathbf{G}\mathbf{f}(\mathbf{r}, \dot{\mathbf{r}}).$ </div>
+               <div class="eq-number">(1.31)</div>
+           </div>
+           <p>
+               Complétons tout cela avec les autres lois de Newton avant de revenir plus tard sur certaines conséquences des résultats ci-dessus. Dans un système fermé, la loi d'action-réaction stipule que si un corps, noté par l'indice $\nu$ agit avec une force $\mathbf{F}_{\mu\nu}$ sur un corps $\mu$ alors ce corps $\mu$ agit sur $\nu$ avec une force $\mathbf{F}_{\nu\mu} = -\mathbf{F}_{\mu\nu}$. Ainsi si nous n'avons que deux corps, avec $\mathbf{r}_{\nu} = (x_{\nu 1}, x_{\nu 2}, x_{\nu 3})$
+           </p>
+            <div class="equation">
+               <div class="eq-content"> $m_1\ddot{\mathbf{r}}_1 = \mathbf{F}_{12}$ </div>
+               <div class="eq-number">(1.32)</div>
+           </div>
+            <div class="equation">
+               <div class="eq-content"> $m_2\ddot{\mathbf{r}}_2 = \mathbf{F}_{21} = -\mathbf{F}_{12}$ </div>
+               <div class="eq-number">(1.33)</div>
+           </div>
+           <p>ou de façon générale, pour $N$ corps (sans somme sur $\nu$)</p>
+           <div class="equation">
+               <div class="eq-content"> $m_{\nu}\ddot{\mathbf{r}}_{\nu} = \sum_{\mu=1, \mu \neq \nu}^{N} \mathbf{F}_{\nu\mu} = -\sum_{\mu=1, \mu \neq \nu}^{N} \mathbf{F}_{\mu\nu}.$ </div>
+               <div class="eq-number">(1.34)</div>
+           </div>
+           <!-- == End Content from page 11 (PDF page number) == -->
+
+           <!-- == Start Content from page 12 (PDF page number) == -->
+           <p>
+               (un corps n'exerce pas de force externe sur lui-même $\mathbf{F}_{\nu\nu} = 0$ selon la 3e loi de Newton)
+           </p>
+           <p>
+               Cette loi a une conséquence immédiate et importante : la conservation du moment linéaire total. Sommons ci-dessus sur $\nu$
+           </p>
+           <div class="equation">
+               <div class="eq-content"> $\sum_{\nu=1}^{N} m_{\nu}\ddot{\mathbf{r}}_{\nu} = \sum_{\nu=1}^{N} \sum_{\mu=1, \mu \neq \nu}^{N} \mathbf{F}_{\nu\mu} = 0$ </div>
+               <div class="eq-number">(1.35)</div>
+               (car les termes $\mathbf{F}_{\nu\mu}$ et $\mathbf{F}_{\mu\nu}$ s'annulent deux à deux).
+           </div>
+           <p>donc puisque les masses ne changent pas</p>
+           <div class="equation">
+               <div class="eq-content"> $\sum_{\nu=1}^{N} m_{\nu}\ddot{\mathbf{r}}_{\nu} = \frac{d}{dt} \left( \sum_{\nu=1}^{N} m_{\nu}\dot{\mathbf{r}}_{\nu} \right) = 0.$ </div>
+               <div class="eq-number">(1.36)</div>
+           </div>
+           <p>
+               La quantité dérivée est donc une constante dans le temps, c'est-à-dire $\sum_{\nu=1}^{N} m_{\nu}\dot{\mathbf{r}}_{\nu} = \mathbf{C}$. Il est habituel de définir le moment $\mathbf{p}_{\nu} = m_{\nu}\dot{\mathbf{r}}_{\nu}$. Nous aurons donc
+           </p>
+            <div class="equation">
+               <div class="eq-content"> $\sum_{\nu=1}^{N} \mathbf{p}_{\nu} = \mathbf{C} \equiv \mathbf{P} \quad : \text{ le moment linéaire total.}$ </div>
+               <div class="eq-number">(1.37)</div>
+           </div>
+
+           <div class="remark">
+               <div class="remark-title"><span class="info-icon">i</span>Remarque 1.1</div>
+               En conclusion : le moment (linéaire) total d'un système fermé est une constante du mouvement.
+           </div>
+           <!-- == End Content from page 12 (PDF page number) == -->
+
+           <!-- == Start Content from page 13 (PDF page number) == -->
+           <p>On définit le moment angulaire d'une particule par</p>
+           <div class="equation">
+               <div class="eq-content"> $\mathbf{l}_{\nu} = \mathbf{r}_{\nu} \times \mathbf{p}_{\nu} = m_{\nu}\mathbf{r}_{\nu} \times \dot{\mathbf{r}}_{\nu}$ </div>
+               <div class="eq-number">(1.38)</div>
+           </div>
+           <p>donc</p>
+           <div class="equation">
+               <div class="eq-content"> $\dot{\mathbf{l}}_{\nu} = m_{\nu}\dot{\mathbf{r}}_{\nu} \times \dot{\mathbf{r}}_{\nu} + m_{\nu}\mathbf{r}_{\nu} \times \ddot{\mathbf{r}}_{\nu} = 0 + m_{\nu}\mathbf{r}_{\nu} \times \ddot{\mathbf{r}}_{\nu}$ </div>
+               <div class="eq-number">(1.39)</div>
+           </div>
+           <div class="equation">
+               <div class="eq-content"> $= \mathbf{r}_{\nu} \times \mathbf{F}_{\nu} = \mathbf{r}_{\nu} \times \sum_{\mu=1}^{N} \mathbf{F}_{\nu\mu}.$ </div>
+               <div class="eq-number">(1.40)</div>
+           </div>
+           <p>Définissant le moment angulaire total du système</p>
+            <div class="equation">
+               <div class="eq-content"> $\mathbf{L} = \sum_{\nu=1}^{N} \mathbf{l}_{\nu} = \sum_{\nu=1}^{N} m_{\nu}\mathbf{r}_{\nu} \times \dot{\mathbf{r}}_{\nu}$ </div>
+               <div class="eq-number">(1.41)</div>
+           </div>
+
+           <figure>
+               <div class="placeholder">[Image Placeholder: Two points mu and nu. Force F_nu_mu exerted by nu on mu. Force F_mu_nu exerted by mu on nu. These forces are equal and opposite and lie along the line connecting mu and nu.]</div>
+               <figcaption><strong>Figure 1.4</strong> Forces entre deux particules.</figcaption>
+           </figure>
+
+           <p>alors</p>
+           <div class="equation">
+               <div class="eq-content"> $\dot{\mathbf{L}} = \sum_{\nu=1}^{N} \mathbf{r}_{\nu} \times \sum_{\mu=1}^{N} \mathbf{F}_{\nu\mu} = \sum_{\mu, \nu=1}^{N} \mathbf{r}_{\nu} \times \mathbf{F}_{\nu\mu}$ </div>
+               <div class="eq-number">(1.42)</div>
+           </div>
+           <div class="equation">
+               <div class="eq-content"> $= \sum_{\mu, \nu=1, \mu \neq \nu}^{N} \mathbf{r}_{\nu} \times \mathbf{F}_{\nu\mu} \quad \text{(puisque } \mathbf{F}_{\nu\nu} = 0)$ </div>
+               <div class="eq-number">(1.43)</div>
+           </div>
+           <p>En intervertissant les indices $\mu$ et $\nu$ dans la somme et en utilisant $\mathbf{F}_{\mu\nu} = -\mathbf{F}_{\nu\mu}$:</p>
+           $\dot{\mathbf{L}} = \sum_{\mu, \nu=1, \mu \neq \nu}^{N} \mathbf{r}_{\mu} \times \mathbf{F}_{\mu\nu} = -\sum_{\mu, \nu=1, \mu \neq \nu}^{N} \mathbf{r}_{\mu} \times \mathbf{F}_{\nu\mu}$.
+           <p>On peut donc écrire $\dot{\mathbf{L}}$ comme la moitié de la somme des deux formes:</p>
+           $\dot{\mathbf{L}} = \frac{1}{2} \sum_{\mu, \nu=1, \mu \neq \nu}^{N} (\mathbf{r}_{\nu} - \mathbf{r}_{\mu}) \times \mathbf{F}_{\nu\mu}$.
+           <p>En regroupant les termes par paires $(\nu, \mu)$ avec $\nu > \mu$ (ou $\nu < \mu$):</p>
+           <div class="equation">
+               <div class="eq-content"> $\dot{\mathbf{L}} = \sum_{\nu > \mu}^{N} (\mathbf{r}_{\nu} - \mathbf{r}_{\mu}) \times \mathbf{F}_{\nu\mu} \quad \text{(puisque } \mathbf{F}_{\nu\mu} = -\mathbf{F}_{\mu\nu})$ </div>
+               <div class="eq-number">(1.44 modifiée)</div>
+           </div>
+           <!-- == End Content from page 13 (PDF page number) == -->
+
+           <!-- == Start Content from page 14 (PDF page number) == -->
+           <p>
+               où la 2<sup>e</sup> ligne tient compte du fait qu'une particule n'agit pas sur elle-même, soit $\mathbf{F}_{\nu\nu} = 0$, et la 3<sup>e</sup> ligne (Eq 1.44) utilise $\mathbf{F}_{\nu\mu} = -\mathbf{F}_{\mu\nu}$.
+           </p>
+           <p>
+               Or, le vecteur $\mathbf{r}_{\nu} - \mathbf{r}_{\mu}$ est dans la direction reliant les particules $\nu$ et $\mu$. Si la force entre ces particules est <strong>centrale</strong>, c'est-à-dire est dans cette direction
+           </p>
+            <div class="equation">
+               <div class="eq-content"> $\mathbf{F}_{\nu\mu} \parallel (\mathbf{r}_{\nu} - \mathbf{r}_{\mu})$ </div>
+               <div class="eq-number"></div>
+           </div>
+            <p>
+               comme sur la figure 1.4, alors le produit vectoriel (dénoté par $\times$) dans l'équation (1.44) sera zéro
+            </p>
+             <div class="equation">
+               <div class="eq-content"> $(\mathbf{r}_{\nu} - \mathbf{r}_{\mu}) \times \mathbf{F}_{\nu\mu} = 0$ </div>
+               <div class="eq-number"></div>
+           </div>
+           <p>et $\dot{\mathbf{L}} = 0$ donc</p>
+           <div class="equation">
+               <div class="eq-content"> $\mathbf{L} = \text{constante.}$ </div>
+               <div class="eq-number"></div>
+           </div>
+
+            <div class="remark">
+               <div class="remark-title"><span class="info-icon">i</span>Remarque 1.2</div>
+               Par conséquent : si les particules constituant un système fermé n'agissent les unes sur les autres que par des forces centrales (selon la droite qui les relie), alors le moment angulaire total du système est une constante du mouvement.
+           </div>
+
+            <h2>1.4 Travail et Énergie</h2>
+            <p>
+                Lorsqu'une force $\mathbf{F}$ agit sur un système physique, disons une particule, on dit qu'elle effectue un travail sur ce système. Ceci cause un changement de l'énergie de ce système. Soit une trajectoire $\mathcal{C}_1$ entre les temps $t_0$ et $t$. Calculons la quantité $\int \mathbf{F} \cdot d\mathbf{x}$ le long de cette trajectoire physique:
+            </p>
+             <!-- == End Content from page 14 (PDF page number) == -->
+
+            <!-- == Start Content from page 15 (PDF page number) == -->
+             <div class="equation">
+                 <div class="eq-content">
+                      $\int_{\mathbf{x}(t_0)}^{\mathbf{x}(t)} \mathbf{F} \cdot d\mathbf{x} = \int_{t_0}^{t} \mathbf{F} \cdot \frac{d\mathbf{x}}{dt} dt \stackrel{\text{traj. phys.}}{=} \int_{t_0}^{t} m \frac{d^2\mathbf{x}}{dt^2} \cdot \frac{d\mathbf{x}}{dt} dt$ <br/>
+                      $= \frac{m}{2} \int_{t_0}^{t} \frac{d}{dt}\left(\frac{d\mathbf{x}}{dt} \cdot \frac{d\mathbf{x}}{dt}\right) dt = \frac{m}{2} \int_{t_0}^{t} \frac{d}{dt}(v^2) dt$ <br/>
+                      $= \frac{1}{2}mv^2(t) - \frac{1}{2}mv^2(t_0) = T - T_0.$
+                 </div>
+                 <div class="eq-number">(1.45)</div>
+             </div>
+             <p>
+                 Ici, à la seconde ligne, nous avons utilisé la relation
+             </p>
+              $$ \frac{d}{dt}\left(\frac{d\mathbf{x}}{dt} \cdot \frac{d\mathbf{x}}{dt}\right) = \frac{d}{dt}(\mathbf{v} \cdot \mathbf{v}) = 2 \mathbf{v} \cdot \frac{d\mathbf{v}}{dt} = 2 \frac{d\mathbf{x}}{dt} \cdot \frac{d^2\mathbf{x}}{dt^2} $$
+
+             <figure>
+                <div class="placeholder">[Image Placeholder: Two points x(t0) and x(t). Two different paths, C1 (purple) and C2 (blue, looping), connecting them.]</div>
+                <figcaption><strong>Figure 1.5</strong> Trajectoires entre les temps $t_0$ et $t$.</figcaption>
+            </figure>
+
+             <p>
+                 Appelant $T = \frac{1}{2}mv^2$ l'énergie cinétique, on voit que l'application de la force $\mathbf{F}$ se traduit par un changement de cette énergie cinétique (Théorème de l'énergie cinétique). Notons cependant que l'intégrale ci-dessus se fait le long d'une trajectoire. Le résultat peut donc dépendre de cette trajectoire (voir figure 1.5), c'est-à-dire de façon générale
+             </p>
+             $$ \int_{\mathcal{C}_1} \mathbf{F} \cdot d\mathbf{x} \neq \int_{\mathcal{C}_2} \mathbf{F} \cdot d\mathbf{x}. $$
+            <!-- == End Content from page 15 (PDF page number) == -->
+
+            <!-- == Start Content from page 16 (PDF page number) == -->
+            <p>
+                Dans certains cas cependant, et ils sont physiquement importants, l'intégrale ne dépend pas de la trajectoire mais uniquement des points initial et final, on dit qu'elle est <strong>conservatrice</strong> (la force). Strictement parlant, il s'agit d'une propriété mathématique, c'est-à-dire qui résulte de la façon dont $\mathbf{F}$ dépend de $\mathbf{x}, \mathbf{v}, t$. Il se trouve que dans le monde physique réel, plusieurs forces peuvent être décrites par de telles fonctions. Lorsque tel est le cas, l'intégrale de $\mathbf{F} \cdot d\mathbf{x}$ sur un parcours fermé est évidemment nul.
+            </p>
+            <div class="equation">
+                <div class="eq-content"> $0 = \oint_{\mathcal{C}} \mathbf{F} \cdot d\mathbf{x} \stackrel{\text{Stokes}}{=} \int_{S \in \mathcal{C}} (\nabla \times \mathbf{F}) \cdot d\mathbf{S}$ </div>
+                <div class="eq-number">(1.46)</div>
+            </div>
+            <p>
+                 où l'application du théorème de Stokes est responsable de la dernière branche de cette équation avec $S$ une surface dont la courbe fermée $\mathcal{C}$ marque la frontière. Comme cette surface est arbitraire mais que le résultat de l'intégrale doit toujours être nul alors la fonction à intégrer doit être nulle:
+            </p>
+             <div class="equation">
+                <div class="eq-content"> $\nabla \times \mathbf{F} = 0 \quad : \text{ force conservatrice.}$ </div>
+                <div class="eq-number">(1.47)</div>
+            </div>
+             <p>
+                 Dans ce cas (et si l'espace est simplement connexe), il est toujours possible d'écrire $\mathbf{F}$ comme le gradient d'une fonction scalaire (potentiel). On écrit
+            </p>
+             <div class="equation">
+                <div class="eq-content"> $\mathbf{F} = -\nabla V(\mathbf{x})$ </div>
+                <div class="eq-number">(1.48)</div>
+            </div>
+            <p>
+                et on appelle $V(\mathbf{x})$ l'énergie potentielle. Ainsi le travail fait par une telle force entre les points $\mathbf{x}_0$ et $\mathbf{x}$ sera
+            </p>
+            <div class="equation">
+                <div class="eq-content"> $\int_{\mathbf{x}_0}^{\mathbf{x}} \mathbf{F} \cdot d\mathbf{x} = -\int_{\mathbf{x}_0}^{\mathbf{x}} \nabla V(\mathbf{x}) \cdot d\mathbf{x} = V(\mathbf{x}_0) - V(\mathbf{x}) = V_0 - V.$ </div>
+                <div class="eq-number">(1.49)</div>
+            </div>
+            <!-- == End Content from page 16 (PDF page number) == -->
+
+            <!-- == Start Content from page 17 (PDF page number) == -->
+             <p>
+                 On avait vu (Eq. 1.45) que ce même travail était donné par $T(\mathbf{x}) - T(\mathbf{x}_0)$. Nous aurons donc
+             </p>
+             <div class="equation">
+                 <div class="eq-content"> $T + V = T_0 + V_0 \quad : \quad \text{Énergie conservée.}$ </div>
+                 <div class="eq-number">(1.50)</div>
+             </div>
+             <p>
+                 Lorsque la force qui agit sur une particule est conservatrice on peut définir une constante du mouvement (indépendante de $t$) qu'on appelle l'énergie $E = T + V$. Physiquement la force est donnée par $-\nabla V$, on peut donc remplacer $V$ par $V + \text{constante}$ sans changer la force $\mathbf{F}$. On change alors la valeur de $E$ en $E + \text{constante}$. L'échelle d'énergie ne peut donc être fixée qu'à une constante additive près. En pratique on fixe la valeur de $V(\mathbf{x})$ à une certaine valeur, $V_0$, pour une $\mathbf{x} = \mathbf{x}_0$, $\mathbf{x}_0$ et $V_0$ étant arbitraires.
+             </p>
+
+             <h2>1.5 Systèmes à $N$ particules et forces extérieures</h2>
+             <p>
+                 Supposons un ensemble de $N$ particules interagissant entre elles et sur lesquelles peuvent également agir des forces extérieures. Notons $m_i$ la masse de la $i^{\text{ème}}$ particule, $\mathbf{F}_i$ la force externe qui agit sur elle et $\mathbf{F}_{ij}$ la force due à l'interaction de la $j^{\text{ème}}$ particule sur la $i^{\text{ème}}$. Évidemment $\mathbf{F}_{ii} = 0$ et par la troisième loi de Newton $\mathbf{F}_{ij} = -\mathbf{F}_{ji}$. Pour la $i^{\text{ème}}$ particule, l'équation de mouvement est
+             </p>
+             <div class="equation">
+                 <div class="eq-content"> $m_i\ddot{\mathbf{x}}_i = \mathbf{F}_i + \sum_{j} \mathbf{F}_{ij}$ </div>
+                 <div class="eq-number">(1.51)</div>
+             </div>
+            <!-- == End Content from page 17 (PDF page number) == -->
+
+             <!-- == Start Content from page 18 (PDF page number) == -->
+             <p>Sommant sur toutes les particules</p>
+             <div class="equation">
+                 <div class="eq-content"> $\sum_i m_i\ddot{\mathbf{x}}_i = \sum_i \mathbf{F}_i + \sum_{i,j} \mathbf{F}_{ij} = \sum_i \mathbf{F}_i \equiv \mathbf{F} \quad : \text{ force externe totale}$ </div>
+                 <div class="eq-number">(1.52)</div>
+             </div>
+             <p>
+                 parce que $\sum_{i, j} \mathbf{F}_{ij} = 0$ (les forces internes s'annulent deux à deux). Avec $M = \sum_i m_i$ : masse totale des $N$ particules,
+             </p>
+             <div class="equation">
+                 <div class="eq-content"> $\mathbf{F} = M \left[ \frac{1}{M} \sum_i m_i\ddot{\mathbf{x}}_i \right] = M \frac{d^2}{dt^2} \left[ \frac{1}{M} \sum_i m_i\mathbf{x}_i \right]$ </div>
+                 <div class="eq-number">(1.53)</div>
+             </div>
+             <p>d'où</p>
+             <div class="equation">
+                 <div class="eq-content"> $\mathbf{F} = M \frac{d^2\mathbf{X}}{dt^2} \quad : \text{ où } \mathbf{X} = \frac{1}{M}\sum_i m_i\mathbf{x}_i$ </div>
+                 <div class="eq-number">(1.54)</div>
+             </div>
+             <p>
+                 donne la position du <strong>centre de masse</strong> du système. Le mouvement du centre de masse se fait comme si toute la masse y était concentrée et que la force externe totale s'y appliquait, quelle que soit l'interaction entre les particules. Définissant le moment linéaire total $\mathbf{P} = M\dot{\mathbf{X}}$, on aura
+             </p>
+              <div class="equation">
+                 <div class="eq-content"> $\mathbf{F} = \frac{d\mathbf{P}}{dt} \quad \text{où } \mathbf{P} = \sum_i m_i\dot{\mathbf{x}}_i.$ </div>
+                 <div class="eq-number">(1.55)</div>
+             </div>
+             <p>
+                 Si la force extérieure disparaît, $\mathbf{F} = 0 = \frac{d\mathbf{P}}{dt}$ alors $\mathbf{P} = \text{constante}$.
+             </p>
+             <!-- == End Content from page 18 (PDF page number) == -->
+
+             <!-- == Start Content from page 19 (PDF page number) == -->
+             <p>
+                 Après le moment linéaire total, étudions le moment angulaire total. Nous aurons évidemment par rapport à l'origine $O_x$
+             </p>
+             <div class="equation">
+                 <div class="eq-content"> $\mathbf{L} = \sum_i \mathbf{l}_i = \sum_i m_i\mathbf{x}_i \times \dot{\mathbf{x}}_i$ </div>
+                 <div class="eq-number">(1.56)</div>
+             </div>
+             <p>
+                 mesuré à partir de l'origine du système de coordonnées utilisées. Il est utile d'utiliser les coordonnées relatives (par rapport au centre de masse $\mathbf{X}$) que nous noterons $\mathbf{x}'_i$ et définis par $\mathbf{x}'_i = \mathbf{x}_i - \mathbf{X} \implies \mathbf{x}_i = \mathbf{X} + \mathbf{x}'_i$.
+             </p>
+             <p>
+                 $\mathbf{L} = \sum_i m_i (\mathbf{X} + \mathbf{x}'_i) \times (\dot{\mathbf{X}} + \dot{\mathbf{x}}'_i)$ <br/>
+                 $= \sum_i m_i (\mathbf{X} \times \dot{\mathbf{X}} + \mathbf{X} \times \dot{\mathbf{x}}'_i + \mathbf{x}'_i \times \dot{\mathbf{X}} + \mathbf{x}'_i \times \dot{\mathbf{x}}'_i)$ <br/>
+                 $= (\sum_i m_i) \mathbf{X} \times \dot{\mathbf{X}} + \mathbf{X} \times (\sum_i m_i \dot{\mathbf{x}}'_i) + (\sum_i m_i \mathbf{x}'_i) \times \dot{\mathbf{X}} + \sum_i m_i \mathbf{x}'_i \times \dot{\mathbf{x}}'_i$
+            </p>
+             <p>
+                 mais $\sum_i m_i \mathbf{x}'_i = \sum_i m_i (\mathbf{x}_i - \mathbf{X}) = (\sum_i m_i \mathbf{x}_i) - (\sum_i m_i)\mathbf{X} = M\mathbf{X} - M\mathbf{X} = 0$ donc $\sum_i m_i \dot{\mathbf{x}}'_i = \frac{d}{dt}(\sum_i m_i \mathbf{x}'_i) = 0$ aussi, et alors
+             </p>
+              <div class="equation">
+                 <div class="eq-content"> $\mathbf{L} = \sum_i m_i \mathbf{x}'_i \times \dot{\mathbf{x}}'_i + M \mathbf{X} \times \dot{\mathbf{X}} = \mathbf{L}_r + \mathbf{L}_{CM}$ </div>
+                 <div class="eq-number">(1.57)</div>
+             </div>
+             <p>où</p>
+             $$ \mathbf{L}_r = \sum_i m_i \mathbf{x}'_i \times \dot{\mathbf{x}}'_i \quad (\text{moment angulaire relatif au CM}) $$
+             <p>et</p>
+             $$ \mathbf{L}_{CM} = M \mathbf{X} \times \dot{\mathbf{X}} = \mathbf{X} \times (M\dot{\mathbf{X}}) = \mathbf{X} \times \mathbf{P}. \quad (\text{moment angulaire du CM}) $$
+             <!-- == End Content from page 19 (PDF page number) == -->
+
+             <!-- == Start Content from page 20 (PDF page number) == -->
+             <p>
+                 Ainsi le moment angulaire total par rapport à l'origine d'un système inertiel est la somme vectorielle du mouvement angulaire relatif des particules par rapport au CM et d'un moment angulaire correspondant à la totalité de la masse centrée au CM par rapport à l'origine du système inertiel.
+             </p>
+             <p>
+                 Voici un sommaire des propriétés globales d'un système de particules :
+             </p>
+             <table class="comparison-table">
+                 <thead>
+                     <tr>
+                         <th>Propriétés globales (Discret)</th>
+                         <th>Dynamique (Discret)</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                         <td>$M = \sum_i m_i$</td>
+                         <td></td>
+                     </tr>
+                     <tr>
+                         <td>$M\mathbf{X} = \sum_i m_i \mathbf{x}_i$</td>
+                         <td></td>
+                     </tr>
+                     <tr>
+                         <td>$\mathbf{P} = M\mathbf{V} = M\dot{\mathbf{X}} = \sum_i m_i \mathbf{v}_i$</td>
+                         <td>$M\mathbf{A} = M\ddot{\mathbf{X}} = \mathbf{F}$ (force externe totale)</td>
+                     </tr>
+                     <tr>
+                         <td>$M\mathbf{A} = M\ddot{\mathbf{X}} = \sum_i m_i \mathbf{a}_i$</td>
+                         <td></td>
+                     </tr>
+                      <tr>
+                         <td>$T = \frac{1}{2}M V^2 + \frac{1}{2}\sum_i m_i v_i^{\prime 2}$ (Théorème de König pour T)</td>
+                         <td></td>
+                     </tr>
+                     <tr>
+                         <td>$\mathbf{L} = \sum_i \mathbf{l}_i = \sum_i m_i \mathbf{x}_i \times \mathbf{v}_i = \mathbf{L}_{CM} + \mathbf{L}_r$</td>
+                         <td>$\dot{\mathbf{L}} = \boldsymbol{\tau}$ (moment de force externe total)</td>
+                     </tr>
+                 </tbody>
+             </table>
+             <p>
+                 On peut passer d'un ensemble de particules ponctuelles à un corps de volume fini en remplaçant de façon adéquate les sommes par des intégrales. Dans ce cas on voit apparaître des densité de masse $\rho(\mathbf{x})$ telles que
+             </p>
+              <div class="equation">
+                 <div class="eq-content"> $M = \int_{\text{Volume}} \rho(\mathbf{x}) d^3x.$ </div>
+                 <div class="eq-number">(1.58)</div>
+             </div>
+              <p>
+                 Supposons maintenant qu'au lieu de considérer un ensemble de particules de masses $m_1, m_2, ...$ nous ayons affaire à un milieu continu comme un solide.
+             </p>
+              <!-- == End Content from page 20 (PDF page number) == -->
+
+              <!-- == Start Content from page 21 (PDF page number) == -->
+              <p>
+                  Le même raisonnement que dans les sections précédentes s'applique encore avec toutefois un traitement qui diffère quelque peu :
+              </p>
+              <ol>
+                  <li>La particule de masse $m_i$ localisée à la position $\mathbf{x}_i$ est remplacée par un élément de masse $\rho(\mathbf{x}) d^3x$ à la position $\mathbf{x}$ où $\rho(\mathbf{x})$ et $d^3x$ sont la densité de masse et l'élément de volume en trois dimensions respectivement.</li>
+                  <li>Les propriétés des particules $X_i$ sont remplacées par des fonctions de la position $X(\mathbf{x})$.</li>
+                  <li>Les sommes $\sum_i$ sont remplacées par des intégrales.</li>
+              </ol>
+              <p>Voici quelques exemples pour des relations énoncées ci-haut :</p>
+              <table class="comparison-table">
+                  <thead>
+                      <tr>
+                          <th>Propriétés globales (Discret)</th>
+                          <th>Milieu continu</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>$M = \sum_i m_i$</td>
+                          <td>$M = \int \rho(\mathbf{x}) d^3x$</td>
+                      </tr>
+                      <tr>
+                          <td>$M\mathbf{X} = \sum_i m_i \mathbf{x}_i$</td>
+                          <td>$M\mathbf{X} = \int \mathbf{x} \rho(\mathbf{x}) d^3x$</td>
+                      </tr>
+                      <tr>
+                          <td>$\mathbf{P} = M\mathbf{V} = M\frac{d\mathbf{X}}{dt} = \sum_i m_i \mathbf{v}_i$</td>
+                           <td>$\mathbf{P} = M\mathbf{V} = \int \mathbf{v}(\mathbf{x}) \rho(\mathbf{x}) d^3x$</td>
+                      </tr>
+                      <tr>
+                           <td>$M\mathbf{A} = M\frac{d^2\mathbf{X}}{dt^2} = \sum_i m_i \mathbf{a}_i$</td>
+                           <td>$M\mathbf{A} = \int \mathbf{a}(\mathbf{x}) \rho(\mathbf{x}) d^3x$</td>
+                      </tr>
+                      <tr>
+                          <td>$T = \frac{1}{2}M V^2 + \frac{1}{2}\sum_i m_i v_i^{\prime 2}$</td>
+                          <td>$T = \frac{1}{2}M V^2 + \frac{1}{2} \int v^{\prime 2}(\mathbf{x}) \rho(\mathbf{x}) d^3x$</td>
+                      </tr>
+                       <tr>
+                          <td>$\mathbf{L} = \sum_i \mathbf{l}_i = \sum_i m_i \mathbf{x}_i \times \mathbf{v}_i$</td>
+                          <td>$\mathbf{L} = \int \mathbf{x} \times \mathbf{v}(\mathbf{x}) \rho(\mathbf{x}) d^3x$</td>
+                      </tr>
+                  </tbody>
+              </table>
+        <!-- == End Content from page 21 (PDF page number) == -->
+
+    </main>
+
+    <footer>
+        <!-- Potential footer content like page numbers or navigation could go here -->
+    </footer>
+
+    <script>
+        // Optional: Configure KaTeX auto-render
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                // Trust the input, useful for environments like \begin{equation}
+                 trust: true,
+                 // Enable macros if needed, e.g., \mathbf
+                 macros: {
+                    "\\vb": "\\mathbf{#1}"
+                 }
+            });
+        });
+    </script>
+
+</body>
+</html>
