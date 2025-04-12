@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanique Analytique - SMP5 - Chapitres 2, 3, 4 & 5</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #a02c2c; /* Dark red color similar to slides */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #a02c2c;
+            padding-bottom: 10px;
+        }
+        h2 {
+             text-align: center;
+        }
+        h3.chapter-title {
+             background-color: #a02c2c;
+             color: white;
+             padding: 10px;
+             border-radius: 5px;
+             text-align: center;
+        }
+        h4.subtitle {
+             text-align: center;
+             color: #802020;
+        }
+         h5 {
+             color: #601010;
+             margin-top: 1.5em;
+         }
+         h6 {
+             color: #601010;
+             margin-top: 1em;
+             font-size: 1.1em;
+         }
+        .image-placeholder {
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px auto; /* Centered */
+            color: #777;
+            font-style: italic;
+            min-height: 50px; /* Ensure placeholder is visible */
+            max-width: 80%; /* Control image size */
+        }
+         .image-placeholder.inline {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px;
+         }
+         .image-placeholder.float-right {
+             width: 150px;
+             float: right;
+             margin-left: 15px;
+             margin-bottom: 10px;
+         }
+         .clear-float {
+            clear: both;
+         }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        blockquote {
+            border-left: 4px solid #a02c2c;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            background-color: #f9f2f2;
+        }
+        strong {
+            color: #601010;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+        }
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 25px;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .contact-info p {
+             margin: 5px 0;
+        }
+         .centered-text {
+             text-align: center;
+         }
+         .boxed-formula {
+             background-color: #e0e8f0;
+             padding: 10px 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+         }
+         .boxed-text {
+             background-color: #e0e8f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+         }
+         /* Torseur notation style */
+         .torseur {
+             display: inline-block;
+             text-align: center;
+             vertical-align: middle;
+             margin: 0 0.2em;
+         }
+         .torseur-content {
+             display: block;
+             border-left: 1px solid;
+             border-right: 1px solid;
+             padding: 0 0.3em;
+         }
+         .torseur-element {
+             display: block;
+         }
+         .torseur-point {
+             font-size: 0.7em;
+             margin-top: -0.3em;
+         }
+         .comoment {
+            display: inline-block;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 0.9em;
+            height: 0.9em;
+            line-height: 0.9em;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 0.2em;
+            font-weight: bold;
+            vertical-align: middle;
+         }
+         .pointer-icon {
+            display: inline-block; /* Prevents block behavior */
+            font-size: 1.5em; /* Adjust size */
+            margin-right: 5px; /* Space from text */
+            vertical-align: middle; /* Align with text */
+             /* Using a simple Unicode character */
+             content: "☞";
+         }
+         .arrow-up {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 2L2 12h5v10h10V12h5L12 2z"/></svg>');
+         }
+         .arrow-down {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 22L22 12h-5V2H7v10H2l10 10z"/></svg>');
+          }
+          .arrow-label {
+             text-align: center;
+             font-weight: bold;
+             color: #a02c2c;
+             margin-top: -5px;
+             margin-bottom: 10px;
+         }
+         .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+         }
+         table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            width: 80%; /* Adjust table width */
+         }
+          table.summary-table th, table.summary-table td {
+             border: 1px solid #aaa;
+             padding: 10px;
+             text-align: left;
+             vertical-align: middle;
+         }
+         table.summary-table th {
+             background-color: #e0e8f0;
+             color: #601010;
+             width: 30%;
+         }
+         table.summary-table td {
+             background-color: #f8fafd;
+         }
+          table.summary-table .katex-display {
+             margin: 0.5em 0;
+         }
+         th, td {
+             border: 1px solid #ccc;
+             padding: 8px;
+             text-align: center;
+         }
+         th {
+             background-color: #f2f2f2;
+             color: #601010;
+         }
+         caption {
+             caption-side: bottom;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-top: 5px;
+         }
+         .small-table th, .small-table td {
+             padding: 5px;
+             font-size: 0.9em;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- START PREVIOUSLY GENERATED CONTENT -->
+    <!-- Chapitre 2, 3 & 4: Slides 1 to 177 -->
+     <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p><p>Professeur de l'enseignement supérieur</p><p>Bureau 37 département de physique</p><p>Faculté des sciences</p><p>Agadir</p><p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... other slides Chap 2, 3 & 4 ... -->
+     <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 4</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+     <hr style="border-top: 3px solid #a02c2c; margin: 40px 0;">
+
+     <!-- CHAPTER 5 START -->
+
+     <!-- Page 158 (OCR 1) : Chap 5 Title Slide -->
+    <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p>
+            <p>Professeur de l'enseignement supérieur</p>
+            <p>Bureau 37 département de physique</p>
+            <p>Faculté des sciences</p>
+            <p>Agadir</p>
+            <p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... Other slides Chap 5 ... -->
+     <section class="slide">
+         <h5>Pour n = 1</h5>
+          <div class="image-placeholder">[Image: Expansion of the Jacobi identity terms for n=1]</div>
+          <p class="explanation">Après expansion complète et regroupement des termes utilisant $\partial_{qp} = \partial_{pq}$, tous les termes s'annulent deux à deux.</p>
+     </section>
+      <section class="slide">
+         <p>Or (Théorème de Schwarz) : $\partial_{p,q} = \partial_{q,p}$</p>
+         <p>d'où :</p>
+          <div class="boxed-formula">
+             $$ \{A, \{B, C\}\} + \{C, \{A, B\}\} + \{B, \{C, A\}\} = 0 $$
+          </div>
+          <span class="pointer-icon"></span>
+          <strong>C'est l'identité de Jacobi</strong>
+     </section>
+     <section class="slide centered-text">
+         <h5>Mise en œuvre</h5>
+          <span class="pointer-icon"></span>
+         <h4>Voir applications pédagogiques</h4>
+          <div style="display: flex; justify-content: space-around; align-items: center;">
+             <div class="boxed-formula"> $$ \{A, B\} = \sum_{i} \left( \frac{\partial A}{\partial q_i}\frac{\partial B}{\partial p_i} - \frac{\partial A}{\partial p_i}\frac{\partial B}{\partial q_i} \right) $$ </div>
+              <div class="image-placeholder" style="width: 150px;">[Image: Portrait de Poisson]</div>
+              <div class="boxed-formula"> $$ \frac{df}{dt} = \frac{\partial f}{\partial t} + \{f, H\} $$ </div>
+         </div>
+          <div class="boxed-formula" style="margin-top: 20px;"> $$ \{A,\{B,C\}\} + \{C,\{A,B\}\} + \{B,\{C,A\}\} = 0 $$ </div>
+     </section>
+     <section class="slide centered-text">
+         <div style="display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center;">
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Lagrange?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Euler?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait D'Alembert?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Hamilton?]</div>
+         </div>
+         <div class="boxed-text" style="margin-top: 20px;">
+            <h4>Et maintenant, c'est à vous de jouer.</h4>
+            <h4>A vos dossiers pédagogiques.</h4>
+         </div>
+          <span class="pointer-icon"></span>
+    </section>
+     <section class="slide centered-text">
+        <h4>§-3-</h4>
+        <h3>Transformations canoniques</h3>
+    </section>
+     <section class="slide">
+         <h5>Transformations canoniques (TC)</h5>
+          <div class="boxed-text">
+             <p>De même que dans un espace vectoriel euclidien, on peut s'intéresser à des « <strong>isométries</strong> », c'est-à dire à des transformations qui conservent la structure euclidienne.</p>
+             <p>Dans l'espace des phases, on peut considérer des transformations $(q,p) \to (Q(q,p,t), P(q,p,t))$ qui conservent la structure fondamentale de la mécanique Hamiltonienne (forme des équations, crochets de Poisson fondamentaux). Ces transformations sont alors appelées « <strong>transformations canoniques</strong> ».</p>
+         </div>
+          <p>Exemples d'isométries : Translation, rotation.</p>
+     </section>
+     <section class="slide">
+          <h5>Variables Canoniques Généralisées</h5>
+          <div class="image-placeholder">[Image: Texte scanné d'un livre décrivant les variables canoniques généralisées]</div>
+         <p class="explanation">Résumé du texte : Les $(q_i, p_i)$ sont très généraux. Des transformations $(q, p) \to (Q, P)$ existent. Elles sont canoniques si les relations fondamentales (crochets de Poisson $\{Q_k, P_j\} = \delta_{kj}$, etc.) et la forme des équations de Hamilton (avec un nouveau Hamiltonien $H'(Q,P,t)$) sont préservées.</p>
+     </section>
+      <section class="slide centered-text">
+          <h5>Transformations canoniques (TC)</h5>
+           <div class="boxed-text"><strong>Principe de base</strong></div>
+            <span class="arrow-down"></span>
+             <div class="boxed-text"><strong>Changement de variables dans l'espace des phases :</strong></div>
+             <div class="boxed-formula">
+                 $$ (q_i, p_i) \longrightarrow (Q_i(q,p,t), P_i(q,p,t)) $$
+             </div>
+             <div class="image-placeholder float-right" style="width: 120px;">[Image: Portrait de Carl Gustav Jacob Jacobi?]</div>
+             <div class="clear-float"></div>
+     </section>
+     <section class="slide">
+          <p>Soit le système canonique associé à l'hamiltonien $H(q_i, p_i, t)$</p>
+           <div class="boxed-formula">
+             $$ \begin{cases} \dot{q}_i = \frac{\partial H}{\partial p_i} \\ \dot{p}_i = -\frac{\partial H}{\partial q_i} \end{cases} \quad i=1, ..., n $$
+        </div>
+         <p>Effectuons la transformation <strong>inversible</strong> suivante:</p>
+         <div class="boxed-formula">
+             $$ \begin{cases} Q_j = Q_j(q, p, t) \\ P_j = P_j(q, p, t) \end{cases} \quad j=1, ..., n $$
+         </div>
+          <p class="explanation">Quand cette transformation est-elle canonique?</p>
+     </section>
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+    <!-- Page 218 (OCR 1) : Definition TC -->
+    <section class="slide">
+        <h5>Définition</h5>
+        <div class="boxed-text">
+            Une <strong>transformation canonique</strong> est une transformation <strong>inversible</strong> des 2n variables $(q_i, p_i)$ en 2n variables $(Q_i, P_i)$, tel que les équations du mouvement soient <strong>encore canoniques</strong>. C'est-à-dire qu'il existe une fonction $K(Q, P, t)$ (le nouveau Hamiltonien) telle que:
+        </div>
+         <div class="boxed-formula">
+             $$
+             \begin{cases}
+             \dot{Q}_i = \frac{\partial K}{\partial P_i} & i=1, ..., n \\
+             \\
+             \dot{P}_i = -\frac{\partial K}{\partial Q_i} & i=1, ..., n
+             \end{cases}
+             $$
+             <p class="explanation">(Attention: la slide utilise H pour le nouveau Hamiltonien, mais il est préférable de le noter K ou H' pour le distinguer de l'ancien H).</p>
+        </div>
+        <blockquote>« Le hamiltonien change ($H \to K$) mais pas la forme des équations canoniques »</blockquote>
+    </section>
+
+    <!-- Page 219 (OCR 2) : Sufficient Condition for TC (F1) -->
+    <section class="slide">
+        <h5>Condition suffisante pour qu'une transformation soit canonique</h5>
+        <p>Soit $F_1(q, Q, t)$ une fonction quelconque (appelée fonction génératrice de type 1), et considérons la transformation définie implicitement par les relations :</p>
+        <div class="boxed-formula">
+            $$ p_i = \frac{\partial F_1(q, Q, t)}{\partial q_i} \quad ; \quad P_i = -\frac{\partial F_1(q, Q, t)}{\partial Q_i} \quad ; \quad i=1, ..., n $$
+        </div>
+        <p>C'est une transformation des variables $(q_i, p_i)$ en les variables $(Q_i, P_i)$ (si on peut exprimer Q, P en fonction de q, p et vice-versa).</p>
+    </section>
+
+    <!-- Page 220 (OCR 3) : Condition dF -->
+    <section class="slide">
+        <p>Pour qu'une telle transformation soit canonique, il suffit que l'expression suivante (appelée 1-forme de Liouville, ou différence des actions élémentaires) :</p>
+        <span class="pointer-icon"></span>
+         <div class="boxed-formula">
+             $$ \sum_i p_i dq_i - \sum_i P_i dQ_i = dF_1 $$
+         </div>
+         <p>soit une <strong>différentielle totale exacte</strong> (celle de $F_1$) à t constant.</p>
+         <p class="explanation">Cette condition assure l'invariance du principe de moindre action, à un terme de bord près.</p>
+         <p class="centered-text"><span class="arrow-down"></span></p>
+         <h6 class="centered-text">Voir démonstration</h6>
+    </section>
+
+    <!-- Page 221 (OCR 4) : Proof dF -->
+     <section class="slide">
+         <h5>En effet :</h5>
+         <p>Si on considère $F_1$ comme une fonction de $(q_i, Q_i)$ :</p>
+         <div class="boxed-formula"> $$ F_1(q_i, Q_i) $$ </div>
+          <span class="arrow-down"></span>
+         <p>Sa différentielle totale (à t constant) est :</p>
+         <div class="boxed-formula">
+             $$ dF_1 = \sum_i \underbrace{\frac{\partial F_1}{\partial q_i}}_{p_i} dq_i + \sum_i \underbrace{\frac{\partial F_1}{\partial Q_i}}_{-P_i} dQ_i = \sum_i p_i dq_i - \sum_i P_i dQ_i $$
+         </div>
+          <p class="explanation">Cela montre que si la transformation est définie par les dérivées de $F_1$, alors la condition de la différentielle exacte est satisfaite par construction.</p>
+     </section>
+
+    <!-- Page 222 (OCR 5) : Generating Function Intro -->
+    <section class="slide">
+        <h5>Fonction génératrice :</h5>
+        <p>La fonction $F_1(q, Q, t)$ est appelée <strong>fonction génératrice</strong> (de type 1) de la transformation canonique.</p>
+        <div class="boxed-text">
+            <p>Le choix d'une fonction génératrice F conduit à des équations implicites simples pour définir la transformation canonique.</p>
+            <p>On exprime généralement ces fonctions en utilisant un mélange des anciennes et nouvelles variables. Par exemple, $F_1$ utilise les anciennes coordonnées $q_i$ et les nouvelles coordonnées $Q_i$.</p>
+             <p>De façon analogue, on peut introduire d'autres types de fonctions génératrices selon les variables choisies comme indépendantes.</p>
+        </div>
+    </section>
+
+    <!-- Page 223 (OCR 6) : Table of Generating Functions -->
+    <section class="slide">
+         <h6>Les 4 types de fonctions génératrices</h6>
+         <table>
+            <thead>
+                <tr>
+                    <th>Variables indépendantes</th>
+                    <th>Variables dépendantes</th>
+                    <th>Générateurs</th>
+                </tr>
+            </thead>
+             <tbody>
+                 <tr><td>$q_i, Q_i$</td><td>$p_i, P_i$</td><td>$F_1(q, Q, t)$</td></tr>
+                 <tr><td>$q_i, P_i$</td><td>$p_i, Q_i$</td><td>$F_2(q, P, t)$</td></tr>
+                 <tr><td>$p_i, Q_i$</td><td>$q_i, P_i$</td><td>$F_3(p, Q, t)$</td></tr>
+                 <tr><td>$p_i, P_i$</td><td>$q_i, Q_i$</td><td>$F_4(p, P, t)$</td></tr>
+             </tbody>
+         </table>
+          <p class="explanation">Ces fonctions sont reliées par des transformations de Legendre. Par exemple, $F_2(q, P, t) = F_1(q, Q, t) + \sum_i Q_i P_i$.</p>
+    </section>
+
+    <!-- Page 224 (OCR 7) : Analysis F1 (text) -->
+    <section class="slide">
+        <h6>Etude détaillée du cas $F_1(q, Q, t)$</h6>
+         <div class="image-placeholder">[Image: Texte scanné - Principe de moindre action modifié]</div>
+         <p class="explanation">Le principe de moindre action $\delta \int L dt = 0$ doit rester valable dans les nouvelles variables $(Q,P)$ avec le nouveau Lagrangien $L' = \sum P_k \dot{Q}_k - K$. L'invariance est assurée si les intégrandes $L$ et $L'$ diffèrent d'une dérivée totale $dF/dt$.
+         $$ L = L' + \frac{dF}{dt} \implies \sum p_i \dot{q}_i - H = \sum P_i \dot{Q}_i - K + \frac{dF}{dt} $$
+         Si on choisit $F=F_1(q,Q,t)$, alors $\frac{dF_1}{dt} = \sum \frac{\partial F_1}{\partial q_i}\dot{q}_i + \sum \frac{\partial F_1}{\partial Q_i}\dot{Q}_i + \frac{\partial F_1}{\partial t}$. L'équation (4.110) du texte est obtenue en substituant cette expression.</p>
+    </section>
+
+     <!-- Page 225 (OCR 8) : Analysis F1 (text) -->
+     <section class="slide">
+         <h6>Identification pour $F_1(q, Q, t)$</h6>
+          <div class="image-placeholder">[Image: Texte scanné - Relations pour F1]</div>
+          <p class="explanation">En identifiant les coefficients des variables indépendantes $\dot{q}_i$ et $\dot{Q}_i$ dans l'équation (4.110), on obtient les relations qui définissent la transformation générée par $F_1$ et le nouveau Hamiltonien $K$ :</p>
+          <div class="boxed-formula">
+             $$ p_i = \frac{\partial F_1}{\partial q_i} \quad ; \quad P_i = -\frac{\partial F_1}{\partial Q_i} \quad ; \quad K = H + \frac{\partial F_1}{\partial t} $$
+         </div>
+     </section>
+
+      <!-- Page 226 (OCR 9) : Analysis F1 (text) -->
+     <section class="slide">
+         <h6>Test du caractère canonique pour $F_1$</h6>
+          <div class="image-placeholder">[Image: Texte scanné - Condition de canonicité]</div>
+          <p class="explanation">En dérivant les relations $p_i = \partial F_1 / \partial q_i$ et $P_i = -\partial F_1 / \partial Q_i$, on trouve une condition nécessaire pour que la transformation soit canonique, liée à l'égalité des dérivées secondes croisées de $F_1$ :</p>
+           <div class="boxed-formula">
+              $$ \frac{\partial p_i}{\partial Q_j} = -\frac{\partial P_j}{\partial q_i} $$
+           </div>
+            <p>Cette condition est équivalente à la conservation des crochets de Poisson fondamentaux.</p>
+     </section>
+
+     <!-- Page 227 (OCR 10) : Analysis F2 (text) -->
+    <section class="slide">
+        <h6>Cas de $F_2(q, P, t)$</h6>
+        <div class="image-placeholder">[Image: Texte scanné - Invariance de l'action pour F2]</div>
+         <p class="explanation">On utilise $F_2(q, P, t) = F_1 + \sum Q_i P_i$, donc $dF_1/dt = dF_2/dt - \sum (\dot{Q}_i P_i + Q_i \dot{P}_i)$. L'invariance de l'action $\sum p_i \dot{q}_i - H = \sum P_i \dot{Q}_i - K + dF_1/dt$ devient l'équation (4.125) après intégration par parties du terme $\sum P_i \dot{Q}_i$ pour isoler les coefficients des variables indépendantes $\dot{q}_i$ et $\dot{P}_i$.</p>
+    </section>
+
+     <!-- Page 228 (OCR 11) : Analysis F2 (text) -->
+    <section class="slide">
+        <h6>Cas de $F_2(q, P, t)$ (suite)</h6>
+        <div class="image-placeholder">[Image: Texte scanné - Identification pour F2]</div>
+        <p class="explanation">En comparant les intégrandes dans l'équation (4.125), on identifie les coefficients des variables indépendantes $\dot{q}_i$ et $\dot{P}_i$.</p>
+    </section>
+
+     <!-- Page 229 (OCR 12) : Analysis F2 (text) -->
+     <section class="slide">
+         <h6>Relations pour $F_2(q, P, t)$</h6>
+          <div class="image-placeholder">[Image: Texte scanné - Relations pour F2 et test]</div>
+          <p class="explanation">L'identification donne les relations qui définissent la transformation générée par $F_2$ et le nouveau Hamiltonien $K$ :</p>
+           <div class="boxed-formula">
+              $$ p_i = \frac{\partial F_2}{\partial q_i} \quad ; \quad Q_i = \frac{\partial F_2}{\partial P_i} \quad ; \quad K = H + \frac{\partial F_2}{\partial t} $$
+          </div>
+           <p>La condition de canonicité dérivée de l'égalité des dérivées secondes croisées de $F_2$ est :</p>
+           <div class="boxed-formula">$$ \frac{\partial p_i}{\partial P_j} = \frac{\partial Q_j}{\partial q_i} $$</div>
+           <p>Cette condition garantit la préservation des crochets de Poisson fondamentaux.</p>
+     </section>
+
+     <!-- Page 230 (OCR 13) : Summary Table TC -->
+     <section class="slide">
+          <h5>Résumé des transformations via fonctions génératrices</h5>
+           <table class="small-table">
+             <thead>
+               <tr><th>Var. ind.</th><th>Générateur</th><th>Transformation</th><th>Nouv. Ham.</th><th>Condition de canonicité</th></tr>
+             </thead>
+             <tbody>
+               <tr>
+                 <td>$q, Q$</td><td>$F_1(q, Q, t)$</td>
+                 <td>$p_i = \frac{\partial F_1}{\partial q_i}$ ; $P_i = -\frac{\partial F_1}{\partial Q_i}$</td>
+                 <td>$K = H + \frac{\partial F_1}{\partial t}$</td>
+                 <td>$\frac{\partial p_i}{\partial Q_j} = -\frac{\partial P_j}{\partial q_i}$</td>
+               </tr>
+               <tr>
+                 <td>$q, P$</td><td>$F_2(q, P, t)$</td>
+                 <td>$p_i = \frac{\partial F_2}{\partial q_i}$ ; $Q_i = \frac{\partial F_2}{\partial P_i}$</td>
+                 <td>$K = H + \frac{\partial F_2}{\partial t}$</td>
+                  <td>$\frac{\partial p_i}{\partial P_j} = \frac{\partial Q_j}{\partial q_i}$</td>
+               </tr>
+               <tr>
+                 <td>$p, Q$</td><td>$F_3(p, Q, t)$</td>
+                 <td>$q_i = -\frac{\partial F_3}{\partial p_i}$ ; $P_i = -\frac{\partial F_3}{\partial Q_i}$</td>
+                 <td>$K = H + \frac{\partial F_3}{\partial t}$</td>
+                  <td>$\frac{\partial q_i}{\partial Q_j} = \frac{\partial P_j}{\partial p_i}$</td>
+               </tr>
+                <tr>
+                 <td>$p, P$</td><td>$F_4(p, P, t)$</td>
+                 <td>$q_i = -\frac{\partial F_4}{\partial p_i}$ ; $Q_i = \frac{\partial F_4}{\partial P_i}$</td>
+                 <td>$K = H + \frac{\partial F_4}{\partial t}$</td>
+                  <td>$-\frac{\partial q_i}{\partial P_j} = \frac{\partial Q_j}{\partial p_i}$</td>
+               </tr>
+             </tbody>
+           </table>
+     </section>
+
+      <!-- Page 231 (OCR 14) : Remark Generating Functions -->
+     <section class="slide">
+        <h5>Remarque importante</h5>
+        <div class="boxed-text">
+            Les transformations $F_1(q, Q, t)$, $F_2(q, P, t)$ etc., ne génèrent pas de transformations différentes mais simplement des façons différentes de générer <strong>une</strong> transformation donnée. Evidemment, deux fonctions $F_1$ différentes par exemple vont en général générer des transformations différentes.
+        </div>
+     </section>
+
+     <!-- Page 232 (OCR 15) : Practical Use Generating Functions -->
+     <section class="slide">
+         <div class="image-placeholder float-right">[Image: Portrait de Jacobi?]</div>
+         <div class="boxed-text">
+             <p>Dans la pratique, il suffit de se donner une fonction $F_i$ (i=1,…,4) de deux groupes de variables. Les deux premières équations expriment les variables dépendantes en fonction des indépendantes, et la troisième donne le nouveau hamiltonien $K = H + \partial F_i / \partial t$.</p>
+             <p>Si une transformation $(q,p) \to (Q,P)$ est engendrée par une fonction $F_i$, on dit que $F_i$ est une <strong>fonction génératrice</strong> de cette transformation.</p>
+         </div>
+         <div class="clear-float"></div>
+     </section>
+
+    <!-- Page 233 (OCR 16) : Poisson Brackets and TC -->
+    <section class="slide">
+        <h5>Crochets de poisson et transformations canoniques</h5>
+        <p>Lorsqu'on opère sur un système une transformation canonique:</p>
+        <div class="boxed-formula">
+             $$ (q_i, p_i) \longrightarrow (Q_i, P_i) $$
+        </div>
+        <p>Que deviennent les crochets de Poisson calculés avec les nouvelles variables?</p>
+        <h6>Théorème</h6>
+         <div class="boxed-text">
+            Les crochets de Poisson sont <strong>invariants</strong> par transformation canonique. C'est-à-dire, si $f$ et $g$ sont deux fonctions quelconques de l'espace des phases, alors:
+        </div>
+         <div class="boxed-formula">
+             $$ \{f, g\}_{q,p} = \{f, g\}_{Q,P} $$
+         </div>
+         <p class="explanation">Le crochet calculé avec les dérivées par rapport à $q,p$ est égal au crochet calculé avec les dérivées par rapport à $Q,P$.</p>
+    </section>
+
+    <!-- Page 234 (OCR 17) : Poisson Bracket Invariance Check -->
+     <section class="slide">
+        <h5>Remarque importante</h5>
+        <div class="boxed-text">
+            Les crochets de Poisson peuvent être utilisés pour vérifier le caractère canonique d'une transformation. En effet:
+        </div>
+         <div class="boxed-text">
+             Une transformation $(q,p) \to (Q,P)$ est canonique si et seulement si les crochets de Poisson fondamentaux sont invariants, i.e., s'ils gardent la même valeur lorsqu'ils sont calculés avec les anciennes variables $(q,p)$:
+         </div>
+          <span class="pointer-icon"></span>
+          <div class="boxed-formula">
+             $$ \{Q_i, P_j\}_{q,p} = \delta_{ij} \quad ; \quad \{Q_i, Q_j\}_{q,p} = 0 \quad ; \quad \{P_i, P_j\}_{q,p} = 0 $$
+          </div>
+    </section>
+
+     <!-- Page 235 (OCR 18) : Example TC 1 (Identity) -->
+    <section class="slide">
+        <h5>Quelques transformations canoniques particulières</h5>
+        <h6>1. Transformation identité:</h6>
+        <p>Fonction génératrice: $ F_2(q, P) = \sum_i q_i P_i $.</p>
+          <p>$ p_k = \partial F_2 / \partial q_k = P_k $.</p>
+          <p>$ Q_k = \partial F_2 / \partial P_k = q_k $.</p>
+          <p>$ K = H + \partial F_2 / \partial t = H $.</p>
+          <p>Résultat : $Q_k=q_k$, $P_k=p_k$, $K=H$. C'est la transformation identité.</p>
+    </section>
+
+    <!-- Page 236 (OCR 19) : Example TC 2 (Point) -->
+    <section class="slide">
+         <h6>2. Transformations ponctuelles</h6>
+         <p>Fonction génératrice: $ F_2(q, P, t) = \sum_i f_i(q, t) P_i $.</p>
+           <p>$ p_k = \partial F_2 / \partial q_k = \sum_i (\partial f_i / \partial q_k) P_i $.</p>
+           <p>$ Q_k = \partial F_2 / \partial P_k = f_k(q, t) $.</p>
+           <p>$ K = H + \partial F_2 / \partial t = H + \sum_i (\partial f_i / \partial t) P_i $.</p>
+           <p>Les nouvelles coordonnées $Q_k$ ne dépendent que des anciennes coordonnées $q$ (et du temps). C'est une transformation <strong>ponctuelle</strong>. Toute transformation ponctuelle est canonique (si on transforme $p$ et $H$ correctement).</p>
+    </section>
+
+    <!-- Page 237 (OCR 20) : Example TC 3 (Exchange) -->
+     <section class="slide">
+         <h6>3. Échange coordonnée-moment</h6>
+         <p>Fonction génératrice: $ F_1(q, Q) = \sum_i q_i Q_i $.</p>
+           <p>$ p_k = \partial F_1 / \partial q_k = Q_k $.</p>
+           <p>$ P_k = -\partial F_1 / \partial Q_k = -q_k $.</p>
+           <p>$ K = H + \partial F_1 / \partial t = H $.</p>
+           <p>Résultat : $Q_k=p_k$, $P_k=-q_k$, $K=H$. C'est un échange entre coordonnées et moments (à un signe près).</p>
+     </section>
+
+     <!-- FINAL SLIDES (already generated) -->
+     <!-- ... -->
+     <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 5</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
