@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mécanique Analytique - SMP5 - Calcul Variationnel & PMA</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX Auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; padding: 15px; max-width: 900px; margin-left: auto; margin-right: auto; background-color: #f8f9fa; }
+        .slide { border: 1px solid #ccc; border-radius: 8px; background-color: #fff; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1, h2, h3, h4, h5, h6 { color: #343a40; margin-top: 1.5em; }
+        h1 { text-align: center; color: #4a148c; border-bottom: 2px solid #4a148c; padding-bottom: 10px; }
+        h2 { color: #880e4f; border-bottom: 1px solid #880e4f; padding-bottom: 5px; }
+        h3 { color: #0d47a1; }
+        .placeholder { border: 2px dashed #e74c3c; padding: 20px; text-align: center; color: #c0392b; margin: 20px 0; background-color: #fdedec; font-weight: bold; border-radius: 5px;}
+        .page-break { text-align: center; font-style: italic; color: #7f8c8d; margin: 40px 0; border-top: 1px dashed #bdc3c7; padding-top: 10px; }
+        code { background-color: #e9ecef; padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #c7254e;}
+        .definition { border-left: 4px solid #17a2b8; background-color: #e0f7fa; padding: 15px; margin: 1em 0; border-radius: 4px;}
+        .definition strong { color: #007bff; }
+        ul { list-style-type: disc; margin-left: 25px; }
+        li { margin-bottom: 0.8em; }
+        .important-quote { border: 2px solid #007bff; padding: 20px; text-align: center; font-size: 1.1em; color: #0056b3; background-color: #cfe2ff; border-radius: 5px; margin: 20px 0;}
+        .math-block { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 4px; margin: 1em 0; overflow-x: auto; }
+        .example-box { border: 1px solid #28a745; padding: 20px; margin-top: 15px; background-color: #e9f7ef; border-radius: 5px; }
+        .centered-text { text-align: center; }
+        .coordinate-box { border: 1px solid #6c757d; background-color: #e9ecef; padding: 5px 10px; display: inline-block; border-radius: 4px; }
+        .highlight { background-color: #fff3cd; padding: 2px 5px; border-radius: 3px; }
+        .note { font-style: italic; color: #6c757d; margin-top: 10px; }
+        .formula-box { background-color: #e9ecef; border: 1px solid #adb5bd; padding: 20px; margin: 15px 0; border-radius: 5px; text-align: center; }
+        .formula-box span { font-size: 1.5em; }
+         .boxed-text {
+            border: 1px solid #007bff; /* Blue border */
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #e7f3ff; /* Light blue background */
+        }
+         .calculation-box {
+             border: 2px solid #fd7e14; /* Orange border */
+             background-color: #fff8e1; /* Light yellow background */
+             padding: 15px;
+             border-radius: 8px;
+             margin: 1em 0;
+         }
+         .result-box {
+             border: 2px solid #198754; /* Green border */
+             background-color: #d1e7dd; /* Light green background */
+             padding: 15px;
+             border-radius: 8px;
+             margin: 1em 0;
+             text-align: center;
+             font-weight: bold;
+         }
+         .historical-note {
+            background-color: #f8f9fa;
+            border-left: 5px solid #6c757d;
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-style: italic;
+         }
+    </style>
+</head>
+<body>
+
+<!-- Page 1 -->
+<div class="slide">
+    <div class="page-break">Exemples Variationnels - Page 1</div>
+    <h2>§-2-3</h2>
+    <h3>2 exemples classiques</h3>
+</div>
+
+<!-- Page 2 -->
+<div class="slide">
+    <div class="page-break">Exemples Variationnels - Page 2</div>
+     <div class="centered-text">
+        <div style="display: inline-block; background-color: #0d6efd; color: white; border-radius: 50%; width: 50px; height: 50px; line-height: 50px; font-size: 1.5em; margin-bottom: 20px;">1</div>
+    </div>
+    <div class="formula-box" style="background-color: #d1e7ff; border-color: #0d6efd;">
+        <h3 style="color: #0a58ca; border: none;">Distance minimale entre deux points sur un plan.</h3>
+        <h3 style="color: #0a58ca; border: none;">Géodésique (du plan euclidien)</h3>
+    </div>
+</div>
+
+<!-- Page 3 -->
+<div class="slide">
+    <div class="page-break">Exemples Variationnels - Page 3</div>
+    <h2 style="background-color: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 5px;">Applications du principe variationnel</h2>
+    <h4 style="color: #0f5132;">Distance minimale entre deux points sur un plan</h4>
+    <p>Le problème est de déterminer la <strong>distance minimale</strong> entre deux points A et B dans un plan.</p>
+    <p>$\rightarrow$ la quantité à minimiser : la distance entre les deux points</p>
+    <div class="math-block">
+        $ ds = \sqrt{dx^2 + dy^2} = \sqrt{1 + (dy/dx)^2} dx = \sqrt{1 + y'^2} dx $
+    </div>
+    <p>$\rightarrow$ Minimiser la fonctionnelle (longueur de la courbe entre A et B):</p>
+     <div class="math-block calculation-box">
+        $ S = \int_A^B ds = \int_{x_A}^{x_B} \sqrt{1 + y'^2} dx \quad \text{et} \quad L(y') = \sqrt{1 + y'^2} $
+     </div>
+    <p>$y$ est cyclique (le Lagrangien $L$ ne dépend pas de $y$), ce qui implique la conservation du moment conjugué $p_y$ :</p>
+     <div class="math-block calculation-box">
+        $ \frac{\partial L}{\partial y'} = p_y = \frac{y'}{\sqrt{1 + y'^2}} = \text{constante} $
+     </div>
+    <p>est constant, ce qui implique $y' = dy/dx$ est constant et donc $y = f(x)$ est une <strong>droite</strong>.</p>
+    <p>La distance minimale est la longueur du segment droit qui sépare les points A et B.</p>
+</div>
+
+<!-- Page 4 -->
+<div class="slide">
+    <div class="page-break">Exemples Variationnels - Page 4</div>
+     <div class="centered-text">
+        <div style="display: inline-block; background-color: #6f42c1; color: white; border-radius: 50%; width: 50px; height: 50px; line-height: 50px; font-size: 1.5em; margin-bottom: 20px;">2</div>
+    </div>
+     <div class="formula-box" style="background-color: #f0eaff; border-color: #6f42c1;">
+        <h3 style="color: #491f8f; border: none;">Exemple historique</h3>
+        <h3 style="color: #491f8f; border: none;">La brachistochrone</h3>
+    </div>
+</div>
+
+<!-- Page 5 -->
+<div class="slide">
+    <div class="page-break">Exemples Variationnels - Page 5</div>
+     <div class="boxed-text" style="border-color: #adb5bd; background-color: #e9ecef;">
+     <h4>Un peu d' étymologie et d' histoire</h4>
+    </div>
+     <div class="boxed-text">
+         Le mot <strong>brachistochrone</strong> vient du grec <em>brakhistos</em> « le plus court » et s'écrit avec un i et non un y, et de <em>chronos</em> « temps ».
+         <div style="display: flex; justify-content: space-around; font-size: 2em; margin: 10px 0;">
+             <span>✚</span><span>✚</span><span>✚</span>
+         </div>
+        Elle fut étudiée et nommée ainsi par Jean Bernoulli en 1696 (défi lancé) et solutionnée par plusieurs mathématiciens dont Newton, Leibniz, L'Hôpital, Jean et Jacques Bernoulli, puis étudiée par Euler en 1736.
+     </div>
+</div>
+
+<!-- Page 6 -->
+<div class="slide">
+    <div class="page-break">Exemples Variationnels - Page 6</div>
+     <div class="historical-note">
+     En juin 1696, <strong>Jean Bernoulli (1667-1748)</strong> posa la question suivante au monde scientifique de son époque : étant donnés deux points A et B situés dans un plan vertical, quelle doit être la trajectoire d'un point matériel M pour que, partant du point A, il atteigne le plus rapidement possible le point B sous le seul effet de son poids ?
+     </div>
+     <div class="placeholder">[Placeholder: Diagramme montrant deux points A et B dans un plan vertical, avec différentes courbes possibles reliant A à B.]</div>
+</div>
+
+<!-- Page 7 -->
+<div class="slide">
+    <div class="page-break">Exemples Variationnels - Page 7</div>
+    <p>Le mot <strong>brachistochrone</strong> désigne une courbe dans un plan vertical sur laquelle un point matériel pesant placé dans un champ de pesanteur uniforme, glissant <strong>sans frottement</strong> et <strong>sans vitesse initiale</strong>, présente un <strong>temps de parcours minimal</strong> parmi toutes les courbes joignant deux points fixés : on parle de <em>problème de la courbe brachistochrone</em>.</p>
+    <div class="placeholder">[Placeholder: Schéma de la courbe brachistochrone (cycloïde) reliant A à B, avec une masse M dessus.]</div>
+</div>
+
+<!-- Page 8 -->
+<div class="slide">
+    <div class="page-break">Exemples Variationnels - Page 8</div>
+    <h2 style="background-color: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 5px;">Applications du principe variationnel</h2>
+    <h4 style="color: #0f5132;">la brachistochrone</h4>
+    <p>M glisse sans frottement sur un plan vertical sous l'action de son poids. Quelle est l'équation de la courbe joignant deux points O et A pour laquelle le temps mis par le point matériel est minimum ?</p>
+    <p>$\rightarrow$ la quantité à minimiser : le temps $dt = ds/v$, $v$ étant la vitesse du point matériel :</p>
+    <div class="math-block calculation-box">
+        $ S = \int_O^A dt = \int_O^A \frac{ds}{v} $
+    </div>
+    <div class="math-block calculation-box">
+        $ ds = \sqrt{dx^2 + dy^2} = \sqrt{1+y'^2} dx $
+    </div>
+    <div class="math-block calculation-box">
+        $ v = \sqrt{2gy} $, déduite à partir du théorème de l'énergie cinétique (conservation de l'énergie: $\frac{1}{2}mv^2 = mgy$ si O est à (0,0) et y orienté vers le bas).
+    </div>
+    <div class="math-block result-box">
+        $ S = \int_0^{x_A} \frac{\sqrt{1+y'^2}}{\sqrt{2gy}} dx $
+    </div>
+</div>
+
+<!-- Page 9 -->
+<div class="slide">
+    <div class="page-break">Exemples Variationnels - Page 9</div>
+    <h2 style="background-color: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 5px;">Applications du principe variationnel</h2>
+    <h4 style="color: #0f5132;">la brachistochrone</h4>
+    <p>Le "lagrangien" est la fonction à intégrer :</p>
+     <div class="formula-box">
+        <span>$ L(y, y') = \frac{\sqrt{1 + y'^2}}{\sqrt{2gy}} $</span>
+     </div>
+    <p>ne dépend pas de $x$, qui joue le rôle du temps, $\implies \partial L / \partial x = 0$ et donc le hamiltonien (analogue de l'énergie pour ce problème variationnel) est une intégrale première (constante) :</p>
+     <div class="formula-box result-box" style="border-color: #0d6efd; background-color: #d1e7ff;">
+        <span>$ H = y' \frac{\partial L}{\partial y'} - L = \frac{-1}{\sqrt{2gy(1+y'^2)}} = \text{constante} $</span>
+     </div>
+    <p>ce qui donne finalement $y(1 + y'^2) = a$, où a est une constante.</p>
+    <p class="highlight">La solution de cette équation est un <strong>cycloïde</strong>.</p>
+</div>
+
+<!-- Page 10 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 1</div>
+    <h2>§-3-</h2>
+    <h3>Principe de moindre action</h3>
+    <h3>Equations d' Euler-Lagrange</h3>
+</div>
+
+<!-- Page 11 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 2</div>
+    <div class="historical-note">
+        <p><em>« La nature agit toujours par les voies les plus courtes»</em> - <strong>Pierre de Fermat</strong> (appliqué au temps de parcours de la lumière)</p>
+        <div class="placeholder">[Placeholder: Portrait de Pierre de Fermat]</div>
+    </div>
+     <div class="historical-note">
+        <p><em>« Au commencement était l’action»</em> - <strong>Johann Wolfgang Von Goethe</strong> (référence philosophique à l'importance de l'action)</p>
+         <div class="placeholder">[Placeholder: Portrait de Johann Wolfgang Von Goethe]</div>
+     </div>
+</div>
+
+<!-- Page 12 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 3</div>
+     <div class="boxed-text" style="border-color: #adb5bd; background-color: #e9ecef;">
+     <h4>Bref historique</h4>
+    </div>
+     <div class="historical-note">
+        <p>Ce principe s'est développé pendant un siècle sur la base de l'optique et de la mécanique, commençant avec Fermat puis Maupertuis et continuant sur un plan mathématique avec Euler, Lagrange, puis Hamilton (1740-1840).</p>
+        <p>Il s'est étendu dans la seconde moitié du 19ème siècle à l'hydrodynamique, l'électromagnétisme et la thermodynamique.</p>
+     </div>
+</div>
+
+<!-- Page 13 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 4</div>
+     <h3>Introduction (au Principe de Moindre Action)</h3>
+     <div class="historical-note">
+        Dans sa <em>Mécanique analytique</em>, en 1787, un siècle après les <em>Principia</em> de Newton, Lagrange propose une façon nouvelle de considérer les problèmes de mécanique. Au lieu de déterminer la position $r(t)$ et la vitesse $v(t)$ d'une particule à l'instant $t$ connaissant son état initial $r(0), v(0)$, Lagrange se pose la question sous l'angle suivant : quelle est la trajectoire effectivement suivie par la particule si, partant de $r_1$ à l'instant $t_1$, elle arrive en $r_2$ à $t_2$ ?
+     </div>
+     <div class="placeholder">[Placeholder: Fig. 15.1: Graphe montrant une trajectoire réelle X(t) et une trajectoire possible x(t) entre (x1,t1) et (x2,t2)]</div>
+     <p>Parmi toutes ces trajectoires, la trajectoire physique effectivement suivie par la particule est celle qui rend l'action S extrémale.</p>
+</div>
+
+<!-- Page 14 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 5</div>
+    <h3>Principe de moindre action - énoncé</h3>
+    <p>On postule l'existence de la fonction de Lagrange $L(q_i, \dot{q}_i, t)$ et on définit l'<strong>action</strong> par</p>
+    <div class="placeholder">[Placeholder: Icône "pointer"]</div>
+     <div class="formula-box">
+        <span>$ S = \int_{t_1}^{t_2} L(q_i, \dot{q}_i, t) dt $</span>
+     </div>
+    <p><strong>Principe de moindre action :</strong></p>
+    <div class="result-box">
+        L'action est extrémale (stationnaire) pour la trajectoire empruntée effectivement par le système entre les instants $t_1$ et $t_2$.
+    </div>
+     <p class="note">(Extrémale signifie $\delta S = 0$ pour des variations autour de la trajectoire réelle)</p>
+</div>
+
+<!-- Page 15 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 6</div>
+    <h3>Principe de moindre action - hypothèses</h3>
+    <p>Considérons 2 trajectoires infiniment voisines l'une de l'autre :</p>
+    <ul>
+        <li>$q_i(t)$ : trajectoire effective</li>
+        <li>$q_i(t) + \delta q_i(t)$ : trajectoire variée</li>
+    </ul>
+    <p>$\rightarrow \delta q_i(t)$ : un accroissement infinitésimal,</p>
+    <p>$\rightarrow \delta q_i(t_1) = \delta q_i(t_2) = 0$ : les deux trajectoires se confondent en ces points (extrémités fixes).</p>
+    <div class="placeholder">[Placeholder: Graphe montrant q_i(t) et q_i(t)+delta q_i(t) entre t1 et t2, avec delta q_i nul aux bords.]</div>
+    <div class="boxed-text result-box">
+        <strong>Principe de moindre action</strong> <br>
+        $\Downarrow$ <br>
+        $ \delta S = 0 $
+    </div>
+</div>
+
+<!-- Page 16 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 7</div>
+    <h3>Principe de moindre action - calculs</h3>
+    <p>Calculons l'accroissement de l'action :</p>
+     <div class="math-block calculation-box">
+     $ \delta S = \int_{t_1}^{t_2} \delta L(q_i, \dot{q}_i, t) dt = \int_{t_1}^{t_2} [ L(q_i + \delta q_i, \dot{q}_i + \delta \dot{q}_i, t) - L(q_i, \dot{q}_i, t) ] dt $
+     </div>
+      <p>Au premier ordre en $\delta q_i, \delta \dot{q}_i$ :</p>
+     <div class="math-block calculation-box">
+     $ \delta S = \int_{t_1}^{t_2} \sum_i \left( \frac{\partial L}{\partial q_i} \delta q_i + \frac{\partial L}{\partial \dot{q}_i} \delta \dot{q}_i \right) dt $
+     </div>
+    <p>nous avons utilisé $\delta \dot{q}_i = d(\delta q_i) / dt$.</p>
+    <p>En intégrant par partie le deuxième terme, on obtient</p>
+     <div class="math-block calculation-box">
+     $ \int_{t_1}^{t_2} \frac{\partial L}{\partial \dot{q}_i} \delta \dot{q}_i dt = \int_{t_1}^{t_2} \frac{\partial L}{\partial \dot{q}_i} \frac{d}{dt}(\delta q_i) dt = \left[ \frac{\partial L}{\partial \dot{q}_i} \delta q_i \right]_{t_1}^{t_2} - \int_{t_1}^{t_2} \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) \delta q_i dt $
+     </div>
+    <p>Donc :</p>
+     <div class="math-block calculation-box">
+     $ \delta S = \sum_i \int_{t_1}^{t_2} \left( \frac{\partial L}{\partial q_i} - \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) \right) \delta q_i dt + \sum_i \left[ \frac{\partial L}{\partial \dot{q}_i} \delta q_i \right]_{t_1}^{t_2} $
+     </div>
+    <p>Comme $\delta q_i(t_1) = \delta q_i(t_2) = 0 \implies \left[ \frac{\partial L}{\partial \dot{q}_i} \delta q_i \right]_{t_1}^{t_2} = 0$.</p>
+</div>
+
+<!-- Page 17 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 8</div>
+    <h3>Principe de moindre action - calculs</h3>
+    <p>sachant que les $\delta q_i$ sont arbitraires et indépendants,</p>
+    <p>La condition $\delta S = 0$</p>
+    <div class="placeholder">[Placeholder: Flèche vers le bas]</div>
+     <div class="math-block calculation-box">
+     $ \delta S = \int_{t_1}^{t_2} \sum_i \left[ \frac{\partial L}{\partial q_i} - \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) \right] \delta q_i dt = 0 $
+     </div>
+    <p>implique que le coefficient de chaque $\delta q_i$ doit être nul pour tout $t$ :</p>
+    <div class="formula-box result-box" style="border-color: #dc3545; background-color: #f8d7da;">
+        <span>$ \frac{\partial L}{\partial q_i} - \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) = 0 $</span>
+    </div>
+    <div class="important-quote" style="width: fit-content; margin: 10px auto; background-color: #e2e3e5; border-color: #6c757d; color: #495057;">
+        Ce sont les équations d'Euler-Lagrange
+    </div>
+</div>
+
+<!-- Page 18 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 9</div>
+     <div class="formula-box" style="background-color: #fef9e7; border-color: #f39c12;">
+        <h2 style="color: #d35400; border: none;">Equations d'Euler-Lagrange (EEL)</h2>
+     </div>
+     <p>Généralement les équation d'Euler-Lagrange sont mises sous la forme suivante:</p>
+    <div style="display: flex; align-items: center;">
+         <div style="flex-grow: 1;">
+             <div class="placeholder">[Placeholder: Icône "pointer"]</div>
+             <div class="formula-box">
+                 <span>$ \frac{d}{dt} \left\{ \frac{\partial L}{\partial \dot{q}_i} \right\}_{p} - \left\{ \frac{\partial L}{\partial q_i} \right\}_{F} = 0 $</span>
+             </div>
+             <p class="note">(Les indices p et F rappellent que $\partial L/\partial \dot{q}_i$ est l'impulsion généralisée $p_i$ et $\partial L/\partial q_i$ est liée à la force généralisée $F_i$).</p>
+             <div class="formula-box" style="width: fit-content; margin: 10px auto; background-color: #e9ecef;">
+                $ i = 1, \dots, n $ (n = nombre de degrés de liberté)
+             </div>
+             <div class="placeholder">[Placeholder: Icône "pointer"]</div>
+             <div class="important-quote" style="width: fit-content; margin: 10px auto;">Voir applications pédagogiques</div>
+         </div>
+         <div class="placeholder" style="margin-left: 20px; width: 150px;">[Placeholder: Portrait de Lagrange]</div>
+     </div>
+</div>
+
+<!-- Page 19 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 10</div>
+     <h3>Attention</h3>
+     <p>Il y a <strong>équivalence</strong> entre le «PMA » et les «EEL »</p>
+     <div style="display: flex; justify-content: space-around; align-items: center; font-size: 1.5em; font-weight: bold; margin: 20px 0;">
+        <span>PMA</span>
+        <span>⟺</span>
+        <span>EEL</span>
+     </div>
+      <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 20px;">
+          <div class="result-box" style="width: 30%;">$ \delta S = 0 $</div>
+          <div style="font-size: 2em;">⟺</div>
+          <div class="result-box" style="width: 50%;">$ \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) - \frac{\partial L}{\partial q_i} = 0 $</div>
+      </div>
+</div>
+
+<!-- Page 20 -->
+<div class="slide">
+    <div class="page-break">PMA - Page 11</div>
+    <h2>§-3-1</h2>
+    <h3>2 exemples classiques</h3>
+     <p class="note">(Probablement application des équations d'Euler-Lagrange aux exemples précédents).</p>
+</div>
+
+</body>
+</html>
