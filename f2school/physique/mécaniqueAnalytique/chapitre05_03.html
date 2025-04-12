@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanique Analytique - SMP5 - Chapitres 2, 3, 4 & 5</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #a02c2c; /* Dark red color similar to slides */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #a02c2c;
+            padding-bottom: 10px;
+        }
+        h2 {
+             text-align: center;
+        }
+        h3.chapter-title {
+             background-color: #a02c2c;
+             color: white;
+             padding: 10px;
+             border-radius: 5px;
+             text-align: center;
+        }
+        h4.subtitle {
+             text-align: center;
+             color: #802020;
+        }
+         h5 {
+             color: #601010;
+             margin-top: 1.5em;
+         }
+         h6 {
+             color: #601010;
+             margin-top: 1em;
+             font-size: 1.1em;
+         }
+        .image-placeholder {
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px auto; /* Centered */
+            color: #777;
+            font-style: italic;
+            min-height: 50px; /* Ensure placeholder is visible */
+            max-width: 80%; /* Control image size */
+        }
+         .image-placeholder.inline {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px;
+         }
+         .image-placeholder.float-right {
+             width: 150px;
+             float: right;
+             margin-left: 15px;
+             margin-bottom: 10px;
+         }
+         .clear-float {
+            clear: both;
+         }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        blockquote {
+            border-left: 4px solid #a02c2c;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            background-color: #f9f2f2;
+        }
+        strong {
+            color: #601010;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+        }
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 25px;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .contact-info p {
+             margin: 5px 0;
+        }
+         .centered-text {
+             text-align: center;
+         }
+         .boxed-formula {
+             background-color: #e0e8f0;
+             padding: 10px 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+         }
+         .boxed-text {
+             background-color: #e0e8f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+         }
+         /* Torseur notation style */
+         .torseur {
+             display: inline-block;
+             text-align: center;
+             vertical-align: middle;
+             margin: 0 0.2em;
+         }
+         .torseur-content {
+             display: block;
+             border-left: 1px solid;
+             border-right: 1px solid;
+             padding: 0 0.3em;
+         }
+         .torseur-element {
+             display: block;
+         }
+         .torseur-point {
+             font-size: 0.7em;
+             margin-top: -0.3em;
+         }
+         .comoment {
+            display: inline-block;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 0.9em;
+            height: 0.9em;
+            line-height: 0.9em;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 0.2em;
+            font-weight: bold;
+            vertical-align: middle;
+         }
+         .pointer-icon {
+            display: inline-block; /* Prevents block behavior */
+            font-size: 1.5em; /* Adjust size */
+            margin-right: 5px; /* Space from text */
+            vertical-align: middle; /* Align with text */
+             /* Using a simple Unicode character */
+             content: "☞";
+         }
+         .arrow-up {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 2L2 12h5v10h10V12h5L12 2z"/></svg>');
+         }
+         .arrow-down {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 22L22 12h-5V2H7v10H2l10 10z"/></svg>');
+          }
+          .arrow-label {
+             text-align: center;
+             font-weight: bold;
+             color: #a02c2c;
+             margin-top: -5px;
+             margin-bottom: 10px;
+         }
+         .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+         }
+         table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            width: 80%; /* Adjust table width */
+         }
+          table.summary-table th, table.summary-table td {
+             border: 1px solid #aaa;
+             padding: 10px;
+             text-align: left;
+             vertical-align: middle;
+         }
+         table.summary-table th {
+             background-color: #e0e8f0;
+             color: #601010;
+             width: 30%;
+         }
+         table.summary-table td {
+             background-color: #f8fafd;
+         }
+          table.summary-table .katex-display {
+             margin: 0.5em 0;
+         }
+         th, td {
+             border: 1px solid #ccc;
+             padding: 8px;
+             text-align: center;
+         }
+         th {
+             background-color: #f2f2f2;
+             color: #601010;
+         }
+         caption {
+             caption-side: bottom;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-top: 5px;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- START PREVIOUSLY GENERATED CONTENT -->
+    <!-- Chapitre 2, 3 & 4: Slides 1 to 177 -->
+     <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p><p>Professeur de l'enseignement supérieur</p><p>Bureau 37 département de physique</p><p>Faculté des sciences</p><p>Agadir</p><p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... other slides Chap 2, 3 & 4 ... -->
+    <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 4</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+     <hr style="border-top: 3px solid #a02c2c; margin: 40px 0;">
+
+     <!-- CHAPTER 5 START -->
+
+     <!-- Page 158 (OCR 1) : Chap 5 Title Slide -->
+    <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p>
+            <p>Professeur de l'enseignement supérieur</p>
+            <p>Bureau 37 département de physique</p>
+            <p>Faculté des sciences</p>
+            <p>Agadir</p>
+            <p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+
+    <!-- Page 159 (OCR 2) : Chap 5 Preamble -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 5 : FORMALISME HAMILTONIEN</h3>
+
+        <h5>Préambule</h5>
+        <blockquote>
+            « Le formalisme hamiltonien transforme le système des n équations du second ordre de Lagrange en un système de 2n équations du premier ordre qui nécessite la connaissance des conditions initiales permettant de déterminer les 2n constantes arbitraires issues de leur intégration »
+        </blockquote>
+        <p class="explanation">Le formalisme de Hamilton utilise les coordonnées généralisées $q_i$ et leurs moments conjugués $p_i = \partial L / \partial \dot{q}_i$ comme variables indépendantes, au lieu de $q_i$ et $\dot{q}_i$. Cela mène à 2n équations différentielles du premier ordre (équations canoniques de Hamilton) au lieu de n équations du second ordre (équations de Lagrange). Cette formulation est fondamentale en mécanique statistique et en mécanique quantique.</p>
+
+        <div class="image-placeholder" style="width: 150px; margin: 20px auto;">[Image: Portrait de William Rowan Hamilton]
+             <p>R. Hamilton (1805-1865)</p>
+         </div>
+    </section>
+
+    <!-- Page 160 (OCR 3) : Chap 5 Objectives -->
+     <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 5 : FORMALISME HAMILTONIEN</h3>
+
+        <h5>Objectifs pédagogiques</h5>
+        <ul>
+            <li><span class="pointer-icon"></span>Introduire le Hamiltonien d'un système.</li>
+             <li class="explanation">Définir la fonction Hamiltonienne $H(q, p, t)$ via la transformation de Legendre du Lagrangien $L(q, \dot{q}, t)$.</li>
+            <li><span class="pointer-icon"></span>Etablir les équations canoniques de Hamilton.</li>
+             <li class="explanation">Dériver les $2n$ équations du premier ordre pour $\dot{q}_i$ et $\dot{p}_i$ en fonction des dérivées partielles de $H$.</li>
+            <li><span class="pointer-icon"></span>Comprendre les transformations canoniques.</li>
+             <li class="explanation">Introduire les changements de variables $(q, p) \to (Q, P)$ qui préservent la forme canonique des équations de Hamilton.</li>
+            <li><span class="pointer-icon"></span>Introduire la notion de crochets de Poisson.</li>
+             <li class="explanation">Définir le crochet de Poisson $\{f, g\}$ et montrer son invariance par transformation canonique et son lien avec l'évolution temporelle des observables $df/dt = \{f, H\} + \partial f / \partial t$.</li>
+            <li><span class="pointer-icon"></span>Comprendre le formalisme de Hamilton-Jacobi.</li>
+             <li class="explanation">Présenter l'équation de Hamilton-Jacobi, une équation aux dérivées partielles pour une fonction génératrice S, dont la résolution est équivalente à la résolution des équations du mouvement.</li>
+        </ul>
+    </section>
+
+    <!-- ... Slides 161-177 (already generated) ... -->
+
+     <!-- Page 178 (OCR 1) : Synthesis 1 Content -->
+    <section class="slide">
+        <h5>Fiche de Synthèse 1 : Formalisme Hamiltonien</h5>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="display: flex; align-items: center; margin-bottom: 20px; width: 80%; justify-content: space-between;">
+                <span style="width: 200px; text-align: right; margin-right: 10px;"><strong>Impulsion généralisée</strong></span>
+                <img src="placeholder_arrow_right.png" alt="->" style="height: 30px; filter: invert(100%);">
+                 <div class="boxed-formula" style="margin-left: 10px; flex-grow: 1;"> $$ p_i = \frac{\partial L}{\partial \dot{q}_i} $$ </div>
+            </div>
+
+            <div style="display: flex; align-items: center; margin-bottom: 20px; width: 80%; justify-content: space-between;">
+                 <span style="width: 200px; text-align: right; margin-right: 10px;"><strong>Hamiltonien</strong></span>
+                 <img src="placeholder_arrow_right.png" alt="->" style="height: 30px; filter: invert(100%);">
+                 <div class="boxed-formula" style="margin-left: 10px; flex-grow: 1;"> $$ H(q,p,t) = \sum_i p_i \dot{q}_i(q,p,t) - L $$ </div>
+            </div>
+
+            <div style="display: flex; align-items: center; margin-bottom: 20px; width: 80%; justify-content: space-between;">
+                 <span style="width: 200px; text-align: right; margin-right: 10px;"><strong>Equations canoniques</strong></span>
+                 <img src="placeholder_arrow_right.png" alt="->" style="height: 30px; filter: invert(100%);">
+                 <div class="boxed-formula" style="margin-left: 10px; flex-grow: 1;">
+                     $$ \begin{cases} \dot{q}_i = \frac{\partial H}{\partial p_i} \\ \dot{p}_i = -\frac{\partial H}{\partial q_i} \end{cases} $$
+                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page 179 (OCR 2) : Methodology Hamiltonian -->
+     <section class="slide">
+        <h5>Méthodologie à suivre pour résoudre un problème en utilisant le formalisme hamiltonien (voir TD4)</h5>
+        <ol>
+            <li><strong>Calculer L</strong> (Lagrangien $L=T-V$)</li>
+            <li><strong>Calculer $p_i = \partial L / \partial \dot{q}_i$</strong> (moments conjugués)</li>
+            <li><strong>Exprimer $\dot{q}_i$ en fonction de $p_i$ et $q_i$</strong> (inverser l'étape 2)</li>
+            <li><strong>Calculer H = $\sum p_i \dot{q}_i - L$</strong></li>
+            <li><strong>Exprimer H en fonction de $(q_i, p_i, t)$</strong> (substituer $\dot{q}_i$)</li>
+            <li><strong>Ecrire les équations canoniques</strong> ($\dot{q}_i = \partial H / \partial p_i$, $\dot{p}_i = -\partial H / \partial q_i$)</li>
+        </ol>
+    </section>
+
+    <!-- Page 180 (OCR 3) : Implementation Hamiltonian -->
+    <section class="slide centered-text">
+         <h5>Mise en œuvre</h5>
+         <span class="pointer-icon"></span>
+         <h4>Voir applications pédagogiques</h4>
+         <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+             <!-- Colonne Gauche -->
+             <div style="width: 45%; text-align: center;">
+                 <div class="boxed-formula"> $$ H = \sum_i p_i \dot{q}_i - L $$ </div>
+                 <p><strong>Hamiltonien</strong></p>
+                 <div class="boxed-formula" style="margin-top: 40px;"> $$ p_i = \frac{\partial L}{\partial \dot{q}_i} $$ </div>
+                 <p><strong>Moments conjugués</strong></p>
+             </div>
+             <!-- Image Centrale -->
+             <div style="width: 10%; text-align: center; padding-top: 50px;">
+                 <div class="image-placeholder" style="width: 100px;">[Image: Portrait de Hamilton]</div>
+             </div>
+             <!-- Colonne Droite -->
+             <div style="width: 45%; text-align: center;">
+                 <div class="boxed-formula">
+                    $$ \begin{cases} \dot{q}_i = \frac{\partial H}{\partial p_i} \\ \dot{p}_i = -\frac{\partial H}{\partial q_i} \end{cases} $$
+                </div>
+                 <p><strong>Equations canoniques</strong></p>
+                 <span class="arrow-down" style="margin-top: 20px;"></span>
+                 <div class="boxed-formula" style="background-color: lightblue; color: black; font-weight: bold; margin-top: 5px;">TD4</div>
+             </div>
+         </div>
+    </section>
+
+     <!-- Page 181 (OCR 4) : Application 1 Title -->
+    <section class="slide">
+        <h5>Application pédagogique n° 1</h5>
+        <div class="boxed-text"><strong>Hamiltonien en coordonnées polaires</strong></div>
+        <p>On considère une particule de masse m placé dans un potentiel de la forme :</p>
+         <div class="boxed-formula">
+             $$ V(r) = -\frac{e^2}{r} $$
+         </div>
+    </section>
+
+    <!-- Page 182 (OCR 5) : Application 1 Questions -->
+    <section class="slide">
+        <ol>
+            <li>Ecrire le lagrangien puis le hamiltonien du système en coordonnées polaires $(r, \theta)$.</li>
+            <li>Exprimer le hamiltonien H en fonction de $P_r$ et $P_\theta$.</li>
+            <li>Pourquoi H = E = Cte, pourquoi $P_\theta$ est une constante du mouvement.</li>
+            <li>Ecrire les équations canoniques et exprimer $\dot{\theta}$ et $\dot{r}$ en fonction de $P_\theta$ et $P_r$.</li>
+        </ol>
+    </section>
+
+     <!-- Page 183 (OCR 6) : Application 1 Sol 1&2 -->
+    <section class="slide">
+         <h6>1- Lagrangien et Hamiltonien</h6>
+         <p>$T = \frac{1}{2}m(\dot{r}^2 + r^2\dot{\theta}^2)$, $V = -e^2/r$.</p>
+         <div class="boxed-formula">
+             $$ L = T - V = \frac{1}{2}m(\dot{r}^2 + r^2\dot{\theta}^2) + \frac{e^2}{r} $$
+         </div>
+          <div class="boxed-formula">
+             $$ H = T + V = \frac{1}{2}m(\dot{r}^2 + r^2\dot{\theta}^2) - \frac{e^2}{r} $$
+          </div>
+
+          <h6>2- Hamiltonien en fonction de $P_r, P_\theta$</h6>
+          <p>Moments conjugués :</p>
+          <div class="boxed-formula"> $ P_r = m\dot{r} \implies \dot{r} = P_r/m $ </div>
+          <div class="boxed-formula"> $ P_\theta = mr^2\dot{\theta} \implies \dot{\theta} = P_\theta/(mr^2) $ </div>
+    </section>
+
+     <!-- Page 184 (OCR 7) : Application 1 Sol 2&3 -->
+    <section class="slide">
+         <p>Substituons $\dot{r}$ et $\dot{\theta}$ dans H:</p>
+          <div class="boxed-formula">
+             $$ H(r, \theta, P_r, P_\theta) = \frac{P_r^2}{2m} + \frac{P_\theta^2}{2mr^2} - \frac{e^2}{r} $$
+          </div>
+
+          <h6>3- Conservation de H et $P_\theta$</h6>
+          <p>H = E = Cte car $\partial H / \partial t = 0$ (H ne dépend pas explicitement du temps).</p>
+          <p>$P_\theta = Cte$ car $\theta$ est une variable cyclique ($\partial L / \partial \theta = 0$, et donc $\partial H / \partial \theta = 0$, ce qui implique $\dot{P}_\theta = 0$).</p>
+    </section>
+
+     <!-- Page 185 (OCR 8) : Application 1 Sol 4a -->
+    <section class="slide">
+        <h6>4- Equations canoniques</h6>
+        <p>Equations pour $\dot{q}_i = \partial H / \partial p_i$ :</p>
+         <div class="boxed-formula">
+             $$ \dot{r} = \frac{\partial H}{\partial P_r} = \frac{P_r}{m} $$
+             $$ \dot{\theta} = \frac{\partial H}{\partial P_\theta} = \frac{P_\theta}{mr^2} $$
+         </div>
+    </section>
+
+     <!-- Page 186 (OCR 9) : Application 1 Sol 4b -->
+    <section class="slide">
+        <p>Equations pour $\dot{p}_i = -\partial H / \partial q_i$ :</p>
+         <div class="boxed-formula">
+             $$ \dot{P}_\theta = -\frac{\partial H}{\partial \theta} = 0 $$
+             $$ \dot{P}_r = -\frac{\partial H}{\partial r} = -\left( \frac{P_\theta^2}{2m} (\frac{-2}{r^3}) - e^2 (\frac{-1}{r^2}) \right) = \frac{P_\theta^2}{mr^3} - \frac{e^2}{r^2} $$
+         </div>
+    </section>
+
+     <!-- Page 187 (OCR 10) : Application 2 Title -->
+     <section class="slide">
+          <h5>Application pédagogique n° 2</h5>
+          <div class="boxed-text"><strong>Hamiltonien en coordonnées sphériques</strong></div>
+          <p>Soit une particule de masse m, soumise à l'action d'un champ de forces. Son énergie potentielle est donnée par :</p>
+          <div class="boxed-formula">
+              $$ V(r, \theta, \phi) = f(r) + \frac{g(\theta)}{r^2} + \frac{h(\phi)}{r^2 \sin^2\theta} $$
+          </div>
+           <ol>
+             <li>Etablir le Hamiltonien en coordonnées sphériques.</li>
+             <li>Déterminer les équations canoniques de Hamilton.</li>
+           </ol>
+     </section>
+
+     <!-- Page 188 (OCR 11) : Application 2 Sol 1 -->
+     <section class="slide">
+         <h6>1- Hamiltonien</h6>
+         <p>Energie cinétique : $ T = \frac{1}{2}m(\dot{r}^2 + r^2\dot{\theta}^2 + r^2\sin^2\theta \dot{\phi}^2) $.</p>
+         <p>Potentiel : $ V(r, \theta, \phi) = f(r) + \frac{g(\theta)}{r^2} + \frac{h(\phi)}{r^2 \sin^2\theta} $. </p>
+         <p>Hamiltonien $H = T + V$ :</p>
+           <div class="boxed-formula">
+              $$ H = \frac{1}{2}m(\dot{r}^2 + r^2\dot{\theta}^2 + r^2\sin^2\theta \dot{\phi}^2) + f(r) + \frac{g(\theta)}{r^2} + \frac{h(\phi)}{r^2 \sin^2\theta} $$
+          </div>
+     </section>
+
+      <!-- Page 189 (OCR 12) : Application 2 Moments -->
+     <section class="slide">
+          <h5>Impulsion généralisée et moments conjugués</h5>
+          <div class="boxed-formula">
+          $$
+          \begin{cases}
+          P_r = m\dot{r} \implies \dot{r} = P_r / m \\
+          P_\theta = mr^2\dot{\theta} \implies \dot{\theta} = P_\theta / (mr^2) \\
+          P_\phi = mr^2\sin^2\theta \dot{\phi} \implies \dot{\phi} = P_\phi / (mr^2\sin^2\theta)
+          \end{cases}
+          $$
+          </div>
+     </section>
+
+      <!-- Page 190 (OCR 13) : Application 2 Hamiltonian(p,q) -->
+     <section class="slide">
+          <h5>Hamiltonien (en $q, p$)</h5>
+           <div class="boxed-formula">
+              $$ H = \frac{1}{2m} \left( P_r^2 + \frac{P_\theta^2}{r^2} + \frac{P_\phi^2}{r^2\sin^2\theta} \right) + f(r) + \frac{g(\theta)}{r^2} + \frac{h(\phi)}{r^2 \sin^2\theta} $$
+          </div>
+     </section>
+
+     <!-- Page 191 (OCR 14) : Application 2 Canonical Eq 1 -->
+     <section class="slide">
+         <h5>2- Equations canoniques</h5>
+         <div style="display: flex; align-items: flex-start;">
+             <div class="boxed-formula" style="margin-right: 20px;">
+                $$ \dot{q}_i = \frac{\partial H}{\partial p_i} $$
+             </div>
+              <img src="placeholder_arrow_right.png" alt="->" style="height: 30px; filter: invert(100%); margin-top: 20px;">
+             <div class="boxed-formula" style="margin-left: 20px;">
+                 $$
+                 \begin{cases}
+                 \dot{r} = \frac{P_r}{m} \\
+                 \dot{\theta} = \frac{P_\theta}{mr^2} \\
+                 \dot{\phi} = \frac{P_\phi}{mr^2\sin^2\theta}
+                 \end{cases}
+                 $$
+             </div>
+         </div>
+     </section>
+
+     <!-- Page 192 (OCR 15) : Application 2 Canonical Eq 2 -->
+    <section class="slide">
+        <div style="position: relative;">
+            <div class="boxed-formula" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%);">
+                 $$ \dot{p}_i = -\frac{\partial H}{\partial q_i} $$
+            </div>
+             <span class="arrow-down" style="position: absolute; top: 60px; left: 50%; transform: translateX(-50%);"></span>
+        </div>
+        <br><br><br><br>
+         <div class="boxed-formula">
+          $$
+          \begin{cases}
+          \dot{P}_r = -\frac{\partial H}{\partial r} = \frac{P_\theta^2}{mr^3} + \frac{P_\phi^2}{mr^3\sin^2\theta} - f'(r) + \frac{2g(\theta)}{r^3} + \frac{2h(\phi)}{r^3\sin^2\theta} \\ \\
+          \dot{P}_\theta = -\frac{\partial H}{\partial \theta} = \frac{P_\phi^2 \cos\theta}{mr^2\sin^3\theta} - \frac{g'(\theta)}{r^2} + \frac{2h(\phi)\cos\theta}{r^2\sin^3\theta} \\ \\
+          \dot{P}_\phi = -\frac{\partial H}{\partial \phi} = -\frac{h'(\phi)}{r^2\sin^2\theta}
+          \end{cases}
+          $$
+         </div>
+         <p class="explanation">Les calculs des dérivées partielles sont détaillés sur la slide et semblent corrects.</p>
+    </section>
+
+    <!-- Page 193 (OCR 16) : Transition slide -->
+    <section class="slide centered-text">
+         <div style="display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center;">
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Lagrange?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Euler?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait D'Alembert?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Hamilton?]</div>
+         </div>
+         <div class="boxed-text" style="margin-top: 20px;">
+            <h4>Et maintenant, c'est à vous de jouer.</h4>
+            <h4>A vos dossiers pédagogiques.</h4>
+         </div>
+          <span class="pointer-icon"></span>
+    </section>
+
+     <!-- Page 194 (OCR 17) : Section 2 Title -->
+    <section class="slide centered-text">
+        <h4>§-2-</h4>
+        <h3>Crochets de poisson</h3>
+    </section>
+
+     <!-- Page 195 (OCR 18) : Poisson Brackets Intro -->
+    <section class="slide">
+         <h5>Crochets de Poisson</h5>
+          <blockquote>« On introduit la notion de crochets de Poisson pour leur analogie avec les commutateurs de la mécanique quantique »</blockquote>
+           <div class="boxed-text"><span class="pointer-icon"></span> C'est un pont vers la mécanique quantique</div>
+           <div class="image-placeholder" style="width: 150px;">[Image: Portrait de Siméon Denis Poisson]
+                <p>Denis Poisson (1781-1840)</p>
+           </div>
+    </section>
+
+    <!-- Page 196 (OCR 19) : Poisson Brackets Motivation -->
+     <section class="slide">
+         <div class="boxed-text">
+             <p>Il est intéressant de reformuler les équations canoniques a l'aide des crochets de Poisson. Ce formalisme s'avère en particulier très utile pour comprendre le passage de la dynamique classique à la dynamique quantique, que le système possède un nombre fini de degrés de liberté, comme c'est le cas dans ce chapitre, ou qu'il possède un nombre infini de degrés de liberté.</p>
+             <p>Par ailleurs, la dissymétrie apparente entre les deux jeux d'équation de Hamilton peut être cachée pudiquement en introduisant les crochets de Poisson.</p>
+         </div>
+          <div class="boxed-formula">
+             $$ \frac{dq_i}{dt} = \frac{\partial H}{\partial p_i} \quad \text{et} \quad \frac{dp_i}{dt} = -\frac{\partial H}{\partial q_i} $$
+         </div>
+     </section>
+
+     <!-- Page 197 (OCR 20) : Poisson Brackets Definition -->
+    <section class="slide">
+         <p>On appelle <strong>crochets de poisson</strong> entre deux fonctions $f(q, p, t)$ et $g(q, p, t)$ définies dans l'espace des phases l'expression suivante :</p>
+          <div class="boxed-formula">
+             $$ \{f, g\} = \sum_i \left( \frac{\partial f}{\partial q_i} \frac{\partial g}{\partial p_i} - \frac{\partial f}{\partial p_i} \frac{\partial g}{\partial q_i} \right) $$
+          </div>
+          <p>Cette notation permet d'écrire pour toute fonction des $q_i$ et $p_i$ et éventuellement le temps, la relation bien plus générale : (voir slide suivante)</p>
+     </section>
+
+    <!-- Page 198 (OCR 1) : Evolution equation with Poisson Brackets -->
+    <section class="slide">
+        <p>La dérivée totale d'une fonction $f(q,p,t)$ par rapport au temps est :</p>
+        <div class="boxed-formula">
+            $$ \frac{df}{dt} = \sum_i \frac{\partial f}{\partial q_i} \dot{q}_i + \sum_i \frac{\partial f}{\partial p_i} \dot{p}_i + \frac{\partial f}{\partial t} $$
+        </div>
+        <p>or (équations canoniques) :</p>
+         <div class="boxed-formula">
+             $$ \dot{q}_i = \frac{\partial H}{\partial p_i} \quad \text{et} \quad \dot{p}_i = -\frac{\partial H}{\partial q_i} $$
+        </div>
+        <p>En substituant :</p>
+         <div class="boxed-formula">
+             $$ \frac{df}{dt} = \sum_i \left( \frac{\partial f}{\partial q_i} \frac{\partial H}{\partial p_i} - \frac{\partial f}{\partial p_i} \frac{\partial H}{\partial q_i} \right) + \frac{\partial f}{\partial t} $$
+             $$ \frac{df}{dt} = \{f, H\} + \frac{\partial f}{\partial t} $$
+        </div>
+    </section>
+
+    <!-- Page 199 (OCR 2) : First Integral with Poisson Brackets -->
+    <section class="slide">
+         <p>Si f ne dépend pas explicitement du temps :</p>
+          <div class="boxed-formula">
+             $$ \frac{\partial f}{\partial t} = 0 $$
+         </div>
+         <p>Pour qu'elle soit une intégrale première ($df/dt = 0$), il suffit que :</p>
+          <div class="boxed-formula">
+             $$ \{f, H\} = 0 $$
+         </div>
+         <p class="explanation">Une quantité qui ne dépend pas explicitement du temps est conservée si son crochet de Poisson avec le Hamiltonien est nul.</p>
+    </section>
+
+    <!-- Page 200 (OCR 3) : Canonical Eq with Poisson Brackets -->
+    <section class="slide">
+        <p>Ceci permet de mettre les équations canoniques de Hamilton sous forme plus symétrique :</p>
+         <div class="boxed-formula">
+             $$ \frac{dq_i}{dt} = \{q_i, H\} \quad \text{et} \quad \frac{dp_i}{dt} = \{p_i, H\} $$
+         </div>
+         <p><strong>En effet :</strong></p>
+          <div class="boxed-formula">
+             $$ \{q_i, H\} = \sum_k \left( \underbrace{\frac{\partial q_i}{\partial q_k}}_{\delta_{ik}} \frac{\partial H}{\partial p_k} - \underbrace{\frac{\partial q_i}{\partial p_k}}_{0} \frac{\partial H}{\partial q_k} \right) = \frac{\partial H}{\partial p_i} = \dot{q}_i $$
+          </div>
+           <div class="boxed-formula">
+             $$ \{p_i, H\} = \sum_k \left( \underbrace{\frac{\partial p_i}{\partial q_k}}_{0} \frac{\partial H}{\partial p_k} - \underbrace{\frac{\partial p_i}{\partial p_k}}_{\delta_{ik}} \frac{\partial H}{\partial q_k} \right) = -\frac{\partial H}{\partial q_i} = \dot{p}_i $$
+          </div>
+          <p class="explanation">Les flèches sur la slide indiquent que $\partial q_i / \partial p_k = 0$ et $\partial p_i / \partial q_k = 0$ car $q_k$ et $p_k$ sont des variables indépendantes.</p>
+    </section>
+
+    <!-- Page 201 (OCR 4) : dH/dt with Poisson Brackets -->
+    <section class="slide">
+        <p>On en déduit que le hamiltonien lui-même vérifie :</p>
+         <div class="boxed-formula">
+             $$ \frac{dH}{dt} = \{H, H\} + \frac{\partial H}{\partial t} $$
+         </div>
+         <p>Comme $\{H, H\} = \sum_i (\frac{\partial H}{\partial q_i}\frac{\partial H}{\partial p_i} - \frac{\partial H}{\partial p_i}\frac{\partial H}{\partial q_i}) = 0$, on retrouve :</p>
+          $$ \frac{dH}{dt} = \frac{\partial H}{\partial t} $$
+         <div class="boxed-text">
+             <p>Ce qui établit que le hamiltonien garde une valeur constante (l'énergie) si il ne dépend pas explicitement du temps.</p>
+             <p>Plus généralement, on appellera « constante du mouvement » (ou intégrale première) tout opérateur (fonction $f(q,p)$) ne dépendant pas explicitement du temps et dont le crochet de Poisson avec H est nul.</p>
+         </div>
+    </section>
+
+    <!-- Page 202 (OCR 5) : Symplectic Structure -->
+    <section class="slide">
+         <h5>Structure symplectique et transformations canoniques</h5>
+          <div class="boxed-text">
+             <p>Le crochet de poisson est un élément central de l'approche hamiltonienne, qui met sur un pied d'égalité les 2n variables dynamiques $(q_i, p_i)$. Du point de vue mathématique, il s'agit d'un produit <strong>bilinéaire</strong> et <strong>antisymétrique</strong> ($\{f,g\} = -\{g,f\}$) qui dote l'espace des phases d'une structure algébrique dite structure «<strong>symplectique</strong> ».</p>
+          </div>
+         <p class="explanation">Cette structure est définie par une forme bilinéaire antisymétrique non dégénérée (la forme symplectique $\omega = \sum dq_i \wedge dp_i$). Les crochets de Poisson et les équations de Hamilton sont intimement liés à cette structure.</p>
+    </section>
+
+    <!-- Page 203 (OCR 6) : Fundamental Poisson Brackets -->
+    <section class="slide">
+         <p>On constate que dans le cas particulier où $f=q_i$ et $g=p_j$ (ou $q_j$ ou $p_j$), on a:</p>
+          <div class="boxed-formula">
+             $$ \{q_i, p_j\} = \sum_k \left( \frac{\partial q_i}{\partial q_k} \frac{\partial p_j}{\partial p_k} - \frac{\partial q_i}{\partial p_k} \frac{\partial p_j}{\partial q_k} \right) = \sum_k (\delta_{ik} \delta_{jk} - 0 \times 0) = \delta_{ij} $$
+          </div>
+          <p>et on obtient les crochets de Poisson fondamentaux entre les variables conjuguées :</p>
+           <div class="boxed-formula">
+             $$ \{q_i, p_j\} = \delta_{ij} \quad ; \quad \{q_i, q_j\} = 0 \quad ; \quad \{p_i, p_j\} = 0 $$
+          </div>
+           <p class="explanation">Ces relations sont analogues aux relations de commutation canoniques en mécanique quantique, avec $\{ , \} \leftrightarrow \frac{1}{i\hbar}[ , ]$.</p>
+    </section>
+
+    <!-- Page 204 (OCR 7) : Poisson Bracket Properties -->
+    <section class="slide">
+        <h5>Propriétés des crochets de Poisson</h5>
+        <h6>Nous présentons quelques propriétés</h6>
+         <div class="boxed-formula">
+             $$ \{f, g\} = -\{g, f\} \quad (\text{Antisymétrie}) $$
+             $$ \{f, c\} = 0 \quad (\text{c est une constante}) $$
+             $$ \{f_1 + f_2, g\} = \{f_1, g\} + \{f_2, g\} \quad (\text{Linéarité}) $$
+             $$ \{f_1 f_2, g\} = \{f_1, g\} f_2 + f_1 \{f_2, g\} \quad (\text{Règle de Leibniz}) $$
+             $$ \frac{\partial}{\partial t} \{f, g\} = \left\{ \frac{\partial f}{\partial t}, g \right\} + \left\{ f, \frac{\partial g}{\partial t} \right\} $$
+             $$ \{f, q_i\} = -\frac{\partial f}{\partial p_i} $$
+             $$ \{f, p_i\} = \frac{\partial f}{\partial q_i} $$
+         </div>
+         <p>On appelle par <strong>l'identité de Jacobi</strong>, l'expression suivante</p>
+          <div class="boxed-formula">
+             $$ \{f, \{g, h\}\} + \{g, \{h, f\}\} + \{h, \{f, g\}\} = 0 $$
+          </div>
+          <p>On démontre aussi que</p>
+           <div class="boxed-formula">
+             $$ \frac{d}{dt}\{f, g\} = \left\{ \frac{df}{dt}, g \right\} + \left\{ f, \frac{dg}{dt} \right\} $$
+          </div>
+          <p class="explanation">Attention, la dernière relation est correcte si df/dt et dg/dt représentent les dérivées totales, mais la relation avec dérivées partielles est $\frac{d}{dt}\{f,g\} = \{\frac{df}{dt}, g\} + \{f, \frac{dg}{dt}\} - \{\frac{\partial f}{\partial t}, g\} - \{f, \frac{\partial g}{\partial t}\}$? Vérification nécessaire. La relation $\frac{d}{dt}\{f, g\} = \{\{f,H\}+\frac{\partial f}{\partial t}, g\} + \{f, \{g,H\}+\frac{\partial g}{\partial t}\}$ est plus standard.</p>
+    </section>
+
+    <!-- Page 205 (OCR 8) : Property 1 Antisymmetry -->
+    <section class="slide">
+        <h5>Propriétés des crochets de Poisson</h5>
+        <h6>Propriété n° 1 (Antisymétrie)</h6>
+        <span class="pointer-icon"></span>
+         <div class="boxed-formula">
+             $$ \{A, B\}_{q,p} = \sum_{i=1}^n \left[ \frac{\partial A}{\partial q_i} \frac{\partial B}{\partial p_i} - \frac{\partial A}{\partial p_i} \frac{\partial B}{\partial q_i} \right] $$
+         </div>
+          <span class="pointer-icon"></span>
+          <div class="boxed-formula">
+             $$ \{A, B\} = -(B, A) $$
+             <p class="explanation">La slide détaille le calcul:</p>
+             $$ \{B, A\} = \sum_{i=1}^n \left[ \frac{\partial B}{\partial q_i} \frac{\partial A}{\partial p_i} - \frac{\partial B}{\partial p_i} \frac{\partial A}{\partial q_i} \right] = \sum_{i=1}^n \left[ - \frac{\partial A}{\partial q_i} \frac{\partial B}{\partial p_i} + \frac{\partial A}{\partial p_i} \frac{\partial B}{\partial q_i} \right] $$
+             $$ = - \sum_{i=1}^n \left[ \frac{\partial A}{\partial q_i} \frac{\partial B}{\partial p_i} - \frac{\partial A}{\partial p_i} \frac{\partial B}{\partial q_i} \right] = -\{A, B\} $$
+          </div>
+    </section>
+
+     <!-- Page 206 (OCR 9) : Property 2 Linearity -->
+     <section class="slide">
+        <h5>Propriété n° 2 (Linéarité)</h5>
+        <span class="pointer-icon"></span>
+        <div class="boxed-formula">
+             $$ \{A, B+C\} = \{A, B\} + \{A, C\} $$
+        </div>
+         <p class="explanation">Démonstration:</p>
+         $$ \{A, B+C\} = \sum_{i=1}^n \left[ \frac{\partial A}{\partial q_i} \frac{\partial (B+C)}{\partial p_i} - \frac{\partial A}{\partial p_i} \frac{\partial (B+C)}{\partial q_i} \right] $$
+          $$ = \sum_{i=1}^n \left[ \frac{\partial A}{\partial q_i} (\frac{\partial B}{\partial p_i} + \frac{\partial C}{\partial p_i}) - \frac{\partial A}{\partial p_i} (\frac{\partial B}{\partial q_i} + \frac{\partial C}{\partial q_i}) \right] $$
+           $$ = \sum_{i=1}^n \left[ (\frac{\partial A}{\partial q_i}\frac{\partial B}{\partial p_i} - \frac{\partial A}{\partial p_i}\frac{\partial B}{\partial q_i}) + (\frac{\partial A}{\partial q_i}\frac{\partial C}{\partial p_i} - \frac{\partial A}{\partial p_i}\frac{\partial C}{\partial q_i}) \right] $$
+            $$ = \sum_{i=1}^n (...) + \sum_{i=1}^n (...) = \{A, B\} + \{A, C\} $$
+    </section>
+
+     <!-- Page 207 (OCR 10) : Property 3 Leibniz Rule -->
+     <section class="slide">
+         <h5>Propriété n° 3 (Règle de Leibniz)</h5>
+         <span class="pointer-icon"></span>
+          <div class="boxed-formula">
+             $$ \{A, BC\} = B\{A, C\} + \{A, B\}C $$
+          </div>
+          <p class="explanation">Démonstration:</p>
+           $$ \{A, BC\} = \sum_{i=1}^n \left[ \frac{\partial A}{\partial q_i} \frac{\partial (BC)}{\partial p_i} - \frac{\partial A}{\partial p_i} \frac{\partial (BC)}{\partial q_i} \right] $$
+            $$ = \sum_{i=1}^n \left[ \frac{\partial A}{\partial q_i} (B\frac{\partial C}{\partial p_i} + \frac{\partial B}{\partial p_i}C) - \frac{\partial A}{\partial p_i} (B\frac{\partial C}{\partial q_i} + \frac{\partial B}{\partial q_i}C) \right] $$
+             $$ = \sum_{i=1}^n \left[ B(\frac{\partial A}{\partial q_i}\frac{\partial C}{\partial p_i} - \frac{\partial A}{\partial p_i}\frac{\partial C}{\partial q_i}) + C(\frac{\partial A}{\partial q_i}\frac{\partial B}{\partial p_i} - \frac{\partial A}{\partial p_i}\frac{\partial B}{\partial q_i}) \right] $$
+             $$ = B \sum_{i=1}^n (...) + C \sum_{i=1}^n (...) = B\{A, C\} + C\{A, B\} $$
+              <p class="explanation">La slide a $\{A,B\}C$ à la fin, c'est correct.</p>
+     </section>
+
+      <!-- Page 208 (OCR 11) : Property 4 Jacobi Identity -->
+      <section class="slide">
+         <h5>Propriété n° 4 (Identité de Jacobi)</h5>
+          <span class="pointer-icon"></span>
+           <div class="boxed-formula">
+             $$ \{A, \{B, C\}\} + \{C, \{A, B\}\} + \{B, \{C, A\}\} = 0 $$
+          </div>
+          <p class="explanation">La démonstration est longue et consiste à développer tous les termes. On utilise la notation $\partial_q A = \partial A / \partial q_i$ etc. pour $n=1$.</p>
+           $$ \{A, \{B, C\}\} = \partial_q A \partial_p(\partial_q B \partial_p C - \partial_p B \partial_q C) - \partial_p A \partial_q(\partial_q B \partial_p C - \partial_p B \partial_q C) $$
+            <p>En développant les 3 termes et en utilisant le théorème de Schwarz ($\partial_{pq} = \partial_{qp}$), on montre que la somme est nulle.</p>
+             <!-- Placeholder for the complex formula image on the slide -->
+            <div class="image-placeholder">[Image: Detailed derivation steps for Jacobi Identity from the slide]</div>
+     </section>
+
+     <!-- Page 209 (OCR 12) : Jacobi Identity Proof n=1 -->
+     <section class="slide">
+          <h5>Pour n = 1</h5>
+          <p>Développement de $\{A, \{B, C\}\} + \{C, \{A, B\}\} + \{B, \{C, A\}\}$ :</p>
+          <div class="image-placeholder">[Image: Expansion of the Jacobi identity terms for n=1]</div>
+          <p class="explanation">Après expansion complète et regroupement des termes utilisant $\partial_{qp} = \partial_{pq}$, tous les termes s'annulent deux à deux.</p>
+     </section>
+
+      <!-- Page 210 (OCR 13) : Jacobi Identity Conclusion -->
+     <section class="slide">
+         <p>Or (Théorème de Schwarz) : $\partial_{p,q} = \partial_{q,p}$</p>
+         <p>d'où :</p>
+          <div class="boxed-formula">
+             $$ \{A, \{B, C\}\} + \{C, \{A, B\}\} + \{B, \{C, A\}\} = 0 $$
+          </div>
+          <span class="pointer-icon"></span>
+          <strong>C'est l'identité de Jacobi</strong>
+     </section>
+
+     <!-- Page 211 (OCR 14) : Implementation Poisson Brackets -->
+     <section class="slide centered-text">
+         <h5>Mise en œuvre</h5>
+          <span class="pointer-icon"></span>
+         <h4>Voir applications pédagogiques</h4>
+          <div style="display: flex; justify-content: space-around; align-items: center;">
+             <div class="boxed-formula">
+                  $$ \{A, B\}_{q,p} = \sum_{i=1}^n \left[ \frac{\partial A}{\partial q_i} \frac{\partial B}{\partial p_i} - \frac{\partial A}{\partial p_i} \frac{\partial B}{\partial q_i} \right] $$
+             </div>
+              <div class="image-placeholder" style="width: 150px;">[Image: Portrait de Poisson]</div>
+              <div class="boxed-formula">
+                  $$ \frac{df}{dt} = \frac{\partial f}{\partial t} + \{f, H\} $$
+             </div>
+         </div>
+          <div class="boxed-formula" style="margin-top: 20px;">
+                 $$ \{A,\{B,C\}\} + \{C,\{A,B\}\} + \{B,\{C,A\}\} = 0 $$
+          </div>
+     </section>
+
+    <!-- Page 212 (OCR 15) : Transition slide -->
+     <section class="slide centered-text">
+         <div style="display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center;">
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Lagrange?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Euler?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait D'Alembert?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Hamilton?]</div>
+         </div>
+         <div class="boxed-text" style="margin-top: 20px;">
+            <h4>Et maintenant, c'est à vous de jouer.</h4>
+            <h4>A vos dossiers pédagogiques.</h4>
+         </div>
+          <span class="pointer-icon"></span>
+    </section>
+
+     <!-- Page 213 (OCR 16) : Section 3 Title -->
+    <section class="slide centered-text">
+        <h4>§-3-</h4>
+        <h3>Transformations canoniques</h3>
+    </section>
+
+    <!-- Page 214 (OCR 17) : Canonical Transformations Intro -->
+     <section class="slide">
+         <h5>Transformations canoniques (TC)</h5>
+          <div class="boxed-text">
+             <p>De même que dans un espace vectoriel euclidien, on peut s'intéresser à des « <strong>isométries</strong> », c'est-à dire à des transformations qui conservent la structure euclidienne (distances, angles).</p>
+             <p>Dans l'espace des phases, on peut considérer des transformations $(q,p) \to (Q(q,p,t), P(q,p,t))$ qui conservent la structure fondamentale, c'est-à-dire la forme des équations de Hamilton et/ou la structure des crochets de Poisson. Ces transformations sont alors appelées « <strong>transformations canoniques</strong> ».</p>
+         </div>
+          <p>Exemples d'isométries : Translation, rotation, homothétie (<--- homothétie n'est pas une isométrie!), ...etc.</p>
+          <p class="explanation">L'idée est de trouver des changements de variables dans l'espace des phases qui simplifient le Hamiltonien ou les équations du mouvement, tout en préservant la structure Hamiltonienne.</p>
+     </section>
+
+     <!-- Page 215 (OCR 18) : Text about canonical variables -->
+     <section class="slide">
+          <div class="image-placeholder">[Image: Texte scanné d'un livre décrivant les variables canoniques généralisées]
+                <p><em>On dit que des $q_i$ et des $p_i$ que ce sont des variables canoniques généralisées. Ce n'est pas un euphémisme puisqu'il n'y a pratiquement aucune limite à ce qu'elles peuvent représenter physiquement. Nous en verrons d'ailleurs à quelques exemples. Puisque tel est le cas, il doit exister des transformations entre ces différents choix. Nous noterons $Q_i$ et $P_i$ les nouvelles variables canoniques obtenues suite à une telle transformation.</em></p>
+                <div class="boxed-formula" style="border-color: red; border-width: 2px;"> $q_i, p_i \xrightarrow{T.C.} Q_i, P_i$ </div>
+                 <p><em>On n'est pas surpris par contre de constater que ces transformations sont soumises à des conditions assez sévères. En effet, les $q_i$ et $p_i$ sont généralisés mais obéissent à</em></p>
+                  <div class="boxed-formula" style="border-color: red; border-width: 2px;"> $\{q_k, q_j\} = 0, \quad \{p_k, p_j\} = 0, \quad \{q_k, p_j\} = \delta_{kj} \quad (4.89)$ </div>
+                 <p><em>et les équations canoniques</em></p>
+                  <div class="boxed-formula"> $\dot{q}_i = \frac{\partial H}{\partial p_i}, \quad \dot{p}_i = -\frac{\partial H}{\partial q_i} \quad (4.90)$ </div>
+                   <p><em>sont invariantes de forme. Ainsi, à la suite d'une transformation des $q_i$ et $p_i$ vers les $Q_i$ et $P_i$ et définissant un nouvel hamiltonien que nous noterons $H'(Q_i, P_i)$, c'est-à-dire</em></p>
+                   <div class="boxed-formula" style="border-color: red; border-width: 2px;"> $q_i, p_i, H(q_i, p_i) \xrightarrow{T.C.} Q_i, P_i, H'(Q_i, P_i)$ </div>
+         </div>
+         <p class="explanation">Ce texte souligne que les variables $(q,p)$ sont très générales et qu'on peut passer d'un jeu de variables canoniques $(q,p)$ à un autre $(Q,P)$ par une transformation canonique (T.C.). Une T.C. doit préserver les crochets de Poisson fondamentaux ($\{Q_k, P_j\} = \delta_{kj}$, etc.) et la forme des équations de Hamilton (avec un nouveau Hamiltonien $H'$).</p>
+     </section>
+
+      <!-- Page 216 (OCR 19) : Canonical Transformations Principle -->
+     <section class="slide centered-text">
+          <h5>Transformations canoniques (TC)</h5>
+           <div class="boxed-text"><strong>Principe de base</strong></div>
+            <span class="arrow-down"></span>
+             <div class="boxed-text"><strong>Changement de variables dans l'espace des phases :</strong></div>
+             <div class="boxed-formula">
+                 $$ (q_i, p_i) \longrightarrow (Q_i, P_i) $$
+                  <p class="explanation">$Q_i = Q_i(q, p, t)$ et $P_i = P_i(q, p, t)$</p>
+             </div>
+             <div class="image-placeholder float-right" style="width: 120px;">[Image: Portrait d'un scientifique, peut-être Jacobi?]</div>
+             <div class="clear-float"></div>
+     </section>
+
+     <!-- Page 217 (OCR 20) : Canonical System -->
+     <section class="slide">
+          <p>Soit le système canonique associé à l'hamiltonien $H(q_i, p_i, t)$</p>
+           <div class="boxed-formula">
+             $$
+             \begin{cases}
+             \dot{q}_i = \frac{\partial H}{\partial p_i} & i=1, ..., n \\
+             \\
+             \dot{p}_i = -\frac{\partial H}{\partial q_i} & i=1, ..., n
+             \end{cases}
+             $$
+        </div>
+         <p>Effectuons la transformation suivante:</p>
+         <div class="boxed-formula">
+             $$
+             \begin{cases}
+             Q_j = Q_j(q_1, ..., q_n, p_1, ..., p_n, t) \\
+             P_j = P_j(q_1, ..., q_n, p_1, ..., p_n, t)
+             \end{cases}
+             \quad j=1, ..., n
+             $$
+         </div>
+          <p class="explanation">Quand cette transformation est-elle canonique? C'est-à-dire, quand existe-t-il un nouveau Hamiltonien $K(Q, P, t)$ tel que les nouvelles variables vérifient $\dot{Q}_j = \partial K / \partial P_j$ et $\dot{P}_j = -\partial K / \partial Q_j$ ?</p>
+     </section>
+
+</body>
+</html>
