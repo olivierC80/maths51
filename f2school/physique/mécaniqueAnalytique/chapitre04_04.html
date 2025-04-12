@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanique Analytique - SMP5 - Chapitres 2, 3 & 4</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #a02c2c; /* Dark red color similar to slides */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #a02c2c;
+            padding-bottom: 10px;
+        }
+        h2 {
+             text-align: center;
+        }
+        h3.chapter-title {
+             background-color: #a02c2c;
+             color: white;
+             padding: 10px;
+             border-radius: 5px;
+             text-align: center;
+        }
+        h4.subtitle {
+             text-align: center;
+             color: #802020;
+        }
+         h5 {
+             color: #601010;
+             margin-top: 1.5em;
+         }
+         h6 {
+             color: #601010;
+             margin-top: 1em;
+             font-size: 1.1em;
+         }
+        .image-placeholder {
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px auto; /* Centered */
+            color: #777;
+            font-style: italic;
+            min-height: 50px; /* Ensure placeholder is visible */
+            max-width: 80%; /* Control image size */
+        }
+         .image-placeholder.inline {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px;
+         }
+         .image-placeholder.float-right {
+             width: 150px;
+             float: right;
+             margin-left: 15px;
+             margin-bottom: 10px;
+         }
+         .clear-float {
+            clear: both;
+         }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        blockquote {
+            border-left: 4px solid #a02c2c;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            background-color: #f9f2f2;
+        }
+        strong {
+            color: #601010;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+        }
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 25px;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .contact-info p {
+             margin: 5px 0;
+        }
+         .centered-text {
+             text-align: center;
+         }
+         .boxed-formula {
+             background-color: #e0e8f0;
+             padding: 10px 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+         }
+         .boxed-text {
+             background-color: #e0e8f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+         }
+         /* Torseur notation style */
+         .torseur {
+             display: inline-block;
+             text-align: center;
+             vertical-align: middle;
+             margin: 0 0.2em;
+         }
+         .torseur-content {
+             display: block;
+             border-left: 1px solid;
+             border-right: 1px solid;
+             padding: 0 0.3em;
+         }
+         .torseur-element {
+             display: block;
+         }
+         .torseur-point {
+             font-size: 0.7em;
+             margin-top: -0.3em;
+         }
+         .comoment {
+            display: inline-block;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 0.9em;
+            height: 0.9em;
+            line-height: 0.9em;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 0.2em;
+            font-weight: bold;
+            vertical-align: middle;
+         }
+         .pointer-icon {
+            display: inline-block; /* Prevents block behavior */
+            font-size: 1.5em; /* Adjust size */
+            margin-right: 5px; /* Space from text */
+            vertical-align: middle; /* Align with text */
+             /* Using a simple Unicode character */
+             content: "☞";
+         }
+         .arrow-up {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 2L2 12h5v10h10V12h5L12 2z"/></svg>');
+         }
+         .arrow-down {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 22L22 12h-5V2H7v10H2l10 10z"/></svg>');
+          }
+          .arrow-label {
+             text-align: center;
+             font-weight: bold;
+             color: #a02c2c;
+             margin-top: -5px;
+             margin-bottom: 10px;
+         }
+         .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+         }
+         table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            width: 80%; /* Adjust table width */
+         }
+          table.summary-table th, table.summary-table td {
+             border: 1px solid #aaa;
+             padding: 10px;
+             text-align: left;
+             vertical-align: middle;
+         }
+         table.summary-table th {
+             background-color: #e0e8f0;
+             color: #601010;
+             width: 30%;
+         }
+         table.summary-table td {
+             background-color: #f8fafd;
+         }
+          table.summary-table .katex-display {
+             margin: 0.5em 0;
+         }
+         th, td {
+             border: 1px solid #ccc;
+             padding: 8px;
+             text-align: center;
+         }
+         th {
+             background-color: #f2f2f2;
+             color: #601010;
+         }
+         caption {
+             caption-side: bottom;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-top: 5px;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- START PREVIOUSLY GENERATED CONTENT -->
+    <!-- Chapitre 2 & 3: Slides 1 to 117 -->
+     <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p><p>Professeur de l'enseignement supérieur</p><p>Bureau 37 département de physique</p><p>Faculté des sciences</p><p>Agadir</p><p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... other slides Chap 2 & 3 ... -->
+     <section class="slide">
+        <h5>Remarque importante</h5>
+        <div class="boxed-text">
+            L'intégrale première de Painlevé $(T_2 - T_0 - U)$ ne contient jamais explicitement le temps.
+        </div>
+        <p class="explanation">Cela vient du fait que l'hypothèse H3 impose $\partial L / \partial t = 0$, ce qui élimine toute dépendance temporelle explicite des coefficients $a_{ij}, b_i, c$ et de $U$. L'intégrale est donc une fonction de $q_i, \dot{q}_i$ seulement.</p>
+    </section>
+     <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 3</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+     <hr style="border-top: 3px solid #a02c2c; margin: 40px 0;">
+
+     <!-- CHAPTER 4 START -->
+
+     <!-- Page 118 (OCR 1) : Chap 4 Title Slide -->
+    <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p>
+            <p>Professeur de l'enseignement supérieur</p>
+            <p>Bureau 37 département de physique</p>
+            <p>Faculté des sciences</p>
+            <p>Agadir</p>
+            <p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+
+    <!-- Page 119 (OCR 2) : Chap 4 Objectives -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 4 : EQUILIBRE ET STABILITE</h3>
+
+        <h5>Objectifs pédagogiques</h5>
+        <ul>
+            <li><span class="pointer-icon"></span>Introduire la notion d'équilibre.</li>
+             <li class="explanation">Définir mathématiquement ce qu'est une position d'équilibre d'un système mécanique (vitesses et accélérations nulles, forces généralisées nulles).</li>
+            <li><span class="pointer-icon"></span>Introduire la notion de stabilité.</li>
+             <li class="explanation">Définir la stabilité d'un équilibre (stabilité de Liapunov) : si le système est légèrement perturbé autour d'une position d'équilibre, reste-t-il au voisinage de cette position ?</li>
+            <li><span class="pointer-icon"></span>Etudier le cas des systèmes conservatifs.</li>
+             <li class="explanation">Analyser la stabilité des équilibres en utilisant l'énergie potentielle (théorème de Lejeune-Dirichlet).</li>
+            <li><span class="pointer-icon"></span>Etudier le cas des systèmes dissipatifs.</li>
+             <li class="explanation">Analyser la stabilité en présence de forces dissipatives (amortissement), souvent en utilisant les fonctions de Liapunov.</li>
+        </ul>
+    </section>
+
+    <!-- Page 120 (OCR 3) : Chap 4 Concepts -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 4 : EQUILIBRE ET STABILITE</h3>
+
+        <h5>Notions abordées</h5>
+        <ul>
+            <li><span class="pointer-icon"></span><strong>Notion d'équilibre paramétrique</strong></li>
+             <li class="explanation">Une configuration $q_i = q_{ie}$ telle que si le système est placé dans cette configuration avec des vitesses nulles ($\dot{q}_i=0$), il y reste ($\ddot{q}_i=0$).</li>
+            <li><span class="pointer-icon"></span><strong>Notion d'équilibre strict</strong></li>
+             <li class="explanation">Un équilibre paramétrique qui ne dépend pas explicitement du temps.</li>
+            <li><span class="pointer-icon"></span><strong>Système conservatif</strong></li>
+             <li class="explanation">Système où les forces appliquées dérivent d'une énergie potentielle $V(q)$ (ou fonction de force $U(q)$) et où les liaisons sont parfaites. L'énergie mécanique est conservée.</li>
+            <li><span class="pointer-icon"></span><strong>Théorème de Lejeune-Dirichlet</strong></li>
+             <li class="explanation">Théorème donnant une condition suffisante pour la stabilité d'un équilibre d'un système conservatif basée sur les extrema de l'énergie potentielle.</li>
+            <li><span class="pointer-icon"></span><strong>Système dissipatif</strong></li>
+             <li class="explanation">Système comportant des forces qui dissipent l'énergie mécanique (frottements, amortissements).</li>
+            <li><span class="pointer-icon"></span><strong>Théorème de Liapunov</strong></li>
+             <li class="explanation">Méthode générale (directe) pour étudier la stabilité d'un équilibre (même pour des systèmes non conservatifs) en utilisant une fonction auxiliaire (fonction de Liapunov). Aussi, méthode indirecte par linéarisation.</li>
+        </ul>
+    </section>
+
+    <!-- Page 121 (OCR 4) : Chap 4 Plan -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 4 : EQUILIBRE ET STABILITE</h3>
+
+        <h5>PLAN DU CHAPITRE 4</h5>
+        <ol>
+            <li><strong>Notion d'équilibre</strong></li>
+            <li><strong>Notion de stabilité</strong></li>
+            <li><strong>Systèmes conservatifs</strong>
+                <ul><li>Théorème de Lejeune-Dirichlet</li></ul>
+            </li>
+            <li><strong>Linéarisation des équations de Lagrange</strong> (pour l'étude de la stabilité près de l'équilibre - méthode de Liapunov indirecte)</li>
+            <li><strong>Systèmes dissipatifs</strong>
+                 <ul><li>Théorème de Liapunov (méthode directe)</li></ul>
+            </li>
+        </ol>
+    </section>
+
+    <!-- Page 122 (OCR 5) : Equilibrium and Stability Intro -->
+    <section class="slide centered-text">
+        <h4>Equilibre et stabilité</h4>
+        <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+            <div>
+                <div class="image-placeholder" style="width: 180px;">[Image: Portrait de Lejeune Dirichlet]</div>
+                <p>Lejeune Dirichlet (1805-1859)</p>
+                <p><u>Approche énergétique</u></p>
+            </div>
+            <div>
+                 <div class="image-placeholder" style="width: 180px;">[Image: Portrait de Aleksandr Lyapunov]</div>
+                 <p>Mikhailovich Lyapunov (1857-1918)</p>
+                 <p><u>Approche dynamique</u></p>
+            </div>
+        </div>
+        <p class="explanation">Deux approches principales pour étudier la stabilité : l'approche énergétique (basée sur l'analyse de l'énergie potentielle, principalement pour les systèmes conservatifs) et l'approche dynamique (basée sur l'analyse des équations du mouvement ou l'utilisation de fonctions de Liapunov, plus générale).</p>
+    </section>
+
+    <!-- Page 123 (OCR 6) : Methods overview -->
+    <section class="slide">
+        <p>L'objectif de ce chapitre est de présenter les différentes méthodes permettant de définir et d'étudier la stabilité d'une position d'équilibre. Deux méthodes peuvent être envisagées:</p>
+        <div class="boxed-text">
+             <strong>Méthode directe: théorème de Lejeune-Dirichlet</strong>
+             <p>Ce théorème permet de définir les positions d'équilibre indépendamment des équations de mouvement (en cherchant où les forces généralisées s'annulent, souvent où le potentiel est stationnaire).</p>
+             <p>Ce théorème est particulièrement bien adapté aux systèmes dont les forces données dérivent d'un potentiel indépendant du temps (systèmes conservatifs scléronomes).</p>
+             <p class="explanation">Il permet de conclure à la stabilité en examinant la nature de l'extremum du potentiel.</p>
+        </div>
+        <div class="boxed-text">
+            <strong>Méthode générale: écriture des équations du mouvement linéarisées</strong>
+             <p>On écrit les équations de Lagrange, on les linéarise au voisinage d'une position d'équilibre, puis on analyse la stabilité du système linéaire obtenu (par exemple, en étudiant les valeurs propres de la matrice du système).</p>
+             <p>Permet de conclure sur la stabilité (théorème de Liapunov par linéarisation).</p>
+              <p class="explanation">Cette méthode est plus générale (applicable aux systèmes non conservatifs) mais nécessite d'écrire et d'analyser les équations du mouvement.</p>
+        </div>
+    </section>
+
+    <!-- Page 124 (OCR 7) : Section 1 Title -->
+    <section class="slide centered-text">
+        <h4>§-1-</h4>
+        <h3>Notion d'équilibre</h3>
+    </section>
+
+    <!-- Page 125 (OCR 8) : Equilibrium Definition -->
+    <section class="slide">
+        <p>Un système est en <strong>équilibre</strong> lorsqu' il est <strong>immobile</strong> par rapport à un repère galiléen. Dans ce cas, ses vitesses $\dot{q}_i$ et ses accélérations $\ddot{q}_i$ sont nulles.</p>
+        <p>La puissance virtuelle des efforts extérieurs $P^*(F_{ext})$ doit être nulle pour tout déplacement virtuel $\delta q_i$ (ou vitesse virtuelle $\dot{q}_i^*$) compatible avec la position d'équilibre. Or $P^*(F_{ext}) = \sum Q_i \dot{q}_i^*$. Si les $\dot{q}_i^*$ sont indépendants, cela implique que toutes les forces généralisées $Q_i$ doivent être nulles à l'équilibre.</p>
+         <div class="boxed-formula" style="margin-top: 20px; display: inline-block;">
+            $$ P^*(F_{ext}) = \sum_i Q_i \dot{q}_i^* = 0 \quad \forall \dot{q}_i^* $$
+             <img src="placeholder_double_arrow_white.png" alt="<->" style="position: absolute; left: -50px; top: 50%; transform: translateY(-50%); height: 30px; filter: invert(100%);">
+             <p class="explanation">La slide utilise $dU/dt - \partial U / \partial t$, ce qui est la puissance *réelle*. La condition d'équilibre vient de $P^*=0$.</p>
+         </div>
+         <p>Si les $\dot{q}_i^*$ sont indépendants, cela impose:</p>
+         <div class="boxed-formula">
+             $$ Q_i = 0 \quad \forall i $$
+         </div>
+        <p>Si les forces dérivent d'une fonction de force $U$, $Q_i = \partial U / \partial q_i$, la condition est :</p>
+        <div class="boxed-formula">
+             $$ \frac{\partial U}{\partial q_i} = 0 $$
+        </div>
+        <p>Les positions d'équilibre $q_i^e$ sont donc obtenues pour les valeurs des paramètres qui annulent les forces généralisées (points stationnaires de U ou V) :</p>
+        <div class="boxed-formula">
+             $$ q_i = q_i^e = Cte $$
+        </div>
+    </section>
+    <!-- ... Autres slides Chap 4 sections 1 et 2 ... -->
+    <section class="slide">
+        <h5>Stabilité autour de la position $\phi=0$</h5>
+        <p>Calculons la dérivée seconde :</p>
+        <div class="boxed-formula">
+             $$ \frac{d^2 U}{d\phi^2} = -g(m_2 l_2 - m_1 l_1) \cos\phi $$
+        </div>
+        <p>Evaluons en $\phi=0$ :</p>
+        <div class="boxed-formula">
+            $$ \left( \frac{d^2 U}{d\phi^2} \right)_{\phi=0} = -g(m_2 l_2 - m_1 l_1) $$
+        </div>
+        <p>Appliquons le théorème de Lejeune-Dirichlet :</p>
+        <div class="boxed-formula">
+         $$
+         \begin{cases}
+         \text{Si } (m_2 l_2 - m_1 l_1) > 0 \implies \left( \frac{d^2 U}{d\phi^2} \right)_{\phi=0} < 0 & \text{équilibre stable} \\
+         \text{Si } (m_2 l_2 - m_1 l_1) < 0 \implies \left( \frac{d^2 U}{d\phi^2} \right)_{\phi=0} > 0 & \text{équilibre instable}
+         \end{cases}
+         $$
+        </div>
+    </section>
+    <section class="slide">
+        <p>- Cas particulier où : $ m_2 l_2 - m_1 l_1 = 0 $</p>
+        <p>On a alors : $ U = Cte $</p>
+        <div class="boxed-formula">
+            $$ \frac{dU}{d\phi} = 0 \quad \forall \phi $$
+        </div>
+        <div class="boxed-text">
+             Dans ce cas il y a équilibre dans toutes les positions. On dit que l'équilibre est <strong>astatique</strong> (ou indifférent).
+        </div>
+    </section>
+    <section class="slide">
+        <h5>2- Système à deux paramètres $q_1$ et $q_2$ :</h5>
+        <h6>a- Positions d'équilibre</h6>
+        <p>Elles sont obtenues en résolvant : $\frac{\partial U}{\partial q_1} = 0$ et $\frac{\partial U}{\partial q_2} = 0$. </p>
+        <p>Soit $(q_1^*, q_2^*)$ une solution.</p>
+        <div class="boxed-formula">
+            $$ (q_1 = q_1^* ; q_2 = q_2^*) $$
+        </div>
+    </section>
+    <section class="slide">
+         <h6>b- Stabilité</h6>
+         <p>Les conditions de stabilité (maximum local strict de U) sont données par les conditions de Schwartz sur la matrice Hessienne $H_U$ évaluée en $(q_1^*, q_2^*)$:</p>
+         <div class="boxed-formula">
+         $$
+          \begin{cases}
+             \det(H_U) = \left( \frac{\partial^2 U}{\partial q_1^2} \right) \left( \frac{\partial^2 U}{\partial q_2^2} \right) - \left( \frac{\partial^2 U}{\partial q_1 \partial q_2} \right)^2 > 0 \\
+             \frac{\partial^2 U}{\partial q_i^2} < 0 \quad (\text{pour } i=1 \text{ ou } i=2)
+          \end{cases}
+          $$
+         </div>
+          <p style="text-align: center;"><strong><u>Conditions de Schwartz</u></strong></p>
+    </section>
+    <section class="slide">
+         <h5>Exemple 1: double pendule (voir TD1)</h5>
+         <div class="image-placeholder">[Image: Pendule double plan, angles alpha et beta avec la verticale descendante.]</div>
+         <p>$ U(\alpha, \beta) = mgl(3\cos\alpha + \cos\beta) + Cte $</p>
+         <p>Etudions la stabilité autour de $(0, 0)$ et $(0, \pi)$.</p>
+    </section>
+    <section class="slide">
+        <p>Matrice Hessienne : $ H_U = \begin{pmatrix} -3mgl \cos\alpha & 0 \\ 0 & -mgl \cos\beta \end{pmatrix} $</p>
+        <p>En $(0, 0)$: $ H_U = \begin{pmatrix} -3mgl & 0 \\ 0 & -mgl \end{pmatrix} $. $\det > 0$, $\partial^2U/\partial\alpha^2 < 0$. <strong>Stable</strong>.</p>
+        <p>En $(0, \pi)$: $ H_U = \begin{pmatrix} -3mgl & 0 \\ 0 & +mgl \end{pmatrix} $. $\det < 0$. <strong>Instable</strong>.</p>
+        <div class="boxed-text">
+            Le théorème de Lejeune-Dirichlet (maximum strict de U => stable) permet d'affirmer la stabilité de (0,0). L'analyse de la Hessienne permet de conclure à l'instabilité de (0,pi) car ce n'est pas un maximum.
+        </div>
+    </section>
+    <section class="slide">
+        <h5>Exemple 2</h5>
+        <p>$ U(\theta, \phi) = Mgl (\cos\theta - \sqrt{3} \cos\phi \sin\theta) + C $</p>
+        <p>Positions d'équilibre trouvées : $(\phi=0, \theta=-\pi/3)$, $(\phi=0, \theta=2\pi/3)$, $(\phi=\pi, \theta=\pi/3)$, $(\phi=\pi, \theta=4\pi/3)$, et $(0, \pm \pi/2)$, $(\pi, \pm \pi/2)$.</p>
+        <h6>a- Positions d'équilibre</h6>
+        <p>Données par $\partial U / \partial \theta = 0$ et $\partial U / \partial \phi = 0$.</p>
+    </section>
+    <section class="slide">
+        <p>Dérivées premières (corrigées):</p>
+         <div class="boxed-formula">
+         $$
+         \begin{cases}
+         \frac{\partial U}{\partial \theta} = -Mgl (\sin\theta + \sqrt{3} \cos\phi \cos\theta) \\
+         \frac{\partial U}{\partial \phi} = Mgl \sqrt{3} \sin\phi \sin\theta
+         \end{cases}
+         $$
+        </div>
+    </section>
+    <section class="slide">
+        <p>Equations d'équilibre:</p>
+        <div class="boxed-formula">
+            $$
+            \begin{cases}
+            \sin\theta + \sqrt{3} \cos\phi \cos\theta = 0 \\
+            \sqrt{3} \sin\phi \sin\theta = 0
+            \end{cases}
+            $$
+        </div>
+        <p>1- Si $\sin\phi=0 \implies \phi=0$ ou $\phi=\pi$.</p>
+    </section>
+    <section class="slide">
+        <p>Analyse des cas $\sin\phi = 0$ :</p>
+        <div class="boxed-formula">
+             $$ \phi = 0 \implies \tan\theta = -\sqrt{3} \implies \theta_1 = -\pi/3, \theta'_1 = 2\pi/3 $$
+        </div>
+        <div class="boxed-formula">
+            $$ \phi = \pi \implies \tan\theta = \sqrt{3} \implies \theta_2 = \pi/3, \theta'_2 = 4\pi/3 $$
+        </div>
+    </section>
+    <section class="slide">
+        <p>2- Si $\sin\theta = 0 \implies \theta=0$ ou $\theta=\pi$.</p>
+        <p>Dans ce cas, la première équation donne $\cos\phi=0$.</p>
+        <div class="boxed-formula">
+            $$ \cos\phi = 0 \implies \phi = \pm \pi/2 $$
+        </div>
+        <h6>b- Etude de la stabilité de la position $(\phi=0, \theta = -\pi/3)$ :</h6>
+    </section>
+    <section class="slide">
+        <p>Dérivées secondes en $(\phi=0, \theta=-\pi/3)$ (selon slide 149, corrigé):</p>
+         <div class="boxed-formula">
+            $$ \left( \frac{\partial^2 U}{\partial \theta^2} \right) = -2Mgl < 0 $$
+          </div>
+          <div class="boxed-formula">
+             $$ \left( \frac{\partial^2 U}{\partial \phi^2} \right) = -\frac{3}{2} Mgl < 0 $$
+         </div>
+    </section>
+    <section class="slide">
+         <p>Dérivée croisée :</p>
+          <div class="boxed-formula">
+             $$ \left( \frac{\partial^2 U}{\partial \theta \partial \phi} \right) = 0 $$
+          </div>
+    </section>
+    <section class="slide">
+         <p>On a immédiatement:</p>
+         <p>Hessienne $ H_U = \begin{pmatrix} -2Mgl & 0 \\ 0 & -\frac{3}{2} Mgl \end{pmatrix} $.</p>
+         <p>Conditions de Schwartz :</p>
+          <div class="boxed-formula">
+             $$
+             \begin{cases}
+             \det(H_U) = 3(Mgl)^2 > 0 \\
+             \frac{\partial^2 U}{\partial \theta^2} = -2Mgl < 0
+             \end{cases}
+             $$
+         </div>
+         <div class="boxed-text"> Les conditions de Schwartz sont satisfaites.</div>
+         <p><strong>Donc l'équilibre $(\phi=0, \theta=-\pi/3)$ est stable.</strong></p>
+    </section>
+    <section class="slide">
+        <h5>3- Système à n paramètres :</h5>
+        <h6>a- Positions d'équilibre</h6>
+        <div class="boxed-formula">
+            $$ \frac{\partial U}{\partial q_i} = 0; \quad i = 1, ..., n $$
+        </div>
+    </section>
+    <section class="slide">
+        <h6>b- Stabilité</h6>
+        <p>Condition suffisante (Dirichlet): La matrice Hessienne $H_{ij} = \left( \frac{\partial^2 U}{\partial q_i \partial q_j} \right)_{q=q_e}$ est <strong>définie négative</strong>.</p>
+        <div class="boxed-formula">
+             $$ \left( \frac{\partial^2 U}{\partial q_i \partial q_j} \right)_{q_e} $$
+        </div>
+         <div class="boxed-text">
+             càd la matrice a des <strong>valeurs propres</strong> (strictement) <strong>négatives</strong>.
+         </div>
+    </section>
+    <section class="slide">
+        <p>Cas de 3 paramètres $(q_1, q_2, q_3)$</p>
+        <p>Matrice Hessienne :</p>
+        <div class="boxed-formula">
+             $$ H_U = \left( \frac{\partial^2 U}{\partial q_i \partial q_j} \right)_{q=q_e} $$
+        </div>
+        <p>Condition définie négative (Sylvester) : $D_1 < 0$, $D_2 > 0$, $D_3 < 0$.</p>
+    </section>
+    <section class="slide">
+         <h5>Exercice d'application</h5>
+         <p>$ U(\alpha, \beta, \gamma) = mgl(\cos\alpha + \cos\beta + \cos\gamma) $</p>
+         <p>Etudier la stabilité de $(0, 0, 0)$ et $(\pi, \pi, \pi)$.</p>
+         <p>Positions d'équilibre: $\frac{\partial U}{\partial q_i} = 0$.</p>
+    </section>
+    <section class="slide">
+         <p>Calcul des dérivées premières :</p>
+         <div class="boxed-formula">
+         $$
+         \begin{cases}
+         \frac{\partial U}{\partial \alpha} = -mgl \sin\alpha = 0 \implies \alpha = 0, \pi \\
+         \frac{\partial U}{\partial \beta} = -mgl \sin\beta = 0 \implies \beta = 0, \pi \\
+         \frac{\partial U}{\partial \gamma} = -mgl \sin\gamma = 0 \implies \gamma = 0, \pi
+         \end{cases}
+         $$
+         </div>
+    </section>
+    <section class="slide">
+        <p>Les 8 positions d'équilibre sont données par (combinaisons de 0 et $\pi$).</p>
+         <div style="display: flex; justify-content: space-around;">
+             <div class="boxed-formula"> $(0,0,0), (0,0,\pi), ...$ </div>
+              <div class="boxed-formula"> $(0,\pi,\pi), ..., (\pi,\pi,\pi)$ </div>
+         </div>
+         <p>Etudions $(0,0,0)$ et $(\pi, \pi, \pi)$.</p>
+         <p>Hessienne : $ H_U = \text{diag}(-mgl\cos\alpha, -mgl\cos\beta, -mgl\cos\gamma) $.</p>
+          <p>En $(0,0,0)$: $ H_U = \text{diag}(-mgl, -mgl, -mgl) $. Définie négative. <strong>Stable</strong>.</p>
+          <p>En $(\pi, \pi, \pi)$: $ H_U = \text{diag}(+mgl, +mgl, +mgl) $. Définie positive. <strong>Instable</strong>.</p>
+    </section>
+    <!-- END CHAPTER 4 -->
+
+     <!-- SUMMARY TABLES -->
+     <section class="slide">
+         <h5>En résumé : Stabilité (Systèmes Conservatifs Scléronomes)</h5>
+         <table class="summary-table">
+            <thead><tr><th>Système</th><th>Conditions</th></tr></thead>
+            <tbody>
+                <tr><th>Fonction de force/potentiel</th><td>$U(q_1, ..., q_n)$ ou $V(q_1, ..., q_n) = -U + Cte$</td></tr>
+                <tr><th>Condition d’équilibre ($q=q_e$)</th><td>$\left.\frac{\partial U}{\partial q_i}\right|_{q_e} = 0 \quad \forall i \quad (\iff \left.\frac{\partial V}{\partial q_i}\right|_{q_e} = 0 \quad \forall i)$</td></tr>
+                <tr><th>Condition de stabilité (suffisante)</th><td>Matrice Hessienne $H_{ij} = \left( \frac{\partial^2 U}{\partial q_i \partial q_j} \right)_{q_e}$ est définie négative <br>($\iff$ $V_{ij} = \left( \frac{\partial^2 V}{\partial q_i \partial q_j} \right)_{q_e}$ est définie positive) <br> $\iff$ $q_e$ est un minimum local strict de V.</td></tr>
+             </tbody>
+         </table>
+          <p class="explanation">Le tableau des slides 161-163 résume les conditions pour 1, 2 et n paramètres.</p>
+    </section>
+
+     <!-- Page 164 (OCR 7) : Section 4 Title (Corrected Section number) -->
+    <section class="slide centered-text">
+        <h4>§-4-</h4> <!-- Maintenu car c'est la section suivante dans le plan -->
+        <h3>Linéarisation des équations de Lagrange</h3>
+         <p class="explanation">Méthode pour étudier la stabilité en analysant le comportement du système près d'un point d'équilibre (méthode indirecte de Liapunov).</p>
+    </section>
+
+    <!-- Page 165 (OCR 8) : Linearization Conditions -->
+    <section class="slide">
+        <h5>Conditions d'application (pour la linéarisation simple)</h5>
+         <div style="border: 2px solid #a02c2c; padding: 15px; border-radius: 8px;">
+             <p>L'écriture directe des équations des petits mouvements (linéarisation autour de $q=0$) s'applique typiquement aux cas où :</p>
+             <ul>
+                 <li>Système scléronome et conservatif.</li>
+                 <li>$q=0$ est une position d'équilibre.</li>
+                 <li>On approxime $T \approx T_r = \frac{1}{2} m_{ij} \dot{q}_i \dot{q}_j$ (avec $m_{ij}$ constantes).</li>
+                 <li>On approxime $V \approx V_r = \frac{1}{2} k_{ij} q_i q_j$ (avec $V(0)=0$ et $k_{ij}$ constantes).</li>
+                 <li>Liaisons parfaites ($Q_i^{nc}=0$).</li>
+             </ul>
+         </div>
+    </section>
+
+     <!-- Page 166 (OCR 9) : Reduced Kinetic Energy -->
+    <section class="slide">
+        <h5>Energie cinétique réduite</h5>
+         <ul>
+            <li>Pour un système scléronome ($T_1=T_0=0$), $T = T_2 = \frac{1}{2} a_{ij}(q) \dot{q}_i \dot{q}_j$.</li>
+            <li>Au voisinage de $q=0$, on approxime les coefficients $a_{ij}(q)$ par leur valeur à l'équilibre $m_{ij} = a_{ij}(0)$.</li>
+            <li>L'énergie cinétique réduite (approchée) est :
+                 <div class="boxed-formula">
+                     $$ T_r(\Sigma/Rg) = \frac{1}{2} \sum_{i,j=1}^N m_{ij} \dot{q}_i \dot{q}_j $$
+                     <p>(Forme quadratique à coefficients constants $m_{ij}$)</p>
+                 </div>
+             </li>
+        </ul>
+    </section>
+
+     <!-- Page 167 (OCR 10) : Reduced Potential Energy -->
+    <section class="slide">
+        <h5>Energie potentielle réduite</h5>
+         <ul>
+            <li>Développement limité de V autour de $q=0$ (équilibre):
+                 <div class="boxed-formula">
+                     $$ V(q) = V(0) + \sum_i \underbrace{\left. \frac{\partial V}{\partial q_i} \right|_{0}}_{=0} q_i + \frac{1}{2} \sum_{i,j} \underbrace{\left. \frac{\partial^2 V}{\partial q_i \partial q_j} \right|_{0}}_{k_{ij}} q_i q_j + ... $$
+                 </div>
+             </li>
+              <li>On pose $V(0)=0$. Les termes du premier ordre sont nuls (condition d'équilibre).</li>
+              <li>On pose $k_{ij} = \left. \frac{\partial^2 V}{\partial q_i \partial q_j} \right|_{0}$. $[k_{ij}]$ est la matrice de raideur.</li>
+             <li>L'énergie potentielle réduite (approchée) est :
+                 <div class="boxed-formula">
+                      $$ V_r(\Sigma) = \frac{1}{2} \sum_{i,j=1}^N k_{ij} q_i q_j $$
+                       <p>(Forme quadratique à coefficients constants $k_{ij}$)</p>
+                 </div>
+             </li>
+         </ul>
+    </section>
+
+    <!-- Page 168 (OCR 11) : Mass and Stiffness Matrices -->
+    <section class="slide">
+        <h5>Matrice de masse, matrice de raideur</h5>
+        <ul>
+            <li>Extraction des termes $m_{ij}$ de l'énergie cinétique réduite $T_r = \frac{1}{2} \sum m_{ij} \dot{q}_i \dot{q}_j$:
+                 <div class="boxed-formula">
+                     $$ T_r (\Sigma / Rg) = \frac{1}{2} \boldsymbol{\dot{q}}^T \boldsymbol{M} \boldsymbol{\dot{q}} \implies \boldsymbol{M} = [m_{ij}] $$
+                 </div>
+                  <p>Si N=3 : $ \boldsymbol{M} = \begin{pmatrix} m_{11} & m_{12} & m_{13} \\ m_{12} & m_{22} & m_{23} \\ m_{13} & m_{23} & m_{33} \end{pmatrix} $ (Matrice de masse)</p>
+            </li>
+             <li>Extraction des termes $k_{ij}$ de l'énergie potentielle réduite $V_r = \frac{1}{2} \sum k_{ij} q_i q_j$:
+                  <div class="boxed-formula">
+                      $$ V_r (\Sigma) = \frac{1}{2} \boldsymbol{q}^T \boldsymbol{K} \boldsymbol{q} \implies \boldsymbol{K} = [k_{ij}] $$
+                  </div>
+                  <p>Si N=3 : $ \boldsymbol{K} = \begin{pmatrix} k_{11} & k_{12} & k_{13} \\ k_{12} & k_{22} & k_{23} \\ k_{13} & k_{23} & k_{33} \end{pmatrix} $ (Matrice de raideur)</p>
+             </li>
+        </ul>
+         <p class="explanation">M et K sont symétriques. M est définie positive.</p>
+    </section>
+
+     <!-- Page 169 (OCR 1) : Linearized Equations -->
+     <section class="slide">
+         <h5>Ecriture directe du système d'équations sous forme matricielle</h5>
+         <ul>
+            <li>L'équation de Lagrange « linéarisée » pour le paramètre $q_k$ s'écrit :</li>
+         </ul>
+         <p>Lagrangien approché : $L_r = T_r - V_r = \frac{1}{2} m_{ij} \dot{q}_i \dot{q}_j - \frac{1}{2} k_{ij} q_i q_j$.</p>
+         $$ \frac{\partial L_r}{\partial \dot{q}_k} = \frac{1}{2} m_{kj} (1) \dot{q}_j + \frac{1}{2} m_{ik} \dot{q}_i (1) = m_{ki} \dot{q}_i \quad \text{(car } m_{ik}=m_{ki}) $$
+         $$ \frac{d}{dt}\left(\frac{\partial L_r}{\partial \dot{q}_k}\right) = m_{ki} \ddot{q}_i $$
+         $$ \frac{\partial L_r}{\partial q_k} = -\frac{1}{2} k_{kj} (1) q_j - \frac{1}{2} k_{ik} q_i (1) = -k_{ki} q_i \quad \text{(car } k_{ik}=k_{ki}) $$
+         <p>L'équation de Lagrange $\frac{d}{dt}(\frac{\partial L_r}{\partial \dot{q}_k}) - \frac{\partial L_r}{\partial q_k} = 0$ devient :</p>
+         $$ m_{ki} \ddot{q}_i - (-k_{ki} q_i) = 0 \implies \sum_{i=1}^N m_{ki} \ddot{q}_i + \sum_{i=1}^N k_{ki} q_i = 0 \quad \forall k $$
+         <p>Sous forme matricielle :</p>
+          <div class="boxed-formula" style="text-align: center;">
+               $$ \boldsymbol{M} \boldsymbol{\ddot{q}} + \boldsymbol{K} \boldsymbol{q} = \boldsymbol{0} $$
+          </div>
+           <p class="explanation">La slide détaille les calculs des dérivées de T et V (ou U=-V) pour arriver au même résultat.</p>
+           <!-- Placeholder for slide's derivation diagram -->
+           <div class="image-placeholder">[Image: Diagram showing derivation of Mq_ddot + Kq = 0 from T and U]</div>
+     </section>
+
+      <!-- Page 170 (OCR 2) : Solving the Linear System -->
+     <section class="slide">
+         <h5>Résolution du système d'équations $\boldsymbol{M\ddot{q}+Kq=0}$</h5>
+          <ul>
+             <li>On cherche $q$ sous la forme d'oscillations harmoniques (solution générale pour un système linéaire) :
+                  $$ \boldsymbol{q}(t) = \cos(\omega t) \boldsymbol{a} + \sin(\omega t) \boldsymbol{b} $$
+                  <p>Ou plus simplement, on cherche des solutions de la forme $\boldsymbol{q}(t) = e^{i\omega t} \boldsymbol{u}$ ou $\boldsymbol{q}(t) = \cos(\omega t) \boldsymbol{u}$.</p>
+                  <p>Si $\boldsymbol{q} = \cos(\omega t) \boldsymbol{u}$, alors $\boldsymbol{\ddot{q}} = -\omega^2 \cos(\omega t) \boldsymbol{u} = -\omega^2 \boldsymbol{q}$.</p>
+                  <p class="explanation">La forme de la slide $q = \cos(\omega t) a + \sin(\omega t) b$ est la solution réelle générale, $a$ et $b$ étant des vecteurs constants. Sa dérivée seconde est bien $\ddot{q} = -\omega^2 q$.</p>
+              </li>
+             <li>L'équation à résoudre $\boldsymbol{M\ddot{q}+Kq=0}$ donne :
+                 $$ \boldsymbol{M}(-\omega^2 \boldsymbol{q}) + \boldsymbol{Kq} = 0 $$
+                 $$ \implies (\boldsymbol{K} - \omega^2 \boldsymbol{M}) \boldsymbol{q} = \boldsymbol{0} $$
+             </li>
+              <li>La condition pour que $\boldsymbol{q}$ soit non nul (solution non triviale) est que la matrice $(\boldsymbol{K} - \omega^2 \boldsymbol{M})$ soit singulière :
+                  <div class="boxed-formula">
+                      $$ \det(\boldsymbol{K} - \omega^2 \boldsymbol{M}) = 0 $$
+                  </div>
+                   <img src="placeholder_arrow_right.png" alt="->" style="display: inline-block; height: 30px; vertical-align: middle; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+                   <span>Polynôme de degré N en $\omega^2$ (équation caractéristique)</span>
+              </li>
+         </ul>
+         <div class="boxed-text" style="background-color: #ffcccc;">
+              Les N racines $\omega_k^2$ du polynôme sont les carrés des N <strong>pulsations propres</strong> du système. Les vecteurs propres $\boldsymbol{u}_k$ associés (solutions de $(\boldsymbol{K} - \omega_k^2 \boldsymbol{M}) \boldsymbol{u}_k = \boldsymbol{0}$) sont les <strong>modes propres</strong> (géométrie de la déformée lors des oscillations à chaque pulsation).
+         </div>
+          <p class="explanation">La stabilité de l'équilibre $q=0$ est assurée si toutes les $\omega_k^2$ sont réelles et positives (oscillations stables). Si une $\omega_k^2$ est négative ($\omega_k$ imaginaire) ou nulle, l'équilibre est instable ou potentiellement instable.</p>
+     </section>
+
+     <!-- Page 171 (OCR 3) : Application Wagons -->
+     <section class="slide">
+         <h5>Application : Wagonnets</h5>
+         <div class="image-placeholder float-right" style="width: 45%;">[Image: Deux masses (1) et (2) reliées par un ressort (k, l0), la masse (1) est reliée à un mur par un autre ressort (k, l0). Coordonnées x1 et x2 depuis les positions d'équilibre des masses.]</div>
+         <ul>
+             <li><strong>Energies :</strong>
+                 <p>Energie cinétique (masses m):</p>
+                  $$ T(\Sigma/R_g) = \frac{1}{2}m(\dot{x}_1^2 + \dot{x}_2^2) $$
+                 <p>Energie potentielle (ressorts, $x_1, x_2$ mesurés depuis l'équilibre):</p>
+                  $$ V(ressorts) = \frac{1}{2}k x_1^2 + \frac{1}{2}k (x_2 - x_1)^2 $$
+                  <p class="explanation">(Note: La slide utilise U pour l'énergie potentielle, attention à la convention $U=-V$). Utilisons V.</p>
+             </li>
+              <li>Les énergies sont déjà réduites (quadratiques, coefficients constants) $\implies$ les matrices :
+                   $$ T = \frac{1}{2} \begin{pmatrix} \dot{x}_1 & \dot{x}_2 \end{pmatrix} \begin{pmatrix} m & 0 \\ 0 & m \end{pmatrix} \begin{pmatrix} \dot{x}_1 \\ \dot{x}_2 \end{pmatrix} \implies \boldsymbol{M} = \begin{pmatrix} m & 0 \\ 0 & m \end{pmatrix} $$
+                   <p>Développons V : $V = \frac{1}{2}k x_1^2 + \frac{1}{2}k (x_2^2 - 2x_1x_2 + x_1^2) = k x_1^2 - k x_1 x_2 + \frac{1}{2} k x_2^2$.</p>
+                   <p>$V = \frac{1}{2} \begin{pmatrix} x_1 & x_2 \end{pmatrix} \begin{pmatrix} 2k & -k \\ -k & k \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} \implies \boldsymbol{K} = \begin{pmatrix} 2k & -k \\ -k & k \end{pmatrix}$</p>
+                    <p class="explanation">La slide a $K=\begin{pmatrix} 2k & -k \\ -k & k? \end{pmatrix}$. Non, $k_{22} = \partial^2 V / \partial x_2^2 = k$. C'est correct.</p>
+                     <div class="boxed-formula">
+                         $$ \boldsymbol{M} = \begin{pmatrix} m & 0 \\ 0 & m \end{pmatrix} \quad \text{et} \quad \boldsymbol{K} = \begin{pmatrix} 2k & -k \\ -k & k \end{pmatrix} $$
+                     </div>
+              </li>
+               <li>Le système s'écrit : $\boldsymbol{M\ddot{q}+Kq=0}$ avec $\boldsymbol{q} = \begin{pmatrix} x_1 \\ x_2 \end{pmatrix}$.</li>
+               <li>Problème aux valeurs propres : $\det(\boldsymbol{K} - \omega^2 \boldsymbol{M}) = 0$
+                    <div class="boxed-formula">
+                       $$ \det \begin{pmatrix} 2k - \omega^2 m & -k \\ -k & k - \omega^2 m \end{pmatrix} = 0 $$
+                    </div>
+                    $$ (2k - \omega^2 m)(k - \omega^2 m) - (-k)(-k) = 0 $$
+                    $$ 2k^2 - 2km\omega^2 - km\omega^2 + m^2\omega^4 - k^2 = 0 $$
+                    $$ m^2\omega^4 - 3km\omega^2 + k^2 = 0 $$
+                     <p>Posons $\omega_0^2 = k/m$.</p>
+                      $$ m^2\omega^4 - 3m^2\omega_0^2\omega^2 + m^2\omega_0^4 = 0 $$
+                       <div class="boxed-formula">
+                          $$ \omega^4 - 3\omega_0^2\omega^2 + \omega_0^4 = 0 $$
+                       </div>
+               </li>
+                <li>Solutions pour $\omega^2$ (équation bicarrée) : $X = \omega^2$. $X^2 - 3\omega_0^2 X + \omega_0^4 = 0$.
+                     <p>$\Delta = (3\omega_0^2)^2 - 4(1)(\omega_0^4) = 9\omega_0^4 - 4\omega_0^4 = 5\omega_0^4$. $\sqrt{\Delta} = \sqrt{5}\omega_0^2$.</p>
+                     $$ \omega^2 = \frac{3\omega_0^2 \pm \sqrt{5}\omega_0^2}{2} = \frac{3 \pm \sqrt{5}}{2} \omega_0^2 $$
+                      <div class="boxed-formula">
+                         $$ \omega_1^2 = \frac{3-\sqrt{5}}{2}\omega_0^2 \quad ; \quad \omega_2^2 = \frac{3+\sqrt{5}}{2}\omega_0^2 $$
+                      </div>
+                      <p>2 pulsations propres.</p>
+               </li>
+         </ul>
+          <div class="clear-float"></div>
+     </section>
+
+     <!-- Page 172 (OCR 4) : Application Rolling Bridge -->
+    <section class="slide">
+        <h5>Application : Pont roulant</h5>
+        <div class="image-placeholder float-right" style="width: 45%;">[Image: Pont roulant (chariot de masse M se déplaçant horizontalement, coordonnée x(t)) avec un pendule (masse m, longueur L) accroché dessous (angle theta(t)). Un ressort horizontal relie le chariot à un mur.]</div>
+        <ul>
+             <li><strong>Energies :</strong>
+                 <p>Cinétique:</p>
+                 $T_{chariot} = \frac{1}{2}M \dot{x}^2$.
+                 $V_{pendule/chariot} = (L\dot{\theta}\cos\theta, -L\dot{\theta}\sin\theta)$.
+                 $V_{pendule/abs} = V_{chariot/abs} + V_{pendule/rel} = (\dot{x}, 0) + (L\dot{\theta}\cos\theta, -L\dot{\theta}\sin\theta)$? Non.
+                 Position pendule: $(x + L\sin\theta, -L\cos\theta)$.
+                 Vitesse pendule: $(\dot{x} + L\dot{\theta}\cos\theta, L\dot{\theta}\sin\theta)$.
+                 $T_{pendule} = \frac{1}{2}m [(\dot{x} + L\dot{\theta}\cos\theta)^2 + (L\dot{\theta}\sin\theta)^2]$
+                 $T_{pendule} = \frac{1}{2}m [\dot{x}^2 + 2L\dot{x}\dot{\theta}\cos\theta + L^2\dot{\theta}^2\cos^2\theta + L^2\dot{\theta}^2\sin^2\theta]$
+                 $T_{pendule} = \frac{1}{2}m (\dot{x}^2 + 2L\dot{x}\dot{\theta}\cos\theta + L^2\dot{\theta}^2)$.
+                 $T_{total} = T_{chariot} + T_{pendule} = \frac{1}{2}(M+m)\dot{x}^2 + m L \dot{x}\dot{\theta}\cos\theta + \frac{1}{2}m L^2\dot{\theta}^2$.
+                  <p class="explanation">La slide a: $ T(\Sigma/R_g) = \frac{1}{2}[(M+m)\dot{x}^2 + m(L^2\dot{\theta}^2 + 2L\dot{x}\dot{\theta}\cos\theta)] $. C'est cohérent.</p>
+                 <p>Potentielle (ressort + pesanteur):</p>
+                   $V = \frac{1}{2}k x^2 + mgy_m = \frac{1}{2}k x^2 - mgL\cos\theta$.
+                    <p class="explanation">La slide utilise $U(pes+ressort) = -V = -\frac{1}{2}kx^2 + mgL\cos\theta$.</p>
+             </li>
+              <li><strong>Energies réduites :</strong> (Approximation petits $\theta \approx 0, \dot{\theta}, x, \dot{x}$)
+                  <p>$\cos\theta \approx 1 - \theta^2/2$. $T \approx \frac{1}{2}(M+m)\dot{x}^2 + mL\dot{x}\dot{\theta}(1) + \frac{1}{2}mL^2\dot{\theta}^2$.</p>
+                   <p class="explanation">La slide $T_r = \frac{1}{2}[(M+m)\dot{x}^2 + mL^2\dot{\theta}^2 + 2mL\dot{x}\dot{\theta}]$. Ok.</p>
+                  <p>$V \approx \frac{1}{2}kx^2 - mgL(1-\theta^2/2) = \frac{1}{2}kx^2 + \frac{1}{2}mgL\theta^2 - mgL$.</p>
+                  <p class="explanation">La slide $U^*(pes+ressort) = -\frac{1}{2}kx^2 - \frac{1}{2}mgL\theta^2 + cte$. Ok ($U^*=-V_r$).</p>
+             </li>
+             <li><strong>Matrices :</strong> $q = \begin{pmatrix} x \\ \theta \end{pmatrix}$.
+                   <p>$T_r = \frac{1}{2} \begin{pmatrix} \dot{x} & \dot{\theta} \end{pmatrix} \begin{pmatrix} M+m & mL \\ mL & mL^2 \end{pmatrix} \begin{pmatrix} \dot{x} \\ \dot{\theta} \end{pmatrix}$.</p>
+                    $$ \boldsymbol{M} = \begin{pmatrix} M+m & mL \\ mL & mL^2 \end{pmatrix} $$
+                   <p>$V_r = \frac{1}{2} \begin{pmatrix} x & \theta \end{pmatrix} \begin{pmatrix} k & 0 \\ 0 & mgL \end{pmatrix} \begin{pmatrix} x \\ \theta \end{pmatrix}$.</p>
+                    $$ \boldsymbol{K} = \begin{pmatrix} k & 0 \\ 0 & mgL \end{pmatrix} $$
+                    <p class="explanation">Cohérent avec la slide.</p>
+              </li>
+         </ul>
+         <p>Système linéarisé : $\boldsymbol{M\ddot{q}+Kq=0}$.</p>
+          <div class="clear-float"></div>
+     </section>
+
+    <!-- Page 173 (OCR 5) : Section 5 Title -->
+    <section class="slide centered-text">
+        <h4>§-5-</h4>
+        <h3>Systèmes dissipatifs (cas général)</h3>
+        <h3>Théorème de Liapunov</h3>
+         <p class="explanation">Etude de la stabilité en présence de dissipation, souvent par la méthode directe de Liapunov.</p>
+    </section>
+
+    <!-- Page 174 (OCR 6) : Liapunov Theorem Intro -->
+    <section class="slide">
+        <h5>Théorème de Liapunov</h5>
+        <h6>1- Oscillateur linéaire</h6>
+        <p>L'étude de stabilité est entreprise par la détermination des petits mouvements au voisinage des positions d'équilibre, car en l'absence de potentiel (ou si le test du potentiel est non concluant), il est impossible d'utiliser la condition suffisante de stabilité (Dirichlet).</p>
+        <p>Si nous supposons l'existence de petits mouvements autour de la position d'équilibre étudiée ($q=0$), nous pouvons écrire les équations de Lagrange linéarisées. Si on inclut des forces dissipatives linéaires ($-\sum_j b_{ij} \dot{q}_j$) et des forces externes $f_i(t)$, les équations linéarisées (en conservant les termes de premier ordre en $q, \dot{q}, \ddot{q}$) prennent la forme :</p>
+        <div class="boxed-formula">
+            $$ \sum_j a_{ij} \ddot{q}_j + \sum_j b_{ij} \dot{q}_j + \sum_j c_{ij} q_j = f_i(t) $$
+        </div>
+         <p class="explanation">Où $a_{ij}=m_{ij}$ (masse), $b_{ij}$ (amortissement), $c_{ij}=k_{ij}$ (raideur). $a_{ij}, b_{ij}, c_{ij}$ sont des constantes, $a_{ij}$ est symétrique.</p>
+         <p>$f_i(t)$ représente les forces données qui sont les seuls termes à dépendre explicitement du temps (si le système est forcé).</p>
+    </section>
+
+    <!-- Page 175 (OCR 7) : Liapunov Theorem Statement -->
+    <section class="slide">
+         <p>Le système mécanique obéissant au système linéaire ainsi formé est appelé <strong>oscillateur linéaire associé (L)</strong>.</p>
+         <p>Si $f_i(t) = 0$ l'oscillateur est dit <strong>libre</strong>.</p>
+         <h6>2- Théorème de Liapunov (par linéarisation / méthode indirecte)</h6>
+         <div class="boxed-text">
+             <p>Soit (L) l'oscillateur linéaire associé ($f_i=0$) au système mécanique étudié et à la position d'équilibre ($S_0$, $q=0$):</p>
+             $$ \boldsymbol{M\ddot{q} + B\dot{q} + Kq = 0} $$
+             <p>On cherche les solutions sous forme $e^{\lambda t}$. L'équation caractéristique est $\det(\lambda^2 \boldsymbol{M} + \lambda \boldsymbol{B} + \boldsymbol{K}) = 0$.</p>
+             <ul>
+                 <li>Si toutes les racines $\lambda$ de l'équation caractéristique de (L) ont leur <strong>partie réelle</strong> (strictement) <strong>négative</strong> alors ($S_0$) est (asymptotiquement) <strong>stable</strong>.</li>
+                 <li>Si l'une au moins a une partie réelle (strictement) <strong>positive</strong>, ($S_0$) est <strong>instable</strong>.</li>
+                 <li>Si l'une au moins a une <strong>partie réelle nulle</strong> (et aucune n'a de partie réelle positive), on ne peut pas conclure par la méthode de linéarisation. Il faut faire une étude directe (e.g., méthode directe de Liapunov, ou analyse non-linéaire) sauf si on peut écrire l'intégrale première de l'énergie cinétique, mais dans ce cas on se retrouve dans le cas d'un système conservatif (où la stabilité est simple, non asymptotique).</li>
+             </ul>
+         </div>
+    </section>
+
+     <!-- Page 176 (OCR 8) : Liapunov Implementation -->
+    <section class="slide centered-text">
+        <h5>Mise en œuvre</h5>
+        <span class="pointer-icon"></span>
+        <h4>Voir application pédagogique</h4>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <div class="boxed-formula">
+                $$ \left( \frac{\partial^2 L_0}{\partial q_i \partial q_j} \right)_{q_e} $$
+                matrice à valeurs propres négatives
+                 <p class="explanation">Stabilité via potentiel pour systèmes conservatifs (Dirichlet). $L_0$ ici semble représenter $-V$.</p>
+            </div>
+             <div class="image-placeholder" style="width: 150px;">[Image: Portrait de Lejeune Dirichlet]</div>
+              <div class="boxed-formula">
+                $$ \left( \frac{\partial U}{\partial q_i} \right)_{q_e} = 0 $$
+                 position d'équilibre
+                 <p class="explanation">Détermination de la position d'équilibre.</p>
+             </div>
+        </div>
+         <p class="explanation">Cette slide semble mélanger/résumer l'approche énergétique de Dirichlet pour les systèmes conservatifs. L'étude par linéarisation ou par fonction de Liapunov directe n'est pas illustrée ici.</p>
+    </section>
+
+    <!-- Page 177 (OCR 9) : Final encouragement -->
+     <section class="slide centered-text">
+         <div style="display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center;">
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Lagrange?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Euler?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait D'Alembert?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Hamilton?]</div>
+         </div>
+         <div class="boxed-text" style="margin-top: 20px;">
+            <h4>Et maintenant, c'est à vous de jouer,</h4>
+            <h4>à vos dossiers pédagogiques.</h4>
+         </div>
+          <span class="pointer-icon"></span>
+    </section>
+
+    <!-- Page 178 (OCR 10) : End slide Chap 4 -->
+    <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 4</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
