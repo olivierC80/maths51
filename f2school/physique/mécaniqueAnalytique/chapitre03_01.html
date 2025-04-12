@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanique Analytique - SMP5 - Chapitres 2 & 3</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                // • auto-render specific keys, e.g.:
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #a02c2c; /* Dark red color similar to slides */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #a02c2c;
+            padding-bottom: 10px;
+        }
+        h2 {
+             text-align: center;
+        }
+        h3.chapter-title {
+             background-color: #a02c2c;
+             color: white;
+             padding: 10px;
+             border-radius: 5px;
+             text-align: center;
+        }
+        h4.subtitle {
+             text-align: center;
+             color: #802020;
+        }
+         h5 {
+             color: #601010;
+             margin-top: 1.5em;
+         }
+         h6 {
+             color: #601010;
+             margin-top: 1em;
+             font-size: 1.1em;
+         }
+        .image-placeholder {
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px auto; /* Centered */
+            color: #777;
+            font-style: italic;
+            min-height: 50px; /* Ensure placeholder is visible */
+            max-width: 80%; /* Control image size */
+        }
+         .image-placeholder.inline {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px;
+         }
+         .image-placeholder.float-right {
+             width: 150px;
+             float: right;
+             margin-left: 15px;
+             margin-bottom: 10px;
+         }
+         .clear-float {
+            clear: both;
+         }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        blockquote {
+            border-left: 4px solid #a02c2c;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            background-color: #f9f2f2;
+        }
+        strong {
+            color: #601010;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+        }
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 25px;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .contact-info p {
+             margin: 5px 0;
+        }
+         .centered-text {
+             text-align: center;
+         }
+         .boxed-formula {
+             background-color: #e0e8f0;
+             padding: 10px 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+         }
+         .boxed-text {
+             background-color: #e0e8f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+         }
+         /* Torseur notation style */
+         .torseur {
+             display: inline-block;
+             text-align: center;
+             vertical-align: middle;
+             margin: 0 0.2em;
+         }
+         .torseur-content {
+             display: block;
+             border-left: 1px solid;
+             border-right: 1px solid;
+             padding: 0 0.3em;
+         }
+         .torseur-element {
+             display: block;
+         }
+         .torseur-point {
+             font-size: 0.7em;
+             margin-top: -0.3em;
+         }
+         .comoment {
+            display: inline-block;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 0.9em;
+            height: 0.9em;
+            line-height: 0.9em;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 0.2em;
+            font-weight: bold;
+            vertical-align: middle;
+         }
+         .pointer-icon {
+            display: inline-block; /* Prevents block behavior */
+            font-size: 1.5em; /* Adjust size */
+            margin-right: 5px; /* Space from text */
+            vertical-align: middle; /* Align with text */
+         }
+         .arrow-up {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 2L2 12h5v10h10V12h5L12 2z"/></svg>');
+         }
+         .arrow-down {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 22L22 12h-5V2H7v10H2l10 10z"/></svg>');
+          }
+          .arrow-label {
+             text-align: center;
+             font-weight: bold;
+             color: #a02c2c;
+             margin-top: -5px;
+             margin-bottom: 10px;
+         }
+         .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+         }
+         table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            width: auto;
+         }
+         th, td {
+             border: 1px solid #ccc;
+             padding: 8px;
+             text-align: center;
+         }
+         th {
+             background-color: #f2f2f2;
+             color: #601010;
+         }
+         caption {
+             caption-side: bottom;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-top: 5px;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- START PREVIOUSLY GENERATED CONTENT -->
+    <!-- Chapitre 2: Slide 1 to 75 -->
+     <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p><p>Professeur de l'enseignement supérieur</p><p>Bureau 37 département de physique</p><p>Faculté des sciences</p><p>Agadir</p><p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... other slides ... -->
+     <section class="slide">
+         <p>Il existe donc $m$ scalaires $\mu_j$ (multiplicateurs de Lagrange) tels que :</p>
+         <div class="boxed-formula">
+             $$ A_i - Q_i = \sum_{j=1}^m \mu_j a_{ji} $$
+         </div>
+         <p>Ce qui donne :</p>
+         <div class="boxed-formula">
+             $$ A_i = Q_i + \sum_{j=1}^m \mu_j a_{ji} $$
+         </div>
+         <p class="explanation">Ici, $Q_i$ représente la force généralisée associée aux forces *appliquées* (données), non aux forces de liaison qui sont maintenant représentées par le terme $\sum \mu_j a_{ji}$.</p>
+         <p>D'où, en remplaçant $A_i$ par son expression en fonction de T :</p>
+         <div style="display: flex; justify-content: space-around; align-items: center;">
+             <div class="boxed-formula">
+                  $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i + \sum_{j=1}^m \mu_j a_{ji} \quad (**) $$
+             </div>
+             <div class="boxed-formula">
+                  $$ \begin{cases} i = 1, ..., n \\ j = 1, ..., m \end{cases} $$
+             </div>
+          </div>
+         <div class="boxed-text">
+             Ce sont les <strong>équations de Lagrange avec multiplicateurs (ELM)</strong>. On a $n$ équations pour $n$ inconnues $q_i(t)$ et $m$ inconnues $\mu_j(t)$. Il faut ajouter les $m$ équations de liaison (sous forme finie $f_j(q,t)=0$ ou différentielle $\sum_i a_{ji}\dot{q}_i = 0$) pour avoir un système complet ($n+m$ équations pour $n+m$ inconnues).
+         </div>
+          <div class="boxed-text" style="background-color: #fff0f0;">
+              <strong>Valables dans le cas où les $q_i$ (et donc les $\dot{q}_i^*$) ne sont pas indépendantes.</strong>
+          </div>
+    </section>
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+    <!-- Page 76 (OCR 1) : Summary ELS vs ELM -->
+    <section class="slide centered-text">
+        <h5>Ce qu'il faut retenir</h5>
+        <div class="image-placeholder">[Image: Flowchart starting from Sum(Ai-Qi)q*i=0. Top equation points down-left and down-right. Down-left box: "les q*i sont indépendantes". This points down to Ai=Qi, which points down to ELS formula. Down-right box: "les q*i ne sont pas indépendantes". This points down to Ai-Qi = Sum(mu_j a_ji), which points down to ELM formula.]</div>
+        <p class="explanation">Ce diagramme résume les deux cas : si les $\dot{q}_i^*$ sont indépendants (pas de liaisons restantes ou liaisons parfaites ignorées), on aboutit aux ELS ($A_i=Q_i$). S'ils ne sont pas indépendants (à cause de $m$ contraintes actives), on aboutit aux ELM ($A_i = Q_i + \sum \mu_j a_{ji}$, où $Q_i$ ne contient que les forces données).</p>
+    </section>
+
+    <!-- Page 77 (OCR 2) : Physical meaning of multipliers -->
+    <section class="slide">
+        <h5>Signification physique des multiplicateurs de Lagrange</h5>
+        <p>Considérons les ELM :</p>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i + \sum_{j=1}^m \mu_j a_{ji} $$
+        </div>
+        <p>Le terme de gauche $(A_i)$ et le terme $Q_i$ (force généralisée appliquée) sont homogènes à une force généralisée (unité dépendant de $q_i$).</p>
+        <p>On constate immédiatement que le terme $\sum_{j=1}^m \mu_j a_{ji}$ est homogène à une force généralisée.</p>
+        <p>Autrement dit ce terme représente le coefficient de $\dot{q}_i^*$ dans la puissance virtuelle développée par les actions de liaison (celles associées aux $m$ contraintes). On peut donc qualifier ce terme d'<strong>action de liaison généralisée</strong>.</p>
+        <div class="boxed-formula">
+            $$ Q_{i, liaison}^* = \sum_{j=1}^m \mu_j a_{ji} $$
+        </div>
+        <p class="explanation">Les multiplicateurs $\mu_j$ sont donc directement liés à l'intensité des forces (ou couples) de liaison nécessaires pour maintenir les contraintes correspondantes.</p>
+    </section>
+
+    <!-- Page 78 (OCR 3) : What to remember about multipliers -->
+    <section class="slide">
+        <h5>Ce qu'il faut retenir</h5>
+        <div class="boxed-text">
+             <p>Les termes $\sum_{j=1}^m \mu_j a_{ji}$ représentent les forces généralisées correspondant aux actions de liaison (celles associées aux contraintes $\sum_i a_{ji} \dot{q}_i = 0$).</p>
+             <p>Par conséquent dans le calcul des $Q_i$ (le terme $Q_i$ dans les ELM), on ne tient <strong>pas</strong> compte des puissances virtuelles développées par les actions de liaisons qui seront représentées par les multiplicateurs. $Q_i$ ne contient que les forces généralisées des actions <strong>données</strong> (appliquées).</p>
+        </div>
+    </section>
+
+     <!-- Page 79 (OCR 4) : ELM Example - Hoop Rolling -->
+    <section class="slide">
+        <h5>Mise en œuvre des multiplicateurs de Lagrange</h5>
+        <div class="image-placeholder float-right" style="width: 40%;">[Image: Disque de centre G, rayon r, roulant sur plan horizontal xy. L'axe instantané de rotation fait un angle psi avec Ox. L'angle de rotation propre est phi.]</div>
+        <p><strong>Application: Cerceau (ou disque?) qui roule sur un plan</strong></p>
+        <p class="explanation">L'exemple semble décrire un disque ou cerceau roulant sans glisser. Les équations données sont:</p>
+        <p>Paramètres: $q = (x_G, y_G, \phi, \psi)$</p>
+        <p>Liaison non-holonome (roulement sans glissement, 2 équations scalaires):</p>
+        <div class="boxed-formula">
+            (1) $\dot{x}_G + r\dot{\phi}\cos\psi = 0$ <br>
+            (2) $\dot{y}_G + r\dot{\phi}\sin\psi = 0$
+        </div>
+         <p class="explanation">Ces conditions expriment que la vitesse du point de contact I est nulle. $V_I = V_G + \vec{\Omega} \wedge \vec{GI}$. Avec $\vec{V}_G = (\dot{x}_G, \dot{y}_G, 0)$, $\vec{\Omega} = (\dot{\psi} \vec{k}?) + (\dot{\phi} \vec{u}_{axe}?)$, $\vec{GI} = (0,0,-r)$? La dérivation exacte dépend de la définition précise des angles et des axes de rotation. Admettons ces équations.</p>
+        <p>L'énergie cinétique (selon la slide, avec $R$ au lieu de $r$):</p>
+        <div class="boxed-formula">
+            $T = \frac{1}{2}m(\dot{x}_G^2 + \dot{y}_G^2 + R^2\dot{\phi}^2 + \frac{1}{2}R^2\dot{\psi}^2)$
+        </div>
+         <p class="explanation">Comme mentionné, cette expression de T semble suspecte. Utilisons-la pour suivre le calcul de la slide.</p>
+
+        <p>Les équations de Lagrange avec multiplicateurs s'écrivent (en supposant $Q_i=0$, i.e., pas de forces appliquées autres que les liaisons):</p>
+        <div class="boxed-formula">
+            $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = \sum_{j=1}^2 \mu_j a_{ji} $$
+        </div>
+         <div class="clear-float"></div>
+    </section>
+
+     <!-- Page 80 (OCR 5) : ELM Example - Calculation Table 1 -->
+    <section class="slide">
+        <h6>Calcul du premier membre des équations de Lagrange :</h6>
+        <p>Basé sur $T = \frac{1}{2}m(\dot{x}_G^2 + \dot{y}_G^2 + R^2\dot{\phi}^2 + \frac{1}{2}R^2\dot{\psi}^2)$.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Terme</th>
+                    <th>$q_1 = x_G$</th>
+                    <th>$q_2 = y_G$</th>
+                    <th>$q_3 = \phi$</th>
+                    <th>$q_4 = \psi$</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>$\frac{\partial T}{\partial q_i}$</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>$\frac{\partial T}{\partial \dot{q}_i}$</td><td>$m\dot{x}_G$</td><td>$m\dot{y}_G$</td><td>$mR^2\dot{\phi}$</td><td>$\frac{1}{2}mR^2\dot{\psi}$</td></tr>
+                <tr><td>$\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{q}_i}\right)$</td><td>$m\ddot{x}_G$</td><td>$m\ddot{y}_G$</td><td>$mR^2\ddot{\phi}$</td><td>$\frac{1}{2}mR^2\ddot{\psi}$</td></tr>
+                 <tr><td>$\boldsymbol{\frac{d}{dt}(\frac{\partial T}{\partial \dot{q}_i}) - \frac{\partial T}{\partial q_i}}$</td><td>$\boldsymbol{m\ddot{x}_G}$</td><td>$\boldsymbol{m\ddot{y}_G}$</td><td>$\boldsymbol{mR^2\ddot{\phi}}$</td><td>$\boldsymbol{\frac{1}{2}mR^2\ddot{\psi}}$</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Page 81 (OCR 6) : ELM Example - Calculation Table 2 -->
+    <section class="slide">
+        <h6>Calcul du second membre $\sum_{j=1}^2 \mu_j a_{ji}$ :</h6>
+        <p>Les liaisons (en $\dot{q}_i$) sont:</p>
+        <p>(j=1) $1\cdot\dot{x}_G + 0\cdot\dot{y}_G + (R\cos\psi)\cdot\dot{\phi} + 0\cdot\dot{\psi} = 0$</p>
+        <p>(j=2) $0\cdot\dot{x}_G + 1\cdot\dot{y}_G + (R\sin\psi)\cdot\dot{\phi} + 0\cdot\dot{\psi} = 0$</p>
+        <p>Les coefficients $a_{ji}$ sont les coefficients de $\dot{q}_i$ dans la liaison $j$ :</p>
+        <table>
+            <thead><tr><th>$a_{ji}$</th><th>$i=1 (x_G)$</th><th>$i=2 (y_G)$</th><th>$i=3 (\phi)$</th><th>$i=4 (\psi)$</th></tr></thead>
+            <tbody>
+                <tr><td>$j=1$</td><td>1</td><td>0</td><td>$R\cos\psi$</td><td>0</td></tr>
+                <tr><td>$j=2$</td><td>0</td><td>1</td><td>$R\sin\psi$</td><td>0</td></tr>
+                <tr><td>$\boldsymbol{\sum_{j=1}^2 \mu_j a_{ji}}$</td><td>$\boldsymbol{\mu_1}$</td><td>$\boldsymbol{\mu_2}$</td><td>$\boldsymbol{\mu_1 R\cos\psi + \mu_2 R\sin\psi}$</td><td>$\boldsymbol{0}$</td></tr>
+            </tbody>
+        </table>
+
+        <p>- Les équations de Lagrange avec multiplicateurs : (Membre de gauche) = (Membre de droite)</p>
+        <table>
+             <tr><th>Equation pour</th><th>Résultat</th></tr>
+             <tr><td>$\mathcal{L}(x_G):$</td><td>$m\ddot{x}_G = \mu_1$</td></tr>
+             <tr><td>$\mathcal{L}(y_G):$</td><td>$m\ddot{y}_G = \mu_2$</td></tr>
+             <tr><td>$\mathcal{L}(\phi):$</td><td>$mR^2\ddot{\phi} = \mu_1 R\cos\psi + \mu_2 R\sin\psi$</td></tr>
+             <tr><td>$\mathcal{L}(\psi):$</td><td>$\frac{1}{2}mR^2\ddot{\psi} = 0$</td></tr>
+        </table>
+        <p class="explanation">On a 4 équations différentielles couplées avec 2 équations de liaison algébriques (en vitesse) pour les 6 fonctions inconnues du temps: $x_G(t), y_G(t), \phi(t), \psi(t), \mu_1(t), \mu_2(t)$. Les multiplicateurs $\mu_1$ et $\mu_2$ sont liés aux composantes de la force de réaction au point de contact qui assure le non-glissement.</p>
+    </section>
+
+    <!-- Page 82 (OCR 7) : Reference to another application -->
+     <section class="slide">
+        <h5>Voir application pédagogique page 25</h5>
+        <div class="image-placeholder">[Image: Sphère roulant sur plan horizontal (identique à page 21 & 72 du PDF)]</div>
+        <p class="explanation">Référence à une autre application, probablement la sphère roulant sur un plan, traitée avec les multiplicateurs de Lagrange (exercice page 25 du document original).</p>
+    </section>
+
+     <!-- Page 83 (OCR 8) : Synthesis page title -->
+     <section class="slide centered-text">
+        <h5>Fiche de synthèse</h5>
+        <div class="image-placeholder" style="width: 150px;">[Image: Portrait of Lagrange]</div>
+        <span class="pointer-icon">☞</span>
+        <h3>Ce qu'il faut absolument savoir</h3>
+    </section>
+
+    <!-- Page 84 (OCR 9) : Summary flowchart PPV -> ELS/ELM -->
+    <section class="slide centered-text">
+        <div class="image-placeholder">[Image: Flowchart identical to page 76 (OCR 1)]</div>
+        <p class="explanation">Rappel du diagramme montrant comment le PPV ($P_a^*=P_e^*+P_i^*$) conduit, via l'analyse des $P_a^*, P_e^*, P_i^*$ et la dépendance/indépendance des $\dot{q}_i^*$, aux ELS ou aux ELM.</p>
+    </section>
+
+     <!-- Page 85 (OCR 10) : Implementation/Applications slide -->
+    <section class="slide centered-text">
+         <h5>Mise en œuvre</h5>
+         <span class="pointer-icon">☞</span>
+         <h4>Voir applications pédagogiques</h4>
+         <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+             <div style="width: 45%; text-align: center;">
+                 <div class="boxed-formula">
+                     $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i $$
+                 </div>
+                 <div class="boxed-formula" style="background-color: lightblue; color: black; font-weight: bold;">ELS</div>
+                 <span class="arrow-down"></span>
+                 <div class="boxed-formula" style="background-color: lightblue; color: black; font-weight: bold;">TD2</div>
+             </div>
+             <div style="width: 10%; text-align: center;">
+                 <div class="image-placeholder" style="width: 100px;">[Image: Portrait of Lagrange]</div>
+             </div>
+             <div style="width: 45%; text-align: center;">
+                 <div class="boxed-formula">
+                      $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \frac{\partial T}{\partial q_i} = Q_i + \sum_{j=1}^m \mu_j a_{ji} $$
+                 </div>
+                  <div class="boxed-formula" style="background-color: lightblue; color: black; font-weight: bold;">ELM</div>
+                 <span class="arrow-down"></span>
+                 <div class="boxed-formula" style="background-color: lightblue; color: black; font-weight: bold;">TD3</div>
+             </div>
+         </div>
+    </section>
+
+    <!-- Page 86 (OCR 11) : Methodology for ELS -->
+     <section class="slide">
+        <h5>Méthodologie à suivre pour résoudre un problème en utilisant les équations de Lagrange simples (ELS) (voir TD2)</h5>
+        <div style="display: flex; align-items: center;">
+            <div style="border-left: 3px solid #a02c2c; padding-left: 10px; margin-right: 20px;">
+                <p><strong>D1-</strong> Calculer T (énergie cinétique)</p>
+                <p><strong>D2-</strong> Calculer $P_{ext}^*$ (puissance virtuelle extérieure)</p>
+                <p><strong>D3-</strong> En déduire $Q_i$ (forces généralisées) par identification: $P_{ext}^* = \sum Q_i \dot{q}_i^*$</p>
+                <p><strong>D4-</strong> Ecrire les ELS</p>
+            </div>
+            <div class="boxed-formula" style="flex-grow: 1; position: relative;">
+                 $$ \underbrace{\frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right)}_{\text{3}} - \underbrace{\frac{\partial T}{\partial q_i}}_{\text{2}} = \underbrace{Q_i}_{\text{1}} $$
+                 <img src="placeholder_arrow_left.png" alt="<-" style="position: absolute; right: -50px; top: 50%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+            </div>
+        </div>
+        <span class="pointer-icon">☞</span>
+        <strong>Les calculs se font de droite à gauche</strong>
+        <p class="explanation">1. Calculer $Q_i$ (via $P_{ext}^*$). 2. Calculer $\partial T / \partial q_i$. 3. Calculer $\partial T / \partial \dot{q}_i$ puis sa dérivée temporelle. Ensuite assembler l'équation.</p>
+    </section>
+
+    <!-- Page 87 (OCR 12) : Methodology for ELM -->
+    <section class="slide">
+        <h5>Méthodologie à suivre pour résoudre un problème en utilisant les équations de Lagrange avec multiplicateurs (ELM) (voir TD3)</h5>
+        <div style="display: flex; align-items: center;">
+            <div style="border-left: 3px solid #a02c2c; padding-left: 10px; margin-right: 20px;">
+                <p><strong>D1-</strong> Calculer T (énergie cinétique)</p>
+                <p><strong>D2-</strong> Calculer $P_{ext}^*$ (puissance virtuelle extérieure <strong>des forces données</strong>)</p>
+                <p><strong>D3-</strong> En déduire $Q_i$ (forces généralisées données) par identification: $P_{ext}^* = \sum Q_i \dot{q}_i^*$</p>
+                <p><strong>D4-</strong> Identifier les coefficients $a_{ji}$ des liaisons et écrire le terme $\sum_{j=1}^m \mu_j a_{ji}$</p>
+                <p><strong>D5-</strong> Ecrire les ELM</p>
+            </div>
+            <div class="boxed-formula" style="flex-grow: 1; position: relative;">
+                 $$ \underbrace{\frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right)}_{\text{4}} - \underbrace{\frac{\partial T}{\partial q_i}}_{\text{3}} = \underbrace{Q_i}_{\text{2}} + \underbrace{\sum_{j=1}^m \mu_j a_{ji}}_{\text{1}} $$
+                 <img src="placeholder_arrow_left.png" alt="<-" style="position: absolute; right: -50px; top: 50%; transform: translateY(-50%); height: 30px; filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);">
+            </div>
+        </div>
+        <span class="pointer-icon">☞</span>
+        <strong>Les calculs se font de droite à gauche</strong>
+        <p class="explanation">1. Identifier $a_{ji}$ et écrire le terme $\sum \mu_j a_{ji}$. 2. Calculer $Q_i$ (forces données). 3. Calculer $\partial T / \partial q_i$. 4. Calculer $\partial T / \partial \dot{q}_i$ puis sa dérivée temporelle. Assembler l'équation. Résoudre avec les équations de liaison.</p>
+    </section>
+
+    <!-- Page 88 (OCR 13) : Transition slide -->
+    <section class="slide centered-text">
+         <div style="display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center;">
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Lagrange?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Euler?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait D'Alembert?]</div>
+             <div class="image-placeholder inline" style="width: 120px;">[Image: Portrait Hamilton?]</div>
+         </div>
+         <div class="boxed-text" style="margin-top: 20px;">
+            <h4>Et maintenant, c'est à vous de jouer,</h4>
+            <h4>à vos dossiers pédagogiques.</h4>
+         </div>
+          <span class="pointer-icon">☞</span>
+    </section>
+
+    <!-- Page 89 (OCR 14) : End slide Chap 2 -->
+    <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 2</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+
+    <hr style="border-top: 3px solid #a02c2c; margin: 40px 0;">
+
+    <!-- Page 90 (OCR 1) : Chap 3 Title Slide -->
+    <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p>
+            <p>Professeur de l'enseignement supérieur</p>
+            <p>Bureau 37 département de physique</p>
+            <p>Faculté des sciences</p>
+            <p>Agadir</p>
+            <p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+
+    <!-- Page 91 (OCR 2) : Chap 3 Objectives -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 3 : INTEGRALES PREMIERES</h3>
+
+        <h5>Objectifs pédagogiques</h5>
+        <p>Ce chapitre vise à ce que l'étudiant puisse :</p>
+        <ul>
+            <li><span class="pointer-icon">☞</span>Introduire la notion d'intégrale première.</li>
+             <li class="explanation">Comprendre ce qu'est une intégrale première du mouvement : une fonction des positions, des vitesses et éventuellement du temps qui reste constante le long de toute trajectoire réelle du système. Elles sont liées aux lois de conservation.</li>
+            <li><span class="pointer-icon">☞</span>Décomposer l'énergie cinétique.</li>
+             <li class="explanation">Analyser la structure de l'énergie cinétique en fonction des vitesses généralisées (termes quadratiques, linéaires, constants).</li>
+            <li><span class="pointer-icon">☞</span>Etudier les intégrales premières linéaires.</li>
+             <li class="explanation">Identifier les conditions d'existence d'intégrales premières linéaires dans les moments généralisés (liées aux coordonnées cycliques et à la conservation des moments généralisés).</li>
+            <li><span class="pointer-icon">☞</span>Etudier les intégrales premières quadratiques.</li>
+             <li class="explanation">Identifier les conditions d'existence d'intégrales premières quadratiques dans les vitesses (liées à la conservation de l'énergie ou à l'intégrale de Jacobi).</li>
+        </ul>
+    </section>
+
+    <!-- Page 92 (OCR 3) : Chap 3 Concepts 1 -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 3 : INTEGRALES PREMIERES</h3>
+
+        <h5>Notions abordées</h5>
+        <ul>
+            <li><span class="pointer-icon">☞</span><strong>Intégrale première linéaire</strong></li>
+             <li class="explanation">Une intégrale première qui est une fonction linéaire des moments généralisés $p_i = \partial L / \partial \dot{q}_i$ (ou des vitesses généralisées $\dot{q}_i$). Typiquement liée à la conservation d'un moment généralisé $p_k = \text{Cte}$ lorsque $q_k$ est cyclique.</li>
+            <li><span class="pointer-icon">☞</span><strong>Intégrale première de Jacobi</strong></li>
+             <li class="explanation">Une intégrale première qui existe pour les systèmes conservatifs dont le Lagrangien ne dépend pas explicitement du temps. Elle est liée à la conservation de l'énergie pour les liaisons scléronomes.</li>
+            <li><span class="pointer-icon">☞</span><strong>Décomposition de l'énergie cinétique</strong></li>
+             <li class="explanation">Exprimer $T$ comme une somme $T = T_2 + T_1 + T_0$ où $T_2$ est quadratique en $\dot{q}_i$, $T_1$ est linéaire, et $T_0$ est indépendant des $\dot{q}_i$.</li>
+            <li><span class="pointer-icon">☞</span><strong>Convention d'Einstein</strong></li>
+             <li class="explanation">Règle de sommation implicite sur les indices répétés pour simplifier l'écriture des sommes.</li>
+            <li><span class="pointer-icon">☞</span><strong>Théorème d'Euler</strong></li>
+             <li class="explanation">Théorème concernant les fonctions homogènes.</li>
+            <li><span class="pointer-icon">☞</span><strong>Fonction homogène</strong></li>
+             <li class="explanation">Une fonction $f(x_1,...,x_n)$ est homogène de degré $k$ si $f(\lambda x_1,...,\lambda x_n) = \lambda^k f(x_1,...,x_n)$.</li>
+        </ul>
+    </section>
+
+    <!-- Page 93 (OCR 4) : Chap 3 Concepts 2 -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 3 : INTEGRALES PREMIERES</h3>
+
+        <h5>Notions abordées - suite</h5>
+        <ul>
+            <li><span class="pointer-icon">☞</span><strong>Degré d'homogénéité</strong></li>
+             <li class="explanation">L'exposant $k$ dans la définition d'une fonction homogène.</li>
+            <li><span class="pointer-icon">☞</span><strong>Identité d'Euler</strong></li>
+             <li class="explanation">Relation découlant du théorème d'Euler pour les fonctions homogènes: $\sum_i x_i \frac{\partial f}{\partial x_i} = k f$.</li>
+            <li><span class="pointer-icon">☞</span><strong>Intégrale première quadratique</strong></li>
+             <li class="explanation">Une intégrale première qui est une fonction quadratique des vitesses généralisées $\dot{q}_i$. L'énergie cinétique $T$ ou l'intégrale de Jacobi $H$ en sont des exemples.</li>
+            <li><span class="pointer-icon">☞</span><strong>Théorème de l'énergie cinétique</strong></li>
+             <li class="explanation">Rappel du théorème $\frac{dT}{dt} = P_e + P_i$.</li>
+            <li><span class="pointer-icon">☞</span><strong>Intégrale première de Painlevé</strong></li>
+             <li class="explanation">Intégrale première liée à l'énergie cinétique dans certains cas spécifiques.</li>
+            <li><span class="pointer-icon">☞</span><strong>Intégrale première de l'énergie cinétique</strong></li>
+             <li class="explanation">Concerne la conservation de $T$ sous certaines conditions (e.g., $P_e+P_i=0$).</li>
+        </ul>
+    </section>
+
+    <!-- Page 94 (OCR 5) : Chap 3 Plan -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 3 : INTEGRALES PREMIERES</h3>
+
+        <h5>PLAN DU CHAPITRE 3</h5>
+        <ol>
+            <li><strong>Intégrale première linéaire</strong> : Liée aux coordonnées cycliques.</li>
+            <li><strong>Intégrale première de Jacobi</strong> : Liée à l'indépendance temporelle du Lagrangien.</li>
+            <li><strong>Décomposition de l'énergie cinétique</strong> : En termes quadratique, linéaire et constant par rapport aux vitesses généralisées.</li>
+            <li><strong>Théorème d'Euler - Identité d'Euler</strong> : Propriétés des fonctions homogènes appliquées à l'énergie cinétique.</li>
+            <li><strong>Intégrales premières quadratiques</strong> : Conservation de l'énergie ou de l'intégrale de Jacobi.</li>
+        </ol>
+    </section>
+
+    <!-- Page 95 (OCR 6) : Chap 3 Preamble -->
+    <section class="slide">
+        <h5>Préambule</h5>
+        <blockquote class="boxed-text">
+            « Nous connaissons le grand intérêt de rechercher des intégrales premières lorsqu' on a étudié les théorèmes généraux. Les équations de Lagrange permettent leur recherche quasi systématique »
+        </blockquote>
+        <p class="explanation">Les intégrales premières (quantités conservées) simplifient grandement l'étude du mouvement. Le formalisme Lagrangien offre un moyen systématique de les trouver, notamment via l'identification des symétries du système (théorème de Noether, non abordé ici mais lié aux coordonnées cycliques) ou des propriétés du Lagrangien (indépendance temporelle pour l'intégrale de Jacobi).</p>
+    </section>
+
+    <!-- Page 96 (OCR 7) : Definition First Integral -->
+    <section class="slide">
+        <h5>Définition</h5>
+        <div class="boxed-text">
+            On appelle <strong>intégrale première du mouvement</strong> toute fonction $f(q_i, \dot{q}_i, t)$ des coordonnées généralisées, des vitesses généralisées et éventuellement du temps, qui reste <strong>constante</strong> le long de toute trajectoire réelle $q_i(t)$ du système:
+        </div>
+        <div class="boxed-formula">
+            $$ f(q_i(t), \dot{q}_i(t), t) = Cte $$
+        </div>
+        <p class="explanation">Cela signifie que sa dérivée totale par rapport au temps est nulle : $df/dt = 0$. Exemples : conservation de l'énergie, du moment cinétique, etc.</p>
+    </section>
+
+    <!-- Page 97 (OCR 8) : Section 1 Title -->
+    <section class="slide centered-text">
+        <h4>§-1-</h4>
+        <h3>Intégrale première linéaire</h3>
+        <p class="explanation">Cas où une quantité conservée dépend linéairement des vitesses (ou moments) généralisées.</p>
+    </section>
+
+    <!-- Page 98 (OCR 9) : Linear First Integral / Cyclic Coordinate -->
+    <section class="slide">
+        <h5>1- Intégrale première linéaire en $\dot{q}_i$</h5>
+        <p>S'il existe un indice $i$ tel que :</p>
+        <ul>
+            <li>La force généralisée correspondante est nulle : $Q_i = 0$</li>
+            <li>L'énergie cinétique $T$ ne dépend pas de la coordonnée $q_i$ : $\frac{\partial T}{\partial q_i} = 0$</li>
+        </ul>
+        <p>Alors la coordonnée $q_i$ est appelée <strong>coordonnée cyclique</strong> (ou ignorable, ou cachée).</p>
+        <p>L'équation de Lagrange (ELS) relative à $q_i$ :</p>
+        $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) - \underbrace{\frac{\partial T}{\partial q_i}}_{0} = \underbrace{Q_i}_{0} $$
+        <p>se réduit à :</p>
+        <div class="boxed-formula">
+             $$ \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_i} \right) = 0 $$
+        </div>
+        <p>Ce qui donne par intégration par rapport au temps :</p>
+        <div class="boxed-formula">
+             $$ \frac{\partial T}{\partial \dot{q}_i} = Cte $$
+        </div>
+        <div class="boxed-text">
+             C'est une <strong>intégrale première linéaire en $\boldsymbol{\dot{q}_i}$</strong> (car T est quadratique en $\dot{q}_i$, sa dérivée est linéaire).
+        </div>
+        <p class="explanation">Le terme $\frac{\partial T}{\partial \dot{q}_i}$ est le <strong>moment généralisé</strong> $p_i$ (conjugué de $q_i$) lorsque T ne dépend pas linéairement des $\dot{q}_k$. Si $q_i$ est cyclique et $Q_i=0$, le moment généralisé $p_i$ est conservé.</p>
+    </section>
+
+    <!-- Page 99 (OCR 10) : Section 2 Title -->
+    <section class="slide centered-text">
+        <h4>§-2-</h4>
+        <h3>Intégrale première de Jacobi</h3>
+        <p class="explanation">Une autre intégrale première, souvent liée à l'énergie, qui apparaît lorsque le Lagrangien ne dépend pas explicitement du temps.</p>
+    </section>
+
+    <!-- Page 100 (OCR 11) : Jacobi Integral -->
+    <section class="slide">
+        <h5>2- Intégrale première de Jacobi</h5>
+         <div class="image-placeholder float-right">[Image: Portrait Jacobi?]</div>
+        <p>Dans le cas d'un système isolé (ou plus généralement si le Lagrangien $L=L(q_i, \dot{q}_i)$ ne dépend pas explicitement du temps), c'est-à-dire :</p>
+        $$ \frac{\partial L}{\partial t} = 0 $$
+        <p>on a l'intégrale première suivante, appelée <strong>intégrale de Jacobi</strong> :</p>
+        <div class="boxed-formula">
+             $$ H = \sum_i p_i \dot{q}_i - L = Cte $$
+        </div>
+        <p>où $p_i = \frac{\partial L}{\partial \dot{q}_i}$ est le moment généralisé.</p>
+
+        <p><strong>En effet :</strong> Calculons la dérivée totale de $L$ par rapport au temps :</p>
+        $$ \frac{dL(q_i, \dot{q}_i)}{dt} = \sum_i \frac{\partial L}{\partial q_i} \dot{q}_i + \sum_i \frac{\partial L}{\partial \dot{q}_i} \ddot{q}_i $$
+        <p>En utilisant les équations d'Euler-Lagrange $\frac{\partial L}{\partial q_i} = \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right)$ (en supposant $Q_i^{nc}=0$ ou que L inclut un potentiel généralisé) :</p>
+        $$ \frac{dL}{dt} = \sum_i \left( \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) \right) \dot{q}_i + \sum_i \frac{\partial L}{\partial \dot{q}_i} \ddot{q}_i $$
+        $$ \frac{dL}{dt} = \sum_i \left( \frac{d}{dt}(p_i) \dot{q}_i + p_i \frac{d}{dt}(\dot{q}_i) \right) = \sum_i \frac{d}{dt} (p_i \dot{q}_i) $$
+        <p>Donc :</p>
+        $$ \frac{dL}{dt} - \sum_i \frac{d}{dt} (p_i \dot{q}_i) = 0 \implies \frac{d}{dt} \left( L - \sum_i p_i \dot{q}_i \right) = 0 $$
+        <p>Ce qui montre que $H = \sum_i p_i \dot{q}_i - L$ est une constante du mouvement.</p>
+        <div class="boxed-formula">
+             $$ H = \sum_i \frac{\partial L}{\partial \dot{q}_i} \dot{q}_i - L = \sum_i p_i \dot{q}_i - L = Cte $$
+        </div>
+        <p style="text-align: center; font-weight: bold; color: #a02c2c;">CQFD</p>
+         <div class="boxed-text" style="background-color: #f0fff0;">
+            <strong>Intégrale première de Jacobi</strong>
+         </div>
+         <div class="clear-float"></div>
+         <p class="explanation">Si $L=T-V$ avec $T$ quadratique en $\dot{q}_i$ ($T=T_2$) et $V=V(q_i)$, alors $H=2T_2 - (T_2-V) = T_2+V = T+V$, l'énergie mécanique totale.</p>
+    </section>
+
+    <!-- Page 101 (OCR 12) : Section 3 Title -->
+    <section class="slide centered-text">
+        <h4>§-3-</h4>
+        <h3>Décomposition de l'énergie cinétique</h3>
+        <p class="explanation">Analyse de la structure de l'énergie cinétique $T$ en fonction des vitesses généralisées $\dot{q}_i$.</p>
+    </section>
+
+    <!-- Page 102 (OCR 13) : Einstein Convention 1 -->
+    <section class="slide">
+        <h5>1- Convention d'Einstein</h5>
+        <ul>
+            <li>L'espace est $\mathbb{R}^3$.</li>
+            <li>$\implies$ les indices de coordonnées varient toujours de 1 à 3 (par exemple, $x_1, x_2, x_3$).</li>
+            <li>$\implies$ le signe $\sum_{i=1}^3$ est inutile !!</li>
+        </ul>
+        <div class="boxed-text" style="border-color: red; border-width: 2px;">
+             <p><strong>Convention de sommation sur les indices répétés (= convention d'Einstein) :</strong></p>
+             <p>Si un indice apparaît <strong>deux fois</strong> dans la même expression (un en haut, un en bas implicitement, ou les deux en bas/haut selon le contexte tensoriel, ici simplifié), il prend systématiquement les valeurs 1, 2 et 3, et on somme sur ces valeurs.</p>
+        </div>
+        <ul>
+            <li>Exemple:
+                 $$ a_i b_j c_j = \sum_{j=1}^3 a_i b_j c_j = a_i b_1 c_1 + a_i b_2 c_2 + a_i b_3 c_3 $$
+                 <p class="explanation">L'indice $j$ est répété (sommé), l'indice $i$ est libre (il reste).</p>
+                 $$ a_{ij} b_j c_j = \sum_{j=1}^3 a_{ij} b_j c_j \quad (\text{Sommation sur } j)$$
+                  <p class="explanation">Slide example: $a_i b_j c_j$ is likely meant to be $a_{ij} b_j$. Let's assume $a_{ij} b^j c_k$ or similar based on typical usage.</p>
+                 <p>Exemple de la slide (probablement $a_{ij} b^j$ ou $a_{ij} b_j$ si métrique euclidienne):</p>
+                 $$ a_{ij} c_j = \sum_{j=1}^3 a_{ij} c_j $$
+                 $$ a_i b_j c_j = a_i (b_1 c_1 + b_2 c_2 + b_3 c_3) $$
+                 <p>Exemple complet donné sur la slide (peut-être $a_{ij} b_k c_l$ avec $i,k$ libres? Non, $a_i b_j c_j$ semble impliquer sommation sur j):</p>
+                  <p>L'expression $a_i b_j c_j = \sum_{i=1}^3 \sum_{j=1}^3 a_i b_j c_j = a_1 b_1 c_1 + ... + a_3 b_3 c_3$ sur la slide est <strong>incorrecte</strong> si on applique la convention d'Einstein standard (sommation uniquement sur indice répété). L'indice $i$ n'est pas répété dans $a_i b_j c_j$. </p>
+                  <p>Si on voulait sommer sur $i$ et $j$, l'expression serait $a_i b_j c_{ij}$ ou $a_i b^i c_j d^j$ etc. L'exemple donné $a_i b_j c_j$ signifie $\sum_{j=1}^3 a_i b_j c_j$ pour chaque $i=1,2,3$.</p>
+                  <p> Prenons l'exemple $a_{ij}x_j$ :</p>
+                  $$ y_i = a_{ij} x_j \equiv \sum_{j=1}^3 a_{ij} x_j $$
+            </li>
+        </ul>
+    </section>
+
+    <!-- Page 103 (OCR 14) : Einstein Convention 2 -->
+    <section class="slide">
+        <h6>Convention d'Einstein (suite)</h6>
+        <ul>
+            <li>Indice répété = indice <strong>muet</strong>, il peut changer de nom ($a_i b_i = a_k b_k$).</li>
+
+            <li>Exemple : position du point $\vec{OM}$
+                 <div class="boxed-formula">
+                     $$ \vec{OM} = x_i \vec{e}_i = x_k \vec{e}_k = x_1 \vec{e}_1 + x_2 \vec{e}_2 + x_3 \vec{e}_3 $$
+                 </div>
+                 <p class="explanation">Sommation implicite sur $i$ (ou $k$) de 1 à 3.</p>
+            </li>
+
+            <li>Exemple : produit scalaire $\vec{x} \cdot \vec{y}$
+                 <div class="boxed-formula">
+                     $$ \vec{x} \cdot \vec{y} = (x_i \vec{e}_i) \cdot (y_j \vec{e}_j) = x_i y_j (\vec{e}_i \cdot \vec{e}_j) $$
+                     $$ \text{Si base orthonormée, } \vec{e}_i \cdot \vec{e}_j = \delta_{ij} \text{ (symbole de Kronecker)} $$
+                     $$ = x_i y_j \delta_{ij} = x_i y_i = x_1 y_1 + x_2 y_2 + x_3 y_3 $$
+                 </div>
+                 <p class="explanation">Sommation sur $i$ et $j$, puis $\delta_{ij}$ impose $j=i$ pour la somme restante.</p>
+             </li>
+
+            <li>Exemple : norme d'un vecteur $\|\vec{x}\|^2$
+                 <div class="boxed-formula">
+                     $$ \|\vec{x}\|^2 = \vec{x} \cdot \vec{x} = (x_i \vec{e}_i) \cdot (x_j \vec{e}_j) = x_i x_j \delta_{ij} = x_i x_i = x_1^2 + x_2^2 + x_3^2 $$
+                 </div>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Page 104 (OCR 15) : Kinetic Energy Decomposition -->
+    <section class="slide">
+        <h5>2- Décomposition de l'énergie cinétique T</h5>
+        <p>L'énergie cinétique est définie par :</p>
+        <div class="boxed-formula">
+             $$ T = \int_{P\in(S)} \frac{1}{2} V^2(P) dm $$
+        </div>
+        <p>avec la vitesse réelle :</p>
+        <div class="boxed-formula">
+             $$ \vec{V}(P) = \frac{d\vec{OP}}{dt} = \sum_i \frac{\partial \vec{OP}}{\partial q_i} \dot{q}_i + \frac{\partial \vec{OP}}{\partial t} $$
+             <p class="explanation">Ici, la sommation $\sum_i$ est sur les $n$ coordonnées généralisées.</p>
+        </div>
+        <p>En remplaçant $\vec{V}(P)$ dans T et en développant le carré scalaire $V^2 = \vec{V} \cdot \vec{V}$ :</p>
+        $$ V^2 = \left( \sum_i \frac{\partial \vec{OP}}{\partial q_i} \dot{q}_i + \frac{\partial \vec{OP}}{\partial t} \right) \cdot \left( \sum_j \frac{\partial \vec{OP}}{\partial q_j} \dot{q}_j + \frac{\partial \vec{OP}}{\partial t} \right) $$
+        $$ V^2 = \sum_i \sum_j \left( \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j} \right) \dot{q}_i \dot{q}_j + 2 \sum_i \left( \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial t} \right) \dot{q}_i + \left( \frac{\partial \vec{OP}}{\partial t} \cdot \frac{\partial \vec{OP}}{\partial t} \right) $$
+        <p>En intégrant $\frac{1}{2}V^2 dm$ :</p>
+        <div class="boxed-formula">
+         $$ T = \int \frac{1}{2} V^2 dm = \underbrace{\int \frac{1}{2} \sum_i \sum_j \left( \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j} \right) \dot{q}_i \dot{q}_j dm}_{T_2} + \underbrace{\int \sum_i \left( \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial t} \right) \dot{q}_i dm}_{T_1} + \underbrace{\int \frac{1}{2} \left( \frac{\partial \vec{OP}}{\partial t} \right)^2 dm}_{T_0} $$
+         $$ T = T_2 + T_1 + T_0 $$
+        </div>
+         <p class="explanation">La slide intervertit les sommes et l'intégrale et regroupe les termes différemment mais le résultat est le même : $T$ est la somme d'un terme quadratique en $\dot{q}$, d'un terme linéaire, et d'un terme constant par rapport aux $\dot{q}$.</p>
+    </section>
+
+    <!-- Page 105 (OCR 16) : T2, T1, T0 definitions -->
+    <section class="slide">
+        <p>avec :</p>
+        <div class="boxed-formula">
+             $$ T_2 = \int_{P\in(S)} \frac{1}{2} \sum_i \sum_j \left( \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j} \right) \dot{q}_i \dot{q}_j dm $$
+             $$ T_2 = \sum_i \sum_j \left( \int_{P\in(S)} \frac{1}{2} \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j} dm \right) \dot{q}_i \dot{q}_j = \text{terme quadratique de T en } \dot{q}_i $$
+        </div>
+        <div class="boxed-formula">
+            $$ T_1 = \int_{P\in(S)} \sum_i \left( \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial t} \right) \dot{q}_i dm $$
+            $$ T_1 = \sum_i \left( \int_{P\in(S)} \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial t} dm \right) \dot{q}_i = \text{terme linéaire de T en } \dot{q}_i $$
+        </div>
+        <div class="boxed-formula">
+             $$ T_0 = \int_{P\in(S)} \frac{1}{2} \left\| \frac{\partial \vec{OP}}{\partial t} \right\|^2 dm = \text{terme indépendant de } \dot{q}_i $$
+        </div>
+         <p class="explanation">$T_2$ est une forme quadratique des $\dot{q}_i$. $T_1$ est une forme linéaire des $\dot{q}_i$. $T_0$ est un terme constant par rapport aux $\dot{q}_i$. Les coefficients de ces formes peuvent dépendre de $q_k$ et $t$.</p>
+         <p>D'où:</p>
+         <div class="boxed-formula">
+             $$ T = T_2 + T_1 + T_0 $$
+         </div>
+    </section>
+
+    <!-- Page 106 (OCR 17) : T2 detailed example -->
+    <section class="slide">
+        <p><strong>Pourquoi T2 est quadratique ?</strong></p>
+        <div class="boxed-formula">
+             $$ T_2 = \frac{1}{2} \int_{P\in(S)} \sum_i \sum_j \left( \frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j} \right) \dot{q}_i \dot{q}_j dm $$
+        </div>
+        <p>Pour mieux comprendre, prenons le cas de 2 paramètres $q_1$ et $q_2$.</p>
+        <p>Le vecteur vitesse est :</p>
+         $$ \vec{V}(P) = \frac{\partial \vec{OP}}{\partial q_1} \dot{q}_1 + \frac{\partial \vec{OP}}{\partial q_2} \dot{q}_2 + \frac{\partial \vec{OP}}{\partial t} $$
+        <p>Le carré scalaire $V^2 = \vec{V} \cdot \vec{V}$ est :</p>
+        <div class="boxed-formula">
+        $$ V^2(P) = \left( \frac{\partial \vec{OP}}{\partial q_1} \right)^2 \dot{q}_1^2 + \left( \frac{\partial \vec{OP}}{\partial q_2} \right)^2 \dot{q}_2^2 + \left( \frac{\partial \vec{OP}}{\partial t} \right)^2 $$
+        $$ + 2 \left( \frac{\partial \vec{OP}}{\partial q_1} \cdot \frac{\partial \vec{OP}}{\partial q_2} \right) \dot{q}_1 \dot{q}_2 + 2 \left( \frac{\partial \vec{OP}}{\partial q_1} \cdot \frac{\partial \vec{OP}}{\partial t} \right) \dot{q}_1 + 2 \left( \frac{\partial \vec{OP}}{\partial q_2} \cdot \frac{\partial \vec{OP}}{\partial t} \right) \dot{q}_2 $$
+        </div>
+    </section>
+
+    <!-- Page 107 (OCR 18) : T expansion continued -->
+    <section class="slide">
+        <p>En intégrant $\frac{1}{2} V^2 dm$ :</p>
+        <p>$T = \int \frac{1}{2} V^2 dm $</p>
+        <div class="boxed-formula">
+            $$ T = \underbrace{\left(\int \frac{1}{2} (\frac{\partial \vec{OP}}{\partial q_1})^2 dm \right) \dot{q}_1^2 + \left(\int \frac{1}{2} (\frac{\partial \vec{OP}}{\partial q_2})^2 dm \right) \dot{q}_2^2 + \left(\int (\frac{\partial \vec{OP}}{\partial q_1} \cdot \frac{\partial \vec{OP}}{\partial q_2}) dm \right) \dot{q}_1 \dot{q}_2}_{T_2} $$
+            $$ + \underbrace{\left(\int (\frac{\partial \vec{OP}}{\partial q_1} \cdot \frac{\partial \vec{OP}}{\partial t}) dm \right) \dot{q}_1 + \left(\int (\frac{\partial \vec{OP}}{\partial q_2} \cdot \frac{\partial \vec{OP}}{\partial t}) dm \right) \dot{q}_2}_{T_1} + \underbrace{\left(\int \frac{1}{2} (\frac{\partial \vec{OP}}{\partial t})^2 dm \right)}_{T_0} $$
+        </div>
+        <p>Forme générale avec sommation sur indices $i, j$ allant de 1 à n :</p>
+         <div class="boxed-formula">
+             $$ T = \frac{1}{2} \sum_{i,j} M_{ij}(q,t) \dot{q}_i \dot{q}_j + \sum_i L_i(q,t) \dot{q}_i + T_0(q,t) $$
+         </div>
+          <p class="explanation">Où $M_{ij} = \int (\frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j}) dm$ (tenseur d'inertie généralisé), $L_i = \int (\frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial t}) dm$, et $T_0 = \int \frac{1}{2} (\frac{\partial \vec{OP}}{\partial t})^2 dm$.</p>
+          <p>La slide regroupe différemment (équivalent):</p>
+          <div class="boxed-formula">
+             $$ V^2 = \sum_{i,j} \left(\frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j}\right) \dot{q}_i \dot{q}_j + 2 \sum_i \left(\frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial t}\right) \dot{q}_i + \left(\frac{\partial \vec{OP}}{\partial t}\right)^2 $$
+          </div>
+    </section>
+
+    <!-- Page 108 (OCR 19) : Commutativity -->
+    <section class="slide">
+        <p><strong>En effet :</strong></p>
+        <p>Le terme quadratique $T_2$ peut s'écrire :</p>
+        <div class="boxed-formula">
+             $$ T_2 = \frac{1}{2} \int \left( \sum_i \frac{\partial \vec{OP}}{\partial q_i} \dot{q}_i \right) \cdot \left( \sum_j \frac{\partial \vec{OP}}{\partial q_j} \dot{q}_j \right) dm = \frac{1}{2} \int \sum_{i,j} \left(\frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j}\right) \dot{q}_i \dot{q}_j dm $$
+        </div>
+        <p>Pour le cas $n=2$ :</p>
+        <div class="boxed-formula">
+        $$ \sum_{i,j=1}^2 \left(\frac{\partial \vec{OP}}{\partial q_i} \cdot \frac{\partial \vec{OP}}{\partial q_j}\right) \dot{q}_i \dot{q}_j = \left(\frac{\partial \vec{OP}}{\partial q_1}\right)^2 \dot{q}_1^2 + \left(\frac{\partial \vec{OP}}{\partial q_1}\cdot\frac{\partial \vec{OP}}{\partial q_2}\right) \dot{q}_1\dot{q}_2 $$
+        $$ + \left(\frac{\partial \vec{OP}}{\partial q_2}\cdot\frac{\partial \vec{OP}}{\partial q_1}\right) \dot{q}_2\dot{q}_1 + \left(\frac{\partial \vec{OP}}{\partial q_2}\right)^2 \dot{q}_2^2 $$
+        $$ = \left(\frac{\partial \vec{OP}}{\partial q_1}\right)^2 \dot{q}_1^2 + \left(\frac{\partial \vec{OP}}{\partial q_2}\right)^2 \dot{q}_2^2 + 2 \left(\frac{\partial \vec{OP}}{\partial q_1}\cdot\frac{\partial \vec{OP}}{\partial q_2}\right) \dot{q}_1\dot{q}_2 $$
+        </div>
+        <p>La multiplication (des $\dot{q}_i$) est commutative.</p>
+    </section>
+
+    <!-- Page 109 (OCR 20) : Remark T=T2 -->
+    <section class="slide">
+        <h5>Remarque</h5>
+        <p>Si le paramétrage ne fait pas intervenir le temps t explicitement (liaisons scléronomes et repère fixe), alors $\frac{\partial \vec{OP}}{\partial t} = \vec{0}$.</p>
+        <div class="boxed-formula">
+             $$ \frac{\partial \vec{OP}}{\partial t} = \vec{0} $$
+        </div>
+        <p>et, d'après la décomposition $T = T_2 + T_1 + T_0$ :</p>
+        <p>$T_1 = \sum_i (\int \frac{\partial \vec{OP}}{\partial q_i} \cdot \vec{0} dm) \dot{q}_i = 0$</p>
+        <p>$T_0 = \int \frac{1}{2} \|\vec{0}\|^2 dm = 0$</p>
+        <p>Donc, dans ce cas :</p>
+        <div class="boxed-formula">
+            $$ T = T_2 $$
+        </div>
+        <div class="boxed-text">
+            T est alors une fonction homogène du second degré par rapport aux vitesses généralisées $\dot{q}_i$.
+        </div>
+        <p class="explanation">$T_2 = \frac{1}{2} \sum_{i,j} M_{ij}(q) \dot{q}_i \dot{q}_j$. Si on remplace $\dot{q}_k$ par $\lambda \dot{q}_k$, $T_2$ devient $\lambda^2 T_2$. C'est la définition d'une fonction homogène de degré 2.</p>
+    </section>
+
+</body>
+</html>
