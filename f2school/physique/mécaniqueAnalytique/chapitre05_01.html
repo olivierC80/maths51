@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecanique Analytique - SMP5 - Chapitres 2, 3 & 4</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError : false
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .slide {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #a02c2c; /* Dark red color similar to slides */
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #a02c2c;
+            padding-bottom: 10px;
+        }
+        h2 {
+             text-align: center;
+        }
+        h3.chapter-title {
+             background-color: #a02c2c;
+             color: white;
+             padding: 10px;
+             border-radius: 5px;
+             text-align: center;
+        }
+        h4.subtitle {
+             text-align: center;
+             color: #802020;
+        }
+         h5 {
+             color: #601010;
+             margin-top: 1.5em;
+         }
+         h6 {
+             color: #601010;
+             margin-top: 1em;
+             font-size: 1.1em;
+         }
+        .image-placeholder {
+            background-color: #eee;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px auto; /* Centered */
+            color: #777;
+            font-style: italic;
+            min-height: 50px; /* Ensure placeholder is visible */
+            max-width: 80%; /* Control image size */
+        }
+         .image-placeholder.inline {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px;
+         }
+         .image-placeholder.float-right {
+             width: 150px;
+             float: right;
+             margin-left: 15px;
+             margin-bottom: 10px;
+         }
+         .clear-float {
+            clear: both;
+         }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        blockquote {
+            border-left: 4px solid #a02c2c;
+            padding-left: 15px;
+            margin-left: 0;
+            font-style: italic;
+            background-color: #f9f2f2;
+        }
+        strong {
+            color: #601010;
+        }
+        .katex-display {
+             margin: 1em 0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+        }
+        .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 25px;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .contact-info p {
+             margin: 5px 0;
+        }
+         .centered-text {
+             text-align: center;
+         }
+         .boxed-formula {
+             background-color: #e0e8f0;
+             padding: 10px 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+             overflow-x: auto; /* Prevent wide equations from breaking layout */
+             overflow-y: hidden;
+             padding-bottom: 5px; /* Space for potential scrollbar */
+         }
+         .boxed-text {
+             background-color: #e0e8f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 15px 0;
+             border: 1px solid #c0c8d0;
+         }
+         /* Torseur notation style */
+         .torseur {
+             display: inline-block;
+             text-align: center;
+             vertical-align: middle;
+             margin: 0 0.2em;
+         }
+         .torseur-content {
+             display: block;
+             border-left: 1px solid;
+             border-right: 1px solid;
+             padding: 0 0.3em;
+         }
+         .torseur-element {
+             display: block;
+         }
+         .torseur-point {
+             font-size: 0.7em;
+             margin-top: -0.3em;
+         }
+         .comoment {
+            display: inline-block;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 0.9em;
+            height: 0.9em;
+            line-height: 0.9em;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 0.2em;
+            font-weight: bold;
+            vertical-align: middle;
+         }
+         .pointer-icon {
+            display: inline-block; /* Prevents block behavior */
+            font-size: 1.5em; /* Adjust size */
+            margin-right: 5px; /* Space from text */
+            vertical-align: middle; /* Align with text */
+             /* Using a simple Unicode character */
+             content: "☞";
+         }
+         .arrow-up {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 2L2 12h5v10h10V12h5L12 2z"/></svg>');
+         }
+         .arrow-down {
+             display: block;
+             margin: 5px auto;
+             height: 30px;
+             width: 30px;
+             filter: invert(20%) sepia(50%) saturate(1500%) hue-rotate(330deg);
+             /* Placeholder image or SVG */
+             content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23a02c2c"><path d="M12 22L22 12h-5V2H7v10H2l10 10z"/></svg>');
+          }
+          .arrow-label {
+             text-align: center;
+             font-weight: bold;
+             color: #a02c2c;
+             margin-top: -5px;
+             margin-bottom: 10px;
+         }
+         .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+         }
+         table {
+            border-collapse: collapse;
+            margin: 15px auto;
+            width: 80%; /* Adjust table width */
+         }
+          table.summary-table th, table.summary-table td {
+             border: 1px solid #aaa;
+             padding: 10px;
+             text-align: left;
+             vertical-align: middle;
+         }
+         table.summary-table th {
+             background-color: #e0e8f0;
+             color: #601010;
+             width: 30%;
+         }
+         table.summary-table td {
+             background-color: #f8fafd;
+         }
+          table.summary-table .katex-display {
+             margin: 0.5em 0;
+         }
+         th, td {
+             border: 1px solid #ccc;
+             padding: 8px;
+             text-align: center;
+         }
+         th {
+             background-color: #f2f2f2;
+             color: #601010;
+         }
+         caption {
+             caption-side: bottom;
+             font-style: italic;
+             font-size: 0.9em;
+             color: #555;
+             margin-top: 5px;
+         }
+    </style>
+</head>
+<body>
+
+    <!-- START PREVIOUSLY GENERATED CONTENT -->
+    <!-- Chapitre 2, 3 & 4: Slides 1 to 157 -->
+     <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p><p>Professeur de l'enseignement supérieur</p><p>Bureau 37 département de physique</p><p>Faculté des sciences</p><p>Agadir</p><p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+    <!-- ... other slides Chap 2, 3 & 4 ... -->
+    <section class="slide">
+        <p>Les 8 positions d'équilibre sont données par (combinaisons de 0 et $\pi$).</p>
+         <div style="display: flex; justify-content: space-around;">
+             <div class="boxed-formula"> $(0,0,0), (0,0,\pi), ...$ </div>
+              <div class="boxed-formula"> $(0,\pi,\pi), ..., (\pi,\pi,\pi)$ </div>
+         </div>
+         <p>Etudions $(0,0,0)$ et $(\pi, \pi, \pi)$.</p>
+         <p>Hessienne : $ H_U = \text{diag}(-mgl\cos\alpha, -mgl\cos\beta, -mgl\cos\gamma) $.</p>
+          <p>En $(0,0,0)$: $ H_U = \text{diag}(-mgl, -mgl, -mgl) $. Définie négative. <strong>Stable</strong>.</p>
+          <p>En $(\pi, \pi, \pi)$: $ H_U = \text{diag}(+mgl, +mgl, +mgl) $. Définie positive. <strong>Instable</strong>.</p>
+    </section>
+    <section class="slide">
+        <h3 class="chapter-title">FIN DU CHAPITRE 4</h3>
+        <div class="boxed-text centered-text" style="margin: 30px auto; width: 80%;">
+            <h2>MERCI DE VOTRE ATTENTION</h2>
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div class="image-placeholder" style="width: 200px; margin-right: 20px;">[Image: Photo, e.g., Metz Temple Neuf]</div>
+            <div class="contact-info">
+                <p><strong>Rachid MESRAR</strong></p>
+                <p>Professeur de l'enseignement supérieur</p>
+                <p>Bureau 37 Département de physique</p>
+                <p>Faculté des sciences</p>
+                <p>Agadir</p>
+                <p>email: r.mesrar@uiz.ac.ma</p>
+            </div>
+        </div>
+    </section>
+    <!-- END PREVIOUSLY GENERATED CONTENT -->
+
+     <hr style="border-top: 3px solid #a02c2c; margin: 40px 0;">
+
+     <!-- CHAPTER 5 START -->
+
+     <!-- Page 158 (OCR 1) : Chap 5 Title Slide -->
+    <section class="slide">
+        <h1>MECANIQUE ANALYTIQUE</h1>
+        <h2>SMP5</h2>
+
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+             <div class="image-placeholder">[Image: Portrait of Joseph-Louis Lagrange]</div>
+             <div class="image-placeholder">[Image: Illustration, possibly Château de Vincennes]</div>
+             <div class="image-placeholder">[Image: Portrait, possibly Euler or another relevant figure]</div>
+        </div>
+
+        <div class="contact-info" style="text-align: center; margin-top: 30px;">
+            <p><strong>Rachid MESRAR</strong></p>
+            <p>Professeur de l'enseignement supérieur</p>
+            <p>Bureau 37 département de physique</p>
+            <p>Faculté des sciences</p>
+            <p>Agadir</p>
+            <p>email: r.mesrar@uiz.ac.ma</p>
+        </div>
+    </section>
+
+    <!-- Page 159 (OCR 2) : Chap 5 Preamble -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 5 : FORMALISME HAMILTONIEN</h3>
+
+        <h5>Préambule</h5>
+        <blockquote>
+            « Le formalisme hamiltonien transforme le système des n équations du second ordre de Lagrange en un système de 2n équations du premier ordre qui nécessite la connaissance des conditions initiales permettant de déterminer les 2n constantes arbitraires issues de leur intégration »
+        </blockquote>
+        <p class="explanation">Le formalisme de Hamilton utilise les coordonnées généralisées $q_i$ et leurs moments conjugués $p_i = \partial L / \partial \dot{q}_i$ comme variables indépendantes, au lieu de $q_i$ et $\dot{q}_i$. Cela mène à 2n équations différentielles du premier ordre (équations canoniques de Hamilton) au lieu de n équations du second ordre (équations de Lagrange). Cette formulation est fondamentale en mécanique statistique et en mécanique quantique.</p>
+
+        <div class="image-placeholder" style="width: 150px; margin: 20px auto;">[Image: Portrait de William Rowan Hamilton]
+             <p>R. Hamilton (1805-1865)</p>
+         </div>
+    </section>
+
+    <!-- Page 160 (OCR 3) : Chap 5 Objectives -->
+     <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 5 : FORMALISME HAMILTONIEN</h3>
+
+        <h5>Objectifs pédagogiques</h5>
+        <ul>
+            <li><span class="pointer-icon"></span>Introduire le Hamiltonien d'un système.</li>
+             <li class="explanation">Définir la fonction Hamiltonienne $H(q, p, t)$ via la transformation de Legendre du Lagrangien $L(q, \dot{q}, t)$.</li>
+            <li><span class="pointer-icon"></span>Etablir les équations canoniques de Hamilton.</li>
+             <li class="explanation">Dériver les $2n$ équations du premier ordre pour $\dot{q}_i$ et $\dot{p}_i$ en fonction des dérivées partielles de $H$.</li>
+            <li><span class="pointer-icon"></span>Comprendre les transformations canoniques.</li>
+             <li class="explanation">Introduire les changements de variables $(q, p) \to (Q, P)$ qui préservent la forme canonique des équations de Hamilton.</li>
+            <li><span class="pointer-icon"></span>Introduire la notion de crochets de Poisson.</li>
+             <li class="explanation">Définir le crochet de Poisson $\{f, g\}$ et montrer son invariance par transformation canonique et son lien avec l'évolution temporelle des observables $df/dt = \{f, H\} + \partial f / \partial t$.</li>
+            <li><span class="pointer-icon"></span>Comprendre le formalisme de Hamilton-Jacobi.</li>
+             <li class="explanation">Présenter l'équation de Hamilton-Jacobi, une équation aux dérivées partielles pour une fonction génératrice S, dont la résolution est équivalente à la résolution des équations du mouvement.</li>
+        </ul>
+    </section>
+
+    <!-- Page 161 (OCR 4) : Chap 5 Concepts 1 -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 5 : FORMALISME HAMILTONIEN</h3>
+
+        <h5>Notions abordées</h5>
+        <ul>
+            <li><span class="pointer-icon"></span><strong>Impulsion généralisée</strong> (ou moment conjugué)</li>
+             <li class="explanation">$p_i = \frac{\partial L}{\partial \dot{q}_i}$.</li>
+            <li><span class="pointer-icon"></span><strong>Espace des phases</strong></li>
+             <li class="explanation">L'espace de dimension $2n$ dont les coordonnées sont $(q_1, ..., q_n, p_1, ..., p_n)$. L'état du système à un instant $t$ est représenté par un point dans cet espace.</li>
+            <li><span class="pointer-icon"></span><strong>Fonction de Hamilton ou Hamiltonien</strong></li>
+             <li class="explanation">$H(q, p, t) = \sum_i p_i \dot{q}_i - L(q, \dot{q}, t)$, où les $\dot{q}_i$ sont exprimés en fonction de $(q, p, t)$.</li>
+            <li><span class="pointer-icon"></span><strong>Equations canoniques</strong> (de Hamilton)</li>
+             <li class="explanation">$\dot{q}_i = \frac{\partial H}{\partial p_i}$, $\dot{p}_i = -\frac{\partial H}{\partial q_i}$.</li>
+            <li><span class="pointer-icon"></span><strong>Crochets de Poisson - Structure symplectique</strong></li>
+             <li class="explanation">$\{f, g\} = \sum_i (\frac{\partial f}{\partial q_i}\frac{\partial g}{\partial p_i} - \frac{\partial f}{\partial p_i}\frac{\partial g}{\partial q_i})$. La structure symplectique est liée à la forme des équations de Hamilton et à la conservation du volume dans l'espace des phases (théorème de Liouville).</li>
+            <li><span class="pointer-icon"></span><strong>Identité de Jacobi</strong> (pour les crochets de Poisson)</li>
+             <li class="explanation">$\{f, \{g, h\}\} + \{g, \{h, f\}\} + \{h, \{f, g\}\} = 0$.</li>
+        </ul>
+    </section>
+
+    <!-- Page 162 (OCR 5) : Chap 5 Concepts 2 -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 5 : FORMALISME HAMILTONIEN</h3>
+
+        <h5>Notions abordées - suite</h5>
+        <ul>
+            <li><span class="pointer-icon"></span><strong>Transformations canoniques</strong></li>
+             <li class="explanation">Changements de variables $(q,p) \to (Q(q,p,t), P(q,p,t))$ qui laissent invariante la forme des équations de Hamilton (éventuellement avec un nouveau Hamiltonien $K(Q,P,t)$).</li>
+            <li><span class="pointer-icon"></span><strong>Fonctions génératrices</strong></li>
+             <li class="explanation">Fonctions scalaires $F(q,Q,t)$, $F(q,P,t)$, etc., qui permettent de définir une transformation canonique.</li>
+            <li><span class="pointer-icon"></span><strong>Intégrale première du mouvement</strong></li>
+             <li class="explanation">Une fonction $f(q, p, t)$ telle que $\{f, H\} + \partial f / \partial t = 0$.</li>
+            <li><span class="pointer-icon"></span><strong>Equation de Hamilton-Jacobi (EHJ)</strong></li>
+             <li class="explanation">$H(q, \partial S / \partial q, t) + \partial S / \partial t = 0$, où $S(q, t)$ est l'action hamiltonienne (une fonction génératrice particulière).</li>
+            <li><span class="pointer-icon"></span><strong>Equation caractéristique</strong></li>
+             <li class="explanation">Souvent associée à la recherche des fréquences propres dans l'étude des petits mouvements ou à la résolution de l'EHJ.</li>
+        </ul>
+    </section>
+
+    <!-- Page 163 (OCR 6) : Chap 5 Plan -->
+    <section class="slide">
+        <h3 class="chapter-title">CHAPITRE 5 : FORMALISME HAMILTONIEN</h3>
+
+        <h5>PLAN DU CHAPITRE 5</h5>
+        <ol>
+            <li><strong>Introduction</strong></li>
+            <li><strong>Formalisme de Hamilton</strong> (Hamiltonien, équations canoniques)</li>
+            <li><strong>Crochets de Poisson</strong></li>
+            <li><strong>Transformations canoniques</strong></li>
+            <li><strong>Formalisme de Hamilton-Jacobi</strong></li>
+        </ol>
+    </section>
+
+    <!-- Page 164 (OCR 7) : Section 1 Title -->
+    <section class="slide centered-text">
+        <h4>§-1-</h4>
+        <h3>Formalisme Hamiltonien<br>Equations canoniques</h3>
+    </section>
+
+    <!-- Page 165 (OCR 8) : Introduction to Hamiltonian Formalism -->
+    <section class="slide">
+        <h5>Introduction</h5>
+        <div class="boxed-text">
+             <p>Le formalisme hamiltonien n'introduit rien de nouveau dans les concepts de la physique ; il ne simplifie pas énormément la résolution des équations de Lagrange qui décrivent les phénomènes de la mécanique, mais il a permis des avancées considérables dans la résolution des problèmes en mécanique classique avec la théorie de Hamilton-Jacobi et les calculs des perturbations.</p>
+             <p>C'est de plus le langage par excellence de la <strong>mécanique statistique</strong> et de la <strong>mécanique quantique</strong>.</p>
+        </div>
+         <p class="explanation">Ce formalisme offre une perspective différente sur la dynamique, mettant en lumière la structure géométrique (symplectique) de l'espace des phases. Il est particulièrement puissant pour l'étude des symétries, des intégrales premières, et des systèmes complexes ou quantiques.</p>
+    </section>
+
+    <!-- Page 166 (OCR 9) : Hamiltonian Philosophy -->
+    <section class="slide centered-text">
+        <h5>Formalisme canonique de Hamilton</h5>
+        <div class="boxed-text"><strong>William R. Hamilton (1805-1865)</strong></div>
+
+        <div class="boxed-text" style="margin-top: 20px;"><strong>Philosophie générale</strong></div>
+        <span class="arrow-down"></span>
+        <div class="boxed-text">Décrire le système par les variables $(q_i, p_i)$, au lieu de $(q_i, \dot{q}_i)$</div>
+        <span class="arrow-down"></span>
+        <div class="boxed-text">Exprimer $\dot{q}_i$ en fonction des $p_i$ et $q_i$</div>
+        <p class="explanation">Le passage de l'espace de configuration étendu $(q, \dot{q})$ à l'espace des phases $(q, p)$ se fait via la définition des moments conjugués $p_i = \partial L / \partial \dot{q}_i$. Il faut pouvoir inverser cette relation pour exprimer $\dot{q}_i = \dot{q}_i(q, p, t)$.</p>
+    </section>
+
+    <!-- Page 167 (OCR 10) : Hypotheses -->
+    <section class="slide">
+        <h5>Formalisme canonique de Hamilton</h5>
+        <h6>Hypothèses :</h6>
+        <ul>
+            <li><span class="pointer-icon"></span>Les paramètres de configuration $q_i$ sont indépendants.</li>
+            <li><span class="pointer-icon"></span>Possibilité d'indépendance du temps (systèmes scléronomes, utile pour la conservation de l'énergie).</li>
+            <li><span class="pointer-icon"></span>Existence d'un potentiel (ou fonction de force U, système conservatif).</li>
+            <li><span class="pointer-icon"></span>Liaisons parfaites.</li>
+        </ul>
+        <p class="explanation">Ces hypothèses sont celles sous lesquelles le formalisme est le plus souvent présenté et où les liens avec l'énergie sont les plus simples. Le formalisme peut être étendu à des cas plus généraux.</p>
+    </section>
+
+    <!-- Page 168 (OCR 11) : Definitions 1 & 2 -->
+    <section class="slide">
+         <h5>Formalisme canonique de Hamilton</h5>
+         <h6>Définition 1: impulsion généralisée</h6>
+         <p>On appelle <strong>impulsions généralisées</strong>, moments généralisés ou encore moments conjugués (à la variable $q_i$), les quantités définies par :</p>
+          <span class="pointer-icon"></span>
+          <div class="boxed-formula">
+             $$ p_i = \frac{\partial L}{\partial \dot{q}_i} $$
+          </div>
+          <p class="explanation">Si le potentiel V ne dépend pas des vitesses, $p_i = \partial T / \partial \dot{q}_i$.</p>
+
+         <h6>Définition 2: espace des phases</h6>
+         <p>On appelle <strong>espace des phases</strong> du système l'espace $(q_i, p_i)$ à 2n dimensions. L'état dynamique du système à un instant t est entièrement caractérisé par un point $(q_1(t), ..., q_n(t), p_1(t), ..., p_n(t))$ de cet espace. Lorsque le temps varie, le point représentatif du système décrit une courbe dans l'espace des phases, appelée <strong>hypertrajectoire</strong>.</p>
+         <p>Toute hypertrajectoire correspond à des conditions initiales $(q_i(0), p_i(0))$ déterminées.</p>
+    </section>
+
+    <!-- Page 169 (OCR 12) : Definition 3: Hamiltonian -->
+    <section class="slide">
+        <h5>Formalisme canonique de Hamilton</h5>
+        <h6>Définition 3 : Hamiltonien</h6>
+        <p>La fonction de Hamilton ou <strong>Hamiltonien</strong> H est défini comme la transformée de Legendre du Lagrangien L par rapport aux vitesses généralisées $\dot{q}_i$ :</p>
+         <span class="pointer-icon"></span>
+         <div class="boxed-formula">
+            $$ H = \sum_i p_i \dot{q}_i - L $$
+         </div>
+         <p>où les $\dot{q}_i$ sont remplacées en fonction de leurs expressions $\dot{q}_i = f(q, p, t)$ (obtenues en inversant $p_k = \partial L / \partial \dot{q}_k$).</p>
+         <div class="boxed-formula">
+            $$ \dot{q}_i = f(q_i, p_i, t) $$
+         </div>
+         <p>H est en définitive une fonction des $q_i$, des $p_i$ et du temps $t$ :</p>
+          <div class="boxed-formula">
+             $$ H = H(q_i, p_i, t) $$
+          </div>
+    </section>
+
+    <!-- Page 170 (OCR 13) : Deriving Canonical Equations 1 -->
+    <section class="slide">
+         <h5>Formalisme canonique de Hamilton</h5>
+         <h6>Equations canoniques</h6>
+         <p>Calculons la différentielle totale de $H(q, p, t)$ considérée comme fonction de $q, p, t$.</p>
+         $$ dH = \sum_i \frac{\partial H}{\partial q_i} dq_i + \sum_i \frac{\partial H}{\partial p_i} dp_i + \frac{\partial H}{\partial t} dt $$
+         <p>Calculons aussi la différentielle de $H = \sum_k p_k \dot{q}_k - L(q, \dot{q}(q,p,t), t)$ :</p>
+         $$ dH = \sum_k (dp_k \dot{q}_k + p_k d\dot{q}_k) - dL $$
+         <p>Or $dL = \sum_i \frac{\partial L}{\partial q_i} dq_i + \sum_i \frac{\partial L}{\partial \dot{q}_i} d\dot{q}_i + \frac{\partial L}{\partial t} dt$.</p>
+         <p>En utilisant $p_i = \partial L / \partial \dot{q}_i$ :</p>
+         $$ dH = \sum_k dp_k \dot{q}_k + \sum_k p_k d\dot{q}_k - \left( \sum_i \frac{\partial L}{\partial q_i} dq_i + \sum_i p_i d\dot{q}_i + \frac{\partial L}{\partial t} dt \right) $$
+          <div class="boxed-formula">
+             $$ dH = \sum_i \dot{q}_i dp_i - \sum_i \frac{\partial L}{\partial q_i} dq_i - \frac{\partial L}{\partial t} dt $$
+          </div>
+          <p class="explanation">La slide décompose $dH$ de $H=\sum p_i \dot{q}_i - L$ et $d(p_i \dot{q}_i)$ différemment mais arrive au même résultat.</p>
+           <p class="explanation">La slide utilise $\sum q_i dp_i + \sum p_i d\dot{q}_i$ pour $d(\sum p_i \dot{q}_i)$?</p>
+           <p class="explanation">Reprenons la slide :</p>
+           $$ dH = d(\sum_i p_i \dot{q}_i - L) = \sum_i d(p_i \dot{q}_i) - dL $$
+           $$ dH = \sum_i (\dot{q}_i dp_i + p_i d\dot{q}_i) - \left( \sum_i \frac{\partial L}{\partial q_i} dq_i + \sum_i p_i d\dot{q}_i + \frac{\partial L}{\partial t} dt \right) $$
+           $$ dH = \sum_i \dot{q}_i dp_i - \sum_i \frac{\partial L}{\partial q_i} dq_i - \frac{\partial L}{\partial t} dt $$
+           <p class="explanation">L'équation finale sur la slide est correcte.</p>
+    </section>
+
+    <!-- Page 171 (OCR 14) : Deriving Canonical Equations 2 -->
+    <section class="slide">
+        <p>En comparant les deux expressions de $dH$ :</p>
+        $$ dH = \sum_i \frac{\partial H}{\partial q_i} dq_i + \sum_i \frac{\partial H}{\partial p_i} dp_i + \frac{\partial H}{\partial t} dt $$
+        $$ dH = \sum_i \left(-\frac{\partial L}{\partial q_i}\right) dq_i + \sum_i \dot{q}_i dp_i + \left(-\frac{\partial L}{\partial t}\right) dt $$
+        <p>Par identification des coefficients de $dq_i$, $dp_i$ et $dt$ (ces différentielles étant indépendantes dans l'espace des phases étendu) :</p>
+        <div class="boxed-formula">
+            $$ \frac{\partial H}{\partial q_i} = -\frac{\partial L}{\partial q_i} $$
+            $$ \frac{\partial H}{\partial p_i} = \dot{q}_i $$
+            $$ \frac{\partial H}{\partial t} = -\frac{\partial L}{\partial t} $$
+        </div>
+
+        <p>Si H ne dépend pas explicitement du temps, $\frac{\partial H}{\partial t} = 0$.</p>
+        <p>On sait que la trajectoire physique obéit à l'équation d'Euler-Lagrange:</p>
+         <div class="boxed-formula">
+            $$ \frac{\partial L}{\partial q_i} = \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{q}_i} \right) = \frac{d}{dt}(p_i) = \dot{p}_i $$
+         </div>
+    </section>
+
+    <!-- Page 172 (OCR 15) : Canonical Equations -->
+     <section class="slide">
+        <p>Ce qui donne, en combinant les résultats précédents:</p>
+        <span class="pointer-icon"></span>
+         <div class="boxed-formula">
+             $$
+             \begin{cases}
+             \dot{q}_i = \frac{\partial H}{\partial p_i} & i=1, ..., n \\
+             \\
+             \dot{p}_i = \frac{\partial L}{\partial q_i} = -\frac{\partial H}{\partial q_i} & i=1, ..., n
+             \end{cases}
+             $$
+        </div>
+        <div class="boxed-text">
+            <strong>Equations canoniques</strong> (de Hamilton)
+        </div>
+         <div class="boxed-text">
+             La dynamique du système est régie par <strong>2n équations</strong> différentielles du <strong>premier ordre</strong>. Ces 2n équations remplacent les n équations d'Euler-Lagrange (du second ordre).
+         </div>
+    </section>
+
+    <!-- Page 173 (OCR 16) : Symplectic Symmetry -->
+    <section class="slide">
+        <h5>Remarque</h5>
+        <div class="boxed-text">
+            L'apparition du signe moins (-) entre les équations pour les $q_i$ ($\dot{q}_i = \partial H / \partial p_i$) et celles pour les moments conjugués ($\dot{p}_i = -\partial H / \partial q_i$), s'appelle <strong>symétrie symplectique</strong>.
+        </div>
+        <p class="explanation">Cette structure est fondamentale en mécanique hamiltonienne et est liée à la conservation de l'aire (ou du volume généralisé) dans l'espace des phases au cours de l'évolution temporelle (théorème de Liouville).</p>
+    </section>
+
+    <!-- Page 174 (OCR 17) : Remark 1 dH/dt -->
+    <section class="slide">
+         <h5>Remarque 1</h5>
+         <p>La dérivée totale du Hamiltonien par rapport au temps est :</p>
+         <div class="boxed-formula">
+             $$ \frac{dH}{dt} = \sum_i \frac{\partial H}{\partial q_i} \dot{q}_i + \sum_i \frac{\partial H}{\partial p_i} \dot{p}_i + \frac{\partial H}{\partial t} $$
+         </div>
+         <p>En utilisant les équations canoniques ($\dot{q}_i = \partial H / \partial p_i$, $\dot{p}_i = -\partial H / \partial q_i$) :</p>
+         $$ \frac{dH}{dt} = \sum_i (-\dot{p}_i) \dot{q}_i + \sum_i (\dot{q}_i) \dot{p}_i + \frac{\partial H}{\partial t} = \frac{\partial H}{\partial t} $$
+         <p>On retrouve aussi $\partial H / \partial t = -\partial L / \partial t$. Donc :</p>
+         <div class="boxed-formula">
+             $$ \frac{dH}{dt} = \frac{\partial H}{\partial t} = -\frac{\partial L}{\partial t} $$
+         </div>
+
+         <p>Les moments conjugués des variables cycliques sont des intégrales premières, ce qui donne:</p>
+         <p class="explanation">Si $q_k$ est cyclique, $\partial L / \partial q_k = 0$. L'équation de Lagrange donne $\dot{p}_k = 0 \implies p_k = \text{Cte}$. L'équation canonique pour $p_k$ est $\dot{p}_k = -\partial H / \partial q_k$. Donc si $q_k$ est cyclique pour L, elle l'est aussi pour H ($\partial H / \partial q_k = 0$) et $p_k$ est conservé.</p>
+
+         <p>Si le hamiltonien ne dépend pas explicitement du temps ($\partial H / \partial t = 0$), alors $dH/dt = 0$, ce qui implique que <strong>H est conservé</strong>.</p>
+         <p>Si $H$ représente l'énergie mécanique totale ($H = T+V$), alors il y a conservation de l'énergie mécanique totale du système:</p>
+         <div class="boxed-formula">
+             $$ H = T + V = Cte $$
+         </div>
+    </section>
+
+    <!-- Page 175 (OCR 18) : Remark 2 dH/dt alternative -->
+    <section class="slide">
+         <h5>Remarque 2</h5>
+         <p>Reprenons la dérivée totale de H :</p>
+         <div class="boxed-formula">
+             $$ \frac{dH}{dt} = \sum_i \frac{\partial H}{\partial q_i} \dot{q}_i + \sum_i \frac{\partial H}{\partial p_i} \dot{p}_i + \frac{\partial H}{\partial t} $$
+         </div>
+         <p>Sur une trajectoire qui obéit aux équations canoniques ($\dot{q}_i = \partial H / \partial p_i$ et $\dot{p}_i = -\partial H / \partial q_i$), on a :</p>
+         <div class="boxed-formula">
+             $$ \frac{dH}{dt} = \sum_i (-\dot{p}_i) \dot{q}_i + \sum_i (\dot{q}_i) \dot{p}_i + \frac{\partial H}{\partial t} $$
+             $$ = \sum_i (-\dot{p}_i \dot{q}_i + \dot{q}_i \dot{p}_i) + \frac{\partial H}{\partial t} = \frac{\partial H}{\partial t} $$
+         </div>
+         <p>D'où:</p>
+         <div class="boxed-formula">
+             $$ \frac{dH}{dt} = \frac{\partial H}{\partial t} = -\frac{\partial L}{\partial t} $$
+         </div>
+          <p class="explanation">Ceci confirme le résultat de la remarque 1 par un calcul direct sur la trajectoire.</p>
+    </section>
+
+    <!-- Page 176 (OCR 19) : Least Action Principle -->
+    <section class="slide">
+         <h5>Equations canoniques à partir du principe de moindre action</h5>
+          <div class="boxed-text">
+             <p>Nous allons établir cette fois-ci les équations canoniques de Hamilton à partir du principe de moindre action :</p>
+             <p>Action $S = \int L dt$. Comme $L = \sum p_k \dot{q}_k - H$, on a $S = \int (\sum p_k \dot{q}_k - H) dt$.</p>
+              <p class="explanation">Ici, l'intégration est entre $t_1$ et $t_2$. La variation de l'action $\delta S$ doit être nulle pour la trajectoire réelle.</p>
+             <p>On prend le cas d'un système à 1 degré de liberté ($q, p$), l'accroissement de l'action due au chemin varié est :</p>
+             $$ \delta S = \delta \int_{t_1}^{t_2} (p\dot{q} - H(q,p,t)) dt = \int_{t_1}^{t_2} \delta(p\dot{q} - H) dt $$
+             $$ \delta S = \int_{t_1}^{t_2} (\delta p \dot{q} + p \delta\dot{q} - \frac{\partial H}{\partial q}\delta q - \frac{\partial H}{\partial p}\delta p - \frac{\partial H}{\partial t}\delta t) dt $$
+              <p class="explanation">On suppose les variations isochrones ($\delta t = 0$). $\delta\dot{q} = \delta(dq/dt) = d(\delta q)/dt$. On intègre par parties le terme $p \delta\dot{q} = p \frac{d(\delta q)}{dt}$:</p>
+              $$ \int p \frac{d(\delta q)}{dt} dt = [p \delta q]_{t_1}^{t_2} - \int \dot{p} \delta q dt $$
+               <p>Comme les variations aux extrémités sont nulles ($\delta q(t_1)=\delta q(t_2)=0$), le terme intégré est nul.</p>
+                $$ \delta S = \int_{t_1}^{t_2} (\dot{q}\delta p - \dot{p}\delta q - \frac{\partial H}{\partial q}\delta q - \frac{\partial H}{\partial p}\delta p) dt $$
+                 $$ \delta S = \int_{t_1}^{t_2} \left[ \left(\dot{q} - \frac{\partial H}{\partial p}\right)\delta p - \left(\dot{p} + \frac{\partial H}{\partial q}\right)\delta q \right] dt $$
+             <p>comme $\delta q(1) = \delta q(2) = 0$; $p$ et $q$ sont indépendantes et arbitraires, alors $\delta S$ est nulle si :</p>
+              <div class="boxed-formula">
+              $$
+              \begin{cases}
+              \dot{q} - \frac{\partial H}{\partial p} = 0 \implies \dot{q} = \frac{\partial H}{\partial p} \\
+              \dot{p} + \frac{\partial H}{\partial q} = 0 \implies \dot{p} = -\frac{\partial H}{\partial q}
+              \end{cases}
+              $$
+              </div>
+              <p class="explanation">On retrouve bien les équations canoniques de Hamilton.</p>
+         </div>
+         <!-- Placeholder for the complex formula image on the slide -->
+         <div class="image-placeholder">[Image: Detailed derivation steps from the slide for delta S]</div>
+    </section>
+
+    <!-- Page 177 (OCR 20) : Synthesis 1 Title -->
+    <section class="slide centered-text">
+        <h5>Fiche de synthèse 1</h5>
+        <div class="image-placeholder" style="width: 150px;">[Image: Portrait of Lagrange or Hamilton?]</div>
+        <span class="pointer-icon"></span>
+        <h3>Ce qu'il faut absolument savoir</h3>
+    </section>
+
+</body>
+</html>
