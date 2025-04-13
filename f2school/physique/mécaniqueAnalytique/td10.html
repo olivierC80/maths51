@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TD Mécanique Analytique - Série N° 2</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 40px; }
+        header, footer { text-align: center; margin-bottom: 20px; }
+        .university-info { text-align: left; float: left; }
+        .date-info { text-align: right; float: right; }
+        .course-info { clear: both; text-align: center; margin-top: 20px; margin-bottom: 10px; font-weight: bold; }
+        h1, h2, h3 { margin-top: 1.5em; font-family: sans-serif;}
+        .exercice { margin-bottom: 2em; margin-top: 2em; padding-top: 1em; border-top: 1px solid #ccc;}
+        .explanation { font-style: italic; color: #555; margin-left: 20px; margin-top: 10px; background-color: #f8f8f8; border-left: 3px solid #ccc; padding: 5px 10px;}
+        .derivation-step { margin-left: 20px; margin-bottom: 10px; }
+        ol { padding-left: 20px; list-style-type: decimal; }
+        li { margin-bottom: 10px; }
+        .footnote-ref { vertical-align: super; font-size: 0.8em; }
+        .footnote { font-size: 0.9em; color: #555; margin-top: 2em; border-top: 1px solid #ccc; padding-top: 10px; text-align: left;}
+        .page-number { text-align: center; margin-top: 30px; font-style: italic; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="university-info">
+            Université Cadi Ayyad<br>
+            Faculté des Sciences<br>
+            Semlalia-Marrakech<br>
+            Département de Physique
+        </div>
+        <div class="date-info">
+            Année Universitaire 2013/2014
+        </div>
+        <div class="course-info">
+            TD de Mécanique Analytique<br>
+            Série N° 2<br>
+            Parcours Physique Moderne : Portrait de phase. Formalisme de Hamilton.
+        </div>
+    </header>
+
+    <main>
+        <section class="exercice">
+            <h3>Exercice 1</h3>
+            <p>
+                Une particule de masse $m$ évolue à une dimension $x$. Elle est soumise à la force
+            </p>
+            $$ F(x) = -kx - \gamma\frac{dx}{dt}, \quad k > 0, \gamma > 0. $$
+            <ol>
+                <li>
+                    Interpréter chacun des termes.
+                     <div class="explanation">
+                        <ul>
+                            <li>$-kx$: Force de rappel élastique (type ressort), proportionnelle à la position et dirigée vers l'équilibre $x=0$. $k$ est la constante de raideur.</li>
+                            <li>$-\gamma \frac{dx}{dt}$: Force de frottement visqueux, proportionnelle à la vitesse $\dot{x}=dx/dt$ et s'opposant au mouvement. $\gamma$ est le coefficient de frottement.</li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    En appliquant le PFD (Principe Fondamental de la Dynamique), montrer que les équations du mouvement dans l'espace de phases peuvent se mettre sous la forme matricielle $\dot{E} = AE$ avec $E^T = (x, p)$ où $(x, p)$ est la coordonnée de position et son moment conjugué. Expliciter l'expression de A.
+                    <div class="explanation">
+                        PFD: $m\ddot{x} = F(x) = -kx - \gamma\dot{x}$.
+                        Espace de phase: Variables $(x, p)$ avec $p = m\dot{x}$. Donc $\dot{x} = p/m$.
+                        $\dot{p} = m\ddot{x} = -kx - \gamma\dot{x} = -kx - \gamma(p/m)$.
+                        Le système d'équations est :
+                        $$ \begin{cases} \dot{x} = 0 \cdot x + \frac{1}{m} p \\ \dot{p} = -k x - \frac{\gamma}{m} p \end{cases} $$
+                        Sous forme matricielle $\begin{pmatrix} \dot{x} \\ \dot{p} \end{pmatrix} = A \begin{pmatrix} x \\ p \end{pmatrix}$, on a :
+                        $$ \dot{E} = \begin{pmatrix} \dot{x} \\ \dot{p} \end{pmatrix} = \begin{pmatrix} 0 & 1/m \\ -k & -\gamma/m \end{pmatrix} \begin{pmatrix} x \\ p \end{pmatrix} $$
+                        Donc la matrice est $A = \begin{pmatrix} 0 & 1/m \\ -k & -\gamma/m \end{pmatrix}$.
+                    </div>
+                </li>
+                 <li>
+                    Résoudre les équations du mouvement en fonction des directions principales.<sup class="footnote-ref">1</sup> Noter par $(X, P)$ les nouvelles coordonnées obtenues. Donner une description précise des trajectoires, de la fréquence d'oscillation et du coefficient d'amortissement.
+                     <div class="explanation">
+                        <strong>Résolution (Diagonalisation) :</strong> Il faut trouver les valeurs propres et vecteurs propres de A.
+                        L'équation caractéristique est $\det(A - \lambda I) = 0$.
+                        $$ \det \begin{pmatrix} -\lambda & 1/m \\ -k & -\gamma/m - \lambda \end{pmatrix} = (-\lambda)(-\gamma/m - \lambda) - (1/m)(-k) = 0 $$
+                        $$ \lambda^2 + \frac{\gamma}{m}\lambda + \frac{k}{m} = 0 $$
+                        Cette équation est équivalente à l'équation caractéristique $mr^2 + \gamma r + k = 0$ de l'oscillateur amorti (avec $r=\lambda$). Les valeurs propres $\lambda_{1,2}$ sont les racines $r_{1,2}$ trouvées dans le TD précédent (Ex 1).
+                        $$ \lambda_{1,2} = \frac{-\gamma/m \pm \sqrt{(\gamma/m)^2 - 4k/m}}{2} = \frac{-\gamma \pm \sqrt{\gamma^2 - 4mk}}{2m} $$
+                        Les vecteurs propres $v_1, v_2$ définissent les directions principales. Si on exprime $E(t)$ dans la base des vecteurs propres $E(t) = c_1(t) v_1 + c_2(t) v_2$, alors $\dot{c}_1 = \lambda_1 c_1$ et $\dot{c}_2 = \lambda_2 c_2$. Les solutions sont $c_1(t) = c_1(0) e^{\lambda_1 t}$ et $c_2(t) = c_2(0) e^{\lambda_2 t}$.
+                        Les nouvelles coordonnées $(X, P)$ sont les composantes dans cette base.
+                        <br>
+                        <strong>Description des trajectoires :</strong> La description dépend du signe du discriminant $\Delta = \gamma^2 - 4mk$.
+                        <ul>
+                            <li><strong>Cas $\Delta > 0$ (sur-critique) :</strong> $\lambda_1, \lambda_2$ réelles négatives. Le point fixe $(0,0)$ est un nœud stable. Les trajectoires convergent vers l'origine sans osciller, alignées avec le vecteur propre correspondant à la valeur propre la moins négative (la plus proche de 0) pour $t \to \infty$.</li>
+                            <li><strong>Cas $\Delta = 0$ (critique) :</strong> $\lambda_1 = \lambda_2 = -\gamma/(2m)$ réelle négative. Nœud dégénéré stable. Retour rapide vers l'origine.</li>
+                            <li><strong>Cas $\Delta < 0$ (sous-critique) :</strong> $\lambda_{1,2} = -\beta \pm i\omega_a$ complexes conjuguées ($\beta=\gamma/2m$, $\omega_a=\sqrt{4mk-\gamma^2}/2m$). Le point fixe $(0,0)$ est un foyer stable. Les trajectoires sont des spirales convergeant vers l'origine.
+                                La fréquence d'oscillation (pseudo-fréquence) est $\omega_a = \sqrt{k/m - (\gamma/2m)^2}$. Le coefficient d'amortissement (taux de décroissance de l'enveloppe) est $\beta = \gamma/2m$.</li>
+                        </ul>
+                    </div>
+                 </li>
+            </ol>
+        </section>
+
+        <section class="exercice">
+            <h3>Exercice 2</h3>
+            <p>
+                Considérons une particule libre évoluant selon une dimension $x$ entre deux murs, séparés par une distance égale à $L$, dont le potentiel peut être modélisé comme suit
+            </p>
+            $$ V(x) = \begin{cases} 0 & \text{si } 0 < x < L \\ +\infty & \text{ailleurs} \end{cases} $$
+            <p>
+                Tracer le portrait de phase.
+            </p>
+            <div class="explanation">
+                Voir TD précédent (TD n°2, Exercice 2). Le portrait de phase $(x, p)$ est constitué de rectangles pour chaque niveau d'énergie $E = p^2/(2m) > 0$. La particule se déplace horizontalement à $p=+\sqrt{2mE}$ ou $p=-\sqrt{2mE}$, et "rebondit" verticalement ($p \to -p$) aux murs $x=0$ et $x=L$.
+                <div class="placeholder">[Placeholder: Diagramme de phase (p vs x). Axe x de 0 à L. Axe p vertical. Une trajectoire rectangulaire pour une énergie E > 0, reliant les lignes p = +sqrt(2mE) et p = -sqrt(2mE) par des segments verticaux en x=0 et x=L. Flèches indiquant le sens : droite sur p>0, gauche sur p<0.]</div>
+            </div>
+        </section>
+
+         <section class="exercice">
+            <h3>Exercice 3</h3>
+            <p>
+                Considérons le potentiel<sup class="footnote-ref">2</sup>
+            </p>
+            $$ U(x) = \frac{1}{6}x^6 - \frac{1}{4}x^4 + \frac{1}{2}\beta x^2. $$
+            <ol>
+                <li>
+                    Etudier les points fixes de $U(x)$ en fonction de $\beta$ et leurs stabilités. Tracer $U(x)$ en fonction de $x$ et ce selon $\beta$.
+                    <div class="explanation">
+                        Points fixes: $p=0$ et $U'(x)=0$.
+                        $U'(x) = x^5 - x^3 + \beta x = x(x^4 - x^2 + \beta) = 0$.
+                        Solutions: $x=0$ ou $Y^2 - Y + \beta = 0$ avec $Y=x^2$.
+                        Le nombre et la position des points fixes dépendent de $\beta$, comme étudié dans le TD précédent (TD n°2, Exercice 4).
+                        <ul>
+                           <li>$\beta > 1/4$: $x=0$ seul point fixe.</li>
+                           <li>$\beta = 1/4$: $x=0, \pm 1/\sqrt{2}$.</li>
+                           <li>$0 < \beta < 1/4$: $x=0, \pm \sqrt{Y_+}, \pm \sqrt{Y_-}$.</li>
+                           <li>$\beta = 0$: $x=0, \pm 1$.</li>
+                           <li>$\beta < 0$: $x=0, \pm \sqrt{Y_+}$.</li>
+                        </ul>
+                        Stabilité: Dépend du signe de $U''(x) = 5x^4 - 3x^2 + \beta$.
+                        <ul>
+                            <li>$x=0$: $U''(0)=\beta$. Stable si $\beta>0$, Instable si $\beta<0$. Instable à $\beta=0$.</li>
+                            <li>$x \ne 0$: $U''(x) = 2Y(2Y-1)$. Stable si $Y > 1/2$, instable si $0 < Y < 1/2$.
+                                $Y_+ = (1+\sqrt{1-4\beta})/2$. $Y_+ > 1/2$ si $\beta < 1/4$. Donc les points fixes $\pm\sqrt{Y_+}$ sont stables quand ils existent ($\beta \le 1/4$).
+                                $Y_- = (1-\sqrt{1-4\beta})/2$. $0 < Y_- < 1/2$ pour $0 < \beta < 1/4$. Donc les points fixes $\pm\sqrt{Y_-}$ sont instables quand ils existent.
+                            </li>
+                         </ul>
+                        <br>
+                        <strong>Tracé de U(x) selon $\beta$:</strong>
+                        <ul>
+                           <li>$\beta > 1/4$: Un seul minimum en $x=0$.</li>
+                           <li>$\beta = 1/4$: Un minimum plat en $x=0$? Non, $U^{(4)}(0)=0$, $U^{(6)}(0)=120>0$. Minimum en 0. Points d'inflexion à $\pm 1/\sqrt{2}$? $U''(\pm 1/\sqrt{2}) = 5(1/4) - 3(1/2) + 1/4 = 5/4 - 6/4 + 1/4 = 0$. Ce sont des points d'inflexion où $U''' \ne 0$.</li>
+                           <li>$0 < \beta < 1/4$: Trois minima ($0, \pm\sqrt{Y_+}$) et deux maxima locaux ($\pm\sqrt{Y_-}$).</li>
+                           <li>$\beta = 0$: $U(x)=x^6/6 - x^4/4$. Minimum global en $x=\pm 1$, maximum local en $x=0$.</li>
+                           <li>$\beta < 0$: Un maximum local en $x=0$, deux minima globaux en $\pm\sqrt{Y_+}$.</li>
+                        </ul>
+                        <div class="placeholder">[Placeholder: Graphes de U(x) pour différentes valeurs de beta > 1/4, beta = 1/4, 0 < beta < 1/4, beta = 0, beta < 0.]</div>
+                    </div>
+                </li>
+                <li>
+                    Tracer la position des points fixes en fonction de $\beta$ et préciser leurs stabilités (Prendre $\beta$ en ordonnée et $x$ en abscisse). On suppose qu'il y a une légère force supplémentaire de dissipation qui stabilise l'état dans un minimum de potentiel.
+                    <div class="placeholder">[Placeholder: Diagramme de bifurcation (x vs beta). Axe beta horizontal, axe x vertical. Trace les branches de points fixes trouvées ci-dessus, avec trait plein pour stable et pointillé pour instable. Montre les bifurcations en beta=0 et beta=1/4.]</div>
+                     <p class="explanation">Note: L'énoncé demande $\beta$ en ordonnée et $x$ en abscisse, ce qui est inhabituel. Le diagramme est plus facile à interpréter avec $\beta$ en abscisse.</p>
+                </li>
+                <li>
+                    On suppose que $\beta$ oscille lentement et périodiquement entre $\beta_{min} = -0.5$ et $\beta_{max} = 0.5$. Discuter l'évolution des positions des points fixes. Commenter.
+                    <div class="explanation">
+                        C'est le phénomène d'hystérésis décrit dans le TD précédent (TD n°2, Exercice 4, question 3). En présence de dissipation, le système suit l'état stable disponible.
+                        <ul>
+                            <li>$\beta$ augmente de -0.5 à 0.5: Partant d'un état stable $x \approx \pm 1.17$, le système suit cette branche. $x=0$ est instable. Lorsque $\beta$ dépasse 0, $x=0$ devient stable, mais le système reste sur la branche $|x|>0$ qui est toujours stable. Lorsque $\beta$ dépasse $1/4$, la branche $\pm\sqrt{Y_+}$ disparaît. Le seul état stable est $x=0$. Le système saute vers $x=0$.</li>
+                            <li>$\beta$ diminue de 0.5 à -0.5: Le système est en $x=0$ (stable). Il y reste même quand $\beta$ passe par $1/4$ (où les autres minima disparaissent). Lorsque $\beta$ devient négatif, $x=0$ devient instable et les branches $\pm\sqrt{Y_+}$ réapparaissent et sont stables. Le système saute vers l'une de ces branches (par ex. $+\sqrt{Y_+}$) et la suit jusqu'à $\beta=-0.5$.</li>
+                        </ul>
+                        Le cycle n'est pas réversible, montrant une hystérésis.
+                    </div>
+                </li>
+            </ol>
+         </section>
+        <div class="page-number">1</div>
+
+         <section class="exercice">
+            <h3>Exercice 4</h3>
+            <p>
+                On étudie classiquement le mouvement d'un électron de masse $m$ et de charge $-e$ soumis à l'attraction électrostatique d'un noyau de charge $+Ze$.
+            </p>
+            <ol>
+                <li>
+                    Ecrire le potentiel $V(\mathbf{r})$ en coordonnées sphériques $(r, \theta, \phi)$. On posera $k = \frac{Ze^2}{4\pi\epsilon_0}$.
+                    <div class="explanation">
+                        La force électrostatique est $\vec{F} = \frac{1}{4\pi\epsilon_0} \frac{(-e)(+Ze)}{r^2} \hat{r} = -\frac{Ze^2}{4\pi\epsilon_0 r^2} \hat{r} = -\frac{k}{r^2} \hat{r}$.
+                        Le potentiel $V(r)$ est tel que $\vec{F} = -\nabla V$. Pour une force radiale $F(r)$, $F(r) = -dV/dr$.
+                        $V(r) = -\int F(r) dr = -\int (-\frac{k}{r^2}) dr = \int \frac{k}{r^2} dr = -\frac{k}{r} + \text{Cste}$.
+                        On choisit la constante nulle ($V(\infty)=0$).
+                        $$ V(r) = -\frac{k}{r} $$
+                    </div>
+                </li>
+                 <li>
+                    Ecrire le lagragien $\mathcal{L}$ du système en coordonnées sphériques. En déduire le hamiltonien $H$ du système. Vérifier qu'il est conservé.
+                    <div class="explanation">
+                        $T = \frac{1}{2}m (\dot{r}^2 + r^2\dot{\theta}^2 + r^2\sin^2\theta\dot{\phi}^2)$.
+                        $V = -k/r$.
+                        $\mathcal{L} = T - V = \frac{1}{2}m (\dot{r}^2 + r^2\dot{\theta}^2 + r^2\sin^2\theta\dot{\phi}^2) + \frac{k}{r}$.
+                        Moments: $p_r = \partial\mathcal{L}/\partial\dot{r} = m\dot{r}$. $p_\theta = \partial\mathcal{L}/\partial\dot{\theta} = mr^2\dot{\theta}$. $p_\phi = \partial\mathcal{L}/\partial\dot{\phi} = mr^2\sin^2\theta\dot{\phi}$.
+                        $H = p_r\dot{r} + p_\theta\dot{\theta} + p_\phi\dot{\phi} - \mathcal{L}$.
+                        $\dot{r}=p_r/m$, $\dot{\theta}=p_\theta/(mr^2)$, $\dot{\phi}=p_\phi/(mr^2\sin^2\theta)$.
+                        $H = \frac{p_r^2}{m} + \frac{p_\theta^2}{mr^2} + \frac{p_\phi^2}{mr^2\sin^2\theta} - [\frac{1}{2}m(\frac{p_r^2}{m^2} + r^2(\frac{p_\theta}{mr^2})^2 + r^2\sin^2\theta(\frac{p_\phi}{mr^2\sin^2\theta})^2) + \frac{k}{r}]$
+                        $H = \frac{p_r^2}{m} + \frac{p_\theta^2}{mr^2} + \frac{p_\phi^2}{mr^2\sin^2\theta} - [\frac{p_r^2}{2m} + \frac{p_\theta^2}{2mr^2} + \frac{p_\phi^2}{2mr^2\sin^2\theta} + \frac{k}{r}]$
+                        $$ H = \frac{p_r^2}{2m} + \frac{p_\theta^2}{2mr^2} + \frac{p_\phi^2}{2mr^2\sin^2\theta} - \frac{k}{r} $$
+                        $H = T+V$, c'est l'énergie.
+                        Le Lagrangien ne dépend pas explicitement du temps, donc $H$ est conservé.
+                    </div>
+                 </li>
+                 <li>
+                    Soit $\mathbf{L}$ le moment cinétique orbital. Calculer les crochets de Poisson de $\{H, \mathbf{L}\}$. Conclure.
+                     <div class="explanation">
+                        $\mathbf{L} = \mathbf{r} \wedge \mathbf{p}$. $L_x = yp_z - zp_y$, $L_y = zp_x - xp_z$, $L_z = xp_y - yp_x$.
+                        Le Hamiltonien est invariant par rotation (il ne dépend que de $r$ et des moments au carré). La force est centrale. Donc le moment cinétique $\mathbf{L}$ est conservé.
+                        Théorème : si $A$ est une quantité conservée, alors $\{A, H\} = 0$.
+                        Calculons par exemple $\{H, L_z\}$. H ne dépend pas de $\phi$. $p_\phi = L_z$.
+                        $\{H, L_z\} = \{H, p_\phi\} = \frac{\partial H}{\partial \phi} = 0$. (Car $H$ ne dépend pas de $\phi$).
+                        De même, on peut montrer (plus laborieusement) que $\{H, L_x\}=0$ et $\{H, L_y\}=0$.
+                        Conclusion: $\mathbf{L}$ est conservé.
+                    </div>
+                 </li>
+                 <li>
+                    On prend $\phi(t) = \text{Constante}, \forall t$. Justifier ce choix. Donner le nouveau hamiltonien.
+                    <div class="explanation">
+                        Puisque $\mathbf{L}$ est conservé, le mouvement se situe dans un plan fixe passant par l'origine, perpendiculaire à $\mathbf{L}$. On peut choisir les axes de sorte que ce plan soit le plan équatorial $\theta=\pi/2$.
+                        Dans ce plan, $\theta=\pi/2$, $\dot{\theta}=0$, $p_\theta=0$. $p_\phi = mr^2\dot{\phi} = L_z$.
+                        Le Hamiltonien se simplifie :
+                        $$ H = \frac{p_r^2}{2m} + \frac{L_z^2}{2mr^2} - \frac{k}{r} $$
+                        (Le mouvement est réduit à un problème 1D radial avec un potentiel effectif).
+                        Justification: Puisque $L_z$ est conservé, $p_\phi$ est constant. $\dot{p}_\phi = -\partial H/\partial \phi = 0$. Si $\phi$ n'apparaît pas dans H, $p_\phi$ est conservé. On peut choisir un plan où $\phi$ est constant? Non. On choisit le plan $\theta=\pi/2$. $\dot{\theta}=0$ est-il compatible? $\dot{p}_\theta = -\partial H/\partial\theta$.
+                        $\frac{\partial H}{\partial \theta} = \frac{p_\phi^2}{2mr^2} \frac{\partial}{\partial\theta}(\frac{1}{\sin^2\theta}) = \frac{p_\phi^2}{2mr^2} (-2\sin^{-3}\theta\cos\theta)$.
+                        Si $\theta=\pi/2$, $\cos\theta=0$, donc $\partial H/\partial\theta = 0$. Donc $p_\theta=0$ (et $\dot{\theta}=0$) est une solution consistante.
+                        Le nouveau Hamiltonien décrit le mouvement dans le plan $\theta=\pi/2$ en coordonnées polaires $(r, \phi)$ ou cartésiennes $(x,y)$.
+                        $$ H(r, \phi, p_r, p_\phi) = \frac{p_r^2}{2m} + \frac{p_\phi^2}{2mr^2} - \frac{k}{r} $$
+                    </div>
+                 </li>
+                 <li>
+                    Ecrire les équations de Hamilton et identifier une nouvelle constante du mouvement.
+                    <div class="explanation">
+                        Variables $(r, \phi, p_r, p_\phi)$.
+                        $$ \dot{r} = \frac{\partial H}{\partial p_r} = \frac{p_r}{m} $$
+                        $$ \dot{\phi} = \frac{\partial H}{\partial p_\phi} = \frac{p_\phi}{mr^2} $$
+                        $$ \dot{p}_r = -\frac{\partial H}{\partial r} = - \left[ \frac{p_\phi^2}{2m}(-2r^{-3}) - k(-r^{-2}) \right] = -\left[ -\frac{p_\phi^2}{mr^3} + \frac{k}{r^2} \right] = \frac{p_\phi^2}{mr^3} - \frac{k}{r^2} $$
+                        $$ \dot{p}_\phi = -\frac{\partial H}{\partial \phi} = 0 $$
+                        La nouvelle constante du mouvement identifiée est $p_\phi = L_z$. (Elle était déjà connue). Le Hamiltonien $H=E$ est aussi conservé.
+                    </div>
+                 </li>
+                  <li>
+                    Montrer qu'un mouvement circulaire et stable est possible. Donner le rayon $r_c$ du cercle.
+                    <div class="explanation">
+                        Mouvement circulaire : $r=r_c$ constant. $\dot{r}=0 \implies p_r=0$. Pour que $p_r$ reste nul, il faut $\dot{p}_r=0$.
+                        $\dot{p}_r = \frac{p_\phi^2}{mr_c^3} - \frac{k}{r_c^2} = 0$.
+                        $$ \frac{p_\phi^2}{mr_c} = k \implies r_c = \frac{p_\phi^2}{mk} $$
+                        C'est le rayon de l'orbite circulaire pour un moment cinétique $p_\phi=L_z$ donné.
+                        Stabilité : Il faut regarder le potentiel effectif $\tilde{U}(r) = \frac{p_\phi^2}{2mr^2} - \frac{k}{r}$.
+                        On a déjà vu que $\frac{d\tilde{U}}{dr}|_{r_c} = 0$.
+                        $\frac{d^2\tilde{U}}{dr^2} = \frac{d}{dr}(-\frac{p_\phi^2}{mr^3} + \frac{k}{r^2}) = -\frac{p_\phi^2}{m}(-3r^{-4}) + k(-2r^{-3}) = \frac{3p_\phi^2}{mr^4} - \frac{2k}{r^3}$.
+                        En $r=r_c$:
+                        $\frac{d^2\tilde{U}}{dr^2}|_{r_c} = \frac{3p_\phi^2}{mr_c^4} - \frac{2k}{r_c^3}$.
+                        En utilisant $k = p_\phi^2 / (mr_c)$:
+                        $\frac{d^2\tilde{U}}{dr^2}|_{r_c} = \frac{3p_\phi^2}{mr_c^4} - \frac{2(p_\phi^2/mr_c)}{r_c^3} = \frac{3p_\phi^2}{mr_c^4} - \frac{2p_\phi^2}{mr_c^4} = \frac{p_\phi^2}{mr_c^4}$.
+                        Puisque $m, r_c^4 > 0$ et $p_\phi^2 \ge 0$. Si $p_\phi \ne 0$, $U''(r_c) > 0$. L'orbite circulaire est stable.
+                    </div>
+                 </li>
+            </ol>
+        </section>
+
+        <section class="exercice">
+            <h3>Exercice 5</h3>
+            <p>Soit la transformation linéaire</p>
+             $$ \begin{pmatrix} Q \\ P \end{pmatrix} \to \begin{pmatrix} \tilde{Q} \\ \tilde{P} \end{pmatrix} = \begin{pmatrix} a & b \\ c & d \end{pmatrix} \begin{pmatrix} Q \\ P \end{pmatrix} $$
+             <p class="explanation">(Notation modifiée pour éviter confusion avec l'exercice précédent)</p>
+            <ol>
+                <li>A quelle condition cette transformation est canonique dans $\mathbb{R}^2$?
+                    <div class="explanation">
+                        Soit $M = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$. La transformation $(Q, P) \to (\tilde{Q}, \tilde{P})$ est canonique si elle préserve le crochet de Poisson fondamental $\{\tilde{Q}, \tilde{P}\}_{Q,P}=1$.
+                        $\tilde{Q} = aQ + bP$. $\tilde{P} = cQ + dP$.
+                        $\{\tilde{Q}, \tilde{P}\}_{Q,P} = \frac{\partial \tilde{Q}}{\partial Q}\frac{\partial \tilde{P}}{\partial P} - \frac{\partial \tilde{Q}}{\partial P}\frac{\partial \tilde{P}}{\partial Q}$
+                        $= (a)(d) - (b)(c) = ad - bc = \det(M)$.
+                        La condition est donc $\det(M) = 1$.
+                        La transformation doit être symplectique. La condition $M^T J M = J$ avec $J=\begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$ donne :
+                        $\begin{pmatrix} a & c \\ b & d \end{pmatrix} \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix} \begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{pmatrix} -c & a \\ -d & b \end{pmatrix} \begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{pmatrix} -ca+ac & -cb+ad \\ -da+bc & -db+bd \end{pmatrix} = \begin{pmatrix} 0 & ad-bc \\ bc-da & 0 \end{pmatrix}$.
+                        Il faut donc que $\begin{pmatrix} 0 & ad-bc \\ -(ad-bc) & 0 \end{pmatrix} = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$.
+                        La condition est bien $ad-bc = \det(M) = 1$.
+                    </div>
+                </li>
+                <li>Montrer que ces transformations linéaires forment un sous groupe de $GL(2, \mathbb{R})$<sup class="footnote-ref">3</sup>.
+                    <div class="explanation">
+                        L'ensemble des matrices $M$ 2x2 à coefficients réels telles que $\det(M)=1$ est appelé le groupe spécial linéaire $SL(2, \mathbb{R})$.
+                        Il faut montrer que c'est un sous-groupe de $GL(2, \mathbb{R})$ (matrices inversibles).
+                        <ul>
+                           <li>Fermeture : Si $\det(M_1)=1$ et $\det(M_2)=1$, alors $\det(M_1 M_2) = \det(M_1)\det(M_2) = 1 \times 1 = 1$. Le produit est dans $SL(2, \mathbb{R})$.</li>
+                           <li>Identité : La matrice identité $I = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ a $\det(I)=1$. Elle appartient à $SL(2, \mathbb{R})$.</li>
+                           <li>Inverse : Si $\det(M)=1$, alors $M$ est inversible, et $\det(M^{-1}) = 1/\det(M) = 1/1 = 1$. L'inverse appartient à $SL(2, \mathbb{R})$.</li>
+                        </ul>
+                        Donc $SL(2, \mathbb{R})$ est un sous-groupe de $GL(2, \mathbb{R})$.
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section class="exercice">
+            <h3>Exercice 6</h3>
+            <p>Considérons la transformation donnée par</p>
+            $$ q_1 = Q_1 \cos\lambda + \frac{\sin\lambda}{m\omega} P_2, \quad q_2 = Q_2 \cos\lambda + \frac{\sin\lambda}{m\omega} P_1, $$
+            $$ p_1 = -m\omega Q_2 \sin\lambda + P_1 \cos\lambda, \quad p_2 = -m\omega Q_1 \sin\lambda + P_2 \cos\lambda. $$
+            <ol>
+                <li>Déterminer la fonction génératrice de cette transformation. $m, \omega$ et $\lambda$ sont des constantes.
+                     <div class="explanation">
+                        C'est une transformation linéaire. Elle est probablement canonique. Cherchons une fonction génératrice $F_2(q_1, q_2, P_1, P_2)$.
+                        $p_1 = \partial F_2 / \partial q_1$, $p_2 = \partial F_2 / \partial q_2$.
+                        $Q_1 = \partial F_2 / \partial P_1$, $Q_2 = \partial F_2 / \partial P_2$.
+                        Il faut inverser les relations pour exprimer $Q_1, Q_2$ en fonction de $q_1, q_2, P_1, P_2$.
+                        De $q_2 = Q_2\cos\lambda + \frac{\sin\lambda}{m\omega} P_1 \implies Q_2 = \frac{q_2 - \frac{\sin\lambda}{m\omega} P_1}{\cos\lambda}$.
+                        De $q_1 = Q_1\cos\lambda + \frac{\sin\lambda}{m\omega} P_2 \implies Q_1 = \frac{q_1 - \frac{\sin\lambda}{m\omega} P_2}{\cos\lambda}$.
+                        La fonction $F_2$ doit satisfaire $\frac{\partial F_2}{\partial P_1} = Q_1$ et $\frac{\partial F_2}{\partial P_2} = Q_2$.
+                        Intégrons $\frac{\partial F_2}{\partial P_1} = Q_1 = \frac{q_1}{\cos\lambda} - \frac{\tan\lambda}{m\omega} P_2$:
+                        $F_2 = \frac{q_1 P_1}{\cos\lambda} - \frac{\tan\lambda}{m\omega} P_1 P_2 + f(q_1, q_2, P_2)$.
+                        Intégrons $\frac{\partial F_2}{\partial P_2} = Q_2 = \frac{q_2}{\cos\lambda} - \frac{\tan\lambda}{m\omega} P_1$:
+                        $F_2 = \frac{q_2 P_2}{\cos\lambda} - \frac{\tan\lambda}{m\omega} P_1 P_2 + g(q_1, q_2, P_1)$.
+                        En comparant, $f$ ne doit pas dépendre de $P_2$ et $g$ ne doit pas dépendre de $P_1$.
+                        $F_2(q_1, q_2, P_1, P_2) = \frac{q_1 P_1 + q_2 P_2}{\cos\lambda} - \frac{\tan\lambda}{m\omega} P_1 P_2 + h(q_1, q_2)$.
+                        Maintenant, vérifions les relations pour $p_1, p_2$.
+                        $p_1 = \partial F_2 / \partial q_1 = \frac{P_1}{\cos\lambda} + \partial h/\partial q_1$.
+                        $p_2 = \partial F_2 / \partial q_2 = \frac{P_2}{\cos\lambda} + \partial h/\partial q_2$.
+                        Comparons avec les expressions données pour $p_1, p_2$. Par ex. $p_1 = -m\omega Q_2 \sin\lambda + P_1 \cos\lambda$.
+                        $Q_2 = \frac{q_2 - \frac{\sin\lambda}{m\omega} P_1}{\cos\lambda}$.
+                        $p_1 = -m\omega (\frac{q_2 - \frac{\sin\lambda}{m\omega} P_1}{\cos\lambda}) \sin\lambda + P_1 \cos\lambda$
+                        $p_1 = -\frac{m\omega q_2 \sin\lambda}{\cos\lambda} + P_1 \frac{\sin^2\lambda}{\cos\lambda} + P_1 \cos\lambda$
+                        $p_1 = -m\omega q_2 \tan\lambda + P_1 \frac{\sin^2\lambda + \cos^2\lambda}{\cos\lambda} = -m\omega q_2 \tan\lambda + \frac{P_1}{\cos\lambda}$.
+                        En comparant avec $p_1 = \frac{P_1}{\cos\lambda} + \partial h/\partial q_1$, on a $\partial h/\partial q_1 = -m\omega q_2 \tan\lambda$.
+                        De même, $p_2 = -m\omega Q_1 \sin\lambda + P_2 \cos\lambda$.
+                        $Q_1 = \frac{q_1 - \frac{\sin\lambda}{m\omega} P_2}{\cos\lambda}$.
+                        $p_2 = -m\omega (\frac{q_1 - \frac{\sin\lambda}{m\omega} P_2}{\cos\lambda}) \sin\lambda + P_2 \cos\lambda$
+                        $p_2 = -m\omega q_1 \tan\lambda + \frac{P_2}{\cos\lambda}$.
+                        En comparant avec $p_2 = \frac{P_2}{\cos\lambda} + \partial h/\partial q_2$, on a $\partial h/\partial q_2 = -m\omega q_1 \tan\lambda$.
+                        Il faut trouver $h(q_1, q_2)$ tel que $\partial h/\partial q_1 = -m\omega q_2 \tan\lambda$ et $\partial h/\partial q_2 = -m\omega q_1 \tan\lambda$.
+                        On peut intégrer: $h = -m\omega q_1 q_2 \tan\lambda + \text{cst}$.
+                        Donc la fonction génératrice est :
+                        $$ F_2(q_1, q_2, P_1, P_2) = \frac{q_1 P_1 + q_2 P_2}{\cos\lambda} - \frac{\sin\lambda}{m\omega\cos\lambda} P_1 P_2 - m\omega q_1 q_2 \frac{\sin\lambda}{\cos\lambda} $$
+                        $$ F_2 = \frac{1}{\cos\lambda} (q_1 P_1 + q_2 P_2 - m\omega q_1 q_2 \sin\lambda) - \frac{\tan\lambda}{m\omega} P_1 P_2 $$
+                        (Vérifier si les constantes sont correctes).
+                    </div>
+                </li>
+                <li>Trouver la nouvelle fonction de Hamilton $\tilde{H}(Q_i, P_i)$.
+                    <div class="explanation">
+                        Le nouveau Hamiltonien $\tilde{H}$ est égal à l'ancien $H$ exprimé dans les nouvelles variables, car la transformation ne dépend pas explicitement du temps ($K=H$).
+                        Supposons que l'ancien Hamiltonien soit celui de deux oscillateurs harmoniques découplés $H = \frac{p_1^2}{2m} + \frac{1}{2}m\omega^2 q_1^2 + \frac{p_2^2}{2m} + \frac{1}{2}m\omega^2 q_2^2$.
+                        Il faut substituer $q_1, q_2, p_1, p_2$ par leurs expressions en $Q_i, P_i$. C'est très calculatoire.
+                        Cette transformation ressemble à une rotation dans un espace de phase combiné. Si $\lambda$ est bien choisi, elle pourrait simplifier un Hamiltonien couplé.
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+    </main>
+
+    <footer class="footnote">
+        <sup class="footnote-ref">1</sup> Diagonaliser A, trouver ses vecteurs propres et la matrice de passage P correspondante. Exprimer E dans la base formée par les vecteurs propres.
+        <br>
+        <sup class="footnote-ref">2</sup> Ce potentiel peut modéliser une tige métallique de Longueur L tenue verticalement à sa base. Le paramètre $\beta$ est relié à la longueur L. x correspond à l'écart entre le sommet de la tige et la verticale.
+         <br>
+        <sup class="footnote-ref">3</sup> $GL(2, \mathbb{R})$ est l'ensemble des matrices 2x2 à éléments dans $\mathbb{R}$.
+    </footer>
+
+    <div class="page-number">1</div>
+    <div class="page-number">2</div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
