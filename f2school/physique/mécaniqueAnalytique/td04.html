@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TD n°5 Mécanique Analytique - Du principe variationnel au Hamiltonien (II)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: serif; line-height: 1.6; margin: 40px; }
+        header, footer { text-align: center; margin-bottom: 20px; }
+        .university-info { text-align: left; }
+        .course-info { text-align: center; margin-top: 10px; font-weight: bold; border-top: 1px solid black; border-bottom: 1px solid black; padding: 5px 0;}
+        h1, h2, h3 { margin-top: 1.5em; font-family: sans-serif;}
+        .exercice { margin-bottom: 2em; margin-top: 2em; padding-top: 1em; border-top: 1px dashed #ccc;}
+        .placeholder { border: 1px dashed #aaa; padding: 20px; text-align: center; margin: 20px auto; background-color: #f9f9f9; font-style: italic; max-width: 400px; }
+        .explanation { font-style: italic; color: #555; margin-left: 20px; margin-top: 10px; }
+        .derivation-step { margin-left: 20px; margin-bottom: 10px; }
+        ol { padding-left: 20px; list-style-type: decimal; }
+        li { margin-bottom: 10px; }
+        .center-text { text-align: center; }
+        .page-number { text-align: center; margin-top: 30px; font-style: italic; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="university-info">Université Joseph Fourier. Licence 3 Physique 2011-12</div>
+        <div class="course-info">TD de Mécanique Analytique</div>
+        <h2>TD n°5</h2>
+        <p>Du principe variationnel au Hamiltonien (II).</p>
+    </header>
+
+    <main>
+        <section class="exercice">
+            <h3>Exercice 1. Film de Savon.</h3>
+            <p>
+                Le but de cet exercice est de montrer que des problèmes de minimisation qui ne sont pas directement des problèmes d'équations de mouvement, utilisent aussi le formalisme Lagrangien.
+            </p>
+            <p>
+                On considère un axe $x$ et une surface de révolution définie par son rayon $r(x)$. Dans la suite, cette surface représentera un film de savon tendu entre deux cercles fixés en $x = x_1$ et $x = x_2$ et de rayon $r(x_1)$, $r(x_2)$. Au repos, la tension superficielle fait que la surface $S$ du film de savon doit être minimale.
+            </p>
+            <div class="placeholder">
+                [Placeholder: Diagramme montrant un axe horizontal x. Deux cercles verticaux aux positions x1 et x2. Une surface de révolution r(x) reliant les deux cercles, formant une forme de caténoïde.]
+            </div>
+            <ol>
+                <li>
+                    Pour un film de savon justifier qualitativement pourquoi la surface a une forme incurvée comme sur la figure, et non pas la forme d'un cylindre droit.
+                    <div class="explanation">
+                        La tension superficielle tend à minimiser l'aire de la surface du film de savon, pour une énergie de surface minimale. Un cylindre droit a une surface latérale de $2\pi r_0 (x_2-x_1)$ si $r(x_1)=r(x_2)=r_0$. Cependant, une forme incurvée (une caténoïde, si les rayons sont égaux) peut avoir une aire plus petite dans certaines conditions, en équilibrant la tension dans le film. La courbure permet de réduire l'aire par rapport à un cylindre si la distance entre les cercles n'est pas trop grande par rapport à leur rayon.
+                    </div>
+                </li>
+                <li>
+                    Pour une fonction $r(x)$ décrivant une surface de révolution quelconque, montrer que la surface entre $x_1$ et $x_2$ est donnée par
+                    $$ S = \int_{x_1}^{x_2} 2\pi r \sqrt{1 + \left(\frac{dr}{dx}\right)^2} dx $$
+                    <div class="explanation">
+                        Considérons un petit élément de la courbe génératrice $r(x)$ entre $x$ et $x+dx$. La longueur de cet élément d'arc est $ds = \sqrt{dx^2 + dr^2} = \sqrt{1 + (dr/dx)^2} dx$.
+                        Lorsque cet élément d'arc tourne autour de l'axe $x$, il engendre une petite bande (tronc de cône infinitésimal) de surface $dA$. Le rayon moyen est $r(x)$ et la largeur "inclinée" est $ds$.
+                        L'aire de cette bande est $dA = (\text{circonférence}) \times (\text{largeur inclinée}) = (2\pi r) ds$.
+                        $$ dA = 2\pi r(x) \sqrt{1 + (r'(x))^2} dx $$
+                        L'aire totale de la surface de révolution entre $x_1$ et $x_2$ est l'intégrale de ces aires élémentaires :
+                        $$ S = \int_{x_1}^{x_2} dA = \int_{x_1}^{x_2} 2\pi r \sqrt{1 + (r')^2} dx $$
+                    </div>
+                </li>
+                <li>
+                    En imposant que cette surface soit "extrémale" avec des conditions aux bords fixées $r(x_1)$, $r(x_2)$ écrire l'équation de Euler-Lagrange que doit satisfaire la fonction $r(x)$. (Attention : ici $x$ joue le rôle du temps en mécanique)
+                    <div class="explanation">
+                        Nous voulons minimiser la fonctionnelle $S = \int_{x_1}^{x_2} F(r, r', x) dx$ où l'intégrande est $F(r, r', x) = 2\pi r \sqrt{1 + (r')^2}$.
+                        La variable indépendante est $x$ (le "temps") et la variable dépendante est $r$ (la "position").
+                        L'équation d'Euler-Lagrange est :
+                        $$ \frac{d}{dx}\left(\frac{\partial F}{\partial r'}\right) - \frac{\partial F}{\partial r} = 0 $$
+                        Calculons les dérivées partielles :
+                        $$ \frac{\partial F}{\partial r} = 2\pi \sqrt{1 + (r')^2} $$
+                        $$ \frac{\partial F}{\partial r'} = 2\pi r \frac{1}{2\sqrt{1+(r')^2}} (2r') = \frac{2\pi r r'}{\sqrt{1 + (r')^2}} $$
+                        L'équation d'Euler-Lagrange est donc :
+                        $$ \frac{d}{dx}\left( \frac{2\pi r r'}{\sqrt{1 + (r')^2}} \right) - 2\pi \sqrt{1 + (r')^2} = 0 $$
+                        On peut simplifier par $2\pi$:
+                        $$ \frac{d}{dx}\left( \frac{r r'}{\sqrt{1 + (r')^2}} \right) - \sqrt{1 + (r')^2} = 0 $$
+                    </div>
+                </li>
+                <li>
+                    Déduire la fonction Hamiltonien $H(r, p)$ et écrire les équations de mouvement de Hamilton. Y a t-il une "quantité conservée"?
+                    <div class="explanation">
+                        Ici, $x$ est le "temps", $r$ est la "position", $r'$ est la "vitesse". Le Lagrangien est $\mathcal{L}(r, r') = F(r, r') = 2\pi r \sqrt{1 + (r')^2}$.
+                        Le moment conjugué à $r$ est $p = \frac{\partial \mathcal{L}}{\partial r'} = \frac{2\pi r r'}{\sqrt{1 + (r')^2}}$.
+                        Le Hamiltonien $H$ (par rapport à $x$) est $H = p r' - \mathcal{L}$.
+                        $$ H = \left( \frac{2\pi r r'}{\sqrt{1 + (r')^2}} \right) r' - 2\pi r \sqrt{1 + (r')^2} $$
+                        $$ H = \frac{2\pi r (r')^2}{\sqrt{1 + (r')^2}} - \frac{2\pi r (1 + (r')^2)}{\sqrt{1 + (r')^2}} = \frac{2\pi r ((r')^2 - 1 - (r')^2)}{\sqrt{1 + (r')^2}} $$
+                        $$ H(r, r') = -\frac{2\pi r}{\sqrt{1 + (r')^2}} $$
+                        Il faut exprimer $H$ en fonction de $(r, p)$. De $p = \frac{2\pi r r'}{\sqrt{1 + (r')^2}}$, on a $p^2 = \frac{(2\pi r)^2 (r')^2}{1 + (r')^2}$.
+                        $p^2 (1 + (r')^2) = (2\pi r)^2 (r')^2 \implies p^2 = (r')^2 ((2\pi r)^2 - p^2)$.
+                        $(r')^2 = \frac{p^2}{(2\pi r)^2 - p^2}$.
+                        $1 + (r')^2 = 1 + \frac{p^2}{(2\pi r)^2 - p^2} = \frac{(2\pi r)^2 - p^2 + p^2}{(2\pi r)^2 - p^2} = \frac{(2\pi r)^2}{(2\pi r)^2 - p^2}$.
+                        $\sqrt{1 + (r')^2} = \frac{2\pi r}{\sqrt{(2\pi r)^2 - p^2}}$.
+                        Substituons dans $H$:
+                        $$ H(r, p) = -\frac{2\pi r}{\frac{2\pi r}{\sqrt{(2\pi r)^2 - p^2}}} = -\sqrt{(2\pi r)^2 - p^2} $$
+                        Le Hamiltonien est $H(r, p) = -\sqrt{(2\pi r)^2 - p^2}$.
+                        <br>
+                        Équations de Hamilton (avec $x$ comme temps):
+                        $$ \frac{dr}{dx} (=r') = \frac{\partial H}{\partial p} = -\frac{1}{2\sqrt{(2\pi r)^2 - p^2}} (-2p) = \frac{p}{\sqrt{(2\pi r)^2 - p^2}} $$
+                         $$ \frac{dp}{dx} = -\frac{\partial H}{\partial r} = - \left( -\frac{1}{2\sqrt{(2\pi r)^2 - p^2}} (2(2\pi r)(2\pi)) \right) = -\frac{2\pi(2\pi r)}{\sqrt{(2\pi r)^2 - p^2}} $$
+                        <br>
+                        Quantité conservée : Le Lagrangien $\mathcal{L}(r, r') = 2\pi r \sqrt{1+(r')^2}$ ne dépend pas explicitement de $x$ (le "temps"). Par conséquent, le Hamiltonien $H(r, p)$ associé est conservé le long de la solution.
+                        $$ H(r, p) = -\frac{2\pi r}{\sqrt{1+(r')^2}} = \text{constante} $$
+                        Soit $\frac{r}{\sqrt{1+(r')^2}} = \rho$ (constante).
+                    </div>
+                </li>
+                 <li>
+                    En supposant que l'origine de l'axe $x$ soit bien choisie, montrer que
+                    $$ r(x) = \rho \cosh\left(\frac{x}{\rho}\right), \quad \rho > 0 $$
+                    est une solution.
+                    <div class="explanation">
+                        La quantité conservée est $\frac{r}{\sqrt{1+(r')^2}} = \rho$.
+                        $r^2 = \rho^2 (1+(r')^2) \implies (r')^2 = \frac{r^2}{\rho^2} - 1 = \frac{r^2 - \rho^2}{\rho^2}$.
+                        $r' = \frac{dr}{dx} = \pm \frac{\sqrt{r^2 - \rho^2}}{\rho}$.
+                        Séparons les variables : $\frac{dr}{\sqrt{r^2 - \rho^2}} = \pm \frac{dx}{\rho}$.
+                        Intégrons : $\int \frac{dr}{\sqrt{r^2 - \rho^2}} = \pm \int \frac{dx}{\rho}$.
+                        L'intégrale de gauche est $\text{arccosh}(r/\rho)$.
+                        $\text{arccosh}(r/\rho) = \pm \frac{x}{\rho} + C$.
+                        $r/\rho = \cosh(\pm \frac{x}{\rho} + C) = \cosh(\frac{x}{\rho} \mp C)$.
+                        $r(x) = \rho \cosh(\frac{x}{\rho} + C')$.
+                        En choisissant bien l'origine de l'axe $x$ (pour que le minimum de $r$ soit en $x=0$), on peut poser $C'=0$.
+                        $$ r(x) = \rho \cosh(x/\rho) $$
+                        Cette forme est une caténoïde (chaînette de révolution).
+                    </div>
+                 </li>
+                 <li>
+                    On souhaite tendre un film de savon entre deux cercles parallèles de même rayon $R$ et distants de $2L$. Montrer que cela est possible tant que $\frac{L}{R} < C$ avec une constante $C$ que l'on déterminera. Que se passe t-il si $\frac{L}{R} > C$? Discuter la solution physique. Tracer $S(\rho)$.
+                    <div class="explanation">
+                        Les conditions aux bords sont $r(-L) = R$ et $r(L) = R$.
+                        La solution $r(x) = \rho \cosh(x/\rho)$ est symétrique par rapport à $x=0$.
+                        Il suffit d'imposer $r(L) = R$:
+                        $$ R = \rho \cosh(L/\rho) $$
+                        Posons $u = L/\rho$. L'équation est $R/L = \frac{\rho}{L} \cosh(u) = \frac{\cosh u}{u}$.
+                        Il faut trouver s'il existe une solution $u > 0$ à l'équation $\frac{\cosh u}{u} = \frac{R}{L}$.
+                        Soit $f(u) = \frac{\cosh u}{u}$. $f'(u) = \frac{u\sinh u - \cosh u}{u^2}$. Le signe de $f'(u)$ est celui de $g(u) = u\sinh u - \cosh u$. $g'(u) = \sinh u + u\cosh u - \sinh u = u\cosh u$. Pour $u>0$, $g'(u)>0$. Comme $g(0)=-1$, $g(u)$ s'annule pour une unique valeur $u_0 \approx 1.19967$.
+                        $f(u)$ décroît de $+\infty$ à $f(u_0)$ pour $u \in (0, u_0]$, puis croît de $f(u_0)$ à $+\infty$ pour $u \in [u_0, \infty)$.
+                        Le minimum de $f(u)$ est $f(u_0) = \frac{\cosh u_0}{u_0} \approx \frac{1.810}{1.199} \approx 1.5088$.
+                        Il existe une solution $\rho$ (ou $u=L/\rho$) à $R/L = f(u)$ si et seulement si $R/L \ge f(u_0)$.
+                        Soit $C_{min} = f(u_0) \approx 1.5088$. La condition est $R/L \ge C_{min}$, ou $L/R \le 1/C_{min}$.
+                        La constante $C$ cherchée est $C = 1/C_{min} \approx 1/1.5088 \approx 0.6627$.
+                        <br>
+                        Il existe une solution (caténoïde) si $L/R \le C \approx 0.6627$.
+                        Si $L/R$ est inférieur à une certaine valeur (correspondant à $u=u_0$), il y a même deux solutions pour $\rho$. La solution stable est celle qui minimise l'aire $S$.
+                        Si $L/R > C$, il n'existe pas de solution de type caténoïde. Le film de savon ne peut pas former une surface minimale lisse reliant les deux cercles et devient instable. Physiquement, le film se rompt ou s'effondre en un disque plat au centre (Solution de Goldschmidt, si les bords peuvent supporter la traction).
+                        <br>
+                        L'aire de la caténoïde est $S(\rho) = \int_{-L}^{L} 2\pi r \sqrt{1+(r')^2} dx$. Comme $\sqrt{1+(r')^2} = r/\rho$, $S(\rho) = \int_{-L}^{L} 2\pi r (r/\rho) dx = \frac{2\pi}{\rho} \int_{-L}^{L} r^2 dx$.
+                        $r(x) = \rho \cosh(x/\rho)$. $r^2 = \rho^2 \cosh^2(x/\rho) = \rho^2 (\frac{1+\cosh(2x/\rho)}{2})$.
+                        $S(\rho) = \frac{2\pi}{\rho} \int_{-L}^{L} \frac{\rho^2}{2} (1+\cosh(2x/\rho)) dx = \pi\rho \left[ x + \frac{\rho}{2}\sinh(2x/\rho) \right]_{-L}^{L}$
+                        $S(\rho) = \pi\rho [ (L + \frac{\rho}{2}\sinh(2L/\rho)) - (-L + \frac{\rho}{2}\sinh(-2L/\rho)) ]$
+                        $S(\rho) = \pi\rho [ 2L + \rho\sinh(2L/\rho) ] = 2\pi\rho L + \pi\rho^2 \sinh(2L/\rho)$.
+                        On peut tracer $S$ en fonction de $\rho$, sachant que $\rho$ est lié à $L/R$ par $R = \rho\cosh(L/\rho)$.
+                     </div>
+                 </li>
+            </ol>
+        </section>
+
+        <section class="exercice">
+            <h3>Exercice 2. Un rouleau qui roule.</h3>
+            <p>
+                On considère un cylindre homogène de rayon $R$ de masse $M$ roulant sans glisser sur un plan incliné d'angle $\alpha$, sous l'effet de son poids. On note $x$ la position du point de contact et $\theta$ la position angulaire d'un point de référence sur le cylindre (voir figure).
+            </p>
+            <div class="placeholder">
+                [Placeholder: Diagramme montrant un plan incliné d'angle alpha. Un cylindre sur le plan. L'axe x est le long du plan incliné vers le bas. L'angle theta mesure la rotation du cylindre.]
+            </div>
+            <ol>
+                <li>
+                    Montrer qu'il y a une contrainte "holonome" qui permet de relier $\theta$ et $x$.
+                    <div class="explanation">
+                        La condition de roulement sans glissement impose une relation entre la vitesse du centre de masse $v_{cm} = \dot{x}$ et la vitesse angulaire $\omega = \dot{\theta}$. Si $x$ mesure la distance parcourue par le point de contact et $\theta$ l'angle de rotation, alors la distance parcourue par le CM est égale à l'arc déroulé : $x = R\theta$ (en choisissant bien les origines et les sens positifs).
+                        En dérivant par rapport au temps : $\dot{x} = R\dot{\theta}$.
+                        Cette relation $\dot{x} - R\dot{\theta} = 0$ est une relation entre les vitesses. Cependant, elle peut être intégrée pour donner $x - R\theta = \text{constante}$. Si on choisit les origines pour que $x=0$ quand $\theta=0$, la constante est nulle et $x = R\theta$. C'est une relation $f(x, \theta) = x - R\theta = 0$ qui ne dépend que des coordonnées. La contrainte est donc <strong>holonome</strong>.
+                    </div>
+                </li>
+                 <li>
+                    Ecrire le Lagrangien $L(\theta, \dot{\theta})$ (en utilisant $V_0$ pour $\dot{\theta}$).
+                    <div class="explanation">
+                        Le système a un seul degré de liberté, on peut choisir $\theta$. $x=R\theta$, $\dot{x}=R\dot{\theta}$.
+                        <strong>Energie cinétique :</strong> C'est la somme de l'énergie cinétique de translation du CM et de rotation autour du CM.
+                        $T_{trans} = \frac{1}{2} M v_{cm}^2 = \frac{1}{2} M \dot{x}^2 = \frac{1}{2} M (R\dot{\theta})^2 = \frac{1}{2} MR^2\dot{\theta}^2$.
+                        $T_{rot} = \frac{1}{2} I_{cm} \omega^2 = \frac{1}{2} I_{cm} \dot{\theta}^2$. Le moment d'inertie d'un cylindre homogène par rapport à son axe est $I_{cm} = \frac{1}{2}MR^2$.
+                        $T_{rot} = \frac{1}{2} (\frac{1}{2}MR^2) \dot{\theta}^2 = \frac{1}{4} MR^2\dot{\theta}^2$.
+                        Energie cinétique totale $T = T_{trans} + T_{rot} = \frac{1}{2} MR^2\dot{\theta}^2 + \frac{1}{4} MR^2\dot{\theta}^2 = \frac{3}{4} MR^2\dot{\theta}^2$.
+                        <br>
+                        <strong>Energie potentielle :</strong> Le CM descend le long du plan incliné. Sa hauteur $h$ par rapport à une référence horizontale diminue. Si $x=0$ est la référence, la hauteur du CM est $h = -x \sin\alpha = -R\theta\sin\alpha$ (si $x$ est mesuré vers le bas).
+                        $U = Mgh = -MgR\sin\alpha \cdot \theta$.
+                        <br>
+                        <strong>Lagrangien :</strong> $L = T - U$.
+                        $$ L(\theta, \dot{\theta}) = \frac{3}{4} MR^2\dot{\theta}^2 + MgR\sin\alpha \cdot \theta $$
+                    </div>
+                 </li>
+                 <li>
+                    Déduire l'impulsion $p_\theta$ et les équations de mouvement de Euler-Lagrange.
+                     <div class="explanation">
+                        Impulsion conjuguée $p_\theta = \frac{\partial L}{\partial \dot{\theta}} = \frac{3}{4} MR^2 (2\dot{\theta}) = \frac{3}{2} MR^2\dot{\theta}$.
+                        <br>
+                        Equation d'Euler-Lagrange : $\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{\theta}}\right) - \frac{\partial L}{\partial \theta} = 0$.
+                        $\frac{\partial L}{\partial \theta} = MgR\sin\alpha$.
+                        $\frac{d}{dt}(p_\theta) = \frac{d}{dt}(\frac{3}{2} MR^2\dot{\theta}) = \frac{3}{2} MR^2\ddot{\theta}$.
+                        L'équation est :
+                        $$ \frac{3}{2} MR^2\ddot{\theta} - MgR\sin\alpha = 0 $$
+                        $$ \ddot{\theta} = \frac{MgR\sin\alpha}{\frac{3}{2} MR^2} = \frac{2 g \sin\alpha}{3 R} $$
+                        L'accélération angulaire $\ddot{\theta}$ est constante. L'accélération linéaire du CM est $\ddot{x} = R\ddot{\theta} = \frac{2}{3} g \sin\alpha$.
+                    </div>
+                 </li>
+                 <li>
+                    Déduire le Hamiltonien $H(\theta, p_\theta)$ et écrire les équations de mouvement de Hamilton.
+                     <div class="explanation">
+                        Hamiltonien $H = p_\theta \dot{\theta} - L$. Exprimons $\dot{\theta} = \frac{2 p_\theta}{3 MR^2}$.
+                        $$ H = p_\theta \left(\frac{2 p_\theta}{3 MR^2}\right) - \left[ \frac{3}{4} MR^2\left(\frac{2 p_\theta}{3 MR^2}\right)^2 + MgR\sin\alpha \cdot \theta \right] $$
+                        $$ H = \frac{2 p_\theta^2}{3 MR^2} - \left[ \frac{3}{4} MR^2 \frac{4 p_\theta^2}{9 M^2R^4} + MgR\sin\alpha \cdot \theta \right] $$
+                        $$ H = \frac{2 p_\theta^2}{3 MR^2} - \frac{p_\theta^2}{3 MR^2} - MgR\sin\alpha \cdot \theta $$
+                        $$ H(\theta, p_\theta) = \frac{p_\theta^2}{3 MR^2} - MgR\sin\alpha \cdot \theta $$
+                         <br>
+                         Équations de Hamilton :
+                         $$ \dot{\theta} = \frac{\partial H}{\partial p_\theta} = \frac{2 p_\theta}{3 MR^2} $$
+                         $$ \dot{p}_\theta = -\frac{\partial H}{\partial \theta} = -(-MgR\sin\alpha) = MgR\sin\alpha $$
+                         On retrouve bien $\dot{\theta} = \frac{2 p_\theta}{3 MR^2}$. En dérivant la première : $\ddot{\theta} = \frac{2 \dot{p}_\theta}{3 MR^2}$. En substituant $\dot{p}_\theta$ de la deuxième : $\ddot{\theta} = \frac{2 (MgR\sin\alpha)}{3 MR^2} = \frac{2 g \sin\alpha}{3 R}$. Les équations de Hamilton sont cohérentes avec l'équation de Lagrange.
+                    </div>
+                 </li>
+                 <li>
+                    Comparer au mouvement d'un point de masse $M$ sur le même plan incliné.
+                     <div class="explanation">
+                        Pour un point matériel (sans rotation, glissant sans frottement), $T = \frac{1}{2}M\dot{x}^2$, $U = -Mgx\sin\alpha$.
+                        $L = \frac{1}{2}M\dot{x}^2 + Mgx\sin\alpha$.
+                        Équation de Lagrange: $\frac{d}{dt}(M\dot{x}) - Mg\sin\alpha = 0 \implies M\ddot{x} = Mg\sin\alpha \implies \ddot{x} = g\sin\alpha$.
+                        L'accélération du point matériel ($g\sin\alpha$) est plus grande que celle du cylindre roulant ($\frac{2}{3}g\sin\alpha$). Cela est dû au fait qu'une partie de l'énergie potentielle perdue par le cylindre est convertie en énergie cinétique de rotation, en plus de l'énergie cinétique de translation.
+                    </div>
+                 </li>
+            </ol>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="page-number">1</div>
+    </footer>
+
+     <footer>
+        <div class="page-number">2</div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
