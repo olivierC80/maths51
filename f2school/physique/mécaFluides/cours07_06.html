@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes de cours: MECANIQUE DES FLUIDES</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 2em; padding: 1em; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        .title-page { text-align: center; margin-bottom: 3em; }
+        .logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2em; flex-wrap: wrap;}
+        .logo { border: 1px dashed grey; padding: 1em; margin: 0.5em; min-width: 100px; min-height: 50px; background-color: #f0f0f0; color: #777; display: flex; align-items: center; justify-content: center; }
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; color: #333; }
+        h1 { border-bottom: 2px solid #666; padding-bottom: 0.3em; font-size: 2em; text-align: center;}
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; font-size: 1.7em; }
+        h3 { font-size: 1.4em; margin-top: 1.5em; }
+        h4 { font-size: 1.2em; margin-top: 1.2em; }
+        h5 { font-size: 1.1em; margin-top: 1.1em; }
+        .figure { text-align: center; margin: 2em 0; border: 1px solid #eee; padding: 1em; }
+        .placeholder { border: 1px dashed grey; padding: 3em 2em; display: inline-block; min-width: 300px; min-height: 100px; background-color: #f0f0f0; color: #777; box-sizing: border-box; }
+        .caption { font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.9em; }
+        table { border-collapse: collapse; margin: 1.5em auto; width: 95%; border: 1px solid #ccc;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: middle; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .katex-display > .katex { text-align: center !important; } /* Center display math */
+        .katex-display { display: block; margin-top: 1em; margin-bottom: 1em; }
+        .equation-number { float: right; color: #888; margin-left: 1em;}
+        .page-number { text-align: right; margin-top: 1em; color: #888; font-size: 0.9em; font-style: italic; }
+        .footer-note { font-size: 0.8em; color: #666; border-top: 1px solid #ccc; margin-top: 2em; padding-top: 0.5em; }
+        .centered { text-align: center; }
+        /* Style for bold vectors/tensors as per PDF convention */
+        .katex .mathbf { font-weight: bold; } /* Ensure KaTeX bold works */
+        .toc ul { list-style-type: none; padding-left: 0; }
+        .toc li { margin-bottom: 0.5em; }
+        .toc .chapter { font-weight: bold; margin-top: 1em; }
+        .toc .section { padding-left: 1.5em; }
+        .toc .subsection { padding-left: 3em; }
+        .toc .subsubsection { padding-left: 4.5em; }
+        .clear-float { clear: both; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin: 1.5em 0; background-color: #f9f9f9; }
+        .table-placeholder { border: 1px dashed grey; padding: 2em; text-align: center; color: #777; background-color: #f0f0f0; margin: 1em auto; display: block; }
+    </style>
+</head>
+<body>
+
+    <!-- Content from previous response... -->
+    <hr> <!-- Separator -->
+    <h2>Chapitre 6: Analyse dimensionnelle et similitude</h2> <!-- Assuming this content starts here -->
+
+    <h3>6.4.2 Force de traînée sur des obstacles non sphériques d'usage courant</h3>
+
+    <p>Un obstacle rigide de forme quelconque immergé dans un écoulement de fluide réel va subir une force globale de contact exercée par cet écoulement. Comme nous l'avons mentionné depuis le chapitre III, connaissant le champ du tenseur des contraintes $\boldsymbol{\sigma}$ sur la surface $\Sigma_c$ de l'obstacle et d'après le principe de l'action et la réaction, cette force s'exprime de manière exacte sous la forme (force exercée par le fluide sur l'obstacle) :</p>
+    $$ \mathbf{F} = \oint_{\Sigma_c} \boldsymbol{\sigma} \cdot \mathbf{n} \, ds $$
+    <div class="equation-number">(6-36)</div>
+    <div class="clear-float"></div>
+    <p><em>Note : La force exercée par l'obstacle sur le fluide serait l'opposée. Le signe '-' dans le PDF (éq. 6-36) correspondrait à la force exercée par l'obstacle sur le fluide si $\mathbf{n}$ est la normale sortante du volume de contrôle coïncidant avec l'obstacle. La force du fluide sur l'obstacle est $\mathbf{F}_{fluide \to obstacle} = - \mathbf{F}_{obstacle \to fluide} = \oint_{\Sigma_c} \boldsymbol{\sigma} \cdot \mathbf{n}_{int} ds = \oint_{\Sigma_c} \boldsymbol{\sigma} \cdot \mathbf{n}_{ext} ds$ où $\mathbf{n}_{ext}$ est la normale sortante de l'obstacle. On conserve la formule (6-36) du PDF en supposant que $\mathbf{n}$ est la normale sortante du fluide (donc entrante dans l'obstacle).</em></p>
+
+    <p>Si on considère que l'écoulement à l'infini est uniforme (vitesse $V_\infty$), la force de traînée $T_r$ exercée par cet écoulement correspond à la projection de $\mathbf{F}$ sur la direction de cet écoulement. De manière empirique, l'expression (6-34) va être extrapolée pour exprimer le module de cette force de traînée qui s'écrit ainsi :</p>
+    $$ T_r = C_D \left( \frac{1}{2} \rho V_\infty^2 \right) A $$
+    <div class="equation-number">(6-37)</div>
+    <div class="clear-float"></div>
+    <p>Où A est une surface caractéristique de l'obstacle. C'est une surface de référence choisie selon la nature de l'objet de trois manières générales :</p>
+    <ul>
+        <li>La <strong>surface frontale</strong> (ou maître-couple) : aire projetée apparente dans la direction de l'écoulement. Utilisée dans le cas des objets épais comme la sphère, le cylindre, une voiture ou un missile.</li>
+        <li>La <strong>surface longitudinale</strong> (ou surface en plan) : vue à partir de la direction normale à l'écoulement. Utilisée dans le cas des objets minces tels que l'aile d'un avion.</li>
+        <li>La <strong>surface mouillée</strong> : aire de la surface de l'objet en contact avec le fluide. Utilisée dans le cas des navires.</li>
+    </ul>
+    <p>Le coefficient de traînée $C_D$ dépend alors de la forme de l'objet, de son orientation et du nombre de Reynolds. Les tableaux 1 et 2 suivants montrent des mesures expérimentales du coefficient de traînée $C_D$ pour quelques objets d'usage courant respectivement bidimensionnels (longueur infinie dans la direction transverse) et tridimensionnels pour une plage des nombres de Reynolds supérieurs à $10^4$ (régime turbulent où $C_D$ dépend moins de Re).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">95</div>
+    <hr>
+
+    <p class="centered"><strong>Tableau 1 : coefficient de traînée pour des objets bidimensionnels*</strong></p>
+    <div class="table-placeholder">
+        Placeholder pour Tableau 1: CD pour objets 2D (basé sur surface frontale, Re >= 10^4).
+        <br><em>(Exemples : Carré normal ~2.1, Carré diagonale ~1.6, Demi-tube concave ~1.2, Demi-tube convexe ~2.3, Demi-cylindre concave ~1.2, Demi-cylindre convexe ~1.7, Triangle équilatéral pointe ~1.6, Triangle équilatéral base ~2.0)</em>
+    </div>
+    <p class="caption footnote centered">* Fluid Mechanics, Frank M. White, University of Rhode Island, WCB Mc-GrawHill, Fourth Edition</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">96</div>
+    <hr>
+
+    <p class="centered"><strong>Tableau 2 : coefficient de traînée pour des objets tridimensionnels*</strong></p>
+    <div class="table-placeholder">
+        Placeholder pour Tableau 2: CD pour objets 3D (basé sur surface frontale, Re >= 10^4).
+        <br><em>(Exemples : Cube normal ~1.07, Cube diagonale ~0.81, Calotte hémisphérique concave ~0.4, Calotte hémisphérique convexe ~1.4, Cône (selon angle), Parachute ~1.2)</em>
+    </div>
+
+    <h2>6.5 Application 2 : Forme universelle d'expression de la perte de charge linéaire dans une conduite</h2>
+    <p>L'écoulement en charge d'un fluide réel s'accompagne d'une perte de charge hydraulique qui traduit la dissipation de son énergie mécanique par les effets de frottement (viscosité). Du point de vue pratique, on distingue deux types de perte de charge :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">97</div>
+    <hr>
+
+    <ul>
+        <li>La <strong>perte de charge linéaire</strong> : c'est la perte de charge rencontrée dans une conduite régulière (section constante). Elle croît linéairement avec la distance $L$ décrite par l'écoulement. Elle est due au frottement du fluide sur la paroi de la conduite.</li>
+        <li>La <strong>perte de charge singulière</strong> : elle correspond à une perte de charge importante qui se produit localement au niveau d'une singularité dans un réseau hydraulique (coude, vanne, élargissement brusque,...) suite à la perturbation (décollements, recirculation, turbulence accrue) de la structure de l'écoulement.</li>
+    </ul>
+    <p>Les grandeurs hydrauliques caractéristiques de ces écoulements utilisées en pratique correspondent à la <strong>vitesse moyenne</strong> $V$ et à la <strong>pression moyenne</strong> $P$ sur la section $S$ données par les relations suivantes :</p>
+    $$ V = \frac{1}{S} \int_S v \, ds = \frac{Q_v}{S} \quad \text{et} \quad P = \frac{1}{S} \int_S p \, ds $$
+    <div class="equation-number">(6-38)</div>
+    <div class="clear-float"></div>
+    <p>$Q_v$ étant le débit volumique de l'écoulement.</p>
+    <p>La <strong>charge hydraulique</strong> $H$ sera définie au niveau d'une section $S$ de la conduite par son expression moyennée suivante :</p>
+    $$ H = \alpha \frac{V^2}{2g} + \frac{P}{\rho g} + Z_G $$
+    <div class="equation-number">(6-39)</div>
+    <div class="clear-float"></div>
+    <p>où $Z_G$ est la cote du centre de masse (centroïde) de la section S donné par :</p>
+    $$ Z_G = \frac{1}{S} \int_S z \, ds $$
+    <div class="equation-number">(6-40)</div>
+    <div class="clear-float"></div>
+    <p>et $\alpha$ un coefficient adimensionnel (coefficient de Coriolis) obtenu suite à la prise de la moyenne du terme de la charge cinétique. Il est donné par la relation suivante :</p>
+    $$ \alpha = \frac{1}{S} \int_S \left( \frac{v}{V} \right)^3 ds $$
+    <div class="equation-number">(6-41)</div>
+    <div class="clear-float"></div>
+    <p>Ce coefficient reste pour un écoulement turbulent (profil de vitesse aplati) de l'ordre de 1.01 à 1.1 (souvent pris égal à 1 en pratique). Pour un écoulement laminaire de Poiseuille (profil parabolique), $\alpha = 2$.</p>
+    <p>Si on considère une conduite horizontale comme le montre la figure suivante :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">98</div>
+    <hr>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 2 : perte de charge entre deux sections</div>
+        <p class="caption">Figure 2 : perte de charge $\Delta H$ entre deux sections $S_1$ et $S_2$ d'une conduite horizontale.</p>
+    </div>
+
+    <p>La perte de charge linéaire $\Delta H_{S_1 \to S_2}$ se manifeste dans ce cas par une chute de la pression moyenne entre les sections $S_1$ et $S_2$ (si $V_1=V_2$ et $Z_{G1}=Z_{G2}$):</p>
+    $$ \Delta H_{S_1 \to S_2} = H_1 - H_2 = \frac{P_1 - P_2}{\rho g} $$
+    <div class="equation-number">(6-42)</div>
+    <div class="clear-float"></div>
+
+    <h3>6.5.1 Perte de charge linéaire en conduite lisse</h3>
+    <p>On se propose d'exprimer par analyse dimensionnelle la variation de la pression par unité de longueur $\Delta P / L$ (gradient de pression moyen, lié à la perte de charge linéaire) en fonction des paramètres caractéristiques de l'écoulement $(\rho, \nu, V, D)$ dans le cas d'une conduite lisse (rugosité négligeable) de diamètre $D$. Ceci revient à déterminer une relation de la forme :</p>
+    $$ \mathcal{F} \left( \frac{\Delta P}{L}, \rho, \nu, V, D \right) = 0 $$
+    <div class="equation-number">(6-43)</div>
+    <div class="clear-float"></div>
+    <p>Cette relation, impliquant 5 grandeurs et 3 dimensions (M, L, T), doit pouvoir s'écrire sous la forme d'une relation entre $5-3=2$ groupes adimensionnels. Choisissons $\rho, V, D$ comme variables de base.</p>
+    <p>Dimensions: $[\Delta P/L]=ML^{-2}T^{-2}$, $[\rho]=ML^{-3}$, $[\nu]=L^2T^{-1}$, $[V]=LT^{-1}$, $[D]=L$.</p>
+    <ul>
+        <li>Groupe 1 (Gradient Pression): $\Pi_1 = (\Delta P/L) \rho^a V^b D^c$.
+            $M: 1+a=0 \implies a=-1$. $T: -2-b=0 \implies b=-2$. $L: -2-3a+b+c=0 \implies -2+3-2+c=0 \implies c=1$.
+            $\Pi_1 = (\Delta P/L) \rho^{-1} V^{-2} D^{1} = \frac{\Delta P / L}{\rho V^2 / D}$.</li>
+        <li>Groupe 2 (Viscosité): $\Pi_2 = \nu \rho^a V^b D^c$.
+            $M: a=0$. $T: -1-b=0 \implies b=-1$. $L: 2-3a+b+c=0 \implies 2+0-1+c=0 \implies c=-1$.
+            $\Pi_2 = \nu V^{-1} D^{-1} = \frac{\nu}{V D} = \frac{1}{\text{Re}}$.</li>
+    </ul>
+    <p>Cette relation s'écrit également sous la forme adimensionnelle suivante :</p>
+    $$ \mathcal{G} \left( \frac{(\Delta P / L) D}{\rho V^2}, \text{Re} \right) = 0 $$
+    <div class="equation-number">(6-44)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: La forme (6-44) du PDF est différente, résultant de choix d'échelles différents. Le résultat final (dépendance de Re uniquement pour $\Delta P / (\rho V^2 / D))$ est le même.</em></p>
+    <p>Si on choisit comme échelles caractéristiques :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">99</div>
+    <hr>
+
+    $$ L_e = D $$
+    <div class="equation-number">(6-45)</div><div class="clear-float"></div>
+    $$ M_e = \rho D^3 $$
+    <div class="equation-number">(6-46)</div><div class="clear-float"></div>
+    $$ T_e = D / V $$
+    <div class="equation-number">(6-47)</div><div class="clear-float"></div>
+    <p>La relation (6-44) (ou plutôt la forme issue du théorème Pi) s'écrit :</p>
+    $$ \mathcal{H} \left( \frac{(\Delta P/L) D}{\rho V^2}, \frac{\nu}{VD} \right) = 0 \quad \text{ou} \quad \frac{(\Delta P/L) D}{\rho V^2} = f(\text{Re}) $$
+    <div class="equation-number">(6-48)</div>
+    <div class="clear-float"></div>
+    <p>On voit apparaître dans cette relation un seul paramètre adimensionnel indépendant correspondant au nombre de Reynolds :</p>
+    $$ \text{Re} = \frac{VD}{\nu} $$
+    <div class="equation-number">(6-49)</div>
+    <div class="clear-float"></div>
+    <p>Ce qui permet d'exprimer $\Delta P / L$ comme suit :</p>
+    $$ \frac{\Delta P}{L} = \rho \frac{V^2}{D} f(\text{Re}) $$
+    <div class="equation-number">(6-50)</div>
+    <div class="clear-float"></div>
+    <p>En pratique, on se base sur la relation (6-50) pour établir la formule universelle de la perte de charge linéaire $\Delta H = (\Delta P / L) \times (L / \rho g)$ (ou la formule de Darcy-Weisbach) :</p>
+    $$ \Delta H_{S_1 \to S_2} = \frac{\Delta P}{\rho g} = \lambda \frac{L}{D} \frac{V^2}{2g} $$
+    <p>En comparant avec $\Delta P = \rho (V^2/D) f(Re) L$, on a $\rho g \Delta H = \rho (V^2/D) f(Re) L$, soit $\Delta H = (V^2/gD) f(Re) L$. L'identification donne :</p>
+    $$ \lambda \frac{L}{D} \frac{V^2}{2g} = \frac{V^2}{gD} f(\text{Re}) L \implies \lambda = 2 f(\text{Re}) $$
+    <p>La perte de charge s'écrit donc :</p>
+    $$ \Delta H_{S_1 \to S_2} = \lambda(\text{Re}) \frac{L}{D} \frac{V^2}{2g} \quad \text{avec} \quad \lambda = \lambda(\text{Re}) $$
+    <div class="equation-number">(6-51)</div>
+    <div class="clear-float"></div>
+    <p>où $\lambda$ est le coefficient de perte de charge linéaire (ou facteur de friction de Darcy), un nombre adimensionnel qui ne dépend que du nombre de Reynolds pour une conduite lisse.</p>
+
+    <h5>6.5.1.1 Exemple 1 : Ecoulement de Poiseuille</h5>
+    <p>La relation analytique (4-48) de l'écoulement de Poiseuille (laminaire) développée au chapitre 4 permet d'exprimer analytiquement le gradient de pression longitudinal :</p>
+    $$ \frac{dp}{dz} = \Gamma = - \frac{32 \mu V}{D^2} $$
+    <div class="equation-number">(6-52)</div>
+    <div class="clear-float"></div>
+    <p>La perte de pression sur une longueur $L$ est $\Delta P = - \Gamma L = (32 \mu V / D^2) L$.</p>
+    <p>La perte de charge est $\Delta H = \Delta P / (\rho g) = (32 \mu V L) / (\rho g D^2)$.</p>
+    <p>En comparant avec la formule de Darcy-Weisbach $\Delta H = \lambda (L/D) (V^2 / 2g)$ :</p>
+    $$ \lambda \frac{L}{D} \frac{V^2}{2g} = \frac{32 \mu V L}{\rho g D^2} \implies \lambda = \frac{32 \mu V L}{\rho g D^2} \times \frac{D}{L} \times \frac{2g}{V^2} = \frac{64 \mu}{\rho V D} = \frac{64 \nu}{V D} $$
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">100</div>
+    <hr>
+
+    <p>On retrouve ainsi dans le cas de l'écoulement laminaire ($Re < 2300$) dans une conduite lisse une expression exacte de la perte de charge similaire à la formule (6-51) avec un coefficient de perte de charge qui s'écrit de manière exacte :</p>
+    $$ \lambda = \frac{64}{\text{Re}} $$
+    <div class="equation-number">(6-53)</div>
+    <div class="clear-float"></div>
+
+    <h5>6.5.1.2 Exemple 2 : Formulation empirique de Blasius</h5>
+    <p>On note également qu'en régime <strong>turbulent</strong> en conduite lisse ($Re > 4000$ et jusqu'à $Re \approx 10^5$), ce coefficient de perte de charge $\lambda$ s'exprime empiriquement en fonction du nombre de Reynolds à l'aide de la relation de Blasius :</p>
+    $$ \lambda = \frac{0.316}{\text{Re}^{0.25}} $$
+    <div class="equation-number">(6-54)</div>
+    <div class="clear-float"></div>
+
+    <h3>6.5.2 Perte de charge linéaire en conduite rugueuse</h3>
+    <p>La <strong>rugosité</strong> $\epsilon$ de la paroi interne de la conduite joue un rôle essentiel dans les effets de frottement qui s'exercent sur l'écoulement en contact avec la paroi, et par conséquences sur la perte de charge, surtout en régime turbulent. On caractérise cette rugosité par une échelle de longueur caractéristique $\epsilon$ (rugosité absolue moyenne) qui diffère selon le matériau et le vieillissement de la conduite (corrosion, dépôts).</p>
+    <p>Si on désire inclure l'effet de la rugosité dans l'expression de la perte de charge linéaire par analyse dimensionnelle, la relation (6-43) va être généralisée en ajoutant $\epsilon$ comme paramètre pertinent :</p>
+    $$ \mathcal{F} \left( \frac{\Delta P}{L}, \rho, \nu, V, D, \epsilon \right) = 0 $$
+    <div class="equation-number">(6-55)</div>
+    <div class="clear-float"></div>
+    <p>Il y a maintenant 6 variables et 3 dimensions, donc $6-3=3$ groupes adimensionnels. En gardant les deux groupes précédents ($\Pi_1$ et $\Pi_2=1/\text{Re}$), on introduit un troisième groupe pour la rugosité :</p>
+    <ul>
+        <li>Groupe 3 (Rugosité): $\Pi_3 = \epsilon \rho^a V^b D^c$. $[\epsilon]=L$.
+            $M: a=0$. $T: b=0$. $L: 1-3a+b+c=0 \implies 1+0+0+c=0 \implies c=-1$.
+            $\Pi_3 = \epsilon D^{-1} = \frac{\epsilon}{D}$. C'est la <strong>rugosité relative</strong>.</li>
+    </ul>
+    <p>Et par suite, la relation adimensionnelle s'écrit :</p>
+    $$ \mathcal{G} \left( \frac{(\Delta P / L) D}{\rho V^2}, \text{Re}, \frac{\epsilon}{D} \right) = 0 $$
+    <div class="equation-number">(6-56)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">101</div>
+    <hr>
+
+    <p>En choisissant les mêmes échelles caractéristiques de temps, de masse et de longueur, cette relation s'écrit :</p>
+    $$ \mathcal{H} \left( \frac{(\Delta P/L) D}{\rho V^2}, \frac{\nu}{VD}, \frac{\epsilon}{D} \right) = 0 $$
+    <div class="equation-number">(6-57)</div>
+    <div class="clear-float"></div>
+    <p>Ce qui permettra enfin d'exprimer la perte linéaire par la même relation (6-51) ($\Delta H = \lambda (L/D) (V^2/2g)$), où le coefficient des pertes de charge $\lambda$ va être fonction de deux paramètres adimensionnels :</p>
+    $$ \lambda = \lambda \left( \text{Re}, \frac{\epsilon}{D} \right) $$
+    <div class="equation-number">(6-58)</div>
+    <div class="clear-float"></div>
+    <p>On note à titre d'exemple la formulation empirique implicite de <strong>Colebrook-White</strong> qui exprime une telle fonction $\lambda(\text{Re}, \epsilon/D)$ et qui est valable pour les régimes turbulents lisses et rugueux. Elle s'écrit :</p>
+    $$ \frac{1}{\sqrt{\lambda}} = -2 \log_{10} \left( \frac{\epsilon/D}{3.71} + \frac{2.51}{\text{Re} \sqrt{\lambda}} \right) $$
+    <div class="equation-number">(6-59)</div>
+    <div class="clear-float"></div>
+    <p>Comme cette relation ne permet pas d'expliciter analytiquement $\lambda$, un diagramme (dit <strong>diagramme de Moody</strong>) construit à la base de cette formulation (et d'expériences) permet de déduire la valeur de ce coefficient $\lambda$ connaissant le couple $(\text{Re}, \epsilon/D)$.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">102</div>
+    <hr>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 3 : Diagramme de Moody</div>
+        <p class="caption">Figure 3 : Diagramme de Moody. Coefficient de perte de charge $\lambda$ en fonction du Nombre de Reynolds Re et de la rugosité relative $\epsilon/D$.</p>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">103</div>
+    <hr>
+    <!-- End of Chapter 6 -->
+
+    <h1>Chapitre 7 : Ecoulements potentiels</h1>
+
+    <div class="toc">
+        <ul>
+            <li class="section">7.1 Introduction</li>
+            <li class="section">7.2 Equations fondamentales de la dynamique des écoulements potentiels</li>
+            <li class="section">7.3 Ecoulements potentiels bidimensionnels</li>
+            <li class="section">7.4 Etude de quelques solutions élémentaires</li>
+            <ul>
+                <li class="subsection">7.4.1 Ecoulement uniforme</li>
+                <li class="subsection">7.4.2 Ecoulement source ou puits</li>
+                <li class="subsection">7.4.3 Tourbillon</li>
+                <li class="subsection">7.4.4 Doublet</li>
+            </ul>
+            <li class="section">7.5 Méthode de superposition : étude de l'écoulement potentiel autour d'un cylindre</li>
+            <ul>
+                <li class="subsection">7.5.1 Ecoulement potentiel autour d'un cylindre</li>
+                <li class="subsection">7.5.2 Effort exercé sur le cylindre - Paradoxe d'Alembert</li>
+                <li class="subsection">7.5.3 Ecoulement potentiel autour d'un cylindre en rotation</li>
+            </ul>
+        </ul>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">104</div>
+    <hr>
+
+    <h2>7.1 Introduction</h2>
+    <p>Nous nous proposons dans ce chapitre de revenir sur la classe des <strong>écoulements potentiels</strong> que nous avons déjà introduits au chapitre 5. L'étude de cette classe d'écoulements est très utile du point de vue des applications pratiques et ceci pour deux raisons essentielles :</p>
+    <ul>
+        <li>Dans un grand nombre de cas pratiques les écoulements observés sont caractérisés par des nombres de Reynolds très élevés. Les effets visqueux sont alors dominés par les effets inertiels (sauf dans de fines régions près des parois ou dans les sillages : les couches limites) et l'hypothèse d'écoulement de fluide parfait demeure satisfaite en première approximation conformément aux résultats de l'analyse dimensionnelle développée au chapitre précédent.</li>
+        <li>D'autre part, le théorème de Lagrange que nous avons vu au chapitre 5 stipule que pour un fluide parfait barotrope, si son écoulement est irrotationnel à un instant donné, il demeure irrotationnel aux instants ultérieurs. Comme l'écoulement d'un fluide autour d'un objet est généré généralement suffisamment loin à partir d'un état de fluide au repos ($\mathbf{v}=0$, irrotationnel) ou en mouvement uniforme ($\text{rot }\mathbf{v}=0$, irrotationnel). Il en résulte que l'écoulement maintient une structure irrotationnelle au voisinage de l'objet (en dehors des couches limites et sillages), indépendamment de la particularité géométrique de ce dernier.</li>
+    </ul>
+    <p>La description mathématique de cette classe d'écoulements (fluide parfait, irrotationnel) se ramène à une équation aux dérivées partielles linéaire de type <strong>Laplace</strong> pour le potentiel des vitesses. Cette simplification permet d'avoir recours à toutes les possibilités de résolution analytique développées pour l'intégration de ce type d'équation (fonctions harmoniques, variables complexes...).</p>
+
+    <h2>7.2 Equations fondamentales de la dynamique des écoulements potentiels</h2>
+    <p>Conformément à ce que nous avons développé au chapitre précédent d'analyse dimensionnelle, l'hypothèse d'un nombre de Reynolds infini ($\text{Re} \to \infty$) nous permet de déduire à partir du système (6-10) (voir parag. 6.2.2 au chapitre 6) les équations fondamentales décrivant l'écoulement potentiel sous leurs formes adimensionnelles. Le nouveau système dit d'<strong>Euler</strong> s'écrit (en revenant aux variables dimensionnelles et en négligeant les termes visqueux) :</p>
+    <ul>
+        <li>Conservation de la masse (incompressibilité) :
+            $$ \frac{\partial v_i}{\partial x_i} = \vec{\nabla} \cdot \mathbf{v} = 0 $$
+            <div class="equation-number">(7-1)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li>Conservation de la quantité de mouvement (Equation d'Euler) :
+            $$ \frac{\partial v_i}{\partial t} + v_j \frac{\partial v_i}{\partial x_j} = g_i - \frac{1}{\rho} \frac{\partial p}{\partial x_i} $$
+            $$ \text{ou } \frac{\partial \mathbf{v}}{\partial t} + (\mathbf{v} \cdot \vec{\nabla}) \mathbf{v} = \mathbf{g} - \frac{1}{\rho} \vec{\nabla} p $$
+            <div class="equation-number">(7-2)</div>
+            <div class="clear-float"></div>
+        </li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">105</div>
+    <hr>
+
+    <p>Avec les conditions aux limites suivantes :</p>
+    <ul>
+        <li>En contact avec une paroi solide animée d'une vitesse $\mathbf{W}$: <strong>condition de glissement</strong> (non-pénétration)
+            $$ \mathbf{v} \cdot \mathbf{n} = \mathbf{W} \cdot \mathbf{n} $$
+            <div class="equation-number">(7-3)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li>A l'infini : les conditions de l'écoulement non perturbé par le présence de l'obstacle
+            $$ \mathbf{v} = \mathbf{V}_\infty \quad \text{et} \quad p = P_\infty $$
+            <div class="equation-number">(7-4)</div>
+            <div class="clear-float"></div>
+        </li>
+    </ul>
+    <p>S'ajoute à ces équations la condition d'<strong>irrotationnalité</strong> :</p>
+    $$ \vec{\nabla} \wedge \mathbf{v} = 0 $$
+    <div class="equation-number">(7-5)</div>
+    <div class="clear-float"></div>
+    <p>Cette condition nous a permis d'introduire (voir l'équation (5-18) au chapitre 5) le <strong>potentiel scalaire de vitesse</strong> $\Phi$ d'où dérive la vitesse :</p>
+    $$ \mathbf{v} = \vec{\nabla} \Phi $$
+    <div class="equation-number">(7-6)</div>
+    <div class="clear-float"></div>
+    <p>En injectant (7-6) dans l'équation de conservation de la masse (7-1) ($\vec{\nabla} \cdot \mathbf{v} = 0$), nous déduisons l'équation de <strong>Laplace</strong> régissant le potentiel de vitesse :</p>
+    $$ \vec{\nabla} \cdot (\vec{\nabla} \Phi) = \Delta \Phi = 0 $$
+    <div class="equation-number">(7-7)</div>
+    <div class="clear-float"></div>
+    <p>Le problème se ramène alors à la résolution de l'équation linéaire de Laplace ($\Delta \Phi = 0$) compte tenu des conditions aux limites (7-3) (sur $\mathbf{v} \cdot \mathbf{n} = \vec{\nabla} \Phi \cdot \mathbf{n}$) et (7-4) (sur $\vec{\nabla} \Phi$).</p>
+    <p>Connaissant $\Phi$, nous pouvons déduire d'après (7-6) le champ de vitesse $\mathbf{v}$. D'autre part, les hypothèses vérifiées dans ce cas d'écoulement (fluide parfait barotrope et écoulement irrotationnel) nous permettent d'utiliser la deuxième forme du théorème de Bernoulli (éq. 5-22) pour déduire la pression $p$. Rappelons que la deuxième forme du théorème de Bernoulli stipule qu'à un instant t donné, la quantité (charge généralisée) $\mathcal{J}(t)$ est constante en tout point :</p>
+    $$ \mathcal{J}(t) = \frac{1}{g} \frac{\partial \Phi}{\partial t} + \frac{v^2}{2g} + \frac{p}{\rho g} + z = \text{Cte}(t) $$
+    <div class="equation-number">(7-8)</div>
+    <div class="clear-float"></div>
+    <p>La constante $\text{Cte}(t)$ peut être déterminée à partir des conditions à l'infini. L'hydrodynamique de l'écoulement potentiel sera ainsi intégralement décrite.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">106</div>
+    <hr>
+
+    <h2>7.3 Ecoulements potentiels bidimensionnels</h2>
+    <p>Nous avons déjà vu au chapitre 2 (section 2.5.3) un autre champ scalaire qu'est la <strong>fonction courant</strong> $\psi$. En effet, nous avons introduit pour les écoulements bidimensionnels de fluides incompressibles ($\vec{\nabla} \cdot \mathbf{v}=0$) la fonction courant $\psi(x,y)$ à partir de laquelle les composantes du vecteur vitesse $u$ (selon x) et $v$ (selon y) se déduisent par le biais des équations (2-40) (voir chapitre 2). Elles s'écrivent :</p>
+    $$ u = \frac{\partial \psi}{\partial y} $$
+    <div class="equation-number">(7-9)</div>
+    <div class="clear-float"></div>
+    $$ v = - \frac{\partial \psi}{\partial x} $$
+    <div class="equation-number">(7-10)</div>
+    <div class="clear-float"></div>
+    <p>Si de plus l'écoulement est irrotationnel, comme il est bidimensionnel dans le plan (xy), l'irrotationnalité ($\vec{\nabla} \wedge \mathbf{v} = 0$) se réduit à une seule équation (la composante selon z de la vorticité est nulle):</p>
+    $$ (\vec{\nabla} \wedge \mathbf{v})_z = \frac{\partial v}{\partial x} - \frac{\partial u}{\partial y} = 0 $$
+    <div class="equation-number">(7-11)</div>
+    <div class="clear-float"></div>
+    <p>En injectant les expressions (7-9) et (7-10) dans l'équation (7-11), nous déduisons que la fonction courant obéit également à l'équation de Laplace :</p>
+    $$ \frac{\partial}{\partial x} \left( -\frac{\partial \psi}{\partial x} \right) - \frac{\partial}{\partial y} \left( \frac{\partial \psi}{\partial y} \right) = - \frac{\partial^2 \psi}{\partial x^2} - \frac{\partial^2 \psi}{\partial y^2} = 0 $$
+    $$ \Delta \psi = \frac{\partial^2 \psi}{\partial x^2} + \frac{\partial^2 \psi}{\partial y^2} = 0 $$
+    <div class="equation-number">(7-12)</div>
+    <div class="clear-float"></div>
+    <p>Nous déduisons alors que les écoulements potentiels plans (2D incompressibles irrotationnels) admettent à la fois le potentiel des vitesses $\Phi$ et la fonction courant $\psi$ qui sont toutes les deux des fonctions harmoniques (solutions de l'équation de Laplace).</p>
+    <p>D'autre part, les équations (7-6) ($\mathbf{v}=\nabla\Phi$, soit $u=\partial\Phi/\partial x, v=\partial\Phi/\partial y$), (7-9) et (7-10) montrent que le potentiel $\Phi$ et la fonction courant $\psi$ vérifient les <strong>conditions de Cauchy-Riemann</strong> :</p>
+    $$ \frac{\partial \Phi}{\partial x} = u = \frac{\partial \psi}{\partial y} \quad \text{et} \quad \frac{\partial \Phi}{\partial y} = v = - \frac{\partial \psi}{\partial x} $$
+    <div class="equation-number">(7-13)</div>
+    <div class="clear-float"></div>
+    <p>Nous déduisons alors que $\Phi$ et $\psi$ sont des <strong>fonctions harmoniques conjuguées</strong>.</p>
+    <p>Cette propriété mathématique nous permet dans un premier temps de montrer que les courbes d'iso-valeurs de $\Phi$ (lignes équipotentielles) et de $\psi$ (lignes de courant) constituent un réseau orthogonal appelé <strong>réseau hydrographique</strong>.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">107</div>
+    <hr>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 1 : Réseau hydrographique orthogonal</div>
+        <p class="caption">Figure 1 : Réseau hydrographique orthogonal formé par les lignes équipotentielles ($\Phi=$cte, tirets) et les lignes de courant ($\psi=$cte, traits pleins).</p>
+    </div>
+    <p>Elle nous permet également de définir, dans un deuxième temps, le <strong>potentiel complexe</strong> $f(z)$ comme une fonction de la variable complexe $z = x + iy$, définie par :</p>
+    $$ f(z) = \Phi(x,y) + i \Psi(x,y) $$
+    <div class="equation-number">(7-14)</div>
+    <div class="clear-float"></div>
+    <p>D'après la théorie des fonctions holomorphes (analytiques), nous définissons aussi la <strong>vitesse complexe</strong> $w(z)$ par dérivation du potentiel complexe $f(z)$ par rapport à $z$. Elle s'écrit compte tenu de (7-13) :</p>
+    $$ w(z) = \frac{df}{dz} = \frac{\partial f}{\partial x} = \frac{\partial \Phi}{\partial x} + i \frac{\partial \Psi}{\partial x} = u - iv $$
+    <div class="equation-number">(7-15)</div>
+    <div class="clear-float"></div>
+    <p><em>(Note: $df/dz = \partial f / \partial y / i = (\partial \Phi/\partial y + i \partial \Psi/\partial y)/i = v - i(-u) = v+iu$. Donc $w(z)=u-iv$. Attention à la définition).</em></p>
+    <p>La connaissance du potentiel complexe $f(z)$ (fonction holomorphe) nous permet alors de remonter à toutes les caractéristiques de la dynamique de l'écoulement potentiel plan (champs $\Phi, \Psi, \mathbf{v}, p$). Réciproquement, toute fonction holomorphe peut jouer le rôle de potentiel complexe d'un écoulement potentiel plan.</p>
+    <p>D'après la linéarité du problème (équation de Laplace), la superposition (addition) de deux fonctions potentielles complexes permet de définir une troisième configuration d'écoulement potentiel. En pratique, nous disposons d'une série d'écoulements potentiels élémentaires dont les fonctions potentiels complexes sont bien connues et répertoriées. L'étude d'une nouvelle situation d'écoulement s'approche par une superposition de quelques unes parmi ces potentiels élémentaires. Une telle démarche se base en grande partie sur l'intuition physique.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">108</div>
+    <hr>
+
+    <h2>7.4 Etude de quelques solutions élémentaires</h2>
+
+    <h3>7.4.1 Ecoulement uniforme</h3>
+    <p>Soit le potentiel complexe :</p>
+    $$ f(z) = a z \quad \text{avec} \quad a = U e^{-i\alpha} = U (\cos\alpha - i \sin\alpha) $$
+    <div class="equation-number">(7-16)</div>
+    <div class="clear-float"></div>
+    <p>L'écoulement potentiel correspondant est un écoulement uniforme à la vitesse (complexe) $w(z) = df/dz = a = U\cos\alpha - i U\sin\alpha$. Donc $u = U\cos\alpha$ et $v = U\sin\alpha$. C'est une vitesse $U$ faisant un angle $\alpha$ avec l'axe des x.</p>
+    <p>En adoptant l'écriture trigonométrique $z = r e^{i\theta}$, $f(z) = U e^{-i\alpha} r e^{i\theta} = U r e^{i(\theta-\alpha)} = Ur[\cos(\theta-\alpha) + i \sin(\theta-\alpha)]$. La partie imaginaire (fonction courant $\Psi$) s'écrit :</p>
+    $$ \Psi(r, \theta) = \text{Im}(f(z)) = U r \sin(\theta-\alpha) $$
+    <div class="equation-number">(7-17)</div>
+    <div class="clear-float"></div>
+    <p>Les lignes de courant définies par la relation $\Psi = \text{cte}$ sont données par l'équation $r \sin(\theta-\alpha) = \text{cte}/U$. En cartésien, $y' = r \sin(\theta-\alpha)$ où $y'$ est la coordonnée dans un repère tourné de $\alpha$. Les lignes de courant sont donc des droites parallèles à la direction $\alpha$ :</p>
+    $$ \theta = \alpha + k \pi \quad \text{ou} \quad y \cos\alpha - x \sin\alpha = \text{cte} $$
+    <div class="equation-number">(7-18)</div>
+    <div class="clear-float"></div>
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 2 : Ecoulement uniforme</div>
+        <p class="caption">Figure 2 : Ecoulement uniforme faisant un angle $\alpha$ avec l'axe Ox.</p>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">109</div>
+    <hr>
+
+    <h3>7.4.2 Ecoulement source ou puits</h3>
+    <p>Soit le potentiel complexe suivant :</p>
+    $$ f(z) = \frac{Q}{2\pi} \text{Log } z $$
+    <div class="equation-number">(7-19)</div>
+    <div class="clear-float"></div>
+    <p>Où Log $z$ est le logarithme complexe principal ($\text{Log } z = \ln r + i \theta$, avec $r=|z|$ et $\theta = \text{arg}(z) \in ]-\pi, \pi]$ ou $[0, 2\pi[$). $Q$ est une constante réelle.</p>
+    <p>Ce potentiel correspond à un écoulement source (si $Q > 0$) ou puits (si $Q < 0$) de débit volumique $Q$ (par unité de longueur transverse) situé à l'origine $z=0$. Ce potentiel s'écrit également :</p>
+    $$ f(z) = \frac{Q}{2\pi} (\ln r + i \theta) = \underbrace{\frac{Q}{2\pi} \ln r}_{\Phi(r)} + i \underbrace{\frac{Q}{2\pi} \theta}_{\Psi(r, \theta)} $$
+    <div class="equation-number">(7-20)</div>
+    <div class="clear-float"></div>
+    <p>Les lignes de courant ($\Psi = \text{cte}$) sont alors des droites radiales issues de l'origine ($\theta = \text{cte}$), et les surfaces équipotentielles ($\Phi = \text{cte}$) sont des cercles concentriques à l'origine ($r = \text{cte}$).</p>
+    $$ \theta = \text{Cte} \quad \text{et} \quad r = \text{Cte} $$
+    <div class="equation-number">(7-21)</div>
+    <div class="clear-float"></div>
+    <p>Le réseau hydrographique se présente alors comme suit :</p>
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 3 : Ecoulement source</div>
+        <p class="caption">Figure 3 : Ecoulement source (lignes de courant radiales, équipotentielles circulaires).</p>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">110</div>
+    <hr>
+
+    <p>La vitesse complexe $w(z) = df/dz$ s'écrit :</p>
+    $$ w(z) = \frac{Q}{2\pi} \frac{1}{z} = \frac{Q}{2\pi} \frac{1}{r e^{i\theta}} = \frac{Q}{2\pi r} e^{-i\theta} $$
+    <div class="equation-number">(7-22)</div>
+    <div class="clear-float"></div>
+    <p>Comme $w=u-iv$, on a $u = (Q/2\pi r)\cos\theta = Qx/(2\pi r^2)$ et $v = (Q/2\pi r)\sin\theta = Qy/(2\pi r^2)$. Le vecteur vitesse $\mathbf{v} = u\mathbf{e}_x + v\mathbf{e}_y = (Q/2\pi r^2) (x\mathbf{e}_x + y\mathbf{e}_y) = (Q/2\pi r^2) \mathbf{r}$. Le champ de vitesse est alors radial :</p>
+    $$ \mathbf{v} = U_r \mathbf{e}_r \quad \text{avec} \quad U_r = \frac{Q}{2\pi r} $$
+    <div class="equation-number">(7-23)</div>
+    <div class="clear-float"></div>
+    <p>Cette vitesse montre une singularité à l'origine ($r=0$) où elle devient infinie. La conservation du débit $Q$ s'écrit (flux à travers un cercle C de rayon r) :</p>
+    $$ Q = \oint_C \mathbf{v} \cdot \mathbf{n} \, ds = \int_0^{2\pi} U_r (r d\theta) = \int_0^{2\pi} \frac{Q}{2\pi r} r d\theta = \frac{Q}{2\pi} (2\pi) = Q $$
+    <div class="equation-number">(7-24)</div>
+    <div class="clear-float"></div>
+    <p>Où C est un contour fermé incluant la source ou le puits. Ce résultat peut être généralisé à une source ou puits placée en un point $z_0$. Le potentiel complexe s'écrit alors dans ce cas :</p>
+    $$ f(z) = \frac{Q}{2\pi} \text{Log}(z - z_0) $$
+    <div class="equation-number">(7-25)</div>
+    <div class="clear-float"></div>
+    <p>La vitesse complexe est donnée par la relation suivante :</p>
+    $$ w(z) = \frac{Q}{2\pi} \frac{1}{z - z_0} $$
+    <div class="equation-number">(7-26)</div>
+    <div class="clear-float"></div>
+
+    <h3>7.4.3 Tourbillon</h3>
+    <p>Le tourbillon (ou vortex potentiel), comparé à un écoulement source ou puits, est un écoulement potentiel où les fonctions courant et potentiels s'échangent de rôles ($\Phi \leftrightarrow \Psi$). Son potentiel complexe s'écrit :</p>
+    $$ f(z) = -i \frac{\Gamma}{2\pi} \text{Log}(z - z_0) $$
+    <div class="equation-number">(7-27)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">111</div>
+    <hr>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 4 : Ecoulement tourbillon</div>
+        <p class="caption">Figure 4 : Ecoulement tourbillon (lignes de courant circulaires, équipotentielles radiales).</p>
+    </div>
+
+    <p>Dans l'expression (7-27), $\Gamma$ est une constante réelle caractéristique du tourbillon, appelée <strong>circulation</strong> (ou intensité du tourbillon). Elle correspond à la circulation du vecteur vitesse le long d'une ligne de courant fermée entourant $z_0$.</p>
+    <p>Le potentiel $f(z) = \Phi + i\Psi$. Pour $z_0=0$, $f(z) = -i \frac{\Gamma}{2\pi} (\ln r + i\theta) = \frac{\Gamma\theta}{2\pi} - i \frac{\Gamma}{2\pi} \ln r$.</p>
+    <p>Donc $\Phi = \frac{\Gamma\theta}{2\pi}$ et $\Psi = - \frac{\Gamma}{2\pi} \ln r$.</p>
+    <p>Les lignes de courant ($\Psi = \text{cte}$) sont alors des cercles centrés à l'origine ($r = \text{cte}$), et les surfaces équipotentielles ($\Phi = \text{cte}$) sont des droites radiales ($\theta = \text{cte}$).</p>
+    $$ r = \text{Cte} \quad \text{et} \quad \theta = \text{Cte} $$
+    <div class="equation-number">(7-28)</div>
+    <div class="clear-float"></div>
+    <p>La vitesse complexe s'écrit (pour $z_0=0$):</p>
+    $$ w(z) = \frac{df}{dz} = -i \frac{\Gamma}{2\pi} \frac{1}{z} = -i \frac{\Gamma}{2\pi r} e^{-i\theta} $$
+    <div class="equation-number">(7-29)</div>
+    <div class="clear-float"></div>
+    <p>$w = u-iv = -i (\Gamma/2\pi r) (\cos\theta - i\sin\theta) = (-\Gamma/2\pi r)\sin\theta - i(\Gamma/2\pi r)\cos\theta$.</p>
+    <p>$u = -(\Gamma/2\pi r)\sin\theta = - \Gamma y / (2\pi r^2)$</p>
+    <p>$v = (\Gamma/2\pi r)\cos\theta = \Gamma x / (2\pi r^2)$</p>
+    <p>Le vecteur vitesse $\mathbf{v} = U_\theta \mathbf{e}_\theta$ est tangent aux cercles (orthoradial): $\mathbf{v} = \frac{\Gamma}{2\pi r} \mathbf{e}_\theta$.</p>
+    <p>La conservation de la circulation $\Gamma$ pour cet écoulement s'écrit (sur un cercle C de rayon r):</p>
+    $$ \oint_C \mathbf{v} \cdot d\mathbf{r} = \int_0^{2\pi} (\frac{\Gamma}{2\pi r} \mathbf{e}_\theta) \cdot (r d\theta \mathbf{e}_\theta) = \int_0^{2\pi} \frac{\Gamma}{2\pi} d\theta = \Gamma = \text{Cte} $$
+    <div class="equation-number">(7-30)</div>
+    <div class="clear-float"></div>
+    <p>Cette conservation s'écrit alors d'après (7-29) et (7-30) (relation vitesse-circulation):</p>
+    $$ v_\theta = \frac{\Gamma}{2\pi r} $$
+    <div class="equation-number">(7-31)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">112</div>
+    <hr>
+
+    <p>Ce qui montre qu'il y aura une singularité à l'origine ($r=0$) où la vitesse devient infinie. Notez que bien que la vitesse dérive d'un potentiel $\Phi$, l'écoulement n'est pas irrotationnel à l'origine ($\text{rot } \mathbf{v} = 0$ pour $r \neq 0$, mais $\Gamma \neq 0$).</p>
+
+    <h3>7.4.4 Doublet</h3>
+    <p>Soit l'écoulement résultant de la superposition d'une source de débit $Q$ en $z=-a$ et d'un puits de même débit ($-Q$) en $z=+a$ (placés sur l'axe réel), symétriques par rapport à l'origine O et distants d'une distance $2a$.</p>
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 5 : Superposition source - puits</div>
+        <p class="caption">Figure 5 : Superposition source ($z=-a$) - puits ($z=+a$).</p>
+    </div>
+    <p>Le potentiel caractéristique $f(z)$ de cet écoulement obtenu par superposition s'écrit :</p>
+    $$ f(z) = f_{source}(-a) + f_{puits}(+a) = \frac{Q}{2\pi} \text{Log}(z+a) - \frac{Q}{2\pi} \text{Log}(z-a) $$
+    $$ f(z) = \frac{Q}{2\pi} \left[ \text{Log}(z+a) - \text{Log}(z-a) \right] $$
+    <div class="equation-number">(7-32)</div>
+    <div class="clear-float"></div>
+    <p>Il permet d'obtenir le réseau hydrographique montré à la figure 5 ci-dessus (lignes de courant allant de la source au puits).</p>
+    <p>Si on fait tendre la distance $a$ vers 0 tout en gardant le produit $aQ$ constant, appelé <strong>intensité du doublet</strong> $k$ :</p>
+    $$ \frac{aQ}{\pi} = k = \text{Cte} $$
+    <div class="equation-number">(7-33)</div>
+    <div class="clear-float"></div>
+    <p>On obtient un <strong>doublet</strong> à l'origine, orienté selon l'axe des x (de $-a$ vers $+a$). Un développement limité à l'ordre 2 permet d'approximer ce potentiel comme suit (pour $a \to 0$):</p>
+    <p>$\text{Log}(z+a) - \text{Log}(z-a) \approx \text{Log}(z(1+a/z)) - \text{Log}(z(1-a/z))$</p>
+    <p>$\approx (\text{Log } z + a/z) - (\text{Log } z - a/z) = 2a/z$.</p>
+    $$ f(z) \approx \frac{Q}{2\pi} \left( \frac{2a}{z} \right) = \frac{aQ}{\pi z} = \frac{k}{z} $$
+    <div class="equation-number">(7-34)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">113</div>
+    <hr>
+
+    <p>Cet écoulement potentiel $f(z)=k/z$ correspond à un doublet (dipôle hydrodynamique) centré à l'origine dont le réseau hydrographique se montre comme suit :</p>
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 6 : Ecoulement doublet</div>
+        <p class="caption">Figure 6 : Ecoulement doublet (lignes de courant sont des cercles tangents à l'axe horizontal à l'origine).</p>
+    </div>
+
+    <h2>7.5 Méthode de superposition : étude de l'écoulement potentiel autour d'un cylindre</h2>
+    <p>Nous nous proposons dans ce paragraphe d'étudier le possible écoulement potentiel autour d'un cylindre circulaire, fixe ou en rotation autour de son axe, placé dans un écoulement uniforme.</p>
+
+    <h3>7.5.1 Ecoulement potentiel autour d'un cylindre</h3>
+    <p>D'après (7-16) (écoulement uniforme $f_1(z) = U z$, si $\alpha=0$) et (7-34) (doublet $f_2(z) = k/z$), le potentiel complexe obtenu par la superposition d'un écoulement uniforme (selon $x$, vitesse $U$) et d'un doublet (intensité $k$) placé à l'origine peut se mettre sous la forme :</p>
+    $$ f(z) = U z + \frac{k}{z} $$
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">114</div>
+    <hr>
+
+    <!-- End of provided pages -->
+
+</body>
+</html>
