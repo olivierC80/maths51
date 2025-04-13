@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 4: Dynamique des fluides Newtoniens</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 2em; padding: 1em; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; color: #333; }
+        h1 { border-bottom: 2px solid #666; padding-bottom: 0.3em; font-size: 2em; text-align: center;}
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; font-size: 1.7em; }
+        h3 { font-size: 1.4em; margin-top: 1.5em; }
+        h4 { font-size: 1.2em; margin-top: 1.2em; }
+        h5 { font-size: 1.1em; margin-top: 1.1em; }
+        .figure { text-align: center; margin: 2em 0; border: 1px solid #eee; padding: 1em; }
+        .placeholder { border: 1px dashed grey; padding: 3em 2em; display: inline-block; min-width: 300px; min-height: 100px; background-color: #f0f0f0; color: #777; box-sizing: border-box; }
+        .caption { font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.9em; }
+        table { border-collapse: collapse; margin: 1.5em auto; width: 95%; border: 1px solid #ccc;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: middle; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .katex-display > .katex { text-align: center !important; } /* Center display math */
+        .katex-display { display: block; margin-top: 1em; margin-bottom: 1em; }
+        .equation-number { float: right; color: #888; margin-left: 1em;}
+        .page-number { text-align: right; margin-top: 1em; color: #888; font-size: 0.9em; font-style: italic; }
+        .footer-note { font-size: 0.8em; color: #666; border-top: 1px solid #ccc; margin-top: 2em; padding-top: 0.5em; }
+        .centered { text-align: center; }
+        /* Style for bold vectors/tensors as per PDF convention */
+        .katex .mathbf { font-weight: bold; } /* Ensure KaTeX bold works */
+        .clear-float { clear: both; }
+    </style>
+</head>
+<body>
+
+    <h4>4.3.1.1 Introduction de la viscosité</h4>
+
+    <p>Si on considère l'expérience suivante : Soit un fluide enfermé entre deux plaques planes parallèles distantes d'une épaisseur $h$ très inférieure aux dimensions caractéristiques des deux plaques (voir Figure 1).</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 1 : champ de vitesse entre deux plaques planes parallèles</div>
+        <p class="caption">Figure 1 : champ de vitesse entre deux plaques planes parallèles. La plaque inférieure est fixe, la supérieure se déplace à vitesse $V$ sous l'effet d'une force $F$. Le profil de vitesse est linéaire.</p>
+    </div>
+
+    <p>On se propose de maintenir la plaque supérieure en mouvement de translation uniforme à la vitesse $V$. Si le fluide était parfait, conformément à ce que nous avons décrit au paragraphe précédent, il suffit d'exercer une impulsion permettant à la plaque d'atteindre la vitesse $V$, elle gardera cette vitesse en mouvement uniforme. Cependant, dans le cas d'un fluide réel on doit maintenir l'exercice d'une force tangentielle $F$ colinéaire à la vitesse $V$ pour maintenir le mouvement. On remarque également que pour un grand nombre de fluides tels que l'eau, l'huile ou l'alcool (fluides newtoniens), la force exercée par unité de surface $F/S$ (où $S$ est l'aire de la plaque en contact avec le fluide) est proportionnelle au rapport $V/h$ :</p>
+    $$ \frac{F}{S} \propto \frac{V}{h} $$
+    <div class="equation-number">(4-6)</div>
+    <div class="clear-float"></div>
+
+    <p>Le rapport $F/S$ est homogène à une densité surfacique de force (contrainte). Il représente la contrainte de cisaillement $\tau$ exercée sur le fluide (ou par le fluide sur la plaque). Tandis que le second membre de (4-6), $V/h$, est homogène à l'inverse d'un temps (un taux de déformation). Il représente le gradient de vitesse $dV/dy$ (si $y$ est la coordonnée verticale) de l'écoulement du fluide qui reste sensiblement uniforme sur la faible épaisseur $h$ (profil linéaire).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">55</div>
+    <hr>
+
+    <p>Le coefficient de proportionnalité entre ces deux grandeurs représente la <strong>viscosité dynamique</strong> du fluide $\mu$. C'est une grandeur physique caractéristique du milieu fluide. L'équation (4-6) devient alors la loi de viscosité de Newton pour ce cas simple :</p>
+    $$ \tau = \frac{F}{S} = \mu \frac{V}{h} = \mu \frac{dV}{dy} $$
+    <p>La viscosité dynamique $\mu$ est homogène à une « pression $\times$ temps » ($[F L^{-2} T]$) donc de dimension $M L^{-1} T^{-1}$. La viscosité dynamique est une grandeur intensive qui ne dépend (principalement) que de la température (et faiblement de la pression pour les liquides). Elle est exprimée dans le S.I. en Pascal-seconde (Pa.s) ou Poiseuille (Pl) :</p>
+    $$ 1 \text{ Poiseuille (Pl)} = 1 \text{ Pa.s} = 1 \text{ kg m}^{-1} \text{ s}^{-1} $$
+    <div class="equation-number">(4-7)</div>
+    <div class="clear-float"></div>
+    <p><em>(Ancienne unité : 1 Poise (P) = 0.1 Pa.s; 1 centiPoise (cP) = 1 mPa.s)</em></p>
+
+    <p>Ce comportement de proportionnalité correspond à une grande classe de fluides dans la nature dits <strong>fluides Newtoniens</strong>. On définit également pour ces fluides la <strong>viscosité cinématique</strong> $\nu$ (nu) obtenue par le rapport de la viscosité dynamique sur la masse volumique $\rho$ :</p>
+    $$ \nu = \frac{\mu}{\rho} $$
+    <div class="equation-number">(4-8)</div>
+    <div class="clear-float"></div>
+    <p>La viscosité cinématique a la dimension $L^2 T^{-1}$ (unité SI: m$^2$.s$^{-1}$). <em>(Ancienne unité: 1 Stokes (St) = $10^{-4}$ m$^2$.s$^{-1}$; 1 centiStokes (cSt) = $10^{-6}$ m$^2$.s$^{-1} = 1$ mm$^2$.s$^{-1}$)</em>.</p>
+
+    <p>Le tableau 1 ci-dessous montre les valeurs mesurées de ces grandeurs pour quelques fluides courants.</p>
+
+    <p class="centered"><strong>Tableau 1 : masse volumique, viscosités dynamique et cinématique pour quelques fluides</strong></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Fluides</th>
+                <th>$\rho$ (kg m⁻³)</th>
+                <th>$\mu$ (Poiseuille = Pa.s)</th>
+                <th>$\nu$ (m²s⁻¹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Eau (1 atm, 20 °C)</td>
+                <td>998.2</td>
+                <td>$1.00 \times 10^{-3}$</td>
+                <td>$1.004 \times 10^{-6}$</td>
+            </tr>
+            <tr>
+                <td>Eau de mer (1 atm, 15 °C)</td>
+                <td>1025.0</td>
+                <td>$1.23 \times 10^{-3}$</td>
+                <td>$1.2 \times 10^{-6}$</td>
+            </tr>
+            <tr>
+                <td>Mercure (1 atm, 15 °C)</td>
+                <td>13555.0</td>
+                <td>$1.49 \times 10^{-3}$ (?)</td> <!-- PDF value seems low, literature often ~1.55 mPa.s -->
+                <td>$1.1 \times 10^{-7}$ (?)</td>
+            </tr>
+            <tr>
+                <td>Alcool éthylique (96% dans l'eau, 20°C)</td> <!-- Added temp -->
+                <td>788.6 (?)</td> <!-- Density of ethanol ~789, mixture density depends -->
+                <td>$1.18 \times 10^{-3}$</td>
+                <td>$1.5 \times 10^{-6}$</td>
+            </tr>
+            <tr>
+                <td>Glycérine (1 atm, 20°C)</td>
+                <td>1257.6 (?)</td> <!-- Density ~1261 -->
+                <td>1.51</td>
+                <td>$1.2 \times 10^{-3}$</td>
+            </tr>
+            <tr>
+                <td rowspan="4">Air (1 atm)</td> <!-- Added pressure -->
+                <td>-20 °C: $1.395$</td> <!-- Density at -20C, 1atm -->
+                <td>$1.61 \times 10^{-5}$</td> <!-- Viscosity at -20C -->
+                <td>$1.15 \times 10^{-5}$</td> <!-- Kinematic viscosity -->
+                <!-- Note: PDF values for Air density seem incorrect (E-05?). Using standard values. -->
+            </tr>
+             <tr>
+                <td>0 °C: $1.292$</td>
+                <td>$1.71 \times 10^{-5}$</td>
+                <td>$1.32 \times 10^{-5}$</td>
+             </tr>
+             <tr>
+                <td>20 °C: $1.204$</td>
+                <td>$1.81 \times 10^{-5}$</td>
+                <td>$1.50 \times 10^{-5}$</td>
+             </tr>
+             <tr>
+                 <td>60 °C: $1.059$</td>
+                 <td>$2.00 \times 10^{-5}$</td>
+                 <td>$1.89 \times 10^{-5}$</td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- Note: Some values in the PDF table for Air density and Mercury viscosity seem unusual. Clarified/corrected with standard values where possible for context. -->
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">56</div>
+    <hr>
+
+    <p>On note qu'il existe également dans la nature des fluides dits <strong>fluides non Newtoniens</strong> qui ne réagissent pas dans l'expérience précédente de la même manière. En effet, la contrainte de cisaillement $F/S$ qu'on doit maintenir appliquée pour ces fluides n'est pas (linéairement) proportionnelle au taux de déformation $V/h$. Deux comportements sont observés expérimentalement selon la nature du fluide utilisé :</p>
+    <ul>
+        <li>Il existe des fluides (tels que les solutions de polymères, certaines peintures, le sang) qui montrent une résistance importante aux faibles vitesses de déplacement de la plaque (viscosité apparente élevée). Au fur et à mesure que la vitesse augmente ils deviennent plus “fluides” (viscosité apparente diminue). Un tel comportement s'appelle <strong>rhéofluidifiant</strong> (shear-thinning).</li>
+        <li>On observe au contraire pour d'autres fluides (suspensions concentrées comme l'amidon dans l'eau, "oobleck") une faible résistance pour les petites vitesses de la plaque, mais qui deviennent assez rigides (viscosité apparente augmente) pour les fortes vitesses. Ce comportement est dit <strong>rhéoépaississant</strong> (shear-thickening).</li>
+        <li>D'autres fluides (dentifrice, boue, Ketchup) nécessitent une contrainte seuil avant de commencer à s'écouler (<strong>fluides à seuil</strong> ou fluides de Bingham).</li>
+    </ul>
+    <p>En termes de viscosité, les fluides non Newtoniens peuvent être interprétés comme des fluides à viscosité variable, dépendant du taux de déformation (ou du gradient de vitesse). L'interprétation d'un tel comportement vis-à-vis de la constitution atomique ou moléculaire de ces milieux constitue la discipline appelée <strong>rhéologie</strong>. On définit le <strong>rhéogramme</strong> qui est un diagramme où on représente les variations des composantes du tenseur des contraintes de cisaillement $\tau_{ij}$ en fonction de celles du tenseur des taux de déformation $D_{ij}$. La figure suivante montre schématiquement les rhéogrammes relatifs aux trois types de fluides décrits ci-dessus.</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 2 : Rhéogrammes</div>
+        <p class="caption">Figure 2 : Rhéogrammes (Contrainte de cisaillement $\tau_{ij}$ vs Taux de déformation $D_{ij}$) de différents types de fluides.</p>
+        <!-- Description: Newtonien=droite passant par origine; Rhéofluidifiant=courbe concave; Rhéoépaississant=courbe convexe; Bingham=droite ne passant pas par l'origine (contrainte seuil). -->
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">57</div>
+    <hr>
+
+    <h4>4.3.1.2 Loi de comportement rhéologique d'un fluide Newtonien</h4>
+
+    <p>Le tenseur des contraintes de cisaillement $\boldsymbol{\tau}$ dans un fluide Newtonien est exprimé en fonction du tenseur des taux de déformation $\mathbf{D}$ par la loi de comportement linéaire de Newton (généralisation de $\tau = \mu \dot{\gamma}$) qui s'écrit sous sa forme la plus générale (pour un fluide isotrope) :</p>
+    $$ \boldsymbol{\tau} = 2\mu \mathbf{D} + \lambda (\vec{\nabla} \cdot \mathbf{v}) \mathbf{I} $$
+    <p>où $\mu$ est la viscosité dynamique (ou première viscosité) et $\lambda$ est la seconde viscosité. L'hypothèse de Stokes postule une relation entre ces deux viscosités, $\lambda = \mu_v - \frac{2}{3}\mu$, où $\mu_v$ est la viscosité volumique qui caractérise la résistance du fluide à une dilatation ou compression rapide. Pour les gaz monoatomiques, $\mu_v \approx 0$, ce qui conduit à $\lambda = - \frac{2}{3}\mu$. La forme générale devient alors :</p>
+    $$ \boldsymbol{\tau} = 2\mu \mathbf{D} + \left(\mu_v - \frac{2}{3}\mu\right) (\vec{\nabla} \cdot \mathbf{v}) \mathbf{I} $$
+    <div class="equation-number">(4.9)</div>
+    <div class="clear-float"></div>
+    <p>$\mu$ est la viscosité dynamique et $\mu_v$ est la viscosité volumique (ou deuxième viscosité) rencontrée dans le cas des fluides compressibles. Compte tenu de l'équation de conservation de la masse (ou de l'hypothèse d'incompressibilité), cette loi de comportement se réduit dans le cas de fluide <strong>incompressible</strong> ($\vec{\nabla} \cdot \mathbf{v} = 0$) à l'expression suivante :</p>
+    $$ \boldsymbol{\tau} = 2\mu \mathbf{D} $$
+    <div class="equation-number">(4.10)</div>
+    <div class="clear-float"></div>
+    <p>Les éléments $\tau_{ij}$ de ce tenseur $\boldsymbol{\tau}$ s'expriment ainsi en fonction du gradient de vitesse comme suit (car $\mathbf{D} = \frac{1}{2}[\nabla\mathbf{v} + (\nabla\mathbf{v})^T]$) :</p>
+    $$ \tau_{ij} = \mu \left( \frac{\partial v_i}{\partial x_j} + \frac{\partial v_j}{\partial x_i} \right) $$
+    <div class="equation-number">(4.11)</div>
+    <div class="clear-float"></div>
+
+    <h3>4.3.2 Loi constitutive de fermeture du vecteur courant de chaleur q : loi de Fourrier</h3>
+
+    <p>De même, pour un fluide Newtonien (et pour la plupart des matériaux usuels), le vecteur courant de chaleur $\mathbf{q}$ (flux de chaleur par conduction) est exprimé en fonction du gradient de température $\vec{\nabla} T$ par une loi de comportement linéaire (loi de Fourier) donnée par :</p>
+    $$ \mathbf{q} = - k \vec{\nabla} T $$
+    <div class="equation-number">(4.12)</div>
+    <div class="clear-float"></div>
+    <p>Où le coefficient $k$ (souvent noté $\lambda$ dans d'autres contextes, mais $k$ est utilisé ici pour éviter confusion avec la seconde viscosité) est la <strong>conductivité thermique</strong> du fluide. C'est une propriété caractéristique du milieu fluide qui ne dépend (principalement) que de la température. Elle est de dimension $M L T^{-3} \Theta^{-1}$ (unité SI: W.m$^{-1}$.K$^{-1}$) et donc homogène à « Puissance / (Longueur $\times$ Température) ». On remarque enfin que le signe “-” qui apparaît dans (4-12) traduit le fait que le flux de chaleur s'oriente spontanément des zones les plus chaudes vers les zones les plus froides dans un milieu (selon la direction opposée au gradient de température).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">58</div>
+    <hr>
+
+    <p>Le tableau suivant montre des valeurs de cette grandeur à 20 °C pour quelques matériaux.</p>
+
+    <p class="centered"><strong>Tableau 2 : valeurs de la conductivité thermique mesurée à 20 °C pour quelques matériaux</strong></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Matériau</th>
+                <th>$k$ à 20 °C (W m⁻¹ K⁻¹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Eau</td><td>0.6</td></tr>
+            <tr><td>Air sec immobile (P = 1 atm)</td><td>0.0262</td></tr>
+            <tr><td>Cuivre</td><td>390</td></tr>
+            <tr><td>Béton</td><td>0.92</td></tr>
+            <tr><td>Laine de verre</td><td>0.04</td></tr>
+            <tr><td>Liège</td><td>0.04</td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.3.3 Loi constitutive de fermeture de l'énergie interne déduite de la thermodynamique</h3>
+
+    <p>On se restreint dans notre développement au cas des fluides <strong>incompressibles</strong>. La masse volumique $\rho$ reste dans ce cas constante le long de la trajectoire d'une particule fluide ($d\rho/dt = 0$). Nous admettons également l'hypothèse de l'<strong>état local d'équilibre thermodynamique</strong>, ce qui consiste à supposer que toute particule fluide passe par des états d'équilibre thermodynamique intermédiaires au cours de son évolution. Cette hypothèse permet d'exprimer la variation de l'énergie interne massique $e$ en fonction d'autres variables d'état comme la température $T$ et l'entropie massique $s$ à l'aide de la relation fondamentale de Gibbs :</p>
+    $$ de = T ds - p d(1/\rho) $$
+    <p>En dérivant par rapport au temps en suivant la particule (dérivée matérielle) :</p>
+    $$ \frac{de}{dt} = T \frac{ds}{dt} - p \frac{d(1/\rho)}{dt} = T \frac{ds}{dt} + \frac{p}{\rho^2} \frac{d\rho}{dt} $$
+    <p>Comme le fluide est incompressible, $d\rho/dt = 0$, cette relation se réduit à :</p>
+    $$ \rho \frac{de}{dt} = \rho T \frac{ds}{dt} $$
+    <div class="equation-number">(4-13)</div>
+    <div class="clear-float"></div>
+    <p>Pour un processus réversible, $T ds = \delta q_{rev}$. Pour un processus incompressible, on peut aussi relier la variation d'énergie interne à la variation de température via la chaleur spécifique à volume constant $C_v$ (qui est égale à la chaleur spécifique à pression constante $C_p$ pour un incompressible parfait, notée simplement $C$):</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">59</div>
+    <hr>
+
+    $$ de = C(T) dT $$
+    <p>D'où :</p>
+    $$ \rho \frac{de}{dt} = \rho C(T) \frac{dT}{dt} $$
+    <div class="equation-number">(4-14)</div>
+    <div class="clear-float"></div>
+    <p>où $C$ (ou $C_v$) est la chaleur spécifique massique (à volume constant pour un incompressible).
+    L'équation (4-5) du bilan de l'énergie interne s'écrit alors, compte tenue de (4-14), sous la forme suivante faisant intervenir la température $T$ (équation de l'énergie ou équation de la chaleur) :</p>
+    $$ \rho C \left( \frac{\partial T}{\partial t} + \mathbf{v} \cdot \vec{\nabla} T \right) = - \vec{\nabla} \cdot \mathbf{q} + \rho r + \boldsymbol{\tau} : (\vec{\nabla} \mathbf{v}) $$
+    <div class="equation-number">(4-15)</div>
+    <div class="clear-float"></div>
+
+    <h2>4.4 Récapitulation : le système final des équations d'un milieu fluide Newtonien incompressible</h2>
+
+    <!-- Renumbered section 4.4.1 to match logic, although missing in PDF -->
+    <h3>4.4.1 Système complet</h3>
+    <p>Le comportement d'un fluide newtonien incompressible est régi par les équations de conservation de la masse, de la quantité de mouvement et de l'énergie, complétées par les lois constitutives.</p>
+
+    <h3>4.4.2 Problème hydrodynamique : Les équations de Navier-Stokes</h3>
+
+    <p>Compte tenu de la fermeture (4-10) $\boldsymbol{\tau} = 2\mu \mathbf{D} = \mu (\nabla\mathbf{v} + (\nabla\mathbf{v})^T)$, les équations de conservation de masse et de quantité de mouvement d'un fluide Newtonien incompressible s'écrivent comme suit :</p>
+    <ul>
+        <li><strong>Continuité (Incompressibilité) :</strong>
+            $$ \vec{\nabla} \cdot \mathbf{v} = 0 $$
+            <div class="equation-number">(4-16)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li><strong>Quantité de Mouvement (Navier-Stokes) :</strong>
+            $$ \rho \left( \frac{\partial \mathbf{v}}{\partial t} + (\mathbf{v} \cdot \vec{\nabla}) \mathbf{v} \right) = \rho \mathbf{f} - \vec{\nabla} p + \vec{\nabla} \cdot (2\mu \mathbf{D}) $$
+            <p>En utilisant $\mathbf{D} = \frac{1}{2}(\nabla\mathbf{v} + (\nabla\mathbf{v})^T)$ et $\vec{\nabla} \cdot (\nabla\mathbf{v})^T = \vec{\nabla}(\vec{\nabla}\cdot\mathbf{v})$, et $\vec{\nabla} \cdot (\nabla\mathbf{v}) = \Delta \mathbf{v}$ (laplacien vectoriel), et si $\mu$ est constant :</p>
+            $$ \vec{\nabla} \cdot (2\mu \mathbf{D}) = \mu \vec{\nabla} \cdot (\nabla\mathbf{v} + (\nabla\mathbf{v})^T) = \mu [\Delta \mathbf{v} + \vec{\nabla}(\underbrace{\vec{\nabla}\cdot\mathbf{v}}_{=0})] = \mu \Delta \mathbf{v} $$
+            <p>L'équation devient donc :</p>
+            $$ \rho \left( \frac{\partial \mathbf{v}}{\partial t} + (\mathbf{v} \cdot \vec{\nabla}) \mathbf{v} \right) = \rho \mathbf{f} - \vec{\nabla} p + \mu \Delta \mathbf{v} $$
+            <div class="equation-number">(4-17)</div>
+            <div class="clear-float"></div>
+            <p><em>(Note: l'équation (4-17) dans le PDF incluait $\nu \Delta \mathbf{v} + \mathbf{g}$, en supposant $\rho \mathbf{f} = \rho \mathbf{g}$ et en divisant par $\rho$, avec $\nu=\mu/\rho$. L'équation ci-dessus est plus générale avant division par $\rho$).</em></p>
+    </ul>
+    <p>Ce système s'écrit sous la forme indicielle (dans le système de coordonnées cartésiennes, avec $\mathbf{f} = \mathbf{g}$) comme suit :</p>
+    <ul>
+        <li>Continuité :
+            $$ \frac{\partial v_i}{\partial x_i} = 0 $$
+            <div class="equation-number">(4-18)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li>Navier-Stokes :
+            $$ \rho \left( \frac{\partial v_i}{\partial t} + v_j \frac{\partial v_i}{\partial x_j} \right) = \rho g_i - \frac{\partial p}{\partial x_i} + \mu \frac{\partial^2 v_i}{\partial x_j \partial x_j} $$
+            <p>Ou en divisant par $\rho$ (si $\rho$ constant) :</p>
+            $$ \frac{\partial v_i}{\partial t} + v_j \frac{\partial v_i}{\partial x_j} = g_i - \frac{1}{\rho} \frac{\partial p}{\partial x_i} + \nu \frac{\partial^2 v_i}{\partial x_j \partial x_j} $$
+            <div class="equation-number">(4-19)</div>
+            <div class="clear-float"></div>
+            <p><em>(Note: l'équation (4-19) dans le PDF contenait $v_i$ au lieu de $v_j$ dans le terme convectif, corrigé ici).</em></p>
+        </li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">60</div>
+    <hr>
+
+    <p>Du point de vue mathématique, ces équations (4-18) et (4-19) forment un système différentiel fermé d'inconnues les champs de vitesse $\mathbf{v}(\mathbf{x}, t)$ (3 composantes) et de pression $p(\mathbf{x}, t)$ (1 scalaire), qu'on appelle le <strong>système de Navier-Stokes</strong> pour un fluide newtonien incompressible à viscosité constante. La résolution de ce système avec la prise en compte des conditions aux limites (et initiales) auxquelles obéit le milieu fluide conduit ainsi à la description totale de l'écoulement.</p>
+
+    <p>Le caractère universel de ce système laisse à s'attendre qu'on serait capable de décrire des systèmes fluides à des échelles de longueur caractéristiques extrêmement différentes : depuis les écoulements géophysiques qui se produisent à l'échelle de la terre jusqu'aux écoulements biologiques qui se produisent à une échelle microscopique au sein d'un organisme. Seulement, la <strong>non linéarité</strong> de ce système qui apparaît au niveau du terme convectif $\mathbf{v} \cdot \vec{\nabla} \mathbf{v}$ (ou $v_j \partial v_i / \partial x_j$) le rend très instable (apparition de turbulence) et la résolution analytique dans le cas général n'est pas possible (c'est l'un des problèmes du millénaire du Clay Mathematics Institute). Ce système n'est solvable analytiquement que dans un nombre assez réduit de cas d'écoulements qui vérifient des hypothèses de symétrie permettant de le linéariser (en annulant ou simplifiant le terme convectif).</p>
+
+    <p>Dans les annexes I et II sont explicités les développements de ce système d'équations de Navier-Stokes en coordonnées cartésiennes et cylindriques.</p>
+
+    <h3>4.4.3 Problème thermique : L'équation de la chaleur</h3>
+
+    <p>D'après les fermetures (4-10) $\boldsymbol{\tau} = 2\mu \mathbf{D}$ et (4-12) $\mathbf{q} = -k \vec{\nabla} T$, l'équation de l'énergie interne (4-15) s'écrit sous la forme fermée suivante (appelée équation de la chaleur ou de l'énergie pour un fluide incompressible) :</p>
+    $$ \rho C \left( \frac{\partial T}{\partial t} + \mathbf{v} \cdot \vec{\nabla} T \right) = - \vec{\nabla} \cdot (-k \vec{\nabla} T) + \rho r + (2\mu \mathbf{D}) : (\vec{\nabla} \mathbf{v}) $$
+    <p>Si la conductivité thermique $k$ est constante :</p>
+    $$ \rho C \left( \frac{\partial T}{\partial t} + \mathbf{v} \cdot \vec{\nabla} T \right) = k \Delta T + \rho r + \Phi_{visc} $$
+    <div class="equation-number">(4-20)</div>
+    <div class="clear-float"></div>
+    <p>où $\Delta T = \vec{\nabla} \cdot (\vec{\nabla} T)$ est le laplacien scalaire de la température, et $\Phi_{visc} = (2\mu \mathbf{D}) : (\vec{\nabla} \mathbf{v}) = \boldsymbol{\tau} : \mathbf{D} = \mu (\nabla\mathbf{v} + (\nabla\mathbf{v})^T) : \mathbf{D}$ est la fonction de dissipation visqueuse (toujours positive ou nulle).</p>
+    <p>Le dernier terme dans cette équation montre la puissance calorifique (volumique) produite au sein de l'écoulement par frottement visqueux entre les particules fluides. La forme indicielle de cette équation de la chaleur s'écrit comme suit :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">61</div>
+    <hr>
+
+    $$ \rho C \left( \frac{\partial T}{\partial t} + v_j \frac{\partial T}{\partial x_j} \right) = k \frac{\partial^2 T}{\partial x_j \partial x_j} + \rho r + \mu \left( \frac{\partial v_i}{\partial x_j} + \frac{\partial v_j}{\partial x_i} \right) \frac{\partial v_i}{\partial x_j} $$
+    <div class="equation-number">(4-21)</div>
+    <div class="clear-float"></div>
+    <p><em>(Note: Le terme de dissipation $\Phi_{visc} = \tau_{ij} D_{ij} = \tau_{ij} \frac{1}{2}(\partial v_i / \partial x_j + \partial v_j / \partial x_i)$ peut se simplifier en $\frac{\mu}{2} (\frac{\partial v_i}{\partial x_j} + \frac{\partial v_j}{\partial x_i})^2$. La forme dans l'éq. (4-21) du PDF est correcte si l'on somme sur i et j).</em></p>
+
+    <p>Comme dans un grand nombre de cas d'écoulements les grandeurs intensives $\rho$, $\mu$, $C$ (et $k$) varient peu en fonction de la température, les deux problèmes dynamique (Navier-Stokes pour $\mathbf{v}, p$) et thermique (équation de la chaleur pour $T$) peuvent être <strong>découplés</strong>. Le problème thermique est alors abordé après avoir résolu le problème dynamique (le champ de vitesse $\mathbf{v}$ étant nécessaire dans l'équation de la chaleur).</p>
+
+    <h2>4.5 Exemples de solutions exactes des équations de Navier-Stokes</h2>
+
+    <p>Nous présentons ici quelques cas simples où le système de Navier-Stokes (4-18, 4-19) peut être résolu analytiquement grâce à des hypothèses de symétrie qui éliminent ou simplifient le terme non-linéaire convectif.</p>
+
+    <h3>4.5.1 Ecoulement de Couette</h3>
+
+    <p>Cette situation correspond à l'écoulement d'un fluide incompressible visqueux confiné entre deux parois solides planes (infinies dans les directions $x_2, x_3$) très proches (distance $H$), susceptibles d'être en mouvement relatif (vitesse $U_0$) et/ou soumises à un gradient de pression longitudinal. Ces deux parois délimitent un domaine d'épaisseur $H$ très petite devant l'échelle de longueur $L$ caractéristique des parois. Une telle configuration d'écoulement peut être rencontrée à titre d'exemple dans les systèmes de lubrification (film mince entre deux surfaces).</p>
+
+    <p>L'écoulement est supposé <strong>permanent</strong> ($\partial/\partial t = 0$), <strong>parallèle</strong> aux deux parois (disons, selon $x_3$, donc $v_1=v_2=0, v_3=v_3(x_1)$ seulement si écoulement établi) et <strong>bidimensionnel</strong> dans le plan vertical $(x_1, x_3)$ (ou plutôt unidirectionnel selon $x_3$ et ne variant que selon $x_1$). Par commodité des calculs, on suppose que les deux parois soient horizontales (en $x_1=0$ et $x_1=H$) et on choisit un système d'axes $(O, x_1, x_2, x_3)$ où la direction $x_1$ est la verticale ascendante comme le montre la figure suivante :</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 3 : Ecoulement de couette plan</div>
+        <p class="caption">Figure 3 : Ecoulement de Couette plan. Fluide entre deux plaques horizontales distantes de H. Plaque inférieure fixe, plaque supérieure mobile à vitesse $U_0$ selon $x_3$. Axe $x_1$ vertical.</p>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">62</div>
+    <hr>
+
+    <p>Cette situation d'écoulement est intéressante dans la mesure où le moteur de l'écoulement peut être un cisaillement pur dans le cas où les parois sont en mouvement relatif ($\mathbf{v}(H)=U_0 \mathbf{e}_3, \mathbf{v}(0)=0$) sans gradient de pression longitudinal, ou un gradient de pression longitudinal ($\partial p / \partial x_3 \neq 0$) entre parois fixes, ou une superposition des deux.</p>
+
+    <p>L'équation de conservation de la masse (continuité $\vec{\nabla} \cdot \mathbf{v} = 0$) se réduit dans ce cas ($\mathbf{v} = v_3(x_1) \mathbf{e}_3$) à :</p>
+    $$ \frac{\partial v_1}{\partial x_1} + \frac{\partial v_2}{\partial x_2} + \frac{\partial v_3}{\partial x_3} = 0 + 0 + 0 = 0 $$
+    <div class="equation-number">(4-22)</div>
+    <div class="clear-float"></div>
+    <p>Elle est automatiquement satisfaite, ce qui implique que l'écoulement est bien établi dans la direction $x_3$. Les projections de l'équation de conservation de la quantité de mouvement (Navier-Stokes, éq. 4-19, en régime permanent) s'écrivent dans ce cas comme suit (avec $\mathbf{g} = -g \mathbf{e}_1$) :</p>
+    <ul>
+        <li>Composante $i=1$ ($x_1$): $\rho(0) = -\frac{\partial p}{\partial x_1} - \rho g + \mu (0) \implies \frac{\partial p}{\partial x_1} = -\rho g$</li>
+        <li>Composante $i=2$ ($x_2$): $\rho(0) = -\frac{\partial p}{\partial x_2} + \mu (0) \implies \frac{\partial p}{\partial x_2} = 0$</li>
+        <div class="equation-number">(4-24)</div><div class="clear-float"></div>
+        <li>Composante $i=3$ ($x_3$): $\rho(0) = -\frac{\partial p}{\partial x_3} + \mu \frac{\partial^2 v_3}{\partial x_1^2}$ (car $\partial^2 v_3 / \partial x_2^2 = \partial^2 v_3 / \partial x_3^2 = 0$)</li>
+        <div class="equation-number">(4-23)</div><div class="clear-float"></div>
+    </ul>
+    <div class="equation-number">(4-25)</div><div class="clear-float"></div>
+    <p>Avec les conditions aux limites de non glissement sur les deux parois : $v_3(0) = 0$ et $v_3(H) = U_0$. Le grand avantage des hypothèses de symétrie (permanent, parallèle, établi) auxquelles obéit l'écoulement consiste à l'élimination de la non-linéarité (terme de convection $(\mathbf{v} \cdot \vec{\nabla})\mathbf{v} = 0$) des équations de Navier-Stokes. Ce système est ainsi linéarisé et devient alors solvable analytiquement.</p>
+
+    <p>La projection (4-24) montre que la pression ne dépend pas de $x_2$. La projection (4-25) s'intègre facilement et indique une distribution verticale hydrostatique de la pression :</p>
+    $$ p(x_1, x_3) = -\rho g x_1 + p_0(x_3) $$
+    <div class="equation-number">(4-26)</div>
+    <div class="clear-float"></div>
+    <p>où $p_0(x_3)$ est la pression à $x_1=0$. Compte tenue de (4-26), la projection (4-23) s'écrit :</p>
+    $$ \mu \frac{d^2 v_3}{d x_1^2} = \frac{\partial p}{\partial x_3} = \frac{d p_0}{d x_3} $$
+    <p>Comme le membre de gauche ne dépend que de $x_1$ et celui de droite que de $x_3$, les deux doivent être égaux à une constante. Ainsi, le gradient de pression longitudinal $dp_0/dx_3$ doit être constant. Posons $dp_0/dx_3 = \Gamma$.</p>
+    $$ \mu \frac{d^2 v_3}{d x_1^2} = \Gamma \quad \implies \quad \frac{d^2 v_3}{d x_1^2} = \frac{\Gamma}{\mu} $$
+    <div class="equation-number">(4-27)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">63</div>
+    <hr>
+
+    <p>Si on note $\Gamma = \frac{dp_0}{dx_3}$ le gradient de pression longitudinal (constant). Deux cas intéressants se présentent :</p>
+
+    <h5>4.5.1.1 Cas où $U_0 \neq 0$ et $\Gamma = 0$ (Ecoulement de Couette pur)</h5>
+    <p>L'équation (4-27) devient $d^2v_3/dx_1^2 = 0$. Elle s'intègre deux fois pour donner $v_3(x_1) = A x_1 + B$. En utilisant les conditions aux limites $v_3(0)=0$ et $v_3(H)=U_0$, on trouve $B=0$ et $A=U_0/H$. On obtient le profil linéaire suivant de la vitesse :</p>
+    $$ v_3(x_1) = \frac{U_0}{H} x_1 $$
+    <div class="equation-number">(4-28)</div>
+    <div class="clear-float"></div>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 4 : Profile linéaire de la vitesse (Couette)</div>
+        <p class="caption">Figure 4 : Profile linéaire de la vitesse pour l'écoulement de Couette pur ($\Gamma=0$).</p>
+    </div>
+
+    <p>Le tenseur des taux de cisaillement $\boldsymbol{\tau} = \mu (\nabla\mathbf{v} + (\nabla\mathbf{v})^T)$ est constant en tout point du domaine de l'écoulement (y compris en contact avec les parois). Il a une seule composante non nulle donnée par :</p>
+    $$ \tau_{31} = \tau_{13} = \mu \left( \frac{\partial v_3}{\partial x_1} + \frac{\partial v_1}{\partial x_3} \right) = \mu \left( \frac{U_0}{H} + 0 \right) = \mu \frac{U_0}{H} $$
+    <div class="equation-number">(4-29)</div>
+    <div class="clear-float"></div>
+    <p>C'est la contrainte tangentielle exercée par le fluide sur les plaques (ou vice versa).</p>
+
+    <h5>4.5.1.2 Cas où $U_0 = 0$ et $\Gamma \neq 0$ (Ecoulement de Poiseuille plan)</h5>
+    <p>L'équation (4-27) s'intègre deux fois : $dv_3/dx_1 = (\Gamma/\mu) x_1 + A$, puis $v_3(x_1) = (\Gamma/\mu) x_1^2/2 + A x_1 + B$. Les conditions aux limites sont $v_3(0) = 0 \implies B=0$, et $v_3(H) = 0 \implies (\Gamma/\mu) H^2/2 + A H = 0 \implies A = -(\Gamma H) / (2\mu)$. On obtient un profil parabolique de la vitesse qui s'annule sur les parois :</p>
+    $$ v_3(x_1) = \frac{\Gamma}{2\mu} x_1^2 - \frac{\Gamma H}{2\mu} x_1 = \frac{\Gamma}{2\mu} x_1 (x_1 - H) $$
+    <p>On peut réécrire ceci sous la forme :</p>
+    $$ v_3(x_1) = \frac{\Gamma H^2}{2\mu} \left[ \left(\frac{x_1}{H}\right)^2 - \frac{x_1}{H} \right] = - \frac{\Gamma H^2}{8\mu} \left[ 1 - \left( \frac{2x_1}{H} - 1 \right)^2 \right] $$
+    <div class="equation-number">(4-30)</div>
+    <div class="clear-float"></div>
+    <p>Il montre un maximum (en valeur absolue, car $\Gamma=dp/dx_3$ est négatif pour un écoulement de gauche à droite si $p$ diminue) au centre du domaine ($x_1=H/2$).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">64</div>
+    <hr>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 5 : Profile parabolique de la vitesse (Poiseuille plan)</div>
+        <p class="caption">Figure 5 : Profile parabolique de la vitesse pour l'écoulement de Poiseuille plan ($U_0=0$).</p>
+    </div>
+
+    <p>La valeur maximale de la vitesse (au centre $x_1=H/2$) atteinte au centre du domaine vaut :</p>
+    $$ U_{max} = v_3(H/2) = \frac{\Gamma H^2}{2\mu} \left(\frac{1}{4} - \frac{1}{2}\right) = - \frac{\Gamma H^2}{8\mu} $$
+    <div class="equation-number">(4-31)</div>
+    <div class="clear-float"></div>
+    <p>On déduit à partir de ce champ hydrodynamique l'expression suivante des composantes non nulles du tenseur des taux de cisaillement :</p>
+    $$ \tau_{31} = \tau_{13} = \mu \frac{dv_3}{dx_1} = \mu \left( \frac{\Gamma}{\mu} x_1 - \frac{\Gamma H}{2\mu} \right) = \Gamma \left( x_1 - \frac{H}{2} \right) $$
+    <div class="equation-number">(4-32)</div>
+    <div class="clear-float"></div>
+    <p>Le cisaillement varie linéairement, est nul au milieu du domaine de l'écoulement ($x_1=H/2$) et maximal (en valeur absolue) aux parois.</p>
+
+    <p>On note enfin, comme l'équation (4-27) est linéaire, un troisième cas est intéressant où on superpose un gradient de pression non nul avec une vitesse relative de la paroi ($U_0 \neq 0, \Gamma \neq 0$). La solution obtenue sera un profil de vitesse parabolique (non symétrique) avec un maximum rapproché de la paroi en mouvement. Il correspond à une superposition des deux solutions précédentes (Couette pur + Poiseuille plan).</p>
+
+    <h3>4.5.2 Ecoulement à surface libre sur un plan incliné</h3>
+
+    <p>On considère l'écoulement d'un fluide visqueux incompressible sur un plan incliné qui fait un angle $\alpha$ avec l'horizontale, comme le montre la figure suivante. Cet écoulement est supposé <strong>laminaire, permanent</strong> et <strong>établi</strong> (donc parallèle au plan incliné). Il est supposé <strong>bidimensionnel</strong> dans le plan $(x_2, x_3)$ (pas de variation selon $x_1$). Il garde une profondeur constante $h$. L'axe $x_3$ est selon la ligne de plus grande pente, $x_2$ est vertical ascendant, et $x_1$ est horizontal transverse.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">65</div>
+    <hr>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 6 : Ecoulement sur un plan incliné</div>
+        <p class="caption">Figure 6 : Ecoulement sur un plan incliné. Système d'axes $(x_1, x_2, x_3)$. $x_3$ selon la pente, $x_2$ normal au plan (origine au fond), $x_1$ transverse.</p>
+    </div>
+
+    <p>C'est une situation basique d'un écoulement gravitaire à surface libre. Il diffère par rapport au cas de l'écoulement de Couette/Poiseuille au niveau de la condition aux limites vérifiée à la surface libre ($x_2=h$) qui correspond à une condition de cisaillement nul (si on néglige l'effet de l'air) et de pression égale à la pression atmosphérique $p_{atm}$. La solution obtenue ci-dessous montre que dans ce cas d'écoulement c'est la gravité (composante selon $x_3$) qui est le moteur générateur de l'écoulement.</p>
+
+    <p>Le système d'équations de Navier-Stokes se réduit, compte tenu des hypothèses (permanent, $v_1=v_2=0$, $v_3=v_3(x_2)$ seulement, $\partial/\partial x_1 = \partial/\partial x_3 = \partial/\partial t = 0$), à la forme linéarisée suivante (avec $\mathbf{g} = g \sin\alpha \, \mathbf{e}_3 - g \cos\alpha \, \mathbf{e}_2$):</p>
+    <ul>
+        <li>Continuité: $\partial v_3 / \partial x_3 = 0$ (vérifié).</li>
+        <li>NS $x_1$: $0 = -\partial p / \partial x_1 + 0 \implies p$ ne dépend pas de $x_1$.</li>
+        <div class="equation-number">(4-34)</div><div class="clear-float"></div>
+        <li>NS $x_2$: $0 = -\partial p / \partial x_2 - \rho g \cos\alpha + 0$</li>
+        <div class="equation-number">(4-35)</div><div class="clear-float"></div>
+        <li>NS $x_3$: $0 = -\partial p / \partial x_3 + \rho g \sin\alpha + \mu (\partial^2 v_3 / \partial x_2^2)$</li>
+        <div class="equation-number">(4-36)</div><div class="clear-float"></div>
+    </ul>
+    <div class="equation-number">(4-33)</div><div class="clear-float"></div>
+    <p>L'équation (4-33) (qui était $\partial v_1/\partial x_1 = 0$ dans le PDF) n'est pas pertinente ici, mais $\partial v_3/\partial x_3 = 0$ vient de l'hypothèse d'écoulement établi.</p>
+    <p>La projection (4-34) montre que la pression ne dépend pas de $x_1$. La projection (4-35) s'intègre pour donner la distribution hydrostatique de la pression.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">66</div>
+    <hr>
+
+    <p>Intégration de (4-35): $p(x_2, x_3) = -\rho g \cos\alpha \, x_2 + f(x_3)$. Condition à la surface libre $p(h, x_3) = p_{atm}$. Donc $p_{atm} = -\rho g \cos\alpha \, h + f(x_3)$, soit $f(x_3) = p_{atm} + \rho g \cos\alpha \, h$. Le profil de pression hydrostatique qui s'écrit compte tenu de la condition de la pression à la surface libre comme suit :</p>
+    $$ p(x_2) = p_{atm} + \rho g \cos\alpha (h - x_2) $$
+    <div class="equation-number">(4-37)</div>
+    <div class="clear-float"></div>
+    <p>La pression ne dépend que de $x_2$, donc $\partial p / \partial x_3 = 0$.</p>
+    <p>Le bilan longitudinal (4-36) devient donc :</p>
+    $$ \mu \frac{d^2 v_3}{d x_2^2} = - \rho g \sin\alpha $$
+    <p>Il s'intègre deux fois pour donner $v_3(x_2) = -(\rho g \sin\alpha / \mu) x_2^2 / 2 + A x_2 + B$. Les conditions aux limites sont :</p>
+    <ul>
+        <li>Non-glissement au fond ($x_2=0$): $v_3(0) = 0 \implies B=0$.</li>
+        <li>Cisaillement nul à la surface libre ($x_2=h$): $\tau_{32} = \mu (dv_3/dx_2) = 0$ à $x_2=h$. Or $dv_3/dx_2 = -(\rho g \sin\alpha / \mu) x_2 + A$. Donc $A = (\rho g \sin\alpha / \mu) h$.</li>
+    </ul>
+    <p>Le profil parabolique suivant de la vitesse est obtenu :</p>
+    $$ v_3(x_2) = - \frac{\rho g \sin\alpha}{2\mu} x_2^2 + \frac{\rho g \sin\alpha h}{\mu} x_2 = \frac{\rho g \sin\alpha}{2\mu} x_2 (2h - x_2) $$
+    <p>Que l'on peut réécrire :</p>
+    $$ v_3(x_2) = \frac{g \sin\alpha \, h^2}{2\nu} \left[ 2 \left(\frac{x_2}{h}\right) - \left(\frac{x_2}{h}\right)^2 \right] $$
+    <div class="equation-number">(4-38)</div>
+    <div class="clear-float"></div>
+    <p>La vitesse est maximale à la surface libre ($x_2=h$).</p>
+
+    <p>Le cisaillement pour cet écoulement varie linéairement entre la surface libre (où il est nul) et le fond (où il est maximal) selon :</p>
+    $$ \tau_{32} = \tau_{23} = \mu \frac{dv_3}{dx_2} = \mu \left[ - \frac{\rho g \sin\alpha}{\mu} x_2 + \frac{\rho g \sin\alpha h}{\mu} \right] = \rho g \sin\alpha (h - x_2) $$
+    <div class="equation-number">(4-39)</div>
+    <div class="clear-float"></div>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 7 : Profils de vitesse et cisaillement plan incliné</div>
+        <p class="caption">Figure 7 : Profils de la vitesse (parabolique) et du cisaillement (linéaire) pour l'écoulement sur plan incliné.</p>
+    </div>
+
+    <p>Cette situation d'écoulement est un cas de référence pour initier l'étude des écoulements à surfaces libres dans le milieu naturel tel que les cours d'eau, les systèmes lacustres ou le milieu marin.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">67</div>
+    <hr>
+
+    <h3>4.5.3 Ecoulement visqueux dans une conduite cylindrique : écoulement de Poiseuille</h3>
+
+    <p>Elle correspond à l'écoulement d'un fluide réel incompressible dans une conduite cylindrique de rayon $R$. Cet écoulement est supposé <strong>permanent, axisymétrique</strong>, et <strong>parallèle</strong> à l'axe $z$ de la conduite et <strong>établi</strong> (le profil transversal de la vitesse $v_z(r)$ du fluide devient invariant par déplacement longitudinal comme le montre la figure suivante). C'est un écoulement en charge (pas de surface libre) dont le moteur est le gradient de pression longitudinal $dp/dz$.</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 8 : distance d'établissement de Poiseuille</div>
+        <p class="caption">Figure 8 : distance d'établissement de l'écoulement de Poiseuille dans une conduite cylindrique. $L_{etablissement}$ est la longueur d'entrée après laquelle le profil de vitesse devient parabolique et indépendant de $z$.</p>
+    </div>
+
+    <p>C'est un écoulement à symétrie de révolution équivalent à l'écoulement de Couette/Poiseuille plan lorsqu'il est vu en coordonnées cylindriques $(r, \theta, z)$.</p>
+
+    <h4>4.5.3.1 Les champs locaux de la vitesse et des taux de cisaillement</h4>
+
+    <p>Les équations de Navier-Stokes exprimées dans le système des coordonnées cylindriques (voir annexe II) s'écrivent dans ce cas (permanent, axisymétrique $\partial/\partial\theta=0$, parallèle $v_r=v_\theta=0$, établi $\partial v_z / \partial z = 0$) sous la forme linéarisée suivante :</p>
+    <ul>
+        <li>Continuité: $\frac{1}{r}\frac{\partial(r v_r)}{\partial r} + \frac{1}{r}\frac{\partial v_\theta}{\partial \theta} + \frac{\partial v_z}{\partial z} = 0 + 0 + 0 = 0$ (vérifié).</li>
+        <div class="equation-number">(4-40)</div><div class="clear-float"></div>
+        <li>NS $r$: $\rho(0) = -\frac{\partial p}{\partial r} + \mu(0) \implies \frac{\partial p}{\partial r} = 0$.</li>
+        <div class="equation-number">(4-41)</div><div class="clear-float"></div>
+        <li>NS $\theta$: $\rho(0) = -\frac{1}{r}\frac{\partial p}{\partial \theta} + \mu(0) \implies \frac{\partial p}{\partial \theta} = 0$.</li>
+        <div class="equation-number">(4-42)</div><div class="clear-float"></div>
+        <li>NS $z$: $\rho(0) = -\frac{\partial p}{\partial z} + \mu \left[ \frac{1}{r} \frac{\partial}{\partial r} \left( r \frac{\partial v_z}{\partial r} \right) + \frac{1}{r^2}\frac{\partial^2 v_z}{\partial \theta^2} + \frac{\partial^2 v_z}{\partial z^2} \right]$. Avec les hypothèses, cela devient :</li>
+        $$ 0 = -\frac{dp}{dz} + \mu \frac{1}{r} \frac{d}{dr} \left( r \frac{d v_z}{d r} \right) $$
+        <div class="equation-number">(4-43)</div><div class="clear-float"></div>
+    </ul>
+    <p>Les équations (4-41) et (4-42) montrent que la pression $p$ ne dépend que de $z$. Donc $\partial p/\partial z = dp/dz$. Comme dans le cas plan, $dp/dz$ doit être une constante, notée $\Gamma$. L'équation (4-43) devient :</p>
+    $$ \frac{1}{r} \frac{d}{dr} \left( r \frac{d v_z}{d r} \right) = \frac{1}{\mu} \frac{dp}{dz} = \frac{\Gamma}{\mu} $$
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">68</div>
+    <hr>
+
+    <p>Si on note $\Gamma = \frac{dp}{dz}$ le gradient de pression longitudinal (constant, négatif pour un écoulement dans le sens $z>0$). L'intégration de l'équation (4-43) nous fournit le profil parabolique de la vitesse de l'écoulement qui s'écrit :</p>
+    <p>Intégration 1 : $r \frac{dv_z}{dr} = \frac{\Gamma}{2\mu} r^2 + A$</p>
+    <p>Intégration 2 : $\frac{dv_z}{dr} = \frac{\Gamma}{2\mu} r + \frac{A}{r}$. $v_z(r) = \frac{\Gamma}{4\mu} r^2 + A \ln r + B$.</p>
+    <p>Conditions aux limites :</p>
+    <ul>
+        <li>Vitesse finie sur l'axe ($r=0$): Ceci impose $A=0$ (car $\ln r \to -\infty$).</li>
+        <li>Non-glissement à la paroi ($r=R$): $v_z(R) = 0 \implies \frac{\Gamma}{4\mu} R^2 + B = 0 \implies B = - \frac{\Gamma R^2}{4\mu}$.</li>
+    </ul>
+    <p>Le profil de vitesse est donc :</p>
+    $$ v_z(r) = \frac{\Gamma}{4\mu} r^2 - \frac{\Gamma R^2}{4\mu} = \frac{\Gamma R^2}{4\mu} \left( \frac{r^2}{R^2} - 1 \right) = - \frac{\Gamma R^2}{4\mu} \left( 1 - \frac{r^2}{R^2} \right) $$
+    <div class="equation-number">(4-44)</div>
+    <div class="clear-float"></div>
+    <p>La vitesse est maximale sur l'axe ($r=0$) : $U_{max} = v_z(0) = - \frac{\Gamma R^2}{4\mu}$.</p>
+
+    <p>On déduit à partir de ce champ de vitesse un profil de cisaillement linéaire qui varie de 0 à l'axe jusqu'à la valeur maximale au niveau de la paroi de la conduite. Les composantes non nulles du tenseur des taux de cisaillement s'écrivent :</p>
+    $$ \tau_{rz} = \tau_{zr} = \mu \left( \frac{\partial v_r}{\partial z} + \frac{\partial v_z}{\partial r} \right) = \mu \frac{d v_z}{d r} = \mu \left( \frac{\Gamma}{2\mu} r \right) = \frac{\Gamma}{2} r $$
+    <div class="equation-number">(4-45)</div>
+    <div class="clear-float"></div>
+    <p>Le cisaillement est nul sur l'axe et maximal (en valeur absolue) à la paroi $r=R$ : $|\tau_{w}| = |\Gamma R / 2|$.</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 9 : Profils vitesse et cisaillement Poiseuille</div>
+        <p class="caption">Figure 9 : Profils de la vitesse (parabolique) et du cisaillement (linéaire) en écoulement de Poiseuille cylindrique.</p>
+    </div>
+
+    <h4>4.5.3.2 La vitesse moyenne - le débit</h4>
+
+    <p>A partir de l'expression (4-44) du champ de vitesse, on déduit les expressions suivantes du débit volumique $Q$ et de la vitesse moyenne $V$ sur la section :</p>
+    <p>Débit $Q = \int_S v_z dA = \int_0^R v_z(r) (2\pi r dr)$</p>
+    $$ Q = \int_0^R \left[ - \frac{\Gamma R^2}{4\mu} \left( 1 - \frac{r^2}{R^2} \right) \right] (2\pi r dr) = - \frac{\pi \Gamma R^2}{2\mu} \int_0^R \left( r - \frac{r^3}{R^2} \right) dr $$
+    $$ Q = - \frac{\pi \Gamma R^2}{2\mu} \left[ \frac{r^2}{2} - \frac{r^4}{4R^2} \right]_0^R = - \frac{\pi \Gamma R^2}{2\mu} \left( \frac{R^2}{2} - \frac{R^4}{4R^2} \right) = - \frac{\pi \Gamma R^2}{2\mu} \left( \frac{R^2}{4} \right) $$
+    $$ Q = - \frac{\pi \Gamma R^4}{8\mu} $$
+    <div class="equation-number">(4-46)</div>
+    <div class="clear-float"></div>
+    <p>C'est la loi de Hagen-Poiseuille.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">69</div>
+    <hr>
+
+    <p>La vitesse moyenne $V$ est définie par $Q = V \times S = V \times (\pi R^2)$.</p>
+    $$ V = \frac{Q}{\pi R^2} = \frac{-\pi \Gamma R^4 / (8\mu)}{\pi R^2} = - \frac{\Gamma R^2}{8\mu} $$
+    <div class="equation-number">(4-47)</div>
+    <div class="clear-float"></div>
+    <p>On remarque que la vitesse moyenne est la moitié de la vitesse maximale: $V = U_{max} / 2$.</p>
+
+    <p>Le gradient de pression longitudinal $\Gamma = dp/dz$ dans cet écoulement qui exprime la perte de charge (chute de pression par unité de longueur) s'écrit ainsi comme suit en fonction de la vitesse moyenne $V$ :</p>
+    $$ \Gamma = \frac{dp}{dz} = - \frac{8\mu V}{R^2} = - \frac{32\mu V}{D^2} $$
+    <div class="equation-number">(4-48)</div>
+    <div class="clear-float"></div>
+    <p>où $D=2R$ est le diamètre de la conduite.</p>
+
+    <p>Cette situation d'écoulement est un cas de référence pour initier l'étude des écoulements en charge (conduites forcées) largement rencontrés dans les systèmes industriels (réseaux de distribution, transport...).</p>
+
+    <h3>4.5.4 Domaine de validité de la structure de l'écoulement de Poiseuille</h3>
+
+    <p>Nous avons vu que les mécanismes de transport dans un milieu fluide correspondent à deux mécanismes fondamentaux :</p>
+    <ul>
+        <li>La <strong>convection</strong> représentée dans les équations de Navier-Stockes ((4-17) ou (4-19)) par le terme convectif non linéaire $\mathbf{v} \cdot \vec{\nabla} \mathbf{v}$.</li>
+        <li>La <strong>diffusion moléculaire</strong> due à la viscosité représentée par le terme visqueux dans les équations de Navier-Stockes ((4-17) ou (4-19)) et qui peut s'écrire sous la forme de divergence $\mu \Delta \mathbf{v}$ (ou $\nu \Delta \mathbf{v}$).</li>
+    </ul>
+    <p>Ces mécanismes agissent de manières différentes et leur importance relative est représentée par un rapport adimensionnel qui définit le <strong>nombre de Reynolds</strong> (Re). Il s'écrit (en utilisant des échelles caractéristiques de vitesse $V$, de longueur $L$ et de viscosité cinématique $\nu$):</p>
+    $$ \text{Re} = \frac{\text{Effets d'inertie (convection)}}{\text{Effets visqueux (diffusion)}} \sim \frac{|\rho (\mathbf{v} \cdot \vec{\nabla}) \mathbf{v}|}{|\mu \Delta \mathbf{v}|} \sim \frac{\rho V^2 / L}{\mu V / L^2} = \frac{\rho V L}{\mu} = \frac{V L}{\nu} $$
+    <div class="equation-number">(4-49)</div>
+    <div class="clear-float"></div>
+    <p>Dans cette relation $V$ est une échelle de vitesse représentative de l'écoulement (ex: vitesse moyenne), $L$ est une échelle de longueur représentative également de l'écoulement (ex: diamètre $D$ pour une conduite) et $\nu$ est la viscosité cinématique du milieu fluide. Ce nombre adimensionnel met en jeu un rapport entre l'effet d'inertie (qui tend à maintenir le mouvement, représenté par le produit $VL$ ou $\rho V L$) et l'effet visqueux (qui tend à freiner le mouvement par diffusion, représenté par la viscosité $\nu$ ou $\mu$).</p>
+    <ul>
+        <li>Lorsqu'il est très grand par rapport à 1 ($\text{Re} \gg 1$), il montre que le transport est gouverné par la convection (les termes d'inertie dominent). L'écoulement est souvent turbulent.</li>
+        <li>Tandis que les faibles valeurs de ce nombre par rapport à 1 ($\text{Re} \ll 1$) montrent que la diffusion moléculaire domine le transport (les termes visqueux dominent). L'écoulement est laminaire et rampant.</li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">70</div>
+    <hr>
+
+    <p>Une expérience assez originale réalisée par Osborne Reynolds depuis plus qu'un siècle (1883) montre que la structure de l'écoulement de Poiseuille en conduite (profil parabolique, écoulement laminaire) décrite analytiquement dans le paragraphe précédent est maintenue jusqu'à un nombre de Reynolds critique $\text{Re}_{crit}$ autour de 2000-2300 (basé sur le diamètre $D$ et la vitesse moyenne $V$).</p>
+    <p>Cette expérience consiste à l'injection d'un filet de colorant dans une conduite en charge pour différentes vitesses d'écoulement pour visualiser le comportement d'une ligne de courant (qui est aussi une ligne d'émission et une trajectoire en régime permanent). Cette expérience met en évidence un résultat universel : le basculement du régime <strong>laminaire</strong> (filet de colorant rectiligne et stable) vers un nouveau régime appelé <strong>turbulent</strong> caractérisé par une structure chaotique aléatoire (le filet de colorant se mélange rapidement et diffuse dans toute la section) se produit à un nombre de Reynolds critique $\text{Re}_D = VD/\nu \approx 2300$, indépendamment de la viscosité du fluide "$\nu$", de la géométrie de la conduite "$D$" et de la vitesse d'écoulement "$V$". Au-delà de cette valeur, l'écoulement devient turbulent et la solution de Poiseuille n'est plus valable (le profil de vitesse moyen devient plus aplati).</p>
+
+    <h2>4.6 Ecoulement dans un milieu poreux</h2>
+
+    <p>Un milieu poreux peut être défini comme un matériau massif formé d'une phase solide (des grains solides de différentes tailles) distribuée de manière aléatoire dans le volume du matériau et renfermant des cavités vides ou pores. L'ensemble de ces pores constitue un espace interstitiel qui peut être le siège de l'écoulement d'un milieu fluide mono ou multiphasique. Du point de vue pratique, les écoulements dans ces milieux poreux sont très intéressants à comprendre pour modéliser convenablement la dynamique des nappes phréatiques ou les gisements des hydrocarbures (pétrole, gaz).</p>
+
+    <h3>4.6.1 Equation de Laplace pour la pression</h3>
+
+    <p>Compte tenu de l'extrême complexité de la géométrie des milieux poreux, l'écoulement dans ces milieux est à priori très difficile à modéliser. La résolution directe des équations de Navier-Stockes nécessite que l'on connaisse parfaitement la géométrie des surfaces de toutes les particules solides pour introduire les conditions aux limites (adhérence $\mathbf{v}=0$ sur les grains). Ce qui reste quasiment impossible.</p>
+    <p>Néanmoins, comme les pores dans un milieu poreux sont caractérisés par une échelle de longueur $d$ (diamètre moyen des pores) extrêmement faible (de l'ordre des micromètres pour les sables fins ou les grès) et les vitesses d'écoulement $v$ sont quasiment nulles (écoulement très lent), le nombre de Reynolds caractéristique $Re_d = vd/\nu$ de tel écoulement reste très faible par rapport à 1 ($\text{Re}_d \ll 1$), c'est pourquoi un tel écoulement est appelé <strong>rampant</strong> (creeping flow).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">71</div>
+    <hr>
+
+    <p>Les équations (4-16) $\vec{\nabla} \cdot \mathbf{v} = 0$ et (4-17) de Navier-Stockes s'écrivent dans ce cas (écoulement rampant, donc terme convectif $(\mathbf{v}\cdot\nabla)\mathbf{v}$ négligeable devant le terme visqueux $\mu \Delta \mathbf{v}$) sous la forme linéarisée suivante (Equations de Stokes) :</p>
+    $$ \vec{\nabla} \cdot \mathbf{v} = 0 $$
+    <div class="equation-number">(4-50)</div>
+    <div class="clear-float"></div>
+    $$ \mathbf{0} = \rho \mathbf{f} - \vec{\nabla} p + \mu \Delta \mathbf{v} $$
+    <div class="equation-number">(4-51)</div>
+    <div class="clear-float"></div>
+    <p><em>(On a négligé le terme d'inertie $\rho d\mathbf{v}/dt$ devant les termes de pression/viscosité). Si on inclut la gravité $\rho\mathbf{f} = \rho\mathbf{g}$.</em></p>
+    <p>En prenant la divergence de (4-51) et compte tenu de (4-50) ($\vec{\nabla} \cdot \mathbf{v} = 0 \implies \vec{\nabla} \cdot (\mu \Delta \mathbf{v}) = \mu \Delta (\vec{\nabla} \cdot \mathbf{v}) = 0$ si $\mu$ constant), on obtient l'équation de Laplace à laquelle obéit le champ de pression $p$ (si $\rho\mathbf{f}$ est à divergence nulle, ce qui est le cas pour $\rho\mathbf{g}$ si $\rho$ est constant) :</p>
+    $$ \Delta p = \vec{\nabla} \cdot (\rho \mathbf{f}) $$
+    <p>Si $\rho \mathbf{f} = \rho \mathbf{g}$ et $\rho$ constant, $\vec{\nabla} \cdot (\rho \mathbf{g}) = \rho (\vec{\nabla} \cdot \mathbf{g}) = 0$. L'équation devient :</p>
+    $$ \Delta p = 0 $$
+    <div class="equation-number">(4-52)</div>
+    <div class="clear-float"></div>
+    <p>La résolution de cette équation (Laplace pour $p$) compte tenu des conditions aux limites du domaine vérifiées par le champ de la pression permet de déduire ce champ $p(\mathbf{x})$. Le retour à l'équation (4-51) (Stokes) permet ensuite de déduire le champ de la vitesse $\mathbf{v}(\mathbf{x})$. Une telle procédure analytique est rendue possible grâce à la linéarisation du système d'équations de Navier-Stockes en négligeant les termes d'inertie (convectif et instationnaire).</p>
+
+    <h3>4.6.2 Loi de Darcy</h3>
+
+    <p>Outre cette démarche analytique (limitée à des géométries simples), une description assez judicieuse de l'écoulement macroscopique dans un milieu poreux peut être effectuée en assimilant, à l'échelle microscopique, l'écoulement au niveau d'un pore dans un milieu poreux à un écoulement de Poiseuille dans une micro-conduite (de diamètre $d \approx$ taille du pore).</p>
+    <p>D'après le résultat (4-47) ou (4-48) établi précédemment, la vitesse moyenne $V$ d'écoulement au niveau du micro-pore sera proportionnelle au gradient de pression local $\Gamma = dp/dz$. Nous pourrons ainsi déduire une relation qui généralise le résultat (4-47) pour exprimer la vitesse locale (moyennée sur plusieurs pores) $\mathbf{v}$ dans un milieu poreux proportionnellement en fonction du gradient de pression local $\vec{\nabla} p$, compte tenu de l'orientation aléatoire des micro-pores :</p>
+    $$ \mathbf{v} = - \frac{d^2}{C \mu} \vec{\nabla} p = - \frac{K}{\mu} \vec{\nabla} p $$
+    <div class="equation-number">(4-53)</div>
+    <div class="clear-float"></div>
+    <p>Où $d$ est une échelle de longueur caractéristique du diamètre des pores, $\mu$ la viscosité, et $K \approx d^2/C$ est la perméabilité intrinsèque du milieu (avec $C$ une constante dépendant de la géométrie, e.g. $C=32$ pour un tube circulaire).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">72</div>
+    <hr>
+
+    <p>Si nous regardons à une échelle de longueur $L$ beaucoup plus grande que le diamètre du pore $d$ ($L \gg d$). Pour cela nous considérons un volume $\mathcal{V} \approx L^3$ pour contenir un nombre de pores suffisamment grand pour que la moyenne à travers ce volume fasse disparaître les fluctuations dues à la variabilité des pores. La prise de moyenne (spatiale sur $\mathcal{V}$) de l'équation (4-53) à travers ce volume permet de définir une vitesse d'écoulement macroscopique (vitesse de filtration ou vitesse de Darcy) $\langle \mathbf{v} \rangle$ dans le milieu poreux qui s'exprime en fonction du gradient de pression macroscopique $\vec{\nabla} \langle p \rangle$ comme suit (Loi de Darcy, 1856) :</p>
+    $$ \langle \mathbf{v} \rangle = - \frac{K}{\mu} \vec{\nabla} \langle p \rangle $$
+    <div class="equation-number">(4-54)</div>
+    <div class="clear-float"></div>
+    <p>Où $\langle \cdot \rangle$ dénote l'opérateur de moyenne volumique.</p>
+    <p>$K$ est un paramètre caractéristique du milieu poreux homogène, ayant la dimension d'une surface (longueur au carré). Il est appelé la <strong>perméabilité</strong> (intrinsèque) du milieu. Comme il prend des valeurs généralement très faibles, il est exprimé en <strong>Darcy</strong> (ou mD) sachant que :</p>
+    $$ 1 \text{ Darcy} \approx 1 \text{ } (\mu\text{m})^2 = 10^{-12} \text{ m}^2 $$
+    <div class="equation-number">(4-55)</div>
+    <div class="clear-float"></div>
+    <p>On donne dans le tableau suivant des valeurs mesurées de perméabilité pour quelques milieux poreux.</p>
+
+    <p class="centered"><strong>Tableau 3 : mesures de la perméabilité pour quelques milieux poreux</strong></p>
+    <table>
+        <thead>
+            <tr><th>Milieu poreux</th><th>Perméabilité (en Darcy)</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Sable</td><td>2 à 120</td></tr>
+            <tr><td>Grès</td><td>$5 \times 10^{-4}$ à 3</td></tr>
+            <tr><td>Calcaire</td><td>$2 \times 10^{-3}$ à $5 \times 10^{-2}$</td></tr>
+            <tr><td>Sols</td><td>0.3 à 10</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">73</div>
+    <hr>
+
+    <!-- End of Chapter 4 -->
+
+    <h1>Chapitre 5 : Théorèmes généraux de la mécanique des fluides</h1>
+
+    <div class="toc">
+        <ul>
+            <li class="section">5.1 Introduction</li>
+            <li class="section">5.2 Conservation de quantité de mouvement : Théorème d'Euler</li>
+            <ul>
+                <li class="subsection">5.2.1 Forme générale</li>
+                <li class="subsection">5.2.2 Forme particulière</li>
+            </ul>
+            <li class="section">5.3 Conservation de l'énergie : Théorème de Bernoulli</li>
+            <ul>
+                <li class="subsection">5.3.1 Forme générale : cas d'un fluide réel</li>
+                <li class="subsection">5.3.2 Premier théorème de Bernoulli : cas de l'écoulement permanent d'un fluide parfait incompressible</li>
+                <li class="subsection">5.3.3 Deuxième théorème de Bernoulli : cas de l'écoulement irrotationnel d'un fluide parfait barotrope</li>
+            </ul>
+            <li class="section">5.4 Dynamique des tourbillons dans un écoulement de fluide parfait</li>
+            <ul>
+                <li class="subsection">5.4.1 Lignes de tourbillon - filet de tourbillon</li>
+                <li class="subsection">5.4.2 Equation de tourbillon pour un fluide parfait incompressible</li>
+                <li class="subsection">5.4.3 Théorème de Lagrange pour l'écoulement d'un fluide parfait</li>
+            </ul>
+        </ul>
+    </div>
+
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">74</div>
+    <hr>
+
+</body>
+</html>
