@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 2: Cinématique des fluides</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 2em; padding: 1em; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; color: #333; }
+        h1 { border-bottom: 2px solid #666; padding-bottom: 0.3em; font-size: 2em; text-align: center;}
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; font-size: 1.7em; }
+        h3 { font-size: 1.4em; margin-top: 1.5em; }
+        h4 { font-size: 1.2em; margin-top: 1.2em; }
+        .figure { text-align: center; margin: 2em 0; border: 1px solid #eee; padding: 1em; }
+        .placeholder { border: 1px dashed grey; padding: 3em 2em; display: inline-block; min-width: 300px; min-height: 150px; background-color: #f0f0f0; color: #777; box-sizing: border-box; }
+        .caption { font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.9em; }
+        table { border-collapse: collapse; margin: 1.5em auto; width: 95%; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; vertical-align: top; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .katex-display > .katex { text-align: center !important; } /* Center display math */
+        .katex-display { display: block; margin-top: 1em; margin-bottom: 1em; }
+        .equation-number { float: right; color: #888; }
+        .page-number { text-align: right; margin-top: 1em; color: #888; font-size: 0.9em; font-style: italic; }
+        .footer-note { font-size: 0.8em; color: #666; border-top: 1px solid #ccc; margin-top: 2em; padding-top: 0.5em; }
+        .centered { text-align: center; }
+        /* Style for bold vectors/tensors as per PDF convention */
+        .katex .mathbf { font-weight: bold; } /* Ensure KaTeX bold works */
+    </style>
+</head>
+<body>
+
+    <div class="page-number">Chapitre 2 : Cinématique des fluides</div>
+    <h1>Chapitre 2: Cinématique des fluides</h1>
+
+    <h3>2.1 Introduction</h3>
+    <h3>2.2 Description de l'écoulement d'un fluide</h3>
+        <h4>2.2.1 Description lagrangienne</h4>
+        <h4>2.2.2 Description eulérienne</h4>
+        <h4>2.2.3 Correspondance entre descriptions lagrangienne et eulérienne</h4>
+    <h3>2.3 Dérivée particulaire</h3>
+        <h4>2.3.1 Dérivée particulaire lagrangienne</h4>
+        <h4>2.3.2 Dérivée particulaire eulérienne</h4>
+    <h3>2.4 Conservation de la masse</h3>
+        <h4>2.4.1 Principe de conservation de la masse</h4>
+        <h4>2.4.2 Forme intégrale de conservation de la masse en description eulérienne</h4>
+        <h4>2.4.3 Forme locale de conservation de la masse en description eulérienne : Equation de continuité</h4>
+    <h3>2.5 Etude graphique de cas d'écoulements</h3>
+        <h4>2.5.1 Lignes d'émission – Lignes de courant – Tubes de courant</h4>
+        <h4>2.5.2 Visualisation expérimentale</h4>
+        <h4>2.5.3 Fonction courant en écoulement incompressible bidimensionnel</h4>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">15</div>
+    <hr>
+
+    <h2>2.1 Introduction</h2>
+
+    <p>La cinématique des fluides a pour objet la description de l'évolution d'un milieu fluide dans l'espace-temps indépendamment des causes (forces) et des lois (dynamique) qui la régissent. Dans le cadre de la mécanique classique, l'espace et le temps sont considérés comme indépendants : le temps $t$ est paramétré sur l'axe des réels et l'espace est assimilé à un espace affine associé à un espace vectoriel euclidien de dimension 3. La cinématique d'un corps matériel n'a de sens que dans le cadre de la définition d'un référentiel. On appelle « référentiel $\mathcal{R}$ » la donnée de 4 points de l'espace non coplanaires formant un trièdre rigide et d'une chronologie (mesure du temps).</p>
+
+    <p>Une difficulté caractéristique surgit dès qu'on aborde l'étude de la cinématique d'un milieu fluide (ou d'un milieu continu en général) qui consiste à la description même du mouvement du fluide. En effet, pour décrire le mouvement d'un point matériel ou même d'un solide, on suit d'une manière systématique le système dans sa trajectoire et donc on adopte, du point de vue de la mécanique des milieux continus, naturellement une description « lagrangienne » du mouvement. Dans le cas d'un milieu continu, la description lagrangienne reste encore suffisante notamment lorsque le milieu continu est soumit à une petite déformation. Cependant, comme nous l'avons vu au chapitre précédent, les milieux fluides sont considérés comme des milieux continus susceptibles de subir des fortes déformations au cours desquelles la configuration initiale du système est quasiment oubliée. Par conséquent, une description Lagrangienne s'avère dans le cas général peu adaptée aux applications pratiques dans le cas des milieux fluides. On recourt dans la plupart des cas à un autre type de description du mouvement : « La description eulérienne ».</p>
+
+    <p>Dans le second paragraphe nous nous proposons de revenir sur les différentes méthodes de description du mouvement d'un milieu fluide. Au troisième paragraphe nous introduisons la notion de dérivée particulaire ou matérielle. Nous établissons les équations traduisant le principe de conservation de la masse au quatrième paragraphe. Au dernier paragraphe nous décrivons l'étude graphique des écoulements.</p>
+
+    <h2>2.2 Description de l'écoulement d'un fluide</h2>
+
+    <p>Un milieu fluide, considéré comme un milieu continu, peut être représenté comme une association d'un très grand nombre de particules fluides (paragraphe 1.4.1) constituant d'un point de vue mathématique un ensemble $\mathcal{M}$. Cet ensemble susceptible d'évoluer au cours du temps, existe indépendamment du domaine $\Omega$ de l'espace qu'il occupe à un instant donné de son évolution. On peut reproduire (dans un référentiel $\mathcal{R}$) le mouvement de ce milieu fluide en décrivant le mouvement de chacune des particules. On reconstitue ainsi au cours du temps les configurations instantanées successives $\Omega_t$ de ce fluide dans l'espace sachant le mouvement de chacune des particules. On note par configuration instantanée le domaine de l'espace occupé par l'ensemble $\mathcal{M}$ des particules à l'instant $t$.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">16</div>
+    <hr>
+
+    <p>D'un point de vue mathématique, la description cinématique de l'écoulement d'un milieu fluide entre deux instants $t_1$ et $t_2$ peut se restreindre à l'étude de l'opérateur de transformation $\Phi_{t_2, t_1}$ qui fait passer de la configuration $\Omega_{t_1}$ à la configuration $\Omega_{t_2}$ :</p>
+    $$ \Phi_{t_2, t_1} : \Omega_{t_1} \to \Omega_{t_2} $$
+    $$ \mathbf{X} \mapsto \mathbf{x} = \Phi_{t_2, t_1}(\mathbf{X}) $$
+    <div class="equation-number">(2-1)</div>
+    <p>$\mathbf{X}$ et $\mathbf{x}$ étant les deux vecteurs position d'une même particule fluide de $\mathcal{M}$ respectivement aux instants $t_1$ et $t_2$ comme le montre la figure suivante :</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 1: Transformation entre deux configurations</div>
+        <p class="caption">Figure 1 : Transformation entre deux configurations $\Omega_{t_1}$ et $\Omega_{t_2}$. Une particule en position $\mathbf{X}$ à $t_1$ se trouve en position $\mathbf{x}$ à $t_2$.</p>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">17</div>
+    <hr>
+
+    <p>La fonction (ou application) $\Phi_{t_2, t_1}$ est évidemment bijective (chaque particule a une seule position à chaque instant, et chaque position est occupée par une seule particule à un instant donné, sauf cas pathologiques non considérés ici). Elle vérifie les propriétés suivantes :</p>
+    <ul>
+        <li>Composition : $\Phi_{t_3, t_1} = \Phi_{t_3, t_2} \circ \Phi_{t_2, t_1}$ <span class="equation-number">(2-2)</span></li>
+        <li>Identité : $\Phi_{t, t} = \text{Id}$ <span class="equation-number">(2-3)</span></li>
+        <li>Inverse : $\Phi_{t_1, t_2} = [\Phi_{t_2, t_1}]^{-1}$ <span class="equation-number">(2-4)</span></li>
+    </ul>
+    <p>L'hypothèse de continuité du milieu implique la continuité de cette transformation $\Phi$. Elle est également supposée de classe $C^2$ (deux fois continûment différentiable) sur son domaine de définition ($\Omega_{t_1}$).</p>
+
+    <h3>2.2.1 Description lagrangienne</h3>
+
+    <p>Si on choisit la configuration du milieu fluide $\Omega_0$ à l'instant $t = 0$ comme une configuration de référence, sa configuration $\Omega_t$ à l'instant $t$ peut être déduite à l'aide de l'opérateur de transformation $\Phi_{t, 0}$. La position géométrique $\mathbf{x}$ à l'instant $t$ de la particule P, identifiée dans la configuration $\Omega_0$ par sa position initiale $\mathbf{X}$ (appelée coordonnée matérielle ou lagrangienne), est donnée par la relation suivante :</p>
+    $$ \mathbf{x} = \Phi_{t, 0}(\mathbf{X}) $$
+    <div class="equation-number">(2-5)</div>
+    <p>On définit ainsi la fonction $\mathbf{x} = \mathbf{\Phi}(\mathbf{X}, t)$ par l'expression :</p>
+    $$ \mathbf{x} = \mathbf{\Phi}(\mathbf{X}, t) $$
+    <div class="equation-number">(2-6)</div>
+    <p>qui permet de déterminer la position actuelle $\mathbf{x}$ à l'instant $t$ connaissant la position initiale $\mathbf{X}$ et le temps $t$. La relation (2-6) ci-dessus représente l'équation horaire de la trajectoire de la particule P initialement en $\mathbf{X}$.</p>
+    <p>La <strong>description lagrangienne</strong> du mouvement du fluide consiste à décrire les grandeurs physiques caractéristiques du milieu (vitesse, pression, température, etc.) à l'instant $t$ dans la configuration $\Omega_t$ comme des fonctions de la variable matérielle $\mathbf{X}$ (qui identifie la particule) et du temps $t$. Les trois composantes $X_i$ (pour $i=1, 2, 3$) ainsi que le temps $t$ sont appelés « les <strong>variables de Lagrange</strong> ». En d'autres termes, dans la description lagrangienne on identifie les particules fluides (par leur position initiale $\mathbf{X}$) et on les suit dans leurs mouvements. Toute grandeur physique $\psi$ associée à une particule est exprimée en fonction des variables de Lagrange $\psi = \psi(\mathbf{X}, t)$.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">18</div>
+    <hr>
+
+    <p>Comme les variables $\mathbf{X}$ sont indépendantes du temps (elles ne font qu'identifier la particule), la dérivée temporelle d'une grandeur $\psi(\mathbf{X}, t)$ en suivant la particule (appelée dérivée matérielle ou particulaire) s'identifie à sa dérivée partielle par rapport au temps $t$ à $\mathbf{X}$ constant :</p>
+    $$ \frac{d\psi}{dt} = \frac{\partial \psi}{\partial t} \bigg|_{\mathbf{X}} $$
+    <div class="equation-number">(2-7)</div>
+    <p>En particulier, la vitesse $\mathbf{u}$ et l'accélération $\mathbf{a}$ de la particule $\mathbf{X}$ sont données par les relations suivantes :</p>
+    $$ \mathbf{u}(\mathbf{X}, t) = \frac{d\mathbf{x}}{dt} = \frac{\partial \mathbf{\Phi}(\mathbf{X}, t)}{\partial t} \bigg|_{\mathbf{X}} $$
+    $$ \mathbf{a}(\mathbf{X}, t) = \frac{d^2\mathbf{x}}{dt^2} = \frac{\partial^2 \mathbf{\Phi}(\mathbf{X}, t)}{\partial t^2} \bigg|_{\mathbf{X}} $$
+    <div class="equation-number">(2-8)</div>
+
+    <p>D'un point de vue pratique, la mise en œuvre de la méthode lagrangienne est mieux adaptée à l'étude de la cinétique des solides ou des milieux continus peu déformables, tandis que pour la description de l'écoulement d'un fluide elle n'est pas aussi évidente (car la configuration initiale $\Omega_0$ est vite "oubliée" lors des grandes déformations). Toutefois, il existe des cas d'applications pratiques où on a recours à cette méthode, telle que l'étude d'une dispersion d'inclusions (traceurs, polluants) dans un fluide.</p>
+
+    <h3>2.2.2 Description eulérienne</h3>
+
+    <p>A la différence de la description lagrangienne où on identifie et suit les particules, la <strong>description eulérienne</strong> consiste à fixer un point d'observation $\mathbf{x}$ dans l'espace (coordonnée spatiale ou eulérienne) et à enregistrer au cours du temps les propriétés (vitesse $\mathbf{u}(\mathbf{x}, t)$, pression $p(\mathbf{x}, t)$, etc.) des différentes particules fluides qui défilent successivement en ce point $\mathbf{x}$. C'est le résultat obtenu par une sonde (thermomètre, anémomètre, manomètre...) fixe placée en un point donné qui enregistre la grandeur locale et instantanée de l'écoulement en ce point.</p>
+    <p>Ainsi, sur un volume de contrôle $\Omega$ fixe par rapport au repère d'observation et choisi de façon arbitraire, la description eulérienne définit l'écoulement du fluide par la donnée, à chaque instant $t$, du champ de la grandeur physique étudiée (par exemple le champ de vitesse $\mathbf{u}(\mathbf{x}, t)$) en tout point $\mathbf{x}$ de ce domaine $\Omega$. Les coordonnées spatiales $x_i$ ($i=1, 2, 3$) ainsi que le temps $t$ représentent les <strong>variables d'Euler</strong> $(\mathbf{x}, t)$. Toute grandeur physique locale intensive $\psi$ caractéristique de l'écoulement sera définie comme une fonction $\psi(\mathbf{x}, t)$ des variables d'Euler dans l'espace-temps.</p>
+    <p>En particulier, les composantes des champs de vitesse $\mathbf{u}$ et d'accélération $\mathbf{a}$ s'écrivent en fonction des variables d'Euler :</p>
+    $$ u_i(\mathbf{x}, t) \quad \text{et} \quad a_i(\mathbf{x}, t) $$
+    <p><em>Attention : En description eulérienne, $u_i(\mathbf{x}, t)$ est la vitesse de la particule qui se trouve en $\mathbf{x}$ à l'instant $t$. L'accélération $a_i(\mathbf{x}, t)$ est l'accélération de cette même particule à cet instant précis. Ce n'est PAS la dérivée partielle $\partial u_i / \partial t$. Voir section 2.3.2.</em></p>
+    <!-- Note: Removed the equations from the PDF for u_i and a_i as they were misleadingly written as derivatives w.r.t. t -->
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">19</div>
+    <hr>
+
+    <p>Sur le plan purement géométrique, la description eulérienne est plus cohérente avec la description incrémentale de l'évolution du milieu fluide (vue en Section 1.4.2). En effet, à chaque instant $t$, l'évolution infinitésimale à venir ($t \to t+dt$) est définie sur la configuration actuelle $\Omega_t$. En d'autres termes, le mouvement étant défini par la donnée du champ de vitesse actuel $\mathbf{u}(\mathbf{x}, t)$, c'est le gradient de ce champ $\vec{\nabla}\mathbf{u}(\mathbf{x}, t)$ qui définit localement la transformation infinitésimale ($d\mathbf{x} = \mathbf{u} dt$, $d\mathbf{u} = (\vec{\nabla}\mathbf{u})\cdot d\mathbf{x}$). Le tenseur des taux de déformations $\mathbf{D}(\mathbf{x}, t)$ donné par la partie symétrique de ce gradient de vitesse (voir paragraphe 1.4.2), qui est un tenseur eulérien, caractérise la déformation locale élémentaire. Tandis que le tenseur des taux de rotations $\mathbf{R}(\mathbf{x}, t)$ correspondant à la partie antisymétrique de ce gradient, qui est de même un tenseur eulérien, caractérise la rotation locale élémentaire du milieu fluide.</p>
+
+    <p>Sur le plan pratique, l'approche eulérienne est mieux adaptée à l'étude expérimentale de l'écoulement des milieux fluides (mesures par sondes fixes).</p>
+
+    <h3>2.2.3 Correspondance entre descriptions lagrangienne et eulérienne</h3>
+
+    <p>D'un point de vue mathématique, les deux descriptions eulérienne et lagrangienne sont équivalentes. En effet, en partant d'une description eulérienne d'un écoulement donnée par le champ de vitesse $\mathbf{u}(\mathbf{x}, t)$, on peut (en théorie) retrouver la description lagrangienne en intégrant le système différentiel $d\mathbf{x}/dt = \mathbf{u}(\mathbf{x}, t)$ avec la condition initiale $\mathbf{x}(t=0) = \mathbf{X}$, ce qui donne $\mathbf{x} = \mathbf{\Phi}(\mathbf{X}, t)$. On peut ensuite exprimer la vitesse lagrangienne $\mathbf{u}(\mathbf{X}, t)$ via la relation (2-6) :</p>
+    $$ \mathbf{u}(\mathbf{X}, t) = \mathbf{u}(\mathbf{x}, t)|_{\mathbf{x}=\mathbf{\Phi}(\mathbf{X}, t)} = \mathbf{u}[\mathbf{\Phi}(\mathbf{X}, t), t] $$
+    <div class="equation-number">(2-10)</div>
+    <p>Réciproquement, en partant d'une description lagrangienne donnée par la fonction de transformation $\mathbf{\Phi}(\mathbf{X}, t)$ entre l'instant initial ($t=0$, position $\mathbf{X}$) et un instant $t$ donné (position $\mathbf{x}$), cf. (2-6), on peut déduire la position initiale $\mathbf{X}$ correspondant à une position actuelle $\mathbf{x}$ à l'instant $t$ en inversant la transformation :</p>
+    $$ \mathbf{X} = \mathbf{\Phi}^{-1}(\mathbf{x}, t) $$
+    <div class="equation-number">(2-11)</div>
+    <p>On peut ainsi écrire la vitesse eulérienne $\mathbf{u}(\mathbf{x}, t)$ à partir de la vitesse lagrangienne $\mathbf{u}(\mathbf{X}, t) = \partial \mathbf{\Phi}(\mathbf{X}, t) / \partial t$ :</p>
+    $$ \mathbf{u}(\mathbf{x}, t) = \frac{\partial \mathbf{\Phi}(\mathbf{X}, t)}{\partial t} \bigg|_{\mathbf{X}=\mathbf{\Phi}^{-1}(\mathbf{x}, t)} $$
+    <div class="equation-number">(2-12)</div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">20</div>
+    <hr>
+
+    <p>D'un point de vue pratique, on peut apercevoir la différence entre les deux descriptions lagrangienne et eulérienne en assimilant la description lagrangienne à une prise de photo de l'écoulement avec un temps de pose (c'est le temps d'ouverture de l'obturateur en photographie) s'étalant de $0$ à $t$ (visualisation des trajectoires). Tandis que la description eulérienne est assimilée à une prise de photo instantanée et actuelle ($t$) où l'on suppose qu'on connaisse en tout point de cette photo la vitesse $\mathbf{u}(\mathbf{x}, t)$ de l'écoulement (champ de vecteurs instantané).</p>
+
+    <h2>2.3 Dérivée particulaire</h2>
+
+    <p>On distingue entre deux types de grandeurs physiques caractéristiques d'un milieu fluide :</p>
+    <ol>
+        <li>Les <strong>grandeurs intensives locales</strong> : telles que la vitesse $\mathbf{u}$, la pression $p$, la température $T$ ou la concentration $C$ d'un élément chimique. Elles sont définies en chaque point $(\mathbf{x}, t)$.</li>
+        <li>Les <strong>grandeurs extensives intégrales</strong> : qui sont stockées dans des volumes, telles que la masse $M$, l'énergie $E$ ou la quantité de mouvement $\mathbf{P}$. Ces grandeurs peuvent être représentées par des intégrales sur un volume $\tau$ d'une densité volumique $b$ (qui est une grandeur locale intensive) :
+            $$ B = \int_\tau b \, d\tau $$
+            <div class="equation-number">(2-13)</div>
+            (Par exemple, $M = \int \rho d\tau$, $E = \int \rho e d\tau$, $\mathbf{P} = \int \rho \mathbf{u} d\tau$, où $\rho$ est la masse volumique, $e$ est l'énergie interne par unité de masse).
+        </li>
+    </ol>
+    <p>Selon la description de l'écoulement (lagrangienne ou eulérienne), ces grandeurs sont attachées aux particules fluides ou à l'élément matériel concerné (en description lagrangienne), ou définies en tant que des fonctions locales des variables d'Euler $(\mathbf{x}, t)$ ou sous forme d'intégrale sur un volume de contrôle $\Omega$ fixe indépendant de l'écoulement (description eulérienne). Il en résulte que la <strong>dérivée particulaire</strong> (ou dite également <strong>matérielle</strong>), qui représente le taux de variation d'une grandeur en suivant une particule fluide donnée, diffère selon la description.</p>
+
+    <h3>2.3.1 Dérivée particulaire lagrangienne</h3>
+
+    <p>Nous avons déjà vu que la dérivée particulaire (matérielle) $d\psi/dt$ d'une grandeur locale intensive $\psi(\mathbf{X}, t)$ en description lagrangienne est identifiée à la dérivée partielle par rapport au temps à $\mathbf{X}$ fixé (équation (2-7)).</p>
+    <p>Pour une grandeur extensive intégrale $B(t)$ associée à un ensemble fixé de particules (qui occupent le domaine $\Omega_t$ à l'instant $t$, et le domaine $\Omega_0$ à $t=0$), on peut l'écrire comme suit en utilisant la description lagrangienne (intégration sur le domaine initial $\Omega_0$):</p>
+    $$ B(t) = \int_{\Omega_t} b(\mathbf{x}, t) \, d\Omega_t = \int_{\Omega_0} b(\mathbf{\Phi}(\mathbf{X}, t), t) J(\mathbf{X}, t) \, d\Omega_0 $$
+    <p>où $J = \det(\partial \mathbf{x} / \partial \mathbf{X})$ est le Jacobien de la transformation $\mathbf{\Phi}$.
+    Ou plus simplement, si $b$ est une densité par unité de masse et $\rho_0$ la masse volumique initiale:</p>
+    $$ B(t) = \int_{\Omega_0} \rho_0(\mathbf{X}) b(\mathbf{X}, t) \, d\Omega_0 $$
+    <p>La dérivée particulaire de $B$ est alors :</p>
+    $$ \frac{dB}{dt} = \frac{d}{dt} \int_{\Omega_0} \rho_0 b \, d\Omega_0 $$
+    <div class="equation-number">(2-14)</div>
+    <p>Comme l'intégration spatiale (sur $\Omega_0$ fixe) et la dérivation temporelle peuvent être interverties, on peut écrire :</p>
+    $$ \frac{dB}{dt} = \int_{\Omega_0} \frac{d(\rho_0 b)}{dt} \, d\Omega_0 = \int_{\Omega_0} \rho_0 \frac{db}{dt} \, d\Omega_0 $$
+    <p>(Si $\rho_0$ est constant dans le temps, ce qui est le cas car c'est la masse initiale). La dérivée particulaire lagrangienne s'obtient alors dans tous les cas (local ou intégral) par une dérivation partielle par rapport au temps à $\mathbf{X}$ constant. Cette relation est valable quel que soit l'ordre tensoriel de la grandeur $B$ (ou $b$).</p>
+    <!-- Note: PDF Eq 2-14/2-15 seem simplified, possibly assuming b is density per unit volume and volume element transforms. The provided text is slightly ambiguous. Added clarification based on standard definition. -->
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">21</div>
+    <hr>
+
+    <h3>2.3.2 Dérivée particulaire eulérienne</h3>
+
+    <h4>2.3.2.1 Dérivée particulaire d'une grandeur locale intensive</h4>
+
+    <p>D'un point de vue mathématique, nous avons vu qu'une grandeur locale intensive $\psi$ est représentée en description eulérienne par une fonction des quatre variables indépendantes d'Euler $\psi(\mathbf{x}, t) = \psi(x_1, x_2, x_3, t)$. Il en résulte que son différentiel total $d\psi$ s'exprime comme suit :</p>
+    $$ d\psi = \frac{\partial \psi}{\partial t} dt + \sum_{i=1}^3 \frac{\partial \psi}{\partial x_i} dx_i $$
+    <div class="equation-number">(2-16)</div>
+    <p>Soit alors la dérivée particulaire eulérienne de $\psi$, notée $D\psi/Dt$ ou $d\psi/dt$, qui représente le taux de variation de $\psi$ pour une particule fluide donnée lorsqu'elle se déplace. En divisant (2-16) par $dt$ et en notant que $dx_i/dt = u_i$ (la vitesse de la particule), on obtient l'expression de la dérivée particulaire :</p>
+    $$ \frac{d\psi}{dt} = \frac{\partial \psi}{\partial t} + \sum_{i=1}^3 u_i \frac{\partial \psi}{\partial x_i} $$
+    <div class="equation-number">(2-17)</div>
+    <!-- Note: PDF uses dy/dt notation in (2-17) which is confusing, changed to dpsi/dt for consistency -->
+    <p>L'écriture tensorielle (ou intrinsèque) de cette relation est formulée comme suit :</p>
+    $$ \frac{d\psi}{dt} = \frac{\partial \psi}{\partial t} + (\mathbf{u} \cdot \vec{\nabla}) \psi $$
+    <div class="equation-number">(2-19)</div>
+    <!-- Note: PDF Eq 2-18 is just Eq 2-17 rewritten. PDF Eq 2-19 is the tensor form. -->
+    <p>Cette relation est valable quel que soit l'ordre tensoriel de la grandeur $\psi$ (scalaire, vecteur, tenseur).</p>
+
+    <p>La dérivée particulaire eulérienne $d\psi/dt$ d'une grandeur locale intensive $\psi$ comporte deux contributions :</p>
+    <ul>
+        <li>Une première contribution $\frac{\partial \psi}{\partial t}$ : la <strong>dérivée locale</strong> (ou instationnaire). Elle correspond à la variation de $\psi$ au point fixe $\mathbf{x}$ au cours du temps. Elle est la seule cause de variation de $\psi$ pour une particule qui serait immobile en ce point ($\mathbf{u}=0$).</li>
+        <li>Une seconde contribution $(\mathbf{u} \cdot \vec{\nabla}) \psi$ : la <strong>dérivée convective</strong> (ou advective). C'est un terme de variation spatiale de $\psi$ dû au transport (convection) par l'écoulement de vitesse $\mathbf{u}$. Cette contribution est la seule cause de variation de $\psi$ pour une particule si l'écoulement est stationnaire ($\partial \psi / \partial t = 0$).</li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">22</div>
+    <hr>
+
+    <p>Afin de mieux mettre en évidence cette notion, on se propose de raisonner par rapport à l'<strong>accélération</strong> $ \mathbf{a} $ d'une particule fluide. L'accélération est la dérivée particulaire de la vitesse $ \mathbf{u}(\mathbf{x}, t) $. Ce champ d'accélération $ \mathbf{a}(\mathbf{x}, t) $ est donné en description eulérienne par (en appliquant (2-19) à $\psi = \mathbf{u}$) :</p>
+    $$ \mathbf{a} = \frac{d\mathbf{u}}{dt} = \frac{\partial \mathbf{u}}{\partial t} + (\mathbf{u} \cdot \vec{\nabla}) \mathbf{u} $$
+    <div class="equation-number">(2-20)</div>
+    <p>Dans cette expression on a :</p>
+    <ul>
+        <li>La première contribution $\frac{\partial \mathbf{u}}{\partial t}$ représente l'<strong>accélération locale</strong> au point $(\mathbf{x}, t)$ due au caractère instationnaire de l'écoulement. C'est l'accélération subie par un « bloc de fluide » (ou une particule) si le champ de vitesse était uniforme dans l'espace mais variait dans le temps.</li>
+        <li>La seconde contribution $(\mathbf{u} \cdot \vec{\nabla}) \mathbf{u}$ représente l'<strong>accélération convective</strong> (ou spatiale). C'est la variation de vitesse subie par une particule fluide du fait qu'elle se déplace vers des régions où la vitesse est différente, même si l'écoulement est stationnaire ($\partial \mathbf{u}/\partial t = 0$), lorsqu'il est non uniforme ($\vec{\nabla}\mathbf{u} \neq 0$). C'est l'accélération par exemple subie par une particule dans l'écoulement stationnaire d'un fluide dans un convergent (tuyau qui se rétrécit). Une particule fluide allant dans le sens de rétrécissement voit sa vitesse augmenter progressivement, même si $\partial \mathbf{u}/\partial t = 0$.</li>
+    </ul>
+    <p>En développant le second terme (convectif) représentant l'accélération spatiale dans (2-20) en utilisant l'identité vectorielle vue au Chapitre 1 (Eq. A.5), on a :</p>
+    $$ (\mathbf{u} \cdot \vec{\nabla}) \mathbf{u} = \vec{\nabla} \left( \frac{1}{2} u^2 \right) - \mathbf{u} \times (\vec{\nabla} \times \mathbf{u}) = \text{grad}\left(\frac{u^2}{2}\right) + (\text{rot } \mathbf{u}) \times \mathbf{u} $$
+    <div class="equation-number">(2-21)</div>
+    <p>On pourra alors écrire l'accélération de l'écoulement sous la forme suivante :</p>
+    $$ \mathbf{a} = \frac{d\mathbf{u}}{dt} = \frac{\partial \mathbf{u}}{\partial t} + \text{grad}\left(\frac{u^2}{2}\right) + (\text{rot } \mathbf{u}) \times \mathbf{u} $$
+    <div class="equation-number">(2-22)</div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">23</div>
+    <hr>
+
+    <h4>2.3.2.2 Dérivée particulaire d'une grandeur intégrale extensive : le Théorème de transport de Reynolds</h4>
+
+    <p>Soit un volume de contrôle $\Omega$ fixe, choisi arbitrairement dans l'espace, délimité par une surface $\Sigma$. Une grandeur intégrale extensive $B(t)$ calculée sur ce domaine peut être exprimée par la forme intégrale conformément à l'équation (2-13) : $B = \int_\Omega b \, d\Omega$, où $b$ est la densité volumique de $B$.</p>
+    <p>On s'intéresse à la variation temporelle de $B$ pour un <strong>système matériel</strong> (un ensemble fixé de particules fluides) qui coïncide avec le volume de contrôle $\Omega$ à l'instant $t$. Appelons $\Omega_t$ ce volume matériel. Cette configuration subit au cours de la durée élémentaire $dt$ une transformation infinitésimale pour se transférer à la configuration $\Omega_{t+dt}$. La dérivée particulaire $dB/dt$ représente le taux de variation de $B$ pour ce système matériel.</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 2 (renumérotée?): Configurations Voisinnes</div>
+        <p class="caption">Figure 2 (répétée) : Deux configurations voisines $\Omega_t = \Omega$ et $\Omega_{t+dt}$ d'un système matériel coïncidant avec le volume de contrôle $\Omega$ à l'instant $t$. $\Sigma_t = \Sigma$ est la surface frontière.</p>
+    </div>
+
+    <p>La variation élémentaire $dB$ de la grandeur $B$ associée au système matériel au cours d'un temps infinitésimal $dt$ est liée à deux facteurs :</p>
+    <ul>
+        <li>La variation locale de la densité $b$ au sein du volume $\Omega$ (destruction ou création locale de $B$). Cette contribution est représentée en tout point de ce volume par la variation locale $\partial b / \partial t$. Intégrée sur $\Omega$, la variation de $B$ due à ce terme est :
+            $$ dB_1 = \left( \int_\Omega \frac{\partial b}{\partial t} d\Omega \right) dt $$
+            <div class="equation-number">(2-23)</div>
+        </li>
+        <li>L'échange de la grandeur $B$ avec le milieu extérieur à travers la surface $\Sigma$ du volume de contrôle. Cet échange correspond au transport convectif de $B$ par le fluide qui traverse la surface $\Sigma$. Le flux volumique de fluide traversant un élément de surface $d\mathbf{s} = \mathbf{n} ds$ (où $\mathbf{n}$ est la normale sortante) est $(\mathbf{u} \cdot \mathbf{n}) ds$. La quantité de $B$ transportée par ce flux est $b (\mathbf{u} \cdot \mathbf{n}) ds$. Intégrée sur toute la surface $\Sigma$, la variation de $B$ due à ce flux net sortant est :
+            $$ dB_2 = \left( \oint_\Sigma b (\mathbf{u} \cdot \mathbf{n}) ds \right) dt = \left( \oint_\Sigma b \mathbf{u} \cdot d\mathbf{s} \right) dt $$
+            <div class="equation-number">(2-24)</div>
+        </li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">24</div>
+    <hr>
+
+    <p>On en déduit alors la forme générale de la dérivée particulaire de la grandeur intégrale $B$ (associée au système matériel qui occupe $\Omega$ à l'instant $t$) qui s'écrit (Théorème de Transport de Reynolds) :</p>
+    $$ \frac{dB}{dt} = \frac{d}{dt} \int_{\Omega_t} b \, d\Omega_t = \int_\Omega \frac{\partial b}{\partial t} d\Omega + \oint_\Sigma b (\mathbf{u} \cdot \mathbf{n}) ds $$
+    <div class="equation-number">(2-25)</div>
+    <p>Cette relation fondamentale implique que le taux de variation de la grandeur extensive $B$ pour un système matériel ($dB/dt$) est égal à la somme du taux d'accumulation de $B$ à l'intérieur du volume de contrôle fixe $\Omega$ ($\int \partial b / \partial t \, d\Omega$) et du flux net de $B$ sortant à travers la surface $\Sigma$ du volume de contrôle ($\oint b \mathbf{u} \cdot \mathbf{n} \, ds$).</p>
+
+    <h2>2.4 Conservation de la masse</h2>
+
+    <h3>2.4.1 Principe de conservation de la masse</h3>
+
+    <p>Dans le cadre de la physique classique (non relativiste, non nucléaire), le principe de conservation de la masse stipule qu'il n'y a ni destruction ni création de la masse. La masse d'un système fermé (qui n'échange pas de matière avec l'extérieur) est constante.</p>
+    <p><em>On note que dans ce cadre les deux concepts : masse et énergie ne sont pas encore unifiés. C'est la célèbre relation d'Einstein $E = mc^2$ qui les a unifiés dans le cadre de la théorie de la relativité (restreinte ou générale), montrant que la masse peut être convertie en énergie et vice-versa, mais la masse-énergie totale est conservée.</em></p>
+    <p>D'autre part, au niveau d'un milieu fluide (ou continu en général), l'hypothèse de continuité (voir paragraphe 1.4.1) implique que les particules fluides qui forment à l'instant initial un ensemble continu forment encore à tout instant un ensemble continu. Il en résulte que les particules qui se trouvent à l'instant initial à l'intérieur d'une surface matérielle fermée (une surface imaginaire composée toujours des mêmes particules matérielles) continuent à être piégées à l'intérieur de la surface transformée à tout instant. On note par surface matérielle une surface constituée par les mêmes particules matérielles au cours du temps. On déduit alors que la <strong>masse $M$ contenue dans une surface matérielle fermée reste constante</strong> au cours du temps.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">25</div>
+    <hr>
+
+    <h3>2.4.2 Forme intégrale de conservation de la masse en description eulérienne</h3>
+
+    <p>Considérons un volume de contrôle $\Omega$ fixe et arbitraire, délimité par la surface $\Sigma$. La masse globale $M$ contenue dans ce volume de contrôle $\Omega$ à l'instant $t$ est donnée par :</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 3: Volume de contrôle arbitraire</div>
+        <p class="caption">Figure 3 : Volume de contrôle arbitraire $\Omega$ délimité par $\Sigma$.</p>
+    </div>
+
+    <p>Elle peut s'exprimer comme suit :</p>
+    $$ M(t) = \int_\Omega \rho(\mathbf{x}, t) \, d\Omega $$
+    <div class="equation-number">(2-26)</div>
+    <p>Où $\rho(\mathbf{x}, t)$ est la masse volumique (masse par unité de volume) du milieu fluide au point $\mathbf{x}$ à l'instant $t$.</p>
+    <p>Le principe de conservation de la masse appliqué au système matériel qui coïncide avec $\Omega$ à l'instant $t$ se résume par :</p>
+    $$ \frac{dM}{dt} = 0 $$
+    <div class="equation-number">(2-27)</div>
+    <p>D'après le théorème de transport de Reynolds (2-25), appliqué à la grandeur extensive $B=M$ avec la densité volumique $b=\rho$, la forme intégrale eulérienne de conservation de la masse s'écrit alors :</p>
+    $$ \frac{dM}{dt} = \int_\Omega \frac{\partial \rho}{\partial t} d\Omega + \oint_\Sigma \rho (\mathbf{u} \cdot \mathbf{n}) ds = 0 $$
+    <div class="equation-number">(2-28)</div>
+    <p>En description eulérienne, la conservation globale de la masse s'énonce ainsi : Le taux d'accumulation (ou de diminution) de la masse dans le volume de contrôle $\Omega$ ($\int \partial \rho / \partial t \, d\Omega$) est égal à l'opposé du flux net de masse sortant à travers la surface $\Sigma$ qui le délimite ($\oint \rho \mathbf{u} \cdot \mathbf{n} \, ds$). Autrement dit, le taux d'accumulation est égal au flux net de masse entrant.</p>
+    <p>Si le fluide est <strong>incompressible</strong> (masse volumique $\rho$ constante dans l'espace et le temps), alors $\partial \rho / \partial t = 0$, et l'équation (2-28) devient :</p>
+    $$ \rho \oint_\Sigma (\mathbf{u} \cdot \mathbf{n}) ds = 0 \implies \oint_\Sigma \mathbf{u} \cdot \mathbf{n} \, ds = 0 $$
+    <p>Le flux de volume total à travers la surface fermée $\Sigma$ est nul. Dans ce cas, le champ de vitesse $\mathbf{u}$ devient un champ à flux conservatif (solénoïdal).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">26</div>
+    <hr>
+
+    <h3>2.4.3 Forme locale de conservation de la masse en description eulérienne : Equation de continuité</h3>
+
+    <p>En utilisant le théorème de la divergence (appelé également de Green ou d'Ostrogradsky), on peut transformer l'intégrale de surface (flux) qui figure dans (2-28) en une intégrale de volume sur $\Omega$ :</p>
+    $$ \oint_\Sigma \rho (\mathbf{u} \cdot \mathbf{n}) ds = \int_\Omega \vec{\nabla} \cdot (\rho \mathbf{u}) d\Omega $$
+    <p>On obtient alors, après avoir regroupé les deux intégrales de volume :</p>
+    $$ \int_\Omega \left( \frac{\partial \rho}{\partial t} + \vec{\nabla} \cdot (\rho \mathbf{u}) \right) d\Omega = 0 $$
+    <div class="equation-number">(2-29)</div>
+    <p>La relation écrite ci-dessus est valable quel que soit le volume de contrôle $\Omega$ considéré. Elle implique par conséquent que la fonction à l'intérieur de l'intégrale est nulle en tout point $(\mathbf{x}, t)$. On en déduit ainsi la <strong>forme locale de conservation de la masse</strong> (ou <strong>équation de continuité</strong>) qui s'écrit :</p>
+    $$ \frac{\partial \rho}{\partial t} + \vec{\nabla} \cdot (\rho \mathbf{u}) = 0 $$
+    <div class="equation-number">(2-30)</div>
+    <p>Cette équation peut être réécrite en développant le second membre (terme de divergence) :</p>
+    $$ \vec{\nabla} \cdot (\rho \mathbf{u}) = (\vec{\nabla} \rho) \cdot \mathbf{u} + \rho (\vec{\nabla} \cdot \mathbf{u}) $$
+    <p>En substituant dans (2-30) :</p>
+    $$ \frac{\partial \rho}{\partial t} + (\vec{\nabla} \rho) \cdot \mathbf{u} + \rho (\vec{\nabla} \cdot \mathbf{u}) = 0 $$
+    <p>On reconnaît dans les deux premiers termes la dérivée particulaire de la masse volumique $\rho$ (voir éq. 2-19 appliquée à $\psi = \rho$):</p>
+    $$ \frac{d\rho}{dt} = \frac{\partial \rho}{\partial t} + \mathbf{u} \cdot (\vec{\nabla} \rho) $$
+    <p>L'équation de continuité peut donc s'écrire sous la forme équivalente :</p>
+    $$ \frac{d\rho}{dt} + \rho (\vec{\nabla} \cdot \mathbf{u}) = 0 $$
+    <div class="equation-number">(2-31)</div>
+    <p>Elle fait apparaître sous cette forme la dérivée particulaire de la masse volumique $d\rho/dt$ (variation de densité de la particule suivie) et la divergence de la vitesse $\vec{\nabla} \cdot \mathbf{u}$ (qui représente le taux de dilatation volumique, cf. éq. 1-36).</p>
+    <p>Si le fluide est <strong>incompressible</strong>, cela signifie que la masse volumique $\rho$ de chaque particule fluide reste constante au cours de son mouvement, soit $d\rho/dt = 0$. L'équation locale de conservation de la masse (2-31) se réduit alors à :</p>
+    $$ \vec{\nabla} \cdot \mathbf{u} = 0 $$
+    <div class="equation-number">(2-32)</div>
+    <p>Cette équation montre que le champ de vitesse $\mathbf{u}$ est dans ce cas conservatif (à divergence nulle ou solénoïdal). Elle exprime qu'un élément de fluide se déforme lors de l'écoulement en conservant son volume.</p>
+    <p><em>On note à ce niveau qu'un fluide est considéré incompressible lorsque la masse volumique $\rho$ reste constante le long de la trajectoire d'une particule fluide ($d\rho/dt=0$). Cela n'implique pas nécessairement que $\rho$ soit uniforme dans l'espace ($\vec{\nabla}\rho$ peut être non nul). Ce qui permet de considérer des écoulements de fluides hétérogènes (ex : écoulements stratifiés, avec des couches de densités différentes) comme étant des écoulements de fluides incompressibles, tant que chaque particule conserve sa propre densité. Si, de plus, $\rho$ est uniforme spatialement ($\vec{\nabla}\rho=0$), alors $\partial \rho / \partial t = 0$ et $\rho$ est une constante partout et tout le temps.</em></p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">27</div>
+    <hr>
+
+    <h2>2.5 Etude graphique de cas d'écoulements</h2>
+
+    <p>L'étude graphique d'un écoulement se fait en traçant à l'instant $t$ une carte de l'écoulement (champ de vecteurs vitesse). Cette carte est souvent représentée à l'aide de courbes caractéristiques, outre que les trajectoires des particules fluides. Ces lignes sont : les <strong>lignes de courant</strong> et les <strong>lignes d'émission</strong> (aussi appelées lignes de fumée ou filet coloré). Ces deux familles de courbes peuvent être visualisées et retracées dans certains cas d'écoulements et peuvent mener, rien qu'avec des considérations cinématiques, à établir des propriétés caractéristiques des écoulements étudiés.</p>
+
+    <h3>2.5.1 Lignes d'émission – Lignes de courant – Tubes de courant</h3>
+
+    <ul>
+        <li>Une <strong>ligne d'émission</strong> (ou ligne de trace, streakline) est une courbe qui relie, à un instant donné $t$, l'ensemble des particules fluides qui sont passées (à des instants $t' \le t$) par un point fixe donné $P_0$ (appelé le point d'émission). C'est ce qu'on visualise en injectant un colorant en continu au point $P_0$.</li>
+        <li>Une <strong>ligne de courant</strong> (streamline) correspond à une ligne du champ de vitesse $\mathbf{u}(\mathbf{x}, t)$ à un instant $t$ donné. C'est une ligne qui est tangente en tout point au vecteur vitesse $\mathbf{u}$ à cet instant $t$. C'est une "photographie" instantanée de la direction de l'écoulement.</li>
+    </ul>
+    <p>La figure suivante montre une ligne de courant :</p>
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 4: Ligne de courant</div>
+        <p class="caption">Figure 4 : Ligne de courant. Le vecteur vitesse $\mathbf{u}$ est tangent à la ligne en chaque point M à l'instant $t$.</p>
+    </div>
+    <p>D'un point de vue mathématique, si on considère un déplacement élémentaire $d\mathbf{l} = dl \, \mathbf{e}_t$ (où $\mathbf{e}_t$ est le vecteur tangent) le long d'une ligne de courant à l'instant $t$, elle sera définie par la condition de colinéarité entre $\mathbf{u}$ et $d\mathbf{l}$ :</p>
+    $$ \mathbf{u} \wedge d\mathbf{l} = \mathbf{0} $$
+    <div class="equation-number">(2-33)</div>
+    <p>Ce qui implique dans le système des coordonnées cartésiennes la relation suivante entre les composantes de $\mathbf{u}=(u_1, u_2, u_3)$ et $d\mathbf{l}=(dx_1, dx_2, dx_3)$ :</p>
+    $$ \frac{dx_1}{u_1} = \frac{dx_2}{u_2} = \frac{dx_3}{u_3} \quad (\text{à } t \text{ fixé}) $$
+    <div class="equation-number">(2-34)</div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">28</div>
+    <hr>
+
+    <ul>
+        <li>Un <strong>tube de courant</strong> est une surface composée de lignes de courant et qui s'appuie sur un contour fermé $C$ donné à un instant $t$.</li>
+    </ul>
+     <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 5: Tube de courant</div>
+        <p class="caption">Figure 5 : Tube de courant. Surface formée par les lignes de courant passant par un contour fermé.</p>
+    </div>
+    <p>Le vecteur vitesse de l'écoulement $\mathbf{u}$ y est tangent en tout point (par définition des lignes de courant). Il en résulte que le fluide ne traverse pas la paroi latérale d'un tube de courant. Par conséquent, pour un écoulement incompressible, le débit volumique qui traverse une section droite d'un tube de courant reste constant le long du tube.</p>
+    <p><strong>Relation avec les trajectoires :</strong>
+    En revenant sur la famille des trajectoires (description lagrangienne), chaque particule fluide que l'on suit dans son mouvement décrit une trajectoire qu'on détermine en résolvant l'équation différentielle (voir éq. 2-8) :</p>
+    $$ \frac{d\mathbf{x}}{dt} = \mathbf{u}(\mathbf{x}, t) $$
+    <p>En composantes cartésiennes, cela s'écrit :</p>
+    $$ dt = \frac{dx_1}{u_1(\mathbf{x}, t)} = \frac{dx_2}{u_2(\mathbf{x}, t)} = \frac{dx_3}{u_3(\mathbf{x}, t)} $$
+    <div class="equation-number">(2-35)</div>
+
+    <p>On note d'après la comparaison des relations (2-34) (lignes de courant) et (2-35) (trajectoires) que :</p>
+    <ul>
+        <li>En régime <strong>stationnaire</strong> ($\mathbf{u}$ ne dépend pas explicitement de $t$, $\mathbf{u}=\mathbf{u}(\mathbf{x})$), les trajectoires des particules fluides, les lignes de courant et les lignes d'émission (issues d'un point fixe) sont <strong>confondues</strong>. Elles constituent un réseau de courbes fixe constant au cours du temps.</li>
+        <li>Cependant, en régime <strong>instationnaire</strong> ($\mathbf{u}=\mathbf{u}(\mathbf{x}, t)$), les lignes de courant (qui dépendent de $t$) et les lignes d'émission évoluent au cours du temps et ne coïncident pas entre elles ni avec les trajectoires des particules (qui dépendent de l'historique du mouvement).</li>
+    </ul>
+
+    <h3>2.5.2 Visualisation expérimentale</h3>
+
+    <p>Une <strong>ligne d'émission</strong> relative à un point peut être visualisée en injectant de façon continue un colorant (ou de la fumée dans l'air) en ce point. Le filet de colorant qui évoluera dans l'écoulement est matérialisé par l'ensemble des particules fluides qui sont passées (à des instants antérieurs) par le point d'injection. Si l'écoulement est permanent (stationnaire), la ligne observée caractérise également une trajectoire des particules et une ligne de courant qui sont confondues.</p>
+    <p>Une visualisation des <strong>trajectoires</strong> des particules fluides peut être réalisée en introduisant dans le fluide des particules réfléchissantes (traceurs) et en prenant une photographie de l'écoulement avec un temps de pose assez long. Chaque traceur laisse une trace lumineuse qui représente sa trajectoire pendant le temps de pose.</p>
+    <p>Une <strong>ligne de courant</strong> (ou plutôt une carte instantanée du champ de vitesse) peut être visualisée après traitement de deux images successives du domaine d'observation de l'écoulement, prises avec un temps de pose très court $\Delta t$. Ensemencement préalable avec des particules traceuses est nécessaire. Le traitement (par exemple par Particle Image Velocimetry - PIV) consiste à mesurer le petit déplacement $\Delta \mathbf{x}$ de chaque particule (ou groupe de particules) pendant $\Delta t$. Le rapport $\Delta \mathbf{x} / \Delta t$ donne le vecteur vitesse $\mathbf{u}(\mathbf{x}, t)$ en chaque point $\mathbf{x}$. Ces informations permettent de reconstituer les lignes de courant (tangentes au champ $\mathbf{u}$) à l'instant $t$ dans le domaine d'observation.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">29</div>
+    <hr>
+
+    <p>La figure suivante montre l'écoulement instationnaire derrière un cylindre visualisé par des lignes d'émission et des lignes de courant.</p>
+    <ul>
+        <li>La première image (en haut) montre les lignes d'émission matérialisées par l'injection d'un colorant fluorescent sur le cylindre (source linéaire).</li>
+        <li>La seconde image (en bas) montre les lignes d'émission extraites (les filets colorés) et les lignes de courant reconstruites (lignes fines) à un instant donné, suite au passage de particules réfléchissantes et traitement PIV*.</li>
+    </ul>
+    <p>On voit bien sur ces images que les lignes d'émission et de courant ne sont pas confondues à cause de l'instationnarité de l'écoulement (formation et détachement de tourbillons, allée de Von Karman).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">30</div>
+    <hr>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 6: Ecoulement instationnaire derrière un cylindre</div>
+        <p class="caption">Figure 6 : Ecoulement instationnaire derrière un cylindre*. Haut: Lignes d'émission (filet coloré). Bas: Lignes d'émission (extraites) et lignes de courant (fines, reconstruites) au même instant.</p>
+        <p class="caption footnote">(*) Hydrodynamique Physique, Marc Fermigier, ESPCI – ParisTech, Laboratoire d'Hydrodynamique et de Mécanique Physique</p>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">31</div>
+    <hr>
+
+    <h3>2.5.3 Fonction courant en écoulement incompressible bidimensionnel</h3>
+
+    <p>Nous avons vu que le champ de vitesse $\mathbf{u}$ de l'écoulement d'un fluide incompressible est à flux conservatif (équation (2-32): $\vec{\nabla} \cdot \mathbf{u} = 0$). D'un point de vue mathématique (théorème de Poincaré pour les champs à divergence nulle), on peut définir pour un tel champ un <strong>potentiel vecteur</strong> $\mathbf{A}$ tel que l'on ait :</p>
+    $$ \mathbf{u} = \vec{\nabla} \wedge \mathbf{A} $$
+    <div class="equation-number">(2-36)</div>
+    <p>(Car $\text{div}(\text{rot } \mathbf{A}) = \vec{\nabla} \cdot (\vec{\nabla} \wedge \mathbf{A}) = 0$ automatiquement).</p>
+    <p>Cette relation s'écrit à l'aide du pseudo-tenseur d'orientation $\theta_{ijk}$ (ou tenseur de Levi-Civita $\epsilon_{ijk}$) sous sa forme indicielle suivante :</p>
+    $$ u_i = \theta_{ijk} \frac{\partial A_k}{\partial x_j} $$
+    <div class="equation-number">(2-37)</div>
+    <p>où $\mathbf{A}=(A_1, A_2, A_3)$ est le potentiel vectoriel.</p>
+    <p>Si l'écoulement est <strong>bidimensionnel</strong> évoluant dans le plan $(x_1, x_2)$, ceci implique les deux relations suivantes :</p>
+    $$ \frac{\partial}{\partial x_3} = 0 \quad ; \quad u_3 = 0 $$
+    <div class="equation-number">(2-38)</div>
+    <p>D'où, l'équation (2-37) pour $i=1, 2, 3$ se réduit à :</p>
+    <ul>
+        <li>$i=1$: $u_1 = \theta_{123} \frac{\partial A_3}{\partial x_2} + \theta_{132} \frac{\partial A_2}{\partial x_3} = \frac{\partial A_3}{\partial x_2}$ (car $\theta_{123}=1, \theta_{132}=-1$ et $\partial/\partial x_3=0$)</li>
+        <li>$i=2$: $u_2 = \theta_{231} \frac{\partial A_1}{\partial x_3} + \theta_{213} \frac{\partial A_3}{\partial x_1} = -\frac{\partial A_3}{\partial x_1}$ (car $\theta_{231}=1, \theta_{213}=-1$)</li>
+        <li>$i=3$: $u_3 = \theta_{312} \frac{\partial A_2}{\partial x_1} + \theta_{321} \frac{\partial A_1}{\partial x_2} = \frac{\partial A_2}{\partial x_1} - \frac{\partial A_1}{\partial x_2} = 0$. (Cette dernière condition n'impose pas $A_1=A_2=0$, mais est compatible avec $\mathbf{u}$ dans le plan $x_1, x_2$).</li>
+    </ul>
+    <p>Les composantes $u_1$ et $u_2$ ne dépendent que de $A_3$. On définit ainsi un potentiel scalaire $\Psi = \Psi(x_1, x_2, t) = A_3$ appelé <strong>fonction courant</strong> permettant de déduire le champ de vitesse bidimensionnel :</p>
+    $$ u_1 = \frac{\partial \Psi}{\partial x_2} \quad ; \quad u_2 = -\frac{\partial \Psi}{\partial x_1} $$
+    <div class="equation-number">(2-40)</div>
+    <p>L'équation de continuité $\vec{\nabla} \cdot \mathbf{u} = 0$ s'écrit dans ce cas :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">32</div>
+    <hr>
+
+    $$ \frac{\partial u_1}{\partial x_1} + \frac{\partial u_2}{\partial x_2} = 0 $$
+    <div class="equation-number">(2-41)</div>
+    <p>D'où on déduit la relation suivante vérifiée par $\Psi$ en substituant (2-40) dans (2-41) :</p>
+    $$ \frac{\partial}{\partial x_1} \left( \frac{\partial \Psi}{\partial x_2} \right) + \frac{\partial}{\partial x_2} \left( -\frac{\partial \Psi}{\partial x_1} \right) = \frac{\partial^2 \Psi}{\partial x_1 \partial x_2} - \frac{\partial^2 \Psi}{\partial x_2 \partial x_1} = 0 $$
+    <div class="equation-number">(2-42)</div>
+    <p>Cette équation est toujours vérifiée si $\Psi$ est suffisamment régulière (dérivées secondes continues, théorème de Schwarz). L'existence de la fonction courant $\Psi$ est donc équivalente à la condition d'incompressibilité $\vec{\nabla} \cdot \mathbf{u} = 0$ pour un écoulement 2D.</p>
+    <p>$\Psi$ est alors une différentielle totale exacte. Son différentiel $d\Psi$ admet une primitive unique (à une constante près) et on a :</p>
+    $$ \int_A^B d\Psi = \Psi_B - \Psi_A $$
+    <div class="equation-number">(2-43)</div>
+    <p>indépendamment du chemin suivi entre les points A et B dans le plan $(x_1, x_2)$.</p>
+    <p>D'autre part, les courbes définies par la relation $\Psi = \text{cte}$ correspondent aux <strong>lignes de courant</strong>. En effet, le long d'une telle courbe, on a $d\Psi = 0$ :</p>
+    $$ d\Psi = \frac{\partial \Psi}{\partial x_1} dx_1 + \frac{\partial \Psi}{\partial x_2} dx_2 = 0 $$
+    $$ (-u_2) dx_1 + (u_1) dx_2 = 0 $$
+    $$ u_1 dx_2 - u_2 dx_1 = 0 \implies \frac{dx_1}{u_1} = \frac{dx_2}{u_2} $$
+    <div class="equation-number">(2-44)</div>
+    <p>Ce qui est la définition d'une ligne de courant (équation (2-34) pour $u_3=dx_3=0$).</p>
+    <p>On a également le <strong>débit volumique</strong> $Q$ (ou par unité de longueur selon la direction $x_3$) du fluide entre deux lignes de courant $\Psi = c_1$ (passant par A) et $\Psi = c_2$ (passant par B) est égal à la différence $\Delta \Psi = c_2 - c_1 = \Psi_B - \Psi_A$.</p>
+    $$ \Delta \Psi = \Psi_B - \Psi_A = c_2 - c_1 = Q_{A \to B} $$
+    <div class="equation-number">(2-45)</div>
+    <p>En effet, ce débit est donné par l'intégrale du flux de vitesse à travers un chemin quelconque M reliant un point de la ligne $\Psi=c_1$ à un point de la ligne $\Psi=c_2$ :</p>
+    $$ Q = \int_M (\mathbf{u} \cdot \mathbf{n}) dl $$
+    <div class="equation-number">(2-46)</div>
+    <p>Où $\mathbf{n}$ est un vecteur unitaire normal au chemin $dl$ comme le montre la figure suivante :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">33</div>
+    <hr>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 7: Ecoulement entre deux lignes de courant</div>
+        <p class="caption">Figure 7 : Ecoulement entre deux lignes de courant $\Psi = c_1$ et $\Psi = c_2$. $\mathbf{u}$ est tangent aux lignes, $\mathbf{n}$ est normal au chemin M.</p>
+    </div>
+
+    <p>Pour un déplacement élémentaire $d\mathbf{l} = dx_1 \mathbf{e}_1 + dx_2 \mathbf{e}_2$ le long du chemin M (de A à B), le vecteur normal unitaire $\mathbf{n}$ dans le plan (tel que $(\mathbf{e}_t, \mathbf{n}, \mathbf{e}_3)$ soit direct, si $\mathbf{e}_t=d\mathbf{l}/dl$) peut être pris comme $\mathbf{n} dl = dx_2 \mathbf{e}_1 - dx_1 \mathbf{e}_2$. Le flux élémentaire est :</p>
+    $$ dQ = (\mathbf{u} \cdot \mathbf{n}) dl = \mathbf{u} \cdot (dx_2 \mathbf{e}_1 - dx_1 \mathbf{e}_2) = u_1 dx_2 - u_2 dx_1 $$
+    <div class="equation-number">(2-47)</div>
+    <p>En utilisant les relations (2-40) :</p>
+    $$ dQ = \left(\frac{\partial \Psi}{\partial x_2}\right) dx_2 - \left(-\frac{\partial \Psi}{\partial x_1}\right) dx_1 = \frac{\partial \Psi}{\partial x_1} dx_1 + \frac{\partial \Psi}{\partial x_2} dx_2 = d\Psi $$
+    <p>Et le débit total est égal à :</p>
+    $$ Q = \int_A^B dQ = \int_A^B d\Psi = \Psi_B - \Psi_A = c_2 - c_1 $$
+    <div class="equation-number">(2-48)</div>
+    <p>La différence de fonction courant entre deux lignes de courant représente donc le débit volumique (par unité de largeur) s'écoulant entre ces deux lignes.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">34</div>
+    <hr>
+
+</body>
+</html>
