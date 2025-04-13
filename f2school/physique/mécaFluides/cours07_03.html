@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 3: Equations de bilans & Chapitre 4: Dynamique des fluides Newtoniens</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 2em; padding: 1em; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; color: #333; }
+        h1 { border-bottom: 2px solid #666; padding-bottom: 0.3em; font-size: 2em; text-align: center;}
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; font-size: 1.7em; }
+        h3 { font-size: 1.4em; margin-top: 1.5em; }
+        h4 { font-size: 1.2em; margin-top: 1.2em; }
+        h5 { font-size: 1.1em; margin-top: 1.1em; }
+        .figure { text-align: center; margin: 2em 0; border: 1px solid #eee; padding: 1em; }
+        .placeholder { border: 1px dashed grey; padding: 3em 2em; display: inline-block; min-width: 300px; min-height: 150px; background-color: #f0f0f0; color: #777; box-sizing: border-box; }
+        .caption { font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.9em; }
+        table { border-collapse: collapse; margin: 1.5em auto; width: 95%; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; vertical-align: top; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .katex-display > .katex { text-align: center !important; } /* Center display math */
+        .katex-display { display: block; margin-top: 1em; margin-bottom: 1em; }
+        .equation-number { float: right; color: #888; margin-left: 1em;}
+        .page-number { text-align: right; margin-top: 1em; color: #888; font-size: 0.9em; font-style: italic; }
+        .footer-note { font-size: 0.8em; color: #666; border-top: 1px solid #ccc; margin-top: 2em; padding-top: 0.5em; }
+        .centered { text-align: center; }
+        /* Style for bold vectors/tensors as per PDF convention */
+        .katex .mathbf { font-weight: bold; } /* Ensure KaTeX bold works */
+        .toc ul { list-style-type: none; padding-left: 0; }
+        .toc li { margin-bottom: 0.5em; }
+        .toc .chapter { font-weight: bold; margin-top: 1em; }
+        .toc .section { padding-left: 1.5em; }
+        .toc .subsection { padding-left: 3em; }
+        .toc .subsubsection { padding-left: 4.5em; }
+        .clear-float { clear: both; }
+    </style>
+</head>
+<body>
+
+    <div class="page-number">Chapitre 3 : Equations de bilans</div>
+    <h1>Chapitre 3: Equations de bilans</h1>
+
+    <div class="toc">
+        <ul>
+            <li class="section">3.1 Introduction</li>
+            <li class="section">3.2 Force à distance – Force de contact – Tenseur des contraintes</li>
+            <ul>
+                <li class="subsection">3.2.1 Force à distance – Force de contact</li>
+                <li class="subsection">3.2.2 Tenseur des contraintes</li>
+            </ul>
+            <li class="section">3.3 Conservation de la quantité de mouvement</li>
+            <ul>
+                <li class="subsection">3.3.1 Enoncé</li>
+                <li class="subsection">3.3.2 Forme globale</li>
+                <li class="subsection">3.3.3 Forme locale</li>
+            </ul>
+            <li class="section">3.4 Conservation du moment cinétique</li>
+            <ul>
+                <li class="subsection">3.4.1 Enoncé</li>
+                <li class="subsection">3.4.2 Forme globale</li>
+                <li class="subsection">3.4.3 Forme locale : symétrie du tenseur des contraintes</li>
+            </ul>
+            <li class="section">3.5 Conservation de l'énergie</li>
+            <ul>
+                <li class="subsection">3.5.1 Energie – Travail des forces – Chaleur</li>
+                <li class="subsection">3.5.2 Premier principe de la thermodynamique : Equations globales et locales de conservation de l'énergie</li>
+                <li class="subsection">3.5.3 Equation de bilan locale de l'énergie cinétique</li>
+                <li class="subsection">3.5.4 Equation de bilan de l'énergie interne</li>
+            </ul>
+        </ul>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">35</div>
+    <hr>
+
+    <h2>3.1 Introduction</h2>
+
+    <p>Dans ce chapitre on s'intéresse à la description du comportement dynamique des fluides en tenant compte des causes régissant ce comportement. Nous avons vu au chapitre 2 comment décrire un milieu fluide dans son mouvement en adoptant une description lagrangienne ou eulérienne. Nous avons vu également que la description eulérienne est la plus adaptée aux applications pratiques.</p>
+
+    <p>On se propose dans ce chapitre de récapituler les équations de conservation vérifiées par un milieu fluide dans son mouvement. Ces équations ne seront autres qu'une reformulation des lois universelles fondamentales de la mécanique classique. Il s'agit essentiellement des lois de conservation de quantité de mouvement, de moment cinétique et de l'énergie qui seront exprimées dans le cadre de la description eulérienne et en termes des variables eulériennes.</p>
+
+    <p>Ces équations font le point sur des bilans globaux des grandeurs physiques extensives caractéristiques du milieu fluide. Ces bilans seront définis comme des intégrales sur un volume de contrôle arbitraire. L'application du théorème de la divergence permet d'en déduire des bilans locaux de ces grandeurs qui constitueront les équations locales régissant le comportement thermodynamique des milieux fluides.</p>
+
+    <p>Dans le paragraphe suivant nous nous proposons de définir la classification adoptée en mécanique des fluides des forces mises en jeu dans les écoulements. Nous introduisons également le tenseur des contraintes caractéristique des forces de contact. Dans les troisième, quatrième et cinquième paragraphes nous établissons les équations de conservation respectivement de la quantité de mouvement, du moment cinétique et de l'énergie avec ses deux contributions : énergie cinétique et énergie interne.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">36</div>
+    <hr>
+
+    <h2>3.2 Force à distance – Force de contact – Tenseur des contraintes</h2>
+
+    <h3>3.2.1 Force à distance – Force de contact</h3>
+
+    <p>Avant d'établir les équations de bilans de quantité de mouvement et d'énergie pour un fluide, il est nécessaire de décrire les différents types de forces qui peuvent agir sur ces milieux.</p>
+
+    <p>Nous connaissons en physique qu'il existe dans la nature quatre types de forces fondamentales : les interactions gravitationnelles – les interactions électromagnétiques – les interactions faibles et les interactions fortes, et que l'un des défis majeurs des physiciens consiste à l'unification de ces quatre forces. Cependant, pour la mécanique des milieux continus, et en raison du spectre des échelles caractéristiques d'observation de la matière considérées, une autre classification des forces agissant sur ces milieux est adoptée. Les forces sont classées selon leur portée en deux catégories.</p>
+
+    <ul>
+        <li>La <strong>force à distance</strong> (ou <strong>force de volume</strong>) : La force de gravité, qui s'exerce sur des distances extrêmement grandes par rapport aux dimensions moléculaires, agit en tout point du milieu continu et, de ce fait, la force de gravité agissant sur un élément de volume est proportionnelle à son volume (via la masse volumique et le champ de gravité). Cette force est dite en mécanique des milieux continus force à distance ou force de volume. D'autres forces de volume peuvent exister (forces électromagnétiques sur un fluide chargé, forces d'inertie dans un référentiel non galiléen).</li>
+        <li>La <strong>force de contact</strong> (ou <strong>force de surface</strong>) : Les interactions intermoléculaires qui assurent la cohésion de la matière, bien qu'elles soient d'origine électromagnétique, ont une portée très courte, à peine plus grande que les dimensions moléculaires. Par conséquent, pour un élément de volume macroscopique, ces interactions ne vont concerner qu'une mince couche externe de matière qui l'enveloppe (son interface avec le reste du milieu). La force globale exercée par ces interactions à courte portée est proportionnelle à l'aire de la surface délimitant cet élément de volume, indépendamment de son volume. Elle est appelée en mécanique des milieux continus force de contact ou force de surface.</li>
+    </ul>
+
+    <p>Les interactions faibles et fortes, qui agissent sur des distances extrêmement faibles par rapport aux dimensions moléculaires (échelle de longueur nucléaire), restent invisibles à l'échelle d'observation de la mécanique des milieux continus et ne sont pas considérées ici.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">37</div>
+    <hr>
+
+    <h3>3.2.2 Tenseur des contraintes</h3>
+
+    <p>On considère en un point M du domaine D le repère orthonormé direct $(M, \mathbf{e}_1, \mathbf{e}_2, \mathbf{e}_3)$. Soit le volume élémentaire (un tétraèdre infinitésimal) du domaine D délimité par un trièdre droit $(M P_1 P_2 P_3)$ de sommet principal M et d'arêtes portées par les axes du repère, comme le montre la figure 5.1 ci-dessous. On note également $\mathbf{n}$ le vecteur normal unitaire extérieur à la surface oblique du tétraèdre (face $P_1 P_2 P_3$).</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 1 : Volume élémentaire triédrique</div>
+        <p class="caption">Figure 1 : Volume élémentaire de forme triédrique (tétraèdre de Cauchy) pour définir les contraintes.</p>
+    </div>
+
+    <p>La force de contact $\mathbf{F}_c$ exercée par le reste du milieu continu sur ce volume élémentaire est proportionnelle à l'aire de sa surface. Si on note $\mathbf{T}(\mathbf{n})$ la densité surfacique de cette force (force par unité d'aire, ou vecteur contrainte) à la surface plane de vecteur normal extérieur $\mathbf{n}$, la résultante des forces de contact $\mathbf{F}_c$ agissant sur les quatre faces du tétraèdre sera donnée par la relation suivante :</p>
+    $$ \mathbf{F}_c = \mathbf{T}(\mathbf{n})\delta A + \mathbf{T}(-\mathbf{e}_1) \delta A_1 + \mathbf{T}(-\mathbf{e}_2) \delta A_2 + \mathbf{T}(-\mathbf{e}_3) \delta A_3 $$
+    <p>où $\delta A$ est l'aire de la face oblique $P_1P_2P_3$ et $\delta A_i$ sont les aires des faces du trièdre situées dans les plans de coordonnées (normales à $\mathbf{e}_i$). Les signes « - » qui apparaissent devant les vecteurs $\mathbf{e}_i$ proviennent du fait qu'il faut considérer les vecteurs normaux aux surfaces du trièdre dirigés vers l'extérieur du tétraèdre.</p>
+    <p>D'après le principe de l'action et de la réaction (troisième loi de Newton), $\mathbf{T}(-\mathbf{n}) = -\mathbf{T}(\mathbf{n})$. La relation (3-1) peut donc s'écrire :</p>
+    $$ \mathbf{F}_c = \mathbf{T}(\mathbf{n})\delta A - \mathbf{T}(\mathbf{e}_1) \delta A_1 - \mathbf{T}(\mathbf{e}_2) \delta A_2 - \mathbf{T}(\mathbf{e}_3) \delta A_3 $$
+    <div class="equation-number">(3-2)</div>
+    <p>Si on considère de plus que les surfaces $\delta A_i$ sont les projections de $\delta A$ sur les plans de coordonnées, on a la relation géométrique :</p>
+    $$ \delta A_i = (\mathbf{e}_i \cdot \mathbf{n}) \delta A = n_i \delta A $$
+    <div class="equation-number">(3-3)</div>
+    <p>où $n_i$ sont les composantes de $\mathbf{n}$.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">38</div>
+    <hr>
+
+    <p>On aura alors :</p>
+    $$ \mathbf{F}_c = \left[ \mathbf{T}(\mathbf{n}) - \sum_{i=1}^3 (\mathbf{n} \cdot \mathbf{e}_i) \mathbf{T}(\mathbf{e}_i) \right] \delta A = \left[ \mathbf{T}(\mathbf{n}) - \sum_{i=1}^3 n_i \mathbf{T}(\mathbf{e}_i) \right] \delta A $$
+    <div class="equation-number">(3-4)</div>
+    <p>En faisant tendre les dimensions linéaires du trièdre vers 0 (limite $h \to 0$), son volume ($\propto h^3$) et donc sa masse et son inertie ($\propto h^3$), ainsi que la force de volume ($\propto h^3$), deviennent négligeables devant les forces de surface ($\propto h^2$). Pour que la loi fondamentale de la dynamique (PFD: $\sum \mathbf{F} = m\mathbf{a}$) appliquée à ce trièdre soit respectée à la limite $h \to 0$, il faut que la force de contact résultante $\mathbf{F}_c$ soit nulle. D'où on tire la relation fondamentale de Cauchy :</p>
+    $$ \mathbf{T}(\mathbf{n}) = \sum_{i=1}^3 n_i \mathbf{T}(\mathbf{e}_i) $$
+    <div class="equation-number">(3-5)</div>
+    <p>Ou autrement exprimé, en introduisant les vecteurs de base $\mathbf{e}_i$ :</p>
+    $$ \mathbf{T}(\mathbf{n}) = \mathbf{n} \cdot [ \mathbf{e}_1 \mathbf{T}(\mathbf{e}_1) + \mathbf{e}_2 \mathbf{T}(\mathbf{e}_2) + \mathbf{e}_3 \mathbf{T}(\mathbf{e}_3) ] $$
+    <div class="equation-number">(3-6)</div>
+    <p><em>(Note: La notation en (3-6) avec le produit dyadique $\mathbf{e}_i \mathbf{T}(\mathbf{e}_i)$ est plus formelle).</em></p>
+    <p>L'équation (3-6) peut s'écrire également en introduisant le <strong>tenseur des contraintes</strong> $\boldsymbol{\sigma}$ (tenseur d'ordre 2 de Cauchy) :</p>
+    $$ \mathbf{T}(\mathbf{n}) = \boldsymbol{\sigma} \cdot \mathbf{n} $$
+    <div class="equation-number">(3-7)</div>
+    <!-- Note: PDF Eq (4-7) renumbered to (3-7) as it's in Chapter 3. -->
+    <p>Où $\boldsymbol{\sigma}$ est un tenseur du second ordre dont la contraction (produit contracté à droite) avec un vecteur unitaire $\mathbf{n}$ représente la densité surfacique $\mathbf{T}(\mathbf{n})$ des efforts de contact exercés sur la surface imaginaire d'orientation $\mathbf{n}$ passant par le point M. Ce tenseur est appelé tenseur des contraintes. Les composantes $\sigma_{ij}$ de ce tenseur dans la base $(\mathbf{e}_1, \mathbf{e}_2, \mathbf{e}_3)$ représentent la $i$-ème composante de la force exercée sur une surface unité normale à $\mathbf{e}_j$. C'est-à-dire, la $j$-ème colonne du tenseur $\boldsymbol{\sigma}$ représente le vecteur contrainte $\mathbf{T}(\mathbf{e}_j)$.</p>
+    <p>En introduisant le champ scalaire de pression $p$, ce tenseur $\boldsymbol{\sigma}$, qu'on démontre être symétrique (voir paragraphe 3.4.3), peut être décomposé en la somme d'un tenseur sphérique (isotrope) associé à la pression et d'un tenseur symétrique non isotrope $\boldsymbol{\tau}$ (le tenseur des contraintes visqueuses ou déviateur des contraintes) :</p>
+    $$ \boldsymbol{\sigma} = - p \mathbf{I} + \boldsymbol{\tau} $$
+    <div class="equation-number">(3-8)</div>
+    <p>où $\mathbf{I}$ est le tenseur identité.</p>
+    <ul>
+        <li>La première contribution (sphérique) $-p\mathbf{I}$ est appelée <strong>tenseur des contraintes de pression</strong>. Elle représente les efforts exercés orthogonalement à toute surface (contraintes normales $-p$) et qui subsistent même en absence d'écoulement (fluide au repos). Par convention, $p$ est positive en compression.</li>
+        <li>Tandis que la seconde contribution $\boldsymbol{\tau}$ est appelée <strong>tenseur des contraintes de cisaillement</strong> (ou contraintes visqueuses). Elle représente les efforts tangentiels (cisaillement) et les variations des efforts normaux par rapport à $-p$, dus aux effets visqueux (frottements internes) qui se produisent au sein du fluide en mouvement ($\boldsymbol{\tau}=\mathbf{0}$ pour un fluide parfait au repos ou en mouvement).</li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">39</div>
+    <hr>
+
+    <h2>3.3 Conservation de la quantité de mouvement</h2>
+
+    <h3>3.3.1 Enoncé :</h3>
+
+    <p>Si on considère un volume de contrôle $D_c$ (qui peut être un volume matériel ou un volume fixe) délimité par une surface $\Sigma_c$ et un repère R $(O, \mathbf{i}, \mathbf{j}, \mathbf{k})$ :</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 2 : Volume de contrôle arbitraire</div>
+        <p class="caption">Figure 2 : Volume de contrôle arbitraire $D_c$ délimité par $\Sigma_c$.</p>
+    </div>
+
+    <p>La quantité de mouvement totale $\mathbf{M}$ (ou impulsion) contenue dans le volume de contrôle $D_c$ est donnée par l'intégrale suivante :</p>
+    $$ \mathbf{M} = \int_{D_c} \rho \mathbf{v} \, d\tau $$
+    <div class="equation-number">(3-9)</div>
+    <p>où $\rho$ est la masse volumique et $\mathbf{v}$ le champ de vitesse.</p>
+
+    <p>Le principe de conservation de la quantité de mouvement n'est autre que la loi de Newton (appliquée à un système matériel) qui s'écrit dans ce cas :</p>
+    $$ \frac{d\mathbf{M}}{dt} = \mathbf{F}_{ext} $$
+    <div class="equation-number">(3-10)</div>
+    <p>où $d\mathbf{M}/dt$ est la dérivée temporelle de la quantité de mouvement du système matériel qui coïncide avec $D_c$ à l'instant $t$, et $\mathbf{F}_{ext}$ est la résultante des forces extérieures (forces de volume et forces de surface) exercées sur le volume $D_c$. Ce principe stipule que toute variation de la quantité de mouvement $\mathbf{M}$ est due à l'action d'une force appliquée par le milieu extérieur et réciproquement.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">40</div>
+    <hr>
+
+    <h3>3.3.2 Forme globale :</h3>
+
+    <p>La force totale $\mathbf{F}_{ext}$ exercée sur le volume $D_c$ est la somme des contributions des forces à distance (ou volumiques) $\mathbf{f}$ (force par unité de masse) qui s'exercent en tout point du domaine et qui peuvent être représentées par une intégrale de volume, et des forces de contact (ou surfaciques) représentées par une intégrale de surface correspondant au flux du tenseur des contraintes $\boldsymbol{\sigma}$ à travers $\Sigma_c$ (i.e., l'intégrale du vecteur contrainte $\mathbf{T}(\mathbf{n}) = \boldsymbol{\sigma} \cdot \mathbf{n}$ sur la surface):</p>
+    $$ \mathbf{F}_{ext} = \int_{D_c} \rho \mathbf{f} \, d\tau + \oint_{\Sigma_c} \boldsymbol{\sigma} \cdot \mathbf{n} \, ds $$
+    <div class="equation-number">(3-11)</div>
+    <p>$\mathbf{f}$ étant la densité massique de la force à distance, elle coïncide avec l'accélération de pesanteur $\mathbf{g}$ si le repère R est galiléen lié à la terre et si la gravité est la seule force de volume.</p>
+
+    <p>Le développement de l'équation (3-10) en utilisant le théorème de transport de Reynolds (éq. 2-25 appliqué à $B=\mathbf{M}$ et $b=\rho\mathbf{v}$) pour $d\mathbf{M}/dt$, compte tenu des équations (3-9) et (3-11), permet d'établir la forme intégrale de l'équation de conservation de la quantité de mouvement pour un volume de contrôle fixe $D_c=\Omega$ :</p>
+    $$ \frac{d}{dt}\int_{\Omega} \rho \mathbf{v} \, d\Omega = \int_{\Omega} \frac{\partial (\rho \mathbf{v})}{\partial t} d\Omega + \oint_{\Sigma} (\rho \mathbf{v}) (\mathbf{v} \cdot \mathbf{n}) \, ds = \int_{\Omega} \rho \mathbf{f} \, d\Omega + \oint_{\Sigma} \boldsymbol{\sigma} \cdot \mathbf{n} \, ds $$
+    <div class="equation-number">(3-12)</div>
+    <p><em>Note: Le terme de flux convectif peut s'écrire $\oint (\rho \mathbf{v} \otimes \mathbf{v}) \cdot \mathbf{n} \, ds$ où $\otimes$ est le produit tensoriel.</em></p>
+    <p>Compte tenue de la décomposition (3-8) du tenseur des contraintes $\boldsymbol{\sigma} = -p\mathbf{I} + \boldsymbol{\tau}$, ce bilan global de quantité de mouvement s'écrit:</p>
+    $$ \int_{\Omega} \frac{\partial (\rho \mathbf{v})}{\partial t} d\Omega + \oint_{\Sigma} \rho \mathbf{v} (\mathbf{v} \cdot \mathbf{n}) \, ds = \int_{\Omega} \rho \mathbf{f} \, d\Omega - \oint_{\Sigma} p \mathbf{n} \, ds + \oint_{\Sigma} \boldsymbol{\tau} \cdot \mathbf{n} \, ds $$
+    <div class="equation-number">(3-13)</div>
+    <p>Les deux derniers termes du second membre de ce bilan global représentent respectivement les forces de pression (normales à la surface) et les forces de cisaillement (visqueuses) exercées sur le volume de contrôle $D_c$ à travers sa surface $\Sigma_c$.</p>
+
+    <h3>3.3.3 Forme locale :</h3>
+
+    <p>En utilisant le théorème de la divergence pour transformer les intégrales de surface en intégrales de volume dans l'équation (3-12), on peut l'écrire sous la forme suivante :</p>
+    $$ \int_{\Omega} \frac{\partial (\rho \mathbf{v})}{\partial t} d\Omega + \int_{\Omega} \vec{\nabla} \cdot (\rho \mathbf{v} \otimes \mathbf{v}) d\Omega = \int_{\Omega} \rho \mathbf{f} \, d\Omega + \int_{\Omega} \vec{\nabla} \cdot \boldsymbol{\sigma} \, d\Omega $$
+    <div class="equation-number">(3-14)</div>
+    <p><em>Note : $\vec{\nabla} \cdot (\rho \mathbf{v} \otimes \mathbf{v})$ est la divergence du tenseur flux de quantité de mouvement.</em></p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">41</div>
+    <hr>
+
+    <p>Et ceci est vrai quelque soit le domaine $D_c = \Omega$. On peut en déduire alors facilement la forme locale suivante de conservation de quantité de mouvement (Equation de Cauchy) :</p>
+    $$ \frac{\partial (\rho \mathbf{v})}{\partial t} + \vec{\nabla} \cdot (\rho \mathbf{v} \otimes \mathbf{v}) = \rho \mathbf{f} + \vec{\nabla} \cdot \boldsymbol{\sigma} $$
+    <div class="equation-number">(3-15)</div>
+    <p>qui s'écrit également en utilisant la décomposition (3-8) du tenseur des contraintes $\boldsymbol{\sigma}$ :</p>
+    $$ \frac{\partial (\rho \mathbf{v})}{\partial t} + \vec{\nabla} \cdot (\rho \mathbf{v} \otimes \mathbf{v}) = \rho \mathbf{f} - \vec{\nabla} p + \vec{\nabla} \cdot \boldsymbol{\tau} $$
+    <div class="equation-number">(3-16)</div>
+    <p>Cette équation traduit la conservation de quantité de mouvement dans un volume élémentaire centré sur un point de l'écoulement. Le développement du premier membre (terme instationnaire et terme convectif) de cette équation, en utilisant l'équation de continuité (2-30), permet de la réécrire sous la forme suivante, faisant apparaître la dérivée particulaire de la vitesse (l'accélération) :</p>
+    $$ \rho \left( \frac{\partial \mathbf{v}}{\partial t} + (\mathbf{v} \cdot \vec{\nabla}) \mathbf{v} \right) = \rho \frac{d\mathbf{v}}{dt} = \rho \mathbf{a} $$
+    <p>Donc, l'équation (3-15) devient :</p>
+    $$ \rho \frac{d\mathbf{v}}{dt} = \rho \mathbf{f} + \vec{\nabla} \cdot \boldsymbol{\sigma} $$
+    <div class="equation-number">(3-17)</div>
+    <p>On rappelle l'équation locale de conservation de la masse (2-30) établie dans le chapitre précédent qui s'écrit :</p>
+    $$ \frac{\partial \rho}{\partial t} + \vec{\nabla} \cdot (\rho \mathbf{v}) = 0 $$
+    <div class="equation-number">(3-18)</div>
+    <p>Et par suite, l'équation locale de quantité de mouvement (3-17), exprimée avec la décomposition du tenseur des contraintes, se réduit à la forme très utilisée :</p>
+    $$ \rho \left( \frac{\partial \mathbf{v}}{\partial t} + (\mathbf{v} \cdot \vec{\nabla}) \mathbf{v} \right) = \rho \mathbf{f} - \vec{\nabla} p + \vec{\nabla} \cdot \boldsymbol{\tau} $$
+    <div class="equation-number">(3-19)</div>
+    <p>Dans un système de coordonnées cartésiennes, cette équation s'écrit en notation indicielle comme suit (en utilisant la convention d'Einstein):</p>
+    $$ \rho \left( \frac{\partial v_i}{\partial t} + v_j \frac{\partial v_i}{\partial x_j} \right) = \rho f_i - \frac{\partial p}{\partial x_i} + \frac{\partial \tau_{ij}}{\partial x_j} $$
+    <div class="equation-number">(3-20)</div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">42</div>
+    <hr>
+
+    <h2>3.4 Conservation du moment cinétique</h2>
+
+    <h3>3.4.1 Enoncé :</h3>
+
+    <p>Le moment cinétique $\boldsymbol{\Gamma}_A$ stocké dans un volume de contrôle $D_c$ par rapport à un point A fixe (ou par rapport à l'origine O si A=O) est donné par l'expression suivante :</p>
+    $$ \boldsymbol{\Gamma}_A = \int_{D_c} \vec{AP} \wedge (\rho \mathbf{v}) \, d\tau $$
+    <div class="equation-number">(3-21)</div>
+    <p>où $\vec{AP}$ est le vecteur position du point P courant dans $D_c$ par rapport à A.</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 3 : Moment cinétique</div>
+        <p class="caption">Figure 3 : Moment cinétique calculé par rapport à un point A.</p>
+    </div>
+
+    <p>Le principe de conservation du moment cinétique stipule que toute variation temporelle du moment cinétique $\boldsymbol{\Gamma}_A$ (pour un système matériel coïncidant avec $D_c$ à l'instant $t$) par rapport au point fixe A est due à l'action du moment résultant $\mathbf{M}_A(\mathbf{F}_{ext})$ des forces extérieures exercées sur $D_c$, calculé par rapport au même point A, et réciproquement. Il s'écrit (dans un référentiel galiléen) :</p>
+    $$ \frac{d\boldsymbol{\Gamma}_A}{dt} = \mathbf{M}_A(\mathbf{F}_{ext}) $$
+    <div class="equation-number">(3-22)</div>
+
+    <h3>3.4.2 Forme globale :</h3>
+
+    <p>Le moment total $\mathbf{M}_A(\mathbf{F}_{ext})$ des forces extérieures exercées sur le domaine $D_c$ par rapport au point A, compte tenue de leur expression (3-11), est donné par l'expression suivante :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">43</div>
+    <hr>
+
+    $$ \mathbf{M}_A(\mathbf{F}_{ext}) = \int_{D_c} \vec{AP} \wedge (\rho \mathbf{f}) \, d\tau + \oint_{\Sigma_c} \vec{AP} \wedge (\boldsymbol{\sigma} \cdot \mathbf{n}) \, ds $$
+    <div class="equation-number">(3-23)</div>
+    <p>La dérivée matérielle du moment cinétique $d\boldsymbol{\Gamma}_A/dt$ s'écrit en utilisant le théorème de Reynolds (éq. 2-25 appliqué à $B=\boldsymbol{\Gamma}_A$ et $b = \vec{AP} \wedge \rho \mathbf{v}$):</p>
+    $$ \frac{d\boldsymbol{\Gamma}_A}{dt} = \int_{\Omega} \frac{\partial}{\partial t} (\rho \vec{AP} \wedge \mathbf{v}) \, d\Omega + \oint_{\Sigma} (\rho \vec{AP} \wedge \mathbf{v}) (\mathbf{v} \cdot \mathbf{n}) \, ds $$
+    <div class="equation-number">(3-24)</div>
+    <p>On déduit alors la forme globale de conservation de moment cinétique en égalant (3-23) et (3-24) :</p>
+    $$ \int_{\Omega} \frac{\partial}{\partial t} (\rho \vec{AP} \wedge \mathbf{v}) \, d\Omega + \oint_{\Sigma} \rho (\vec{AP} \wedge \mathbf{v}) (\mathbf{v} \cdot \mathbf{n}) \, ds = \int_{\Omega} \vec{AP} \wedge (\rho \mathbf{f}) \, d\Omega + \oint_{\Sigma} \vec{AP} \wedge (\boldsymbol{\sigma} \cdot \mathbf{n}) \, ds $$
+    <div class="equation-number">(3-25)</div>
+
+    <h3>3.4.3 Forme locale : symétrie du tenseur des contraintes</h3>
+
+    <p>En utilisant le pseudo-tenseur d'orientation $\epsilon_{ijk}$ (ou Levi-Civita), l'équation globale de conservation du moment cinétique (3-25) s'écrit encore sous la forme indicielle suivante (pour la $i$-ème composante, avec A à l'origine O, $\vec{OP} = \mathbf{x}$) :</p>
+    $$ \int_{\Omega} \frac{\partial}{\partial t} (\rho \epsilon_{ijk} x_j v_k) \, d\Omega + \oint_{\Sigma} \rho (\epsilon_{ijk} x_j v_k) v_l n_l \, ds = \int_{\Omega} \epsilon_{ijk} x_j (\rho f_k) \, d\Omega + \oint_{\Sigma} \epsilon_{ijk} x_j \sigma_{kl} n_l \, ds $$
+    <div class="equation-number">(3-26)</div>
+    <p>Le théorème de la divergence permet de réécrire (3-26) comme suit :</p>
+    $$ \int_{\Omega} \frac{\partial}{\partial t} (\rho \epsilon_{ijk} x_j v_k) \, d\Omega + \int_{\Omega} \frac{\partial}{\partial x_l} [\rho (\epsilon_{ijk} x_j v_k) v_l] \, d\Omega = \int_{\Omega} \epsilon_{ijk} x_j \rho f_k \, d\Omega + \int_{\Omega} \frac{\partial}{\partial x_l} (\epsilon_{ijk} x_j \sigma_{kl}) \, d\Omega $$
+    <div class="equation-number">(3-27)</div>
+    <p>d'où on déduit l'expression locale de l'équation de conservation de moment cinétique :</p>
+    $$ \frac{\partial}{\partial t} (\rho \epsilon_{ijk} x_j v_k) + \frac{\partial}{\partial x_l} [\rho \epsilon_{ijk} x_j v_k v_l] = \epsilon_{ijk} x_j \rho f_k + \frac{\partial}{\partial x_l} (\epsilon_{ijk} x_j \sigma_{kl}) $$
+    <div class="equation-number">(3-28)</div>
+    <p>Qui s'écrit encore, en développant les dérivées :</p>
+    $$ \epsilon_{ijk} x_j \left[ \frac{\partial (\rho v_k)}{\partial t} + \frac{\partial (\rho v_k v_l)}{\partial x_l} \right] + \epsilon_{ijk} \rho v_k \frac{\partial x_j}{\partial t} + \epsilon_{ijk} \rho v_k v_l \frac{\partial x_j}{\partial x_l} = \epsilon_{ijk} x_j \rho f_k + \epsilon_{ijk} \sigma_{kl} \frac{\partial x_j}{\partial x_l} + \epsilon_{ijk} x_j \frac{\partial \sigma_{kl}}{\partial x_l} $$
+    <p>En utilisant $\partial x_j / \partial t = 0$, $\partial x_j / \partial x_l = \delta_{jl}$ (symbole de Kronecker), et $\epsilon_{ijk} \rho v_k v_j = 0$, on obtient :</p>
+    $$ \epsilon_{ijk} x_j \left[ \frac{\partial (\rho v_k)}{\partial t} + \frac{\partial (\rho v_k v_l)}{\partial x_l} \right] = \epsilon_{ijk} x_j \rho f_k + \epsilon_{ijk} \sigma_{kj} + \epsilon_{ijk} x_j \frac{\partial \sigma_{kl}}{\partial x_l} $$
+    <div class="equation-number">(3-29)</div>
+    <p>D'après l'équation (3-15) de conservation de quantité de mouvement (composante $k$) : $\frac{\partial (\rho v_k)}{\partial t} + \frac{\partial (\rho v_k v_l)}{\partial x_l} = \rho f_k + \frac{\partial \sigma_{kl}}{\partial x_l}$. En substituant ceci dans (3-29) on aura :</p>
+    $$ \epsilon_{ijk} x_j \left[ \rho f_k + \frac{\partial \sigma_{kl}}{\partial x_l} \right] = \epsilon_{ijk} x_j \rho f_k + \epsilon_{ijk} \sigma_{kj} + \epsilon_{ijk} x_j \frac{\partial \sigma_{kl}}{\partial x_l} $$
+    <div class="equation-number">(3-30)</div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">44</div>
+    <hr>
+
+    <p>Soit après simplification :</p>
+    $$ \epsilon_{ijk} \sigma_{kj} = 0 $$
+    <div class="equation-number">(3-31)</div>
+    <!-- Note: PDF Eq 3-31 seems incorrect, the derivation leads to eps_ijk sigma_kj = 0. -->
+    <p>Cette équation se réduit encore à (en développant pour $i=1, 2, 3$):</p>
+    <ul>
+        <li>$i=1$: $\epsilon_{123}\sigma_{32} + \epsilon_{132}\sigma_{23} = \sigma_{32} - \sigma_{23} = 0 \implies \sigma_{32} = \sigma_{23}$</li>
+        <li>$i=2$: $\epsilon_{231}\sigma_{13} + \epsilon_{213}\sigma_{31} = \sigma_{13} - \sigma_{31} = 0 \implies \sigma_{13} = \sigma_{31}$</li>
+        <li>$i=3$: $\epsilon_{312}\sigma_{21} + \epsilon_{321}\sigma_{12} = \sigma_{21} - \sigma_{12} = 0 \implies \sigma_{21} = \sigma_{12}$</li>
+    </ul>
+    <p>Donc, l'équation se réduit à:</p>
+    $$ \epsilon_{ijk} \sigma_{kj} = 0 $$
+    <div class="equation-number">(3-32)</div>
+    <p>Ce qui implique que les éléments du tenseur des contraintes vérifient la propriété :</p>
+    $$ \sigma_{kl} = \sigma_{lk} \quad (\text{pour tout } k, l) $$
+    <div class="equation-number">(3-33)</div>
+    <p>On déduit alors d'après cette relation que le <strong>tenseur des contraintes $\boldsymbol{\sigma}$ est symétrique</strong>. (Ceci n'est vrai qu'en l'absence de couples de volume ou de surface).</p>
+
+    <h2>3.5 Conservation de l'énergie</h2>
+
+    <h3>3.5.1 Energie – Travail des forces – Chaleur</h3>
+
+    <p>Outre la matière (masse) et la quantité de mouvement, un milieu fluide est susceptible d'échanger de l'<strong>énergie</strong> au cours de son écoulement avec le milieu extérieur. Cette grandeur extensive, dont la dimension est $ML^2T^{-2}$ (unité SI: Joule), se manifeste à l'échelle macroscopique sous plusieurs formes telles que : la <strong>chaleur</strong> $Q$, le <strong>travail mécanique</strong> $W$ (des forces), l'<strong>énergie cinétique</strong> $E_c$ (due au mouvement macroscopique) ou l'<strong>énergie potentielle</strong> (de gravité, électrique...). À l'échelle microscopique, l'énergie est stockée sous forme d'<strong>énergie interne</strong> $U$ (énergie cinétique d'agitation thermique des molécules et énergie potentielle d'interaction intermoléculaire).</p>
+    <p>Selon le premier principe de la thermodynamique, qui est un principe de conservation, l'énergie totale d'un système isolé est conservée. Pour un système fluide fermé, l'énergie totale $E_{tot} = E_c + E_p + U$ est conservée au cours de sa transformation s'il n'échange ni travail ni chaleur avec l'extérieur. S'il y a des échanges, la variation d'énergie totale est égale à la somme du travail et de la chaleur échangés.</p>
+
+    <p>On se propose dans ce paragraphe de traduire, dans le cadre de la description eulérienne et en termes des variables d'Euler, les principes de la thermodynamique régissant l'écoulement d'un fluide.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">45</div>
+    <hr>
+
+    <h2>3.5.2 Premier principe de la thermodynamique: Equations globales et locales de conservation de l'énergie</h2>
+
+    <h3>3.5.2.1 Enoncé</h3>
+
+    <p>Considérons comme les cas précédents un volume de contrôle $D_c$ délimité par une surface $\Sigma_c$ :</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 4 : Volume de contrôle arbitraire</div>
+        <p class="caption">Figure 4 : Volume de contrôle arbitraire $D_c$.</p>
+    </div>
+
+    <p>L'énergie totale $E$ contenue dans ce volume de contrôle est la somme de l'énergie cinétique macroscopique $E_c$ et de l'énergie interne $E_i$. L'énergie potentielle de pesanteur sera incluse via le travail des forces de gravité. Elle peut s'écrire sous la forme intégrale suivante :</p>
+    $$ E = E_c + E_i = \int_{D_c} \rho \left( \frac{v^2}{2} + e \right) d\tau $$
+    <div class="equation-number">(3-34)</div>
+    <p>où $v^2/2$ est la densité massique de l'énergie cinétique (énergie cinétique par unité de masse) et $e$ est la densité massique de l'énergie interne (énergie interne par unité de masse, souvent notée $u$ en thermodynamique, mais on utilise $e$ ici pour éviter la confusion avec la vitesse). On note que cette expression de l'énergie est valable à l'échelle macroscopique. En effet, à l'échelle microscopique le stockage de l'énergie interne dans $D_c$ est effectué en la distribuant sous forme d'énergie cinétique d'agitation et d'énergie potentielle d'interaction sur les molécules présentes dans ce milieu.</p>
+
+    <p>Le premier principe de la thermodynamique correspond au principe de conservation de l'énergie. Il énonce que la variation de l'énergie totale $E$ d'un système matériel (qui coïncide avec $D_c$ à l'instant $t$) entre deux instants est égale à la somme du travail $W_{ext}$ des forces extérieures et de la chaleur $Q_{ech}$ échangés avec le milieu extérieur pendant cet intervalle.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">46</div>
+    <hr>
+
+    <p>Le principe peut être exprimé en termes de puissances par l'équation suivante :</p>
+    $$ \frac{dE}{dt} = P_{F_{ext}} + P_{cal} $$
+    <div class="equation-number">(3-35)</div>
+    <p>Où $dE/dt$ est le taux de variation de l'énergie totale du système matériel, $P_{F_{ext}} = \mathbf{F}_{ext} \cdot \mathbf{v}_{appropriée}$ est la puissance des forces extérieures (travail par unité de temps) et $P_{cal} = dQ_{ech}/dt$ est la puissance calorifique (chaleur échangée par unité de temps).</p>
+
+    <h3>3.5.2.2 Forme globale</h3>
+
+    <p>Compte tenu de l'expression (3-11) de la force extérieure $\mathbf{F}_{ext}$, la puissance $P_{F_{ext}}$ de cette force est donnée par la relation (puissance des forces de volume + puissance des forces de surface) :</p>
+    $$ P_{F_{ext}} = \int_{D_c} \rho (\mathbf{f} \cdot \mathbf{v}) \, d\tau + \oint_{\Sigma_c} (\boldsymbol{\sigma} \cdot \mathbf{n}) \cdot \mathbf{v} \, ds $$
+    <div class="equation-number">(3-36)</div>
+    <p>En utilisant la symétrie du tenseur des contraintes $\boldsymbol{\sigma}$ (voir paragraphe 3.4.3), on peut réécrire le terme de puissance des forces de surface $(\boldsymbol{\sigma} \cdot \mathbf{n}) \cdot \mathbf{v} = (\mathbf{v} \cdot \boldsymbol{\sigma}) \cdot \mathbf{n}$. Ainsi :</p>
+    $$ P_{F_{ext}} = \int_{D_c} \rho \mathbf{f} \cdot \mathbf{v} \, d\tau + \oint_{\Sigma_c} (\mathbf{v} \cdot \boldsymbol{\sigma}) \cdot \mathbf{n} \, ds $$
+    <div class="equation-number">(3-37)</div>
+
+    <p>En ce qui concerne la puissance calorifique $P_{cal}$, il existe trois mécanismes d'échange de chaleur :</p>
+    <ul>
+        <li><strong>Les échanges par conduction</strong> : Ces échanges résultent du transfert de chaleur par diffusion moléculaire (agitation et collisions). Ils s'effectuent avec le milieu extérieur à travers la surface $\Sigma_c$. Ils sont représentés par le flux d'un vecteur $\mathbf{q}$ à travers $\Sigma_c$, appelé « le <strong>vecteur courant de chaleur</strong> » (ou vecteur densité de flux thermique, loi de Fourier). La puissance calorifique échangée par conduction (flux de chaleur entrant) s'écrit :
+            $$ \frac{dQ_c}{dt} = - \oint_{\Sigma_c} \mathbf{q} \cdot \mathbf{n} \, ds $$
+            <div class="equation-number">(3-38)</div>
+            (Le signe '-' vient du fait que $\mathbf{q}$ représente usuellement le flux sortant).
+        </li>
+        <li><strong>Les échanges par rayonnement</strong> : Ce sont des échanges à distance résultant du transfert de chaleur par ondes électromagnétiques (infrarouge). La puissance calorifique échangée par rayonnement peut être représentée par une intégrale de volume d'un terme source $r$ (puissance rayonnée ou absorbée par unité de masse) :
+            $$ \frac{dQ_R}{dt} = \int_{D_c} \rho r \, d\tau $$
+            <div class="equation-number">(3-39)</div>
+        </li>
+        <li><strong>Les échanges par convection</strong> : Ils résultent du transfert convectif de la chaleur (énergie interne) par l'écoulement lui-même. Ces échanges sont représentés par le terme convectif dans la dérivée particulaire de l'énergie totale E (voir éq. 3-40 ci-dessous).</li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">47</div>
+    <hr>
+
+    <p>La dérivée particulaire (matérielle) de l'énergie totale $E$ s'écrit en utilisant le théorème de Reynolds (éq. 2-25 appliqué à $B=E$ et $b = \rho (v^2/2 + e)$) :</p>
+    $$ \frac{dE}{dt} = \int_{\Omega} \frac{\partial}{\partial t} \left[ \rho \left(\frac{v^2}{2} + e \right) \right] d\Omega + \oint_{\Sigma} \rho \left(\frac{v^2}{2} + e \right) (\mathbf{v} \cdot \mathbf{n}) \, ds $$
+    <div class="equation-number">(3-40)</div>
+
+    <p>Le bilan global (3-35) de l'énergie sur le volume de contrôle $D_c=\Omega$ s'écrit donc compte tenu des équations (3-37) à (3-40) comme suit :</p>
+    $$ \int_{\Omega} \frac{\partial}{\partial t} \left[ \rho \left(\frac{v^2}{2} + e \right) \right] d\Omega + \oint_{\Sigma} \rho \left(\frac{v^2}{2} + e \right) (\mathbf{v} \cdot \mathbf{n}) \, ds = \int_{\Omega} \rho \mathbf{f} \cdot \mathbf{v} \, d\Omega + \oint_{\Sigma} (\mathbf{v} \cdot \boldsymbol{\sigma}) \cdot \mathbf{n} \, ds - \oint_{\Sigma} \mathbf{q} \cdot \mathbf{n} \, ds + \int_{\Omega} \rho r \, d\Omega $$
+    <div class="equation-number">(3-41)</div>
+
+    <h3>3.5.2.3 Forme locale</h3>
+
+    <p>Le bilan global de l'énergie (3-41) s'écrit en utilisant le théorème de la divergence pour transformer les flux de surface en intégrales de volume :</p>
+    $$ \int_{\Omega} \frac{\partial}{\partial t} \left[ \rho \left(\frac{v^2}{2} + e \right) \right] d\Omega + \int_{\Omega} \vec{\nabla} \cdot \left[ \rho \left(\frac{v^2}{2} + e \right) \mathbf{v} \right] d\Omega = \int_{\Omega} \rho \mathbf{f} \cdot \mathbf{v} \, d\Omega + \int_{\Omega} \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) \, d\Omega - \int_{\Omega} \vec{\nabla} \cdot \mathbf{q} \, d\Omega + \int_{\Omega} \rho r \, d\Omega $$
+    <div class="equation-number">(3-42)</div>
+    <p>Et ceci est vrai quelque soit le volume de contrôle $D_c = \Omega$. On en déduit alors la forme locale de conservation de l'énergie totale qui s'écrit :</p>
+    $$ \frac{\partial}{\partial t} \left[ \rho \left(\frac{v^2}{2} + e \right) \right] + \vec{\nabla} \cdot \left[ \rho \left(\frac{v^2}{2} + e \right) \mathbf{v} \right] = \rho \mathbf{f} \cdot \mathbf{v} + \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) - \vec{\nabla} \cdot \mathbf{q} + \rho r $$
+    <div class="equation-number">(3-43)</div>
+    <p>Cette équation traduit le premier principe de la thermodynamique écrit localement pour un système thermodynamique constitué par un fluide en écoulement et dont le mouvement est décrit d'une manière eulérienne.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">48</div>
+    <hr>
+
+    <p>Dans un système de coordonnées cartésiennes, cette équation s'écrit en notation indicielle comme suit :</p>
+    $$ \frac{\partial}{\partial t} \left[ \rho \left(\frac{v_k v_k}{2} + e \right) \right] + \frac{\partial}{\partial x_j} \left[ \rho \left(\frac{v_k v_k}{2} + e \right) v_j \right] = \rho f_j v_j + \frac{\partial}{\partial x_j} (v_k \sigma_{kj}) - \frac{\partial q_j}{\partial x_j} + \rho r $$
+    <div class="equation-number">(3-44)</div>
+
+    <h2>3.5.3 Equation de bilan locale de l'énergie cinétique</h2>
+
+    <p>La projection du bilan local de quantité de mouvement (3-15) sur la vitesse $\mathbf{v}$ (produit scalaire avec $\mathbf{v}$) nous donne :</p>
+    $$ \mathbf{v} \cdot \left[ \frac{\partial (\rho \mathbf{v})}{\partial t} + \vec{\nabla} \cdot (\rho \mathbf{v} \otimes \mathbf{v}) \right] = \mathbf{v} \cdot (\rho \mathbf{f}) + \mathbf{v} \cdot (\vec{\nabla} \cdot \boldsymbol{\sigma}) $$
+    <div class="equation-number">(3-45)</div>
+    <p>D'une part, le premier membre de ce bilan peut s'écrire (en utilisant la continuité et quelques manipulations, notamment pour un fluide incompressible $\rho = \text{cte}, \vec{\nabla} \cdot \mathbf{v} = 0$) sous la forme d'une équation de bilan pour la densité volumique d'énergie cinétique $e_c = \rho v^2 / 2$ :</p>
+    $$ \mathbf{v} \cdot \left[ \rho \frac{\partial \mathbf{v}}{\partial t} + \rho (\mathbf{v} \cdot \vec{\nabla}) \mathbf{v} \right] = \rho \frac{d}{dt} \left( \frac{v^2}{2} \right) = \frac{\partial (\rho v^2/2)}{\partial t} + \vec{\nabla} \cdot (\rho \mathbf{v} v^2/2) $$
+    <p>Donc le premier membre de (3-45) devient (même pour compressible) :</p>
+    $$ \frac{\partial e_c}{\partial t} + \vec{\nabla} \cdot (e_c \mathbf{v}) $$
+    <div class="equation-number">(3-46)</div>
+    <p><em>(Note: $e_c = \rho v^2 / 2$ est la densité volumique de l'énergie cinétique).</em></p>
+    <p>D'autre part, le dernier terme du second membre de l'équation (3-45) « $\mathbf{v} \cdot (\vec{\nabla} \cdot \boldsymbol{\sigma})$ » peut être développé pour donner (en utilisant $\vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) = \mathbf{v} \cdot (\vec{\nabla} \cdot \boldsymbol{\sigma}) + \boldsymbol{\sigma} : (\vec{\nabla} \mathbf{v})$) :</p>
+    $$ \mathbf{v} \cdot (\vec{\nabla} \cdot \boldsymbol{\sigma}) = \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) - \boldsymbol{\sigma} : (\vec{\nabla} \mathbf{v}) $$
+    <div class="equation-number">(3-47)</div>
+    <p><em>(Note: Le double point ':' représente la double contraction des tenseurs. $\boldsymbol{\sigma} : (\vec{\nabla} \mathbf{v})$ est le travail des contraintes par unité de volume et de temps).</em></p>
+    <p>Ce terme s'écrit également compte tenu de la décomposition $\boldsymbol{\sigma} = -p\mathbf{I} + \boldsymbol{\tau}$ et de la symétrie de $\boldsymbol{\tau}$ (qui implique $\boldsymbol{\tau}:\mathbf{R} = 0$ où $\mathbf{R}$ est la partie antisymétrique de $\nabla\mathbf{v}$):</p>
+    $$ \mathbf{v} \cdot (\vec{\nabla} \cdot \boldsymbol{\sigma}) = \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) - (-p\mathbf{I} + \boldsymbol{\tau}) : (\mathbf{D} + \mathbf{R}) = \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) + p (\vec{\nabla} \cdot \mathbf{v}) - \boldsymbol{\tau} : \mathbf{D} $$
+    <p>Et pour un fluide incompressible ($\vec{\nabla} \cdot \mathbf{v} = 0$) :</p>
+    $$ \mathbf{v} \cdot (\vec{\nabla} \cdot \boldsymbol{\sigma}) = \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) - \boldsymbol{\tau} : (\vec{\nabla} \mathbf{v}) \quad \text{(car } \boldsymbol{\sigma} : \mathbf{R}=0 \text{ et } p\mathbf{I}:\mathbf{D}=p \text{ trace}(\mathbf{D})=p\vec{\nabla}\cdot\mathbf{v}) $$
+    <div class="equation-number">(3-48)</div>
+    <p>On déduit alors le bilan local de l'énergie cinétique qui s'écrit (en substituant 3-46 et 3-48 dans 3-45):</p>
+    $$ \frac{\partial e_c}{\partial t} + \vec{\nabla} \cdot (e_c \mathbf{v}) = \rho \mathbf{f} \cdot \mathbf{v} + \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) - \boldsymbol{\tau} : (\vec{\nabla} \mathbf{v}) $$
+    <div class="equation-number">(3-49)</div>
+    <p>Interprétons ce bilan à l'échelle d'un volume élémentaire de contrôle centré sur un point M de l'écoulement :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">49</div>
+    <hr>
+
+    <ul>
+        <li>Le terme $\partial e_c / \partial t$ est le taux d'accumulation d'énergie cinétique.</li>
+        <li>Le terme $\vec{\nabla} \cdot (e_c \mathbf{v})$ est le flux net sortant d'énergie cinétique par convection.</li>
+        <li>Le premier terme du second membre $\rho \mathbf{f} \cdot \mathbf{v}$ représente la puissance (volumique) des forces extérieures à distance (gravité...).</li>
+        <li>Le second terme $\vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma})$ est un terme de divergence, il correspond à un flux d'énergie lié au travail des forces de contact $\mathbf{v} \cdot \boldsymbol{\sigma}$ à travers la surface de ce volume élémentaire et représente alors la puissance (volumique) des forces de contact.</li>
+        <li>Le dernier terme $-\boldsymbol{\tau} : (\vec{\nabla} \mathbf{v})$ (ou plus précisément $\boldsymbol{\tau} : \mathbf{D}$) qui montre une double contraction entre le tenseur des contraintes de cisaillement $\boldsymbol{\tau}$ et le tenseur des taux de déformation $\mathbf{D} = (\nabla \mathbf{v} + (\nabla \mathbf{v})^T)/2$, représente la puissance (volumique) dissipée par les efforts intérieurs visqueux. Cette puissance est toujours positive (dissipation visqueuse, production d'entropie) et correspond à une conversion irréversible d'énergie mécanique (cinétique) en énergie interne (chaleur).</li>
+    </ul>
+    <p>En résumé, le bilan de l'énergie cinétique met en jeu la puissance des efforts extérieurs (à distance et de contact) et la puissance dissipée par les efforts intérieurs visqueux.</p>
+
+    <h2>3.5.4 Equation de bilan de l'énergie interne</h2>
+
+    <p>En retranchant le bilan de l'énergie cinétique (3-49) du bilan de l'énergie totale (3-43), on obtient le bilan de l'énergie interne $e_i = \rho e$ qui s'écrit :</p>
+    $$ \frac{\partial (\rho e)}{\partial t} + \vec{\nabla} \cdot (\rho e \mathbf{v}) = - \vec{\nabla} \cdot \mathbf{q} + \rho r + \boldsymbol{\tau} : (\vec{\nabla} \mathbf{v}) $$
+    <div class="equation-number">(3-50)</div>
+    <p>Cette équation montre que la variation d'énergie interne d'un élément de fluide ($\partial(\rho e)/\partial t + \vec{\nabla}\cdot(\rho e \mathbf{v}) = \rho de/dt$) est due au flux de chaleur par conduction ($-\vec{\nabla}\cdot\mathbf{q}$), à la source de chaleur par rayonnement ($\rho r$) et à la dissipation visqueuse ($\boldsymbol{\tau} : (\vec{\nabla} \mathbf{v}) = \Phi_{visc}$, fonction de dissipation).</p>
+    <p>La puissance des efforts intérieurs $\Phi_{visc} = \boldsymbol{\tau} : (\vec{\nabla} \mathbf{v})$ qui figure dans les deux bilans (3-49) et (3-50) avec des signes opposés joue alors un rôle d'échange d'énergie entre le montant de l'énergie interne et le montant de l'énergie cinétique sans intervenir dans le montant de l'énergie totale. C'est une conversion irréversible d'énergie cinétique en énergie interne.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">50</div>
+    <hr>
+
+    <div class="page-number">Chapitre 4 : Dynamique des fluides Newtoniens</div>
+    <h1>Chapitre 4 : Dynamique des fluides Newtoniens</h1>
+
+    <div class="toc">
+        <ul>
+            <li class="section">4.1 Introduction</li>
+            <li class="section">4.2 Position du problème - Démarche de fermeture</li>
+            <li class="section">4.3 Lois constitutives pour un fluide Newtonien</li>
+            <ul>
+                <li class="subsection">4.3.1 Loi constitutive de fermeture du tenseur des taux de cisaillement $\boldsymbol{\tau}$ déduite de la rhéologie : loi de Newton</li>
+                <li class="subsection">4.3.2 Loi constitutive de fermeture du vecteur courant de chaleur $\mathbf{q}$ : loi de Fourrier</li>
+                <li class="subsection">4.3.3 Loi constitutive de fermeture de l'énergie interne déduite de la thermodynamique</li>
+            </ul>
+            <li class="section">4.4 Récapitulation : le système final des équations d'un milieu fluide</li>
+            <ul>
+                <li class="subsection">4.4.2 Problème hydrodynamique : Les équations de Navier-Stockes</li>
+                <li class="subsection">4.4.3 Problème thermique : L'équation de la chaleur</li>
+            </ul>
+            <li class="section">4.5 Exemples de solutions exactes des équations de Navier-Stokes</li>
+            <ul>
+                <li class="subsection">4.5.1 Ecoulement de Couette</li>
+                <li class="subsection">4.5.2 Ecoulement à surface libre sur un plan incliné</li>
+                <li class="subsection">4.5.3 Ecoulement visqueux dans une conduite cylindrique : écoulement de Poiseuille</li>
+                <li class="subsection">4.5.4 Domaine de validité de la structure de l'écoulement de Poiseuille</li>
+            </ul>
+            <li class="section">4.6 Ecoulement dans un milieu poreux</li>
+            <ul>
+                <li class="subsection">4.6.1 Equation de Laplace pour la pression</li>
+                <li class="subsection">4.6.2 Loi de Darcy</li>
+            </ul>
+        </ul>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">51</div>
+    <hr>
+
+    <h2>4.1 Introduction</h2>
+
+    <p>Dans ce chapitre, on focalise l'étude sur les fluides dits « classiques » ou « <strong>newtoniens</strong> ». C'est le cas de la majorité des fluides d'usage courant tels que l'eau, l'air ou l'huile (dans des conditions usuelles). Ces fluides sont caractérisés par des comportements rhéologique (relation contrainte-déformation) et thermique (transfert de chaleur) particuliers. En effet, le tenseur des taux de cisaillement $\boldsymbol{\tau}$ (décrivant les contraintes de cisaillement tangentielles visqueuses) et le vecteur courant de chaleur $\mathbf{q}$ s'expriment <strong>linéairement</strong> respectivement en fonction du tenseur des taux de déformations $\mathbf{D}$ (caractérisant la vitesse de déformation) et du vecteur gradient de la température $\vec{\nabla} T$. Les équations locales décrivant la dynamique de ces fluides sont appelées les <strong>équations de Navier-Stokes</strong>.</p>
+
+    <h2>4.2 Position du problème - Démarche de fermeture</h2>
+
+    <p>En pratique, l'écoulement d'un milieu fluide susceptible d'effectuer des échanges thermiques avec le milieu extérieur est totalement décrit par la donnée des champs eulériens des variables hydrodynamiques et thermodynamiques. Typiquement, on cherche à déterminer :</p>
+    <ul>
+        <li>Le champ de vitesse $\mathbf{v}(\mathbf{x}, t)$</li>
+        <li>Le champ de pression $p(\mathbf{x}, t)$</li>
+        <li>Le champ de température $T(\mathbf{x}, t)$</li>
+    </ul>
+    <p>La description eulérienne de ces grandeurs est obtenue par l'intégration des équations locales de conservation de la masse, de la quantité de mouvement et de l'énergie établies dans les chapitres précédents (dans le domaine de l'écoulement et en tenant compte des conditions aux limites correspondantes). On récapitule ces équations comme suit :</p>
+    <ul>
+        <li><strong>Conservation de la masse</strong> (équation (2-30) ; Chapitre 2) :
+            $$ \frac{\partial \rho}{\partial t} + \vec{\nabla} \cdot (\rho \mathbf{v}) = 0 $$
+            <div class="equation-number">(4-1)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li><strong>Conservation de la quantité de mouvement</strong> (équation (3-19) ; Chapitre 3) :
+            $$ \rho \left( \frac{\partial \mathbf{v}}{\partial t} + (\mathbf{v} \cdot \vec{\nabla}) \mathbf{v} \right) = \rho \mathbf{f} - \vec{\nabla} p + \vec{\nabla} \cdot \boldsymbol{\tau} $$
+            <div class="equation-number">(4-2)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li><strong>Conservation de l'énergie totale</strong> (équation (3-43) ; Chapitre 3) :
+            $$ \frac{\partial}{\partial t} \left[ \rho \left(\frac{v^2}{2} + e \right) \right] + \vec{\nabla} \cdot \left[ \rho \left(\frac{v^2}{2} + e \right) \mathbf{v} \right] = \rho \mathbf{f} \cdot \mathbf{v} + \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) - \vec{\nabla} \cdot \mathbf{q} + \rho r $$
+            <div class="equation-number">(4-3)</div>
+            <div class="clear-float"></div>
+        </li>
+    </ul>
+    <p><em>(Note: L'équation (4-1) est l'éq. (2-30), pas (2-28)).</em></p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">52</div>
+    <hr>
+
+    <p>On peut aussi utiliser les bilans d'énergie cinétique et interne à la place du bilan d'énergie totale :</p>
+    <ul>
+        <li><strong>Bilan de l'énergie cinétique</strong> (équation (3-49) ; Chapitre 3) :
+             $$ \frac{\partial e_c}{\partial t} + \vec{\nabla} \cdot (e_c \mathbf{v}) = \rho \mathbf{f} \cdot \mathbf{v} + \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) - \boldsymbol{\tau} : (\vec{\nabla} \mathbf{v}) \quad \text{avec } e_c = \frac{1}{2} \rho v^2 $$
+             <div class="equation-number">(4-4)</div>
+             <div class="clear-float"></div>
+        </li>
+        <li><strong>Bilan de l'énergie interne</strong> (équation (3-50) ; Chapitre 3) :
+            $$ \frac{\partial (\rho e)}{\partial t} + \vec{\nabla} \cdot (\rho e \mathbf{v}) = - \vec{\nabla} \cdot \mathbf{q} + \rho r + \boldsymbol{\tau} : (\vec{\nabla} \mathbf{v}) $$
+            <div class="equation-number">(4-5)</div>
+            <div class="clear-float"></div>
+        </li>
+    </ul>
+    <p>Dans ce système d'équations, le bilan de l'énergie cinétique (4-4) est déduit à partir de celui de quantité de mouvement (4-2). D'autre part le bilan (4-5) de l'énergie interne n'est autre que la différence entre (4-3) (énergie totale) et (4-4) (énergie cinétique). Ce système est par conséquent formé par <strong>3 équations scalaires indépendantes</strong> (plus 1 équation vectorielle = 3 équations scalaires), qu'on peut choisir par exemple comme (4-1) (masse), (4-2) (quantité de mouvement) et (4-5) (énergie interne). Soit un total de $1+3+1 = 5$ équations scalaires indépendantes.</p>
+
+    <p>Le problème ainsi formulé reste <strong>ouvert</strong> : il contient plus d'inconnues que d'équations. En effet, une comptabilisation des inconnues mises en jeu montre que l'on a 9 inconnues (scalaires) répertoriées comme suit :</p>
+    <ul>
+        <li>Vitesse: $\mathbf{v}$ (3 composantes)</li>
+        <li>Pression: $p$ (1 scalaire)</li>
+        <li>Température: $T$ (1 scalaire)</li>
+        <li>Masse volumique : $\rho$ (1 scalaire)</li>
+        <li>Densité massique des forces à distance : $\mathbf{f}$ (3 composantes, généralement connues, ex: gravité)</li>
+        <li>Densité massique de la puissance calorifique rayonnée : $r$ (1 scalaire, souvent connu ou négligé)</li>
+        <li>Tenseur des taux de cisaillement : $\boldsymbol{\tau}$ (tenseur symétrique à trace nulle, 5 composantes indépendantes)</li>
+        <li>Vecteur courant de chaleur : $\mathbf{q}$ (3 composantes)</li>
+        <li>Densité massique de l'énergie interne : $e$ (1 scalaire)</li>
+    </ul>
+    <p>Si on considère que $\mathbf{f}$ et $r$ sont connues, il reste $3+1+1+1+5+3+1 = 15$ inconnues scalaires pour 5 équations scalaires. Il manque donc 10 équations.</p>
+    <p>Si on désire maintenir la vitesse $\mathbf{v}$, la pression $p$ et la température $T$ comme inconnues principales (soit $3+1+1=5$ inconnues), on serait amené à fermer ce système par l'introduction de $15-5=10$ équations scalaires complémentaires (en nombre égal aux inconnues restantes: $\rho, \boldsymbol{\tau}, \mathbf{q}, e$). Comme ce système est valable pour des milieux fluides de natures très différentes, les équations complémentaires qu'on doit ajouter doivent préciser la constitution particulière de chaque milieu : ce sont les <strong>lois constitutives</strong> (ou relations de fermeture).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">53</div>
+    <hr>
+
+    <p>D'autre part, dans la plupart des cas d'applications, les densités massiques des forces à distance $\mathbf{f}$ et de la puissance calorifique $r$ sont à priori connues ($\mathbf{f}$ s'identifie à l'accélération de pesanteur $\mathbf{g}$ dans un repère Galiléen et $r$ est décrite par la loi de Stéphane pour le rayonnement thermique, ou souvent négligée).</p>
+    <p>Ainsi, on retient enfin que les loi constitutives devront exprimer les grandeurs $\rho$, $e$, $\boldsymbol{\tau}$ et $\mathbf{q}$ en fonction des variables principales (par exemple $\mathbf{v}$, $p$ et $T$) et de leurs gradients.</p>
+
+    <h2>4.3 Lois constitutives pour un fluide Newtonien</h2>
+
+    <h3>4.3.1 Loi constitutive de fermeture du tenseur des taux de cisaillement $\boldsymbol{\tau}$ déduite de la rhéologie : loi de Newton</h3>
+
+    <p>Du point de vue de la mécanique, la différence entre un fluide réel et un fluide parfait réside dans l'absence dans le cas de fluide parfait de tout effort de cisaillement (contrainte tangentielle). Ceci implique que :</p>
+    <ul>
+        <li>A l'échelle microscopique les particules fluides glissent les unes sur les autres sans frottement entre elles (viscosité nulle).</li>
+        <li>A l'échelle macroscopique les contraintes de contact se réduisent aux contraintes de pression ($p$) qui s'exercent perpendiculairement à la surface extérieure ($\boldsymbol{\sigma} = -p\mathbf{I}$, donc $\boldsymbol{\tau} = \mathbf{0}$).</li>
+    </ul>
+    <p>Ce comportement se manifeste particulièrement en présence de parois solides. En effet, aux points de contact entre un fluide parfait en écoulement et une paroi (étanche), seule la composante normale à la paroi de la vitesse de l'écoulement est nulle (condition de non-pénétration). La composante tangentielle peut être non nulle. Les conditions d'écoulement à la paroi sont alors des conditions de <strong>glissement</strong>. Cependant, les conditions à la paroi qui régissent l'écoulement d'un fluide réel (visqueux) sont des conditions d'<strong>adhérence</strong> : la vitesse aux points de contact entre le fluide réel et la paroi est égale à la vitesse de la paroi (condition de non-glissement et de non-pénétration).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">54</div>
+    <hr>
+
+</body>
+</html>
