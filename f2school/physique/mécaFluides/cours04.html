@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mécanique des Fluides - Terminale STL</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4 {
+            color: #0056b3; /* Bleu foncé pour les titres */
+            margin-top: 1.5em;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        h2 {
+            background-color: #e7f1ff; /* Fond bleu clair pour les sections principales */
+            padding: 8px;
+            border-left: 5px solid #0056b3;
+        }
+        .placeholder {
+            display: block;
+            text-align: center;
+            padding: 20px;
+            border: 1px dashed #aaa;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+            font-style: italic;
+            color: #555;
+        }
+        ul {
+            margin-left: 20px;
+            list-style-type: disc;
+        }
+        strong {
+            color: #333;
+        }
+        code {
+            background-color: #eee;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .katex-display {
+            margin: 1em 0;
+            padding: 0.5em;
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            overflow-x: auto; /* Pour les formules longues */
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 0.9em;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Terminale STL - Physique de Laboratoire et Procédés Industriels<br>MECANIQUE DES FLUIDES</h1>
+
+    <p>Ce document couvre les notions essentielles de la mécanique des fluides abordées en classe de Terminale STL, divisées en plusieurs sections :</p>
+    <ul>
+        <li>Généralités sur les fluides</li>
+        <li>Dynamique des fluides incompressibles (F1)</li>
+        <li>Viscosité (F2)</li>
+        <li>Pertes de charge (F3)</li>
+        <li>Tension superficielle (F4)</li>
+    </ul>
+
+    <h2>GÉNÉRALITÉS</h2>
+
+    <h3>1 - Définition</h3>
+    <p>
+        Un <strong>fluide</strong> peut être considéré comme étant formé d'un grand nombre de particules matérielles, très petites et libres de se déplacer les unes par rapport aux autres. Un fluide est donc un <strong>milieu matériel continu</strong>, déformable, sans rigidité propre et qui peut s'écouler (il prend la forme du récipient qui le contient). Parmi les fluides, on fait souvent la distinction entre les <strong>liquides</strong> et les <strong>gaz</strong>.
+    </p>
+
+    <h3>2 - Liquides et gaz</h3>
+    <p>
+        Les liquides et gaz habituellement étudiés en mécanique des fluides sont généralement considérés comme :
+    </p>
+    <ul>
+        <li>
+            <strong>Isotropes :</strong> L'isotropie assure que les propriétés physiques du fluide (comme la masse volumique, la viscosité) sont identiques dans toutes les directions de l'espace en un point donné.
+        </li>
+        <li>
+            <strong>Mobiles :</strong> La mobilité signifie qu'ils n'ont pas de forme propre et qu'ils prennent la forme du récipient qui les contient. Les particules peuvent se déplacer facilement les unes par rapport aux autres.
+        </li>
+        <li>
+            <strong>Visqueux :</strong> La viscosité caractérise la résistance interne à l'écoulement. Tout changement de forme d'un fluide réel s'accompagne d'une résistance due aux frottements internes entre les couches de fluide.
+        </li>
+    </ul>
+    <p>
+        La propriété physique fondamentale qui permet de faire la différence entre les liquides et les gaz est la <strong>compressibilité</strong> :
+        <ul>
+            <li>Les <strong>liquides</strong> sont considérés comme <strong>quasi-incompressibles</strong>. Leur volume (et donc leur masse volumique) varie très peu avec la pression et la température dans les conditions usuelles.</li>
+            <li>Les <strong>gaz</strong> sont <strong>très compressibles</strong>. Leur volume (et leur masse volumique) dépend fortement de la pression et de la température (cf. loi des gaz parfaits).</li>
+        </ul>
+    </p>
+
+    <h3>3 - Forces de volume et forces de surface</h3>
+    <p>
+        Comme tout problème de mécanique, la résolution d'un problème de mécanique des fluides passe par la définition du système matériel étudié (souvent un volume de contrôle S, contenant des particules de fluide à l'intérieur d'une surface fermée limitant S). À ce système, on applique les principes et théorèmes généraux de la mécanique et de la thermodynamique, notamment :
+    </p>
+    <ul>
+        <li>
+            <strong>Principe de la conservation de la masse :</strong> La masse de fluide entrant dans le système moins la masse sortante est égale à la variation de masse à l'intérieur du système (pour un régime permanent, la masse entrant égale la masse sortante).
+        </li>
+        <li>
+            <strong>Principe fondamental de la dynamique (PFD) :</strong> La résultante des forces appliquées au système est égale à la dérivée par rapport au temps de sa quantité de mouvement (ou, en régime permanent, à la variation du débit de quantité de mouvement entre la sortie et l'entrée). Les forces peuvent être des forces de volume (comme le poids) ou des forces de surface (comme les forces de pression et de viscosité).
+        </li>
+        <li>
+            <strong>Principe de la conservation de l'énergie (Premier principe de la thermodynamique) :</strong> La variation d'énergie totale du système (énergie interne + énergie cinétique + énergie potentielle) est égale à la somme du travail et de la chaleur échangés avec l'extérieur.
+        </li>
+    </ul>
+
+    <!-- #################### Section F1 #################### -->
+    <h2>DYNAMIQUE DES FLUIDES INCOMPRESSIBLES (F1)</h2>
+
+    <h3>1 - DEFINITIONS</h3>
+    <p>
+        Le <strong>débit</strong> est le quotient de la quantité de fluide (masse ou volume) qui traverse une section droite (perpendiculaire à l'écoulement) d'une conduite par la durée de cet écoulement.
+    </p>
+
+    <h4>1.1 - Débit-masse</h4>
+    <p>
+        Si \\( \Delta m \\) est la masse de fluide qui a traversé une section droite de la conduite pendant le temps \\( \Delta t \\), par définition le <strong>débit-masse</strong> \\( q_m \\) est :
+    </p>
+    <div class="placeholder">[Image: Formula for mass flow rate qm = Δm / Δt]</div>
+    \\[ q_m = \frac{\Delta m}{\Delta t} \\]
+    <p>
+        Unité SI : kilogramme par seconde (kg·s⁻¹).
+    </p>
+
+    <h4>1.2 - Débit-volume</h4>
+    <p>
+        Si \\( \Delta V \\) est le volume de fluide qui a traversé une section droite de la conduite pendant le temps \\( \Delta t \\), par définition le <strong>débit-volume</strong> \\( q_V \\) est :
+    </p>
+    <div class="placeholder">[Image: Formula for volume flow rate qV = ΔV / Δt]</div>
+    \\[ q_V = \frac{\Delta V}{\Delta t} \\]
+    <p>
+        Unité SI : mètre cube par seconde (m³·s⁻¹).
+    </p>
+
+    <h4>1.3 - Relation entre \\( q_m \\) et \\( q_V \\)</h4>
+    <p>
+        La masse volumique \\( \rho \\) est donnée par la relation :
+        \\( \rho = \frac{\Delta m}{\Delta V} \\)
+        d'où la relation entre les débits :
+    </p>
+    \\[ q_m = \rho \, q_V \\]
+
+    <p><strong>Remarques :</strong></p>
+    <ul>
+        <li>
+            Les <strong>liquides</strong> sont généralement considérés comme <strong>incompressibles</strong> et peu dilatables, ce qui signifie que leur masse volumique \\( \rho \\) est considérée comme constante. On parle alors d'<strong>écoulements isovolumes</strong> (le débit-volume \\( q_V \\) se conserve le long de la conduite).
+        </li>
+        <li>
+            Pour les <strong>gaz</strong>, la masse volumique \\( \rho \\) dépend de la température et de la pression. Cependant, pour des vitesses d'écoulement faibles (où les variations de pression sont limitées, typiquement pour des nombres de Mach Ma < 0.3) et pour des températures constantes, on peut souvent les traiter comme des écoulements isovolumes en première approximation.
+        </li>
+    </ul>
+
+    <h4>1.4 - Écoulements permanents ou stationnaires</h4>
+    <p>
+        Un régime d'écoulement est dit <strong>permanent</strong> ou <strong>stationnaire</strong> si les paramètres qui le caractérisent (pression, température, vitesse, masse volumique, etc.) en tout point de l'espace occupé par le fluide, ont une valeur constante au cours du temps. En d'autres termes, les propriétés du fluide en un point fixe ne changent pas avec le temps, même si elles peuvent varier d'un point à l'autre.
+    </p>
+
+    <h3>2 - Équation de conservation de la masse ou équation de continuité</h3>
+
+    <h4>2.1 - Définitions</h4>
+    <div class="placeholder">[Image: Diagram showing streamline, stream tube, sections S1 and S2]</div>
+    <ul>
+        <li>
+            <strong>Ligne de courant :</strong> En régime stationnaire, on appelle ligne de courant la courbe suivant laquelle se déplace une particule de fluide. Une ligne de courant est tangente en chacun de ses points au vecteur vitesse \\( \vec{v} \\) du fluide en ce point. Les particules de fluide suivent ces lignes.
+        </li>
+        <li>
+            <strong>Tube de courant :</strong> C'est un ensemble de lignes de courant s'appuyant sur une courbe fermée. En régime stationnaire, le fluide contenu dans un tube de courant y reste confiné (pas de flux à travers la surface latérale).
+        </li>
+        <li>
+            <strong>Filet de courant :</strong> C'est un tube de courant dont la section de base \\( \Delta S \\) est suffisamment petite pour que l'on puisse considérer la vitesse du fluide \\( \vec{v} \\) comme étant la même (uniforme) en tous les points de cette section.
+        </li>
+    </ul>
+
+    <h4>2.2 - Conservation du débit</h4>
+    <p>
+        Considérons un tube de courant entre deux sections droites \\( S_1 \\) et \\( S_2 \\). En régime stationnaire, la masse de fluide ne peut pas s'accumuler dans le volume compris entre \\( S_1 \\) et \\( S_2 \\). Par conséquent, la masse de fluide qui traverse \\( S_1 \\) pendant un intervalle de temps \\( \Delta t \\) doit être égale à la masse de fluide qui traverse \\( S_2 \\) pendant le même intervalle de temps.
+    </p>
+    <p>
+        En régime stationnaire, le <strong>débit-masse est le même à travers toutes les sections droites d'un même tube de courant</strong> :
+        \\[ q_{m1} = q_{m2} \\]
+    </p>
+    <p>
+        Dans le cas particulier d'un <strong>écoulement isovolume</strong> (\\( \rho = \text{Cte} \\)), la conservation du débit-masse implique la conservation du débit-volume :
+    </p>
+    <p>
+        En régime stationnaire et isovolume, le <strong>débit-volume est le même à travers toutes les sections droites d'un même tube de courant</strong> :
+        \\[ q_{V1} = q_{V2} \\]
+    </p>
+
+    <h4>2.3 - Expression du débit en fonction de la vitesse \\( v \\)</h4>
+    <p>
+        Le débit-volume \\( q_V \\) traversant une section droite d'aire \\( S \\) peut être exprimé en fonction de la vitesse \\( v \\) du fluide (supposée uniforme sur la section S et perpendiculaire à celle-ci). Pendant une unité de temps (\\( \Delta t = 1 \\) s), une particule de fluide parcourt une distance \\( v \\). Le volume de fluide traversant la section S pendant ce temps est donc le volume d'un cylindre de base S et de hauteur v.
+    </p>
+    <p>
+        Il en résulte la relation importante :
+        \\[ q_V = v \cdot S \\]
+    </p>
+
+    <h4>2.4 - Vitesse moyenne</h4>
+    <p>
+        En général, à cause des forces de frottement (viscosité) sur les parois de la conduite, la vitesse \\( v \\) n'est pas constante sur toute la section \\( S \\) d'un tube de courant. Il existe un <strong>profil de vitesse</strong> (par exemple, parabolique en régime laminaire dans un tube cylindrique, plus aplati en régime turbulent).
+    </p>
+    <div class="placeholder">[Image: Parabolic velocity profile in laminar flow]</div>
+    <div class="placeholder">[Image: Flatter velocity profile in turbulent flow, represented by average velocity Vmoy]</div>
+    <p>
+        Pour simplifier les calculs globaux, on définit la <strong>vitesse moyenne</strong> \\( v_m \\) (ou \\( v_{moy} \\)) dans une section droite S comme la vitesse uniforme qui, à travers cette section S, assurerait le même débit-volume que la répartition réelle des vitesses :
+    </p>
+    \\[ v_{moy} = \frac{q_V}{S} \\]
+    <p>
+        Si l'écoulement est isovolume (\\( q_V = \text{Cte} \\)), l'équation de continuité s'écrit en termes de vitesses moyennes pour deux sections \\( S_1 \\) et \\( S_2 \\) :
+        \\[ q_V = v_{1,moy} S_1 = v_{2,moy} S_2 = \text{Cte} \\]
+    <p>Ceci est l'<strong>équation de continuité</strong> pour un écoulement isovolume en termes de vitesse moyenne. Elle implique que :</p>
+    \\[ \frac{v_{1,moy}}{v_{2,moy}} = \frac{S_2}{S_1} \\]
+    <p>
+        La vitesse moyenne est d'autant plus grande que la section de la conduite est faible (principe utilisé dans les tuyères, les étranglements comme le Venturi, etc.).
+    </p>
+
+    <h3>3 - Théorème de BERNOULLI</h3>
+
+    <h4>3.1 - Le phénomène (Observations qualitatives)</h4>
+    <ul>
+        <li>Une balle de ping-pong peut rester en suspension dans un jet d'air incliné (la zone de haute vitesse au centre du jet correspond à une basse pression qui la maintient).</li>
+        <li>Une feuille de papier est aspirée vers le haut lorsqu'on souffle horizontalement au-dessus d'elle (l'air en mouvement rapide au-dessus a une pression plus faible que l'air au repos en dessous).</li>
+    </ul>
+    <p>
+        <strong>Conclusion intuitive :</strong> La pression d'un fluide semble diminuer lorsque sa vitesse augmente. Le théorème de Bernoulli formalise cette relation.
+    </p>
+
+    <h4>3.2 - Théorème de Bernoulli pour un écoulement permanent d'un fluide parfait incompressible</h4>
+    <p>
+        Un <strong>fluide parfait</strong> est un modèle idéal de fluide dont l'écoulement se fait <strong>sans frottement</strong> (viscosité nulle).
+    </p>
+    <p>
+        Considérons un écoulement <strong>permanent</strong>, <strong>isovolume</strong> (\\( \rho = \text{Cte} \\)) d'un <strong>fluide parfait</strong>, le long d'une ligne de courant, entre deux points (1) et (2) situés aux altitudes \\( z_1 \\) et \\( z_2 \\), où les pressions sont \\( p_1, p_2 \\) et les vitesses \\( v_1, v_2 \\). On suppose qu'il n'y a aucune machine hydraulique (ni pompe, ni turbine) entre (1) et (2).
+    </p>
+    <div class="placeholder">[Image: Diagram illustrating Bernoulli's theorem setup with points 1 and 2, heights z1, z2, pressures p1, p2, velocities v1, v2, sections S1, S2 along a streamline]</div>
+    <p>
+        En appliquant le théorème de l'énergie cinétique (ou un bilan d'énergie mécanique) à une masse \\( m \\) de fluide se déplaçant de la position (1) à la position (2), on montre que la variation d'énergie cinétique est égale à la somme des travaux des forces extérieures (poids et forces de pression). On obtient la relation de Bernoulli :
+    </p>
+    \\[ \frac{1}{2} \rho v^2 + \rho g z + p = \text{Cte} \quad \text{(le long d'une ligne de courant)} \\]
+    <p>
+        Tous les termes de cette équation ont la dimension d'une pression (en Pascals, Pa) :
+    </p>
+    <ul>
+        <li>\\( p \\) : <strong>Pression statique</strong> (pression thermodynamique du fluide).</li>
+        <li>\\( \rho g z \\) : <strong>Pression de pesanteur</strong> (due à l'altitude \\( z \\) dans le champ de gravité \\( g \\)).</li>
+        <li>\\( \frac{1}{2} \rho v^2 \\) : <strong>Pression cinétique</strong> ou dynamique (due à la vitesse \\( v \\) du fluide).</li>
+    </ul>
+    <p>
+        La somme de ces trois termes est appelée <strong>pression totale</strong> et reste constante le long d'une ligne de courant pour un fluide parfait en écoulement permanent incompressible.
+    </p>
+    <p>
+        En divisant tous les termes par le produit \\( \rho g \\) (poids volumique), on obtient une autre forme de l'équation de Bernoulli, où chaque terme a la dimension d'une hauteur (souvent appelée "charge", exprimée en mètres de colonne de fluide) :
+    </p>
+    \\[ \frac{v^2}{2g} + z + \frac{p}{\rho g} = H = \text{Cte} \\]
+    <ul>
+        <li>\\( H \\) : <strong>Hauteur totale</strong> ou charge totale.</li>
+        <li>\\( \frac{p}{\rho g} \\) : <strong>Hauteur de Pression</strong> ou charge de pression.</li>
+        <li>\\( z \\) : <strong>Cote</strong> ou hauteur géométrique (charge potentielle).</li>
+        <li>\\( \frac{v^2}{2g} \\) : <strong>Hauteur cinétique</strong> ou charge cinétique/dynamique.</li>
+        <li>\\( z + \frac{p}{\rho g} \\) : <strong>Hauteur piézométrique</strong> ou charge piézométrique (niveau qu'atteindrait le fluide dans un tube manométrique branché tangentiellement à l'écoulement).</li>
+    </ul>
+
+    <h4>3.3 - Cas d'un écoulement (1) \\( \rightarrow \\) (2) sans échange de travail</h4>
+    <p>
+        Lorsque, dans un écoulement permanent d'un fluide parfait incompressible, il n'y a aucune machine (ni pompe ni turbine) entre les points (1) et (2) d'une même ligne de courant, la relation de Bernoulli peut s'écrire en comparant l'état du fluide aux points (1) et (2) :
+    </p>
+    <p>Sous forme de pressions :</p>
+    \\[ \frac{1}{2} \rho v_1^2 + \rho g z_1 + p_1 = \frac{1}{2} \rho v_2^2 + \rho g z_2 + p_2 \\]
+    <p>Ce qui peut se réarranger en :</p>
+    \\[ \frac{1}{2} \rho (v_2^2 - v_1^2) + \rho g (z_2 - z_1) + (p_2 - p_1) = 0 \\]
+    <p>Sous forme de hauteurs (charges) :</p>
+    \\[ \frac{v_1^2}{2g} + z_1 + \frac{p_1}{\rho g} = \frac{v_2^2}{2g} + z_2 + \frac{p_2}{\rho g} \\]
+    <p>Ce qui peut se réarranger en :</p>
+    \\[ \frac{v_2^2 - v_1^2}{2g} + (z_2 - z_1) + \frac{p_2 - p_1}{\rho g} = 0 \\]
+
+    <h4>3.4 - Cas d'un écoulement (1) \\( \rightarrow \\) (2) avec échange d'énergie (machine hydraulique)</h4>
+    <p>
+        Lorsque le fluide traverse une machine hydraulique entre les points (1) et (2), il échange de l'énergie avec cette machine sous forme de travail \\( \Delta W \\) pendant une durée \\( \Delta t \\). La puissance \\( P \\) échangée (énergie par unité de temps) est \\( P = \frac{\Delta W}{\Delta t} \\).
+    </p>
+    <ul>
+        <li>Unités : \\( P \\) en Watts (W), \\( W \\) en Joules (J), \\( t \\) en secondes (s).</li>
+        <li>Convention de signe :
+            <ul>
+                <li>\\( P > 0 \\) si l'énergie est <strong>reçue par le fluide</strong> (ex. : pompe, ventilateur). La machine augmente l'énergie du fluide.</li>
+                <li>\\( P < 0 \\) si l'énergie est <strong>fournie par le fluide</strong> (ex. : turbine, éolienne). La machine extrait de l'énergie du fluide.</li>
+            </ul>
+        </li>
+    </ul>
+    <div class="placeholder">[Image: Diagram showing flow through a pump between points 1 and 2, adding energy]</div>
+    <p>
+        Si le débit-volume est \\( q_V \\), la relation de Bernoulli (sous forme de pressions) doit être modifiée pour inclure le terme de puissance par unité de débit volumique \\( P / q_V \\) (qui a la dimension d'une pression) :
+    </p>
+    \\[ \frac{1}{2} \rho (v_2^2 - v_1^2) + \rho g (z_2 - z_1) + (p_2 - p_1) = \frac{P}{q_V} \\]
+    <p>
+        Ou sous forme de hauteurs, en introduisant la hauteur manométrique \\( H_m = \frac{P}{\rho g q_V} \\) fournie (si \\( P > 0 \\)) ou extraite (si \\( P < 0 \\)) par la machine :
+    </p>
+    \\[ \frac{v_2^2 - v_1^2}{2g} + (z_2 - z_1) + \frac{p_2 - p_1}{\rho g} = H_m = \frac{P}{\rho g q_V} \\]
+    <p>
+        Note : Ce terme \\( H_m \\) est souvent appelé "charge de la pompe" ou "charge de la turbine". Pour une pompe, \\( H_m > 0 \\); pour une turbine, \\( H_m < 0 \\).
+    </p>
+
+    <h3>4 - Application du Théorème de Bernoulli :</h3>
+
+    <h4>4.1 - Tube de Pitot</h4>
+    <p>
+        On considère un liquide en écoulement permanent dans une canalisation. Deux tubes piézométriques sont plongés dans le liquide :
+        <ul>
+            <li>Le tube B est un simple tube ouvert tangentiellement à l'écoulement. Il mesure la pression statique \\( p_B = p \\) à l'altitude considérée. Le liquide y monte à une hauteur correspondant à la charge piézométrique \\( z_B + p_B / (\rho g) \\).</li>
+            <li>Le tube A (tube de Pitot) a son ouverture face au courant. Le fluide est arrêté à l'entrée de ce tube (point d'arrêt ou point de stagnation). En ce point A, la vitesse \\( v_A \\) est nulle et la pression est la pression d'arrêt \\( p_A \\). Le liquide y monte à une hauteur correspondant à la charge totale \\( z_A + p_A / (\rho g) \\) (puisque \\( v_A = 0 \\)).</li>
+        </ul>
+        Les deux extrémités A et B sont supposées être à la même hauteur \\( z_A = z_B = z \\).
+    </p>
+    <div class="placeholder">[Image: Diagram of a Pitot tube setup showing stagnation point A, static point B, and height difference h]</div>
+    <p>
+        Appliquons le théorème de Bernoulli entre un point B sur la ligne de courant juste avant le tube A (vitesse \\( v_B = v \\), pression \\( p_B = p \\)) et le point d'arrêt A (vitesse \\( v_A = 0 \\), pression \\( p_A \\)), en supposant un fluide parfait :
+        \\[ \frac{1}{2} \rho v_B^2 + \rho g z_B + p_B = \frac{1}{2} \rho v_A^2 + \rho g z_A + p_A \\]
+        Avec \\( v_B = v \\), \\( p_B = p \\), \\( v_A = 0 \\), et \\( z_A = z_B \\), cela devient :
+        \\[ \frac{1}{2} \rho v^2 + p = p_A \\]
+    <p>
+        La différence de pression \\( p_A - p = \frac{1}{2} \rho v^2 \\) est la pression dynamique. Cette différence de pression est mesurée par la différence de hauteur \\( h \\) du liquide dans les deux tubes : \\( p_A - p = \rho g h \\).
+    </p>
+    <p>
+        Donc :
+        \\[ \frac{1}{2} \rho v^2 = \rho g h \quad \implies \quad v = \sqrt{2 g h} \\]
+    <p>
+        En mesurant la dénivellation \\( h \\), on peut déduire la vitesse \\( v \\) d'écoulement du fluide (en supposant le fluide parfait, sinon un coefficient de correction est nécessaire).
+    </p>
+
+    <h4>4.2 - Phénomène de Venturi</h4>
+    <p>
+        Un tube de Venturi est un conduit qui présente un étranglement (rétrécissement de la section) suivi d'un élargissement progressif (diffuseur). Soit \\( S_A \\) la section principale et \\( S_B \\) la section au niveau de l'étranglement (col), avec \\( S_B < S_A \\).
+    </p>
+    <div class="placeholder">[Image: Diagram of a Venturi tube showing wide section A and narrow section B]</div>
+    <p>
+        Pour un écoulement isovolume (débit \\( q_V = v_A S_A = v_B S_B \\)), comme \\( S_B < S_A \\), on a nécessairement \\( v_B > v_A \\) (la vitesse augmente dans l'étranglement).
+    </p>
+    <p>
+        Appliquons le théorème de Bernoulli (fluide parfait, écoulement horizontal \\( z_A = z_B \\)) entre les sections A et B :
+        \\[ \frac{1}{2} \rho v_A^2 + p_A = \frac{1}{2} \rho v_B^2 + p_B \\]
+    <p>
+        Comme \\( v_B > v_A \\), on en déduit que \\( p_B < p_A \\) (la pression diminue dans l'étranglement).
+    </p>
+    <p>
+        La différence de pression \\( \Delta p = p_A - p_B \\) est liée à la différence des carrés des vitesses :
+        \\[ p_A - p_B = \frac{1}{2} \rho (v_B^2 - v_A^2) \\]
+    <p>
+        En utilisant l'équation de continuité \\( v_A = q_V / S_A \\) et \\( v_B = q_V / S_B \\), on obtient :
+        \\[ p_A - p_B = \frac{1}{2} \rho q_V^2 \left( \frac{1}{S_B^2} - \frac{1}{S_A^2} \right) \\]
+    <p>
+        La différence de pression aux bornes du Venturi est proportionnelle au carré du débit :
+        \\[ p_A - p_B = k \, q_V^2 \quad \text{avec} \quad k = \frac{1}{2} \rho \left( \frac{1}{S_B^2} - \frac{1}{S_A^2} \right) \\]
+    <p>
+        Cette propriété est utilisée pour mesurer les débits (organes déprimogènes). D'autres applications incluent la trompe à eau (création de vide) et les pulvérisateurs (aspiration du liquide par la zone de basse pression).
+    </p>
+
+    <h4>4.3 - Écoulement d'un liquide contenu dans un réservoir - Théorème de Torricelli</h4>
+    <p>
+        Considérons un grand réservoir rempli d'un liquide, ouvert à l'air libre, muni d'un petit orifice à sa base par lequel le liquide s'écoule. Soit (1) un point à la surface libre du liquide dans le réservoir et (2) un point à la sortie de l'orifice.
+    </p>
+    <div class="placeholder">[Image: Diagram of a tank with an orifice, showing point 1 (surface) and point 2 (orifice), height difference z]</div>
+    <p>
+        Appliquons le théorème de Bernoulli (fluide parfait) entre les points (1) et (2) le long d'une ligne de courant :
+        \\[ \frac{1}{2} \rho v_1^2 + \rho g z_1 + p_1 = \frac{1}{2} \rho v_2^2 + \rho g z_2 + p_2 \\]
+    <p>
+        Hypothèses :
+        <ul>
+            <li>La pression aux deux points est la pression atmosphérique : \\( p_1 = p_2 = p_{atm} \\).</li>
+            <li>Le réservoir est suffisamment grand pour que la vitesse d'abaissement de la surface libre soit négligeable devant la vitesse d'éjection : \\( v_1 \approx 0 \\) (si l'aire de la surface libre \\( S_1 \gg \\) aire de l'orifice \\( S_2 \\)).</li>
+        </ul>
+    <p>
+        L'équation de Bernoulli se simplifie en :
+        \\[ \rho g z_1 \approx \frac{1}{2} \rho v_2^2 + \rho g z_2 \\]
+    <p>
+        En posant \\( z = z_1 - z_2 \\) (la hauteur de liquide au-dessus de l'orifice), on obtient la vitesse d'éjection \\( v_2 \\) :
+        \\[ v_2 = \sqrt{2 g (z_1 - z_2)} = \sqrt{2 g z} \\]
+    <p>
+        C'est le <strong>Théorème de Torricelli</strong> : la vitesse d'écoulement d'un liquide par un orifice est la même que la vitesse qu'atteindrait un corps en chute libre depuis la surface libre jusqu'au niveau de l'orifice, quelle que soit la masse volumique du liquide.
+    </p>
+    <p>
+        Application : Le vase de Mariotte utilise ce principe (combiné à une prise d'air maintenant une pression constante) pour obtenir un débit constant à la sortie de l'orifice, tant que le niveau de la prise d'air est au-dessus de l'orifice.
+    </p>
+
+
+    <!-- #################### Section F2 #################### -->
+    <h2>VISCOSITE (F2)</h2>
+
+    <h3>1 - Le phénomène</h3>
+
+    <h4>1.1 - Observations</h4>
+    <ul>
+        <li>L'eau, l'huile, le miel coulent différemment : l'eau coule vite, potentiellement avec des tourbillons (faible viscosité) ; le miel coule lentement, de façon régulière (forte viscosité).</li>
+        <li>La chute d'un parachutiste (ou d'une bille dans un liquide visqueux) se fait à vitesse constante (vitesse limite) après une phase d'accélération, contrairement à la loi de la chute libre dans le vide. Ceci est dû aux forces de frottement visqueux de l'air (ou du liquide) qui finissent par équilibrer le poids.</li>
+        <li>La pression d'un liquide réel diminue tout au long d'une canalisation horizontale de section uniforme dans laquelle il s'écoule, contrairement à ce que prédirait le théorème de Bernoulli pour un fluide parfait (où la pression resterait constante si la vitesse et l'altitude sont constantes). Cette perte de pression est due aux frottements visqueux.</li>
+    </ul>
+
+    <h4>1.2 - Conclusion</h4>
+    <ul>
+        <li>Dans un <strong>fluide réel</strong> (non parfait), les forces de contact exercées par le fluide sur une surface (ou entre couches de fluide) ne sont pas nécessairement perpendiculaires à cette surface. Il existe des composantes tangentielles qui s'opposent au mouvement relatif : ce sont les <strong>forces de viscosité</strong> dues aux <strong>frottements</strong> internes.</li>
+        <li>Les phénomènes dus à la viscosité des fluides ne se produisent que lorsque ces <strong>fluides sont en mouvement</strong> relatif (écoulement ou mouvement d'un objet dans le fluide). Un fluide au repos n'exerce que des forces de pression (normales aux surfaces).</li>
+    </ul>
+
+    <h3>2 - Viscosité dynamique - Viscosité cinématique</h3>
+
+    <h4>2.1 - Profil des vitesses</h4>
+    <p>
+        Sous l'effet des forces d'interaction entre les molécules de fluide et des forces d'interaction entre les molécules de fluide et celles de la paroi solide, chaque molécule de fluide ne s'écoule pas à la même vitesse. Généralement, la vitesse est nulle à la paroi (condition d'adhérence) et maximale loin des parois (par exemple, au centre d'un tube).
+    </p>
+    <p>
+        On dit qu'il existe un <strong>profil de vitesse</strong>. Si on représente par un vecteur la vitesse de chaque particule située dans une section droite perpendiculaire à l'écoulement d'ensemble, la courbe lieu des extrémités de ces vecteurs représente le profil de vitesse.
+    </p>
+    <div class="placeholder">[Image: Diagram showing velocity profile v(z) near a fixed plate (z=0), with velocity increasing with distance z. Shows two layers at z and z+Δz with velocities v and v+Δv.]</div>
+    <p>
+        Le mouvement du fluide peut être imaginé comme résultant du glissement des couches de fluide les unes sur les autres. La vitesse \\( v \\) de chaque couche est une fonction de la distance \\( z \\) de cette couche à une référence (par exemple, la paroi fixe) : \\( v = v(z) \\). La variation de vitesse entre couches adjacentes \\( \frac{dv}{dz} \\) est appelée <strong>gradient de vitesse</strong>.
+    </p>
+
+    <h4>2.2 - Viscosité dynamique</h4>
+    <p>
+        Considérons deux couches de fluide parallèles, de surface \\( S \\), distantes d'une petite distance \\( \Delta z \\), et glissant l'une par rapport à l'autre avec une différence de vitesse \\( \Delta v \\). La force de frottement \\( F \\) qui s'exerce tangentiellement entre ces deux couches s'oppose au glissement. L'expérience (pour de nombreux fluides dits newtoniens) montre que cette force est :
+    </p>
+    <ul>
+        <li>Proportionnelle à la surface de contact \\( S \\).</li>
+        <li>Proportionnelle à la différence de vitesse \\( \Delta v \\).</li>
+        <li>Inversement proportionnelle à la distance \\( \Delta z \\) entre les couches.</li>
+    </ul>
+    <p>
+        On peut donc écrire, en passant à la limite différentielle :
+        \\[ F = \eta S \frac{dv}{dz} \\]
+    <p>
+        Le facteur de proportionnalité \\( \eta \\) (êta) est le <strong>coefficient de viscosité dynamique</strong> du fluide. Il caractérise la résistance du fluide au cisaillement. Plus \\( \eta \\) est grand, plus le fluide est visqueux.
+    </p>
+    <p>
+        <strong>Dimension :</strong> L'analyse dimensionnelle de la formule donne \\( [\eta] = \frac{[F]}{[S] [dv/dz]} = \frac{M L T^{-2}}{L^2 \cdot (L T^{-1} / L)} = M L^{-1} T^{-1} \\).
+    </p>
+    <p>
+        <strong>Unité SI :</strong> L'unité de viscosité dynamique est le <strong>Pascal-seconde</strong> (Pa·s). On l'appelle aussi parfois le <strong>Poiseuille</strong> (Pl).
+        \\[ 1 \, \text{Pa} \cdot \text{s} = 1 \, \text{Pl} = 1 \, \text{kg} \cdot \text{m}^{-1} \cdot \text{s}^{-1} \\]
+    </p>
+    <p>
+        <strong>Autres unités (non légales mais courantes) :</strong> Dans l'ancien système CGS, l'unité était le <strong>Poise</strong> (Po).
+        \\[ 1 \, \text{Pl} = 10 \, \text{Po} \quad ( \text{ou } 1 \, \text{Pa} \cdot \text{s} = 10 \, \text{Po}) \\]
+        On utilise souvent le centiPoise (cPo) : \\( 1 \, \text{cPo} = 10^{-2} \, \text{Po} = 10^{-3} \, \text{Pa} \cdot \text{s} = 1 \, \text{mPa} \cdot \text{s} \\). (Par exemple, l'eau à 20°C a une viscosité d'environ 1 cPo).
+    </p>
+    <p>
+        La viscosité de produits industriels (huiles de lubrification, etc.) est parfois exprimée au moyen d'unités ou d'indices empiriques basés sur des temps d'écoulement dans des appareils standardisés : degré Engler (Europe), degré Redwood (Angleterre), grade SAE ou seconde Saybolt Universal (SSU) aux USA. Des tables de conversion existent pour relier ces indices à la viscosité cinématique.
+    </p>
+
+    <h4>2.3 - Viscosité cinématique</h4>
+    <p>
+        Dans de nombreuses formules de mécanique des fluides (comme le nombre de Reynolds), apparaît le rapport de la viscosité dynamique \\( \eta \\) à la masse volumique \\( \rho \\) du fluide. Ce rapport est appelé <strong>viscosité cinématique</strong> et est noté \\( \nu \\) (nu) :
+    </p>
+    \\[ \nu = \frac{\eta}{\rho} \\]
+    <p>
+        <strong>Dimension :</strong> \\( [\nu] = \frac{[\eta]}{[\rho]} = \frac{M L^{-1} T^{-1}}{M L^{-3}} = L^2 T^{-1} \\).
+    </p>
+    <p>
+        <strong>Unité SI :</strong> L'unité de viscosité cinématique est le <strong>mètre carré par seconde</strong> (m²/s). Elle n'a pas de nom particulier.
+    </p>
+    <p>
+        <strong>Autres unités (non légales) :</strong> Dans le système CGS, l'unité était le <strong>Stokes</strong> (St).
+        \\[ 1 \, \text{m}^2/\text{s} = 10^4 \, \text{St} \\]
+        On utilise souvent le centiStokes (cSt) : \\( 1 \, \text{cSt} = 10^{-2} \, \text{St} = 10^{-6} \, \text{m}^2/\text{s} = 1 \, \text{mm}^2/\text{s} \\). (Par exemple, l'eau à 20°C a une viscosité cinématique d'environ 1 cSt).
+    </p>
+
+    <h4>2.4 - Ordre de grandeur ; influence de la température</h4>
+    <div class="placeholder">[Table: Viscosity values for various fluids at different temperatures]</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Fluide</th>
+                <th>Température (°C)</th>
+                <th>Viscosité dynamique \\( \eta \\) (Pa·s ou Pl)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>eau</td>
+                <td>0 °C</td>
+                <td>\\( 1.787 \times 10^{-3} \\)</td>
+            </tr>
+            <tr>
+                <td>eau</td>
+                <td>20 °C</td>
+                <td>\\( 1.002 \times 10^{-3} \\)</td>
+            </tr>
+            <tr>
+                <td>eau</td>
+                <td>100 °C</td>
+                <td>\\( 0.2818 \times 10^{-3} \\)</td>
+            </tr>
+            <tr>
+                <td>huile d'olive</td>
+                <td>20 °C</td>
+                <td>\\( \approx 100 \times 10^{-3} = 0.1 \\)</td>
+            </tr>
+            <tr>
+                <td>glycérol (glycérine)</td>
+                <td>20 °C</td>
+                <td>\\( \approx 1.0 - 1.5 \\)</td>
+            </tr>
+            <tr>
+                <td>Dihydrogène (H₂)</td>
+                <td>20 °C</td>
+                <td>\\( 0.860 \times 10^{-5} \\)</td>
+            </tr>
+            <tr>
+                <td>Dioxygène (O₂)</td>
+                <td>20 °C</td>
+                <td>\\( 1.95 \times 10^{-5} \\)</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        Observations importantes sur l'influence de la température :
+    </p>
+    <ul>
+        <li>La viscosité des <strong>liquides diminue fortement</strong> lorsque la température augmente. Il n'existe pas de relation théorique simple et universelle liant \\( \eta \\) et T, mais des formules empiriques existent (ex: loi d'Arrhenius).</li>
+        <li>Contrairement aux liquides, la viscosité des <strong>gaz augmente</strong> avec la température (les collisions moléculaires, responsables du transfert de quantité de mouvement, deviennent plus fréquentes et efficaces).</li>
+    </ul>
+
+    <h3>3 - Mesurage de viscosités</h3>
+    <p>Les appareils de mesure de la viscosité sont appelés <strong>viscosimètres</strong>.</p>
+
+    <h4>3.1 - Viscosimètre d'Ostwald (ou viscosimètre capillaire)</h4>
+    <p>
+        On mesure le temps d'écoulement \\( t \\) d'un volume V de liquide (calibré entre deux repères) à travers un tube capillaire fin sous l'effet de la gravité. La loi de Poiseuille (voir section F3) montre que pour un appareil donné, le temps d'écoulement est lié à la viscosité cinématique \\( \nu \\). On montre que :
+        \\[ \nu = K \cdot t \\]
+        où K est une constante de l'appareil, déterminée par étalonnage avec un fluide de viscosité connue (souvent de l'eau distillée à une température précise). Ce type de viscosimètre mesure principalement la <strong>viscosité cinématique</strong>. (Le terme \\( \rho \\) intervient, mais est souvent inclus dans K ou compensé par comparaison).
+    </p>
+    <div class="placeholder">[Image: Diagram of an Ostwald viscometer]</div>
+
+    <h4>3.2 - Viscosimètre à chute de bille (ou viscosimètre d'Hoepler)</h4>
+    <p>
+        Une bille sphérique de densité connue tombe lentement dans un tube vertical calibré rempli du liquide dont on veut mesurer la viscosité. Sous l'effet de son poids, de la poussée d'Archimède et de la force de traînée visqueuse (loi de Stokes), la bille atteint rapidement une vitesse limite constante. On mesure le temps \\( t \\) que met la bille pour parcourir une distance calibrée entre deux repères. On montre que la <strong>viscosité dynamique</strong> \\( \eta \\) est proportionnelle à ce temps (après prise en compte des densités de la bille et du fluide) :
+        \\[ \eta = K' \cdot (\rho_{bille} - \rho_{fluide}) \cdot t \\]
+        où K' dépend de la géométrie de l'appareil et de la bille. Souvent, pour une bille et un appareil donnés, on utilise une relation simplifiée \\( \eta = K \cdot t \\) après étalonnage.
+    </p>
+    <div class="placeholder">[Image: Diagram of a falling ball viscometer (Hoepler type)]</div>
+
+    <h4>3.3 - Viscosimètre rotatif (ou viscosimètre de Couette)</h4>
+    <p>
+        Un cylindre intérieur (mobile A) tourne à une vitesse angulaire constante \\( \Omega \\) à l'intérieur d'un cylindre extérieur fixe (ou inversement : le cylindre extérieur B tourne et on mesure le couple sur le cylindre intérieur A maintenu fixe par un ressort de torsion). Le liquide visqueux remplit l'espace entre les deux cylindres. La rotation impose un cisaillement au fluide. Le couple \\( C \\) nécessaire pour maintenir la vitesse constante (ou le couple transmis au cylindre fixe) est mesuré. Ce couple est proportionnel à la viscosité dynamique \\( \eta \\).
+    </p>
+    <div class="placeholder">[Image: Diagram of a Couette viscometer showing rotating cylinder A, stationary cylinder B, fluid in between, and torque measurement via angle α of a torsion spring]</div>
+    <p>
+        Pour le type où le cylindre extérieur B est mobile et retenu par un ressort de torsion qui tourne d'un angle \\( \alpha \\) à l'équilibre :
+        \\[ \eta = K \cdot \alpha \\]
+        où K dépend de la géométrie de l'appareil et de la vitesse de rotation. Ces appareils permettent de mesurer \\( \eta \\) sur une large gamme et d'étudier des fluides non-newtoniens (dont la viscosité dépend du taux de cisaillement).
+    </p>
+
+    <h4>3.4 - Applications ; conséquences de la viscosité</h4>
+    <ul>
+        <li>La viscosité de l'air et de l'eau permet la propulsion par hélice (avion, bateau) : l'hélice met en mouvement le fluide, et la réaction du fluide sur l'hélice crée la poussée.</li>
+        <li>À cause de sa viscosité, la pression d'un fluide réel diminue lors de son écoulement dans une canalisation (même horizontale et de section constante), en raison de la dissipation d'énergie par frottement. C'est ce qu'on appelle les <strong>pertes de charge</strong>. Pour compenser ces pertes dans les longs pipelines ou réseaux, il faut installer des pompes (pour les liquides) ou des compresseurs (pour les gaz) à intervalles réguliers pour redonner de l'énergie (pression) au fluide.</li>
+        <li>La viscosité est une propriété essentielle pour les lubrifiants (huiles) : elle doit être suffisamment élevée pour maintenir un film protecteur entre les pièces en mouvement, mais pas trop pour ne pas générer trop de frottement interne.</li>
+    </ul>
+
+
+    <!-- #################### Section F3 #################### -->
+    <h2>PERTES DE CHARGE (F3)</h2>
+
+    <h3>1 - Le phénomène</h3>
+
+    <h4>Observations</h4>
+    <ul>
+        <li>La pression d'un liquide réel diminue tout au long d'une canalisation horizontale et de section uniforme dans laquelle il s'écoule (contrairement à la prédiction de Bernoulli pour un fluide parfait).</li>
+        <li>La pression d'un fluide réel diminue de façon plus marquée après le passage à travers des obstacles comme un coude, une vanne (robinet), un rétrécissement ou un élargissement brusque.</li>
+    </ul>
+
+    <h4>Conclusion</h4>
+    <ul>
+        <li>Un <strong>fluide réel</strong>, en mouvement, subit des <strong>pertes d'énergie</strong> (dissipation sous forme de chaleur) dues :
+            <ul>
+                <li>Aux frottements visqueux sur les parois de la canalisation. Ce sont les <strong>pertes de charge systématiques</strong> ou <strong>régulières</strong> (réparties tout le long de la conduite).</li>
+                <li>Aux turbulences et décollements de l'écoulement créés par les "accidents" de parcours (coudes, vannes, changements de section, etc.). Ce sont les <strong>pertes de charge singulières</strong> ou <strong>accidentelles</strong> (localisées au niveau de ces accidents).</li>
+            </ul>
+        </li>
+        <li>Ces pertes d'énergie se traduisent par une diminution de la pression (ou plus précisément, de la charge totale du fluide) dans le sens de l'écoulement.</li>
+    </ul>
+
+    <h3>2 - Les différents régimes d'écoulement : nombre de Reynolds</h3>
+    <p>
+        Les expériences réalisées par Osborne Reynolds (1883) sur l'écoulement d'un liquide dans une conduite cylindrique rectiligne (en injectant un filet de liquide coloré au centre) ont montré l'existence de deux régimes d'écoulement principaux :
+    </p>
+    <ul>
+        <li><strong>Régime laminaire :</strong> À faible vitesse, le filet coloré reste rectiligne et distinct. L'écoulement se fait par couches parallèles (lames) glissant les unes sur les autres sans se mélanger. Les lignes de courant sont régulières et parallèles aux parois.</li>
+        <li><strong>Régime turbulent :</strong> Au-delà d'une certaine vitesse critique, le filet coloré se disperse rapidement et se mélange au reste du fluide. L'écoulement devient chaotique, désordonné, avec des tourbillons (vortex) et des fluctuations aléatoires de vitesse et de pression. Les particules de fluide ont des trajectoires très irrégulières et se mélangent intensément.</li>
+    </ul>
+    <div class="placeholder">[Image: Diagram of Reynolds experiment showing laminar flow (straight filament)]</div>
+    <div class="placeholder">[Image: Diagram of Reynolds experiment showing turbulent flow (dispersed filament - instantaneous view)]</div>
+    <div class="placeholder">[Image: Diagram of Reynolds experiment showing turbulent flow (averaged view shows mixing)]</div>
+    <p>
+        En utilisant des fluides de viscosités différentes, en faisant varier le débit et le diamètre de la canalisation, Reynolds a montré que le paramètre qui permettait de déterminer si l'écoulement est laminaire ou turbulent est un nombre sans dimension appelé <strong>nombre de Reynolds</strong> (Re), défini comme :
+    </p>
+    \\[ \text{Re} = \frac{\rho v D}{\eta} \quad \text{ou} \quad \text{Re} = \frac{v D}{\nu} \\]
+    <p>
+        avec :
+    </p>
+    <ul>
+        <li>\\( \rho \\) : masse volumique du fluide (kg/m³)</li>
+        <li>\\( v \\) : vitesse moyenne du fluide dans la conduite (m/s)</li>
+        <li>\\( D \\) : diamètre de la conduite (m) (ou une autre dimension caractéristique pour des sections non circulaires)</li>
+        <li>\\( \eta \\) : viscosité dynamique du fluide (Pa·s)</li>
+        <li>\\( \nu = \eta / \rho \\) : viscosité cinématique du fluide (m²/s)</li>
+    </ul>
+    <p>
+        Le nombre de Reynolds représente le rapport entre les forces d'inertie (liées à la masse et à la vitesse du fluide, tendant à créer des turbulences) et les forces de viscosité (liées aux frottements internes, tendant à amortir les perturbations et à maintenir un écoulement régulier).
+    </p>
+    <p>
+        L'expérience montre que pour l'écoulement dans une conduite cylindrique :
+    </p>
+    <ul>
+        <li>Si \\( \text{Re} < 2000 \\) : le régime est <strong>LAMINAIRE</strong>.</li>
+        <li>Si \\( 2000 < \text{Re} < 3000 \\) (environ) : le régime est <strong>intermédiaire</strong> ou de <strong>transition</strong> (instable, peut alterner entre laminaire et turbulent).</li>
+        <li>Si \\( \text{Re} > 3000 \\) : le régime est <strong>TURBULENT</strong>.</li>
+    </ul>
+    <p>
+        Ces valeurs limites (environ 2000-3000) doivent être considérées comme des ordres de grandeur. La transition dépend aussi de la rugosité des parois et des perturbations à l'entrée de la conduite. Cependant, elles fournissent un critère très utile pour prédire le type d'écoulement.
+    </p>
+
+    <h3>3 - Théorème de Bernoulli appliqué à un fluide réel avec pertes de charge</h3>
+    <p>
+        Lors d'un écoulement d'un fluide réel entre deux points (1) et (2), l'énergie mécanique n'est pas conservée à cause de la dissipation par viscosité. Il faut introduire un terme de perte d'énergie dans l'équation de Bernoulli.
+    </p>
+    <p>
+        Considérons un écoulement permanent isovolume d'un fluide réel entre (1) et (2), sans machine hydraulique entre ces points. Le théorème de Bernoulli généralisé s'écrit :
+    </p>
+    \\[ \frac{1}{2} \rho v_1^2 + \rho g z_1 + p_1 = \frac{1}{2} \rho v_2^2 + \rho g z_2 + p_2 + \Delta p_{1 \to 2} \\]
+    <p>
+        où \\( \Delta p_{1 \to 2} \\) représente l'ensemble des <strong>pertes de charge</strong> entre les points (1) et (2), exprimées en unités de pression (Pascals). C'est une quantité toujours positive (\\( \Delta p_{1 \to 2} > 0 \\)) qui représente la pression "perdue" à cause des frottements. L'équation peut aussi s'écrire :
+    </p>
+    \\[ \left( \frac{1}{2} \rho v_2^2 + \rho g z_2 + p_2 \right) - \left( \frac{1}{2} \rho v_1^2 + \rho g z_1 + p_1 \right) = - \Delta p_{1 \to 2} \\]
+    <p>
+        Cela montre que la charge totale du fluide diminue entre (1) et (2) d'une quantité égale aux pertes de charge.
+    </p>
+    <p>
+        Sous forme de hauteurs (charges), l'équation devient :
+        \\[ \frac{v_1^2}{2g} + z_1 + \frac{p_1}{\rho g} = \frac{v_2^2}{2g} + z_2 + \frac{p_2}{\rho g} + \Delta h_{1 \to 2} \\]
+    <p>
+        où \\( \Delta h_{1 \to 2} = \frac{\Delta p_{1 \to 2}}{\rho g} \\) est la <strong>perte de charge</strong> exprimée en mètres de colonne de fluide (mCF). C'est la hauteur d'énergie perdue par unité de poids de fluide.
+    </p>
+
+    <h3>4 - Expression des pertes de charge</h3>
+
+    <h4>4.1 - Influence des différentes grandeurs</h4>
+    <p>
+        Lorsqu'on considère un fluide réel, les pertes d'énergie spécifiques (pertes de charge) dépendent de nombreux facteurs :
+    </p>
+    <ul>
+        <li>La <strong>géométrie</strong> de la canalisation (forme, diamètre D, longueur L).</li>
+        <li>La <strong>rugosité</strong> (\\( k \\)) de la paroi interne de la canalisation (hauteur moyenne des aspérités).</li>
+        <li>Les caractéristiques du <strong>fluide</strong> : masse volumique \\( \rho \\) et viscosité (\\( \eta \\) ou \\( \nu \\)).</li>
+        <li>Les caractéristiques de l'<strong>écoulement</strong> : vitesse moyenne \\( v \\) (ou débit \\( q_V \\)) et le régime d'écoulement (laminaire ou turbulent, caractérisé par le nombre de Reynolds Re).</li>
+    </ul>
+    <p>
+        Les pertes de charge ne dépendent pas (ou très peu) de la valeur absolue de la pression qui règne dans le liquide.
+    </p>
+    <p>
+        On distingue deux types de pertes de charge dont la somme donne la perte de charge totale :
+    </p>
+    <ul>
+        <li><strong>Pertes de charge régulières (ou systématiques) :</strong> dues au frottement du fluide sur la paroi interne tout le long d'une conduite de section constante. Elles sont proportionnelles à la longueur de la conduite.</li>
+        <li><strong>Pertes de charge singulières (ou accidentelles) :</strong> dues aux perturbations locales de l'écoulement causées par les accidents de parcours (coudes, élargissements ou rétrécissements brusques, vannes, Tés, etc.). Elles sont localisées au niveau de ces singularités.</li>
+    </ul>
+    <p>
+        Le calcul de ces pertes de charge repose sur des formules empiriques ou semi-empiriques basées sur l'analyse dimensionnelle et de nombreuses expériences.
+    </p>
+
+    <h4>4.2 - Pertes de charge systématiques (régulières)</h4>
+
+    <h5>4.2.1 - Généralités - Formule de Darcy-Weisbach</h5>
+    <p>
+        Ce type de perte est causé par le frottement intérieur qui se produit dans les liquides réels en mouvement, que les tuyaux soient lisses ou rugueux.
+    </p>
+    <p>
+        Entre deux points séparés par une longueur \\( L \\) dans un tuyau de diamètre \\( D \\) et de section constante, la perte de charge régulière \\( \Delta p_{reg} \\) (en Pascals) ou \\( \Delta h_{reg} \\) (en mètres) est exprimée par la <strong>formule de Darcy-Weisbach</strong> :
+    </p>
+    <p>Forme en pression :</p>
+    \\[ \Delta p_{reg} = \lambda \cdot \frac{L}{D} \cdot \frac{1}{2} \rho v^2 \\]
+    <p>Forme en hauteur (mCF) :</p>
+    \\[ \Delta h_{reg} = \lambda \cdot \frac{L}{D} \cdot \frac{v^2}{2g} \\]
+    <p>
+        avec :
+    </p>
+    <ul>
+        <li>\\( \lambda \\) (lambda) : <strong>coefficient de perte de charge linéaire</strong> (ou facteur de frottement de Darcy). C'est un nombre <strong>sans dimension</strong>.</li>
+        <li>\\( L \\) : longueur de la conduite (m).</li>
+        <li>\\( D \\) : diamètre intérieur de la conduite (m).</li>
+        <li>\\( \rho \\) : masse volumique du fluide (kg/m³).</li>
+        <li>\\( v \\) : vitesse moyenne de l'écoulement (m/s).</li>
+        <li>\\( g \\) : accélération de la pesanteur (m/s²).</li>
+    </ul>
+    <p>
+        Le calcul des pertes de charge régulières repose entièrement sur la détermination correcte du coefficient \\( \lambda \\). Ce coefficient dépend du régime d'écoulement (nombre de Reynolds Re) et de la rugosité relative de la conduite (\\( k/D \\)).
+    </p>
+
+    <h5>4.2.2 - Cas de l'écoulement laminaire (Re < 2000)</h5>
+    <p>
+        Dans ce cas, on peut montrer théoriquement (à partir des équations de Navier-Stokes) que le coefficient de perte de charge \\( \lambda \\) est uniquement fonction du nombre de Reynolds Re et ne dépend pas de la rugosité de la paroi :
+    </p>
+    \\[ \lambda = \frac{64}{\text{Re}} \quad (\text{pour } \text{Re} < 2000) \\]
+    <p>
+        avec \\( \text{Re} = \frac{v D}{\nu} \\).
+    </p>
+    <p>
+        En remplaçant \\( \lambda \\) dans la formule de Darcy-Weisbach, on obtient la perte de charge en régime laminaire :
+        \\[ \Delta h_{reg} = \frac{64}{\text{Re}} \cdot \frac{L}{D} \cdot \frac{v^2}{2g} = \frac{64 \nu}{v D} \cdot \frac{L}{D} \cdot \frac{v^2}{2g} = \frac{32 \nu L v}{g D^2} \\]
+    <p>
+        Il est alors immédiat de voir que la perte de charge en régime laminaire (\\( \Delta h_{reg} \\) ou \\( \Delta p_{reg} \\)) est :
+    </p>
+    <ul>
+        <li>Proportionnelle à la vitesse moyenne \\( v \\) (et donc au débit \\( q_V \\)).</li>
+        <li>Proportionnelle à la viscosité cinématique \\( \nu \\) (ou dynamique \\( \eta \\)).</li>
+        <li>Proportionnelle à la longueur \\( L \\).</li>
+        <li>Inversement proportionnelle au carré du diamètre \\( D^2 \\) (pour \\( \Delta h \\)) ou à \\( D^4 \\) (pour \\( \Delta p \\) en fonction de \\( q_V \\)).</li>
+    </ul>
+
+    <h5>4.2.3 - Loi de Poiseuille</h5>
+    <p>
+        Pour un écoulement laminaire (\\( \text{Re} < 2000 \\)) d'un fluide de viscosité dynamique \\( \eta \\) dans une conduite cylindrique horizontale de rayon \\( r = D/2 \\) et de longueur \\( l = L \\), la relation entre le débit-volume \\( q_V \\) et la différence de pression \\( \Delta p = p_1 - p_2 \\) est donnée par la <strong>loi de Poiseuille</strong> :
+    </p>
+    <div class="placeholder">[Image: Diagram showing horizontal pipe flow for Poiseuille's law, with radius r, length l, pressures p1, p2 and pressure drop Δh]</div>
+    \\[ q_V = \frac{\pi r^4}{8 \eta l} (p_1 - p_2) = \frac{\pi D^4}{128 \eta L} \Delta p_{reg} \\]
+    <p>
+        Cette loi est cohérente avec la formule de perte de charge laminaire vue précédemment. Elle montre la très forte dépendance du débit au rayon (ou diamètre) de la conduite (en \\( r^4 \\) ou \\( D^4 \\)).
+    </p>
+    <p>
+        avec :
+    </p>
+    <ul>
+        <li>\\( q_V \\) : débit-volume (m³/s)</li>
+        <li>\\( r \\) : rayon intérieur (m)</li>
+        <li>\\( D \\) : diamètre intérieur (m)</li>
+        <li>\\( \eta \\) : viscosité dynamique (Pa·s)</li>
+        <li>\\( l=L \\) : longueur de la conduite (m)</li>
+        <li>\\( p_1, p_2 \\) : pressions aux points (1) et (2) (Pa)</li>
+        <li>\\( \Delta p_{reg} = p_1 - p_2 \\) : perte de charge régulière (Pa)</li>
+    </ul>
+
+    <h5>4.2.4 - Cas de l'écoulement turbulent (Re > 3000)</h5>
+    <p>
+        Les phénomènes d'écoulement turbulent sont beaucoup plus complexes car l'écoulement est instationnaire et tridimensionnel à petite échelle. La détermination du coefficient de perte de charge \\( \lambda \\) résulte principalement de mesures expérimentales et de formules empiriques ou semi-empiriques.
+    </p>
+    <p>
+        En régime turbulent, l'état de la surface (la <strong>rugosité</strong> \\( k \\)) devient important. Son influence est d'autant plus grande que le nombre de Reynolds Re est élevé. Le paramètre pertinent est la <strong>rugosité relative</strong> \\( k/D \\).
+    </p>
+    <p>
+        De nombreux travaux ont cherché à déterminer la variation de \\( \lambda \\) en fonction de Re et de \\( k/D \\). La formule de <strong>Colebrook-White</strong> est actuellement considérée comme celle qui traduit le mieux les phénomènes d'écoulement en régime turbulent dans les conduites industrielles. Elle est présentée sous forme implicite (\\( \lambda \\) apparaît des deux côtés) :
+    </p>
+    \\[ \frac{1}{\sqrt{\lambda}} = -2 \log_{10} \left( \frac{k}{3.7 D} + \frac{2.51}{\text{Re} \sqrt{\lambda}} \right) \\]
+    <p>
+        L'utilisation directe de cette formule nécessite un calcul itératif pour trouver \\( \lambda \\). En pratique, on utilise souvent des représentations graphiques de cette formule, appelées <strong>diagrammes de Moody</strong> (ou abaques), qui donnent \\( \lambda \\) en fonction de Re et \\( k/D \\).
+    </p>
+    <p>
+        On distingue deux sous-régimes en turbulence :
+    </p>
+    <ul>
+        <li><strong>Turbulent lisse :</strong> Pour des Re modérés ou des parois très lisses, le terme lié à Re domine (\\( 2.51 / (\text{Re} \sqrt{\lambda}) \gg k / (3.7 D) \\)). \\( \lambda \\) dépend principalement de Re et peu de la rugosité.</li>
+        <li><strong>Turbulent rugueux :</strong> Pour des Re très élevés ou des parois très rugueuses, le terme lié à la rugosité domine (\\( k / (3.7 D) \gg 2.51 / (\text{Re} \sqrt{\lambda}) \\)). \\( \lambda \\) dépend principalement de la rugosité relative \\( k/D \\) et devient quasi-indépendant de Re.</li>
+    </ul>
+    <p>
+        <strong>Remarque :</strong> Pour des cas particuliers, on utilise parfois des formules empiriques explicites plus simples, valables dans des domaines limités. Par exemple, la <strong>formule de Blasius</strong> pour des tuyaux lisses et \\( \text{Re} < 10^5 \\) :
+        \\[ \lambda = 0.316 \, \text{Re}^{-0.25} \\]
+        Dans ce cas, la perte de charge \\( \Delta h_{reg} \propto v^{1.75} \\). En général, en régime turbulent, la perte de charge est approximativement proportionnelle à \\( v^2 \\) (alors qu'elle est proportionnelle à \\( v \\) en laminaire).
+    </p>
+
+    <h4>4.3 - Pertes de charge accidentelles (singulières)</h4>
+    <p>
+        Ces pertes de charge se produisent au niveau des singularités du circuit (coudes, vannes, Tés, élargissements, rétrécissements, etc.) où l'écoulement est fortement perturbé.
+    </p>
+    <div class="placeholder">[Image: Pressure variation across a fitting showing singular pressure drop Δp or Δh]</div>
+    <p>
+        Les expériences montrent que, dans beaucoup de cas (surtout en régime turbulent), les pertes de charge singulières sont approximativement proportionnelles au carré de la vitesse moyenne \\( v \\) dans la conduite (souvent prise en amont ou en aval de la singularité, selon la convention). On adopte donc la forme suivante d'expression :
+    </p>
+    <p>Forme en pression :</p>
+    \\[ \Delta p_{sing} = K \cdot \frac{1}{2} \rho v^2 \\]
+    <p>Forme en hauteur (mCF) :</p>
+    \\[ \Delta h_{sing} = K \cdot \frac{v^2}{2g} \\]
+    <p>
+        avec :
+    </p>
+    <ul>
+        <li>\\( K \\) : <strong>coefficient de perte de charge singulière</strong>. C'est un nombre <strong>sans dimension</strong> qui dépend du type et de la géométrie de la singularité.</li>
+        <li>\\( v \\) : vitesse moyenne de référence (m/s).</li>
+        <li>Les autres termes sont définis comme précédemment.</li>
+    </ul>
+    <p>
+        La détermination de \\( K \\) est principalement du domaine de l'expérience. Les valeurs de K pour les singularités courantes (coudes de différents angles et rayons, vannes de différents types et degrés d'ouverture, etc.) sont données dans des tables ou abaques dans les manuels de mécanique des fluides ou par les fabricants de matériel.
+    </p>
+    <p>
+        La perte de charge totale dans un circuit est la somme des pertes de charge régulières de toutes les sections droites et des pertes de charge singulières de tous les accidents : \\( \Delta p_{tot} = \sum \Delta p_{reg} + \sum \Delta p_{sing} \\).
+    </p>
+
+    <h3>5 - Théorème de Bernoulli généralisé</h3>
+    <p>
+        Lors d'un écoulement permanent d'un fluide réel entre deux points (1) et (2), il peut y avoir à la fois des échanges d'énergie avec des machines (pompes, turbines) et des pertes d'énergie par frottement (pertes de charge). Le théorème de Bernoulli doit inclure ces deux contributions.
+    </p>
+    <p>
+        Le théorème de Bernoulli généralisé s'écrit alors sous la forme générale (en termes de pression) :
+    </p>
+    \\[ \left( \frac{1}{2} \rho v_2^2 + \rho g z_2 + p_2 \right) - \left( \frac{1}{2} \rho v_1^2 + \rho g z_1 + p_1 \right) = \sum \frac{P_{machine}}{q_V} - \Delta p_{1 \to 2} \\]
+    <p>
+        ou, de manière équivalente :
+    </p>
+    \\[ \frac{1}{2} \rho (v_2^2 - v_1^2) + \rho g (z_2 - z_1) + (p_2 - p_1) = \sum \frac{P_{machine}}{q_V} - \Delta p_{1 \to 2} \\]
+    <p>
+        avec :
+    </p>
+    <ul>
+        <li>\\( \sum \frac{P_{machine}}{q_V} \\) : somme des termes de puissance des machines (pompes ou turbines) situées entre (1) et (2), divisée par le débit volumique. Ce terme est positif pour une pompe (gain d'énergie), négatif pour une turbine (perte d'énergie par le fluide).</li>
+        <li>\\( \Delta p_{1 \to 2} \\) : somme de toutes les pertes de charge (régulières et singulières) entre les points (1) et (2) (toujours > 0).</li>
+    </ul>
+    <p>
+        Sous forme de hauteurs (charges) :
+    </p>
+    \\[ \left( \frac{v_2^2}{2g} + z_2 + \frac{p_2}{\rho g} \right) - \left( \frac{v_1^2}{2g} + z_1 + \frac{p_1}{\rho g} \right) = \sum H_{machine} - \Delta h_{1 \to 2} \\]
+    <p>
+        avec \\( H_{machine} = \frac{P_{machine}}{\rho g q_V} \\) la hauteur manométrique de la machine (positive pour une pompe, négative pour une turbine) et \\( \Delta h_{1 \to 2} = \frac{\Delta p_{1 \to 2}}{\rho g} \\) la perte de charge totale en mètres.
+    </p>
+
+
+    <!-- #################### Section F4 #################### -->
+    <h2>TENSION SUPERFICIELLE (F4)</h2>
+
+    <h3>1 - Le phénomène</h3>
+
+    <h4>Observations</h4>
+    <ul>
+        <li>La surface libre de l'eau dans un tube de verre forme un ménisque (concave vers le haut près des bords). Pour le mercure, le ménisque est convexe.</li>
+        <li>Les poils d'un pinceau sec se rassemblent lorsqu'ils sont mouillés et retirés de l'eau (la surface de l'eau entre les poils tend à se minimiser).</li>
+        <li>Une aiguille fine en acier (plus dense que l'eau) peut flotter à la surface de l'eau si elle est déposée délicatement.</li>
+        <li>L'eau monte dans un tube capillaire (tube très fin) en verre propre, alors que le mercure descend.</li>
+        <li>Une plaque de verre posée sur une surface d'eau adhère très fortement (il faut une force notable pour la soulever perpendiculairement).</li>
+        <li>Une lame d'eau savonneuse dans un cadre métallique prend une forme telle que sa surface soit minimale (par exemple, un film plan si le cadre est plan).</li>
+    </ul>
+
+    <h4>Conclusion</h4>
+    <ul>
+        <li>La surface libre d'un liquide (l'interface entre le liquide et un gaz, généralement l'air) possède des propriétés particulières. Elle tend à se contracter spontanément de façon à acquérir une <strong>aire minimale</strong> compatible avec les autres contraintes (volume du liquide, forme du récipient).</li>
+        <li>La surface d'un liquide se comporte un peu comme une <strong>membrane élastique tendue</strong> qui chercherait à minimiser sa surface. C'est ce phénomène qui est appelé <strong>tension superficielle</strong>. Il est dû aux forces d'attraction intermoléculaires (forces de cohésion) qui sont dissymétriques pour les molécules situées à la surface par rapport à celles situées à l'intérieur du liquide.</li>
+    </ul>
+
+    <h3>2 - La force de tension superficielle</h3>
+
+    <h4>2.1 - Force de tension superficielle appliquée à un solide tiré par une lame liquide</h4>
+    <p>
+        Considérons un cadre métallique rectangulaire ABCD dont le côté AB, de longueur L, peut glisser sans frottement sur les côtés DA et CB. Si on plonge ce cadre dans une solution savonneuse, il se forme une lame mince liquide (un film de savon) qui remplit le cadre.
+    </p>
+    <div class="placeholder">[Image: Diagram of a wire frame ABCD with a sliding side AB pulling a liquid film. Shows the force F needed to balance the surface tension force f.]</div>
+    <p>
+        Le liquide tire le côté mobile AB vers DC (pour minimiser sa surface). Cette force de traction, que l'on note \\( f_{tot} \\), est exercée par la tension superficielle le long du côté AB. Comme le film de savon a deux faces (deux interfaces liquide-air), la force totale exercée sur le côté AB est due aux deux surfaces.
+    </p>
+    <p>
+        On définit la <strong>tension superficielle</strong> \\( \gamma \\) (gamma) comme la force par unité de longueur exercée par l'interface. Pour une seule interface de longueur L, la force serait \\( f = \gamma L \\).
+    </p>
+    <p>
+        Ici, avec deux interfaces, la force totale tirant AB vers DC est \\( f_{tot} = 2 \gamma L \\). Pour maintenir AB en équilibre, il faut lui appliquer une force extérieure \\( F \\) égale et opposée :
+        \\[ F = 2 \gamma L \\]
+    <p>
+        L'expérience montre que cette force \\( F \\) ne dépend pas de la position de AB (c'est-à-dire de l'aire du film), mais seulement de la longueur L et de la nature du liquide (qui détermine \\( \gamma \\)).
+    </p>
+    <p>
+        Unités : Si \\( F \\) est en Newtons (N) et \\( L \\) en mètres (m), alors \\( \gamma \\) s'exprime en <strong>Newtons par mètre</strong> (N·m⁻¹).
+    </p>
+
+    <h4>2.2 - Définition de la Tension Superficielle</h4>
+    <p>
+        Dans la relation précédente, le coefficient \\( \gamma \\) s'appelle <strong>tension superficielle</strong> (ou parfois coefficient de tension superficielle) du liquide (à l'interface considérée, généralement liquide-air). C'est une mesure de l'énergie nécessaire pour augmenter la surface de l'interface d'une unité d'aire (elle peut aussi s'exprimer en J·m⁻²).
+    </p>
+    <p>
+        <strong>Dimension :</strong> \\( [\gamma] = \frac{[F]}{[L]} = \frac{M L T^{-2}}{L} = M T^{-2} \\). (Cohérent avec J/m² car J = N·m = kg·m²/s², donc J/m² = kg/s² = M T⁻²).
+    </p>
+    <p>
+        <strong>Unité SI :</strong> L'unité de tension superficielle est le <strong>Newton par mètre</strong> (N·m⁻¹). Elle n'a pas de nom particulier.
+    </p>
+
+    <h4>2.3 - Ordres de grandeur (dans le cas d'interface liquide-air)</h4>
+    <div class="placeholder">[Table: Surface tension values for various liquids at 20°C]</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Liquide</th>
+                <th>Température (°C)</th>
+                <th>Tension superficielle \\( \gamma \\) (N·m⁻¹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>eau</td>
+                <td>20 °C</td>
+                <td>\\( 72.8 \times 10^{-3} \approx 0.073 \\)</td>
+            </tr>
+             <tr>
+                <td>eau</td>
+                <td>0 °C</td>
+                <td>\\( 75.6 \times 10^{-3} \\)</td>
+            </tr>
+            <tr>
+                <td>huile végétale (type olive)</td>
+                <td>20 °C</td>
+                <td>\\( \approx 32 \times 10^{-3} = 0.032 \\)</td>
+            </tr>
+            <tr>
+                <td>éthanol</td>
+                <td>20 °C</td>
+                <td>\\( 22 \times 10^{-3} = 0.022 \\)</td>
+            </tr>
+            <tr>
+                <td>éther diéthylique</td>
+                <td>20 °C</td>
+                <td>\\( 17 \times 10^{-3} = 0.017 \\)</td>
+            </tr>
+            <tr>
+                <td>mercure</td>
+                <td>20 °C</td>
+                <td>\\( \approx 480 \times 10^{-3} = 0.48 \\)</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        Remarques :
+        <ul>
+            <li>L'eau a une tension superficielle relativement élevée par rapport à la plupart des liquides organiques.</li>
+            <li>Le mercure a une tension superficielle très élevée.</li>
+            <li>La tension superficielle des liquides diminue lorsque la température augmente.</li>
+            <li>La présence de substances dissoutes (solutés), notamment les tensioactifs, peut modifier considérablement la tension superficielle.</li>
+        </ul>
+    </p>
+
+    <h4>2.4 - Angle \\( \theta \\) de raccordement liquide/solide (Angle de contact)</h4>
+    <p>
+        Lorsqu'une goutte de liquide est déposée sur une surface solide plane et horizontale, la forme de la goutte dépend des interactions entre les trois interfaces présentes : liquide-gaz (tension \\( \gamma_{LG} \\)), solide-liquide (tension \\( \gamma_{SL} \\)) et solide-gaz (tension \\( \gamma_{SG} \\)). L'équilibre de ces tensions au niveau de la ligne de contact triple définit l'<strong>angle de contact</strong> (ou angle de raccordement) \\( \theta \\). C'est l'angle formé entre la surface solide et la tangente à l'interface liquide-gaz au point de contact, mesuré à l'intérieur du liquide.
+    </p>
+    <div class="placeholder">[Image: Diagram showing contact angles θ for wetting (θ<90°, e.g., water on clean glass) and non-wetting (θ>90°, e.g., mercury on glass)]</div>
+    <p>
+        On observe différents cas :
+    </p>
+    <ul>
+        <li>
+            <strong>Mouillage parfait :</strong> Le liquide s'étale complètement sur le solide. L'angle de contact \\( \theta = 0^\circ \\). (Exemple : eau très propre sur du verre très propre).
+        </li>
+        <li>
+            <strong>Mouillage imparfait (ou mouillage) :</strong> Le liquide forme une goutte (lentille) avec un angle de contact \\( 0^\circ < \theta < 90^\circ \\). On dit que le liquide <strong>mouille</strong> le solide. (Exemple : eau sur du verre ordinaire ou du plastique comme le polyéthylène). Plus \\( \theta \\) est petit, meilleur est le mouillage.
+        </li>
+        <li>
+            <strong>Non-mouillage :</strong> Le liquide forme une goutte avec un angle de contact \\( \theta > 90^\circ \\). On dit que le liquide <strong>ne mouille pas</strong> le solide. (Exemple : mercure sur du verre, eau sur du Téflon ou une surface paraffinée). Si \\( \theta = 180^\circ \\), on aurait un non-mouillage parfait (la goutte serait sphérique et ne toucherait qu'en un point, cas idéal).
+        </li>
+    </ul>
+    <p>
+        Le même angle de contact \\( \theta \\) se retrouve à la surface libre d'un liquide près des bords du récipient qui le contient. Il est responsable de la formation d'un <strong>ménisque</strong> :
+        <ul>
+            <li>Si \\( \theta < 90^\circ \\) (liquide mouillant), le liquide "monte" le long de la paroi, formant un ménisque <strong>concave</strong>.</li>
+            <li>Si \\( \theta > 90^\circ \\) (liquide non-mouillant), le liquide "descend" le long de la paroi, formant un ménisque <strong>convexe</strong>.</li>
+        </ul>
+    </p>
+
+    <h3>3 - Tube capillaire - loi de Jurin</h3>
+    <p>
+        Un <strong>tube capillaire</strong> (du latin <em>capillus</em> : cheveu) est un tube de très petit diamètre intérieur (généralement \\( r < 1 \\) mm).
+    </p>
+    <p>
+        Lorsqu'on plonge un tube capillaire, ouvert aux deux extrémités, dans un liquide, on observe que le niveau du liquide à l'intérieur du tube est différent du niveau à l'extérieur.
+    </p>
+    <ul>
+        <li>Si le liquide mouille le tube (\\( \theta < 90^\circ \\)), le liquide <strong>monte</strong> dans le tube d'une hauteur \\( h \\) (ascension capillaire).</li>
+        <li>Si le liquide ne mouille pas le tube (\\( \theta > 90^\circ \\)), le liquide <strong>descend</strong> dans le tube d'une hauteur \\( h \\) (dépression capillaire, \\( h \\) est alors négatif).</li>
+    </ul>
+    <div class="placeholder">[Image: Diagram showing capillary rise (h > 0) for a wetting liquid (θ < 90°) with tube radius r]</div>
+    <p>
+        La hauteur (ou dépression) \\( h \\) est donnée par la <strong>loi de Jurin</strong>. Elle résulte de l'équilibre entre les forces de tension superficielle (qui tirent le liquide vers le haut le long du périmètre de contact \\( 2\pi r \\)) et le poids de la colonne de liquide soulevée (ou abaissée). La composante verticale de la force de tension superficielle est \\( (2 \pi r) \gamma \cos \theta \\). Le poids de la colonne de liquide est \\( (\pi r^2 h) \rho g \\). À l'équilibre :
+        \\[ (2 \pi r) \gamma \cos \theta = (\pi r^2 h) \rho g \\]
+    <p>
+        D'où la hauteur \\( h \\) :
+        \\[ h = \frac{2 \gamma \cos \theta}{\rho g r} \\]
+    <p>
+        avec :
+    </p>
+    <ul>
+        <li>\\( h \\) : hauteur d'ascension ou de dépression (m)</li>
+        <li>\\( \gamma \\) : tension superficielle du liquide (N/m)</li>
+        <li>\\( \theta \\) : angle de contact liquide/solide (degrés ou radians)</li>
+        <li>\\( \rho \\) : masse volumique du liquide (kg/m³)</li>
+        <li>\\( g \\) : accélération de la pesanteur (m/s²)</li>
+        <li>\\( r \\) : rayon intérieur du tube capillaire (m)</li>
+    </ul>
+    <p>
+        La loi montre que \\( h \\) est inversement proportionnelle au rayon \\( r \\) : l'effet capillaire est d'autant plus important que le tube est fin. Si \\( \cos \theta > 0 \\) (\\( \theta < 90^\circ \\)), \\( h > 0 \\) (ascension). Si \\( \cos \theta < 0 \\) (\\( \theta > 90^\circ \\)), \\( h < 0 \\) (dépression).
+    </p>
+
+    <h3>4 - Mesurages de tension superficielle</h3>
+    <p>Plusieurs méthodes existent pour mesurer la tension superficielle \\( \gamma \\).</p>
+
+    <h4>4.1 - Méthode du capillaire</h4>
+    <p>
+        On applique la loi de Jurin. On mesure l'ascension (ou la dépression) \\( h \\) d'un liquide dans un tube capillaire de rayon \\( r \\) connu. Si l'on connaît la masse volumique \\( \rho \\) du liquide, l'accélération \\( g \\), et l'angle de contact \\( \theta \\) (souvent, on utilise un liquide qui mouille parfaitement le tube, comme l'eau propre sur du verre propre, pour lequel \\( \theta \approx 0 \\) et \\( \cos \theta \approx 1 \\)), on peut en déduire \\( \gamma \\) :
+        \\[ \gamma = \frac{\rho g r h}{2 \cos \theta} \\]
+    </p>
+
+    <h4>4.2 - Méthode de la lame immergée (Plaque de Wilhelmy) ou de l'anneau immergé (Anneau de du Noüy)</h4>
+    <ul>
+        <li>
+            <strong>Plaque de Wilhelmy :</strong> Une lame mince et parfaitement propre (souvent en platine pour assurer un bon mouillage, \\( \theta \approx 0 \\)), de périmètre \\( P = 2(L+e) \approx 2L \\) si \\( e \ll L \\) (L=largeur, e=épaisseur), est suspendue à une balance de précision (balance de torsion ou électronique). On amène la surface du liquide au contact du bord inférieur de la plaque. La force supplémentaire \\( F \\) mesurée par la balance juste au moment où la plaque affleure la surface (pour annuler la poussée d'Archimède) est due à la tension superficielle tirant la plaque vers le bas le long de son périmètre : \\( F = \gamma P \cos \theta \\). Si le mouillage est parfait (\\( \theta=0 \\)), \\( F = \gamma P \\). On peut donc déduire \\( \gamma = F/P \\).
+            <div class="placeholder">[Image: Diagram of Wilhelmy plate method]</div>
+        </li>
+        <li>
+            <strong>Anneau de du Noüy :</strong> On utilise un anneau (souvent en platine) de rayon \\( R \\), suspendu à une balance. L'anneau est mis en contact avec la surface du liquide puis soulevé lentement. La force maximale \\( F_{max} \\) mesurée juste avant l'arrachement de l'anneau de la surface est liée à la tension superficielle. L'anneau est tiré par deux interfaces (intérieure et extérieure) de périmètre \\( 2 \pi R \\) chacune. Idéalement, la force serait \\( F = \gamma (2 \times 2 \pi R) = 4 \pi R \gamma \\) (en supposant \\( \theta = 0 \\)). En pratique, des facteurs correctifs sont nécessaires pour tenir compte de la forme du ménisque arraché.
+            \\[ \gamma \approx \frac{F_{max}}{4 \pi R} \quad (\text{des corrections sont appliquées}) \\]
+            <div class="placeholder">[Image: Diagram of du Noüy ring method]</div>
+        </li>
+    </ul>
+
+    <h4>4.3 - Méthode du stalagmomètre (ou compte-gouttes)</h4>
+    <p>
+        Un stalagmomètre est un tube de verre calibré muni d'une extrémité inférieure large et polie, de rayon extérieur \\( R \\), par laquelle un liquide s'écoule lentement goutte à goutte. Au moment où une goutte se détache, son poids \\( mg \\) est équilibré (en première approximation) par la force de tension superficielle agissant sur le périmètre de détachement \\( 2 \pi R \\). La loi de Tate (simplifiée) dit : \\( mg = k' \gamma (2 \pi R) \\), où \\( k' \\) est un facteur correctif.
+    </p>
+    <p>
+        En pratique, on mesure la masse \\( m_{goutte} \\) d'une goutte, ou plus souvent, on compte le nombre N de gouttes qui s'écoulent pour un volume V donné (calibré entre deux traits de jauge sur le stalagmomètre). Le volume d'une goutte est \\( V_{goutte} = V/N \\), et sa masse est \\( m_{goutte} = \rho V_{goutte} = \rho V / N \\). La relation devient :
+        \\[ \frac{\rho V g}{N} \approx \text{constante} \cdot \gamma \\]
+    <p>
+        On utilise souvent une méthode comparative. On étalonne le stalagmomètre avec un liquide de référence (indice 0), souvent l'eau pure à 20°C, dont la tension superficielle \\( \gamma_0 \\) et la masse volumique \\( \rho_0 \\) sont connues. On compte le nombre de gouttes \\( N_0 \\) pour le volume V. Puis on fait de même avec le liquide inconnu (indice x, tension \\( \gamma_x \\), masse volumique \\( \rho_x \\)) et on compte le nombre de gouttes \\( N_x \\). En supposant que les facteurs géométriques et correctifs sont les mêmes :
+        \\[ \frac{m_0 g}{\gamma_0} \approx \frac{m_x g}{\gamma_x} \quad \implies \quad \frac{\rho_0 V / N_0}{\gamma_0} \approx \frac{\rho_x V / N_x}{\gamma_x} \\]
+        \\[ \gamma_x = \gamma_0 \frac{\rho_x N_0}{\rho_0 N_x} \\]
+    </p>
+
+    <h4>4.4 - Applications : agents tensioactifs (surfactants)</h4>
+    <p>
+        Les <strong>agents tensioactifs</strong> (ou surfactants) sont des substances qui, même ajoutées en faible quantité à un liquide (généralement l'eau), ont la propriété d'abaisser considérablement sa tension superficielle \\( \gamma \\). Ce sont typiquement des molécules amphiphiles, possédant une "tête" hydrophile (qui aime l'eau) et une "queue" hydrophobe (qui fuit l'eau). Elles se placent préférentiellement aux interfaces (eau-air, eau-huile, eau-solide), modifiant leurs propriétés.
+    </p>
+    <p>
+        Leur rôle est essentiel dans de nombreuses applications :
+    </p>
+    <ul>
+        <li><strong>Agents mouillants :</strong> Ils abaissent \\( \gamma \\) et diminuent l'angle de contact \\( \theta \\), permettant à l'eau de mieux s'étaler sur les surfaces (ex : détergents pour laver le linge, produits phytosanitaires pour couvrir les feuilles).</li>
+        <li><strong>Agents moussants :</strong> Ils stabilisent les films liquides formant les bulles de mousse (ex : savons, shampooings, extincteurs à mousse).</li>
+        <li><strong>Détergents :</strong> Ils aident à détacher les salissures (souvent grasses, hydrophobes) des surfaces en les entourant (formation de micelles) et en les dispersant dans l'eau.</li>
+        <li><strong>Émulsifiants :</strong> Ils permettent de stabiliser des mélanges de liquides non miscibles (comme l'huile et l'eau) en formant de fines gouttelettes d'un liquide dispersées dans l'autre (ex : lécithine dans la mayonnaise, agents émulsifiants dans les crèmes cosmétiques, le lait).</li>
+    </ul>
+
+    <!-- #################### Annexes #################### -->
+    <h2>Annexes</h2>
+
+    <h3>Bibliographie</h3>
+    <ul>
+        <li>Mécanique 2 – AGATI (Dunod)</li>
+        <li>Mécanique expérimentale des fluides – COMOLET (Masson)</li>
+        <li>Mécanique des fluides – HANAUER (Breal)</li>
+        <li>Mesure des débits et vitesses des fluides – LEFEBVRE (Masson)</li>
+        <li>Mécanique des fluides (cours et exercices résolus) – MEIER (Masson)</li>
+        <li>Mécanique des fluides appliquée – OUZIAUX (Dunod Universités)</li>
+        <li>Mécanique / Phénomènes vibratoires – PRUNET (Dunod)</li>
+        <li>La Mécanique des fluides – SALIN (Natan Universités)</li>
+    </ul>
+
+    <h3>Avertissement</h3>
+    <p>
+        Certaines parties de ce document dépassent le cadre du strict programme de terminale STL, mais peuvent fournir des compléments utiles à la compréhension.
+    </p>
+
+    <h3>Liens internet</h3>
+    <p>Physique Chimie académie de Nancy-Metz</p>
+    <ul>
+        <li>Site général : <a href="http://www.ac-nancy-metz.fr/enseign/physique/PHYS/" target="_blank" rel="noopener noreferrer">http://www.ac-nancy-metz.fr/enseign/physique/PHYS/</a></li>
+        <li>Mécanique des fluides (Bac STL) : <a href="http://www.ac-nancy-metz.fr/enseign/physique/PHYS/Term/Mecaflu/mecanique_des_fluides.htm" target="_blank" rel="noopener noreferrer">http://www.ac-nancy-metz.fr/enseign/physique/PHYS/Term/Mecaflu/mecanique_des_fluides.htm</a></li>
+        <li>Mécanique des fluides (BTS Industriel) : <a href="http://www.ac-nancy-metz.fr/enseign/physique/PHYS/Bts-Cira/mecaflu/mecaflu.htm" target="_blank" rel="noopener noreferrer">http://www.ac-nancy-metz.fr/enseign/physique/PHYS/Bts-Cira/mecaflu/mecaflu.htm</a></li>
+        <li>Expériences : <a href="http://www.ac-nancy-metz.fr/enseign/physique/Tp-phys/Term/Exp-fluid/exp-flu1.htm" target="_blank" rel="noopener noreferrer">http://www.ac-nancy-metz.fr/enseign/physique/Tp-phys/Term/Exp-fluid/exp-flu1.htm</a></li>
+    </ul>
+
+    <p>
+        N'hésitez pas à contacter les auteurs pour leur communiquer vos remarques, questions, critiques constructives, compléments d'information :
+    </p>
+    <p>
+        J. CARBONNET<br>
+        M. ROQUES<br>
+        <a href="mailto:michel.roques@laposte.net">michel.roques@laposte.net</a>
+    </p>
+
+    <div class="footer">
+        Document basé sur Fichier: Poly-mecaflu.doc - © J. CARBONNET - M. ROQUES académie de Nancy-Metz
+    </div>
+
+    <script>
+        // Configuration de KaTeX auto-render
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // Options de rendu de KaTeX si nécessaire
+                delimiters: [
+                    {left: "$$", right: "$$", display: true}, // Pour les maths en mode display
+                    {left: "\\[", right: "\\]", display: true}, // Autre délimiteur display
+                    {left: "\\(", right: "\\)", display: false}, // Pour les maths en ligne
+                    {left: "$", right: "$", display: false} // Autre délimiteur en ligne
+                ]
+            });
+        });
+    </script>
+
+</body>
+
+</html>
