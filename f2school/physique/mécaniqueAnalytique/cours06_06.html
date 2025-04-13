@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mécanique analytique - P. Amiot et L. Marleau</title>
+    <!-- Link KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <!-- Link KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <!-- KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50; /* Dark blue-grey */
+        }
+        h1 {
+            color: #e67e22; /* Orange */
+            text-align: center;
+            margin-bottom: 5px;
+        }
+         h1.chapter-title {
+            color: #2c3e50; /* Dark blue-grey */
+            text-align: left;
+            border-bottom: 2px solid #e67e22; /* Orange */
+            padding-bottom: 5px;
+            margin-top: 40px;
+         }
+        h2 {
+            color: #2980b9; /* Blue */
+             border-bottom: 1px solid #bdc3c7; /* Light grey */
+             padding-bottom: 3px;
+             margin-top: 30px;
+        }
+        h2.authors {
+            text-align: center;
+            color: #8e44ad; /* Purple */
+            margin-top: 0;
+            font-style: italic;
+            border-bottom: none; /* Override */
+        }
+         h3 { /* Subsection titles */
+             color: #27ae60; /* Green */
+             margin-top: 25px;
+             /* Minor sections like Beltrami ID, specific forces */
+             border-bottom: 1px dashed #ccc;
+             padding-bottom: 2px;
+         }
+         h4 { /* Sub-subsection titles like variable cycliques */
+             color: #8e44ad; /* Purple */
+             margin-top: 20px;
+         }
+
+         /* ... [rest of the CSS from the previous response] ... */
+
+         /* Definition Box */
+         .definition {
+             border-left: 4px solid #3498db; /* Blue */
+             background-color: #eaf2f8;
+             padding: 10px 15px;
+             margin: 15px 0;
+             font-size: 0.95em;
+             overflow: hidden;
+         }
+         .definition .definition-title {
+             font-weight: bold;
+             color: #21618c; /* Darker Blue */
+             margin-bottom: 5px;
+             display: block;
+         }
+          .definition .info-icon {
+              color: #3498db;
+          }
+
+        /* Theorem Box */
+         .theorem {
+             border: 1px solid #9b59b6; /* Purple */
+             background-color: #f4ecf7;
+             padding: 10px 15px;
+             margin: 15px 0;
+             font-size: 0.95em;
+             overflow: hidden;
+         }
+         .theorem .theorem-title {
+             font-weight: bold;
+             color: #7d3c98; /* Darker Purple */
+             margin-bottom: 5px;
+             display: block;
+         }
+
+        /* KaTeX display mode centering */
+        .katex-display { text-align: center; }
+        .katex-display .katex { text-align: center; } /* Force inner center */
+
+        /* Equation numbering */
+        .equation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap; /* Allow wrapping for long equations */
+        }
+        .equation .eq-content {
+            flex-grow: 1;
+            text-align: center; /* Center the equation content */
+             padding: 0 20px; /* Add padding around equation */
+        }
+        .equation .eq-number {
+            min-width: 40px; /* Ensure space for number */
+            text-align: right;
+            color: #555;
+            font-style: italic;
+            align-self: center; /* Align number vertically */
+        }
+
+        /* Figure styling */
+        figure {
+            text-align: center;
+            margin: 20px auto; /* Center figure block */
+            border: 1px solid #eee;
+            padding: 10px;
+            background-color: #f9f9f9;
+            max-width: 90%; /* Prevent very wide figures */
+            box-sizing: border-box;
+        }
+        figcaption {
+            font-style: italic;
+            color: #34495e;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        figure .placeholder {
+            display: block;
+            min-height: 100px; /* Placeholder height */
+            background-color: #e0e0e0;
+            border: 1px dashed #aaa;
+            color: #777;
+            padding: 20px;
+            box-sizing: border-box; /* Include padding in width/height */
+            overflow: hidden; /* Prevent content spill */
+        }
+        figure img { /* Style for actual images if used */
+            max-width: 100%;
+            height: auto;
+        }
+
+         /* Remarks and Examples */
+         .remark, .example {
+             border-left: 4px solid #16a085; /* Teal color */
+             background-color: #f0fdfa;
+             padding: 10px 15px;
+             margin: 15px 0;
+             font-size: 0.95em;
+             overflow: hidden; /* Clear floats */
+         }
+         .example {
+            border-left-color: #f39c12; /* Orange */
+            background-color: #fef9e7;
+         }
+         .remark .remark-title, .example .example-title, .definition .definition-title, .theorem .theorem-title {
+             font-weight: bold;
+             margin-bottom: 5px;
+             display: block; /* Ensure title is on its own line */
+         }
+         .example .example-title { color: #b0720f; }
+         .remark .remark-title { color: #117a65; }
+         .definition .definition-title { color: #21618c; }
+         .theorem .theorem-title { color: #7d3c98; }
+
+         .remark .info-icon, .example .example-icon, .definition .info-icon { /* Simple text icon for now */
+             display: inline-block;
+             color: #16a085;
+             text-align: center;
+             font-style: normal;
+             font-weight: bold;
+             margin-right: 8px;
+             font-size: 1.1em;
+         }
+          .example .example-icon { color: #f39c12; }
+          .definition .info-icon { color: #3498db; }
+
+         .example table { /* Tables inside examples */
+            margin: 10px auto;
+            border-collapse: collapse;
+            width: auto; /* Adjust width */
+         }
+         .example th, .example td {
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            text-align: center;
+         }
+         .example th {
+            background-color: #fdf2e9; /* Light orange */
+         }
+
+
+         /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .comparison-table th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+        .comparison-table td:first-child { /* Style the first column if needed */
+             /* font-family: monospace; Example: different font for formulas */
+        }
+
+        /* Exercise list */
+        .exercises ol {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .exercises li {
+            margin-bottom: 20px;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 15px;
+        }
+         .exercises .ex-number {
+            font-weight: bold;
+            color: #2980b9; /* Blue */
+            margin-right: 10px;
+            display: inline-block; /* Ensure space */
+            min-width: 30px; /* Align numbers */
+         }
+         .exercises .ex-title {
+             font-weight: bold;
+             display: inline; /* Keep on same line as number */
+         }
+         .exercises ol ol { /* Sublist for parts a, b, c */
+            list-style-type: lower-alpha;
+             padding-left: 30px;
+             margin-top: 10px;
+         }
+          .exercises ol ol li {
+              border-bottom: none;
+              padding-bottom: 5px;
+              margin-bottom: 5px;
+          }
+
+          .footnote {
+              font-size: 0.85em;
+              color: #555;
+              margin-top: 10px;
+              border-top: 1px dotted #ccc;
+              padding-top: 5px;
+          }
+
+    </style>
+</head>
+<body>
+
+    <!-- === Header / Title / TOC / Foreword / Chap 1 / Chap 2 up to page 81 === -->
+    <!-- Skipped for brevity, assume they are present -->
+    <hr>
+
+    <main>
+         <h1 class="chapter-title">Chapitre 2: FORMALISME DE LAGRANGE</h1>
+         <!-- ... Previous content of Chapter 2 ... -->
+
+         <h2>2.7 Lois de conservation et constantes du mouvement</h2>
+          <p>
+             Dans certains cas, il est possible de simplifier la résolution des équations d'Euler-Lagrange en identifiant des quantités conservées.
+          </p>
+
+         <h4>2.7.1 Variables cycliques</h4>
+          <p>
+             Il existe bien des situations où le lagrangien $L$ dépend d'une certaine vitesse généralisée $\dot{q}$ mais ne dépend pas de la coordonnée correspondante $q$. On appelle $q$ une <strong>variable cyclique</strong> (ou ignorable). L'équation d'Euler-Lagrange pour $q$,
+          </p>
+           <div class="equation">
+             <div class="eq-content"> $\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}}\right) - \frac{\partial L}{\partial q} = 0$ </div>
+             <div class="eq-number">(2.120)</div>
+          </div>
+           <!-- == Start Content from page 82 (PDF page number) == -->
+           <p>se simplifie. Clairement si le lagrangien $L$ ne dépend pas explicitement de $q_i$,</p>
+            <div class="equation">
+              <div class="eq-content"> $\frac{\partial L}{\partial q_i} = 0$ </div>
+              <div class="eq-number">(2.121)</div>
+          </div>
+           <p>
+              on peut en déduire que le système mécanique lui-même ne dépend pas de cette variable. Donc $L$ n'est pas affecté par une variation de $q_i$, et suggère qu'on peut identifier une symétrie par rapport à une telle variation et en dégager un invariant. L'équation d'Euler-Lagrange (2.120) devient alors:
+           </p>
+            <div class="equation">
+              <div class="eq-content"> $\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) = 0$ </div>
+              <div class="eq-number">(2.122)</div>
+          </div>
+           <p>d'où nous concluons que</p>
+            <div class="equation">
+              <div class="eq-content"> $p_i \equiv \frac{\partial L}{\partial \dot{q}_i} = \text{constante.}$ </div>
+              <div class="eq-number">(2.123)</div>
+          </div>
+           <p>
+              Cette quantité $p_i$, le <strong>moment conjugué</strong> à $q_i$, est appelé constante du mouvement. On la nomme aussi intégrale première.
+           </p>
+           <p>
+               Par exemple, si $q_i = x$ est une mesure de longueur (cartésienne), le moment conjugué $p_i = \partial L / \partial \dot{x} = m\dot{x}$ est l'impulsion (linéaire) associée. Une invariance de $L$ par rapport à une translation selon $x$ ($\partial L / \partial x = 0$) implique que le système physique ne dépend pas de la position en $x$. Puisque c'est le cas, le potentiel $V$ ne doit pas dépendre de $x$ et la force selon $x$, $F_x = -\partial V / \partial x$, est nulle. Donc il y aura conservation de la quantité de mouvement $p_x = m\dot{x}$.
+           </p>
+            <p>
+               De la même façon, si $q_i = \theta$ est un angle, le moment conjugué correspondant est le moment cinétique $p_{\theta} = \partial L / \partial \dot{\theta} = I\dot{\theta}$ (pour une rotation simple). L'invariance de $L$ par rapport à une rotation d'angle $\theta$ ($\partial L / \partial \theta = 0$) implique qu'aucun moment de force (torque) n'est exercé sur le système pour cette rotation. Donc il y aura conservation d'une composante du moment cinétique ($p_{\theta}$).
+           </p>
+           <!-- == End Content from page 82 (PDF page number) == -->
+
+           <!-- == Start Content from page 83 (PDF page number) == -->
+           <h4>2.7.2 Lagrangien indépendant du temps</h4>
+            <p>
+               Nous avons vu qu'en général le lagrangien est une fonction qui peut dépendre explicitement du temps
+          </p>
+           $$ L = L(q_i, \dot{q}_i, t) $$
+           <p>
+              et la forme des équations d'Euler-Lagrange implique directement des dérivées par rapport au temps. Qu'advient-il alors si un lagrangien donné ne possède aucune dépendance explicite par rapport au temps $L = L(q_i, \dot{q}_i)$ ?
+           </p>
+           <p>Considérons l'énergie cinétique d'un système de particules $\alpha$:</p>
+           $$ T = \sum_{\alpha} \frac{1}{2} m_{\alpha} v_{\alpha}^2 $$
+           <p>
+               où $\mathbf{v}_{\alpha} = \dot{\mathbf{r}}_{\alpha}$ et $\mathbf{r}_{\alpha}$ sont les vecteurs vitesse et position spatiales (cartésiennes). En fonction de coordonnées généralisées $q_i$, on a $\mathbf{r}_{\alpha} = \mathbf{r}_{\alpha}(q_i, t)$. La vitesse est alors:
+          </p>
+           $$ \mathbf{v}_{\alpha} = \frac{d\mathbf{r}_{\alpha}}{dt} = \sum_i \frac{\partial \mathbf{r}_{\alpha}}{\partial q_i} \dot{q}_i + \frac{\partial \mathbf{r}_{\alpha}}{\partial t} $$
+           <p>L'énergie cinétique $T = \frac{1}{2}\sum_{\alpha} m_{\alpha} \mathbf{v}_{\alpha} \cdot \mathbf{v}_{\alpha}$ devient:</p>
+           $$ v_{\alpha}^2 = \left(\sum_i \frac{\partial \mathbf{r}_{\alpha}}{\partial q_i} \dot{q}_i + \frac{\partial \mathbf{r}_{\alpha}}{\partial t}\right) \cdot \left(\sum_j \frac{\partial \mathbf{r}_{\alpha}}{\partial q_j} \dot{q}_j + \frac{\partial \mathbf{r}_{\alpha}}{\partial t}\right) $$
+            <div class="equation">
+               <div class="eq-content"> $ v_{\alpha}^2 = \left(\frac{\partial \mathbf{r}_{\alpha}}{\partial t}\right)^2 + 2 \sum_i \left(\frac{\partial \mathbf{r}_{\alpha}}{\partial t}\right) \cdot \left(\frac{\partial \mathbf{r}_{\alpha}}{\partial q_i}\right) \dot{q}_i + \sum_{i,j} \left(\frac{\partial \mathbf{r}_{\alpha}}{\partial q_i}\right) \cdot \left(\frac{\partial \mathbf{r}_{\alpha}}{\partial q_j}\right) \dot{q}_i \dot{q}_j $ </div>
+               <div class="eq-number"></div>
+            </div>
+            <p>
+               Ici, on fait cette distinction entre composantes de positions spatiales $\mathbf{r}_{\alpha}$ et coordonnées généralisées $q_i$, parce qu'en général, les coordonnées généralisées $q_i$ peuvent être choisies différemment des composantes de positions spatiales $\mathbf{r}_{\alpha}$ (e.g., angles).
+            </p>
+            <p>Si les relations $\mathbf{r}_{\alpha}(q_i, t)$ ne dépendent pas explicitement du temps (cas des contraintes scléronomes):</p>
+            $$ \frac{\partial \mathbf{r}_{\alpha}}{\partial t} = 0 $$
+            <!-- == End Content from page 83 (PDF page number) == -->
+
+            <!-- == Start Content from page 84 (PDF page number) == -->
+            <p>
+                on parle alors de <em>contraintes scléronomes</em>. Alors l'énergie cinétique est uniquement une fonction quadratique des vitesses généralisées $\dot{q}_i$, c'est-à-dire
+            </p>
+            <div class="equation">
+                <div class="eq-content"> $T = \frac{1}{2} \sum_{i,j} m_{ij}(q) \dot{q}_i \dot{q}_j$ </div>
+                <div class="eq-number">(2.144)</div>
+            </div>
+             <p>où $m_{ij}(q)$ est une matrice réelle et symétrique (inerte généralisée):</p>
+            $$ m_{ij}(q) = \sum_{\alpha} m_{\alpha} \left(\frac{\partial \mathbf{r}_{\alpha}}{\partial q_i}\right) \cdot \left(\frac{\partial \mathbf{r}_{\alpha}}{\partial q_j}\right) $$
+             <!-- Placeholder for matrix representation -->
+            <!-- = \sum_{\alpha} m_{\alpha} \begin{pmatrix} ... \end{pmatrix} $$ -->
+
+            <div class="remark">
+                <div class="remark-title"><span class="info-icon">i</span>Remarque 2.4</div>
+                On note ici que l'énergie cinétique $T$ est alors une fonction homogène du second degré en $\dot{q}_i$, c'est-à-dire que
+                $$ T(q, \lambda\dot{q}) = \lambda^2 T(q, \dot{q}) $$
+            </div>
+            <!-- == End Content from page 84 (PDF page number) == -->
+
+             <!-- == Start Content from page 85 (PDF page number) == -->
+             <p>
+                 La dérivée totale du lagrangien par rapport au temps est alors donnée par (en utilisant la règle de chaîne, et $\partial L / \partial t = 0$ car $L$ ne dépend pas explicitement de $t$):
+             </p>
+              $$ \frac{dL}{dt} = \sum_i \left( \frac{\partial L}{\partial q_i} \dot{q}_i + \frac{\partial L}{\partial \dot{q}_i} \ddot{q}_i \right) $$
+              <p>En utilisant les équations d'Euler-Lagrange $\frac{\partial L}{\partial q_i} = \frac{d}{dt}(\frac{\partial L}{\partial \dot{q}_i})$:</p>
+              $$ \frac{dL}{dt} = \sum_i \left( \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) \dot{q}_i + \frac{\partial L}{\partial \dot{q}_i} \ddot{q}_i \right) $$
+              <p>On reconnaît le terme de droite comme la dérivée totale du produit $\sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i}$:</p>
+              $$ \frac{dL}{dt} = \frac{d}{dt}\left(\sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i}\right) $$
+              <p>ou</p>
+              $$ \frac{d}{dt}\left(\sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i} - L\right) = 0 $$
+
+              <div class="remark">
+                  <div class="remark-title"><span class="info-icon">i</span>Remarque 2.5</div>
+                  Rappelons que nous avions déjà obtenu ce résultat (Identité de Beltrami): lorsque la fonction $L$ est indépendante de $t$, l'équation d'Euler-Lagrange mène à l'identité de Beltrami :
+                   $$ \sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i} - L = C = \text{constante} $$
+              </div>
+              <!-- == End Content from page 85 (PDF page number) == -->
+
+              <!-- == Start Content from page 86 (PDF page number) == -->
+              <p>
+                 On trouve que la dérivée totale de la quantité $H = \sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i} - L$ est nulle
+             </p>
+              $$ \frac{dH}{dt} = \frac{d}{dt}\left(\sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i} - L\right) = 0 $$
+              <p>
+                 et $H$ correspond donc bien à une quantité invariante ou conservée, appelée <strong>intégrale de Jacobi</strong>,
+             </p>
+              $$ H = \sum_i p_i \dot{q}_i - L $$
+              <p>où ici on définit le moment conjugué $p_i = \frac{\partial L}{\partial \dot{q}_i}$.</p>
+
+             <div class="definition">
+                <div class="definition-title"><span class="info-icon">i</span>Définition 2.1: Moment canonique</div>
+                On définit le moment canonique (ou conjugué) $p_i$ associé à la coordonnée généralisée $q_i$ à partir du lagrangien $L(q_j, \dot{q}_j, t)$ comme
+                $$ p_i = \frac{\partial L}{\partial \dot{q}_i}. $$
+             </div>
+              <!-- == End Content from page 86 (PDF page number) == -->
+
+              <!-- == Start Content from page 87 (PDF page number) == -->
+              <div class="definition">
+                <div class="definition-title"><span class="info-icon">i</span>Définition 2.2: Intégrale de Jacobi/Hamiltonien</div>
+                 Si le lagrangien $L$ ne dépend pas explicitement du temps ($\partial L / \partial t = 0$), la quantité $H$ est une quantité invariante ou conservée, appelée <strong>intégrale de Jacobi</strong>,
+                 $$ H = \sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i} - L = \sum_i p_i \dot{q}_i - L $$
+                 où $p_i = \frac{\partial L}{\partial \dot{q}_i}$. Cette quantité $H$ est aussi appelée l'Hamiltonien du système.
+              </div>
+
+              <p>Mais que représente $H$ ?</p>
+              <ol>
+                  <li>
+                      Si le potentiel ne dépend que de la position $V = V(q)$ (et si les contraintes sont scléronomes, $\partial \mathbf{r}_{\alpha}/\partial t = 0$), alors l'énergie cinétique $T$ est une forme quadratique des $\dot{q}_i$ (Eq. 2.144) et $L = T(q, \dot{q}) - V(q)$. Le moment conjugué est
+                      $$ p_i = \frac{\partial L}{\partial \dot{q}_i} = \frac{\partial T}{\partial \dot{q}_i} = \frac{\partial}{\partial \dot{q}_i} \left(\frac{1}{2}\sum_{j,k} m_{jk}(q) \dot{q}_j \dot{q}_k\right) = \sum_j m_{ij}(q) \dot{q}_j $$
+                       <!-- == End Content from page 87 (PDF page number) == -->
+
+                       <!-- == Start Content from page 88 (PDF page number) == -->
+                        <p>Alors, on calcule $\sum_i p_i \dot{q}_i$:</p>
+                       $$ \sum_i p_i \dot{q}_i = \sum_i \left(\sum_j m_{ij}(q) \dot{q}_j\right) \dot{q}_i = \sum_{i,j} m_{ij}(q) \dot{q}_i \dot{q}_j = 2 T $$
+                       <p>D'où</p>
+                       <div class="equation">
+                           <div class="eq-content"> $H = \sum_i p_i \dot{q}_i - L = 2T - (T - V) = T + V = E$ </div>
+                           <div class="eq-number">(2.145)</div>
+                       </div>
+                       <p>
+                           est l'énergie mécanique totale du système. On a donc conservation de l'énergie mécanique totale $E$ d'un système mécanique si celui-ci est invariant par translation dans le temps (système autonome ou fermé : contraintes scléronomes et potentiel ne dépendant pas explicitement du temps). Il faut noter qu'ici $V$ ne contient que le travail des forces conservatives (absence des forces de contrainte ou non conservatives).
+                       </p>
+                  </li>
+                   <li>
+                       Par ailleurs, si $V = V(q, \dot{q})$ (potentiel généralisé, dépendant des vitesses), on a
+                       $$ H = \sum_i p_i \dot{q}_i - L = \sum_i \frac{\partial L}{\partial \dot{q}_i} \dot{q}_i - L $$
+                       $$ = \sum_i \left(\frac{\partial T}{\partial \dot{q}_i} - \frac{\partial V}{\partial \dot{q}_i}\right) \dot{q}_i - (T - V) $$
+                       $$ = \left(\sum_i \frac{\partial T}{\partial \dot{q}_i} \dot{q}_i\right) - \sum_i \frac{\partial V}{\partial \dot{q}_i} \dot{q}_i - T + V $$
+                        <p>Si $T$ est quadratique en $\dot{q}_i$, $\sum_i \frac{\partial T}{\partial \dot{q}_i} \dot{q}_i = 2T$. Alors:</p>
+                       $$ H = 2T - T + V - \sum_i \frac{\partial V}{\partial \dot{q}_i} \dot{q}_i = T + V - \sum_i \frac{\partial V}{\partial \dot{q}_i} \dot{q}_i $$
+                       <p>C'est le cas de la force de Lorentz (avec $V = qU - q\mathbf{A}\cdot\mathbf{v}$ où $U$ est le potentiel scalaire et $\mathbf{A}$ le potentiel vecteur), où, par exemple, on obtient $H = T + qU$.</p>
+                    </li>
+                    <!-- == End Content from page 88 (PDF page number) == -->
+
+                    <!-- == Start Content from page 89 (PDF page number) == -->
+                    <p>ainsi</p>
+                    $$ H = T + qU = E $$
+                    <p>
+                        et $H$ correspond à la somme de l'énergie cinétique et de l'énergie potentielle électrique.
+                    </p>
+                   <li>
+                       Dans d'autres cas (systèmes dissipatifs, etc.), $H$ est conservé (si $\partial L / \partial t = 0$), mais cette quantité ne correspond pas nécessairement à l'énergie mécanique $E=T+V$.
+                       $$ H \neq T + V. $$
+                   </li>
+               </ol>
+                <p><strong>Autres cas particuliers :</strong></p>
+               <ol>
+                    <li>
+                       Si les contraintes sont scléronomes ($\partial \mathbf{r}_{\alpha}/\partial t = 0 \implies \partial L / \partial t = \partial V / \partial t$) mais $V$ dépend explicitement du temps (par exemple : particules placées dans un champ extérieur variable), alors $L$ dépend explicitement du temps. La dérivée totale de $L$ est:
+                   </li>
+                   $$ \frac{dL}{dt} = \sum_i \left( \frac{\partial L}{\partial q_i} \dot{q}_i + \frac{\partial L}{\partial \dot{q}_i} \ddot{q}_i \right) + \frac{\partial L}{\partial t} $$
+                   <p>En utilisant les étapes menant à l'identité de Beltrami, on obtient:</p>
+                   $$ \frac{d}{dt}\left(\sum_i \dot{q}_i \frac{\partial L}{\partial \dot{q}_i} - L\right) + \frac{\partial L}{\partial t} = 0 $$
+                   <p>Soit:</p>
+                    $$ \frac{dH}{dt} + \frac{\partial L}{\partial t} = 0 $$
+                     <!-- == End Content from page 89 (PDF page number) == -->
+
+                     <!-- == Start Content from page 90 (PDF page number) == -->
+                     <p>
+                         Encore une fois, si $H = E$ (cas 1 ci-dessus), alors l'énergie varie comme
+                    </p>
+                    <div class="equation">
+                        <div class="eq-content"> $\frac{dH}{dt} = \frac{dE}{dt} = -\frac{\partial L}{\partial t} = \frac{\partial V}{\partial t}$ </div>
+                        <div class="eq-number">(2.146)</div>
+                    </div>
+                     <p>
+                         Un tel cas correspond à un système ouvert, recevant ou perdant de l'énergie par l'intermédiaire du champ imposé ($V(t)$).
+                    </p>
+                   <li>
+                       Si le lagrangien $L(q, Q, \dot{q}, \dot{Q}, t)$ d'un système permet la séparation de la dépendance temporelle (explicite) suivante $L = L_1(q, \dot{q}) + L_2(Q, \dot{Q}, t)$, alors l'intégrale de Jacobi associée aux coordonnées $q$,
+                  </li>
+                  $$ H_1 = \sum_i \dot{q}_i \frac{\partial L_1}{\partial \dot{q}_i} - L_1 $$
+                   <p>est une intégrale première (conservée), même si l'énergie totale du système $H = H_1 + H_2$ ne l'est pas.</p>
+                    <li>
+                       Un système mécanique fermé n'est possible que si $V$ ne dépend pas explicitement du temps (et contraintes scléronomes). Si le système possède $n$ degrés de liberté, alors il y a au plus $2n-1$ intégrales premières indépendantes : elles correspondent aux $2n$ conditions initiales $(q_i(t_0), \dot{q}_i(t_0))$ moins une, servant à fixer le choix de l'origine des temps $t_0$:
+                   </li>
+                   $$ q_i(t) = q_i(C_1, \dots, C_{2n}, t) = q_i(C_1, \dots, C_{2n-1}, t+t_0) $$
+                    <li>
+                       Toutes les quantités conservées qui sont liées aux propriétés de l'espace-temps (symétries) sont additives (énergie $E$, impulsion $\mathbf{p}$ et moment cinétique $\mathbf{L}$). Cela est dû au fait que leur définition ne dépend pas de l'existence ou non d'une interaction entre les particules.
+                   </li>
+               </ol>
+                <!-- == End Content from page 90 (PDF page number) == -->
+
+                 <!-- == Start Content from page 91 (PDF page number) == -->
+                 <h3>2.7.3 Théorème de Noether</h3>
+                 <p>
+                     Le théorème de Noether établit une relation d'équivalence entre les lois de conservation et les symétries d'un système. Par symétrie, on entend invariance des lois physiques (ici, du Lagrangien $L$ ou plus précisément de l'action $S$) par rapport à certaines transformations continues des coordonnées et/ou du temps. Il fut énoncé en 1918 par la mathématicienne Emmy Noether à Göttingen et fut qualifié par Albert Einstein de « monument de la pensée mathématique ». Il est devenu un outil courant en physique théorique, où on tente, autant que faire se peut, de décrire les phénomènes en termes de symétrie d'espace, de charges, de temps et autres.
+                </p>
+
+                 <figure style="float:right; width: 250px; margin-left: 15px;">
+                      <div class="placeholder">[Image Placeholder: Portrait of Emmy Noether.]</div>
+                      <figcaption><strong>Figure 2.11</strong> (Previously 5.2) Amalie Emmy Noether (1882 - 1935).</figcaption>
+                 </figure>
+
+                 <div class="remark">
+                      <div class="remark-title"><span class="info-icon">i</span>Remarque 2.6</div>
+                      <strong>Rappel historique : Amalie Emmy Noether</strong><br/>
+                      Amalie Emmy Noether (23 mars 1882 - 14 avril 1935) est une mathématicienne allemande spécialiste d'algèbre abstraite et de physique théorique. Elle a révolutionné les théories des anneaux, des corps et des algèbres. En physique, le théorème de Noether explique le lien fondamental entre la symétrie et les lois de conservation.
+                 </div>
+                 <div class="clear"></div>
+                  <!-- == End Content from page 91 (PDF page number) == -->
+
+                 <!-- == Start Content from page 92 (PDF page number) == -->
+                  <div class="theorem">
+                     <div class="theorem-title">Théorème 2.1: Théorème de Noether</div>
+                     À toute transformation infinitésimale continue (paramétrée par $u$) des coordonnées $q_i \rightarrow \tilde{q}_i(u)$ qui laisse invariante l'action $S$ (ou le Lagrangien $L$ à une dérivée totale près) correspond une quantité qui est conservée.
+                  </div>
+
+                  <p>
+                      Pour démontrer ce théorème, nous introduisons une famille de trajectoires représentée par des coordonnées généralisées $\tilde{q}_i(t, u)$ qui dépendent de façon continue d'un paramètre $u$. La trajectoire physique qui nous intéresse $q_i(t)$ coïncide avec $\tilde{q}_i(t, u)$ à, disons, $u = 0$, c'est-à-dire
+                  </p>
+                  $$ \tilde{q}_i(t, u=0) = q_i(t). $$
+                  <p>
+                      Si le lagrangien $L$ est invariant sous cette transformation (à une dérivée totale près, $L(\tilde{q}, \dot{\tilde{q}}, t) = L(q, \dot{q}, t) + dG/dt$), l'action $S$ est invariante $\delta S = 0$. On considère la dérivée de $L$ par rapport au paramètre $u$ évaluée à $u=0$:
+                   </p>
+                  $$ \left.\frac{dL}{du}\right|_{u=0} = 0. $$
+                  <p>
+                     Si le lagrangien $L$ est indépendant de $u$, c'est-à-dire si $L(\tilde{q}, \dot{\tilde{q}}, t) = L(q, \dot{q}, t)$, alors la quantité
+                 </p>
+                  <div class="equation">
+                     <div class="eq-content"> $O(q_k, \dot{q}_k) = \sum_k \frac{\partial L}{\partial \dot{q}_k} \left.\frac{d\tilde{q}_k}{du}\right|_{u=0}$ </div>
+                     <div class="eq-number">(2.147)</div>
+                  </div>
+                  <p>est une constante du mouvement (ou intégrale première).</p>
+                  <p>On démontre cette relation comme suit : $L$ étant indépendant de $u$,</p>
+                   $$ \frac{dL}{du} = \sum_i \frac{\partial L}{\partial \tilde{q}_i} \frac{d\tilde{q}_i}{du} + \sum_i \frac{\partial L}{\partial \dot{\tilde{q}}_i} \frac{d\dot{\tilde{q}}_i}{du} = 0. $$
+                   <p>Cependant, $\frac{d\dot{\tilde{q}}_i}{du} = \frac{d}{du}\left(\frac{d\tilde{q}_i}{dt}\right) = \frac{d}{dt}\left(\frac{d\tilde{q}_i}{du}\right)$.</p>
+                    <!-- == End Content from page 92 (PDF page number) == -->
+
+                   <!-- == Start Content from page 93 (PDF page number) == -->
+                    <p>et suivant l'équation d'Euler-Lagrange $\frac{\partial L}{\partial \tilde{q}_i} = \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{\tilde{q}}_i}\right)$.</p>
+                   <p>Alors substituant, on a</p>
+                    $$ \frac{dL}{du} = \sum_i \left[ \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{\tilde{q}}_i}\right) \frac{d\tilde{q}_i}{du} + \frac{\partial L}{\partial \dot{\tilde{q}}_i} \frac{d}{dt}\left(\frac{d\tilde{q}_i}{du}\right) \right] = 0. $$
+                   <p>L'expression dans la somme est la dérivée totale par rapport à $t$:</p>
+                   $$ \frac{dL}{du} = \frac{d}{dt}\left(\sum_i \frac{\partial L}{\partial \dot{\tilde{q}}_i} \frac{d\tilde{q}_i}{du}\right) = 0. $$
+                   <p>L'expression entre parenthèses est donc une constante du mouvement.</p>
+                    $$ \sum_i \frac{\partial L}{\partial \dot{\tilde{q}}_i} \frac{d\tilde{q}_i}{du} = C. $$
+                    <p>En posant $u=0$, $\tilde{q}_i(t, u) \rightarrow q_i(t)$, $\dot{\tilde{q}}_i(t, u) \rightarrow \dot{q}_i(t)$ et on trouve</p>
+                     $$ \sum_k \frac{\partial L}{\partial \dot{q}_k} \left.\frac{d\tilde{q}_k}{du}\right|_{u=0} = C $$
+                    <p>ce qui prouve le théorème.</p>
+                    <p>La quantité $O(q_k, \dot{q}_k) = \sum_k p_k \left.\frac{d\tilde{q}_k}{du}\right|_{u=0}$ est alors une constante du mouvement (ou intégrale première).</p>
+                     <!-- == End Content from page 93 (PDF page number) == -->
+
+                     <!-- == Start Content from page 94 (PDF page number) == -->
+                      <div class="example">
+                          <div class="example-title"><span class="example-icon">◆</span>Exemple 2.2: Invariance par rapport à une translation</div>
+                          <p>Supposons qu'un système soit invariant par rapport à une translation dans une direction $x$. La translation correspond au changement de coordonnée $\tilde{q}_i(u) = q_i + u \delta_{ix}$, pour $i$ tel que $q_i$ soit associé à la coordonnée $x$ de chaque particule $\alpha$ du système ($q_i = x_{\alpha}$) et $\tilde{q}_k(u) = q_k$ pour les autres coordonnées (celles qui ne sont pas $x$). On a $\frac{d\tilde{q}_k}{du} = \delta_{kx}$.</p>
+                           <p>Alors, d'après le théorème de Noether, la quantité conservée $O$ est:</p>
+                           $$ O = \sum_k \frac{\partial L}{\partial \dot{q}_k} \left.\frac{d\tilde{q}_k}{du}\right|_{u=0} = \sum_k \frac{\partial L}{\partial \dot{q}_k} \delta_{kx} = \frac{\partial L}{\partial \dot{x}} = C $$
+                           <p>(Si $x$ est la seule coordonnée). Plus généralement, si plusieurs $q_k$ correspondent à la coordonnée $x$ de différentes particules $\alpha$, alors:</p>
+                           $$ \left.\frac{d\tilde{q}_k}{du}\right|_{u=0} = 1 \quad \text{si } q_k = x_{\alpha} \text{ pour une particule } \alpha $$
+                           <p>et $0$ sinon. Alors</p>
+                           <div class="equation">
+                              <div class="eq-content"> $O = \sum_{k \text{ tel que } q_k=x_{\alpha}} \frac{\partial L}{\partial \dot{q}_k} = \sum_{\alpha} p_{\alpha, x} = P_x$ </div>
+                              <div class="eq-number">(2.148)</div>
+                          </div>
+                          <p>est un invariant : c'est la somme des composantes $x$ des impulsions généralisées (moments conjugués). Alors $P_x$ est un invariant (quantité conservée), c'est-à-dire une constante du mouvement.</p>
+                     </div>
+
+                      <div class="example">
+                          <div class="example-title"><span class="example-icon">◆</span>Exemple 2.3: Invariance par rapport à une translation en 3D</div>
+                           <!-- Content seems self-contained in Example 2.4 -->
+                      </div>
+                       <!-- == End Content from page 94 (PDF page number) == -->
+
+                       <!-- == Start Content from page 95 (PDF page number) == -->
+                        <p>
+                            Soit un système invariant par rapport à une translation dans chacune des trois directions. En répétant l'exercice ci-dessus pour $y$ et $z$, on voit que $P_x, P_y$ et $P_z$ sont des invariants, c'est-à-dire l'impulsion totale
+                       </p>
+                       <div class="equation">
+                           <div class="eq-content"> $\mathbf{P} = \sum_{\alpha} \mathbf{p}_{\alpha} = \sum_{\alpha} m_{\alpha} \dot{\mathbf{r}}_{\alpha}$ </div>
+                           <div class="eq-number">(2.149)</div>
+                       </div>
+                       <p>
+                           est une constante du mouvement. À noter que ceci est valable pour les quantités de mouvement comme pour les moments cinétiques d'un système.
+                       </p>
+
+                       <div class="example">
+                          <div class="example-title"><span class="example-icon">◆</span>Exemple 2.4: Invariance par rapport à une rotation</div>
+                          <p>
+                              De façon similaire, s'il y a invariance par rapport à une rotation d'angle $\phi$ autour d'un axe $Oz$ (c.a.d. $L$ ne dépend pas de $\phi$), la coordonnée généralisée est $\phi$ et la transformation est $\tilde{\phi}(u) = \phi + u$. Alors $d\tilde{\phi}/du = 1$. La quantité conservée est:
+                          </p>
+                           $$ O = \sum_k \frac{\partial L}{\partial \dot{q}_k} \frac{d\tilde{q}_k}{du} = \frac{\partial L}{\partial \dot{\phi}} = p_{\phi} $$
+                          <p>
+                              Cette quantité $p_{\phi}$ est la composante selon $z$ du moment cinétique total du système $L_z = \sum_{\alpha} (\mathbf{r}_{\alpha} \times \mathbf{p}_{\alpha})_z$. Elle est alors conservée.
+                          </p>
+                           $$ O = \frac{\partial L}{\partial \dot{\phi}} = \sum_{\alpha} L_{\alpha, z} = L_z $$
+                       </div>
+
+                       <div class="example">
+                          <div class="example-title"><span class="example-icon">◆</span>Exemple 2.5: Invariance par rapport à une rotation dans toutes les directions</div>
+                           <!-- == End Content from page 95 (PDF page number) == -->
+
+                           <!-- == Start Content from page 96 (PDF page number) == -->
+                           <p>
+                               S'il y a invariance par rapport à une rotation dans toutes les directions, le système possède une symétrie sphérique et chacune des composantes du moment cinétique $L_x, L_y, L_z$ ainsi que le moment cinétique total
+                          </p>
+                           <div class="equation">
+                              <div class="eq-content"> $\mathbf{L} = \sum_{\alpha} \mathbf{L}_{\alpha} = \sum_{\alpha} m_{\alpha} \mathbf{r}_{\alpha} \times \dot{\mathbf{r}}_{\alpha}$ </div>
+                              <div class="eq-number">(2.150)</div>
+                          </div>
+                           <p>sont conservés.</p>
+                      </div>
+
+                      <h2>2.8 Invariance de jauge</h2>
+                      <p>
+                          On appelle <strong>transformation de jauge</strong> une transformation du Lagrangien $L$ en $L'$ telle que $L'$ diffère de $L$ par la dérivée totale par rapport au temps d'une fonction arbitraire $F(q_i, t)$ des coordonnées et du temps:
+                      </p>
+                       <div class="equation">
+                          <div class="eq-content"> $L'(q_i, \dot{q}_i, t) = L(q_i, \dot{q}_i, t) + \frac{d}{dt}F(q_i, t)$ </div>
+                          <div class="eq-number">(2.151)</div>
+                      </div>
+                       <p>où $F$ est une fonction des $q_i$ et de $t$ (appelée génératrice de la transformation) et</p>
+                       <div class="equation">
+                          <div class="eq-content"> $\frac{dF}{dt} = \sum_i \frac{\partial F}{\partial q_i} \dot{q}_i + \frac{\partial F}{\partial t}.$ </div>
+                          <div class="eq-number">(2.152)</div>
+                      </div>
+                        <!-- == End Content from page 96 (PDF page number) == -->
+
+                       <!-- == Start Content from page 97 (PDF page number) == -->
+                       <p>Remplaçant $L$ par $L'$ dans la définition de l'action $S$, $S$ devient $S'$</p>
+                       $$ S' = \int_{t_1}^{t_2} L'(q_i, \dot{q}_i, t) dt $$
+                       $$ = \int_{t_1}^{t_2} L(q_i, \dot{q}_i, t) dt + \int_{t_1}^{t_2} \frac{d}{dt}F(q_i, t) dt $$
+                       <div class="equation">
+                          <div class="eq-content"> $ S' = S + [F(q_i, t)]_{t_1}^{t_2} = S + F(t_2) - F(t_1) $ </div>
+                          <div class="eq-number">(2.153)</div>
+                      </div>
+                       <p>
+                          où $F(1) = F(q_i(t_1), t_1)$ et $F(2) = F(q_i(t_2), t_2)$. Considérons la variation $\delta S'$ due à une variation $\delta q_i$ de la trajectoire:
+                      </p>
+                       $$ \delta S' = \delta S + \delta F(t_2) - \delta F(t_1) $$
+                       <p>
+                          Puisque les points extrêmes sont fixes, $\delta q_i(t_1) = \delta q_i(t_2) = 0$, on a $\delta F(t_1) = \sum_i (\partial F / \partial q_i)|_1 \delta q_i(t_1) = 0$ et $\delta F(t_2) = 0$. Ainsi
+                      </p>
+                       <div class="equation">
+                          <div class="eq-content"> $\delta S' = \delta S.$ </div>
+                          <div class="eq-number">(2.154)</div>
+                      </div>
+                       <p>
+                          Or, comme la physique est déterminée par l'extrémisation de $S$ (principe de moindre action, $\delta S = 0$), ou de $S'$, rien n'est changé ici. Comme $\delta S' = \delta S$, on décrit la même physique, les trajectoires seront les mêmes.
+                      </p>
+                      <p>
+                          On constate cependant que le passage de $L$ à $L'$ change la forme du lagrangien. En effet, supposons que
+                      </p>
+                      <div class="equation">
+                          <div class="eq-content"> $L = T - V(q_i, t).$ </div>
+                          <div class="eq-number">(2.155)</div>
+                      </div>
+                       <p>Alors une transformation de jauge générée par $F(q_i, t)$ nous donne</p>
+                        <div class="equation">
+                          <div class="eq-content"> $L' = T - V(q_i, t) + \sum_i \frac{\partial F}{\partial q_i} \dot{q}_i + \frac{\partial F}{\partial t}.$ </div>
+                          <div class="eq-number">(2.156)</div>
+                      </div>
+                        <!-- == End Content from page 97 (PDF page number) == -->
+
+                        <!-- == Start Content from page 98 (PDF page number) == -->
+                        <p>Puisque $F$ est une fonction de $q_i$ et de $t$, appelons</p>
+                         <div class="equation">
+                          <div class="eq-content"> $V'(q_i, t) = V(q_i, t) - \frac{\partial F(q_i, t)}{\partial t}.$ </div>
+                          <div class="eq-number">(2.157)</div>
+                      </div>
+                       <p>Ainsi</p>
+                       <div class="equation">
+                          <div class="eq-content"> $L' = T - V'(q_i, t) + \sum_i \frac{\partial F(q_i, t)}{\partial q_i} \dot{q}_i.$ </div>
+                          <div class="eq-number">(2.158)</div>
+                      </div>
+                       <p>
+                           Le dernier terme est linéaire en $\dot{q}_i$ et fait que la forme de $L$ n'est pas inchangée (il n'est plus simplement $T-V'$).
+                      </p>
+                      <p>
+                           Opérons une deuxième transformation de jauge, générée par la fonction $G(q_i, t)$. Nous obtenons de $L'$ un nouveau lagrangien, $L''$
+                      </p>
+                      <div class="equation">
+                          <div class="eq-content"> $L''(q_i, \dot{q}_i, t) = L'(q_i, \dot{q}_i, t) + \frac{d}{dt}G(q_i, t)$ </div>
+                          <div class="eq-number">(2.159)</div>
+                      </div>
+                       <div class="equation">
+                          <div class="eq-content"> $= L(q_i, \dot{q}_i, t) + \frac{d}{dt}(F(q_i, t) + G(q_i, t))$ </div>
+                          <div class="eq-number">(2.160)</div>
+                      </div>
+                       <p>c'est-à-dire</p>
+                        <div class="equation">
+                          <div class="eq-content"> $L'' = T - V''(q_i, t) + \sum_i \dot{q}_i \frac{\partial}{\partial q_i}(F+G)$ </div>
+                          <div class="eq-number">(2.161)</div>
+                      </div>
+                       <p>où</p>
+                        <div class="equation">
+                          <div class="eq-content"> $V''(q_i, t) = V(q_i, t) - \frac{\partial}{\partial t}[F(q_i, t) + G(q_i, t)].$ </div>
+                          <div class="eq-number">(2.162)</div>
+                      </div>
+                        <!-- == End Content from page 98 (PDF page number) == -->
+
+                        <!-- == Start Content from page 99 (PDF page number) == -->
+                        <p>
+                           On voit donc que $L''$ est invariant de forme sous une transformation de jauge qui laisse la physique inchangée. Aujourd'hui, on a admis le principe théorique qu'il s'agit de la forme la plus générale que peut prendre un lagrangien, c'est-à-dire que les seules interactions possibles sont des interactions de jauge. C'est cette philosophie qui a permis l'unification de trois des quatre interactions fondamentales en théorie du champ.
+                       </p>
+                       <p>
+                           Le terme en $\dot{q}_i$, c'est-à-dire $\sum_i \frac{\partial F}{\partial q_i} \dot{q}_i$, est la forme $\dot{\mathbf{q}} \cdot \nabla F$, c'est-à-dire le produit scalaire entre le vecteur vitesse généralisée $\dot{\mathbf{q}}$ et un champ vectoriel (local) que la transformation de jauge nous donne comme étant le gradient de $F$, $\nabla F$.
+                       </p>
+                       <p>
+                           Supposons maintenant que notre lagrangien s'écrive initialement sous la forme la plus générale invariante de jauge:
+                      </p>
+                       <div class="equation">
+                          <div class="eq-content"> $L(q_i, \dot{q}_i, t) = T(q_i, \dot{q}_i) - V(q_i, t) + \dot{\mathbf{q}} \cdot \mathbf{A}(q_i, t)$ </div>
+                          <div class="eq-number">(2.163)</div>
+                      </div>
+                       <p>
+                           où $\mathbf{A}(q_i, t)$ est un champ vectoriel quelconque (potentiel vecteur), et non nécessairement un gradient $\nabla F$. Alors une transformation de jauge $L \xrightarrow{F} L'$ donne
+                      </p>
+                      $$ L' = L + \frac{dF}{dt} = T - V + \dot{\mathbf{q}}\cdot\mathbf{A} + \sum_i \frac{\partial F}{\partial q_i} \dot{q}_i + \frac{\partial F}{\partial t} $$
+                       $$ L' = T - \left(V - \frac{\partial F}{\partial t}\right) + \dot{\mathbf{q}} \cdot (\mathbf{A} + \nabla F) $$
+                       <div class="equation">
+                          <div class="eq-content"> $L' = T - V'(q_i, t) + \dot{\mathbf{q}} \cdot \mathbf{A}'(q_i, t)$ </div>
+                          <div class="eq-number">(2.164)</div>
+                      </div>
+                       <!-- == End Content from page 99 (PDF page number) == -->
+
+                       <!-- == Start Content from page 100 (PDF page number) == -->
+                        <p>où</p>
+                        <div class="equation">
+                           <div class="eq-content"> $V'(q_i, t) = V(q_i, t) - \frac{\partial F(q_i, t)}{\partial t}$ </div>
+                           <div class="eq-number">(2.165)</div>
+                       </div>
+                       <div class="equation">
+                           <div class="eq-content"> $\mathbf{A}'(q_i, t) = \mathbf{A}(q_i, t) + \nabla F(q_i, t).$ </div>
+                           <div class="eq-number">(2.166)</div>
+                       </div>
+                       <p>
+                           La forme du lagrangien (2.163) est clairement restée la même (invariante de forme) et nous savons que la physique (la trajectoire) n'est pas affectée par la transformation de jauge. En physique moderne, on adopte aujourd'hui une approche basée sur l'axiome suivant : la nature est telle qu'observée, invariante de jauge (interaction électromagnétique). Nous devons donc développer un formalisme physique qui respecte cet aspect de la nature et qui soit invariant de jauge. En mécanique classique, cela signifie que le lagrangien le plus général que l'on peut écrire à priori devra être invariant de forme sous une transformation de jauge, c'est-à-dire devra être de la forme
+                      </p>
+                       <div class="equation">
+                           <div class="eq-content"> $L = T - V(q_i, t) + \dot{\mathbf{q}} \cdot \mathbf{A}(q_i, t)$ </div>
+                           <div class="eq-number">(2.167)</div>
+                       </div>
+                       <p>
+                           où $V$ et $\mathbf{A}$ sont des champs locaux, scalaire et vectoriel respectivement. La conclusion qui s'impose est que les seules interactions permises par la nature sont celles décrites par ce lagrangien (qui inclut $T-V$ comme cas particulier si $\mathbf{A}=0$). Il nous reste donc à vérifier quel type d'interaction existe dans la nature, au niveau classique, sur la base de cet axiome d'invariance de jauge.
+                      </p>
+                       <!-- == End Content from page 100 (PDF page number) == -->
+
+                       <!-- == Start Content from page 101 (PDF page number) == -->
+                        <p>
+                           Typiquement donc une interaction invariante de jauge dépendra des vitesses puisque $L$ contient le terme $\dot{\mathbf{q}} \cdot \mathbf{A}(q_i, t)$, donc la force dépendra des vitesses. Clairement cette force n'est pas conservatrice au sens vu dans le chapitre précédent ($\mathbf{F} \neq -\nabla V$ uniquement), néanmoins de telles forces trouvent leur place dans le formalisme lagrangien. Examinons le type de forces qui émergent de (en coordonnées cartésiennes $q_i=x_i$):
+                       </p>
+                       <div class="equation">
+                           <div class="eq-content"> $L = \frac{m}{2}\dot{\mathbf{x}}^2 - V(\mathbf{x}, t) + \dot{\mathbf{x}} \cdot \mathbf{A}(\mathbf{x}, t) = \frac{m}{2}\sum_j \dot{x}_j^2 - V(\mathbf{x}, t) + \sum_j \dot{x}_j A_j(\mathbf{x}, t)$ </div>
+                           <div class="eq-number">(2.168)</div>
+                       </div>
+                       <p>
+                           qui restera invariant de forme lors d'une transformation de jauge même dans le cas général où $\mathbf{A} \neq \nabla F$ (2.169).
+                       </p>
+                        <p>L'équation d'Euler-Lagrange pour la composante $x_i$ demande que l'on calcule</p>
+                        <div class="equation">
+                           <div class="eq-content"> $\frac{\partial L}{\partial x_i} = -\frac{\partial V}{\partial x_i} + \sum_j \dot{x}_j \frac{\partial A_j}{\partial x_i}$ </div>
+                           <div class="eq-number">(2.170)</div>
+                       </div>
+                       <div class="equation">
+                           <div class="eq-content"> $\frac{\partial L}{\partial \dot{x}_i} = m\dot{x}_i + A_i(\mathbf{x}, t)$ </div>
+                           <div class="eq-number">(2.171)</div>
+                       </div>
+                       <p>et sa dérivée temporelle totale:</p>
+                       <div class="equation">
+                           <div class="eq-content"> $\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{x}_i}\right) = m\ddot{x}_i + \frac{d A_i}{dt} = m\ddot{x}_i + \sum_j \frac{\partial A_i}{\partial x_j} \dot{x}_j + \frac{\partial A_i}{\partial t}$ </div>
+                           <div class="eq-number">(2.172)</div>
+                       </div>
+                       <!-- == End Content from page 101 (PDF page number) == -->
+
+
+    </main>
+
+    <footer>
+        <!-- Potential footer content like page numbers or navigation could go here -->
+    </footer>
+
+    <script>
+        // Optional: Configure KaTeX auto-render
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                // Trust the input, useful for environments like \begin{equation}
+                 trust: true,
+                 // Enable macros if needed, e.g., \mathbf
+                 macros: {
+                    "\\vb": "\\mathbf{#1}"
+                 }
+            });
+        });
+    </script>
+
+</body>
+</html>
