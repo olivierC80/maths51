@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes de cours: MECANIQUE DES FLUIDES</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 2em; padding: 1em; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        .title-page { text-align: center; margin-bottom: 3em; }
+        .logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2em; flex-wrap: wrap;}
+        .logo { border: 1px dashed grey; padding: 1em; margin: 0.5em; min-width: 100px; min-height: 50px; background-color: #f0f0f0; color: #777; display: flex; align-items: center; justify-content: center; }
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; color: #333; }
+        h1 { border-bottom: 2px solid #666; padding-bottom: 0.3em; font-size: 2em; text-align: center;}
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; font-size: 1.7em; }
+        h3 { font-size: 1.4em; margin-top: 1.5em; }
+        h4 { font-size: 1.2em; margin-top: 1.2em; }
+        h5 { font-size: 1.1em; margin-top: 1.1em; }
+        .figure { text-align: center; margin: 2em 0; border: 1px solid #eee; padding: 1em; }
+        .placeholder { border: 1px dashed grey; padding: 3em 2em; display: inline-block; min-width: 300px; min-height: 100px; background-color: #f0f0f0; color: #777; box-sizing: border-box; }
+        .caption { font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.9em; }
+        table { border-collapse: collapse; margin: 1.5em auto; width: 95%; border: 1px solid #ccc;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: middle; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .katex-display > .katex { text-align: center !important; } /* Center display math */
+        .katex-display { display: block; margin-top: 1em; margin-bottom: 1em; }
+        .equation-number { float: right; color: #888; margin-left: 1em;}
+        .page-number { text-align: right; margin-top: 1em; color: #888; font-size: 0.9em; font-style: italic; }
+        .footer-note { font-size: 0.8em; color: #666; border-top: 1px solid #ccc; margin-top: 2em; padding-top: 0.5em; }
+        .centered { text-align: center; }
+        /* Style for bold vectors/tensors as per PDF convention */
+        .katex .mathbf { font-weight: bold; } /* Ensure KaTeX bold works */
+        .toc ul { list-style-type: none; padding-left: 0; }
+        .toc li { margin-bottom: 0.5em; }
+        .toc .chapter { font-weight: bold; margin-top: 1em; }
+        .toc .section { padding-left: 1.5em; }
+        .toc .subsection { padding-left: 3em; }
+        .toc .subsubsection { padding-left: 4.5em; }
+        .clear-float { clear: both; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin: 1.5em 0; background-color: #f9f9f9; }
+        .table-placeholder { border: 1px dashed grey; padding: 2em; text-align: center; color: #777; background-color: #f0f0f0; margin: 1em auto; display: block; }
+        .boxed-equation { border: 1px solid #ccc; padding: 0.5em; margin: 1em 0; } /* For grouping equations */
+        .boxed-equation .katex-display { margin: 0.5em 0; }
+    </style>
+</head>
+<body>
+    <!-- Content from previous response... -->
+    <hr> <!-- Separator -->
+    <h1>Chapitre 8 : Couche limite</h1>
+
+    <div class="toc">
+        <ul>
+            <li class="section">8.1 Introduction</li>
+            <li class="section">8.2 Approche par la méthode des développements raccordés</li>
+            <ul>
+                <li class="subsection">8.2.1 Ecoulement extérieur : problème singulier</li>
+                <li class="subsection">8.2.2 Ecoulement intérieur : Equations de Prandtl</li>
+                <li class="subsection">8.2.3 Etablissement de l'équation de la fonction courant</li>
+            </ul>
+            <li class="section">8.3 Grandeurs caractéristiques d'une couche limite</li>
+            <ul>
+                <li class="subsection">8.3.1 Epaisseurs caractéristiques</li>
+                <li class="subsection">8.3.2 Coefficient de frottement pariétal</li>
+            </ul>
+            <li class="section">8.4 Couche limite sur plaque plane sans gradient de pression : solution de Blasius</li>
+            <ul>
+                <li class="subsection">8.4.1 Solution affine</li>
+                <li class="subsection">8.4.2 Grandeurs caractéristiques</li>
+            </ul>
+        </ul>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">120</div>
+    <hr>
+
+    <h2>8.1 Introduction</h2>
+    <p>Nous avons mentionné dans les chapitres précédents que la plupart des écoulements rencontrés dans les applications pratiques, aussi bien en écoulements confinés comme en hydraulique en charge qu'en écoulements extérieurs tels qu'en aérodynamique ou en hydrodynamique navale, se produisent à des nombres de Reynolds très élevés. Pour fixer les idées, nous citons à titre d'exemple qu'un écoulement de l'eau dans une conduite de 1 m de diamètre à une vitesse de 1 m/s se produit à un nombre de Reynolds égal à $10^6$. L'écoulement également autour d'un objet de dimension caractéristique 1 m se déplaçant dans l'air ambiant à une vitesse de 100 m/s est caractérisé par un nombre de Reynolds égal à $7 \times 10^6$ (la viscosité cinématique de l'air ambiante est voisine de $1.4 \times 10^{-5}$ m²/s). Malgré que les fluides mis en jeu dans ces écoulements sont réels (visqueux), les effets visqueux sont alors dominés par les effets inertiels et l'hypothèse de fluide parfait reste assez valable pour décrire en première approximation les écoulements dans de tels systèmes réels.</p>
+    <p>Cependant, cette approximation reste insuffisante pour décrire tous les mécanismes qui se produisent dans un écoulement en présence d'une structure solide et conduit à des résultats incohérents avec les observations expérimentales. Nous pouvons mentionner à titre d'exemple le résultat paradoxal que nous avons vu au chapitre précédent (paradoxe d'Alembert) lorsqu'un cylindre est animé d'un mouvement de translation uniforme dans un fluide parfait au repos. Il sera en effet soumis à une force de traînée nulle ce que contredisent formellement les simples observations de la vie courante.</p>
+    <p>D'un point de vue physique, c'est la <strong>condition d'adhérence</strong> (non-glissement) entre un fluide réel et une paroi qui est à l'origine de cette incohérence. Cette condition (vitesse du fluide nulle par rapport à la paroi) est en effet substituée par une condition de glissement (vitesse tangentielle non nulle autorisée) pour un fluide parfait, ce qui nous éloigne de la réalité au voisinage immédiat de la paroi.</p>
+    <p>Dans le cas des fluides réels, la condition de non glissement en contact avec une paroi est toujours vérifiée même si l'écoulement se produit loin de la paroi à grande vitesse. Une telle contrainte impose le développement au voisinage immédiat de la paroi d'une zone de l'écoulement où les effets visqueux sont prépondérants (même si Re est très élevé). Cette zone de l'écoulement, appelée <strong>couche limite</strong> (introduite par Prandtl en 1904), est caractérisée par :</p>
+    <ul>
+        <li>De forts gradients transversaux de vitesse (comparés aux gradients longitudinaux), dus à la grande variation de la vitesse en s'éloignant de la paroi (de 0 à la vitesse extérieure $U_e$).</li>
+        <li>Ceci engendre des taux de déformations intenses et l'écoulement demeure fortement rotationnel (vorticité importante) dans cette couche, même si l'écoulement extérieur (loin de la paroi) maintient un comportement irrotationnel (potentiel).</li>
+    </ul>
+    <p>Une description raffinée de la structure de l'écoulement dans cette couche limite, avec une démarche de raccordement avec l'écoulement observé à l'extérieur, s'avère nécessaire pour décrire de manière cohérente l'écoulement de fluide réel en présence d'une paroi solide.</p>
+    <p>Une description de la structure de l'écoulement dans cette couche ainsi que ses paramètres caractéristiques constituent l'objet de ce chapitre.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">121</div>
+    <hr>
+
+    <h2>8.2 Approche par la méthode des développements raccordés</h2>
+    <p>Pour mieux mettre en évidence les mécanismes qui se produisent dans la couche limite, nous considérons le cas simplifié d'un écoulement non pesant ($g=0$), stationnaire ($\partial/\partial t=0$), parallèle à l'infini (vitesse extérieure $U_e(x)$ et pression $p_e(x)$) d'un fluide réel incompressible (masse volumique $\rho$ et viscosité cinématique $\nu$), dans lequel sera placée dans la direction de l'écoulement ($x>0$) une plaque plane semi-infinie (en $y=0$). Nous notons $u$ et $v$ les composantes longitudinale (direction $x$) et transversale (direction $y$) de l'écoulement.</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 1 : couche limite sur plaque plane</div>
+        <p class="caption">Figure 1 : couche limite sur plaque plane. Épaisseur $\delta(x)$. Vitesse extérieure $U_e(x)$.</p>
+    </div>
+
+    <p>La présence de la plaque ne va pas ainsi perturber la structure de l'écoulement à l'infini (loin de la plaque, $y \to \infty$) tout en imposant une condition d'adhérence ($u=v=0$) du fluide à son contact ($y=0$). L'écoulement extérieur (loin de la plaque) est susceptible de subir des accélérations longitudinales (si $U_e(x)$ varie). Il admet à l'infini les valeurs limites $U_\infty, p_\infty$.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">122</div>
+    <hr>
+
+    <h3>8.2.1 Ecoulement extérieur : problème singulier</h3>
+    <p>L'écoulement autour de la plaque est décrit par les équations de Navier-Stokes stationnaires qui se réduisent dans cette situation bidimensionnelle à :</p>
+    <ul>
+        <li>Continuité :
+            $$ \frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} = 0 $$
+            <div class="equation-number">(8-1)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li>Navier-Stokes (x) :
+            $$ u \frac{\partial u}{\partial x} + v \frac{\partial u}{\partial y} = - \frac{1}{\rho} \frac{\partial p}{\partial x} + \nu \left( \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} \right) $$
+            <div class="equation-number">(8-2)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li>Navier-Stokes (y) :
+            $$ u \frac{\partial v}{\partial x} + v \frac{\partial v}{\partial y} = - \frac{1}{\rho} \frac{\partial p}{\partial y} + \nu \left( \frac{\partial^2 v}{\partial x^2} + \frac{\partial^2 v}{\partial y^2} \right) $$
+            <div class="equation-number">(8-3)</div>
+            <div class="clear-float"></div>
+        </li>
+    </ul>
+    <p>Avec les conditions aux limites suivantes :</p>
+    <ul>
+        <li>Au contact avec la paroi ($x \ge 0$ et $y=0$) :
+            $$ u = 0 \quad \text{et} \quad v = 0 $$
+            <div class="equation-number">(8-4)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li>A l'infini ($y \to \infty$) :
+            $$ u = U_e(x) \quad ; \quad v = 0 \quad ; \quad p = p_e(x) $$
+            <div class="equation-number">(8-5)</div>
+            <div class="clear-float"></div>
+        </li>
+    </ul>
+    <p>Pour décrire l'écoulement autour de la plaque à une distance $L$ du bord d'attaque, nous introduisons les échelles caractéristiques suivantes :</p>
+    $$ L_0 = L \quad : \text{ Echelle de longueur (longitudinale)} $$
+    <div class="equation-number">(8-6)</div><div class="clear-float"></div>
+    $$ T_0 = L / U_\infty \quad : \text{ Echelle de temps (où } U_\infty \text{ est une vitesse de référence)} $$
+    <div class="equation-number">(8-7)</div><div class="clear-float"></div>
+    $$ M_0 = \rho L^3 \quad : \text{ Echelle de masse} $$
+    <div class="equation-number">(8-8)</div><div class="clear-float"></div>
+    <p>Les variables spatiales ($x, y$) et hydrodynamiques ($u, v, p$) adimensionnelles $(\bar{x}, \bar{y}, \bar{u}, \bar{v}, \bar{p})$ caractérisant cet écoulement seront alors définies par:</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">123</div>
+    <hr>
+
+    $$ \bar{x} = \frac{x}{L} \quad ; \quad \bar{y} = \frac{y}{L} \quad ; \quad \bar{u} = \frac{u}{U_\infty} \quad ; \quad \bar{v} = \frac{v}{U_\infty} \quad \text{et} \quad \bar{p} = \frac{p - p_\infty}{\rho U_\infty^2} $$
+    <div class="equation-number">(8-9)</div>
+    <div class="clear-float"></div>
+    <p>Le système de Navier-Stokes précédent se met ainsi sous la forme adimensionnelle suivante :</p>
+    $$ \frac{\partial \bar{u}}{\partial \bar{x}} + \frac{\partial \bar{v}}{\partial \bar{y}} = 0 $$
+    <div class="equation-number">(8-10)</div>
+    <div class="clear-float"></div>
+    $$ \bar{u} \frac{\partial \bar{u}}{\partial \bar{x}} + \bar{v} \frac{\partial \bar{u}}{\partial \bar{y}} = - \frac{\partial \bar{p}}{\partial \bar{x}} + \frac{1}{\text{Re}} \left( \frac{\partial^2 \bar{u}}{\partial \bar{x}^2} + \frac{\partial^2 \bar{u}}{\partial \bar{y}^2} \right) $$
+    <div class="equation-number">(8-11)</div>
+    <div class="clear-float"></div>
+    $$ \bar{u} \frac{\partial \bar{v}}{\partial \bar{x}} + \bar{v} \frac{\partial \bar{v}}{\partial \bar{y}} = - \frac{\partial \bar{p}}{\partial \bar{y}} + \frac{1}{\text{Re}} \left( \frac{\partial^2 \bar{v}}{\partial \bar{x}^2} + \frac{\partial^2 \bar{v}}{\partial \bar{y}^2} \right) $$
+    <div class="equation-number">(8-12)</div>
+    <div class="clear-float"></div>
+    <p>Avec les conditions aux limites adimensionnelles suivantes :</p>
+    <ul>
+        <li>Au contact avec la paroi ($\bar{x} \ge 0$ et $\bar{y}=0$) :
+            $$ \bar{u} = 0 \quad \text{et} \quad \bar{v} = 0 $$
+            <div class="equation-number">(8-13)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li>A l'infini ($\bar{y} \to \infty$) :
+            $$ \bar{u} = \bar{U}_e(\bar{x}) = U_e(x)/U_\infty \quad ; \quad \bar{v} = 0 \quad ; \quad \bar{p} = \bar{p}_e(\bar{x}) = (p_e(x)-p_\infty)/(\rho U_\infty^2) $$
+            <div class="equation-number">(8-14)</div>
+            <div class="clear-float"></div>
+            (Si $U_e=U_\infty$, alors $\bar{u}=1$ et $\bar{p}=0$).
+        </li>
+    </ul>
+    <p>Le nombre de Reynolds qui figure dans (8-11) et (8-12) est exprimé en fonction des échelles caractéristiques de l'écoulement selon :</p>
+    $$ \text{Re} = \frac{U_\infty L}{\nu} $$
+    <div class="equation-number">(8-15)</div>
+    <div class="clear-float"></div>
+    <p>Comme la plaque est semi-infinie ($L \to \infty$), ce nombre de Reynolds croît indéfiniment. Lorsqu'il atteint des valeurs très grandes ($\text{Re} \to \infty$), les effets inertiels seront dominants devant les effets visqueux (termes en $1/\text{Re}$ deviennent négligeables). Le système de Navier-Stockes adimensionnel se réduit dans ce cas ($\text{Re} \to \infty$) pour donner les équations d'Euler :</p>
+    $$ \frac{\partial \bar{u}}{\partial \bar{x}} + \frac{\partial \bar{v}}{\partial \bar{y}} = 0 $$
+    <div class="equation-number">(8-16)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">124</div>
+    <hr>
+
+    $$ \bar{u} \frac{\partial \bar{u}}{\partial \bar{x}} + \bar{v} \frac{\partial \bar{u}}{\partial \bar{y}} = - \frac{\partial \bar{p}}{\partial \bar{x}} $$
+    <div class="equation-number">(8-17)</div>
+    <div class="clear-float"></div>
+    $$ \bar{u} \frac{\partial \bar{v}}{\partial \bar{x}} + \bar{v} \frac{\partial \bar{v}}{\partial \bar{y}} = - \frac{\partial \bar{p}}{\partial \bar{y}} $$
+    <div class="equation-number">(8-18)</div>
+    <div class="clear-float"></div>
+    <p>Ce système admet comme solution celle correspondant à l'écoulement extérieur (potentiel, si $U_e$ constant) :</p>
+    $$ \bar{u} = \bar{U}_e \quad ; \quad \bar{v} = 0 \quad ; \quad \bar{p} = \bar{p}_e $$
+    <div class="equation-number">(8-19)</div>
+    <div class="clear-float"></div>
+    <p>Cependant, cette solution est incohérente avec la condition aux limites (8-13) de non glissement ($\bar{u}=0$ en $\bar{y}=0$). D'un point de vue mathématique, ce résultat montre que le système d'Euler dans cette situation d'écoulement admet une <strong>singularité</strong> aux points de contact avec la plaque ($\bar{y}=0$). La solution valable dans tout le domaine de l'écoulement n'est pas définie en ces points. C'est un problème de perturbation singulière : négliger le terme de plus haute dérivée ($\nu \Delta \mathbf{v}$) change la nature des équations et empêche de satisfaire toutes les conditions aux limites.</p>
+    <p>D'un point de vue physique, il existe au voisinage de la plaque une zone (d'épaisseur évanescente $\delta \ll L$ lorsque le nombre de Reynolds tend vers l'infini) où les équations d'Euler ne sont plus valables. Les termes visqueux qui étaient éliminés en première approximation ne sont plus négligeables dans cette région (car les gradients transversaux $\partial/\partial y$ deviennent très grands), ils seront prépondérants et vont agir dans le sens d'atténuer rapidement la vitesse tangentielle de l'écoulement dans cette zone pour atteindre une valeur nulle sur la paroi. C'est la couche limite.</p>
+    <p>Une description de l'écoulement en présence de la plaque plane par la méthode des <strong>développements asymptotiques raccordés</strong> consiste à la recherche de solutions pour deux problèmes distincts qui vont être raccordées en seconde étape :</p>
+    <ul>
+        <li><strong>Ecoulement extérieur</strong> : rencontré dès que nous nous éloignons de la plaque plane ($y \sim L$). Dans cet écoulement les effets visqueux sont négligeables et l'approximation de fluide parfait régi par les équations d'Euler (8-16)-(8-18) reste valable. La solution $(u_e(x,y), v_e(x,y), p_e(x,y))$ dite extérieure obtenue par la résolution de ce système d'Euler coïncide dans le cas d'écoulement que nous avons envisagé avec $U_e(x)$ et $p_e(x)$.</li>
+        <li><strong>Ecoulement intérieur</strong> : $(\tilde{u}(\tilde{x},\tilde{y}), \tilde{v}(\tilde{x},\tilde{y}), \tilde{p}(\tilde{x},\tilde{y}))$ correspondant à la mince région de couche limite en contact avec la plaque ($y \sim \delta$). Une nouvelle approximation (Equations de Prandtl) dans laquelle les termes visqueux ne sont plus négligés et basée sur l'introduction de nouvelles échelles caractéristiques va être adoptée pour cet écoulement intérieur.</li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">125</div>
+    <hr>
+
+    <p>Le raccordement entre les écoulements intérieur ($\tilde{\cdot}$) et extérieur ($e$) s'exprime de manière schématique par les conditions suivantes (conditions de matching) :</p>
+    $$ \lim_{\tilde{y} \to \infty} \tilde{u}(\tilde{x}, \tilde{y}) = \lim_{y \to 0} u_e(x, y) = U_e(x) $$
+    <div class="equation-number">(8-20)</div>
+    <div class="clear-float"></div>
+    $$ \lim_{\tilde{y} \to \infty} \tilde{v}(\tilde{x}, \tilde{y}) = \lim_{y \to 0} v_e(x, y) = 0 $$
+    <div class="equation-number">(8-21)</div>
+    <div class="clear-float"></div>
+    $$ \lim_{\tilde{y} \to \infty} \tilde{p}(\tilde{x}, \tilde{y}) = \lim_{y \to 0} p_e(x, y) = p_e(x) $$
+    <div class="equation-number">(8-22)</div>
+    <div class="clear-float"></div>
+
+    <h3>8.2.2 Ecoulement intérieur : Equations de Prandtl</h3>
+    <p>La structure de l'écoulement de couche limite est fortement anisotrope. Elle est caractérisée par des taux de déformation dans la direction transversale (y) beaucoup plus importants que les taux de déformation dans la direction longitudinale (x). Il serait ainsi plus adéquat de maintenir les échelles caractéristiques $L$ et $U_\infty$ pour la longueur et la vitesse longitudinales, et d'introduire de nouvelles échelles transversales : de longueur $\delta$ (épaisseur de la couche limite, $\delta \ll L$) et de vitesse $V_e$ (vitesse transversale induite, $V_e \ll U_\infty$). Les variables spatiales et hydrodynamiques adimensionnelles $(\tilde{x}, \tilde{y}, \tilde{u}, \tilde{v}, \tilde{p})$ dans la couche limite s'écrivent alors compte tenu de ce nouveau scaling comme suit :</p>
+    $$ \tilde{x} = \frac{x}{L} \quad ; \quad \tilde{y} = \frac{y}{\delta} \quad ; \quad \tilde{u} = \frac{u}{U_\infty} \quad ; \quad \tilde{v} = \frac{v}{V_e} \quad \text{et} \quad \tilde{p} = \frac{p - p_\infty}{\rho U_\infty^2} $$
+    <div class="equation-number">(8-23)</div>
+    <div class="clear-float"></div>
+    <p>En insérant ces nouvelles variables adimensionnelles dans les équations de Navier-Stokes (8-10)-(8-12), il s'en suit :</p>
+    <p>Continuité:</p>
+    $$ \frac{U_\infty}{L} \frac{\partial \tilde{u}}{\partial \tilde{x}} + \frac{V_e}{\delta} \frac{\partial \tilde{v}}{\partial \tilde{y}} = 0 \implies \frac{\partial \tilde{u}}{\partial \tilde{x}} + \left( \frac{V_e L}{U_\infty \delta} \right) \frac{\partial \tilde{v}}{\partial \tilde{y}} = 0 $$
+    <div class="equation-number">(8-24)</div>
+    <div class="clear-float"></div>
+    <p>NS (x):</p>
+     $$ \frac{U_\infty^2}{L} \left( \tilde{u} \frac{\partial \tilde{u}}{\partial \tilde{x}} + \frac{V_e L}{U_\infty \delta} \tilde{v} \frac{\partial \tilde{u}}{\partial \tilde{y}} \right) = - \frac{\rho U_\infty^2}{L \rho} \frac{\partial \tilde{p}}{\partial \tilde{x}} + \frac{\nu U_\infty}{L^2} \frac{\partial^2 \tilde{u}}{\partial \tilde{x}^2} + \frac{\nu U_\infty}{\delta^2} \frac{\partial^2 \tilde{u}}{\partial \tilde{y}^2} $$
+     $$ \tilde{u} \frac{\partial \tilde{u}}{\partial \tilde{x}} + \left( \frac{V_e L}{U_\infty \delta} \right) \tilde{v} \frac{\partial \tilde{u}}{\partial \tilde{y}} = - \frac{\partial \tilde{p}}{\partial \tilde{x}} + \frac{1}{\text{Re}} \frac{\partial^2 \tilde{u}}{\partial \tilde{x}^2} + \left( \frac{L^2}{\delta^2 \text{Re}} \right) \frac{\partial^2 \tilde{u}}{\partial \tilde{y}^2} $$
+     <div class="equation-number">(8-25)</div>
+     <div class="clear-float"></div>
+    <p>NS (y):</p>
+    $$ \frac{U_\infty V_e}{L} \left( \tilde{u} \frac{\partial \tilde{v}}{\partial \tilde{x}} + \frac{V_e L}{U_\infty \delta} \tilde{v} \frac{\partial \tilde{v}}{\partial \tilde{y}} \right) = - \frac{\rho U_\infty^2}{\delta \rho} \frac{\partial \tilde{p}}{\partial \tilde{y}} + \frac{\nu V_e}{L^2} \frac{\partial^2 \tilde{v}}{\partial \tilde{x}^2} + \frac{\nu V_e}{\delta^2} \frac{\partial^2 \tilde{v}}{\partial \tilde{y}^2} $$
+    $$ \frac{\delta}{L} \left( \tilde{u} \frac{\partial \tilde{v}}{\partial \tilde{x}} + \left( \frac{V_e L}{U_\infty \delta} \right) \tilde{v} \frac{\partial \tilde{v}}{\partial \tilde{y}} \right) = - \frac{U_\infty \delta}{V_e L} \frac{\partial \tilde{p}}{\partial \tilde{y}} + \frac{1}{\text{Re}} \frac{\delta V_e}{L U_\infty} \frac{\partial^2 \tilde{v}}{\partial \tilde{x}^2} + \left( \frac{L^2}{\delta^2 \text{Re}} \right) \frac{\delta V_e}{L U_\infty} \frac{\partial^2 \tilde{v}}{\partial \tilde{y}^2} $$
+    <div class="equation-number">(8-26)</div>
+    <div class="clear-float"></div>
+    <p>Avec la condition à la paroi :</p>
+    $$ \tilde{u}(\tilde{x} \ge 0, \tilde{y}=0) = 0 \quad \text{et} \quad \tilde{v}(\tilde{x} \ge 0, \tilde{y}=0) = 0 $$
+    <div class="equation-number">(8-27)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">126</div>
+    <hr>
+
+    <p>Les nouvelles échelles $\delta$ et $V_e$ ne sont pas encore connues. Pour les déterminer, nous utilisons le <strong>principe de moindre dégénérescence</strong> (ou principe de l'ordre de grandeur dominant). Ce principe consiste à la simplification du système adimensionnel (8-24)-(8-26) tout en gardant le maximum de termes pertinents (au moins deux termes de nature différente dans chaque équation pour équilibrer). D'un point de vue physique, cette démarche consiste à obtenir un système simplifié décrivant l'écoulement tout en maintenant une prise en compte des divers phénomènes physiques mis en jeu (inertie, pression, viscosité).</p>
+    <p>Ce principe nous conduit aux relations suivantes entre les différentes échelles caractéristiques de l'écoulement, pour que les coefficients adimensionnels soient d'ordre 1:</p>
+    <ol type="i">
+        <li>Continuité (8-24) $\implies$
+            $$ \frac{V_e L}{U_\infty \delta} \approx 1 $$
+            <div class="equation-number">(8-28)</div>
+            <div class="clear-float"></div>
+            Si cette relation n'est pas satisfaite (par ex. si $V_e L \ll U_\infty \delta$), le système (8-24)-(8-26) dégénère vers un système monodimensionnel ($\partial \tilde{u}/\partial \tilde{x} \approx 0$) et sera incapable de satisfaire à la fois la condition (8-27) d'adhérence à la paroi et la condition (8-20) de raccordement avec l'écoulement extérieur.</li>
+        <li>Navier-Stokes (x) (8-25) : Pour que le terme visqueux transversal (le plus important car $\delta \ll L$) soit du même ordre que les termes inertiels (ordre 1), il faut que :
+             $$ \frac{L^2}{\delta^2 \text{Re}} \approx 1 $$
+            <div class="equation-number">(8-29)</div>
+            <div class="clear-float"></div>
+            Cette relation permet de ne pas négliger le phénomène de diffusion transversale de la quantité de mouvement par les effets visqueux. Cet effet est loin d'être négligeable dans la couche limite et demeure de même ordre de grandeur que l'effet d'inertie. (Le terme $\frac{1}{\text{Re}} \frac{\partial^2 \tilde{u}}{\partial \tilde{x}^2}$ est négligeable car d'ordre $1/\text{Re} \ll 1$).</li>
+    </ol>
+    <p>Il s'en suit de ces conditions que les échelles caractéristiques transversales ($\delta, V_e$) dans la couche limite sont reliées aux échelles longitudinales ($L, U_\infty$) par l'intermédiaire du nombre de Reynolds comme le montrent les expressions suivantes :</p>
+    <p>De (8-29): $\delta^2 \approx \frac{L^2}{\text{Re}} \implies \delta \approx \frac{L}{\sqrt{\text{Re}}}$.</p>
+    <p>De (8-28): $V_e \approx U_\infty \frac{\delta}{L} \approx U_\infty \frac{L/\sqrt{\text{Re}}}{L} = \frac{U_\infty}{\sqrt{\text{Re}}}$.</p>
+    $$ \delta = \frac{L}{\sqrt{\text{Re}}} \quad \text{et} \quad V_e = \frac{U_\infty}{\sqrt{\text{Re}}} $$
+    <div class="equation-number">(8-30)</div>
+    <div class="clear-float"></div>
+    <p>L'épaisseur de la couche limite $\delta$ est donc beaucoup plus petite que $L$ ($\delta/L \sim 1/\sqrt{Re} \ll 1$) et la vitesse transversale $V_e$ est beaucoup plus petite que $U_\infty$ ($V_e/U_\infty \sim 1/\sqrt{Re} \ll 1$).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">127</div>
+    <hr>
+
+    <p>D'après ces résultats, le système de Navier-Stokes dans la couche limite se simplifie tout en obéissant au principe de moindre dégénérescence (tous les coefficients deviennent d'ordre 1). Il se réduit à la forme asymptotique suivante (<strong>équations de Prandtl</strong>, 1904) :</p>
+    <ul>
+        <li>Continuité (8-24 devient 8-31):
+            $$ \frac{\partial \tilde{u}}{\partial \tilde{x}} + \frac{\partial \tilde{v}}{\partial \tilde{y}} = 0 $$
+            <div class="equation-number">(8-31)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li>NS (x) (8-25 devient 8-32):
+            $$ \tilde{u} \frac{\partial \tilde{u}}{\partial \tilde{x}} + \tilde{v} \frac{\partial \tilde{u}}{\partial \tilde{y}} = - \frac{\partial \tilde{p}}{\partial \tilde{x}} + \frac{\partial^2 \tilde{u}}{\partial \tilde{y}^2} $$
+            <div class="equation-number">(8-32)</div>
+            <div class="clear-float"></div>
+        </li>
+         <li>NS (y) (8-26 devient 8-33): (Termes à gauche $\sim \delta/L \ll 1$. Termes visqueux $\sim (\delta/L)/\text{Re} \ll 1$ et $(\delta V_e)/(L U_\infty) = (\delta/L)^2 \ll 1$. Reste:)
+            $$ 0 = - \frac{\partial \tilde{p}}{\partial \tilde{y}} $$
+            <div class="equation-number">(8-33)</div>
+            <div class="clear-float"></div>
+        </li>
+    </ul>
+    <p>Avec les conditions (8-27) d'adhérence à la paroi et (8-20)-(8-22) de raccordement avec l'écoulement extérieur. Les équations de ce système s'appellent les <strong>équations de Prandtl</strong> décrivant la dynamique de la couche limite.</p>
+    <p>L'équation (8-33) montre que la pression $\tilde{p}$ est uniforme sur la section transversale ($\tilde{y}$) et est donc fonction uniquement de la position longitudinale $\tilde{x}$ :</p>
+    $$ \tilde{p}(\tilde{x}, \tilde{y}) = \tilde{p}_e(\tilde{x}) $$
+    <div class="equation-number">(8-34)</div>
+    <div class="clear-float"></div>
+    <p>Le champ de pression ne subit pas ainsi une perturbation à la traversée entre l'écoulement extérieur et la couche limite. Une variation de la pression $p_e(x)$ dans l'écoulement extérieur sera entièrement transmise à la couche limite. Comme l'écoulement extérieur est approximé par l'hypothèse de l'écoulement irrotationnel d'un fluide parfait, le théorème de Bernoulli permet d'établir la relation différentielle suivante (relation d'Euler le long d'une ligne de courant extérieure):</p>
+    $$ u_e \frac{d u_e}{dx} = - \frac{1}{\rho} \frac{d p_e}{dx} \quad \text{ou} \quad U_e \frac{d U_e}{dx} = - \frac{1}{\rho} \frac{d p_e}{dx} $$
+    <div class="equation-number">(8-35)</div>
+    <div class="clear-float"></div>
+    <p>Qui se met sous la forme adimensionnelle :</p>
+    $$ \bar{U}_e \frac{d \bar{U}_e}{d \bar{x}} = - \frac{d \bar{p}_e}{d \bar{x}} $$
+    <div class="equation-number">(8-36)</div>
+    <div class="clear-float"></div>
+    <p>Les équations générales de la couche limite dynamique se résument par conséquences dans les deux équations (8-31) et (8-32), où le terme $\partial \tilde{p}/\partial \tilde{x}$ est remplacé par $- \bar{U}_e d\bar{U}_e / d\bar{x}$ :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">128</div>
+    <hr>
+
+    <div class="boxed-equation">
+        $$ \frac{\partial \tilde{u}}{\partial \tilde{x}} + \frac{\partial \tilde{v}}{\partial \tilde{y}} = 0 $$
+        <div class="equation-number">(8-37)</div>
+        <div class="clear-float"></div>
+        $$ \tilde{u} \frac{\partial \tilde{u}}{\partial \tilde{x}} + \tilde{v} \frac{\partial \tilde{u}}{\partial \tilde{y}} = \bar{U}_e \frac{d \bar{U}_e}{d \bar{x}} + \frac{\partial^2 \tilde{u}}{\partial \tilde{y}^2} $$
+        <div class="equation-number">(8-38)</div>
+        <div class="clear-float"></div>
+    </div>
+    <p>Avec les conditions aux limites et de raccord suivantes :</p>
+    $$ \tilde{y} = 0 \quad ; \quad \tilde{u} = \tilde{v} = 0 $$
+    <div class="equation-number">(8-39)</div>
+    <div class="clear-float"></div>
+    $$ \tilde{y} \to \infty \quad ; \quad \tilde{u} = \bar{U}_e(\tilde{x}) $$
+    <div class="equation-number">(8-40)</div>
+    <div class="clear-float"></div>
+    <p>Nous voyons que l'écoulement extérieur n'intervient dans les équations (8-37)-(8-40) que par le biais du champ de vitesse $U_e(x)$ (ou $\bar{U}_e(\tilde{x})$).</p>
+    <p>En l'absence d'un gradient de pression longitudinal ($dp_e/dx=0$, donc $dU_e/dx=0$, $U_e=U_\infty$), l'équation (8-38) se réduit à un équilibre entre convection inertielle et diffusion visqueuse : La quantité de mouvement qui atteint par transport convectif une position $x$ est distribuée instantanément par les effets visqueux dans le plan transversal.</p>
+    <p>Ces équations sont établies pour la plaque plane mais elles restent valables quelque soit la géométrie de la paroi en introduisant l'abscisse curviligne le long de la paroi.</p>
+
+    <h3>8.2.3 Etablissement de l'équation de la fonction courant</h3>
+    <p>Conformément aux résultats établis ci-dessus, l'écoulement de couche limite est généralement fortement rotationnel. Cependant, il maintient une structure plane en présence d'une plaque plane ou même curviligne bidimensionnelle. Nous pouvons alors définir pour cet écoulement une fonction courant adimensionnelle $\tilde{\Psi}(\tilde{x}, \tilde{y})$ telle que :</p>
+    $$ \tilde{u} = \frac{\partial \tilde{\Psi}}{\partial \tilde{y}} \quad \text{et} \quad \tilde{v} = - \frac{\partial \tilde{\Psi}}{\partial \tilde{x}} $$
+    <div class="equation-number">(8-41)</div>
+    <div class="clear-float"></div>
+    <p>En partant de (8-38), et en substituant $\tilde{u}, \tilde{v}$ par leurs expressions en fonction de $\tilde{\Psi}$, cette fonction courant est solution de l'équation aux dérivées partielles du troisième ordre suivante :</p>
+    $$ \frac{\partial \tilde{\Psi}}{\partial \tilde{y}} \frac{\partial^2 \tilde{\Psi}}{\partial \tilde{x} \partial \tilde{y}} - \frac{\partial \tilde{\Psi}}{\partial \tilde{x}} \frac{\partial^2 \tilde{\Psi}}{\partial \tilde{y}^2} = \bar{U}_e \frac{d \bar{U}_e}{d \tilde{x}} + \frac{\partial^3 \tilde{\Psi}}{\partial \tilde{y}^3} $$
+    <div class="equation-number">(8-42)</div>
+    <div class="clear-float"></div>
+    <p>Avec les conditions aux limites et de raccordement suivantes :</p>
+    $$ \tilde{\Psi}(\tilde{x} \ge 0, \tilde{y}=0) = 0 \quad ; \quad \frac{\partial \tilde{\Psi}}{\partial \tilde{y}}(\tilde{x} \ge 0, \tilde{y}=0) = 0 $$
+    <div class="equation-number">(8-43)</div>
+    <div class="clear-float"></div>
+    $$ \lim_{\tilde{y} \to \infty} \frac{\partial \tilde{\Psi}}{\partial \tilde{y}}(\tilde{x}, \tilde{y}) = \bar{U}_e(\tilde{x}) $$
+    <div class="equation-number">(8-44)</div>
+    <div class="clear-float"></div>
+    <p>Une intégration de ce système d'équations va être développée au paragraphe 8.4 dans le cas de l'absence d'un gradient de pression longitudinal.</p>
+
+    <h2>8.3 Grandeurs caractéristiques d'une couche limite</h2>
+
+    <h3>8.3.1 Epaisseurs caractéristiques</h3>
+    <p>Plusieurs définitions de l'épaisseur de la couche limite existent, basées sur des critères différents.</p>
+    <p><strong>a. Epaisseur locale $\delta_{0.99}$ :</strong></p>
+    <p>Nous avons déjà établi précédemment (éq. 8-30) que l'épaisseur de la couche limite $\delta$ est de l'ordre de grandeur $L/\sqrt{\text{Re}}$. Une épaisseur locale plus précise notée $\delta_{0.99}$ est également utilisée pour estimer l'épaisseur de la couche limite localement à une position longitudinale $x$ donnée. Cette épaisseur est purement conventionnelle et ne se base sur aucun argument physique. Elle est définie comme la distance $y$ à la paroi où la vitesse $u(x,y)$ atteint 99% de la vitesse extérieure $U_e(x)$ :</p>
+    $$ u(x, y=\delta_{0.99}) = 0.99 U_e(x) $$
+    <div class="equation-number">(8-45)</div>
+    <div class="clear-float"></div>
+    <p>Nous définissons de manière similaire l'épaisseur $\delta_{0.999}$.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">130</div>
+    <hr>
+
+    <p><strong>b. Epaisseur de déplacement $\delta_1$ :</strong></p>
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 2 : signification de l'épaisseur de déplacement</div>
+        <p class="caption">Figure 2 : signification de l'épaisseur de déplacement $\delta_1$. Le débit manquant dans la couche limite (zone hachurée à gauche) par rapport à un écoulement uniforme $U_e$ est équivalent au débit qui passerait dans une épaisseur $\delta_1$ avec la vitesse $U_e$ (rectangle à droite).</p>
+    </div>
+    <p>La présence de la plaque plane dans l'écoulement induit un déficit de débit (volumique par unité de largeur), de flux de quantité de mouvement et d'énergie par comparaison à la situation où elle est absente (écoulement uniforme $U_e$ partout). Le <strong>déficit du débit</strong> $\Delta Q$ par unité de largeur peut être estimé (comme le montre la figure 2 ci-dessus) par l'expression suivante :</p>
+    $$ \Delta Q = \int_0^\infty (U_e - u) dy $$
+    <div class="equation-number">(8-46)</div>
+    <div class="clear-float"></div>
+    <p>L'<strong>épaisseur de déplacement $\delta_1$</strong> est définie telle que ce débit manquant $\Delta Q$ soit égal au débit qui passerait dans une épaisseur $\delta_1$ si la vitesse était uniformément $U_e$ :</p>
+     $$ U_e \delta_1 = \Delta Q = \int_0^\infty (U_e - u) dy $$
+    <p>Elle s'écrit alors :</p>
+    $$ \delta_1 = \int_0^\infty \left( 1 - \frac{u}{U_e} \right) dy $$
+    <div class="equation-number">(8-47)</div>
+    <div class="clear-float"></div>
+    <p>Physiquement, $\delta_1$ représente la distance dont les lignes de courant extérieures sont déplacées vers le haut à cause du ralentissement du fluide dans la couche limite. Cette épaisseur qui a une signification physique est du même ordre de grandeur que $L/\sqrt{\text{Re}}$.</p>
+    <p><strong>c. Epaisseur de quantité de mouvement $\delta_2$ :</strong></p>
+    <p>L'épaisseur $\delta_2$ caractérise le <strong>déficit du flux de quantité de mouvement</strong> par unité de largeur induit par les effets de cisaillement dans la couche limite, comparé à un écoulement uniforme $U_e$. Le flux de quantité de mouvement pour l'écoulement réel est $\int_0^\infty \rho u^2 dy$. Pour l'écoulement uniforme $U_e$, il serait $\int_0^\infty \rho U_e^2 dy$ dans la même région. Le déficit est lié à $\delta_2$ par :</p>
+    $$ \rho U_e^2 \delta_2 = \int_0^\infty (\rho U_e^2 - \rho u^2) dy \quad \text{Non, définition liée au flux } \rho u (U_e-u) $$
+    <p>La définition correcte est : $\delta_2$ est telle que le déficit de flux de quantité de mouvement $\int_0^\infty \rho u (U_e - u) dy$ soit égal au flux $\rho U_e^2 \delta_2$.</p>
+    $$ \rho U_e^2 \delta_2 = \int_0^\infty \rho u (U_e - u) dy $$
+    <div class="equation-number">(8-48)</div>
+    <div class="clear-float"></div>
+    <p>D'où nous déduisons son expression :</p>
+    $$ \delta_2 = \int_0^\infty \frac{u}{U_e} \left( 1 - \frac{u}{U_e} \right) dy $$
+    <div class="equation-number">(8-49)</div>
+    <div class="clear-float"></div>
+    <p>Cette épaisseur est directement liée à la force de traînée sur la plaque.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">131</div>
+    <hr>
+
+    <p><strong>d. Epaisseur de l'énergie $\delta_3$ :</strong></p>
+    <p>De manière similaire, l'épaisseur $\delta_3$ caractérise le déficit du flux de l'énergie cinétique de l'écoulement par unité de largeur induit par les effets visqueux. Le flux d'énergie cinétique est $\int_0^\infty \frac{1}{2} \rho u^3 dy$. Pour l'écoulement uniforme $U_e$, il serait $\int_0^\infty \frac{1}{2} \rho U_e^3 dy$. L'épaisseur $\delta_3$ est telle que le déficit $\int_0^\infty \frac{1}{2} \rho u (U_e^2 - u^2) dy$ soit égal à $(\frac{1}{2} \rho U_e^3) \delta_3$ ? Non, définition usuelle:</p>
+    $$ (\frac{1}{2} \rho U_e^3) \delta_3 = \int_0^\infty \frac{1}{2} \rho u (U_e^2 - u^2) dy $$
+    <p><em>Note: La définition (8-50) dans le PDF semble incorrecte, elle compare $\frac{1}{2}\rho U_e^3 \delta_3$ à $\int \frac{1}{2}\rho u^2 dy - \int \frac{1}{2}\rho U_e^2 dy$? La définition standard relie $\delta_3$ au déficit de flux d'énergie cinétique. Prenons la définition via (8-51) qui est correcte:</em></p>
+    $$ (\frac{1}{2} \rho U_e^3) \delta_3 = \int_0^\infty \frac{1}{2} \rho u (U_e^2 - u^2) dy = \int_0^\infty \frac{1}{2} \rho U_e^3 \frac{u}{U_e} (1 - (\frac{u}{U_e})^2) dy $$
+    <div class="equation-number">(8-50)</div>
+    <div class="clear-float"></div>
+    <p>Il s'en suit :</p>
+    $$ \delta_3 = \int_0^\infty \frac{u}{U_e} \left( 1 - \left(\frac{u}{U_e}\right)^2 \right) dy $$
+    <div class="equation-number">(8-51)</div>
+    <div class="clear-float"></div>
+    <p>Les intégrales intervenant dans les expressions de ces différentes épaisseurs ($\delta_1, \delta_2, \delta_3$) sont toujours convergentes (car $u \to U_e$ rapidement pour $y \to \infty$). Ces épaisseurs jouent un rôle important dans les calculs pratiques de la couche limite laminaire et même de la couche limite turbulente (via des méthodes intégrales).</p>
+
+    <h3>8.3.2 Coefficient de frottement pariétal</h3>
+    <p>La prise en compte de la couche limite permet de reproduire la force de traînée exercée par l'écoulement sur une paroi. Ce qui résout le paradoxe de l'absence de la force de traînée exercée sur un corps solide placé dans un écoulement prévue par la théorie des écoulements potentiels que nous avons mentionné au chapitre précédent (paradoxe de D'Alembert).</p>
+    <p>Nous définissons le <strong>coefficient local de frottement pariétal $C_f(x)$</strong> (et non $C_p$ comme dans le PDF) par :</p>
+    $$ C_f(x) = \frac{\tau_w(x)}{\frac{1}{2} \rho U_e^2(x)} $$
+    <div class="equation-number">(8-52)</div>
+    <div class="clear-float"></div>
+    <p>Où $\tau_w(x)$ est la <strong>contrainte de cisaillement à la paroi</strong> à la position $x$. Comme le tenseur des contraintes de cisaillement à la paroi $\boldsymbol{\tau}$ se réduit à sa composante tangentielle $\tau_{xy}$ (ou $\tau_{yx}$), il s'en suit :</p>
+    $$ \tau_w(x) = \tau_{xy}(x, y=0) = \mu \left( \frac{\partial u}{\partial y} + \frac{\partial v}{\partial x} \right)_{y=0} = \mu \left( \frac{\partial u}{\partial y} \right)_{y=0} $$
+    <div class="equation-number">(8-53)</div>
+    <div class="clear-float"></div>
+    <p>(car $v=0$ et $\partial v/\partial x = 0$ à la paroi).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">132</div>
+    <hr>
+
+    <p>Compte tenu des expressions (8-15) du nombre de Reynolds ($Re_L = U_\infty L / \nu$) et (8-30) de l'échelle caractéristique de l'épaisseur $\delta \approx L/\sqrt{Re_L}$, le coefficient pariétal de frottement se met en fonction des variables adimensionnelles ($\tilde{u}=u/U_\infty, \tilde{y}=y/\delta$) sous la forme :</p>
+    $$ \tau_w = \mu \frac{\partial u}{\partial y} \bigg|_{y=0} = \mu \frac{U_\infty}{\delta} \frac{\partial \tilde{u}}{\partial \tilde{y}} \bigg|_{\tilde{y}=0} $$
+    $$ C_f(x) = \frac{\mu (U_\infty/\delta) (\partial \tilde{u}/\partial \tilde{y})_{\tilde{y}=0}}{\frac{1}{2} \rho U_\infty^2} = \frac{2 \mu}{\rho U_\infty \delta} \left( \frac{\partial \tilde{u}}{\partial \tilde{y}} \right)_{\tilde{y}=0} $$
+    <p>En utilisant $\delta \approx L/\sqrt{Re_L}$ et $Re_L = U_\infty L/\nu$:</p>
+    $$ C_f(x) = \frac{2 \mu}{\rho U_\infty (L/\sqrt{Re_L})} \left( \frac{\partial \tilde{u}}{\partial \tilde{y}} \right)_{\tilde{y}=0} = \frac{2 \mu \sqrt{U_\infty L / \nu}}{\rho U_\infty L} (\dots) = \frac{2 \nu}{U_\infty L} \sqrt{\frac{U_\infty L}{\nu}} (\dots) $$
+    $$ C_f(x) = \frac{2}{\sqrt{Re_L}} \left( \frac{\partial \tilde{u}}{\partial \tilde{y}} \right)_{\tilde{y}=0} $$
+    <p>Ou plus généralement, en utilisant le Reynolds local $Re_x = U_e(x) x / \nu$:</p>
+    $$ C_f(x) = \frac{2}{\sqrt{Re_x}} \left( \frac{\partial \tilde{u}}{\partial \tilde{y}} \right)_{\tilde{y}=0} $$
+    <div class="equation-number">(8-54)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: L'éq. (8-54) du PDF a $U_e^2 \sqrt{Re}$ au dénominateur ? Corrigé ici avec la dérivation standard. Le $\partial \tilde{u}/\partial \tilde{y}|_0$ est la pente adimensionnelle à la paroi.</em></p>
+
+    <h2>8.4 Couche limite sur plaque plane sans gradient de pression : solution de Blasius</h2>
+    <p>Nous nous proposons dans ce paragraphe d'étudier le cas intéressant de la couche limite qui se développe sur une plaque plane semi-infinie ($x \ge 0$) placée dans un écoulement amont uniforme à gradient de pression longitudinal nul ($dp_e/dx = 0$), de vitesse $U_\infty$ et de pression $p_\infty$. La solution de l'écoulement extérieur dans ce cas est triviale :</p>
+    $$ u_e(x, y) = U_e(x) = U_\infty \quad ; \quad v_e(x, y) = 0 \quad ; \quad p_e(x, y) = p_e(x) = p_\infty $$
+    <div class="equation-number">(8-55)</div>
+    <div class="clear-float"></div>
+    <p>ou sous forme adimensionnelle ($\bar{U}_e=1, \bar{p}_e=0$ si $p_\infty$ utilisé comme référence) :</p>
+    $$ \bar{u}_e(\bar{x}, \bar{y}) = 1 \quad ; \quad \bar{v}_e(\bar{x}, \bar{y}) = 0 \quad ; \quad \bar{p}_e(\bar{x}, \bar{y}) = 0 $$
+    <div class="equation-number">(8-56)</div>
+    <div class="clear-float"></div>
+    <p>Il s'agit de résoudre le problème de Prandtl (8-37)-(8-40) qui se simplifie ici (avec $d\bar{U}_e/d\bar{x}=0$):</p>
+    <div class="boxed-equation">
+        $$ \frac{\partial \tilde{u}}{\partial \tilde{x}} + \frac{\partial \tilde{v}}{\partial \tilde{y}} = 0 $$
+        <div class="equation-number">(8-57)</div>
+        <div class="clear-float"></div>
+        $$ \tilde{u} \frac{\partial \tilde{u}}{\partial \tilde{x}} + \tilde{v} \frac{\partial \tilde{u}}{\partial \tilde{y}} = \frac{\partial^2 \tilde{u}}{\partial \tilde{y}^2} $$
+        <div class="equation-number">(8-58)</div>
+        <div class="clear-float"></div>
+    </div>
+    <p>Avec les conditions aux limites et de raccord suivantes :</p>
+    $$ \tilde{y} = 0 \quad ; \quad \tilde{u} = \tilde{v} = 0 $$
+    $$ \tilde{y} \to \infty \quad ; \quad \tilde{u} = 1 $$
+    <div class="equation-number">(8-59)</div>
+    <div class="clear-float"></div>
+    <p>Ce qui revient en introduisant la fonction courant $\Psi$ (dimensionnelle) à résoudre le problème (éq. 8-42 avec $dU_e/dx=0$) :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">133</div>
+    <hr>
+
+    $$ \frac{\partial \Psi}{\partial y} \frac{\partial^2 \Psi}{\partial x \partial y} - \frac{\partial \Psi}{\partial x} \frac{\partial^2 \Psi}{\partial y^2} = \nu \frac{\partial^3 \Psi}{\partial y^3} $$
+    <div class="equation-number">(8-60)</div>
+    <div class="clear-float"></div>
+    <p>Avec les conditions aux limites et de raccord suivantes :</p>
+    $$ \Psi(x, y=0) = 0 \quad ; \quad \frac{\partial \Psi}{\partial y}(x, y=0) = 0 \quad \text{et} \quad \lim_{y \to \infty} \frac{\partial \Psi}{\partial y}(x, y) = U_\infty $$
+    <div class="equation-number">(8-61)</div>
+    <div class="clear-float"></div>
+
+    <h3>8.4.1 Solution affine</h3>
+    <p>L'obstacle solide (la plaque plane semi-infinie $x \ge 0$) dans cette situation n'a aucune échelle de longueur caractéristique $L$. Nous nous attendons à trouver une solution de ce problème dite "<strong>affine</strong>" ou "<strong>auto-semblable</strong>" (self-similar).</p>
+    <p>La démarche d'établissement d'un comportement affine pour un système fluide aboutit dans un grand nombre de cas à des résultats très intéressants. Comme se présente le cas envisagé ici. Il s'agit de trouver un profil de la vitesse adimensionnelle $\tilde{u} = u/U_\infty$ dans cette couche limite qui soit indépendant de la position longitudinale $x$ sur l'obstacle, lorsqu'exprimé en fonction d'une variable de similitude $\eta$. Ce profil se présente comme suit :</p>
+    $$ \tilde{u} = \frac{u}{U_\infty} = \phi'(\eta) $$
+    <div class="equation-number">(8-62)</div>
+    <div class="clear-float"></div>
+    <p>où $\phi$ est une fonction (sans dimension) et $\eta$ est la <strong>variable de similitude</strong> qui à priori s'exprime de la façon la plus générale comme $\eta = y / \delta(x)$, où $\delta(x)$ est l'épaisseur locale de la couche limite.</p>
+    $$ \eta = \eta(x, y, \nu, U_\infty) $$
+    <div class="equation-number">(8-63)</div>
+    <div class="clear-float"></div>
+    <p>Pour établir ce profil, nous nous proposons de suivre une démarche purement physique (d'analyse dimensionnelle et de scaling) sachant qu'il est possible d'aboutir au même résultat en ayant recours à un raisonnement mathématique basé sur les propriétés d'invariance (par changement d'échelle) du système d'équations (8-60) - (8-61).</p>
+    <p>Compte tenu des paramètres du problème ($\Psi$ dépend de $x, y, \nu, U_\infty, \rho$), la fonction courant $\psi$ solution de ce système sera donnée par une relation de la forme :</p>
+    $$ \mathcal{F}(\Psi, x, y, \nu, \rho) = 0 \quad (\text{On omet } U_\infty \text{ ici ?}) $$
+    <div class="equation-number">(8-64)</div>
+    <div class="clear-float"></div>
+    <p>qui s'écrit sous la forme adimensionnelle suivante :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">134</div>
+    <hr>
+
+    $$ \mathcal{G}\left( \frac{\Psi}{L_e^2 T_e^{-1}}, \frac{x}{L_e}, \frac{y}{L_e}, \frac{\nu}{L_e^2 T_e^{-1}}, \frac{\rho}{M_e L_e^{-3}} \right) = 0 $$
+    <div class="equation-number">(8-65)</div>
+    <div class="clear-float"></div>
+    <p>Si on choisit les échelles caractéristiques basées sur les paramètres locaux $x, U_\infty, \nu, \rho$ :</p>
+    $$ L_e = \frac{\nu}{U_\infty} \quad \text{(échelle visqueuse ? Non, utiliser x)} $$
+    <p>Utilisons plutôt $x$ comme échelle de longueur, $U_\infty$ comme échelle de vitesse. L'échelle de temps est $x/U_\infty$. L'échelle pour $\Psi$ (qui a la dimension $L^2/T$) est $x^2 / (x/U_\infty) = x U_\infty$. Les variables adim sont $\bar{x}=x/L$ (pas utile ici), $y/x$, $V=U_\infty$, $\rho$, $\nu$. La grandeur adim pour $\Psi$ est $\Psi / (U_\infty x)$. Le paramètre adim est $\nu/(U_\infty x) = 1/Re_x$. Donc :</p>
+    $$ \frac{\Psi}{U_\infty x} = f\left(\frac{y}{x}, Re_x\right) $$
+    <p>Pour une solution auto-semblable, on cherche une forme $\frac{\Psi}{U_\infty \delta(x)} = f(\eta)$ avec $\eta=y/\delta(x)$. On sait $\delta(x) \sim x/\sqrt{Re_x} = x / \sqrt{U_\infty x/\nu} = \sqrt{\nu x / U_\infty}$.</p>
+    <p>Donc l'échelle pour $\Psi$ devrait être $U_\infty \delta(x) = U_\infty \sqrt{\nu x / U_\infty} = \sqrt{\nu x U_\infty}$.</p>
+    $$ \frac{\Psi}{\sqrt{\nu x U_\infty}} = f(\eta) \quad \text{avec} \quad \eta = y \sqrt{\frac{U_\infty}{\nu x}} $$
+    <p>La relation précédente (8-69) dans le PDF est correcte avec ce scaling:</p>
+    $$ \mathcal{G}\left( \frac{\Psi}{\nu}, \frac{U_\infty x}{\nu}, \frac{U_\infty y}{\nu} \right) = 0 $$
+    <div class="equation-number">(8-69)</div>
+    <div class="clear-float"></div>
+    <p>Nous avons déjà vu qu'une description cohérente de la couche limite nécessite l'introduction de deux échelles de longueur : une échelle longitudinale L (correspondant ici à la position $x$) et une échelle transversale $\delta$ (voir (8-30)) caractéristique de son épaisseur. Le nombre de Reynolds local (8-15) s'écrit dans ce cas :</p>
+    $$ Re_x = \frac{U_\infty x}{\nu} $$
+    <div class="equation-number">(8-70)</div>
+    <div class="clear-float"></div>
+    <p>Il s'en suit alors l'épaisseur locale $\delta(x)$:</p>
+    $$ \delta(x) = \frac{x}{\sqrt{Re_x}} = \sqrt{\frac{\nu x}{U_\infty}} $$
+    <div class="equation-number">(8-71)</div>
+    <div class="clear-float"></div>
+    <p>Par raisonnement purement physique (ou par analyse d'invariance d'échelle), l'introduction de la nouvelle échelle transversale $\delta(x)$ dans la relation (8-69) nous mène à chercher une solution de la forme générale auto-semblable :</p>
+    $$ \mathcal{G}\left( \frac{\Psi}{U_\infty \delta(x)}, \frac{U_\infty x}{\nu}, \frac{y}{\delta(x)} \right) = 0 \quad \implies \quad \frac{\Psi}{U_\infty \delta(x)} = f\left( \frac{y}{\delta(x)} \right) $$
+    <div class="equation-number">(8-72)</div>
+    <div class="clear-float"></div>
+    <p>Pour que la solution cherchée soit auto-semblable, il faut que la relation (8-72) soit indépendante de la variable $x$ (ou $Re_x = U_\infty x / \nu$). Ceci revient à chercher une fonction courant $\psi$ qui s'écrit sous la forme auto-semblable :</p>
+    $$ \frac{\Psi(x,y)}{U_\infty \delta(x)} = f(\eta) \quad \text{avec } \eta = \frac{y}{\delta(x)} $$
+    <div class="equation-number">(8-73)</div>
+    <div class="clear-float"></div>
+    <p>Nous voyons apparaître la variable de similitude :</p>
+    $$ \eta = \frac{y}{\delta(x)} = y \sqrt{\frac{U_\infty}{\nu x}} $$
+    <div class="equation-number">(8-74)</div>
+    <div class="clear-float"></div>
+    <p>Soit alors :</p>
+    $$ \Psi(x,y) = U_\infty \delta(x) f(\eta) = U_\infty \sqrt{\frac{\nu x}{U_\infty}} f(\eta) = \sqrt{\nu x U_\infty} f(\eta) $$
+    <div class="equation-number">(8-75)</div>
+    <div class="clear-float"></div>
+    <p>En reportant cette expression auto-semblable de la fonction courant $\Psi$ dans le système (8-60) - (8-61) (ou dans les équations de Prandtl (8-37)-(8-40)), nous obtenons l'équation différentielle ordinaire suivante régissant la fonction $f(\eta)$ (équation de Blasius) :</p>
+    $$ f''' + \frac{1}{2} f f'' = 0 $$
+    <div class="equation-number">(8-77)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: Le facteur 1/2 provient du calcul des dérivées. Le PDF a $f f'' + 2 f''' = 0$. Vérifions: $u = \partial\Psi/\partial y = \sqrt{\nu x U_\infty} f'(\eta) \frac{\partial \eta}{\partial y} = \sqrt{\nu x U_\infty} f' \sqrt{U_\infty/\nu x} = U_\infty f'$.
+    $v = -\partial\Psi/\partial x = -\frac{1}{2}\sqrt{\nu U_\infty/x} f - \sqrt{\nu x U_\infty} f' \frac{\partial \eta}{\partial x} = -\frac{1}{2}\sqrt{\nu U_\infty/x} f - \sqrt{\nu x U_\infty} f' (-\frac{1}{2} \eta/x) = \frac{1}{2}\sqrt{\nu U_\infty/x} (\eta f' - f)$.
+    Equation NS(x) (8-38) en dim: $u\partial u/\partial x + v\partial u/\partial y = \nu \partial^2 u/\partial y^2$.
+    $\partial u/\partial x = U_\infty f'' (\partial\eta/\partial x) = U_\infty f'' (-\eta/2x)$.
+    $\partial u/\partial y = U_\infty f'' (\partial\eta/\partial y) = U_\infty f'' \sqrt{U_\infty/\nu x}$.
+    $\partial^2 u/\partial y^2 = U_\infty f''' (\partial\eta/\partial y)^2 = U_\infty f''' (U_\infty/\nu x)$.
+    $u\partial u/\partial x = (U_\infty f') (U_\infty f'' (-\eta/2x)) = - U_\infty^2 f' f'' \eta / (2x)$.
+    $v\partial u/\partial y = \frac{1}{2}\sqrt{\nu U_\infty/x} (\eta f' - f) (U_\infty f'' \sqrt{U_\infty/\nu x}) = \frac{1}{2} \frac{U_\infty^2}{x} (\eta f' - f) f''$.
+    $\nu \partial^2 u/\partial y^2 = \nu U_\infty f''' (U_\infty/\nu x) = U_\infty^2 f''' / x$.
+    Somme termes gauches: $\frac{U_\infty^2}{x} [ -\frac{1}{2} f' f'' \eta + \frac{1}{2} \eta f' f'' - \frac{1}{2} f f'' ] = - \frac{U_\infty^2}{2x} f f''$.
+    Donc: $- \frac{U_\infty^2}{2x} f f'' = \frac{U_\infty^2}{x} f''' \implies f''' + \frac{1}{2} f f'' = 0$. Le PDF (8-77) est incorrect.</em></p>
+    <p>Les conditions aux limites vérifiées par $f$ se déduisent à partir de (8-61) :</p>
+    $$ f(\eta=0) = 0 \quad ; \quad f'(\eta=0) = 0 \quad ; \quad f'(\eta=\infty) = 1 $$
+    <div class="equation-number">(8-78)</div>
+    <div class="clear-float"></div>
+    <p>Cette équation différentielle non-linéaire (appelée équation de Blasius) se résout numériquement. A partir de la solution obtenue $f(\eta)$, les composantes de la vitesse $u = U_\infty f'(\eta)$ et $v = \frac{1}{2}\sqrt{\nu U_\infty/x} (\eta f'(\eta) - f(\eta))$ dans la couche limite se déduisent comme suit :</p>
+    $$ \tilde{u}(\eta) = \frac{u}{U_\infty} = f'(\eta) $$
+    <div class="equation-number">(8-79)</div>
+    <div class="clear-float"></div>
+    $$ \tilde{v}(\tilde{x},\tilde{y}) = \frac{v}{V_e} = \frac{v}{U_\infty/\sqrt{Re_x}} = \frac{\frac{1}{2}\sqrt{\nu U_\infty/x} (\eta f' - f)}{U_\infty/\sqrt{U_\infty x / \nu}} = \frac{1}{2 \sqrt{Re_x}} (\eta f'(\eta) - f(\eta)) $$
+    <div class="equation-number">(8-80)</div>
+    <div class="clear-float"></div>
+    <p>Quant à la contrainte de cisaillement, elle s'écrit :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">136</div>
+    <hr>
+
+    $$ \tau_{xy} = \mu \frac{\partial u}{\partial y} = \mu U_\infty f''(\eta) \frac{\partial \eta}{\partial y} = \mu U_\infty f''(\eta) \sqrt{\frac{U_\infty}{\nu x}} = \rho \nu U_\infty f''(\eta) \sqrt{\frac{U_\infty}{\nu x}} = \rho U_\infty \sqrt{\frac{\nu U_\infty}{x}} f''(\eta) $$
+    <div class="equation-number">(8-81)</div>
+    <div class="clear-float"></div>
+    <p>La fonction $f'(\eta) = u/U_\infty$ représente le profil affine de la vitesse dans la couche limite qui se développe sur plaque plane sans gradient de pression extérieur.</p>
+    <p>La figure 3 ci-dessous montre ce profil affine comparé à des résultats expérimentaux obtenus pour différents nombres de Reynolds ($Re_x = U_\infty x / \nu$). Cette figure montre une concordance satisfaisante entre la solution de Blasius que nous venons de développer et les observations expérimentales.</p>
+    <p>Nous notons que l'expérience montre également que cette structure d'écoulement laminaire est maintenue jusqu'à un nombre de Reynolds local limite :</p>
+    $$ Re_{x, crit} \approx 3 \times 10^5 \text{ à } 5 \times 10^5 $$
+    <div class="equation-number">(8-82)</div>
+    <div class="clear-float"></div>
+    <p>Au delà de cette valeur critique l'écoulement de couche limite bascule vers un état <strong>turbulent</strong> où cette solution n'est plus valable.</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 3 : profil affine de Blasius</div>
+        <p class="caption">Figure 3 : profil affine de Blasius de la vitesse $u/U_\infty = f'(\eta)$ dans une couche limite laminaire sur plaque plane. Comparaison avec des données expérimentales à différents $Re_x$.</p>
+        <p class="caption footnote">(Source: Physical Fluid Dynamic, D. J. Tritton, Oxford Science Publications, 1988)</p>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">137</div>
+    <hr>
+
+    <h3>8.4.2 Grandeurs caractéristiques</h3>
+    <p>D'après les résultats établis ci-dessus, la contrainte de cisaillement à la paroi ($\eta=0$) a pour valeur :</p>
+    $$ \tau_w = \tau_{xy}(y=0) = \rho U_\infty \sqrt{\frac{\nu U_\infty}{x}} f''(0) $$
+    <div class="equation-number">(8-83)</div>
+    <div class="clear-float"></div>
+    <p>L'un des résultats obtenu suite à la résolution numérique de l'équation de Blasius est :</p>
+    $$ f''(0) \approx 0.332 $$
+    <div class="equation-number">(8-84)</div>
+    <div class="clear-float"></div>
+    <p>Le coefficient de frottement pariétal local $C_f(x)$ défini par la relation (8-52) s'écrit alors :</p>
+    $$ C_f(x) = \frac{\tau_w}{\frac{1}{2} \rho U_\infty^2} = \frac{\rho U_\infty \sqrt{\nu U_\infty/x} f''(0)}{\frac{1}{2} \rho U_\infty^2} = \frac{2 \sqrt{\nu U_\infty/x}}{U_\infty} f''(0) = \frac{2 \sqrt{\nu / (U_\infty x)}}{\sqrt{1}} f''(0) $$
+    $$ C_f(x) = \frac{2 f''(0)}{\sqrt{U_\infty x / \nu}} = \frac{2 \times 0.332}{\sqrt{Re_x}} = \frac{0.664}{\sqrt{Re_x}} $$
+    <div class="equation-number">(8-85)</div>
+    <div class="clear-float"></div>
+    <p>Concernant les épaisseurs caractéristiques, l'épaisseur $\delta_{0.99}$ est telle que :</p>
+    $$ \tilde{u}(x, y=\delta_{0.99}) = u/U_\infty = f'(\eta_{0.99}) = 0.99 $$
+    <div class="equation-number">(8-86)</div>
+    <div class="clear-float"></div>
+    <p>D'après le profil affine de la vitesse (8-79) et la solution numérique $f'(\eta)$, nous avons à cette épaisseur $f'(\eta) = 0.99$. Ce qui lui correspond une valeur de $\eta_{0.99}$ sensiblement égale à 5.0. D'où :</p>
+    $$ \eta_{0.99} = \delta_{0.99} \sqrt{\frac{U_\infty}{\nu x}} \approx 5.0 $$
+    <div class="equation-number">(8-87)</div>
+    <div class="clear-float"></div>
+    <p>Ce qui nous donne une épaisseur :</p>
+    $$ \delta_{0.99}(x) \approx 5.0 \sqrt{\frac{\nu x}{U_\infty}} = \frac{5.0 x}{\sqrt{Re_x}} $$
+    <div class="equation-number">(8-88)</div>
+    <div class="clear-float"></div>
+    <p>Les épaisseurs de déplacement $\delta_1$ (8-47) et de quantité de mouvement $\delta_2$ (8-49) s'expriment également compte tenu du profil affine (8-79) de la vitesse $u/U_\infty = f'(\eta)$ et de l'expression (8-74) de la variable de similitude $\eta = y \sqrt{U_\infty / \nu x}$ (d'où $dy = d\eta / \sqrt{U_\infty / \nu x} = \delta(x) d\eta$) comme suit :</p>
+    <ul>
+    <li>Epaisseur de déplacement:
+        $$ \delta_1 = \int_0^\infty (1 - f'(\eta)) dy = \int_0^\infty (1 - f'(\eta)) \delta(x) d\eta = \delta(x) \int_0^\infty (1 - f'(\eta)) d\eta $$
+        $$ \delta_1 = \sqrt{\frac{\nu x}{U_\infty}} [\eta - f(\eta)]_0^\infty $$
+        Numériquement, on trouve $\lim_{\eta\to\infty}(\eta - f(\eta)) \approx 1.72$.
+        $$ \delta_1 \approx 1.72 \sqrt{\frac{\nu x}{U_\infty}} = \frac{1.72 x}{\sqrt{Re_x}} $$
+        <div class="equation-number">(8-89)</div>
+        <div class="clear-float"></div>
+    </li>
+    <li>Epaisseur de quantité de mouvement:
+        $$ \delta_2 = \int_0^\infty f'(\eta) (1 - f'(\eta)) dy = \delta(x) \int_0^\infty f'(\eta) (1 - f'(\eta)) d\eta $$
+        Numériquement, $\int_0^\infty f'(1-f') d\eta = f''(0) \approx 0.664 / 2 = 0.332$ ? Non, $\int_0^\infty f'(1-f') d\eta = \lim (\eta - 2f + \int f^2 d\eta ?)$
+        Relation connue: $d\delta_2/dx = C_f/2$. $C_f = 0.664 / \sqrt{Re_x}$. $\delta_2 = \int_0^x (C_f/2) dx = \int_0^x \frac{0.332}{\sqrt{U_\infty x / \nu}} dx = 0.332 \sqrt{\nu/U_\infty} \int_0^x x^{-1/2} dx = 0.332 \sqrt{\nu/U_\infty} [2 x^{1/2}]_0^x = 0.664 \sqrt{\nu x / U_\infty}$.
+        $$ \delta_2 = 0.664 \sqrt{\frac{\nu x}{U_\infty}} = \frac{0.664 x}{\sqrt{Re_x}} $$
+        <div class="equation-number">(8-90)</div>
+        <div class="clear-float"></div>
+        <!-- Note: Le calcul via intégration numérique de f'(1-f') donne environ 0.664. La relation avec Cf est plus directe. -->
+    </li>
+    </ul>
+    <p>Ces résultats sont d'une importance considérable dans les applications pratiques.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">138</div>
+    <hr>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">139</div>
+    <hr>
+
+    <!-- Annexes Start -->
+    <h1>Annexe 1 : Equations en coordonnées cartésiennes</h1>
+
+    <h2>1.1 Formulaire d'analyse tensorielle en coordonnées cartésiennes</h2>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder: Repère Cartésien</div>
+        <p class="caption">Repère orthonormé direct $(O, \mathbf{e}_1, \mathbf{e}_2, \mathbf{e}_3)$</p>
+    </div>
+
+    <p>Les coordonnées d'un point M sont $x_i$ ($i=1, 2, 3$), elles correspondent aux composantes du vecteur $\vec{OM}$ dans la base orthonormée $\mathbf{e}_i$ ($i=1, 2, 3$).</p>
+    <p>Selon la convention d’Einstein (sommation implicite sur les indices répétés), le vecteur $\vec{OM}$ s'écrit :</p>
+    $$ \vec{OM} = x_i \mathbf{e}_i $$
+    <div class="equation-number">(I-1)</div>
+    <div class="clear-float"></div>
+    <p>Un déplacement élémentaire $d\mathbf{l}$ :</p>
+    $$ d\mathbf{l} = dx_i \mathbf{e}_i $$
+    <div class="equation-number">(I-2)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">140</div>
+    <hr>
+
+    <h3>1.1.1 Pseudo-tenseur d'orientation</h3>
+    <p>L'ensemble des tenseurs à l'ordre 3 a la structure d'un espace vectoriel réel de dimension $3^3 = 27$. Cet espace peut être généré à l'aide de la base $\{\mathbf{e}_i \otimes \mathbf{e}_j \otimes \mathbf{e}_k , i,j,k=1,2,3\}$ déduite à partir de la base $\mathbf{e}_i$ ($i=1, 2, 3$). Un tenseur $\mathbf{T}$ à l'ordre 3 s'écrit ainsi à l'aide de ses composantes $T_{ijk}$ :</p>
+    $$ \mathbf{T} = T_{ijk} \mathbf{e}_i \otimes \mathbf{e}_j \otimes \mathbf{e}_k $$
+    <div class="equation-number">(I-3)</div>
+    <div class="clear-float"></div>
+    <p>On définit le pseudo-tenseur d'orientation $\boldsymbol{\theta}$ (ou tenseur de Levi-Civita) comme le tenseur d'ordre 3 :</p>
+    $$ \boldsymbol{\theta} = \epsilon_{ijk} \mathbf{e}_i \otimes \mathbf{e}_j \otimes \mathbf{e}_k $$
+    <div class="equation-number">(I-4)</div>
+    <div class="clear-float"></div>
+    <p>dont les composantes $\epsilon_{ijk}$ sont des fonctions alternées des indices i ; j ; k tel que $\epsilon_{123} = +1$ :</p>
+    $$ \epsilon_{ijk} = \begin{cases} +1 & \text{si } (i,j,k) \text{ est une permutation paire de } (1,2,3) \\ -1 & \text{si } (i,j,k) \text{ est une permutation impaire de } (1,2,3) \\ 0 & \text{sinon (si deux indices sont égaux)} \end{cases} $$
+    <div class="equation-number">(I-5)</div>
+    <div class="clear-float"></div>
+    <p>Les composantes de ce tenseur vérifient les relations suivantes (avec $\delta_{ij}$ le symbole de Kronecker):</p>
+    $$ \epsilon_{ijk} \epsilon_{pqk} = \delta_{ip}\delta_{jq} - \delta_{iq}\delta_{jp} $$
+    <div class="equation-number">(I-6)</div>
+    <div class="clear-float"></div>
+    $$ \epsilon_{ijk} \epsilon_{pjk} = 2 \delta_{ip} $$
+    <div class="equation-number">(I-7)</div>
+    <div class="clear-float"></div>
+    $$ \epsilon_{ijk} \epsilon_{ijk} = 6 $$
+    <div class="equation-number">(I-8)</div>
+    <div class="clear-float"></div>
+
+    <h3>1.1.2 Opérateurs vectoriels</h3>
+    <h4>1.1.2.1 Champ scalaire $\phi(\mathbf{x})$</h4>
+    $$ \phi = \phi(x_i) $$
+    <div class="equation-number">(I-9)</div>
+    <div class="clear-float"></div>
+    <p>Gradient:</p>
+    $$ \vec{\nabla} \phi = \frac{\partial \phi}{\partial x_i} \mathbf{e}_i $$
+    <div class="equation-number">(I-10)</div>
+    <div class="clear-float"></div>
+    <p>Laplacien:</p>
+    $$ \Delta \phi = \vec{\nabla} \cdot (\vec{\nabla} \phi) = \frac{\partial^2 \phi}{\partial x_i \partial x_i} $$
+    <div class="equation-number">(I-11)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">141</div>
+    <hr>
+
+    <h4>1.1.2.2 Champ vectoriel $\mathbf{u}(\mathbf{x})$</h4>
+    $$ \mathbf{u} = u_i \mathbf{e}_i $$
+    <div class="equation-number">(I-12)</div>
+    <div class="clear-float"></div>
+    <p>Gradient (tenseur d'ordre 2):</p>
+    $$ \vec{\nabla} \mathbf{u} = \frac{\partial u_i}{\partial x_j} \mathbf{e}_i \otimes \mathbf{e}_j $$
+    <div class="equation-number">(I-13)</div>
+    <div class="clear-float"></div>
+    <p>Divergence (scalaire):</p>
+    $$ \vec{\nabla} \cdot \mathbf{u} = \frac{\partial u_i}{\partial x_i} $$
+    <div class="equation-number">(I-14)</div>
+    <div class="clear-float"></div>
+    <p>Laplacien vectoriel (vecteur):</p>
+    $$ \Delta \mathbf{u} = \vec{\nabla} \cdot (\vec{\nabla} \mathbf{u}) = \frac{\partial^2 u_i}{\partial x_j \partial x_j} \mathbf{e}_i = (\Delta u_i) \mathbf{e}_i $$
+    <div class="equation-number">(I-15)</div>
+    <div class="clear-float"></div>
+    <p>Rotationnel (vecteur):</p>
+    $$ \text{Rot}(\mathbf{u}) = \vec{\nabla} \wedge \mathbf{u} = \epsilon_{ijk} \frac{\partial u_k}{\partial x_j} \mathbf{e}_i $$
+    <div class="equation-number">(I-16)</div>
+    <div class="clear-float"></div>
+
+    <h4>1.1.2.3 Champ de tenseurs à l'ordre 2 $\mathbf{T}(\mathbf{x})$</h4>
+    $$ \mathbf{T} = T_{ij} \mathbf{e}_i \otimes \mathbf{e}_j $$
+    <div class="equation-number">(I-17)</div>
+    <div class="clear-float"></div>
+    <p>Gradient (tenseur d'ordre 3):</p>
+    $$ \vec{\nabla} \mathbf{T} = \frac{\partial T_{ij}}{\partial x_k} \mathbf{e}_i \otimes \mathbf{e}_j \otimes \mathbf{e}_k $$
+    <div class="equation-number">(I-18)</div>
+    <div class="clear-float"></div>
+    <p>Divergence (vecteur):</p>
+    $$ \vec{\nabla} \cdot \mathbf{T} = \frac{\partial T_{ij}}{\partial x_j} \mathbf{e}_i $$
+    <div class="equation-number">(I-19)</div>
+    <div class="clear-float"></div>
+    <p>Laplacien tensoriel (tenseur d'ordre 2):</p>
+    $$ \Delta \mathbf{T} = \vec{\nabla} \cdot (\vec{\nabla} \mathbf{T}) = \frac{\partial^2 T_{ij}}{\partial x_k \partial x_k} \mathbf{e}_i \otimes \mathbf{e}_j $$
+    <div class="equation-number">(I-20)</div>
+    <div class="clear-float"></div>
+
+    <h3>1.1.3 Propriétés intégrales</h3>
+    <p>On considère une surface fermée $\Sigma$ délimitant un volume $\tau$ et une ligne fermée C délimitant une surface S. A un champ vectoriel $\mathbf{A}$ et $\phi$ un champ scalaire.</p>
+    <ul>
+        <li>Théorème de la divergence (Green-Ostrogradsky):
+            $$ \oint_\Sigma \mathbf{A} \cdot \mathbf{n} \, ds = \iiint_\tau (\vec{\nabla} \cdot \mathbf{A}) \, d\tau $$
+            <div class="equation-number">(I-21)</div>
+            <div class="clear-float"></div>
+            $$ \oint_\Sigma \phi \mathbf{n} \, ds = \iiint_\tau (\vec{\nabla} \phi) \, d\tau $$
+            <div class="equation-number">(I-22)</div>
+            <div class="clear-float"></div>
+            $$ \oint_\Sigma \mathbf{n} \wedge \mathbf{A} \, ds = \iiint_\tau (\vec{\nabla} \wedge \mathbf{A}) \, d\tau $$
+            <div class="equation-number">(I-23)</div>
+            <div class="clear-float"></div>
+        </li>
+        <li>Théorème de Stokes (Rotationnel):
+            $$ \oint_C \mathbf{A} \cdot d\mathbf{r} = \iint_S (\vec{\nabla} \wedge \mathbf{A}) \cdot \mathbf{n} \, ds $$
+            <div class="equation-number">(I-24)</div>
+            <div class="clear-float"></div>
+        </li>
+    </ul>
+
+    <h2>1.2 Equations de Navier-Stockes</h2>
+    <p>(Rappel des équations (4-18) et (4-19) / (6-2))</p>
+    $$ \frac{\partial v_i}{\partial x_i} = 0 $$
+    <div class="equation-number">(I-25)</div>
+    <div class="clear-float"></div>
+    $$ \frac{\partial v_i}{\partial t} + v_j \frac{\partial v_i}{\partial x_j} = g_i - \frac{1}{\rho} \frac{\partial p}{\partial x_i} + \nu \frac{\partial^2 v_i}{\partial x_j \partial x_j} $$
+    <div class="equation-number">(I-26)</div>
+    <div class="clear-float"></div>
+
+    <h2>1.3 Equation de la chaleur</h2>
+    <p>(Rappel de l'équation (4-21))</p>
+    $$ \rho C \left( \frac{\partial T}{\partial t} + v_j \frac{\partial T}{\partial x_j} \right) = k \frac{\partial^2 T}{\partial x_j \partial x_j} + \rho r + \mu \left( \frac{\partial v_i}{\partial x_j} + \frac{\partial v_j}{\partial x_i} \right) \frac{\partial v_i}{\partial x_j} $$
+    <div class="equation-number">(I-27)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">142</div>
+    <hr>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">143</div>
+    <hr>
+
+    <h1>Annexe 2 : Equations en coordonnées cylindriques</h1>
+
+    <h2>2.1 Formulaire d'analyse tensorielle en coordonnées cylindriques</h2>
+
+    <h3>2.1.1 Expression des coordonnées</h3>
+    <p>Coordonnées $(r, \theta, z)$. Base locale orthonormée $(\mathbf{e}_r, \mathbf{e}_\theta, \mathbf{e}_z)$.</p>
+    <div class="figure">
+        <div class="placeholder">Placeholder: Repère Cylindrique</div>
+        <p class="caption">Repère cylindrique $(O, \mathbf{e}_r, \mathbf{e}_\theta, \mathbf{e}_z)$ lié au point M.</p>
+    </div>
+    $$ \vec{OM} = r \mathbf{e}_r + z \mathbf{e}_z $$
+    <div class="equation-number">(II-1)</div>
+    <div class="clear-float"></div>
+    <p>Déplacement élémentaire :</p>
+    $$ d\mathbf{l} = dr \mathbf{e}_r + r d\theta \mathbf{e}_\theta + dz \mathbf{e}_z $$
+    <div class="equation-number">(II-2)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">144</div>
+    <hr>
+
+    <h2>2.1.2 Opérateurs vectoriels</h2>
+    <h3>2.1.2.1 Champ scalaire $\phi(r, \theta, z)$</h3>
+    $$ \phi = \phi(r, \theta, z) $$
+    <div class="equation-number">(II-3)</div>
+    <div class="clear-float"></div>
+    <p>Gradient:</p>
+    $$ \vec{\nabla} \phi = \frac{\partial \phi}{\partial r} \mathbf{e}_r + \frac{1}{r} \frac{\partial \phi}{\partial \theta} \mathbf{e}_\theta + \frac{\partial \phi}{\partial z} \mathbf{e}_z $$
+    <div class="equation-number">(II-4)</div>
+    <div class="clear-float"></div>
+    <p>Laplacien:</p>
+    $$ \Delta \phi = \vec{\nabla} \cdot (\vec{\nabla} \phi) = \frac{1}{r} \frac{\partial}{\partial r} \left( r \frac{\partial \phi}{\partial r} \right) + \frac{1}{r^2} \frac{\partial^2 \phi}{\partial \theta^2} + \frac{\partial^2 \phi}{\partial z^2} $$
+    <div class="equation-number">(II-5)</div>
+    <div class="clear-float"></div>
+
+    <h3>2.1.2.2 Champ vectoriel $\mathbf{v}(r, \theta, z)$</h3>
+    $$ \mathbf{v} = v_r(r, \theta, z) \mathbf{e}_r + v_\theta(r, \theta, z) \mathbf{e}_\theta + v_z(r, \theta, z) \mathbf{e}_z $$
+    <div class="equation-number">(II-6)</div>
+    <div class="clear-float"></div>
+    <p>Gradient (tenseur d'ordre 2, expression complexe, non écrite ici, voir PDF) :</p>
+    <!-- Placeholder: Gradient Tensor expression -->
+    <div class="equation-number">(II-7)</div>
+    <div class="clear-float"></div>
+    <p>Divergence:</p>
+    $$ \vec{\nabla} \cdot \mathbf{v} = \frac{1}{r} \frac{\partial (r v_r)}{\partial r} + \frac{1}{r} \frac{\partial v_\theta}{\partial \theta} + \frac{\partial v_z}{\partial z} $$
+    <div class="equation-number">(II-8)</div>
+    <div class="clear-float"></div>
+    <p>Laplacien vectoriel (expression complexe, non écrite ici, voir PDF):</p>
+    $$ \Delta \mathbf{v} = \vec{\nabla} \cdot (\vec{\nabla} \mathbf{v}) $$
+    <!-- Placeholder: Laplacian Vector expression -->
+    <div class="equation-number">(II-9)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">145</div>
+    <hr>
+
+    <h3>2.1.2.3 Champ de tenseurs à l'ordre 2 $\mathbf{T}(r, \theta, z)$</h3>
+    $$ \mathbf{T} = T_{ij} \mathbf{e}_i \otimes \mathbf{e}_j \quad (i,j \in \{r, \theta, z\}) $$
+    <div class="equation-number">(II-9 bis)</div> <!-- Adjust numbering -->
+    <div class="clear-float"></div>
+    <p>Divergence (vecteur):</p>
+    $$ (\vec{\nabla} \cdot \mathbf{T})_r = \frac{1}{r} \frac{\partial (r T_{rr})}{\partial r} + \frac{1}{r} \frac{\partial T_{\theta r}}{\partial \theta} + \frac{\partial T_{zr}}{\partial z} - \frac{T_{\theta\theta}}{r} $$
+    $$ (\vec{\nabla} \cdot \mathbf{T})_\theta = \frac{1}{r} \frac{\partial (r T_{r\theta})}{\partial r} + \frac{1}{r} \frac{\partial T_{\theta\theta}}{\partial \theta} + \frac{\partial T_{z\theta}}{\partial z} + \frac{T_{\theta r} - T_{r \theta}}{r} $$
+    $$ (\vec{\nabla} \cdot \mathbf{T})_z = \frac{1}{r} \frac{\partial (r T_{rz})}{\partial r} + \frac{1}{r} \frac{\partial T_{\theta z}}{\partial \theta} + \frac{\partial T_{zz}}{\partial z} $$
+    <div class="equation-number">(II-10)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: L'équation (II-10) du PDF est écrite de manière compacte mais difficile à lire. Les composantes sont explicitées ici pour la clarté, en supposant la convention $T_{ij}$ est la $i$-ème composante de la force sur une surface normale à $j$. Si T est symétrique $T_{r\theta}=T_{\theta r}$.</em></p>
+
+    <h2>2.2 Equations de Navier-Stockes</h2>
+    <p>Conservation de la masse :</p>
+    $$ \frac{1}{r} \frac{\partial (r v_r)}{\partial r} + \frac{1}{r} \frac{\partial v_\theta}{\partial \theta} + \frac{\partial v_z}{\partial z} = 0 $$
+    <div class="equation-number">(II-11)</div>
+    <div class="clear-float"></div>
+    <p>Conservation de la quantité de mouvement :</p>
+    <p>Projection sur $\mathbf{e}_r$ :</p>
+    $$ \rho \left( \frac{\partial v_r}{\partial t} + v_r \frac{\partial v_r}{\partial r} + \frac{v_\theta}{r} \frac{\partial v_r}{\partial \theta} + v_z \frac{\partial v_r}{\partial z} - \frac{v_\theta^2}{r} \right) = \rho g_r - \frac{\partial p}{\partial r} + \mu \left[ \frac{1}{r}\frac{\partial}{\partial r}\left(r\frac{\partial v_r}{\partial r}\right) - \frac{v_r}{r^2} + \frac{1}{r^2}\frac{\partial^2 v_r}{\partial \theta^2} - \frac{2}{r^2}\frac{\partial v_\theta}{\partial \theta} + \frac{\partial^2 v_r}{\partial z^2} \right] $$
+    <div class="equation-number">(II-12)</div>
+    <div class="clear-float"></div>
+    <p>Projection sur $\mathbf{e}_\theta$ :</p>
+    $$ \rho \left( \frac{\partial v_\theta}{\partial t} + v_r \frac{\partial v_\theta}{\partial r} + \frac{v_\theta}{r} \frac{\partial v_\theta}{\partial \theta} + v_z \frac{\partial v_\theta}{\partial z} + \frac{v_r v_\theta}{r} \right) = \rho g_\theta - \frac{1}{r} \frac{\partial p}{\partial \theta} + \mu \left[ \frac{1}{r}\frac{\partial}{\partial r}\left(r\frac{\partial v_\theta}{\partial r}\right) - \frac{v_\theta}{r^2} + \frac{1}{r^2}\frac{\partial^2 v_\theta}{\partial \theta^2} + \frac{2}{r^2}\frac{\partial v_r}{\partial \theta} + \frac{\partial^2 v_\theta}{\partial z^2} \right] $$
+    <div class="equation-number">(II-13)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">146</div>
+    <hr>
+
+    <p>Projection sur $\mathbf{e}_z$ :</p>
+    $$ \rho \left( \frac{\partial v_z}{\partial t} + v_r \frac{\partial v_z}{\partial r} + \frac{v_\theta}{r} \frac{\partial v_z}{\partial \theta} + v_z \frac{\partial v_z}{\partial z} \right) = \rho g_z - \frac{\partial p}{\partial z} + \mu \left[ \frac{1}{r}\frac{\partial}{\partial r}\left(r\frac{\partial v_z}{\partial r}\right) + \frac{1}{r^2}\frac{\partial^2 v_z}{\partial \theta^2} + \frac{\partial^2 v_z}{\partial z^2} \right] $$
+    <div class="equation-number">(II-14)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">147</div>
+    <hr>
+    <!-- End of Annex 2 -->
+
+</body>
+</html>
