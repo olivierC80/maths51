@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 5: Théorèmes généraux & Chapitre 6: Analyse dimensionnelle</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 2em; padding: 1em; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; color: #333; }
+        h1 { border-bottom: 2px solid #666; padding-bottom: 0.3em; font-size: 2em; text-align: center;}
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; font-size: 1.7em; }
+        h3 { font-size: 1.4em; margin-top: 1.5em; }
+        h4 { font-size: 1.2em; margin-top: 1.2em; }
+        h5 { font-size: 1.1em; margin-top: 1.1em; }
+        .figure { text-align: center; margin: 2em 0; border: 1px solid #eee; padding: 1em; }
+        .placeholder { border: 1px dashed grey; padding: 3em 2em; display: inline-block; min-width: 300px; min-height: 100px; background-color: #f0f0f0; color: #777; box-sizing: border-box; }
+        .caption { font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.9em; }
+        table { border-collapse: collapse; margin: 1.5em auto; width: 95%; border: 1px solid #ccc;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: middle; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .katex-display > .katex { text-align: center !important; } /* Center display math */
+        .katex-display { display: block; margin-top: 1em; margin-bottom: 1em; }
+        .equation-number { float: right; color: #888; margin-left: 1em;}
+        .page-number { text-align: right; margin-top: 1em; color: #888; font-size: 0.9em; font-style: italic; }
+        .footer-note { font-size: 0.8em; color: #666; border-top: 1px solid #ccc; margin-top: 2em; padding-top: 0.5em; }
+        .centered { text-align: center; }
+        /* Style for bold vectors/tensors as per PDF convention */
+        .katex .mathbf { font-weight: bold; } /* Ensure KaTeX bold works */
+        .toc ul { list-style-type: none; padding-left: 0; }
+        .toc li { margin-bottom: 0.5em; }
+        .toc .chapter { font-weight: bold; margin-top: 1em; }
+        .toc .section { padding-left: 1.5em; }
+        .toc .subsection { padding-left: 3em; }
+        .toc .subsubsection { padding-left: 4.5em; }
+        .clear-float { clear: both; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin: 1.5em 0; background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+    <div class="page-number">Chapitre 5 : Théorèmes généraux de la mécanique des fluides</div>
+    <h1>Chapitre 5: Théorèmes généraux de la mécanique des fluides</h1>
+
+    <h2>5.1 Introduction</h2>
+    <p>Nous avons vu au chapitre précédent le système d'équations qui décrit le comportement dynamique (équations de Navier-Stokes) et thermique (équation de la chaleur) d'un milieu fluide newtonien. L'intégration du système de Navier-Stockes nous fournit une description totale de la dynamique de l'écoulement en termes des champs eulériens locaux de pression et de vitesse.</p>
+    <p>D'un autre côté, nous avons mis l'accent sur un aspect fondamental de ces équations qui est la non-linéarité. En effet, bien que le système de Navier-Stockes soit mathématiquement fermé, la non-linéarité introduite par les termes de convection rend la résolution analytique dans le cas général, même approchée, quasiment impossible. Nous avons vu également que la résolution n'est possible que dans un nombre très réduit de cas qui obéissent à des hypothèses simplificatrices qui permettent justement de linéariser ces équations (Ex : écoulement de Poiseuille ou écoulement de Couette).</p>
+    <p>Dans le cas général, la résolution numérique reste une issue très intéressante qui a donné lieu à une discipline intitulée « Mécanique des Fluides Numérique ». Grâce au grand progrès des moyens de calcul numérique, cette discipline a permis de développer des codes numériques de CFD (Computational Fluid Dynamics) qui se basent sur cette résolution numérique. Ces codes constituent actuellement un outil d'ingénierie fondamental pour la simulation et l'investigation des systèmes fluides dans les divers domaines d'application.</p>
+    <p>D'autre part, dans un grand nombre d'applications pratiques on n'a pas besoin de connaître un écoulement jusqu'à ces échelles caractéristiques microscopiques. Mais plutôt ses conséquences, telles que le débit ou l'effort exercé sur une structure solide. En termes d'échelles, ces résultats peuvent être interprétés comme des grandeurs globales à une échelle macroscopique résultant d'une intégration sur une surface ou sur un volume des quantités locales. C'est pourquoi il serait extrêmement utile de disposer de relations ayant un aspect pratique permettant d'établir ces grandeurs globales.</p>
+    <p>Dans ce chapitre nous nous proposons de revenir sur ces relations qu'on a l'habitude de regrouper sous le vocable de <strong>théorèmes généraux de la mécanique des fluides</strong>. Ils concernent le <strong>théorème d'Euler</strong> et le <strong>théorème de Bernoulli</strong> qui se déduisent respectivement des principes de conservation de quantité de mouvement et de l'énergie (voir chapitre 3). Nous préciserons notamment les hypothèses de leur application en pratique qu'il faut respecter et qu'il faut traiter avec prudence. En effet, l'absence de ces hypothèses (comme par exemple l'hypothèse d'un fluide parfait) peut mener dans certains cas à des résultats très loin de la réalité.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">75</div>
+    <hr>
+
+    <h2>5.2 Conservation de quantité de mouvement: Théorème d'Euler</h2>
+
+    <h3>5.2.1 Forme générale</h3>
+    <p>On considère l'écoulement permanent d'un fluide réel. L'équation globale de conservation de quantité de mouvement sur un volume de contrôle $D_C$ établie au chapitre 3 (voir équation (3-13) au chapitre 3) s'écrit :</p>
+    $$ \oint_{\Sigma_C} \rho \mathbf{v} (\mathbf{v} \cdot \mathbf{n}) \, ds = \int_{D_C} \rho \mathbf{g} \, d\tau - \oint_{\Sigma_C} p \mathbf{n} \, ds + \oint_{\Sigma_C} \boldsymbol{\tau} \cdot \mathbf{n} \, ds = \mathbf{F}_{ext} $$
+    <div class="equation-number">(5-1)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: L'équation (5-1) du PDF simplifie le premier membre $\frac{d}{dt}\int \rho \mathbf{v} d\Omega + \oint \rho\mathbf{v}(\mathbf{v}\cdot\mathbf{n})ds$. Pour un écoulement permanent, le terme $\partial/\partial t = 0$, mais la forme intégrale devient $\oint \rho \mathbf{v} (\mathbf{v} \cdot \mathbf{n}) ds = \mathbf{F}_{ext}$. L'équation (5-1) écrite ici est l'équilibre des forces (flux de quantité de mouvement = somme des forces).</em></p>
+    <p>Cette relation constitue la forme générale du théorème d'Euler (ou théorème de la résultante cinétique appliqué à un volume de contrôle en régime permanent) qui permet de déduire, à partir de la connaissance du champ de vitesse $\mathbf{v}$ sur la paroi $\Sigma_C$ et de la masse volumique $\rho$, les efforts globaux $\mathbf{F}_{ext}$ (gravité, pression, viscosité) auxquels est soumis le milieu fluide contenu dans $D_C$. Inversement, si on connaît les forces, on peut avoir une information sur le flux de quantité de mouvement.</p>
+
+    <h3>5.2.2 Forme particulière</h3>
+    <p>Si le volume de contrôle est un tube de courant coiffé par deux sections de base $S_1$ et $S_2$: $\Sigma_C = S_1 \cup S_2 \cup S_L$ où $S_L$ est la surface latérale comme le montre la figure suivante. Ce cas correspond, à titre d'exemple, à l'écoulement en charge dans un tronçon d'une conduite ou à une approximation d'un jet d'eau dans l'air atmosphérique.</p>
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 1 : Ecoulement dans un tronçon de conduite</div>
+        <p class="caption">Figure 1 : Ecoulement dans un tronçon de conduite. Sections d'entrée $S_1$ (normale $\mathbf{n}_1$ entrante) et de sortie $S_2$ (normale $\mathbf{n}_2$ sortante), surface latérale $S_L$.</p>
+    </div>
+    <p>Le flux de quantité de mouvement à travers la surface latérale $S_L$ est nul (car $\mathbf{v} \cdot \mathbf{n}_L = 0$). L'équation (5-1) (flux sortant = somme des forces) se réduit alors à la forme suivante, en notant que $\mathbf{n}_1$ est entrant (donc $\mathbf{v} \cdot \mathbf{n}_1 = -v_1$) et $\mathbf{n}_2$ est sortant ($\mathbf{v} \cdot \mathbf{n}_2 = v_2$):</p>
+    $$ \int_{S_2} \rho \mathbf{v}_2 (v_2) \, ds - \int_{S_1} \rho \mathbf{v}_1 (v_1) \, ds = \mathbf{F}_{ext} $$
+    <div class="equation-number">(5-2)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: La forme dans le PDF $\int_{S_1} \rho \mathbf{v}_1 (\mathbf{v}_1 \cdot \mathbf{n}_1) ds + \int_{S_2} \rho \mathbf{v}_2 (\mathbf{v}_2 \cdot \mathbf{n}_2) ds = \mathbf{F}_{ext}$ utilise les normales sortantes partout. Avec $\mathbf{n}_1$ sortant de $D_C$ (donc pointant vers l'amont), $\mathbf{v}_1 \cdot \mathbf{n}_1 < 0$. Avec $\mathbf{n}_2$ sortant, $\mathbf{v}_2 \cdot \mathbf{n}_2 > 0$. Le flux total sortant est $\int_{S_2} \rho \mathbf{v}_2 v_{n2} ds + \int_{S_1} \rho \mathbf{v}_1 v_{n1} ds = \mathbf{F}_{ext}$.</em></p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">76</div>
+    <hr>
+
+    <p>La conservation de la masse se traduit dans ce cas par une conservation du débit massique $Q_m$ (ou volumique $Q$ si $\rho$ constant) qui s'écrit :</p>
+    $$ Q = \int_{S_1} \mathbf{v}_1 \cdot (-\mathbf{n}_1) \, ds = \int_{S_2} \mathbf{v}_2 \cdot \mathbf{n}_2 \, ds $$
+    <div class="equation-number">(5-3)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: Forme du PDF corrigée pour utiliser normale entrante à gauche et sortante à droite.</em></p>
+    <p>Si on néglige la variation de la vitesse sur les sections (vitesses moyennes $\mathbf{V}_1, \mathbf{V}_2$). D'après (5-1), (5-2) et (5-3), l'effort de contact $\mathbf{F}_{contact} = \mathbf{F}_{pression} + \mathbf{F}_{visqueux}$ exercé par la paroi sur l'écoulement s'exprime comme suit :</p>
+    <p>$\mathbf{F}_{ext} = \mathbf{F}_{pesanteur} + \mathbf{F}_{pression\_1,2} + \mathbf{F}_{visqueux\_1,2} + \mathbf{F}_{contact\_paroi \to ecoulement}$</p>
+    <p>Flux de q.m. sortant net: $\int_{S_2} \rho \mathbf{v} (\mathbf{v}\cdot\mathbf{n}) ds + \int_{S_1} \rho \mathbf{v} (\mathbf{v}\cdot\mathbf{n}) ds = \rho Q (\mathbf{V}_2 - \mathbf{V}_1)$ (si $\rho$ constant et profils uniformes simplifiés).</p>
+    <p>Alors : $\rho Q (\mathbf{V}_2 - \mathbf{V}_1) = \int_{D_C} \rho \mathbf{g} d\tau - \int_{\Sigma_C} p \mathbf{n} ds + \int_{\Sigma_C} \boldsymbol{\tau} \cdot \mathbf{n} ds$</p>
+    <p>$\mathbf{F}_{contact\_paroi \to ecoulement} = \mathbf{F}_{pression\_paroi} + \mathbf{F}_{visqueux\_paroi}$</p>
+    <p>On isole la force de contact sur la paroi latérale:</p>
+    $$ \mathbf{F}_{contact \atop paroi \to ecoulement} = \int_{S_L} (-\mathbf{p} \mathbf{n} + \boldsymbol{\tau}\cdot\mathbf{n}) ds = \rho Q (\mathbf{V}_2 - \mathbf{V}_1) - \int_{D_C} \rho \mathbf{g} d\tau - \int_{S_1+S_2} (-p \mathbf{n} + \boldsymbol{\tau} \cdot \mathbf{n}) ds $$
+    <div class="equation-number">(5-4)</div>
+    <div class="clear-float"></div>
+    <p>Si on néglige la variation de la pression sur une section ($p_1, p_2$) et les contraintes visqueuses sur les sections d'entrée/sortie, la contrainte de pression sur $S_1, S_2$ qui figure au second membre de (5-4) se réduit à :</p>
+    $$ \mathbf{F}_{pression \atop S_1+S_2} = \int_{S_1+S_2} -p \mathbf{n} ds = -p_1(-\mathbf{S}_1) - p_2(\mathbf{S}_2) = p_1 \mathbf{S}_1 - p_2 \mathbf{S}_2 $$
+    <div class="equation-number">(5-5)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: où $\mathbf{S}_1 = S_1 \mathbf{n}_1$, $\mathbf{S}_2 = S_2 \mathbf{n}_2$ avec $\mathbf{n}_1$ et $\mathbf{n}_2$ sortantes du volume. La forme PDF est $-(p_1 S_1 \mathbf{n}_1 + p_2 S_2 \mathbf{n}_2)$ qui semble utiliser les normales pointant dans le sens de l'écoulement.</em></p>
+    <p>On déduit alors une expression aisée de la force de frottement (visqueux) $\mathbf{F}_{visqueux \atop paroi \to ecoulement}$ des parois exercée sur l'écoulement (égale à $\int_{S_L} \boldsymbol{\tau} \cdot \mathbf{n} ds$) qui s'écrit :</p>
+    $$ \mathbf{F}_{visqueux \atop paroi \to ecoulement} = \rho Q (\mathbf{V}_2 - \mathbf{V}_1) - \int_{D_C} \rho \mathbf{g} d\tau - (p_1 \mathbf{S}_1 - p_2 \mathbf{S}_2) - \mathbf{F}_{pression \atop paroi} $$
+    <div class="equation-number">(5-6)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: Les équations (5-4) à (5-6) du PDF sont difficiles à interpréter sans clarification des termes $\mathbf{F}_{contact}$, $\mathbf{F}_{pression}$, $\mathbf{F}_{cisaillement}$. La décomposition standard de $\mathbf{F}_{ext}$ est utilisée ici pour la clarté.</em></p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">77</div>
+    <hr>
+
+    <h2>5.3 Conservation de l'énergie : Théorème de Bernoulli</h2>
+
+    <h3>5.3.1 Forme générale : cas d'un fluide réel</h3>
+    <p>On considère l'écoulement d'un fluide incompressible dans le champ de pesanteur terrestre $\mathbf{g}$. Le bilan local de l'énergie cinétique $e_c = \rho v^2/2$ établi au chapitre 3 (équation (3-49)) s'écrit :</p>
+    $$ \frac{\partial e_c}{\partial t} + \vec{\nabla} \cdot (e_c \mathbf{v}) = \rho \mathbf{g} \cdot \mathbf{v} + \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) - \boldsymbol{\tau} : \mathbf{D} $$
+    <div class="equation-number">(5-7)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: Le terme $\boldsymbol{\tau}:(\nabla\mathbf{v})$ a été remplacé par $\boldsymbol{\tau}:\mathbf{D}$ car $\boldsymbol{\tau}$ est symétrique et $\boldsymbol{\tau}:\mathbf{R}=0$.</em></p>
+    <p>Soit un système d'axes $(O; \mathbf{e}_x, \mathbf{e}_y, \mathbf{e}_z)$ choisi tel que l'axe $(O ; \mathbf{e}_z)$ est dirigé selon la verticale ascendante. Le champ de pesanteur $\rho \mathbf{g}$ dérive du potentiel scalaire de gravité $\Psi$:</p>
+    $$ \Psi = \rho g z $$
+    <div class="equation-number">(5-8)</div>
+    <div class="clear-float"></div>
+    <p>selon la relation :</p>
+    $$ \rho \mathbf{g} = - \vec{\nabla} \Psi $$
+    <div class="equation-number">(5-9)</div>
+    <div class="clear-float"></div>
+    <p>En introduisant la décomposition du tenseur des contraintes $\boldsymbol{\sigma} = -p\mathbf{I} + \boldsymbol{\tau}$, la puissance des efforts de contact (terme $\vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma})$ dans le bilan d'énergie cinétique) s'écrit :</p>
+    $$ \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) = \vec{\nabla} \cdot (\mathbf{v} \cdot (-p\mathbf{I} + \boldsymbol{\tau})) = \vec{\nabla} \cdot (-p\mathbf{v}) + \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau}) $$
+    $$ \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) = - \mathbf{v} \cdot \vec{\nabla} p - p (\vec{\nabla} \cdot \mathbf{v}) + \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau}) $$
+    <p>Pour un fluide incompressible, $\vec{\nabla} \cdot \mathbf{v} = 0$, donc :</p>
+    $$ \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\sigma}) = - \mathbf{v} \cdot \vec{\nabla} p + \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau}) $$
+    <div class="equation-number">(5-10)</div>
+    <div class="clear-float"></div>
+    <p>L'équation (5-7) s'écrit alors :</p>
+    $$ \frac{\partial e_c}{\partial t} + \vec{\nabla} \cdot (e_c \mathbf{v}) = - \mathbf{v} \cdot \vec{\nabla} \Psi - \mathbf{v} \cdot \vec{\nabla} p + \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau}) - \boldsymbol{\tau} : \mathbf{D} $$
+    <div class="equation-number">(5-11)</div>
+    <div class="clear-float"></div>
+    <p>En passant les deux premiers termes du second membre (puissance de la gravité et de la pression) à gauche, on peut écrire :</p>
+    $$ \frac{\partial e_c}{\partial t} + \vec{\nabla} \cdot (e_c \mathbf{v}) + \mathbf{v} \cdot \vec{\nabla} (\Psi + p) = \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau}) - \boldsymbol{\tau} : \mathbf{D} $$
+    <p>Comme $\vec{\nabla} \cdot (\mathbf{v}(\Psi+p)) = (\vec{\nabla} \cdot \mathbf{v})(\Psi+p) + \mathbf{v} \cdot \vec{\nabla}(\Psi+p)$, et $\vec{\nabla} \cdot \mathbf{v}=0$, on a $\mathbf{v} \cdot \vec{\nabla}(\Psi+p) = \vec{\nabla} \cdot (\mathbf{v}(\Psi+p))$. L'équation devient :</p>
+    $$ \frac{\partial e_c}{\partial t} + \vec{\nabla} \cdot [ \mathbf{v} (e_c + \Psi + p) ] = \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau}) - \boldsymbol{\tau} : \mathbf{D} $$
+    <div class="equation-number">(5-12)</div>
+    <div class="clear-float"></div>
+    <p>Si on introduit la quantité $\Phi$, souvent appelée charge totale ou énergie mécanique totale par unité de volume :</p>
+    $$ \Phi = e_c + p + \Psi = \frac{1}{2} \rho v^2 + p + \rho g z $$
+    <div class="equation-number">(5-13)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">78</div>
+    <hr>
+
+    <p>$\Phi$ de dimension $M L^{-1} T^{-2}$ est homogène à une densité volumique d'énergie. L'équation (5-12) s'écrit par conséquent (en revenant à la forme 5-11 et en réarrangeant différemment) :</p>
+     $$ \frac{\partial e_c}{\partial t} + \vec{\nabla} \cdot (\mathbf{v} (e_c+p+\Psi)) = \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau}) - \boldsymbol{\tau} : \mathbf{D} $$
+     <p><em>Note: L'équation (5-14) du PDF $\frac{\partial e_c}{\partial t} + \vec{\nabla} \cdot (\mathbf{v} \Phi) = \vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau}) - \boldsymbol{\tau} : \mathbf{D}$ est une réécriture directe de (5-12).</em></p>
+    <div class="equation-number">(5-14)</div>
+    <div class="clear-float"></div>
+    <p>C'est l’équation locale de Bernoulli sous sa forme générale pour un fluide réel incompressible. On peut interpréter cette équation à l'échelle d'un volume élémentaire de la manière suivante :</p>
+    <blockquote>
+    « La variation locale ($\partial e_c/\partial t$) ajoutée au flux advectif ($\vec{\nabla} \cdot (\mathbf{v}\Phi)$) de l'énergie mécanique totale $\Phi = e_c+p+\Psi$ est égale à la somme de la puissance des efforts de contact de cisaillement s'exerçant à la surface de ce volume ($\vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau})$) et de la puissance (négative) dissipée par les efforts intérieurs visqueux ($-\boldsymbol{\tau}:\mathbf{D}$). »
+    </blockquote>
+    <p>Le premier terme du second membre ($\vec{\nabla} \cdot (\mathbf{v} \cdot \boldsymbol{\tau})$) qui représente la puissance des efforts de contact de cisaillement peut être interprété, à l'échelle de l'écoulement, comme un terme d'échange d'énergie mécanique avec le milieu extérieur via les contraintes tangentielles. Il est positif en cas d'apport d'énergie depuis le milieu extérieur (ex: pompe, turbine vue du côté moteur). Il est négatif en cas de transfert d'énergie depuis l'écoulement vers le milieu extérieur (ex: turbine vue du côté récepteur, frottement sur parois mobiles).</p>
+    <p>Le second terme du second membre ($-\boldsymbol{\tau}:\mathbf{D} = -\Phi_{visc}$) qui représente la puissance dissipée par les efforts intérieurs visqueux est un terme constamment négatif (car $\Phi_{visc} \ge 0$). C'est un terme qui représente à l'échelle de l'écoulement la perte d'énergie mécanique par les effets de frottement (irréversibilités). Ce frottement se produit entre les particules fluides à l'intérieur du milieu fluide ou en contact avec la paroi. L'effet de ce terme est très présent dans les applications pratiques (pertes de charge).</p>
+
+    <h3>5.3.2 Premier théorème de Bernoulli : cas de l'écoulement permanent d'un fluide parfait incompressible</h3>
+    <p>Une relation importante appelée « le théorème de Bernoulli » est obtenue si on considère les hypothèses simplificatrices suivantes :</p>
+    <ul>
+        <li>L'écoulement est <strong>permanent</strong> : $\partial/\partial t = 0$.</li>
+        <li>Le fluide est <strong>parfait</strong> (non visqueux) : $\boldsymbol{\tau} = \mathbf{0}$.</li>
+        <li>Le fluide est <strong>incompressible</strong> : $\rho = \text{cte}$.</li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">79</div>
+    <hr>
+
+    <p>L'équation (5-14) (ou 5-12) du théorème de Bernoulli sous sa forme générale se réduit dans ce cas à :</p>
+    $$ \vec{\nabla} \cdot (\mathbf{v} \Phi) = 0 $$
+    <div class="equation-number">(5-15)</div>
+    <div class="clear-float"></div>
+    <p>Comme $\vec{\nabla} \cdot \mathbf{v} = 0$ (incompressible), on a $\vec{\nabla} \cdot (\mathbf{v} \Phi) = (\vec{\nabla} \cdot \mathbf{v})\Phi + \mathbf{v} \cdot (\vec{\nabla} \Phi) = \mathbf{v} \cdot (\vec{\nabla} \Phi)$. L'équation (5-15) devient donc $\mathbf{v} \cdot (\vec{\nabla} \Phi) = 0$.</p>
+    <p>Ceci signifie que le gradient de $\Phi$ est orthogonal à la vitesse $\mathbf{v}$, ce qui veut dire que la quantité $\Phi$ reste constante le long d'une <strong>ligne de courant</strong> :</p>
+    $$ \Phi = \frac{1}{2} \rho v^2 + p + \rho g z = \text{Cte}_{\text{(ligne de courant)}} $$
+    <div class="equation-number">(5-16)</div>
+    <div class="clear-float"></div>
+    <p>Ceci traduit la conservation de l'énergie mécanique totale $\Phi$ le long d'une ligne de courant en écoulement permanent d'un fluide parfait incompressible.</p>
+    <p>Afin d'exprimer cette conservation d'énergie en termes de grandeurs homogènes à des distances (hauteurs), on divise $\Phi$ par la quantité $\rho g$. On obtient ainsi une nouvelle grandeur $H$ homogène à une distance et qui se conserve le long d'une ligne de courant :</p>
+    $$ H = \frac{\Phi}{\rho g} = \frac{v^2}{2g} + \frac{p}{\rho g} + z = \text{Cte}_{\text{(ligne de courant)}} $$
+    <div class="equation-number">(5-17)</div>
+    <div class="clear-float"></div>
+    <p>$H$ s'appelle « La <strong>charge hydraulique</strong> » définie localement. Elle est la somme de la hauteur cinétique ($v^2/2g$), de la hauteur piézométrique ($p/(\rho g)$) et de la cote ($z$).</p>
+    <p>On note enfin que ce résultat (conservation de $H$ ou $\Phi$) reste valable pour le cas des fluides parfaits <strong>barotropes</strong> (où la masse volumique $\rho$ ne dépend que de la pression $\rho = \rho(p)$, comme un gaz parfait en écoulement isentropique) en écoulement permanent. Nous pouvons citer à titre d'exemples le cas du gaz parfait en écoulement adiabatique réversible (isentropique) où la masse volumique est liée à la pression par la relation suivante :</p>
+    $$ p / \rho^\gamma = \text{Cte} \quad \text{ou} \quad p \rho^{-\gamma} = \text{Cte} $$
+    <div class="equation-number">(5-18)</div>
+    <div class="clear-float"></div>
+    <p>où $\gamma = C_p/C_v$ est une constante caractéristique des gaz parfaits (indice adiabatique).</p>
+
+    <h3>5.3.3 Deuxième théorème de Bernoulli : cas de l'écoulement irrotationnel d'un fluide parfait barotrope</h3>
+
+    <h4>5.3.3.1 Introduction du potentiel d'écoulement</h4>
+    <p>Si l'écoulement est <strong>irrotationnel</strong> ($\text{rot } \mathbf{v} = \vec{\nabla} \wedge \mathbf{v} = \mathbf{0}$), on dit qu'il est <strong>potentiel</strong>. En effet, nous pouvons définir un potentiel scalaire $\phi$ (potentiel des vitesses) tel que le champ de vitesse de l'écoulement dérive de ce potentiel selon la relation de gradient suivante :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">80</div>
+    <hr>
+
+    $$ \mathbf{v} = \vec{\nabla} \phi $$
+    <div class="equation-number">(5-18)</div>
+    <div class="clear-float"></div>
+    <p>Nous nous proposons de revenir sur cette classe d'écoulements potentiels en détails au chapitre 7.</p>
+
+    <h4>5.3.3.2 Deuxième forme du théorème de Bernoulli</h4>
+    <p>Compte tenu de la relation (2-21) développée au chapitre 2, $\mathbf{v} \cdot \nabla \mathbf{v} = \nabla(v^2/2) - \mathbf{v} \times (\nabla \times \mathbf{v})$, l'équation locale de conservation de la quantité de mouvement (éq (4-17) au chapitre 4, ou (3-19)) pour un fluide parfait ($\boldsymbol{\tau}=0$) peut se mettre sous la forme suivante :</p>
+    $$ \rho \left( \frac{\partial \mathbf{v}}{\partial t} + \vec{\nabla}\left(\frac{v^2}{2}\right) - \mathbf{v} \times (\vec{\nabla} \times \mathbf{v}) \right) = \rho \mathbf{g} - \vec{\nabla} p $$
+    <p>En divisant par $\rho$ et en réarrangeant:</p>
+    $$ \frac{\partial \mathbf{v}}{\partial t} + \vec{\nabla}\left(\frac{v^2}{2}\right) + \frac{1}{\rho} \vec{\nabla} p = \mathbf{g} + \mathbf{v} \times (\vec{\nabla} \times \mathbf{v}) $$
+    <div class="equation-number">(5-19)</div>
+    <div class="clear-float"></div>
+    <p>Si on considère les hypothèses suivantes :</p>
+    <ul>
+        <li>L'écoulement est <strong>irrotationnel</strong> : $\vec{\nabla} \times \mathbf{v} = \mathbf{0}$.</li>
+        <li>Le fluide est <strong>parfait</strong> ($\boldsymbol{\tau}=0$) et <strong>barotrope</strong> ($\rho=\rho(p)$, ce qui permet de définir l'enthalpie $h$ telle que $dh = dp/\rho$).</li>
+    </ul>
+    <p>L'irrotationnalité ($\vec{\nabla} \times \mathbf{v} = \mathbf{0}$) permet de poser $\mathbf{v} = \vec{\nabla} \phi$. Alors $\partial \mathbf{v} / \partial t = \partial (\vec{\nabla}\phi) / \partial t = \vec{\nabla}(\partial\phi / \partial t)$. Aussi, $\mathbf{g} = -\vec{\nabla}(gz) = -\vec{\nabla}(\Psi/\rho)$ si $\rho$ constant, ou $\rho\mathbf{g} = -\vec{\nabla}\Psi$. Et $\frac{1}{\rho}\vec{\nabla}p = \vec{\nabla} h$ (gradient de l'enthalpie massique $h = e+p/\rho$).</p>
+    <p>L'équation (5-19) devient (avec $\vec{\nabla} \times \mathbf{v} = \mathbf{0}$) :</p>
+    $$ \vec{\nabla}\left(\frac{\partial \phi}{\partial t}\right) + \vec{\nabla}\left(\frac{v^2}{2}\right) + \vec{\nabla} h = \mathbf{g} $$
+    <p>Si $\rho\mathbf{g} = -\vec{\nabla}\Psi$ (potentiel de gravité $\Psi=\rho gz$ pour $\rho$ cst):</p>
+    $$ \vec{\nabla} \left( \frac{\partial \phi}{\partial t} + \frac{v^2}{2} + h \right) = \mathbf{g} = - \frac{1}{\rho}\vec{\nabla}\Psi $$
+    <p>Si on réintègre le potentiel de gravité $\Psi$ :</p>
+    $$ \vec{\nabla} \left( \frac{\partial \phi}{\partial t} + \frac{v^2}{2} + \frac{p}{\rho} + gz \right) = \mathbf{0} $$
+    <p><em>Note: La dérivation dans le PDF aboutit à (5-20) puis (5-21). En (5-20), le terme $\nabla \Psi$ devrait être $\frac{1}{\rho}\nabla \Psi$ ou alors $\nabla(\Psi/\rho)$ si $\rho$ est cst. L'équation (5-21) est correcte si on intègre l'équation précédente.</em></p>
+    <div class="equation-number">(5-20)</div>
+    <div class="clear-float"></div>
+    <p>Du fait que le fluide est barotrope, ce bilan peut être arrangé sous la forme suivante :</p>
+    $$ \vec{\nabla} \left[ \frac{\partial \phi}{\partial t} + \int \frac{dp}{\rho} + \frac{v^2}{2} + gz \right] = 0 $$
+    <p>Pour un incompressible, $\int dp/\rho = p/\rho$ :</p>
+    $$ \vec{\nabla} \left[ \frac{\partial \phi}{\partial t} + \frac{p}{\rho} + \frac{v^2}{2} + gz \right] = 0 $$
+    <div class="equation-number">(5-21)</div>
+    <div class="clear-float"></div>
+    <p>Cette relation est valable en tout point du domaine de l'écoulement. Nous déduisons alors, qu'à un instant $t$ donné, la quantité entre crochets (à l'intérieur de l'opérateur de gradient) est constante en tout point de l'écoulement (pas seulement le long d'une ligne de courant).</p>
+    <p>Ceci nous permet d'énoncer la <strong>deuxième forme du théorème de Bernoulli</strong> pour un écoulement irrotationnel d'un fluide parfait barotrope comme suit :</p>
+    <blockquote>
+    La charge hydraulique généralisée $\mathcal{J}(t)$ donnée par l'expression suivante :
+    $$ \mathcal{J}(t) = \frac{1}{g} \frac{\partial \phi}{\partial t} + \frac{v^2}{2g} + \frac{p}{\rho g} + z $$
+    <div class="equation-number">(5-22)</div>
+    <div class="clear-float"></div>
+    est conservée (spacialement constante), à un instant donné, en tout point de l'écoulement indépendamment des lignes de courant. $\mathcal{J}$ peut cependant varier dans le temps si l'écoulement est instationnaire ($\partial \phi / \partial t \neq 0$).
+    </blockquote>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">81</div>
+    <hr>
+
+    <h2>5.4 Dynamique des tourbillons dans un écoulement de fluide parfait</h2>
+
+    <h3>5.4.1 Lignes de tourbillon - filet de tourbillon</h3>
+    <p>Nous avons défini au chapitre 1 pour un écoulement donné le champ de <strong>vorticité</strong> $\boldsymbol{\omega}$ qui s'écrit :</p>
+    $$ \boldsymbol{\omega} = \vec{\nabla} \wedge \mathbf{v} = 2 \vec{\Omega} $$
+    <div class="equation-number">(5-23)</div>
+    <div class="clear-float"></div>
+    <p>où $\vec{\Omega}$ est le vecteur taux de rotation local.</p>
+    <p>Les <strong>lignes de tourbillon</strong> correspondent aux lignes de champ (lignes de courant) du champ de vorticité $\boldsymbol{\omega}$. Un <strong>filet de tourbillon</strong> (ou tube de vorticité) est défini par une surface composée de lignes de tourbillon s'appuyant sur un contour fermé.</p>
+
+    <h3>5.4.2 Equation de tourbillon pour un fluide parfait incompressible</h3>
+    <p>L'équation de conservation de la quantité de mouvement (5-19) pour un fluide parfait ($\boldsymbol{\tau}=0$) peut également s'écrire en introduisant le vecteur vorticité $\boldsymbol{\omega} = \nabla \times \mathbf{v}$ (ou $2\Omega$):</p>
+    $$ \rho \left( \frac{\partial \mathbf{v}}{\partial t} + \vec{\nabla}\left(\frac{v^2}{2}\right) - \mathbf{v} \times \boldsymbol{\omega} \right) = \rho \mathbf{g} - \vec{\nabla} p $$
+    <p>Pour un fluide incompressible ($\rho=$cte) et si les forces de volume dérivent d'un potentiel ($\rho\mathbf{g} = -\nabla \Psi$), on peut écrire :</p>
+    $$ \frac{\partial \mathbf{v}}{\partial t} + \vec{\nabla}\left(\frac{v^2}{2} + \frac{p}{\rho} + \frac{\Psi}{\rho}\right) = \mathbf{v} \times \boldsymbol{\omega} $$
+    <div class="equation-number">(5-24)</div>
+    <div class="clear-float"></div>
+    <p>En calculant le rotationnel ($\nabla \times$) de cette relation, et notant que $\nabla \times (\nabla(\dots)) = 0$, on déduit l'équation d'évolution de la vorticité (équation de Helmholtz pour un fluide incompressible parfait) :</p>
+    $$ \nabla \times \left( \frac{\partial \mathbf{v}}{\partial t} \right) = \nabla \times (\mathbf{v} \times \boldsymbol{\omega}) $$
+    $$ \frac{\partial (\nabla \times \mathbf{v})}{\partial t} = \nabla \times (\mathbf{v} \times \boldsymbol{\omega}) $$
+    $$ \frac{\partial \boldsymbol{\omega}}{\partial t} = \nabla \times (\mathbf{v} \times \boldsymbol{\omega}) $$
+    <div class="equation-number">(5-25)</div>
+    <div class="clear-float"></div>
+    <p>En utilisant l'identité $\nabla \times (\mathbf{A} \times \mathbf{B}) = (\mathbf{B} \cdot \nabla)\mathbf{A} - (\mathbf{A} \cdot \nabla)\mathbf{B} + \mathbf{A}(\nabla \cdot \mathbf{B}) - \mathbf{B}(\nabla \cdot \mathbf{A})$, et sachant que $\nabla \cdot \mathbf{v} = 0$ (incompressible) et $\nabla \cdot \boldsymbol{\omega} = \nabla \cdot (\nabla \times \mathbf{v}) = 0$, on obtient :</p>
+    $$ \frac{\partial \boldsymbol{\omega}}{\partial t} = (\boldsymbol{\omega} \cdot \nabla)\mathbf{v} - (\mathbf{v} \cdot \nabla)\boldsymbol{\omega} $$
+    <p>Soit encore :</p>
+    $$ \frac{\partial \boldsymbol{\omega}}{\partial t} + (\mathbf{v} \cdot \nabla)\boldsymbol{\omega} = (\boldsymbol{\omega} \cdot \nabla)\mathbf{v} $$
+    <div class="equation-number">(5-26)</div>
+    <div class="clear-float"></div>
+    <p>Le membre de gauche est la dérivée matérielle de la vorticité $d\boldsymbol{\omega}/dt$. Ce qui nous permet d'établir l'équation de tourbillon qui s'écrit alors comme suit :</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">82</div>
+    <hr>
+
+    $$ \frac{d\boldsymbol{\omega}}{dt} = (\boldsymbol{\omega} \cdot \nabla)\mathbf{v} $$
+    <div class="equation-number">(5-27)</div>
+    <div class="clear-float"></div>
+    <p>Cette équation montre comment la vorticité d'une particule fluide évolue : elle change si le vecteur vorticité $\boldsymbol{\omega}$ n'est pas nul et s'il y a un gradient de vitesse dans la direction de $\boldsymbol{\omega}$. Le terme $(\boldsymbol{\omega} \cdot \nabla)\mathbf{v}$ représente l'étirement et l'inclinaison des lignes de tourbillon par le gradient de vitesse.</p>
+    <p>Dans un écoulement plan (2D), le vecteur vorticité $\boldsymbol{\omega}$ est perpendiculaire au plan de l'écoulement ($\boldsymbol{\omega} = \omega_z \mathbf{e}_z$) et le champ de vitesse est dans le plan ($\mathbf{v} = v_x \mathbf{e}_x + v_y \mathbf{e}_y$), donc $\partial/\partial z = 0$. Le terme $(\boldsymbol{\omega} \cdot \nabla)\mathbf{v} = (\omega_z \partial/\partial z)\mathbf{v} = 0$. L'équation de tourbillon s'écrit alors dans ce cas :</p>
+    $$ \frac{d\boldsymbol{\omega}}{dt} = \mathbf{0} $$
+    <div class="equation-number">(5-28)</div>
+    <div class="clear-float"></div>
+    <p>Le vecteur vorticité se conserve alors pour une particule fluide au cours de son mouvement dans un écoulement plan d'un fluide parfait incompressible.</p>
+
+    <h3>5.4.3 Théorème de Lagrange pour l'écoulement d'un fluide parfait</h3>
+    <p>Si on considère un contour fermé $C$ (formé toujours des mêmes particules fluides) dans un écoulement de fluide parfait barotrope. La <strong>circulation</strong> du vecteur vitesse $\Gamma$ sur ce contour est liée au flux du vecteur vorticité $\boldsymbol{\omega}$ sur une surface $S$ quelconque s'appuyant sur ce contour $C$, d'après le théorème de Stokes, comme suit :</p>
+    $$ \Gamma = \oint_C \mathbf{v} \cdot d\mathbf{r} = \iint_S (\nabla \times \mathbf{v}) \cdot \mathbf{n} \, ds = \iint_S \boldsymbol{\omega} \cdot \mathbf{n} \, ds $$
+    <div class="equation-number">(5-29)</div>
+    <div class="clear-float"></div>
+    <p>Cette circulation se conserve au cours du temps pour un contour matériel $C$ dans un fluide parfait barotrope (Théorème de Kelvin). En effet, sa dérivée particulaire par rapport au temps est nulle :</p>
+    $$ \frac{d\Gamma}{dt} = \frac{d}{dt} \oint_C \mathbf{v} \cdot d\mathbf{r} = \oint_C \frac{d\mathbf{v}}{dt} \cdot d\mathbf{r} + \oint_C \mathbf{v} \cdot \frac{d(d\mathbf{r})}{dt} $$
+    <p>En utilisant l'équation d'Euler (quantité de mouvement pour fluide parfait barotrope) $d\mathbf{v}/dt = \mathbf{g} - (1/\rho)\nabla p = -\nabla(\Psi/\rho) - \nabla h$ (si $\rho\mathbf{g}=-\nabla\Psi$ et $dh=dp/\rho$), on a $\oint_C (d\mathbf{v}/dt) \cdot d\mathbf{r} = -\oint_C \nabla(\Psi/\rho+h) \cdot d\mathbf{r} = 0$ car le gradient est intégré sur un contour fermé. Le second terme est aussi nul.</p>
+    $$ \frac{d\Gamma}{dt} = 0 $$
+    <div class="equation-number">(5-30)</div>
+    <div class="clear-float"></div>
+    <p>Ce qui permet de déduire que la circulation du vecteur vitesse sur un contour fermé matériel que l'on suit dans son mouvement se conserve au cours du temps.</p>
+    <p><strong>Théorème de Lagrange :</strong></p>
+    <blockquote>
+    "Si à un instant donné $t_0$ l'écoulement est irrotationnel ($\boldsymbol{\omega}=0$) dans un domaine $\Omega_0$ occupé par un fluide parfait barotrope, il reste irrotationnel pour $t > t_0$ dans le domaine $\Omega_t$ occupé par les mêmes particules fluides (si l'on suit dans son mouvement)".
+    </blockquote>
+    <p><em>Démonstration: Si $\boldsymbol{\omega}(t_0)=0$ dans $\Omega_0$, alors $\Gamma=0$ pour tout contour fermé $C_0 \subset \Omega_0$. Comme $\Gamma$ se conserve pour le contour matériel $C_t$ à $t>t_0$, on a $\Gamma(t)=0$. Comme ceci est vrai pour tout contour $C_t$, cela implique (par Stokes) que $\boldsymbol{\omega}(t)=0$ dans $\Omega_t$.</em></p>
+    <p>Ce théorème est d'une importance considérable pour justifier l'hypothèse de l'irrotationnalité des écoulements observés non permanents à l'échelle atmosphérique ou océanographique. En effet, la plupart des écoulements non permanents observés au temps réel étaient au repos ($\mathbf{v}=0$, donc $\boldsymbol{\omega}=0$) à l'instant initial et par conséquence en état irrotationnel, et le restent s'ils peuvent être considérés comme parfaits.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">83</div>
+    <hr>
+
+    <!-- End of Chapter 5 -->
+
+    <h1>Chapitre 6 : Analyse dimensionnelle et similitude</h1>
+
+    <div class="toc">
+        <ul>
+            <li class="section">6.1 Introduction</li>
+            <li class="section">6.2 Analyse dimensionnelle des équations fondamentales</li>
+            <ul>
+                <li class="subsection">6.2.1 Principe d'invariance dimensionnelle</li>
+                <li class="subsection">6.2.2 Analyse dimensionnelle des équations de Navier-Stockes</li>
+                <li class="subsection">6.2.3 Analyse dimensionnelle de l'équation de la chaleur</li>
+            </ul>
+            <li class="section">6.3 Procédé de similitude</li>
+            <ul>
+                <li class="subsection">6.3.1 Principe</li>
+                <li class="subsection">6.3.2 Similitude partielle</li>
+            </ul>
+            <li class="section">6.4 Application 1 : force de trainée exercée sur un objet</li>
+            <ul>
+                <li class="subsection">6.4.1 Force de trainée sur un obstacle sphérique</li>
+                <li class="subsection">6.4.2 Force de trainée sur des obstacles non sphériques d'usage courant</li>
+            </ul>
+            <li class="section">6.5 Application 2 : Forme universelle d'expression de la perte de charge linéaire dans une conduite</li>
+            <ul>
+                <li class="subsection">6.5.1 Perte de charge linéaire en conduite lisse</li>
+                <li class="subsection">6.5.2 Perte de charge linéaire en conduite rugueuse</li>
+            </ul>
+        </ul>
+    </div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">84</div>
+    <hr>
+
+    <h2>6.1 Introduction</h2>
+    <p>Nous nous proposons dans ce chapitre de décrire une nouvelle alternative permettant d'étudier les systèmes fluides sans passer par la résolution (souvent impossible analytiquement) des équations de Navier-Stockes. Cette nouvelle alternative à caractère empirique est basée sur une démarche d'<strong>analyse dimensionnelle</strong>.</p>
+    <p>Nous présentons au second paragraphe cette démarche d'analyse dimensionnelle appliquée aux équations fondamentales. Dans le troisième paragraphe, nous revenons sur la théorie de <strong>similitude</strong>. En effet, l'étude des systèmes industriels sur des maquettes (modèles réduits) s'avère un procédé d'ingénierie largement utilisé en pratique malgré sa relative simplicité. La démarche d'analyse dimensionnelle permet d'introduire les règles à respecter pour pouvoir transposer les résultats expérimentaux obtenus sur une maquette au système fluide à l'échelle réelle (prototype) sachant que la similitude géométrique est réalisée. Deux cas d'applications seront explicités aux quatrième et cinquième paragraphes. Ils concernent l'étude par analyse dimensionnelle de la force de traînée exercée par un écoulement sur un corps immergé et la formulation de la perte de charge linéaire en écoulement de conduite.</p>
+
+    <h2>6.2 Analyse dimensionnelle des équations fondamentales</h2>
+
+    <h3>6.2.1 Principe d'invariance dimensionnelle</h3>
+    <p>La <strong>dimension</strong> d'une grandeur physique est une propriété intrinsèque liée à la nature de celle-ci. On distingue pour les systèmes thermomécaniques 4 <strong>dimensions fondamentales</strong> (indépendantes) :</p>
+    <ul>
+        <li>Distance (espace) : $L$</li>
+        <li>Temps (chronologie) : $T$</li>
+        <li>Masse (matière) : $M$</li>
+        <li>Température : $\Theta$</li>
+    </ul>
+    <p>La dimension de toute autre grandeur (globale (extensive) ou locale (intensive)) $\Phi$ s'exprime par une loi de puissance en fonction de ces dimensions fondamentales comme suit (Théorème Pi de Buckingham, forme simplifiée):</p>
+    $$ [\Phi] = L^\alpha M^\beta T^\gamma \Theta^\lambda $$
+    <div class="equation-number">(6.1)</div>
+    <div class="clear-float"></div>
+    <p>Où $\alpha, \beta, \gamma$ et $\lambda$ sont des constantes (exposants dimensionnels).</p>
+    <p>Cette grandeur s'exprime par son unité dans un système d'unités conformément à sa dimension. Nous citons à titre d'exemple le système international (SI) dans lequel les unités des dimensions fondamentales sont les suivantes :</p>
+    <ul>
+        <li>Pour la distance : le mètre "m"</li>
+        <li>Pour le temps : la seconde "s"</li>
+        <li>Pour la masse : le kilogramme "kg"</li>
+        <li>Pour la température : le degré Kelvin "K"</li>
+    </ul>
+    <p>Exemple de grandeur intensive : la pression $p$ est une force par unité de surface. $[Force]=MLT^{-2}$, $[Surface]=L^2$. Donc la dimension de la pression est $[p] = ML^{-1}T^{-2}$. Son unité dans le SI est le Pascal (Pa) tel que : $1 \, \text{Pa} = 1 \, \text{kg m}^{-1} \text{s}^{-2}$.</p>
+    <p>Exemple de grandeur extensive : l'énergie $E$ a pour dimension $[E] = ML^{2}T^{-2}$. Son unité dans le SI est le Joule (J) tel que : $1 \, \text{J} = 1 \, \text{kg m}^{2} \text{s}^{-2}$.</p>
+    <p>Le <strong>principe d'invariance dimensionnelle</strong> (ou homogénéité dimensionnelle) stipule que toute équation physique reliant différentes grandeurs physiques doit être homogène dimensionnellement. C'est-à-dire que tous les termes additionnés dans une équation doivent avoir la même dimension. Ce principe reste invariant dans un changement de système d'unités.</p>
+
+    <h3>6.2.2 Analyse dimensionnelle des équations de Navier-Stockes</h3>
+    <p>On considère un fluide Newtonien incompressible évoluant dans un domaine $D_c$. Sa dynamique est décrite par les champs des grandeurs physiques locales pression $p$ et vitesse $v_i$ dans $D_c$. Du point de vue mathématique, ces grandeurs sont solutions du problème suivant (équations 4-18 et 4-19) :</p>
+    $$ \begin{cases} \frac{\partial v_i}{\partial x_i} = 0 \\ \frac{\partial v_i}{\partial t} + v_j \frac{\partial v_i}{\partial x_j} = g_i - \frac{1}{\rho} \frac{\partial p}{\partial x_i} + \nu \frac{\partial^2 v_i}{\partial x_j \partial x_j} \\ \oplus \text{ conditions aux limites de } D_c \oplus \text{ conditions initiales} \end{cases} $$
+    <div class="equation-number">(6-2)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">86</div>
+    <hr>
+
+    <p>Si on choisit les échelles caractéristiques suivantes $L_e, M_e, T_e, \Theta_e$ pour les dimensions fondamentales L, M, T, $\Theta$ :</p>
+    <ul>
+        <li>$L_e$: échelle de longueur caractéristique de $D_c$</li>
+        <div class="equation-number">(6-3)</div><div class="clear-float"></div>
+        <li>$M_e = \rho L_e^3$: échelle de masse (où $\rho$ est la masse volumique)</li>
+        <div class="equation-number">(6-4)</div><div class="clear-float"></div>
+        <li>$T_e$: échelle de temps caractéristique</li>
+        <div class="equation-number">(6-5)</div><div class="clear-float"></div>
+        <li>$\Theta_e$: échelle de température caractéristique</li>
+        <div class="equation-number">(6-6)</div><div class="clear-float"></div>
+    </ul>
+    <p>Les variables indépendantes d'Euler (position $\mathbf{x}$ et temps $t$) s'expriment alors en termes de variables adimensionnelles $\bar{\mathbf{x}}$ et $\bar{t}$ :</p>
+    $$ x_i = L_e \bar{x}_i \quad ; \quad t = T_e \bar{t} $$
+    <div class="equation-number">(6-7)</div>
+    <div class="clear-float"></div>
+    <p>Les composantes $g_i$ de l'accélération gravitationnelle (dimension $LT^{-2}$) s'écrivent (si $\mathbf{g}$ est constant):</p>
+    $$ g_i = \bar{g}_i g \quad \text{avec} \quad \bar{g}_i = - \delta_{i3} \text{ dans un repère où } x_3 \text{ est la verticale ascendante} $$
+    <div class="equation-number">(6-8)</div>
+    <div class="clear-float"></div>
+    <p>(Ici $g$ est l'intensité de la pesanteur, $\approx 9.81$ m/s$^2$).</p>
+    <p>Quand aux grandeurs dynamiques (vitesse $\mathbf{v}$ et pression $p$), elles s'expriment comme suit en introduisant des échelles caractéristiques $V_e$ pour la vitesse ($[V_e]=LT^{-1}$) et $P_e$ pour la pression ($[P_e]=ML^{-1}T^{-2}$):</p>
+    $$ v_i = V_e \bar{v}_i \quad \text{où } V_e = L_e / T_e $$
+    $$ p = P_e \bar{p} \quad \text{où } P_e = \rho V_e^2 \text{ (pression dynamique)} $$
+    <div class="equation-number">(6-9)</div>
+    <div class="clear-float"></div>
+    <p>Où $\bar{p}$ et $\bar{v}_i$ sont des grandeurs adimensionnelles. Elles correspondent à des "mesures" dans le nouveau système d'unités défini par $(L_e, M_e, T_e)$. En partant du système (6-2), on déduit facilement, en remplaçant les variables dimensionnelles par leurs expressions illustrées dans (6-7) et (6-9), que les variables adimensionnelles $(\bar{v}_i, \bar{p})$ sont solutions du problème adimensionnel suivant :</p>
+    $$ \begin{cases} \frac{\partial \bar{v}_i}{\partial \bar{x}_i} = 0 \\ \frac{T_e V_e}{L_e} \frac{\partial \bar{v}_i}{\partial \bar{t}} + \frac{V_e^2}{L_e} \bar{v}_j \frac{\partial \bar{v}_i}{\partial \bar{x}_j} = g \bar{g}_i - \frac{P_e}{\rho L_e} \frac{\partial \bar{p}}{\partial \bar{x}_i} + \frac{\nu V_e}{L_e^2} \frac{\partial^2 \bar{v}_i}{\partial \bar{x}_j \partial \bar{x}_j} \end{cases} $$
+    <p>En utilisant $V_e = L_e/T_e$ et $P_e = \rho V_e^2$, et en divisant par $V_e^2/L_e$ :</p>
+    $$ \begin{cases} \frac{\partial \bar{v}_i}{\partial \bar{x}_i} = 0 \\ \frac{\partial \bar{v}_i}{\partial \bar{t}} + \bar{v}_j \frac{\partial \bar{v}_i}{\partial \bar{x}_j} = \frac{g L_e}{V_e^2} \bar{g}_i - \frac{\partial \bar{p}}{\partial \bar{x}_i} + \frac{\nu}{V_e L_e} \frac{\partial^2 \bar{v}_i}{\partial \bar{x}_j \partial \bar{x}_j} \\ \oplus \text{ conditions adimensionnelles} \end{cases} $$
+    <div class="equation-number">(6-10)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">87</div>
+    <hr>
+
+    <p>On note dans ce système l'apparition de deux nombres adimensionnels :</p>
+    <ul>
+        <li>Le nombre de Reynolds :
+            $$ \text{Re} = \frac{V_e L_e}{\nu} $$
+            <div class="equation-number">(6-11)</div>
+            <div class="clear-float"></div>
+            qui représente un rapport entre les effets d'inertie (termes convectifs $\sim V_e^2/L_e$) et les effets visqueux ($\sim \nu V_e / L_e^2$). Introduit déjà au chapitre 4 (voir paragraphe 4.5.4).
+        </li>
+        <li>Le nombre de Froude :
+            $$ \text{Fr} = \frac{V_e}{\sqrt{g L_e}} \quad \text{ou son carré } \text{Fr}^2 = \frac{V_e^2}{g L_e} $$
+            <div class="equation-number">(6-12)</div>
+            <div class="clear-float"></div>
+            appelé nombre de Froude. C'est un nombre adimensionnel basique largement utilisé notamment dans l'étude des écoulements à surface libre. Il met en jeu un rapport entre les effets d'inertie ($\sim V_e^2/L_e$) et les effets de gravité ($\sim g$).
+        </li>
+    </ul>
+    <p>L'équation de Navier-Stokes adimensionnelle (6-10) devient :</p>
+    $$ \frac{\partial \bar{v}_i}{\partial \bar{t}} + \bar{v}_j \frac{\partial \bar{v}_i}{\partial \bar{x}_j} = \frac{1}{\text{Fr}^2} \bar{g}_i - \frac{\partial \bar{p}}{\partial \bar{x}_i} + \frac{1}{\text{Re}} \frac{\partial^2 \bar{v}_i}{\partial \bar{x}_j \partial \bar{x}_j} $$
+    <p>Du point de vue mathématique, pour que le système adimensionnel $(\bar{A})$ reste invariant dans un changement des échelles $(L_e, M_e, T_e)$, il faut et il suffit de maintenir les deux nombres adimensionnels de Reynolds (Re) et de Froude (Fr) constants au cours de ce changement entre les deux systèmes (le système réel et le modèle).</p>
+
+    <h3>6.2.3 Analyse dimensionnelle de l'équation de la chaleur</h3>
+    <p>Les transferts thermiques qui peuvent avoir lieu dans ce milieu fluide sont régis par l'équation de la chaleur établie au chapitre 4 (Eq (4-21)). Le problème thermique s'écrit ainsi sous la forme suivante :</p>
+    $$ \begin{cases} \rho C \left( \frac{\partial T}{\partial t} + v_j \frac{\partial T}{\partial x_j} \right) = k \frac{\partial^2 T}{\partial x_j \partial x_j} + \rho r + \Phi_{visc} \\ \oplus \text{ conditions aux limites de } D_c \oplus \text{ conditions initiales} \end{cases} $$
+    <div class="equation-number">(6-13)</div>
+    <div class="clear-float"></div>
+    <p>où $\Phi_{visc} = \mu (\frac{\partial v_i}{\partial x_j} + \frac{\partial v_j}{\partial x_i}) \frac{\partial v_i}{\partial x_j}$ est la dissipation visqueuse.</p>
+    <p>Afin de simplifier le problème, on suppose qu'il n'y a pas transfert par rayonnement ($r=0$). Ce problème s'écrit sous la forme adimensionnelle suivante, en introduisant l'échelle de température $\Theta_e$ et la variable adimensionnelle $\bar{T} = T/\Theta_e$ :</p>
+    $$ \rho C \left( \frac{\Theta_e}{T_e} \frac{\partial \bar{T}}{\partial \bar{t}} + \frac{V_e \Theta_e}{L_e} \bar{v}_j \frac{\partial \bar{T}}{\partial \bar{x}_j} \right) = \frac{k \Theta_e}{L_e^2} \frac{\partial^2 \bar{T}}{\partial \bar{x}_j \partial \bar{x}_j} + \mu \left( \frac{V_e}{L_e} (\dots) \right) \left( \frac{V_e}{L_e} \dots \right) $$
+    <p>En divisant par $\rho C V_e \Theta_e / L_e$ :</p>
+    $$ \frac{L_e}{V_e T_e} \frac{\partial \bar{T}}{\partial \bar{t}} + \bar{v}_j \frac{\partial \bar{T}}{\partial \bar{x}_j} = \frac{k}{\rho C V_e L_e} \frac{\partial^2 \bar{T}}{\partial \bar{x}_j \partial \bar{x}_j} + \frac{\mu V_e^2 / L_e^2}{\rho C V_e \Theta_e / L_e} (\dots) $$
+    <p>Avec $L_e = V_e T_e$ :</p>
+    $$ \begin{cases} \frac{\partial \bar{T}}{\partial \bar{t}} + \bar{v}_j \frac{\partial \bar{T}}{\partial \bar{x}_j} = \frac{(k / \rho C)}{V_e L_e} \frac{\partial^2 \bar{T}}{\partial \bar{x}_j \partial \bar{x}_j} + \frac{\mu V_e}{\rho C \Theta_e L_e} \left( \frac{\partial \bar{v}_i}{\partial \bar{x}_j} + \frac{\partial \bar{v}_j}{\partial \bar{x}_i} \right) \frac{\partial \bar{v}_i}{\partial \bar{x}_j} \\ \oplus \text{ conditions adimensionnelles} \end{cases} $$
+    <div class="equation-number">(6-14)</div>
+    <div class="clear-float"></div>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">88</div>
+    <hr>
+
+    <p>On introduit les nombres adimensionnels de Peclet (Pe) et d'Eckert (Ec) qui s'écrivent respectivement sous les formes suivantes :</p>
+    <ul>
+        <li><strong>Nombre de Peclet (Pe) :</strong> Rapport entre convection thermique et diffusion thermique.
+            $$ \text{Pe} = \frac{\text{Convection thermique}}{\text{Diffusion thermique}} = \frac{\rho C V_e L_e}{k} = \frac{V_e L_e}{\alpha} $$
+            <div class="equation-number">(6-15)</div>
+            <div class="clear-float"></div>
+            où $\alpha = k/(\rho C)$ est la diffusivité thermique.
+        </li>
+        <li><strong>Nombre d'Eckert (Ec) :</strong> Rapport entre l'énergie cinétique et l'enthalpie (ou énergie interne).
+            $$ \text{Ec} = \frac{\text{Energie cinétique}}{\text{Energie interne (enthalpie)}} = \frac{V_e^2}{C \Theta_e} $$
+            <div class="equation-number">(6-16)</div>
+            <div class="clear-float"></div>
+    </ul>
+    <p>Le nombre de Peclet mesure l'importance relative des transferts de chaleur par convection et par diffusion au sein de l'écoulement du fluide. Il joue dans l'équation de la chaleur un rôle similaire à celui du nombre de Reynolds dans l'équation de la dynamique (6-10).</p>
+    <p>Enfin, le nombre d'Eckert mesure l'importance relative des variations de l'énergie cinétique par rapport aux variations de l'énergie interne (enthalpie) au sein de l'écoulement.</p>
+    <p>Le problème adimensionnel $(\bar{B})$ s'écrit alors :</p>
+     $$ \begin{cases} \frac{\partial \bar{T}}{\partial \bar{t}} + \bar{v}_j \frac{\partial \bar{T}}{\partial \bar{x}_j} = \frac{1}{\text{Pe}} \frac{\partial^2 \bar{T}}{\partial \bar{x}_j \partial \bar{x}_j} + \frac{\mu V_e^2}{\rho C \Theta_e V_e L_e} \bar{\Phi}_{visc} = \frac{1}{\text{Pe}} \frac{\partial^2 \bar{T}}{\partial \bar{x}_j \partial \bar{x}_j} + \frac{\nu}{L_e V_e} \frac{V_e^2}{C \Theta_e} \bar{\Phi}_{visc} \\ \frac{\partial \bar{T}}{\partial \bar{t}} + \bar{v}_j \frac{\partial \bar{T}}{\partial \bar{x}_j} = \frac{1}{\text{Pe}} \frac{\partial^2 \bar{T}}{\partial \bar{x}_j \partial \bar{x}_j} + \frac{\text{Ec}}{\text{Re}} \bar{\Phi}_{visc} \\ \oplus \text{ conditions adimensionnelles} \end{cases} $$
+     <p>où $\bar{\Phi}_{visc} = (\frac{\partial \bar{v}_i}{\partial \bar{x}_j} + \frac{\partial \bar{v}_j}{\partial \bar{x}_i}) \frac{\partial \bar{v}_i}{\partial \bar{x}_j}$ est la dissipation visqueuse adimensionnelle.</p>
+    <div class="equation-number">(6-17)</div>
+    <div class="clear-float"></div>
+    <p>On note que le rapport $\text{Ec}/\text{Re}$ qui apparaît dans (6-17) permet de comparer l'importance relative de la dissipation de l'énergie interne par contraintes visqueuses et de son transfert par convection.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">89</div>
+    <hr>
+
+    <p>Ce système reste alors invariant par changement d'échelle si on maintient le nombre de Peclet (Pe) ainsi que le rapport $\text{Ec}/\text{Re}$ constants.</p>
+
+    <h2>6.3 Procédé de similitude</h2>
+
+    <h3>6.3.1 Principe</h3>
+    <p>L'un des intérêts essentiels de l'analyse dimensionnelle consiste à définir les règles qu'il faut respecter dans une étude d'un système fluide par <strong>similitude</strong>. C'est à dire, les règles qu'il faut respecter pour pouvoir déduire, à partir d'une étude expérimentale sur une <strong>maquette</strong> (modèle réduit), les valeurs réelles que l'on mesurerait en vraie grandeur (<strong>prototype</strong>).</p>
+    <p>D'après l'analyse développée au paragraphe précédent, pour qu'il y ait similitude dynamique (égalité entre les grandeurs dynamiques adimensionnelles mesurées sur maquette et les grandeurs correspondantes sur le prototype), il suffit que les deux nombres adimensionnels de Reynolds (Re) et de Froude (Fr) aient les mêmes valeurs dans les deux expériences (maquette et prototype).</p>
+    <p>Quand au problème thermique, il faut avoir en plus l'égalité du nombre de Peclet (Pe) et du rapport adimensionnel $\text{Ec}/\text{Re}$.</p>
+
+    <h3>6.3.2 Similitude partielle</h3>
+    <p>On considère une étude expérimentale sur maquette où l'on a le même fluide que dans le modèle réel ($\nu_m = \nu_p = \nu$, $\rho_m=\rho_p=\rho$). On peut citer à titre d'exemples l'étude sur un modèle réduit du fonctionnement hydraulique d'un déversoir d'un barrage ou de la force de portance sur un avion en vitesse de croisière.</p>
+    <p>Si on note $C_{sim} = L_m/L_p$ le rapport de similitude géométrique ($C_{sim}<1$ pour un modèle réduit) et on note avec l'indice $m$ les mesures sur maquette et $p$ (ou sans indice) pour le prototype. On aura alors les relations suivantes entre les échelles caractéristiques :</p>
+    $$ L_m = C_{sim} L_p $$
+    <div class="equation-number">(6-18)</div>
+    <div class="clear-float"></div>
+    <p>Les nombres de Reynolds et Froude s'écrivent :</p>
+    $$ \text{Re}_p = \frac{V_p L_p}{\nu} $$
+    <div class="equation-number">(6-19)</div>
+    <div class="clear-float"></div>
+    $$ \text{Re}_m = \frac{V_m L_m}{\nu} = \frac{V_m (C_{sim} L_p)}{\nu} $$
+    <div class="equation-number">(6-20)</div>
+    <div class="clear-float"></div>
+    $$ \text{Fr}_p = \frac{V_p}{\sqrt{g L_p}} $$
+    <div class="equation-number">(6-21)</div>
+    <div class="clear-float"></div>
+    $$ \text{Fr}_m = \frac{V_m}{\sqrt{g L_m}} = \frac{V_m}{\sqrt{g C_{sim} L_p}} $$
+    <div class="equation-number">(6-22)</div>
+    <div class="clear-float"></div>
+    <p>La <strong>similitude parfaite</strong> (ou similitude de Reech-Froude) implique les égalités suivantes :</p>
+    $$ \text{Re}_m = \text{Re}_p \quad \text{et} \quad \text{Fr}_m = \text{Fr}_p $$
+    <div class="equation-number">(6-23)</div>
+    <div class="clear-float"></div>
+    <p>D'où résultent les relations suivantes entre les échelles de vitesse $V$ et de longueur $L$ :</p>
+    $$ \text{Re}_m = \text{Re}_p \implies V_m L_m = V_p L_p \implies \frac{V_m}{V_p} = \frac{L_p}{L_m} = \frac{1}{C_{sim}} $$
+    $$ \text{Fr}_m = \text{Fr}_p \implies \frac{V_m}{\sqrt{L_m}} = \frac{V_p}{\sqrt{L_p}} \implies \frac{V_m}{V_p} = \sqrt{\frac{L_m}{L_p}} = \sqrt{C_{sim}} $$
+    <div class="equation-number">(6-24)</div>
+    <div class="clear-float"></div>
+    <p>Ces deux conditions sur le rapport des vitesses ($V_m/V_p$) ne peuvent être satisfaites simultanément que si $1/C_{sim} = \sqrt{C_{sim}}$, c'est-à-dire $C_{sim}^{3/2} = 1$, soit $C_{sim} = 1$. Ceci impliquerait une maquette de même taille que le modèle réel, ce qui est contradictoire avec l'idée de modèle réduit.</p>
+    <p>En pratique on a recours à ce qu'on appelle la <strong>similitude partielle</strong> où on favorise, selon le cas à étudier, la similitude basée sur l'égalité du nombre de Reynolds ou sur l'égalité du nombre de Froude.</p>
+    <ul>
+        <li><strong>Similitude de Froude ($\text{Fr}_m = \text{Fr}_p$):</strong> On impose l'égalité des nombres de Froude. Ceci implique $V_m/V_p = \sqrt{L_m/L_p} = \sqrt{C_{sim}}$. Cette similitude est favorisée lorsque les effets de gravité sont dominants, comme dans les écoulements à surface libre (déversoirs, canaux, navires). Dans ce cas, les nombres de Reynolds ne sont pas égaux ($\text{Re}_m / \text{Re}_p = (V_m L_m) / (V_p L_p) = \sqrt{C_{sim}} C_{sim} = C_{sim}^{3/2} < 1$). Les effets visqueux sont proportionnellement plus importants sur la maquette.</li>
+        <li><strong>Similitude de Reynolds ($\text{Re}_m = \text{Re}_p$):</strong> On impose l'égalité des nombres de Reynolds. Ceci implique $V_m/V_p = L_p/L_m = 1/C_{sim}$. Cette similitude est favorisée lorsque les effets visqueux sont dominants ou lorsque l'on s'intéresse à des phénomènes où la gravité joue peu de rôle (écoulements en charge, aérodynamique). Par exemple, pour la force de portance sur un avion induite par le cisaillement du vent au niveau de la surface de l'avion. Dans ce cas, les nombres de Froude ne sont pas égaux ($\text{Fr}_m / \text{Fr}_p = (V_m/\sqrt{L_m}) / (V_p/\sqrt{L_p}) = (1/C_{sim}) / \sqrt{C_{sim}} = C_{sim}^{-3/2} > 1$). Les effets de gravité sont proportionnellement moins importants sur la maquette.</li>
+    </ul>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">91</div>
+    <hr>
+
+    <h2>6.4 Application 1 : force de traînée exercée sur un objet</h2>
+    <p>On se propose dans ce paragraphe d'étudier par analyse dimensionnelle la force de traînée $T_r$ exercée par l'écoulement uniforme (à vitesse $V_\infty$, pression $P_\infty$) d'un fluide visqueux incompressible (viscosité $\nu$, masse volumique $\rho$ constante), sur un obstacle immergé.</p>
+
+    <h3>6.4.1 Force de traînée sur un obstacle sphérique</h3>
+    <p>On note $D$ le diamètre de la sphère, $V_\infty$ et $P_\infty$ respectivement la vitesse et la pression à l'infini où l'écoulement est uniforme et non perturbé par la présence de la sphère. On suppose de plus en première approximation l'absence des effets de la gravité.</p>
+    <p>En recensant tous les paramètres pertinents du problème, on s'attend à ce que la force de traînée $T_r$ exercée par l'écoulement sur la sphère soit fonction des 5 paramètres du problème : $D, V_\infty, P_\infty, \rho, \nu$. Elle sera donnée par une relation de la forme :</p>
+    $$ \mathcal{F}(T_r, \rho, \nu, P_\infty, V_\infty, D) = 0 $$
+    <div class="equation-number">(6-25)</div>
+    <div class="clear-float"></div>
+    <p>Cette relation doit être dimensionnellement homogène. Elle peut s'écrire également sous la forme adimensionnelle suivante en utilisant le théorème Pi de Buckingham. Il y a 6 variables et 3 dimensions fondamentales (M, L, T). On s'attend donc à $6-3=3$ groupes adimensionnels indépendants. Choisissons $\rho, V_\infty, D$ comme variables de base.</p>
+    <p>Dimensions: $[T_r]=MLT^{-2}$, $[\rho]=ML^{-3}$, $[\nu]=L^2T^{-1}$, $[P_\infty]=ML^{-1}T^{-2}$, $[V_\infty]=LT^{-1}$, $[D]=L$.</p>
+    <ul>
+        <li>Groupe 1 (Force): $\Pi_1 = T_r \rho^a V_\infty^b D^c$. $[MLT^{-2}] [ML^{-3}]^a [LT^{-1}]^b [L]^c = M^0 L^0 T^0$.
+            $M: 1+a=0 \implies a=-1$. $T: -2-b=0 \implies b=-2$. $L: 1-3a+b+c=0 \implies 1+3-2+c=0 \implies c=-2$.
+            $\Pi_1 = T_r \rho^{-1} V_\infty^{-2} D^{-2} = \frac{T_r}{\rho V_\infty^2 D^2}$ (Coefficient de force, lié à $C_D$).</li>
+        <li>Groupe 2 (Pression): $\Pi_2 = P_\infty \rho^a V_\infty^b D^c$.
+            $M: 1+a=0 \implies a=-1$. $T: -2-b=0 \implies b=-2$. $L: -1-3a+b+c=0 \implies -1+3-2+c=0 \implies c=0$.
+            $\Pi_2 = P_\infty \rho^{-1} V_\infty^{-2} = \frac{P_\infty}{\rho V_\infty^2}$ (Coefficient de pression $C_p$).</li>
+        <li>Groupe 3 (Viscosité): $\Pi_3 = \nu \rho^a V_\infty^b D^c$. $[L^2T^{-1}] [ML^{-3}]^a [LT^{-1}]^b [L]^c = M^0 L^0 T^0$.
+            $M: a=0$. $T: -1-b=0 \implies b=-1$. $L: 2-3a+b+c=0 \implies 2+0-1+c=0 \implies c=-1$.
+            $\Pi_3 = \nu V_\infty^{-1} D^{-1} = \frac{\nu}{V_\infty D} = \frac{1}{\text{Re}}$.</li>
+    </ul>
+    <p>La relation adimensionnelle s'écrit donc :</p>
+    $$ \mathcal{G}\left(\frac{T_r}{\rho V_\infty^2 D^2}, \frac{P_\infty}{\rho V_\infty^2}, \text{Re}\right) = 0 $$
+    <div class="equation-number">(6-26)</div>
+    <div class="clear-float"></div>
+    <p><em>Note: La forme (6-26) du PDF est différente, elle semble avoir choisi $M_e, L_e, T_e$ différemment. Le résultat final (dépendance de Re et $P_\infty/(\rho V_\infty^2)$) est similaire.</em></p>
+    <p>Les dimensions fondamentales intervenant sont la masse M, la distance L et le temps T. En choisissant comme échelles caractéristiques :</p>
+    $$ L_e = D $$
+    <div class="equation-number">(6-27)</div><div class="clear-float"></div>
+    $$ M_e = \rho D^3 $$
+    <div class="equation-number">(6-28)</div><div class="clear-float"></div>
+    $$ T_e = D / V_\infty $$
+    <div class="equation-number">(6-29)</div><div class="clear-float"></div>
+    <p>La relation (6-26) s'écrit sous forme adimensionnelle (en utilisant les grandeurs adim $\bar{T}_r=T_r/(M_e L_e T_e^{-2}) = T_r/(\rho D^3 D (D/V_\infty)^{-2}) = T_r/(\rho V_\infty^2 D^2)$, $\bar{\nu}=\nu/(L_e^2 T_e^{-1})=\nu/(D^2 (D/V_\infty)^{-1}) = \nu/(V_\infty D)$, $\bar{P}_\infty=P_\infty/(M_e L_e^{-1} T_e^{-2}) = P_\infty / (\rho D^3 D^{-1} (D/V_\infty)^{-2}) = P_\infty/(\rho V_\infty^2)$):</p>
+    $$ \mathcal{H}\left( \frac{T_r}{\rho V_\infty^2 D^2}, \frac{\nu}{D V_\infty}, \frac{P_\infty}{\rho V_\infty^2} \right) = 0 $$
+    <div class="equation-number">(6-30)</div>
+    <div class="clear-float"></div>
+    <p>Cette relation montre qu'on passe, pour la détermination de $T_r$, de 5 paramètres dimensionnels $(\rho, \nu, P_\infty, V_\infty, D)$ à 2 paramètres adimensionnels parmi lesquels on note le nombre de Reynolds :</p>
+    $$ \text{Re} = \frac{V_\infty D}{\nu} $$
+    <div class="equation-number">(6-31)</div>
+    <div class="clear-float"></div>
+    <p>On déduit finalement par analyse dimensionnelle que la force de traînée (adimensionnée) peut s'exprimer par une relation de la forme :</p>
+    $$ \frac{T_r}{\rho V_\infty^2 D^2} = \lambda \left( \text{Re}, \frac{P_\infty}{\rho V_\infty^2} \right) $$
+    <div class="equation-number">(6-32)</div>
+    <div class="clear-float"></div>
+    <p>D'autre part, comme la pression $P_\infty$ intervient dans le bilan de quantité de mouvement (6-2) par son gradient, le champ de pression $p$ est défini à une constante près. Ceci implique que toute translation de la valeur $P_\infty$ (ajout d'une constante $C$ à $p$) laisse la force de traînée $T_r$ invariante (car $T_r$ dépend du gradient de pression et des contraintes visqueuses, qui ne dépendent pas de la constante additive). Il s'en suit alors la non dépendance de $T_r$ de la quantité adimensionnelle $P_\infty / (\rho V_\infty^2)$.</p>
+    <p>Finalement on déduit que la traînée $T_r$ peut être exprimée en fonction uniquement d'un seul nombre adimensionnel, le nombre de Reynolds, comme suit :</p>
+    $$ \frac{T_r}{\rho V_\infty^2 D^2} = \lambda(\text{Re}) $$
+    <div class="equation-number">(6-33)</div>
+    <div class="clear-float"></div>
+    <p>En pratique, on exprime cette force de traînée sous la forme similaire suivante :</p>
+    $$ T_r = C_D \left( \frac{1}{2} \rho V_\infty^2 \right) A $$
+    <div class="equation-number">(6-34)</div>
+    <div class="clear-float"></div>
+    <p>avec $C_D = C_D(\text{Re})$ et $A = \pi D^2 / 4$ est la surface frontale (apparente) de la sphère dans la direction de l'écoulement. Le coefficient $C_D$ s'appelle le <strong>coefficient de traînée</strong>. C'est un coefficient adimensionnel qui dépend uniquement du nombre de Reynolds (pour une sphère lisse dans ces conditions).</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">93</div>
+    <hr>
+
+    <p>On note enfin l'apparition dans cette expression (6-34) de la <strong>pression dynamique</strong> $\frac{1}{2} \rho V_\infty^2$.</p>
+    <p>Ce résultat, à priori empirique (issu de l'analyse dimensionnelle), est appuyé par des études analytiques et expérimentales. En effet, un développement analytique (par Stokes) basé sur la théorie des écoulements potentiels (ou plutôt rampants) montre que pour les écoulements à très faibles nombres de Reynolds ($\text{Re} \ll 1$, écoulement de Stokes), le coefficient de traînée $C_D$ s'exprime analytiquement comme suit :</p>
+    $$ C_D = \frac{24}{\text{Re}} \quad (\text{Loi de Stokes}) $$
+    <div class="equation-number">(6-35)</div>
+    <div class="clear-float"></div>
+    <p>D'autre part, des travaux expérimentaux montrent que pour les plus grands nombres de Reynolds, la variation de $C_D$ est illustrée par la figure suivante.</p>
+
+    <div class="figure">
+        <div class="placeholder">Placeholder pour Figure 1 : Coeff de traînée vs Re pour une sphère</div>
+        <p class="caption">Figure 1 : Coefficient de traînée $C_D$ pour une sphère lisse en fonction du nombre de Reynolds Re.</p>
+    </div>
+
+    <p>Cette figure montre que pour la plage des nombres de Reynolds compris entre $10^3$ et $2 \times 10^5$ (environ), le coefficient $C_D$ garde une valeur sensiblement constante indépendamment de Re, autour de la valeur 0.44 (régime de Newton). On remarque également une chute brusque de ce coefficient pour les nombres de Reynolds de l'ordre de $3 \times 10^5$. Cette chute correspond au phénomène de la <strong>crise de traînée</strong> (transition de la couche limite sur la sphère de laminaire à turbulente, ce qui retarde le décollement et réduit la traînée de pression).</p>
+    <p>En résumé, l'analyse dimensionnelle pour cette situation d'étude a permis de simplifier considérablement l'étude en mettant en évidence la dépendance de la traînée d'un seul paramètre adimensionnel qu'est le nombre de Reynolds. Des études (analytiques ou expérimentaux) plus approfondies permettent de mieux expliciter une telle relation $C_D(\text{Re})$.</p>
+
+    <div class="footer-note">
+        ENIT – Département de Génie Civil – Laboratoire de Modélisation en Hydraulique et Environnement<br>
+        Enseignant : Ghazi Bellakhal
+    </div>
+    <div class="page-number">94</div>
+    <hr>
+
+    <!-- End of provided pages -->
+
+</body>
+</html>
