@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 7 Espaces vectoriels</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '\\[', right: '\\]', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false} ] });"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+            color: #333;
+        }
+        h1, h2, h3, h4 {
+            color: #0056b3; /* Dark blue */
+            margin-top: 1.8em;
+            margin-bottom: 0.8em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.3em;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; color: #007bff; /* Lighter blue */ border-bottom: none; } /* Exercise titles */
+        h4 { font-size: 1.2em; color: #666; border-bottom: none; margin-top: 1.5em; } /* Correction subheadings, Objectives */
+
+        .exercice, .correction, .probleme-synthese {
+            margin-bottom: 2em;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fdfdfd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .correction {
+             background-color: #f0f9ff; /* Light blue background for corrections */
+             border-color: #cce5ff; /* Lighter blue border */
+        }
+        .objectif {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-left: 3px solid #007bff;
+        }
+         .boxed-objective { /* Style for objectives starting with □ or ■ */
+             border: 1px solid #aaa;
+             padding: 8px 12px;
+             display: block;
+             margin: 10px 0 15px 0;
+             font-style: italic;
+             color: #555;
+             border-left: 3px solid #007bff;
+             background-color: #f9f9f9;
+         }
+         .boxed-objective::before {
+             content: "□ Objectif : "; /* Default marker */
+             font-weight: bold;
+             font-style: normal;
+             color: #333;
+         }
+        .placeholder {
+            background-color: #f0f0f0;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px 0;
+            font-style: italic;
+            color: #888;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        .katex-display > .katex { /* Less vertical space for pmatrix */
+             margin-top: 0.5em;
+             margin-bottom: 0.5em;
+        }
+        .katex-display {
+             margin: 0.8em 0;
+        }
+        /* Style for discussion cases */
+        .discussion-case, .case-label {
+            margin-top: 0.8em;
+            padding-left: 15px;
+        }
+        .case-label {
+             font-weight: bold;
+             color: #0056b3;
+             border-left: none;
+             padding-left: 0;
+        }
+        .discussion-case > p, .discussion-case > ul {
+            margin-left: 10px;
+             border-left: 3px solid #007bff;
+             padding-left: 10px;
+        }
+         /* Specific notes/warnings */
+        .note {
+            font-style: italic;
+            color: #e85d04; /* Orange-like color */
+            margin: 10px 0;
+            padding: 5px 10px;
+            background-color: #fff3e0;
+            border-left: 3px solid #e85d04;
+        }
+        .pin-note::before {
+            content: "📌 ";
+            font-weight: bold;
+        }
+        .snake-note::before {
+            content: "🐍 ";
+            font-weight: bold;
+        }
+        .at-mention::before {
+            content: "☞ "; /* Using a pointer symbol */
+            font-weight: bold;
+            margin-right: 3px;
+        }
+        .at-mention {
+             font-style: italic;
+             color: #888;
+             margin-left: 1em;
+        }
+         .note-perso::before {
+            content: "📝 Note personnelle : ";
+            font-weight: bold;
+         }
+        .note-perso {
+            font-style: italic;
+            color: #555;
+            background-color: #eee;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        .warning-note {
+             color: #dc3545;
+             font-weight: bold;
+             background-color: #f8d7da;
+             border-left: 3px solid #dc3545;
+             padding: 5px 10px;
+             margin: 10px 0;
+         }
+         .warning-note::before {
+             content: "‼️ ";
+         }
+        /* Arrow for Gaussian elim etc */
+        .transform-arrow {
+            text-align: center;
+            margin: 0.5em 0;
+            color: #007bff;
+            font-size: 1.1em;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Chapitre 7: Espaces vectoriels</h1>
+
+    <div class="placeholder">Placeholder for: image0090190 (referenced as page 188)</div>
+
+    <p>Ce chapitre introduit la structure fondamentale d'espace vectoriel, ainsi que les notions clés associées : sous-espaces vectoriels, familles libres et génératrices, bases, dimension, et sommes directes.</p>
+
+    <h2>1. Reconnaissance d’un espace vectoriel</h2>
+    <p>Cette section vise à identifier si un ensemble donné, muni d'opérations usuelles, forme un espace vectoriel (ou plus souvent, un sous-espace vectoriel d'un espace connu comme $\mathbb{R}^n$, $\mathcal{M}_{n,p}(\mathbb{R})$, l'espace des fonctions, etc.). La méthode principale consiste à vérifier la définition d'un sous-espace vectoriel : non vide, stable par addition et par multiplication par un scalaire.</p>
+
+    <div class="exercice">
+        <h3>Exercice 7.1.1</h3>
+        <div class="boxed-objective">déterminer si un ensemble est un espace vectoriel ou non.</div>
+        <p>Dire si les ensembles de vecteurs suivants (sous-ensembles d'espaces vectoriels connus) sont des sous-espaces vectoriels. Justifier la réponse.</p>
+        <ol>
+            <li>$F_1 = \{ (x, y) \in \mathbb{R}^2 \mid x - 2y = 0 \}$</li>
+            <li>$F_2 = \{ (x, y) \in \mathbb{R}^2 \mid xy = 0 \}$</li>
+            <li>$F_3 = \{ (x, y, z) \in \mathbb{R}^3 \mid x - 2y + 3z = 0 \}$</li>
+            <li>$F_4 = \{ (x, y, z) \in \mathbb{R}^3 \mid x = 2y \text{ et } y = 2z \}$</li>
+            <li>$F_5 = \{ (x, y, z) \in \mathbb{R}^3 \mid 2x - y - 3z = 0 \text{ et } 3x - 2y - 4z = 0 \}$</li>
+            <li>$F_6 = \{ (x, y, z) \in \mathbb{R}^3 \mid x^2 + y - z = 0 \}$</li>
+            <li>$F_7 = \{ (x, y, z, t) \in \mathbb{R}^4 \mid 2x - y + z = 1 \text{ et } x + y + z = 1 \text{ et } 3x + 2z = 1 \}$</li>
+        </ol>
+        <!-- Link to correction added manually, assuming ID exists -->
+        <p><a href="#Exercice7.1.1c">Voir la correction</a></p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.1.2</h3>
+        <div class="boxed-objective">trouver une condition sur un ensemble dépendant d'un paramètre pour qu'il soit un espace vectoriel.</div>
+        <p>Déterminer le réel $a$ pour que l'ensemble $F$ suivant soit un sous-espace vectoriel de $\mathbb{R}^n$ :</p>
+        <ol>
+            <li>$F = \{ (x, y) \in \mathbb{R}^2 \mid (a + 1)x + (a - 1)y + (2a^3 - a^2 + 3a - 4) = 0 \}$</li>
+            <li>$F = \{ (x, y, z) \in \mathbb{R}^3 \mid ax + a^2y + a^3z - (a^3 - a^2 - 2a) = 0 \}$</li>
+        </ol>
+        (Indication : une condition nécessaire est que le vecteur nul appartienne à $F$).
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.1.3</h3>
+        <div class="boxed-objective">déterminer si des ensembles définis avec des matrices sont des espaces vectoriels ou non.</div>
+        <p>Parmi les ensembles suivants, quels sont ceux qui sont des sous-espaces vectoriels de l'espace vectoriel ambiant ($\mathcal{M}_{2,1}(\mathbb{R})$ ou $\mathcal{M}_n(\mathbb{R})$) ?</p>
+        <ol>
+            <li>$F_1 = \left\{ \begin{pmatrix} x \\ y \end{pmatrix} \in \mathcal{M}_{2,1}(\mathbb{R}) \mid x^2 = y \right\}$</li>
+             <div class="placeholder">Placeholder for: image0090191 (referenced as page 189)</div>
+            <li>$F_2 = \{ M \in \mathcal{M}_{2,1}(\mathbb{R}) \mid \begin{pmatrix} 1 & 2 \\ -3 & 2 \end{pmatrix} M = 2M \}$ (Ensemble des vecteurs propres associés à la valeur propre 2).</li>
+            <li>$F_3 = \{ M \in \mathcal{M}_n(\mathbb{R}) \mid M \text{ est symétrique} \}$ ($^tM = M$).</li>
+            <li>$F_4 = \{ M \in \mathcal{M}_{3,1}(\mathbb{R}) \mid AM = B_0 \}$ où $A \in \mathcal{M}_3(\mathbb{R})$ est donnée et $B_0 = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}$.</li>
+            <li>$F_5 = \{ M \in \mathcal{M}_{3,1}(\mathbb{R}) \mid {}^tM A M = 0 \}$ où $A = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}$. (Forme quadratique nulle).</li>
+            <li>$F_6 = \{ M \in \mathcal{M}_{4,1}(\mathbb{R}) \mid A^3M + 2A^2M + M = 0 \}$ où $A \in \mathcal{M}_4(\mathbb{R})$ est donnée. (Noyau d'un polynôme en A appliqué à M).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.1.4</h3>
+        <p class="objectif">Condition nécessaire et suffisante pour que l'union de deux sous-espaces vectoriels soit un sous-espace vectoriel.</p>
+        <p>Soit $E$ un espace vectoriel et $F, G$ deux sous-espaces vectoriels de $E$. Montrer l'équivalence :</p>
+        <p>$F \cup G$ est un sous-espace vectoriel de $E \Longleftrightarrow (F \subset G \text{ ou } G \subset F)$</p>
+        (Indication pour $\implies$ : raisonner par l'absurde. Si $F \not\subset G$ et $G \not\subset F$, prendre $x \in F \setminus G$ et $y \in G \setminus F$. Où se trouve $x+y$ ?).
+        <div class="placeholder">Placeholder for: image0090192 (referenced as page 190)</div>
+    </div>
+
+    <h2>2. Familles et bases</h2>
+    <p>Cette section se concentre sur les concepts de familles génératrices, familles libres, bases et dimension d'un espace vectoriel (ou sous-espace vectoriel).</p>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.1</h3>
+        <p class="objectif">Extraire une base d’un espace vectoriel.</p>
+        <p>Justifier que les ensembles suivants sont des sous-espaces vectoriels et en donner une base (et la dimension) :</p>
+        <ol>
+            <li>$F_1 = \left\{ \begin{pmatrix} a & a \\ b & a \end{pmatrix} \mid a, b \in \mathbb{R} \right\} \subset \mathcal{M}_2(\mathbb{R})$</li>
+            <li>$F_2 = \{ M \in \mathcal{M}_{3,1}(\mathbb{R}) \mid AM = M \}$ où $A = \begin{pmatrix} 1 & 2 & 3 \\ -1 & 0 & 1 \\ 0 & 1 & 3 \end{pmatrix}$. (Espace propre pour la valeur propre 1).</li>
+            <li>$F_3 = \{ (x, y, z) \in \mathbb{R}^3 \mid x - 2y - z = 0 \}$ (Plan vectoriel).</li>
+            <li>$F_4 = \{ (x, y, z, t) \in \mathbb{R}^4 \mid x - y + 2z + 2t = 0 \text{ et } 3x - 3y + t = 0 \}$ (Intersection de deux hyperplans).</li>
+            <li>$F_5 = \{ (x, y, z, t) \in \mathbb{R}^4 \mid -3x + y + z + t = 0, x - 3y + z + t = 0, x + y - 3z + t = 0, x + y + z - 3t = 0 \}$ (Solution d'un système linéaire homogène).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.2</h3>
+        <p class="objectif">Décomposer une matrice dans une base.</p>
+        <p>Soit $A = \begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}$, $B = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$, $C = \begin{pmatrix} 0 & 1 \\ 1 & 1 \end{pmatrix}$, $D = \begin{pmatrix} 1 & 0 \\ 1 & 1 \end{pmatrix}$.</p>
+        <ol>
+            <li>Montrer que $\mathcal{B} = (A, B, C, D)$ est une base de $\mathcal{M}_2(\mathbb{R})$. (Indication : Montrer que la famille est libre et utiliser la dimension de l'espace).</li>
+            <li>Quelles sont, dans cette base $\mathcal{B}$, les coordonnées de la matrice identité $I = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ ? (Résoudre $I = aA+bB+cC+dD$).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090193 (referenced as page 191)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.3</h3>
+        <p class="objectif">Décrire les solutions d’un système linéaire homogène à l’aide de la notation Vect.</p>
+        <p>Résoudre les systèmes linéaires homogènes suivants et écrire l'ensemble des solutions sous la forme $\text{Vect}(\dots)$ (c'est-à-dire comme le sous-espace vectoriel engendré par une famille de vecteurs) :</p>
+        <ol>
+            <li> $$ \left\{\begin{array}{l} x + 2y + z + t = 0 \\ -2x + y + 3t = 0 \\ x - 3y - 2z - t = 0 \end{array}\right. $$ </li>
+            <li> $$ \left\{\begin{array}{l} 2x + z = 0 \\ x + y + z = 0 \\ x - y = 0 \end{array}\right. $$ </li>
+            <li> $$ \left\{\begin{array}{l} 3x - 2y + z - 2t = 0 \\ 6x - y - z - t = 0 \\ -3x - 4y + 5z - 4t = 0 \\ 6x - 7y + 5z - 7t = 0 \end{array}\right. $$ </li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.4</h3>
+        <p class="objectif">Montrer l’égalité entre deux sous-espaces vectoriels engendrés.</p>
+        <ol>
+            <li>Dans $\mathbb{R}^3$, montrer que les vecteurs $v_1 = (2, 3, -1)$ et $v_2 = (1, -1, -2)$ engendrent le même sous-espace vectoriel que $w_1 = (3, 7, 0)$ et $w_2 = (5, 0, -7)$. (Indication : Montrer $\text{Vect}(w_1, w_2) \subset \text{Vect}(v_1, v_2)$ et utiliser les dimensions).</li>
+            <li>Dans $\mathbb{R}^3$, on considère les vecteurs $u = (1, 1, 2)$, $v = (5, 2, -11)$ et $w = (-1, 0, 5)$. Montrer que $v$ est combinaison linéaire de $u$ et $w$. En déduire que $\text{Vect}(u, w) = \text{Vect}(u, v, w)$.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.5</h3>
+        <p class="objectif">Déterminer si une famille est génératrice ou non.</p>
+        <ol>
+            <li>Montrer que $\mathcal{F}_1 = \{(1, 1), (1, 2), (1, 0)\}$ est une famille génératrice de $\mathbb{R}^2$. Est-ce une base ?</li>
+            <li>Montrer que la famille $\mathcal{F}_2 = \{(2, 1, -4), (3, -1, 2), (1, -2, 6)\}$ n’est pas génératrice de $\mathbb{R}^3$. (Indication : Vérifier si la famille est libre. Quel est le rang de la famille ?).</li>
+             <div class="placeholder">Placeholder for: image0090194 (referenced as page 192)</div>
+            <li>La famille $\mathcal{F}_3 = (A, B, C)$ où $A, B, C$ sont les matrices données dans l'énoncé est-elle génératrice dans $\mathcal{M}_3(\mathbb{R})$ ? (Comparer le cardinal de la famille à la dimension de l'espace).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.6</h3>
+        <div class="boxed-objective">Étudier la liberté d'une famille de vecteurs.</div>
+        <p>Étudier la liberté des familles suivantes dans $\mathbb{R}^n$ :</p>
+        <ol>
+            <li>$\mathcal{F}_1 = (v_1 = (5, 2, -11), v_2 = (1, 1, 2), v_3 = (-1, 0, 6))$ dans $\mathbb{R}^3$.</li>
+            <li>$\mathcal{F}_2 = (v_1 = (1, 2, 3), v_2 = (3, 2, 1), v_3 = (7, 2, -3))$ dans $\mathbb{R}^3$.</li>
+            <li>$\mathcal{F}_3 = (v_1 = (1, -2, 1, 5), v_2 = (1, 1, 1, 1), v_3 = (3, -3, 2, -1), v_4 = (-6, 6, -3, 14))$ dans $\mathbb{R}^4$.</li>
+        </ol>
+         (Indication : Résoudre le système $\sum \lambda_i v_i = 0$. Si l'unique solution est $\lambda_i=0$ pour tout $i$, la famille est libre, sinon elle est liée).
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.7</h3>
+        <div class="boxed-objective">Justifier qu'une famille est une base et donner la décomposition d'un vecteur dans celle-ci.</div>
+        <p>On pose $v_1 = (1, 2, -1)$, $v_2 = (0, 2, 1)$ et $v_3 = (-1, 0, 3)$ dans $\mathbb{R}^3$.</p>
+        <ol>
+            <li>Montrer que la famille $\mathcal{B} = (v_1, v_2, v_3)$ est une base de $\mathbb{R}^3$. (Libre + cardinal = dimension).</li>
+            <li>Décomposer le vecteur $v = (4, -8, 1)$ dans cette base $\mathcal{B}$, c'est-à-dire trouver les coordonnées $(a,b,c)$ de $v$ dans $\mathcal{B}$ telles que $v = a v_1 + b v_2 + c v_3$.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.8</h3>
+        <div class="boxed-objective">Étudier la liberté d'une famille de fonctions ou de polynômes.</div>
+        <p>Étudier la liberté des familles suivantes dans l'espace vectoriel approprié (fonctions réelles, polynômes) :</p>
+        <ol>
+            <li>$\mathcal{F}_1 = (f_1(x) = e^x, f_2(x) = xe^x, f_3(x) = e^{-x}, f_4(x) = xe^{-x})$ dans $\mathcal{F}(\mathbb{R}, \mathbb{R})$. (Indication : Partir de $\sum \lambda_i f_i = 0$. Évaluer en des points, ou multiplier par $e^{-x}, e^x$ et prendre des limites).</li>
+            <li>$\mathcal{F}_2 = (f_{a_i}: x \mapsto e^{a_i x})_{1 \leq i \leq n}$ où les réels $a_i$ sont deux à deux distincts ($a_1 < a_2 < \cdots < a_n$). (Indication : Récurrence ou factoriser par $e^{a_n x}$ et limite en $+\infty$).</li>
+            <li>$\mathcal{F}_3 = (P_1(X) = 2X^2 - 3, P_2(X) = -X + 1, P_3(X) = -X^4 - 3X^2 - 2X + 1)$ dans $\mathbb{R}[X]$. (Comparer les degrés).</li>
+            <li>$\mathcal{F}_4 = (P_1(X) = 2X - 1, P_2(X) = -X^2, P_3(X) = 3X^2 - 2X + 1)$ dans $\mathbb{R}_2[X]$. (Résoudre $\sum \lambda_i P_i = 0$).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090195 (referenced as page 193)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.9</h3>
+        <div class="boxed-objective">Étudier la liberté d'une famille donnée dépendant d'un paramètre réel.</div>
+        <p>Discuter, suivant la valeur de $m \in \mathbb{R}$, de la liberté de la famille de vecteurs de $\mathbb{R}^3$ :</p>
+        <p>$\mathcal{F}_m = (v_1 = (1,1,m), v_2 = (1,m,1), v_3 = (m,1,1))$</p>
+        (Indication : Résoudre $\sum \lambda_i v_i = 0$. Discuter selon $m$ si l'unique solution est $\lambda_1=\lambda_2=\lambda_3=0$. Utiliser le pivot de Gauss ou le déterminant).
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.10</h3>
+        <div class="boxed-objective">Savoir décrire à l'aide d'équations un espace vectoriel engendré.</div>
+        <p>Soit les matrices de $\mathcal{M}_{2}(\mathbb{R})$ :</p>
+        $A = \begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}$, $B = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$, $C = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix}$,
+        $D = \begin{pmatrix} 1 & 0 \\ 2 & 0 \end{pmatrix}$, $E = \begin{pmatrix} 0 & -1 \\ 1 & 1 \end{pmatrix}$, $F = \begin{pmatrix} 1 & 2 \\ 0 & 1 \end{pmatrix}$.
+        <ol>
+            <li>Montrer l'égalité des sous-espaces vectoriels engendrés : $\text{Vect}(A, B, C) = \text{Vect}(D, E, F)$.</li>
+            <li>Donner une ou plusieurs équations caractérisant les matrices $M = \begin{pmatrix} x & y \\ z & t \end{pmatrix}$ appartenant à cet espace.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.11</h3>
+        <div class="boxed-objective">Détermination d'une base et de la dimension d'une intersection de sous-espaces vectoriels.</div>
+        <p>On considère dans $\mathbb{R}^3$ les vecteurs $v_1 = (2, 1, 0)$, $v_2 = (-1, 0, 1)$ et $v_3 = (4, 1, -2)$ et les sous-espaces $F = \text{Vect}(v_1, v_2, v_3)$ et $G = \{(0, \alpha + \beta, -\beta) \mid \alpha, \beta \in \mathbb{R}\}$.</p>
+        <ol>
+            <li>Déterminer une base et la dimension de $F$.</li>
+            <li>Déterminer une base et la dimension de $G$.</li>
+            <li>Trouver une base et la dimension de $F \cap G$. (Indication : Trouver des équations cartésiennes pour $F$ et $G$, puis résoudre le système).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090196 (referenced as page 194)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.12</h3>
+        <p class="objectif">Déterminer une base d’un espace vectoriel et d’une intersection d’espaces vectoriels.</p>
+        <ol>
+            <li>On considère les vecteurs $v_1=(1,-1,2,1)$, $v_2=(2,1,0,1)$, $v_3=(3,3,-2,1)$ de $\mathbb{R}^4$. On note $E_1 = \text{Vect}(v_1, v_2, v_3)$. Déterminer une base (extraite) de $E_1$ et sa dimension.</li>
+            <li>Soit $E_2=\{(x, y, z, t) \in \mathbb{R}^{4} \mid x-y+z-2t=0 \text{ et } x-z-t=0\}$. Montrer que $E_2$ est un sous-espace vectoriel de $\mathbb{R}^4$ et en donner une base (en résolvant le système).</li>
+            <li>Trouver une base et la dimension de $E_1 \cap E_2$. (Exprimer un vecteur de $E_1$ et imposer qu'il vérifie les équations de $E_2$).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.13</h3>
+        <p class="objectif">Partir d’une base d’un espace vectoriel pour en déterminer une équation (ou un système d’équations) le caractérisant.</p>
+        <ol>
+            <li>Soit $F = \text{Vect}(v_1, v_2, v_3)$ dans $\mathbb{R}^3$ où $v_1=(3,1,2)$, $v_2=(5,-1,-4)$, $v_3=(-1,5,14)$.
+            (a) Déterminer la dimension et une base de $F$.
+            (b) En déduire une équation cartésienne de $F$ (relation liant $x,y,z$ pour $(x,y,z) \in F$).</li>
+            <li>Soit $F = \text{Vect}(v_1, v_2)$ dans $\mathbb{R}^4$ avec $v_1=(-1,1,1,-1)$, $v_2=(1,2,3,4)$. Former un système d’équations cartésiennes définissant $F$. (Un vecteur $(x,y,z,t)$ est dans $F$ ssi la famille $(v_1, v_2, (x,y,z,t))$ est liée).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.14</h3>
+        <p class="objectif">Étude de familles créées à partir d’une famille libre.</p>
+        <p>Soit $(v_1, \ldots, v_k)$ une famille libre de $\mathbb{R}^n$ ($k \le n$). Étudier la liberté des familles suivantes :</p>
+        <ol>
+            <li>$\mathcal{F}_1 = (v_1, v_1+v_2, v_1+v_2+v_3, \ldots, v_1+\cdots+v_k)$</li>
+            <li>$\mathcal{F}_2 = (v_1-v_2, v_2-v_3, \ldots, v_{k-1}-v_k, v_k-v_1)$</li>
+            <li>$\mathcal{F}_3 = (v_1+v_2, v_2+v_3, \ldots, v_{k-1}+v_k, v_k+v_1)$ (Discuter selon la parité de $k$).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090197 (referenced as page 195)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.15</h3>
+        <p class="objectif">Inversion d'une relation entre deux bases.</p>
+        <p>On note $\mathcal{E} = (e_1, \ldots, e_n)$ la base canonique de $\mathbb{R}^n$ ($n \geq 2$).
+        On pose, pour $k \in \llbracket 1, n \rrbracket, v_k = (\sum_{i=1}^{n} e_i) - e_k$. (Donc $v_k$ a des 1 partout sauf 0 à la k-ème position ? Non, $\sum e_i$ est le vecteur $(1,\dots,1)$. $v_k$ a des 1 partout sauf à la k-ème coordonnée qui vaut 1-1=0 ? Non plus. $v_k = e_1+\dots+e_{k-1}+e_{k+1}+\dots+e_n$).</p>
+        <ol>
+            <li>Montrer que la famille $\mathcal{V} = (v_1, \ldots, v_n)$ est une base de $\mathbb{R}^n$.</li>
+            <li>Décomposer chaque vecteur $e_i$ de la base canonique dans la base $\mathcal{V}$. (Chercher $e_i = \sum \lambda_k v_k$. Indication : calculer $\sum v_k$).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.2.16</h3>
+        <p class="objectif">Étude d'un hyperplan.</p>
+        <p>On note $E = \{ (x_1, \ldots, x_n) \in \mathbb{R}^n \mid \sum_{i=1}^{n} x_i = 0 \}$ (hyperplan passant par l'origine).</p>
+        <ol>
+            <li>Vérifier que $E$ est un sous-espace vectoriel de $\mathbb{R}^n$.</li>
+            <li>Donner une base de $E$. En déduire la dimension de $E$. (Exprimer $x_n$ en fonction des autres, par exemple).</li>
+            <li>Soit $w = (y_1, \ldots, y_n) \in \mathbb{R}^n$. Donner une condition nécessaire et suffisante sur $w$ (en fonction de ses coordonnées) pour que $\mathcal{S} = (\text{base de } E, w)$ soit une base de $\mathbb{R}^n$. (Quand une famille concaténée est-elle une base ?).</li>
+            <li>Cas particulier : $w = (1, \ldots, 1)$. Montrer que $\mathcal{S}$ est une base. Décomposer un vecteur quelconque $x = (x_1, \ldots, x_n)$ dans cette base $\mathcal{S}$. (Chercher $x = (\sum \lambda_i v_i) + \lambda_n w$. Utiliser $\sum x_i$).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090198 (referenced as page 196)</div>
+    </div>
+
+    <h2>3. Espaces vectoriels de matrices</h2>
+
+    <div class="exercice">
+        <h3>Exercice 7.3.1</h3>
+        <p class="objectif">Comparaison de deux sous-espaces vectoriels de matrices ; étude du cas d'égalité.</p>
+        <p>On considère pour $A \in \mathcal{M}_3(\mathbb{R})$ les ensembles :</p>
+        $E_1(A) = \{M \in \mathcal{M}_3(\mathbb{R}) \mid AM = M\}$ (espace propre associé à la valeur propre 1).
+        $E_2(A) = \{M \in \mathcal{M}_3(\mathbb{R}) \mid A^2M = AM\}$.
+        <ol>
+            <li>Montrer que $E_1(A)$ et $E_2(A)$ sont des sous-espaces vectoriels de $\mathcal{M}_3(\mathbb{R})$.</li>
+            <li>(a) Montrer que $E_1(A) \subset E_2(A)$.
+            (b) Montrer que si $A$ est inversible, alors $E_1(A) = E_2(A)$.</li>
+            <li>(a) Montrer que si $A - I$ est inversible (i.e. 1 n'est pas valeur propre), alors $E_1(A) = \{0\}$.
+            (b) Application : Soit $B = \begin{pmatrix} -1 & 1 & 0 \\ 0 & -1 & 1 \\ 0 & 0 & 2 \end{pmatrix}$. Déterminer $E_1(B)$ et $E_2(B)$. Sont-ils égaux ?</li>
+        </ol>
+        <p class="at-mention">(Inspiré EM Lyon)</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.3.2</h3>
+        <p class="objectif">Trouver une condition nécessaire et suffisante pour qu'une matrice quelconque appartienne à un espace vectoriel.</p>
+        <p>On considère l'ensemble : $F = \{M \in \mathcal{M}_2(\mathbb{R}) \mid JM + MJ = 0\}$, où $J = \begin{pmatrix} 1 & 1 \\ 1 & 1 \end{pmatrix}$.</p>
+        <ol>
+            <li>Montrer que $F$ est un sous-espace vectoriel de $\mathcal{M}_2(\mathbb{R})$.</li>
+            <li>Déterminer une condition nécessaire et suffisante sur les coefficients $x, y, z, t$ pour que $M = \begin{pmatrix} x & y \\ z & t \end{pmatrix}$ appartienne à $F$. En déduire une base de $F$.</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090199 (referenced as page 197)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.3.3</h3>
+        <p class="objectif">Application de l'étude d'un sev de matrices à la résolution d'équations matricielles.</p>
+        <p>On pose $J = \begin{pmatrix} 1 & 2 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}$ et on note $F = \text{Vect}(I, J)$.</p>
+        <ol>
+            <li>Déterminer la dimension de $F$ et une base de $F$.</li>
+            <li>Trouver une relation simple entre $J^2, J, I$.</li>
+            <li>Résoudre dans $F$ (c-à-d chercher $M = aI+bJ \in F$) les équations suivantes : (a) $M^2 = I$, (b) $M^2 = J$.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.3.4</h3>
+        <p class="objectif">Étude du commutant d'une matrice diagonalisable.</p>
+        <p>Soit les matrices :</p>
+        $A = \begin{pmatrix} 1/2 & 3/2 & -3/2 \\ 0 & 2 & 0 \\ -3/2 & 3/2 & 1/2 \end{pmatrix}$,
+        $D = \begin{pmatrix} 2 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & -1 \end{pmatrix}$,
+        $P = \begin{pmatrix} 0 & 1 & 0 \\ 0 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}$.
+        <ol>
+            <li>Déterminer une base et la dimension de l'espace vectoriel $C(D) = \{M \in \mathcal{M}_3(\mathbb{R}) \mid DM = MD\}$ (commutant de D).</li>
+            <li>Montrer que $P$ est inversible et vérifier que $A = PDP^{-1}$.</li>
+            <li>On note $C(A) = \{N \in \mathcal{M}_3(\mathbb{R}) \mid AN = NA\}$ (commutant de A). Montrer l'équivalence : $N \in C(A) \Longleftrightarrow P^{-1}NP \in C(D)$.</li>
+            <li>En déduire une base et la dimension de $C(A)$.</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090200 (referenced as page 198)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.3.5</h3>
+        <div class="boxed-objective">Étude de stabilités dans un espace vectoriel de matrices.</div>
+        <p>On note les matrices :</p>
+        $$ J = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 1 \\ 0 & 1 & 0 \end{pmatrix}, \quad K = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \end{pmatrix}, \quad P = \begin{pmatrix} 1 & 1 & 1 \\ \sqrt{2} & -\sqrt{2} & 0 \\ 1 & 1 & -1 \end{pmatrix}. $$
+        <ol>
+            <li>Montrer que $P$ est inversible et déterminer $P^{-1}$. Calculer $P^{-1} J P$ et $P^{-1} K P$. (Ces matrices devraient être diagonales).</li>
+            <li>(a) Montrer que la famille $(I, J, K)$ est une famille libre de $\mathcal{M}_3(\mathbb{R})$.
+            (b) On note $E = \text{Vect}(I, J, K)$. Quelle est la dimension de $E$ ?
+            (c) Calculer $J^2, K^2, JK, KJ$ et les exprimer en fonction de $I, J, K$. En déduire que $E$ est stable par produit matriciel (c'est une sous-algèbre de $\mathcal{M}_3(\mathbb{R})$).
+            (d) Pour $T = xI + yJ + zK \in E$, calculer $P^{-1} T P$. (Utiliser la linéarité et les résultats de la question 1).
+            (e) En déduire une condition nécessaire et suffisante sur $x, y, z$ pour que $T$ soit inversible. Quand $T$ est inversible, exprimer $T^{-1}$ en fonction de $I, J, K$. (Utiliser le fait que $T$ est inversible ssi $P^{-1}TP$ l'est, et l'inverse d'une matrice diagonale).</li>
+            <li>Montrer que $J^n \in E$ pour tout $n \ge 1$. Trouver une relation de récurrence sur les coordonnées $(a_n, b_n, c_n)$ de $J^n = a_n I + b_n J + c_n K$. Résoudre ces récurrences pour obtenir la décomposition de $J^n$.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.3.6</h3>
+        <div class="boxed-objective">Recherche de bases sous contrainte.</div>
+        <ol>
+            <li>Existe-t-il une base de $\mathcal{M}_2(\mathbb{R})$ formée uniquement de matrices inversibles ? (Tester des matrices simples).</li>
+            <li>Existe-t-il une base de $\mathcal{M}_2(\mathbb{R})$ formée uniquement de matrices diagonalisables sur $\mathbb{R}$ ? (Tester des matrices simples).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090201 (referenced as page 199)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.3.7</h3>
+        <div class="boxed-objective">Étudier des conditions sur des paramètres pour que les éléments matriciels d’un espace vectoriel soient inversibles.</div>
+        <p>Soit $H = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix}$ et $N = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{pmatrix}$.</p>
+        <p>On associe à $(a, b, c) \in \mathbb{R}^3$ la matrice $C_{(a,b,c)} = aI + bH + cN$. On note $F$ l’ensemble de ces matrices.</p>
+        <ol>
+            <li>Montrer que $F$ est un sous-espace vectoriel de $\mathcal{M}_3(\mathbb{R})$. Préciser une base de $F$.</li>
+            <li>Expliciter la matrice $C_{(a,b,c)}$. Préciser les conditions sur $a, b, c$ pour que $C_{(a,b,c)}$ soit inversible. Déterminer, quand elle existe, sa matrice inverse (qui doit être dans $F$).</li>
+        </ol>
+        <p class="at-mention">(Inspiré ESCP)</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.3.8</h3>
+        <div class="boxed-objective" style="font-weight: bold;">Objectif : étude des éléments d’un ensemble de matrices définies par 2 paramètres.</div>
+        <p>Soit $E$ l’ensemble des matrices $M_{a,b} = \begin{pmatrix} a & b & b \\ b & a & b \\ b & b & a \end{pmatrix}$ où $(a, b) \in \mathbb{R}^2$.</p>
+        <ol>
+            <li>Montrer que $E$ est un espace vectoriel réel de dimension 2. Calculer le produit $M_{a,b}M_{a',b'}$ et vérifier qu'il appartient à $E$.</li>
+            <li>Pour quelles valeurs de $(a,b)$ la matrice $M_{a,b}$ n'est-elle pas inversible ? (Calculer le déterminant ou trouver des vecteurs non nuls dans le noyau. Indication: tester $X=(1,1,1)$ et $X=(1,-1,0)$ ou $X=(1,0,-1)$).</li>
+            <li>Dans le cas où $M_{a,b}$ est inversible, calculer son inverse et montrer qu’il appartient à $E$.</li>
+            <li>Calculer $M_{a,b}^n$ pour $n \in \mathbb{N}^*$. (Comme Exercice 7.3.13).</li>
+        </ol>
+        <p class="at-mention">(Oral HEC)</p>
+        <div class="placeholder">Placeholder for: image0090202 (referenced as page 200)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.3.9</h3>
+        <p class="objectif">Recherche d’une condition nécessaire et suffisante sur des paramètres définissant une matrice pour qu’elle soit inversible.</p>
+        <p>On considère l’ensemble $E$ des matrices $M(a, b, c) = \begin{pmatrix} a & b & -3c \\ b & a & 3c \\ b & 0 & a + 3c \end{pmatrix}$ ($a,b,c \in \mathbb{R}$).</p>
+        <ol>
+            <li>Démontrer que $E$ est un espace vectoriel et en déterminer une base.</li>
+            <li>Déterminer une condition nécessaire et suffisante sur $a, b, c$ pour que $M(a, b, c)$ soit inversible. (Calculer le déterminant ou utiliser le pivot de Gauss).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090203 (referenced as page 201)</div>
+    </div>
+
+    <h2>4. Sous-espaces supplémentaires</h2>
+    <p>Deux sous-espaces vectoriels $F$ et $G$ de $E$ sont supplémentaires ($E=F\oplus G$) si tout vecteur de $E$ s'écrit de manière unique comme somme d'un vecteur de $F$ et d'un vecteur de $G$, ce qui équivaut à $E=F+G$ et $F \cap G = \{0\}$.</p>
+
+    <div class="exercice">
+        <h3>Exercice 7.4.1</h3>
+        <p class="objectif">Déterminer des supplémentaires d’un sev.</p>
+        <p>Soit l’ensemble $F = \{ (x, y, z, t) \in \mathbb{R}^4 \mid 2x - y + z = 0 \}$.</p>
+        <ol>
+            <li>Vérifier que $F$ est un sous-espace vectoriel de $\mathbb{R}^4$, préciser une base de $F$ et sa dimension.</li>
+            <li>Donner (au moins) deux exemples de sous-espaces vectoriels $G_1, G_2$ qui soient supplémentaires de $F$ dans $\mathbb{R}^4$. (Quelle doit être la dimension d'un supplémentaire ? Comment s'assurer que l'intersection est nulle ?).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.4.2</h3>
+        <p class="objectif">Sous-espaces supplémentaires dans les espaces de suites.</p>
+        <p>On considère l'espace vectoriel $\mathcal{S}$ des suites réelles $(u_n)_{n \in \mathbb{N}}$. Soient les sous-ensembles :</p>
+        <p>$C = \{ (u_n)_n \in \mathcal{S} \mid (u_n)_n \text{ converge} \}$</p>
+        <p>$N = \{ (u_n)_n \in \mathcal{S} \mid \lim_{n \to +\infty} u_n = 0 \}$ (suites convergeant vers 0)</p>
+        <p>$K = \{ (u_n)_n \in \mathcal{S} \mid (u_n)_n \text{ est constante} \}$</p>
+        <p>Montrer que $N$ et $K$ sont des sous-espaces vectoriels de $C$, et qu'ils sont supplémentaires dans $C$, i.e. $C = N \oplus K$. (Montrer $N+K=C$ et $N \cap K = \{0\}$).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 7.4.3</h3>
+        <p class="objectif">Prouver que 2 sev sont supplémentaires dans $\mathbb{R}^n$.</p>
+        <p>Soit $F = \{ (x_1, \dots, x_n) \in \mathbb{R}^n \mid x_1 + \dots + x_n = 0 \}$ (l'hyperplan d'équation $\sum x_i = 0$) et $u = (1, \dots, 1) \in \mathbb{R}^n$. Montrer que $F$ et $G=\text{Vect}(u)$ (la droite vectorielle dirigée par $u$) sont supplémentaires dans $\mathbb{R}^n$ :</p>
+        $$ \mathbb{R}^n = F \oplus G $$
+        (Montrer $F \cap G = \{0\}$ et $\dim F + \dim G = \dim \mathbb{R}^n$).
+        <div class="placeholder">Placeholder for: image0090204 (referenced as page 202)</div>
+    </div>
+
+    <!-- Correction Start -->
+    <div class="warning-note">Les pages 202 et 203 contenant le début des corrections (7.1.1) sont manquantes dans le document source.</div>
+
+    <div class="correction">
+        <h3 id="Exercice7.1.1c">Exercice 7.1.1c (Partiel)</h3>
+        <p> (Correction basée sur le texte après la coupure)</p>
+        <ol start="5">
+        <li>$F_5 = \{ (x, y, z) \in \mathbb{R}^3 \mid 2x - y - 3z = 0 \text{ et } 3x - 2y - 4z = 0 \}$.
+         C'est l'ensemble des solutions d'un système linéaire homogène. C'est donc un sous-espace vectoriel de $\mathbb{R}^3$.
+         Résolvons le système :
+         $$ \begin{cases} 2x - y - 3z = 0 \\ 3x - 2y - 4z = 0 \end{cases} \xrightarrow{L_2 \leftarrow 2L_2 - 3L_1} \begin{cases} 2x - y - 3z = 0 \\ (4y-6y) + (-8z - (-9z)) = 0 \implies -y + z = 0 \end{cases} $$
+         Non, $(4y-6y)$ est $(4y-3y)=y$. Non plus. $2(3x-2y-4z) - 3(2x-y-3z) = (6x-4y-8z) - (6x-3y-9z) = -y+z = 0$.
+         Le système équivalent est $\begin{cases} 2x - y - 3z = 0 \\ -y + z = 0 \end{cases}$.
+         La deuxième équation donne $y=z$. La première donne $2x - z - 3z = 0 \implies 2x = 4z \implies x = 2z$.
+         Les solutions sont de la forme $(2z, z, z)$ pour $z \in \mathbb{R}$.
+         $F_5 = \{ (2z, z, z) \mid z \in \mathbb{R} \} = \{ z(2, 1, 1) \mid z \in \mathbb{R} \} = \text{Vect}((2,1,1))$.
+         C'est bien un sous-espace vectoriel (la droite vectorielle dirigée par $(2,1,1)$).
+        </li>
+        <li>$F_6 = \{ (x, y, z) \in \mathbb{R}^3 \mid x^2 + y - z = 0 \}$.
+        Le vecteur nul $(0,0,0)$ appartient à $F_6$ car $0^2+0-0=0$.
+        Soit $u=(1, 0, 1)$. $1^2+0-1=0$, donc $u \in F_6$.
+        Soit $v=(2, 0, 4)$. $2^2+0-4=0$, donc $v \in F_6$.
+        Regardons $u+v = (3, 0, 5)$. Vérifions si $u+v \in F_6$.
+        $3^2 + 0 - 5 = 9 - 5 = 4 \neq 0$. Donc $u+v \notin F_6$.
+        $F_6$ n'est pas stable par addition. Ce n'est pas un espace vectoriel.
+        (La correction utilise $(1,1,2) \in F_6$. $1^2+1-2=0$. OK. $2(1,1,2)=(2,2,4)$. $2^2+2-4=4+2-4=2 \neq 0$. Non stable par multiplication scalaire non plus).
+        </li>
+        <li>$F_7 = \{ (x, y, z, t) \in \mathbb{R}^4 \mid 2x - y + z = 1 \text{ et } \dots \}$.
+        Le vecteur nul $(0,0,0,0)$ ne vérifie pas les équations (car le second membre est 1).
+        Un espace vectoriel doit contenir le vecteur nul.
+        Donc $F_7$ n'est pas un espace vectoriel.
+        </li>
+        </ol>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 7.1.2c</h3>
+        <p>Pour que $F$ soit un sous-espace vectoriel, il est nécessaire que le vecteur nul $0$ appartienne à $F$.
+        Dans $\mathbb{R}^n$, le vecteur nul est $(0, \dots, 0)$.
+        L'équation définissant $F$ est de la forme $\text{ExpressionLinéaire}(x_1, \dots) + \text{Constante} = 0$.
+        Pour que $(0, \dots, 0)$ appartienne à $F$, il faut que $\text{ExpressionLinéaire}(0, \dots) + \text{Constante} = 0$.
+        Comme $\text{ExpressionLinéaire}(0, \dots) = 0$, il faut nécessairement que $\text{Constante} = 0$.</p>
+        <ol>
+            <li>$F \subset \mathbb{R}^2$. L'équation est $(a + 1)x + (a - 1)y + C(a) = 0$, où $C(a) = 2a^3 - a^2 + 3a - 4$.
+            Condition nécessaire : $C(a)=0$.
+            $2a^3 - a^2 + 3a - 4 = 0$.
+            On teste des racines évidentes : $a=1 \implies 2(1)^3 - 1^2 + 3(1) - 4 = 2 - 1 + 3 - 4 = 0$. Donc $a=1$ est racine.
+            On peut factoriser par $(a-1)$. On divise $2a^3 - a^2 + 3a - 4$ par $(a-1)$.
+            On trouve $2a^3 - a^2 + 3a - 4 = (a-1)(2a^2 + a + 4)$.
+            Le trinôme $2a^2+a+4$ a pour discriminant $\Delta = 1^2 - 4(2)(4) = 1 - 32 = -31 < 0$. Il n'a pas de racines réelles.
+            La seule racine réelle de $C(a)=0$ est $a=1$.
+            La seule valeur possible pour $a$ est $a=1$.
+            Réciproquement, si $a=1$, l'équation devient $(1+1)x + (1-1)y + 0 = 0$, soit $2x = 0$, ou $x=0$.
+            $F = \{ (x,y) \in \mathbb{R}^2 \mid x=0 \}$. C'est l'axe des ordonnées. C'est bien un sous-espace vectoriel de $\mathbb{R}^2$ (engendré par $(0,1)$).
+            Conclusion : $F$ est un sev $\iff a=1$.
+            </li>
+            <li>$F \subset \mathbb{R}^3$. L'équation est $ax + a^2y + a^3z - C(a) = 0$, où $C(a) = a^3 - a^2 - 2a$.
+            Condition nécessaire : $C(a)=0$.
+            $a^3 - a^2 - 2a = 0 \iff a(a^2 - a - 2) = 0$.
+            Le trinôme $a^2-a-2$ a pour racines $a = \frac{1 \pm \sqrt{(-1)^2 - 4(1)(-2)}}{2} = \frac{1 \pm \sqrt{1+8}}{2} = \frac{1 \pm 3}{2}$. Racines : $a=2$ et $a=-1$.
+            Les valeurs possibles pour $a$ sont $0, -1, 2$.
+            Réciproquement, il faut vérifier si pour ces valeurs, $F$ est un sev.
+            Si $a=0$, l'équation est $0x+0y+0z - 0 = 0$, soit $0=0$. Cette équation est toujours vérifiée. $F = \mathbb{R}^3$. $\mathbb{R}^3$ est un ev. OK.
+            Si $a=-1$, l'équation est $(-1)x + (-1)^2y + (-1)^3z - 0 = 0$, soit $-x+y-z=0$. C'est l'équation d'un plan vectoriel passant par l'origine. C'est un sev. OK.
+            Si $a=2$, l'équation est $2x + 2^2y + 2^3z - 0 = 0$, soit $2x+4y+8z=0$ (ou $x+2y+4z=0$). C'est l'équation d'un plan vectoriel passant par l'origine. C'est un sev. OK.
+            Conclusion : $F$ est un sev $\iff a \in \{-1, 0, 2\}$.
+             <div class="placeholder">Placeholder for: image0090205 (referenced as page 205)</div>
+            (Note: La correction indique $F=\{0\}$ pour $a=0$, ce qui est faux. $F=\mathbb{R}^3$ pour $a=0$).
+            </li>
+        </ol>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 7.1.3c</h3>
+        <ol>
+            <li>$F_1 = \{ M=\begin{pmatrix} x \\ y \end{pmatrix} \mid x^2 = y \}$.
+            $0 = \begin{pmatrix} 0 \\ 0 \end{pmatrix}$ est dans $F_1$ car $0^2=0$.
+            Soit $M_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$. $1^2=1$, donc $M_1 \in F_1$.
+            Soit $M_2 = \begin{pmatrix} -1 \\ 1 \end{pmatrix}$. $(-1)^2=1$, donc $M_2 \in F_1$.
+            $M_1 + M_2 = \begin{pmatrix} 1+(-1) \\ 1+1 \end{pmatrix} = \begin{pmatrix} 0 \\ 2 \end{pmatrix}$.
+            Vérifions si $M_1+M_2 \in F_1$. $x=0, y=2$. $x^2 = 0^2 = 0$. Est-ce égal à $y=2$? Non.
+            $F_1$ n'est pas stable par addition. Ce n'est pas un sev.
+            </li>
+            <li>$F_2 = \{ M \in \mathcal{M}_{2,1}(\mathbb{R}) \mid AM = 2M \}$, où $A=\begin{pmatrix} 1 & 2 \\ -3 & 2 \end{pmatrix}$.
+            L'équation $AM=2M$ est équivalente à $AM - 2M = 0$, soit $(A-2I)M = 0$.
+            C'est l'ensemble des solutions d'un système linéaire homogène $(A-2I)M=0$. L'ensemble des solutions d'un système homogène est toujours un sous-espace vectoriel.
+            Donc $F_2$ est un sev de $\mathcal{M}_{2,1}(\mathbb{R})$.
+            (Vérification directe : $0 \in F_2$ car $A0=0=2(0)$. Si $M_1, M_2 \in F_2$, $A(\lambda M_1+M_2) = \lambda AM_1 + AM_2 = \lambda (2M_1) + 2M_2 = 2(\lambda M_1+M_2)$. Stable).
+            </li>
+            <li>$F_3 = \{ M \in \mathcal{M}_n(\mathbb{R}) \mid {}^tM = M \}$.
+            La matrice nulle $0$ vérifie ${}^t0 = 0$, donc $0 \in F_3$.
+            Soit $M_1, M_2 \in F_3$ (${}^tM_1=M_1, {}^tM_2=M_2$) et $\lambda \in \mathbb{R}$.
+            ${}^t(\lambda M_1 + M_2) = {}^t(\lambda M_1) + {}^tM_2 = \lambda {}^tM_1 + {}^tM_2 = \lambda M_1 + M_2$.
+            Donc $\lambda M_1 + M_2$ est symétrique. $F_3$ est stable par combinaison linéaire.
+            $F_3$ est un sev de $\mathcal{M}_n(\mathbb{R})$.
+            </li>
+            <li>$F_4 = \{ M \in \mathcal{M}_{3,1}(\mathbb{R}) \mid AM = B_0 \}$ avec $B_0 = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix} \neq 0$.
+            Le vecteur nul $M=0$ ne vérifie pas $A0=B_0$ (car $A0=0$).
+            Donc $0 \notin F_4$. $F_4$ n'est pas un sev.
+            </li>
+            <li>$F_5 = \{ M \in \mathcal{M}_{3,1}(\mathbb{R}) \mid {}^tM A M = 0 \}$ où $A = J = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}$.
+            Soit $M = \begin{pmatrix} x \\ y \\ z \end{pmatrix}$.
+            $AM = \begin{pmatrix} x+y+z \\ x+y+z \\ x+y+z \end{pmatrix} = (x+y+z) \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}$.
+            ${}^tM A M = \begin{pmatrix} x & y & z \end{pmatrix} (x+y+z) \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix} = (x+y+z) (x(1)+y(1)+z(1)) = (x+y+z)^2$.
+            La condition est $(x+y+z)^2 = 0$, ce qui équivaut à $x+y+z=0$.
+            $F_5 = \{ (x,y,z) \in \mathbb{R}^3 \mid x+y+z=0 \}$. C'est l'équation d'un plan vectoriel passant par l'origine.
+            C'est un sev de $\mathbb{R}^3$ (ou $\mathcal{M}_{3,1}(\mathbb{R})$).
+            Une base est $((-1, 1, 0), (-1, 0, 1))$. C'est un sev.
+            </li>
+             <div class="placeholder">Placeholder for: image0090206 (referenced as page 206)</div>
+            <li>$F_6 = \{ M \in \mathcal{M}_{4,1}(\mathbb{R}) \mid P(A)M = 0 \}$, où $P(X) = X^3 + 2X^2 + 1$ (ou $P(A) = A^3+2A^2+I$).
+            Soit $B = A^3+2A^2+I$. L'ensemble est $F_6 = \{ M \mid BM = 0 \}$. C'est le noyau de l'application linéaire $M \mapsto BM$. Le noyau d'une application linéaire est toujours un sous-espace vectoriel.
+            Donc $F_6$ est un sev de $\mathcal{M}_{4,1}(\mathbb{R})$.
+            (Vérification directe : $B0=0$. Si $BM_1=0, BM_2=0$, alors $B(\lambda M_1+M_2) = \lambda BM_1 + BM_2 = \lambda 0 + 0 = 0$. Stable).
+            </li>
+        </ol>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 7.1.4c</h3>
+        <p>Soit $E$ un ev, $F, G$ deux sev de $E$. Montrer $F \cup G$ est un sev $\iff (F \subset G \text{ ou } G \subset F)$.</p>
+        <p>Sens $(\Leftarrow)$ :</p>
+        <p>Si $F \subset G$, alors $F \cup G = G$. Comme $G$ est un sev, $F \cup G$ est un sev.</p>
+        <p>Si $G \subset F$, alors $F \cup G = F$. Comme $F$ est un sev, $F \cup G$ est un sev.</p>
+        <p>Dans les deux cas, $F \cup G$ est un sev.</p>
+        <p>Sens $(\implies)$ :</p>
+        <p>On suppose que $F \cup G$ est un sev. On veut montrer que $F \subset G$ ou $G \subset F$.</p>
+        <p>On raisonne par l'absurde. Supposons que $F \not\subset G$ ET $G \not\subset F$.</p>
+        <p>Comme $F \not\subset G$, il existe un vecteur $x$ tel que $x \in F$ et $x \notin G$.</p>
+        <p>Comme $G \not\subset F$, il existe un vecteur $y$ tel que $y \in G$ et $y \notin F$.</p>
+        <p>Puisque $x \in F$, on a $x \in F \cup G$.</p>
+        <p>Puisque $y \in G$, on a $y \in F \cup G$.</p>
+        <p>Comme $F \cup G$ est un sev, il est stable par addition. Donc $x+y \in F \cup G$.</p>
+        <p>Cela signifie que $x+y \in F$ ou $x+y \in G$.</p>
+        <p>Cas 1 : $x+y \in F$.</p>
+        <p>Comme $F$ est un sev et que $x \in F$, alors $-x \in F$.</p>
+        <p>Puisque $x+y \in F$ et $-x \in F$, leur somme $(x+y) + (-x)$ doit être dans $F$ (par stabilité de l'addition dans $F$).</p>
+        <p>$(x+y) + (-x) = y$. Donc on aurait $y \in F$.</p>
+        <p>Mais on a choisi $y$ tel que $y \notin F$. C'est une contradiction.</p>
+        <p>Cas 2 : $x+y \in G$.</p>
+        <p>Comme $G$ est un sev et que $y \in G$, alors $-y \in G$.</p>
+        <p>Puisque $x+y \in G$ et $-y \in G$, leur somme $(x+y) + (-y)$ doit être dans $G$.</p>
+        <p>$(x+y) + (-y) = x$. Donc on aurait $x \in G$.</p>
+        <p>Mais on a choisi $x$ tel que $x \notin G$. C'est une contradiction.</p>
+        <p>Dans les deux cas, on aboutit à une contradiction. L'hypothèse de départ ("$F \not\subset G$ ET $G \not\subset F$") est donc fausse.</p>
+        <p>Par conséquent, on doit avoir $F \subset G$ ou $G \subset F$.</p>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 7.2.1c</h3>
+        <ol>
+            <li>$F_1 = \left\{ M = \begin{pmatrix} a & a \\ b & a \end{pmatrix} \mid a, b \in \mathbb{R} \right\}$.
+            On peut écrire $M = a \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} + b \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix}$.
+            Posons $A = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$ et $B = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix}$.
+            Alors $F_1 = \{ aA + bB \mid a, b \in \mathbb{R} \} = \text{Vect}(A, B)$.
+            Par définition, $F_1$ est le sous-espace vectoriel de $\mathcal{M}_2(\mathbb{R})$ engendré par la famille $(A, B)$. C'est donc un sev.
+            La famille $(A, B)$ est génératrice de $F_1$. Est-elle libre ?
+            Supposons $aA + bB = 0$ (matrice nulle).
+            $ \begin{pmatrix} a & a \\ b & a \end{pmatrix} = \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix} $.
+            Cela implique $a=0$ et $b=0$. La famille est libre.
+            Conclusion : $(A, B)$ est une base de $F_1$. $\dim F_1 = 2$.
+            </li>
+            <li>$F_2 = \{ M \in \mathcal{M}_{3,1}(\mathbb{R}) \mid AM = M \}$, avec $A$ donnée.
+            $AM=M \iff AM-M=0 \iff (A-I)M=0$.
+            $F_2$ est l'ensemble des solutions du système linéaire homogène $(A-I)M=0$. C'est donc un sev (le noyau de $A-I$).
+            $A-I = \begin{pmatrix} 0 & 2 & 3 \\ -1 & -1 & 1 \\ 0 & 1 & 2 \end{pmatrix}$.
+            Résolvons $(A-I)M=0$ pour $M = \begin{pmatrix} x \\ y \\ z \end{pmatrix}$.
+            $$ \begin{cases} 2y + 3z = 0 \\ -x - y + z = 0 \\ y + 2z = 0 \end{cases} $$
+            De la 3ème ligne: $y = -2z$.
+            Reportons dans la 1ère: $2(-2z) + 3z = 0 \implies -4z+3z = 0 \implies -z=0 \implies z=0$.
+            Alors $y = -2(0) = 0$.
+            Reportons dans la 2ème: $-x - 0 + 0 = 0 \implies x=0$.
+            La seule solution est $M=0 = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$.
+            $F_2 = \{0\}$. C'est l'espace vectoriel nul. Sa base est la famille vide $\emptyset$. Sa dimension est 0.
+             <div class="placeholder">Placeholder for: image0090207 (referenced as page 207)</div>
+             (Note : La correction a $x=y=z=0$, ce qui est correct).
+            </li>
+            <li>$F_3 = \{ M = \begin{pmatrix} x \\ y \\ z \end{pmatrix} \mid x - 2y - z = 0 \}$.
+            C'est l'équation d'un plan vectoriel passant par l'origine. C'est un sev.
+            On peut exprimer une variable en fonction des autres: $x = 2y + z$.
+            Les vecteurs de $F_3$ sont de la forme $\begin{pmatrix} 2y+z \\ y \\ z \end{pmatrix}$.
+            On peut décomposer : $\begin{pmatrix} 2y+z \\ y \\ z \end{pmatrix} = \begin{pmatrix} 2y \\ y \\ 0 \end{pmatrix} + \begin{pmatrix} z \\ 0 \\ z \end{pmatrix} = y \begin{pmatrix} 2 \\ 1 \\ 0 \end{pmatrix} + z \begin{pmatrix} 1 \\ 0 \\ 1 \end{pmatrix}$.
+            Posons $v_1 = (2, 1, 0)$ et $v_2 = (1, 0, 1)$. Alors $F_3 = \text{Vect}(v_1, v_2)$.
+            La famille $(v_1, v_2)$ est génératrice de $F_3$. Est-elle libre ?
+            $v_1$ et $v_2$ ne sont pas colinéaires (regarder les composantes nulles). Donc la famille est libre.
+            Conclusion : $(v_1, v_2)$ est une base de $F_3$. $\dim F_3 = 2$.
+            </li>
+            <li>$F_4 = \{ M = \begin{pmatrix} x \\ y \\ z \\ t \end{pmatrix} \mid x - y + 2z + 2t = 0 \text{ et } 3x - 3y + t = 0 \}$.
+            C'est l'ensemble des solutions d'un système linéaire homogène, donc un sev.
+            Résolvons le système. De la 2ème équation: $t = -3x + 3y$.
+            Reportons dans la 1ère: $x - y + 2z + 2(-3x+3y) = 0$.
+            $x - y + 2z - 6x + 6y = 0 \implies -5x + 5y + 2z = 0 \implies 2z = 5x - 5y \implies z = \frac{5}{2}x - \frac{5}{2}y$.
+            Les solutions dépendent de $x$ et $y$ comme paramètres libres.
+            Un vecteur de $F_4$ s'écrit $\begin{pmatrix} x \\ y \\ \frac{5}{2}x - \frac{5}{2}y \\ -3x + 3y \end{pmatrix}$.
+            Décomposons selon $x$ et $y$:
+            $= \begin{pmatrix} x \\ 0 \\ \frac{5}{2}x \\ -3x \end{pmatrix} + \begin{pmatrix} 0 \\ y \\ -\frac{5}{2}y \\ 3y \end{pmatrix} = x \begin{pmatrix} 1 \\ 0 \\ 5/2 \\ -3 \end{pmatrix} + y \begin{pmatrix} 0 \\ 1 \\ -5/2 \\ 3 \end{pmatrix}$.
+            Posons $v_1 = (1, 0, 5/2, -3)$ et $v_2 = (0, 1, -5/2, 3)$. Alors $F_4 = \text{Vect}(v_1, v_2)$.
+            La famille $(v_1, v_2)$ est génératrice. Elle est libre car les vecteurs ne sont pas colinéaires.
+            Conclusion : $(v_1, v_2)$ (ou des multiples entiers comme $(2,0,5,-6)$ et $(0,2,-5,6)$) est une base de $F_4$. $\dim F_4 = 2$.
+            </li>
+            <li>$F_5 = \{ (x, y, z, t) \in \mathbb{R}^4 \mid \text{4 équations} \}$. Solution d'un système homogène, donc sev.
+             $$ \begin{cases} -3x + y + z + t = 0 &(L1) \\ x - 3y + z + t = 0 &(L2) \\ x + y - 3z + t = 0 &(L3) \\ x + y + z - 3t = 0 &(L4) \end{cases} $$
+             $L1-L2 \implies -4x+4y=0 \implies x=y$.
+             $L2-L3 \implies -4y+4z=0 \implies y=z$.
+             $L3-L4 \implies -4z+4t=0 \implies z=t$.
+             Donc $x=y=z=t$. Reportons dans L1 : $-3x+x+x+x = 0 \implies 0=0$.
+             Le système est équivalent à $x=y=z=t$.
+             Les solutions sont de la forme $(x, x, x, x)$.
+             $F_5 = \{ (x, x, x, x) \mid x \in \mathbb{R} \} = \{ x(1, 1, 1, 1) \mid x \in \mathbb{R} \} = \text{Vect}((1,1,1,1))$.
+             Une base de $F_5$ est $((1,1,1,1))$. $\dim F_5 = 1$.
+            </li>
+        </ol>
+    </div>
+
+     <div class="correction">
+        <h3>Exercice 7.2.2c</h3>
+        <p>Matrices $A, B, C, D \in \mathcal{M}_2(\mathbb{R})$.</p>
+        <ol>
+            <li>Montrer que $\mathcal{B} = (A, B, C, D)$ est une base de $\mathcal{M}_2(\mathbb{R})$.
+            L'espace $\mathcal{M}_2(\mathbb{R})$ est de dimension $2 \times 2 = 4$.
+            La famille $\mathcal{B}$ a 4 vecteurs. Pour montrer que c'est une base, il suffit de montrer qu'elle est libre.
+            Considérons une combinaison linéaire nulle : $aA + bB + cC + dD = 0$ (matrice nulle).
+            $$ a\begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix} + b\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} + c\begin{pmatrix} 0 & 1 \\ 1 & 1 \end{pmatrix} + d\begin{pmatrix} 1 & 0 \\ 1 & 1 \end{pmatrix} = \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix} $$
+            $$ \begin{pmatrix} a+b+d & a+b+c \\ a+c+d & b+c+d \end{pmatrix} = \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix} $$
+            Cela donne le système linéaire homogène en $a,b,c,d$:
+            $$ \begin{cases} a + b + d = 0 &(1) \\ a + b + c = 0 &(2) \\ a + c + d = 0 &(3) \\ b + c + d = 0 &(4) \end{cases} $$
+            $(1)-(2) \implies d-c=0 \implies d=c$.
+            $(2)-(3) \implies b-d=0 \implies b=d$.
+            $(3)-(4) \implies a-b=0 \implies a=b$.
+            Donc $a=b=c=d$.
+            Reportons dans (1) : $a+a+a=0 \implies 3a=0 \implies a=0$.
+            Donc $a=b=c=d=0$.
+            La seule solution est la solution nulle. La famille est libre.
+            Étant libre et de cardinal 4 dans un espace de dimension 4, c'est une base.
+            </li>
+             <div class="placeholder">Placeholder for: image0090208 (referenced as page 208)</div>
+            <li>Coordonnées de $I = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ dans la base $\mathcal{B}$.
+            On cherche $a, b, c, d$ tels que $aA + bB + cC + dD = I$.
+            Cela donne le système :
+            $$ \begin{cases} a + b + d = 1 &(1') \\ a + b + c = 0 &(2') \\ a + c + d = 0 &(3') \\ b + c + d = 1 &(4') \end{cases} $$
+            $(1')-(2') \implies d-c=1$.
+            $(2')-(3') \implies b-d=0 \implies b=d$.
+            $(3')-(4') \implies a-b= -1 \implies a=b-1$.
+            On a $b=d$ et $d-c=1 \implies c=d-1=b-1$.
+            On a $a=b-1$.
+            Vérifions avec (1') : $a+b+d = (b-1)+b+b = 3b-1 = 1 \implies 3b=2 \implies b=2/3$.
+            Alors $d=b=2/3$. $c=b-1=2/3-1=-1/3$. $a=b-1=-1/3$.
+            Les coordonnées sont $(a, b, c, d) = (-1/3, 2/3, -1/3, 2/3)$.
+            La décomposition est $I = -\frac{1}{3}A + \frac{2}{3}B - \frac{1}{3}C + \frac{2}{3}D$.
+            </li>
+        </ol>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 7.2.3c</h3>
+        <ol>
+            <li>Système $S_1$:
+             $$ \begin{cases} x + 2y + z + t = 0 &(L1) \\ -2x + y + 3t = 0 &(L2) \\ x - 3y - 2z - t = 0 &(L3) \end{cases} $$
+             <p>Pivot de Gauss :</p>
+             <div class="transform-arrow">$L_2 \leftarrow L_2 + 2L_1$, $L_3 \leftarrow L_3 - L_1$</div>
+             $$ \begin{cases} x + 2y + z + t = 0 \\ 5y + 2z + 5t = 0 \\ -5y - 3z - 2t = 0 \end{cases} $$
+             <div class="transform-arrow">$L_3 \leftarrow L_3 + L_2$</div>
+             $$ \begin{cases} x + 2y + z + t = 0 \\ 5y + 2z + 5t = 0 \\ -z + 3t = 0 \end{cases} $$
+             <p>Le système est échelonné, de rang 3, avec 4 inconnues. L'ensemble des solutions est un sev de dimension $4-3=1$. Choisissons $t$ comme paramètre.</p>
+             <p>$L_3 \implies z = 3t$.</p>
+             <p>$L_2 \implies 5y = -2z - 5t = -2(3t) - 5t = -6t - 5t = -11t$. Donc $y = -11t/5$.</p>
+             <p>$L_1 \implies x = -2y - z - t = -2(-11t/5) - (3t) - t = \frac{22t}{5} - 4t = \frac{22t - 20t}{5} = \frac{2t}{5}$.</p>
+             <p>Les solutions sont de la forme $(2t/5, -11t/5, 3t, t)$ pour $t \in \mathbb{R}$.</p>
+             <p>En $t=5$, on obtient le vecteur $(2, -11, 15, 5)$. Erreur dans $z$. $z=3t$. $z=15$.</p>
+             <p>Vérifions le calcul de $z$ dans la correction $z = -29t/5$? Reprenons.</p>
+             <p>Le système est : $x=2t/5, y=-11t/5, z=3t$.</p>
+             <p>L'ensemble solution est $\{ t(2/5, -11/5, 3, 1) \mid t \in \mathbb{R} \} = \text{Vect}((2/5, -11/5, 3, 1))$.</p>
+             <p>On peut prendre un multiple : $\text{Vect}((2, -11, 15, 5))$.</p>
+             <p>La correction du livre a $x=2t/5, y=-11t/5, z=-29t/5$. D'où vient le -29 ?
+             $x+2y+z+t = (2/5)t + 2(-11/5)t + (-29/5)t + t = (2/5 - 22/5 - 29/5 + 5/5)t = (-20-29+5)/5 t = -44/5 t \neq 0$.
+             Ma solution: $x+2y+z+t = (2/5)t + 2(-11/5)t + (15/5)t + (5/5)t = (2-22+15+5)/5 t = 0/5 t = 0$. OK.
+             $-2x+y+3t = -2(2/5)t + (-11/5)t + 3(5/5)t = (-4/5 - 11/5 + 15/5)t = 0/5 t = 0$. OK.
+             $x-3y-2z-t = (2/5)t - 3(-11/5)t - 2(15/5)t - (5/5)t = (2/5 + 33/5 - 30/5 - 5/5)t = (35-35)/5 t = 0$. OK.
+             Mon résultat est correct. Ensemble solution $S = \text{Vect}((2, -11, 15, 5))$.</p>
+              <div class="warning-note">Il semble y avoir une erreur dans le calcul de $z$ dans la correction du livre pour l'exercice 7.2.3, partie 1.</div>
+             <div class="placeholder">Placeholder for: image0090209 (referenced as page 209)</div>
+             </li>
+            <li>Système $S_2$:
+            $$ \begin{cases} 2x + z = 0 \\ x + y + z = 0 \\ x - y = 0 \end{cases} $$
+            $L3 \implies y=x$.
+            $L1 \implies z = -2x$.
+            Reportons dans L2: $x + (x) + (-2x) = 0 \implies 2x-2x=0 \implies 0=0$.
+            Le système est équivalent à $y=x$ et $z=-2x$.
+            Les solutions sont de la forme $(x, x, -2x)$ pour $x \in \mathbb{R}$.
+            $S = \{ x(1, 1, -2) \mid x \in \mathbb{R} \} = \text{Vect}((1, 1, -2))$.</li>
+            <li>Système $S_3$: (4 équations, 4 inconnues).
+            <p>Appliquons le pivot de Gauss.
+            ... (calculs omis, cf. correction) ...</p>
+            <p>On trouve que le système est de rang 2. Il y a $4-2=2$ paramètres libres.
+            Les solutions sont de la forme $(z/3, z-t, z, t)$ pour $z, t \in \mathbb{R}$.
+            $S = \{ z(1/3, 1, 1, 0) + t(0, -1, 0, 1) \mid z, t \in \mathbb{R} \}$.
+            $S = \text{Vect}((1/3, 1, 1, 0), (0, -1, 0, 1))$.
+            On peut prendre des multiples entiers : $S = \text{Vect}((1, 3, 3, 0), (0, -1, 0, 1))$.
+            La base donnée dans la correction est $( (1/3, 1, 1, 0), (0, -1, 0, 1) )$. OK.</p>
+            </li>
+        </ol>
+    </div>
+
+    <!-- ... Autres corrections ... -->
+
+    <div class="correction">
+        <h3>Exercice 7.2.8c</h3>
+        <ol>
+            <li>Liberté de $\mathcal{F}_1 = (e^x, xe^x, e^{-x}, xe^{-x})$.
+            Soit $\lambda_1 e^x + \lambda_2 x e^x + \lambda_3 e^{-x} + \lambda_4 x e^{-x} = 0$ pour tout $x \in \mathbb{R}$. (E)
+            Multiplions (E) par $e^{-x}$: $\lambda_1 + \lambda_2 x + \lambda_3 e^{-2x} + \lambda_4 x e^{-2x} = 0$.
+            Faisons tendre $x \to +\infty$. $e^{-2x} \to 0$ et $xe^{-2x} \to 0$.
+            Si $\lambda_2 \neq 0$, le terme $\lambda_2 x$ tend vers $\pm \infty$. Pour que la somme tende vers 0, il faut $\lambda_2 = 0$.
+            L'équation devient $\lambda_1 + \lambda_3 e^{-2x} + \lambda_4 x e^{-2x} = 0$.
+            En faisant $x \to +\infty$, on obtient $\lambda_1 = 0$.
+            Il reste $\lambda_3 e^{-x} + \lambda_4 x e^{-x} = 0$.
+            Multiplions par $e^x$: $\lambda_3 + \lambda_4 x = 0$.
+            Ceci doit être vrai pour tout $x$. C'est un polynôme en $x$ qui est nul. Ses coefficients sont nuls. $\lambda_4=0$ et $\lambda_3=0$.
+            Tous les coefficients sont nuls. La famille est libre.
+             <div class="placeholder">Placeholder for: image0090211 (referenced as page 211)</div>
+            </li>
+            <li>Liberté de $\mathcal{F}_2 = (e^{a_1 x}, \dots, e^{a_n x})$ avec $a_1 < \dots < a_n$.
+            Soit $\sum_{k=1}^{n} \lambda_k e^{a_k x} = 0$ pour tout $x$. (E)
+            Multiplions par $e^{-a_n x}$: $\sum_{k=1}^{n} \lambda_k e^{(a_k - a_n) x} = 0$.
+            $\sum_{k=1}^{n-1} \lambda_k e^{(a_k - a_n) x} + \lambda_n e^0 = 0$.
+            Faisons tendre $x \to +\infty$. Comme $a_k < a_n$ pour $k < n$, $a_k - a_n < 0$.
+            Donc $e^{(a_k - a_n) x} \to 0$ pour $k=1, \dots, n-1$.
+            Il reste $\lambda_n = 0$.
+            L'équation (E) devient $\sum_{k=1}^{n-1} \lambda_k e^{a_k x} = 0$.
+            On peut répéter le processus : multiplier par $e^{-a_{n-1} x}$ et faire $x \to +\infty$ pour obtenir $\lambda_{n-1}=0$.
+            De proche en proche (ou par récurrence finie descendante), on obtient $\lambda_k = 0$ pour tout $k$.
+            La famille est libre.
+            </li>
+            <li>Liberté de $\mathcal{F}_3 = (P_1, P_2, P_3)$ dans $\mathbb{R}[X]$.
+            $P_1(X) = 2X^2 - 3$ (degré 2).
+            $P_2(X) = -X + 1$ (degré 1).
+            $P_3(X) = -X^4 - 3X^2 - 2X + 1$ (degré 4).
+            Les polynômes ont des degrés distincts (4, 2, 1). Une famille de polynômes de degrés échelonnés est toujours libre.
+            Preuve : Soit $\lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3 = 0$.
+            Le terme de plus haut degré est $\lambda_3 (-X^4)$. Si la combinaison est nulle, le coefficient de $X^4$ doit être nul, donc $-\lambda_3 = 0$, soit $\lambda_3=0$.
+            Il reste $\lambda_1 P_1 + \lambda_2 P_2 = 0$. Le terme de plus haut degré est $\lambda_1 (2X^2)$. Son coefficient doit être nul, $2\lambda_1=0$, soit $\lambda_1=0$.
+            Il reste $\lambda_2 P_2 = 0$. Comme $P_2$ n'est pas le polynôme nul, $\lambda_2=0$.
+            Tous les coefficients sont nuls. La famille est libre.
+            </li>
+            <li>Liberté de $\mathcal{F}_4 = (P_1(X) = 2X - 1, P_2(X) = -X^2, P_3(X) = 3X^2 - 2X + 1)$ dans $\mathbb{R}_2[X]$.
+            Soit $\lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3 = 0$.
+            $\lambda_1 (2X - 1) + \lambda_2 (-X^2) + \lambda_3 (3X^2 - 2X + 1) = 0$.
+            Regroupons par puissance de $X$:
+            $X^2 (-\lambda_2 + 3\lambda_3) + X (2\lambda_1 - 2\lambda_3) + (-\lambda_1 + \lambda_3) = 0$.
+            Un polynôme est nul si et seulement si tous ses coefficients sont nuls.
+            $$ \begin{cases} -\lambda_2 + 3\lambda_3 = 0 &(X^2) \\ 2\lambda_1 - 2\lambda_3 = 0 &(X) \\ -\lambda_1 + \lambda_3 = 0 &(\text{Cst}) \end{cases} $$
+            L'équation (2) donne $2(\lambda_1 - \lambda_3) = 0 \implies \lambda_1 = \lambda_3$.
+            L'équation (3) donne $\lambda_1 = \lambda_3$. Cohérent.
+            L'équation (1) donne $\lambda_2 = 3\lambda_3$.
+            Le système est équivalent à $\lambda_1 = \lambda_3$ et $\lambda_2 = 3\lambda_3$.
+            Il y a une infinité de solutions non nulles. Par exemple, si $\lambda_3=1$, alors $\lambda_1=1$ et $\lambda_2=3$.
+            Vérifions : $1 P_1 + 3 P_2 + 1 P_3 = (2X-1) + 3(-X^2) + (3X^2-2X+1) = 2X-1 - 3X^2 + 3X^2 - 2X + 1 = 0$.
+            La famille est liée. On a la relation de dépendance linéaire $P_1 + 3P_2 + P_3 = 0$.
+            </li>
+             <div class="placeholder">Placeholder for: image0090212 (referenced as page 212)</div>
+        </ol>
+    </div>
+
+    <!-- ... etc pour les autres corrections ... -->
+
+     <div class="correction">
+        <h3>Exercice 7.4.5c</h3>
+        <p>$F = \{ P \in \mathbb{R}_3[X] \mid P(1)=P(2)=P(-2)=0 \}$</p>
+        <p>$G = \{ P \in \mathbb{R}_3[X] \mid P(0)=P'(0)=0 \}$</p>
+        <ol>
+            <li>Caractérisation de F.
+            Un polynôme $P$ est dans $F$ ssi 1, 2, -2 sont racines de $P$.
+            Donc $P(X)$ doit être divisible par $(X-1)(X-2)(X+2)$.
+            $P(X) = (X-1)(X^2-4) Q(X)$ pour un polynôme $Q(X)$.
+            Comme $\deg P \le 3$, on a $\deg Q \le 3 - 3 = 0$. Donc $Q(X)$ est une constante $a$.
+            $P(X) = a(X-1)(X-2)(X+2) = a(X-1)(X^2-4)$.
+            $F = \{ a(X^3 - X^2 - 4X + 4) \mid a \in \mathbb{R} \}$.
+            $F = \text{Vect}((X-1)(X-2)(X+2))$.
+            $F$ est la droite vectorielle engendrée par $P_0(X) = X^3 - X^2 - 4X + 4$.
+            Une base de $F$ est $(P_0)$. $\dim F = 1$.
+            Caractérisation de G.
+            $P \in G \iff P(0)=0$ et $P'(0)=0$.
+            $P(0)=0$ signifie que 0 est racine, donc $P(X)$ est divisible par $X$.
+            $P'(0)=0$ signifie que 0 est racine de $P'$, donc l'ordre de multiplicité de la racine 0 pour $P$ est au moins 2.
+            Donc $P(X)$ est divisible par $X^2$.
+            $P(X) = X^2 Q(X)$.
+            Comme $\deg P \le 3$, on a $\deg Q \le 3 - 2 = 1$. Donc $Q(X) = aX+b$.
+            $P(X) = X^2(aX+b) = aX^3 + bX^2$.
+            $G = \{ aX^3 + bX^2 \mid a, b \in \mathbb{R} \} = \text{Vect}(X^3, X^2)$.
+            La famille $(X^2, X^3)$ est libre (polynômes de degrés distincts) et génératrice de $G$.
+            C'est une base de $G$. $\dim G = 2$.
+            </li>
+            <li>Intersection $F \cap G$.
+            Soit $P \in F \cap G$.
+            Comme $P \in F$, $P(X) = a(X-1)(X-2)(X+2)$ pour un $a \in \mathbb{R}$.
+            Comme $P \in G$, $P(0)=0$. Vérifions : $P(0) = a(-1)(-2)(2) = 4a$.
+            Pour avoir $P(0)=0$, il faut $4a=0$, donc $a=0$.
+            Si $a=0$, alors $P(X)=0$.
+            L'intersection $F \cap G$ ne contient que le polynôme nul. $F \cap G = \{0\}$.
+            </li>
+            <li>Somme $F+G$. La somme est directe car $F \cap G = \{0\}$.
+            $\dim(F \oplus G) = \dim F + \dim G = 1 + 2 = 3$.
+            L'espace $F \oplus G$ est un sous-espace de dimension 3 de $\mathbb{R}_3[X]$, qui est de dimension 4.
+            Donc $F \oplus G \neq \mathbb{R}_3[X]$. Ils ne sont pas supplémentaires dans $\mathbb{R}_3[X]$.
+            (Le calcul montrant que 1 n'est pas dans $F+G$ est une autre façon de le prouver).
+            Si $1 = P_1 + P_2$ avec $P_1 \in F$ et $P_2 \in G$.
+            $P_1(X) = a(X^3-X^2-4X+4)$. $P_2(X) = bX^2 + cX^3$.
+            $1 = (a+c)X^3 + (b-a)X^2 - 4aX + 4a$.
+            Par identification des coefficients :
+            $X^3: a+c = 0$.
