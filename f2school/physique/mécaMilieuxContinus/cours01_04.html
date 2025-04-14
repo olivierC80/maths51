@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relations Fondamentales de la Dynamique et Applications aux Fluides Parfaits et Visqueux</title>
+    <!-- Link KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
+    <!-- Link KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- Auto-render KaTeX -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ] });"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 900px; margin: auto; }
+        h1, h2, h3, h4 { color: #333; margin-top: 1.5em; }
+        h1 { border-bottom: 2px solid #eee; padding-bottom: 0.3em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 0.2em; }
+        img { max-width: 100%; height: auto; display: block; margin: 20px auto; border: 1px solid #ccc; }
+        .placeholder {
+            border: 1px dashed #aaa;
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            background-color: #f9f9f9;
+            margin: 20px auto;
+            display: block;
+            min-height: 100px; /* Ensure placeholder visibility */
+        }
+        .katex-display { display: block; margin: 1em 0; text-align: center; overflow-x: auto; overflow-y: hidden;}
+        ul { margin-left: 20px; }
+        li { margin-bottom: 0.5em; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1em; margin-bottom: 1em; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .formula-box { border: 1px solid #ccc; padding: 1em; margin: 1em 0; background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+    <h2>Remarque sur les conventions de signe des déformations</h2>
+    <p>Ces conventions sont standard en mécanique des milieux continus :</p>
+    <ul>
+        <li>La déformation longitudinale (ou normale) $\epsilon$ sera considérée comme <strong>positive</strong> s'il y a <strong>allongement</strong> (traction) dans la direction considérée. Une déformation négative correspond à une contraction (compression).</li>
+        <li>La déformation angulaire (ou de cisaillement) $\gamma$ (souvent liée au tenseur des déformations $\epsilon_{ij}$ pour $i \neq j$) est considérée comme <strong>positive</strong> s'il y a <strong>diminution</strong> de l'angle droit initial entre deux lignes matérielles initialement orthogonales.</li>
+    </ul>
+    <hr>
+
+    <h1>Chapitre IV : Les Relations Fondamentales de la Dynamique (Les Équations de Conservation)</h1>
+
+    <h2>1. Rappels mathématiques</h2>
+
+    <h3>Théorème de la divergence (Théorème de Green-Ostrogradsky)</h3>
+    <p>Ce théorème fondamental permet de transformer une intégrale de volume (portant sur un domaine $V$) en une intégrale de surface (portant sur la surface fermée $S$ qui délimite ce volume $V$). Il relie le flux d'un champ vectoriel à travers la surface $S$ à la divergence de ce champ à l'intérieur du volume $V$.</p>
+    <p>Soient $S$ la surface fermée entourant le domaine volumique $V$. Soit $\vec{A}(M)$ un champ vectoriel défini dans $V$ et sur $S$, et $\vec{n}$ le vecteur normal unitaire extérieur à l'élément de surface $dS$ au point $M$.</p>
+    <p>Le théorème s'écrit :</p>
+    <div class="katex-display">
+        \int_V (\nabla \cdot \vec{A}) \, dV = \oint_S \vec{A} \cdot \vec{n} \, dS = \oint_S A_n \, dS
+    </div>
+    <p>Où $\nabla \cdot \vec{A} = \text{div} \vec{A}$ est la divergence de $\vec{A}$, et $A_n = \vec{A} \cdot \vec{n}$ est la composante de $\vec{A}$ normale à la surface $S$. Cette intégrale de surface représente le flux total du vecteur $\vec{A}$ sortant de la surface $S$.</p>
+
+    <div class="placeholder" style="width: 300px;">
+        Placeholder: Diagram illustrating the divergence theorem with volume V, surface S, normal vector n, vector field A, and surface element dS.
+        <!-- Example: <img src="placeholder_divergence_theorem.png" alt="Divergence Theorem Diagram"> -->
+    </div>
+
+    <p>Si le vecteur $\vec{A}$ a pour composantes $(A_1, A_2, A_3)$ et le vecteur normal $\vec{n}$ a pour composantes $(n_1, n_2, n_3)$ dans une base cartésienne, alors la divergence est $\text{div} \vec{A} = \frac{\partial A_1}{\partial x_1} + \frac{\partial A_2}{\partial x_2} + \frac{\partial A_3}{\partial x_3}$. Le théorème peut s'écrire sous la forme :</p>
+    <div class="katex-display">
+        \int_V \left( \frac{\partial A_1}{\partial x_1} + \frac{\partial A_2}{\partial x_2} + \frac{\partial A_3}{\partial x_3} \right) dV = \oint_S (A_1 n_1 + A_2 n_2 + A_3 n_3) \, dS
+    </div>
+    <p>On peut l'écrire aussi composante par composante (Formule d'Ostrogradsky), en utilisant la convention de sommation d'Einstein :</p>
+    <div class="katex-display">
+        \int_V \frac{\partial A_i}{\partial x_i} \, dV = \oint_S A_i n_i \, dS
+    </div>
+
+    <p><strong>Cas particulier (Formule de Gauss) :</strong> Une conséquence utile du théorème de la divergence s'applique au gradient d'une fonction scalaire $f$ :</p>
+    <div class="katex-display">
+        \int_V \nabla f \, dV = \oint_S f \vec{n} \, dS
+    </div>
+
+    <h3>Formule du rotationnel</h3>
+    <p>Une autre formule, également liée aux théorèmes intégraux, relie l'intégrale volumique du rotationnel d'un champ vectoriel $\vec{A}$ à une intégrale surfacique :</p>
+    <div class="katex-display">
+        \int_V (\nabla \times \vec{A}) \, dV = \oint_S (\vec{n} \times \vec{A}) \, dS
+    </div>
+
+    <h3>Formule de Stokes (Théorème du Rotationnel)</h3>
+    <p>Ce théorème permet de transformer une intégrale de surface (portant sur une surface ouverte $S$) en une intégrale curviligne (portant sur la courbe fermée $C$ qui délimite cette surface $S$).</p>
+    <p>Si on considère une surface $S$ limitée par une courbe fermée $C$, sur laquelle on fixe un sens de circulation (défini par le vecteur élément de longueur $\vec{dl}$) et une orientation de la surface (définie par le vecteur normal $\vec{n}$, compatible avec le sens de parcours de $C$ par la règle de la main droite), le théorème de Stokes s'écrit :</p>
+    <div class="katex-display">
+        \int_S (\nabla \times \vec{A}) \cdot \vec{n} \, dS = \oint_C \vec{A} \cdot \vec{dl}
+    </div>
+    <p>L'intégrale curviligne $\oint_C \vec{A} \cdot \vec{dl}$ représente la circulation du vecteur $\vec{A}$ le long de la courbe fermée $C$. Le théorème énonce que cette circulation est égale au flux du rotationnel de $\vec{A}$ à travers n'importe quelle surface $S$ s'appuyant sur la courbe $C$.</p>
+
+    <div class="placeholder" style="width: 300px;">
+        Placeholder: Diagram illustrating Stokes' theorem with an open surface S, its boundary curve C, normal vector n, vector field A, and line element dl.
+        <!-- Example: <img src="placeholder_stokes_theorem.png" alt="Stokes' Theorem Diagram"> -->
+    </div>
+
+    <h2>2. La dérivée particulaire (ou matérielle)</h2>
+
+    <p>Soit une fonction $f(M,t)$ qui décrit une propriété (scalaire ou vectorielle) d'une particule fluide au point $M$ à l'instant $t$. Lorsque l'on suit le point matériel $M$ dans son mouvement, sa position $\vec{x} = (x_1, x_2, x_3)$ dépend du temps. La fonction $f(M,t)$ devient alors une fonction $g(t)$ de la seule variable temporelle $t$ le long de la trajectoire de la particule.</p>
+    <p>Par définition, on nomme <strong>dérivée particulaire</strong> (ou <strong>dérivée matérielle</strong>, ou <strong>dérivée lagrangienne</strong>, ou <strong>dérivée totale</strong> par rapport au temps) la dérivée de cette fonction $g(t)$ par rapport au temps. Elle représente le taux de variation de la propriété $f$ pour une particule fluide donnée pendant son mouvement. On la note $\frac{df}{dt}$ ou $\frac{Df}{Dt}$.</p>
+
+    <p>Si $f(M,t) = f(x_1(t), x_2(t), x_3(t), t)$, en utilisant la règle de dérivation des fonctions composées, on obtient :</p>
+    <div class="katex-display">
+        \frac{df}{dt} = \frac{\partial f}{\partial t} + \frac{\partial f}{\partial x_1} \frac{dx_1}{dt} + \frac{\partial f}{\partial x_2} \frac{dx_2}{dt} + \frac{\partial f}{\partial x_3} \frac{dx_3}{dt}
+    </div>
+    <p>En posant $u_i = \frac{dx_i}{dt}$ la composante $i$ du vecteur vitesse $\vec{u}$ de la particule, on a :</p>
+    <div class="katex-display">
+        \frac{df}{dt} = \frac{\partial f}{\partial t} + u_1 \frac{\partial f}{\partial x_1} + u_2 \frac{\partial f}{\partial x_2} + u_3 \frac{\partial f}{\partial x_3}
+    </div>
+    <p>Qui peut s'écrire aussi sous la forme compacte en utilisant l'opérateur gradient $\nabla f = (\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}, \frac{\partial f}{\partial x_3})$ :</p>
+    <div class="katex-display">
+        \frac{df}{dt} = \frac{\partial f}{\partial t} + \vec{u} \cdot \nabla f
+    </div>
+    <p>Ou en notation indicielle (avec sommation sur $j$):</p>
+    <div class="katex-display">
+        \frac{df}{dt} = \frac{\partial f}{\partial t} + u_j \frac{\partial f}{\partial x_j}
+    </div>
+    <ul>
+        <li>$\frac{\partial f}{\partial t}$ est le <strong>terme local</strong> : variation de $f$ au point fixe $M$.</li>
+        <li>$\vec{u} \cdot \nabla f$ est le <strong>terme convectif</strong> : variation de $f$ due au déplacement de la particule dans une région où $f$ varie spatialement.</li>
+    </ul>
+
+    <p><strong>Dérivée particulaire d'une fonction vectorielle :</strong> Si la fonction est vectorielle, $\vec{A}(M,t)$, la dérivée particulaire s'applique à chaque composante, ou s'écrit vectoriellement :</p>
+    <div class="katex-display">
+        \frac{d\vec{A}}{dt} = \frac{\partial \vec{A}}{\partial t} + (\vec{u} \cdot \nabla) \vec{A}
+    </div>
+    <p>En notation indicielle, pour la $i$-ème composante $A_i$ :</p>
+    <div class="katex-display">
+        \frac{dA_i}{dt} = \frac{\partial A_i}{\partial t} + u_j \frac{\partial A_i}{\partial x_j}
+    </div>
+    <p>L'opérateur $(\vec{u} \cdot \nabla)$ est défini comme $(\vec{u} \cdot \nabla) = u_1 \frac{\partial}{\partial x_1} + u_2 \frac{\partial}{\partial x_2} + u_3 \frac{\partial}{\partial x_3}$.</p>
+
+    <p><strong>Application à l'accélération :</strong> Si le vecteur $\vec{A}$ est le vecteur vitesse $\vec{u}$, sa dérivée particulaire est l'accélération $\vec{\gamma}$ de la particule fluide :</p>
+    <div class="katex-display">
+        \vec{\gamma} = \frac{d\vec{u}}{dt} = \underbrace{\frac{\partial \vec{u}}{\partial t}}_{\text{Accélération locale}} + \underbrace{(\vec{u} \cdot \nabla) \vec{u}}_{\text{Accélération convective}}
+    </div>
+    <p>On peut utiliser l'identité vectorielle $(\vec{u} \cdot \nabla) \vec{u} = \nabla \left( \frac{u^2}{2} \right) - \vec{u} \times (\nabla \times \vec{u}) = \text{grad} \left( \frac{|\vec{u}|^2}{2} \right) - \vec{u} \wedge (\text{rot} \vec{u})$ pour réécrire l'accélération convective :</p>
+    <div class="katex-display">
+        \vec{\gamma} = \frac{\partial \vec{u}}{\partial t} + \text{grad} \left( \frac{u^2}{2} \right) + (\text{rot} \vec{u}) \wedge \vec{u}
+    </div>
+
+
+    <h3>Dérivée particulaire d'une intégrale de volume (Théorème de Transport de Reynolds)</h3>
+    <p>Soit une intégrale de volume d'une fonction scalaire $f(M,t)$ sur un volume matériel $V(t)$ qui suit le mouvement du fluide :</p>
+    <div class="katex-display">
+         I(t) = \int_{V(t)} f(M,t) \, dV
+    </div>
+    <p>La dérivée particulaire de cette intégrale (le taux de variation de $I$ pour le volume matériel $V(t)$) est donnée par le Théorème de Transport de Reynolds :</p>
+    <div class="katex-display">
+        \frac{dI}{dt} = \frac{d}{dt} \int_{V(t)} f \, dV = \int_{V(t)} \left( \frac{\partial f}{\partial t} + \nabla \cdot (f \vec{u}) \right) dV
+    </div>
+    <p>En utilisant $\nabla \cdot (f \vec{u}) = (\nabla f) \cdot \vec{u} + f (\nabla \cdot \vec{u})$, on peut aussi écrire :</p>
+    <div class="katex-display">
+        \frac{dI}{dt} = \int_{V(t)} \left( \underbrace{\frac{\partial f}{\partial t} + \vec{u} \cdot \nabla f}_{\frac{df}{dt}} + f (\nabla \cdot \vec{u}) \right) dV = \int_{V(t)} \left( \frac{df}{dt} + f (\nabla \cdot \vec{u}) \right) dV
+    </div>
+    <p>En utilisant le théorème de la divergence, on peut transformer le terme $\nabla \cdot (f \vec{u})$ en une intégrale de surface sur la frontière $S(t)$ de $V(t)$:</p>
+    <div class="katex-display">
+        \frac{dI}{dt} = \int_{V(t)} \frac{\partial f}{\partial t} \, dV + \oint_{S(t)} f \vec{u} \cdot \vec{n} \, dS
+    </div>
+    <p>Où $\vec{u} \cdot \vec{n} = U_n$ est la composante normale de la vitesse du fluide sur la surface $S(t)$.</p>
+
+    <p><strong>Cas d'une quantité vectorielle :</strong> Si $\vec{I} = \int_{V(t)} \vec{A} \, dV$, alors</p>
+     <div class="katex-display">
+        \frac{d\vec{I}}{dt} = \int_{V(t)} \frac{\partial \vec{A}}{\partial t} \, dV + \oint_{S(t)} \vec{A} (\vec{u} \cdot \vec{n}) \, dS = \int_{V(t)} \left( \frac{d\vec{A}}{dt} + \vec{A} (\nabla \cdot \vec{u}) \right) dV
+    </div>
+     <p>En notation indicielle pour la i-ème composante $A_i$ et $U_n = u_k n_k$:</p>
+      <div class="katex-display">
+        \frac{dI_i}{dt} = \int_{V(t)} \frac{\partial A_i}{\partial t} \, dV + \oint_{S(t)} A_i U_n \, dS = \int_{V(t)} \frac{\partial A_i}{\partial t} \, dV + \oint_{S(t)} A_i u_k n_k \, dS
+    </div>
+
+    <p><strong>Remarque (Cas f=1) :</strong> Si $f=1$, alors $I = \int_{V(t)} dV = V(t)$ est le volume matériel.</p>
+    <div class="katex-display">
+        \frac{dV}{dt} = \int_{V(t)} (\nabla \cdot \vec{u}) \, dV = \oint_{S(t)} \vec{u} \cdot \vec{n} \, dS = \oint_{S(t)} U_n \, dS
+    </div>
+    <p>Cette intégrale de surface représente le débit volumique net sortant de la surface $S(t)$. Pour un fluide incompressible, $\nabla \cdot \vec{u} = 0$, donc $\frac{dV}{dt} = 0$, le volume matériel est constant.</p>
+
+    <h2>Le lemme fondamental du calcul variationnel (adapté)</h2>
+    <p>Soit $f(M)$ une fonction continue dans un domaine $D$.</p>
+    <p>Si pour <strong>tout</strong> sous-domaine $V$ inclus dans $D$, on a $\int_V f(M) \, dV = 0$, alors la fonction $f(M)$ est nécessairement nulle en tout point $M$ de $D$ : $f(M) = 0$.</p>
+    <p>Ce lemme est aussi utilisé sous la forme :</p>
+    <p>Si pour tout sous-domaine $V \subset D$, on a $\int_V f(M) \, dV = \int_V g(M) \, dV$, avec $f$ et $g$ continues, alors $f(M) = g(M)$ en tout point $M$ de $D$.</p>
+    <p>Ce lemme permet de passer d'une forme intégrale d'une loi de conservation (valable pour un volume arbitraire) à une forme locale (ponctuelle) sous forme d'équation aux dérivées partielles.</p>
+
+    <h2>3. Les Équations de conservation</h2>
+
+    <h3>i. Équation de conservation de la masse (Équation de continuité)</h3>
+    <p>Soit un volume matériel $V(t)$ d'un milieu continu que l'on suit dans son mouvement. Sa masse $M$ est donnée par $M = \int_{V(t)} \rho(\vec{x}, t) \, dV$, où $\rho$ est la masse volumique.</p>
+    <p>Étant donné qu'il n'y a ni source ni puits de masse à l'intérieur du volume matériel (la matière se conserve), la masse $M$ de ce volume reste constante lors de son déplacement :</p>
+    <div class="katex-display">
+        \frac{dM}{dt} = \frac{d}{dt} \int_{V(t)} \rho \, dV = 0
+    </div>
+    <p>En appliquant le théorème de transport de Reynolds avec $f = \rho$ :</p>
+    <div class="katex-display">
+        \frac{dM}{dt} = \int_{V(t)} \left( \frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \vec{u}) \right) dV = 0
+    </div>
+     <p>Comme cette équation doit être vraie pour <strong>tout</strong> volume matériel $V(t)$, l'intégrande doit être nul (d'après le lemme fondamental) :</p>
+    <div class="formula-box">
+        <strong>Équation de continuité (forme conservative) :</strong>
+        <div class="katex-display">
+            \frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \vec{u}) = 0
+        </div>
+    </div>
+    <p>On peut développer le terme de divergence : $\nabla \cdot (\rho \vec{u}) = (\nabla \rho) \cdot \vec{u} + \rho (\nabla \cdot \vec{u})$. L'équation devient :</p>
+    <div class="katex-display">
+         \frac{\partial \rho}{\partial t} + \vec{u} \cdot \nabla \rho + \rho (\nabla \cdot \vec{u}) = 0
+    </div>
+    <p>On reconnaît la dérivée particulaire de la densité $\frac{d\rho}{dt} = \frac{\partial \rho}{\partial t} + \vec{u} \cdot \nabla \rho$ :</p>
+    <div class="formula-box">
+        <strong>Équation de continuité (forme non conservative ou lagrangienne) :</strong>
+        <div class="katex-display">
+             \frac{d\rho}{dt} + \rho (\nabla \cdot \vec{u}) = 0
+        </div>
+    </div>
+    <p>Ou en notation indicielle : $\frac{d\rho}{dt} + \rho \frac{\partial u_i}{\partial x_i} = 0$.</p>
+
+    <p><strong>Cas d'un fluide incompressible :</strong> Si le milieu est incompressible, sa masse volumique $\rho$ est constante ($\rho = \text{cte}$). Alors $\frac{\partial \rho}{\partial t} = 0$ et $\nabla \rho = 0$, donc $\frac{d\rho}{dt} = 0$. L'équation de continuité se réduit à :</p>
+     <div class="katex-display">
+       \nabla \cdot \vec{u} = 0 \quad \text{ou} \quad \frac{\partial u_1}{\partial x_1} + \frac{\partial u_2}{\partial x_2} + \frac{\partial u_3}{\partial x_3} = 0
+    </div>
+    <p>Ceci exprime que le champ de vitesse d'un fluide incompressible est à divergence nulle.</p>
+
+    <p><strong>Application à un écoulement permanent dans une conduite :</strong></p>
+    <p>Il faut rappeler la notion de débit :</p>
+    <ul>
+        <li><strong>Débit volumique $Q_v$ :</strong> Volume de fluide traversant une section par unité de temps. Pour une vitesse $\vec{u}$ non uniforme sur une section $S$, $Q_v = \int_S \vec{u} \cdot \vec{n} \, dS = \int_S u_n \, dS$. Si la vitesse $u$ est uniforme et normale à la section $S$, $Q_v = u S$. Unités : m³/s.</li>
+        <li><strong>Débit massique $Q_m$ :</strong> Masse de fluide traversant une section par unité de temps. $Q_m = \int_S \rho \vec{u} \cdot \vec{n} \, dS = \int_S \rho u_n \, dS$. Si $\rho$ et $u$ sont uniformes, $Q_m = \rho u S = \rho Q_v$. Unités : kg/s.</li>
+    </ul>
+    <p>Considérons un écoulement <strong>permanent</strong> ($\partial/\partial t = 0$) dans une conduite entre une section d'entrée $S_1$ et une section de sortie $S_2$.</p>
+    <div class="placeholder" style="width: 400px;">
+        Placeholder: Diagram of flow through a variable section pipe (S1, U1 to S2, U2).
+        <!-- Example: <img src="placeholder_pipe_flow.png" alt="Flow in a pipe"> -->
+    </div>
+    <p>Appliquons la conservation de la masse au volume fixe $V$ compris entre $S_1$ et $S_2$ et les parois de la conduite. Pour un écoulement permanent, l'équation de continuité $\int_V (\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \vec{u})) dV = 0$ se réduit à $\int_V \nabla \cdot (\rho \vec{u}) dV = 0$.</p>
+    <p>Par le théorème de la divergence, $\oint_S \rho \vec{u} \cdot \vec{n} \, dS = 0$, où $S$ est la surface fermée délimitant $V$. Cette surface comprend $S_1$ (normale $\vec{n}_1$ entrante, opposée à $\vec{u}_1$), $S_2$ (normale $\vec{n}_2$ sortante, même sens que $\vec{u}_2$), et les parois latérales $S_{lat}$ (où $\vec{u} \cdot \vec{n}_{lat} = 0$).</p>
+    <p>L'intégrale devient : $\int_{S_1} \rho \vec{u} \cdot \vec{n}_1 \, dS + \int_{S_2} \rho \vec{u} \cdot \vec{n}_2 \, dS + \int_{S_{lat}} \rho \underbrace{\vec{u} \cdot \vec{n}_{lat}}_{0} \, dS = 0$.</p>
+    <p>Soit $-\int_{S_1} \rho u_{n1} \, dS + \int_{S_2} \rho u_{n2} \, dS = 0$. Ceci signifie que le débit massique entrant est égal au débit massique sortant : $Q_{m1} = Q_{m2}$.</p>
+    <p>Si on suppose les densités $\rho_1, \rho_2$ et les vitesses normales moyennes $u_1, u_2$ uniformes sur les sections $S_1, S_2$, alors :</p>
+    <div class="katex-display">
+        \rho_1 S_1 u_1 = \rho_2 S_2 u_2
+    </div>
+    <p>Pour un fluide <strong>incompressible</strong> ($\rho_1 = \rho_2$), la conservation de la masse implique la conservation du débit volumique :</p>
+    <div class="katex-display">
+        S_1 u_1 = S_2 u_2 \quad \text{ou} \quad Q_{v1} = Q_{v2}
+    </div>
+
+    <h3>ii. Théorème de la Quantité de Mouvement (Conservation de la quantité de mouvement)</h3>
+    <p>Soit un domaine matériel $D$ de volume $V(t)$ et de surface $S(t)$ en mouvement.</p>
+    <p>La <strong>quantité de mouvement</strong> totale du système contenu dans $V(t)$ est $\vec{K} = \int_{V(t)} \rho \vec{u} \, dV$.</p>
+    <p>Le <strong>théorème de la résultante cinétique</strong> (deuxième loi de Newton appliquée à un système matériel) stipule que le taux de variation de la quantité de mouvement est égal à la résultante des forces extérieures appliquées au système :</p>
+    <div class="katex-display">
+        \frac{d\vec{K}}{dt} = \vec{F}_{ext}
+    </div>
+    <p>Les forces extérieures $\vec{F}_{ext}$ se décomposent en :</p>
+    <ul>
+        <li>Forces de volume (agissant sur chaque élément de volume $dV$), dont la résultante est $\int_{V(t)} \rho \vec{F}_v \, dV$, où $\vec{F}_v$ est la force de volume par unité de masse (ex: gravité $\vec{g}$).</li>
+        <li>Forces de surface (agissant sur la surface $S(t)$), dont la résultante est $\oint_{S(t)} \vec{T} \, dS$, où $\vec{T}$ est le vecteur contrainte de Cauchy ($\vec{T} = \sigma \cdot \vec{n}$, où $\sigma$ est le tenseur des contraintes).</li>
+    </ul>
+    <div class="katex-display">
+        \vec{F}_{ext} = \int_{V(t)} \rho \vec{F}_v \, dV + \oint_{S(t)} \vec{T} \, dS
+    </div>
+
+    <div class="placeholder" style="width: 400px;">
+        Placeholder: Diagram showing a material volume D with volume forces (rho*Fv*dV) and surface forces (T*dS).
+        <!-- Example: <img src="placeholder_momentum_forces.png" alt="Forces on material volume"> -->
+    </div>
+
+    <p>En appliquant le théorème de transport de Reynolds à la quantité de mouvement $\vec{K} = \int_{V(t)} \rho \vec{u} \, dV$ :</p>
+     <div class="katex-display">
+        \frac{d\vec{K}}{dt} = \int_{V(t)} \left( \frac{\partial (\rho \vec{u})}{\partial t} + \nabla \cdot (\rho \vec{u} \otimes \vec{u}) \right) dV
+    </div>
+    <p>Où $\otimes$ est le produit tensoriel ($\nabla \cdot (\rho \vec{u} \otimes \vec{u})$ est un vecteur dont la i-ème composante est $\frac{\partial}{\partial x_j} (\rho u_i u_j)$).</p>
+    <p>En utilisant $\vec{T} = \sigma \cdot \vec{n}$ et le théorème de la divergence appliqué au tenseur $\sigma$ ( $\oint_S \sigma \cdot \vec{n} \, dS = \int_V \nabla \cdot \sigma \, dV$, où $\nabla \cdot \sigma$ est le vecteur divergence du tenseur $\sigma$, de composante $i$ : $\frac{\partial \sigma_{ij}}{\partial x_j}$), l'équation de quantité de mouvement devient :</p>
+    <div class="katex-display">
+        \int_{V(t)} \left( \frac{\partial (\rho \vec{u})}{\partial t} + \nabla \cdot (\rho \vec{u} \otimes \vec{u}) \right) dV = \int_{V(t)} \rho \vec{F}_v \, dV + \int_{V(t)} \nabla \cdot \sigma \, dV
+    </div>
+    <p>Cette relation étant valable pour tout volume $V(t)$, les intégrandes doivent être égaux :</p>
+    <div class="formula-box">
+        <strong>Équation de conservation de la quantité de mouvement (forme conservative) :</strong>
+        <div class="katex-display">
+             \frac{\partial (\rho \vec{u})}{\partial t} + \nabla \cdot (\rho \vec{u} \otimes \vec{u}) = \rho \vec{F}_v + \nabla \cdot \sigma
+        </div>
+        <p>En notation indicielle :</p>
+        <div class="katex-display">
+             \frac{\partial (\rho u_i)}{\partial t} + \frac{\partial (\rho u_i u_j)}{\partial x_j} = \rho F_{vi} + \frac{\partial \sigma_{ij}}{\partial x_j}
+        </div>
+    </div>
+
+    <p>On peut développer le terme $\frac{\partial (\rho u_i)}{\partial t} = u_i \frac{\partial \rho}{\partial t} + \rho \frac{\partial u_i}{\partial t}$ et $\frac{\partial (\rho u_i u_j)}{\partial x_j} = u_i \frac{\partial (\rho u_j)}{\partial x_j} + \rho u_j \frac{\partial u_i}{\partial x_j}$.</p>
+    <p>En regroupant les termes, on obtient :</p>
+    <div class="katex-display">
+        u_i \underbrace{\left( \frac{\partial \rho}{\partial t} + \frac{\partial (\rho u_j)}{\partial x_j} \right)}_{=0 \text{ (continuité)}} + \rho \underbrace{\left( \frac{\partial u_i}{\partial t} + u_j \frac{\partial u_i}{\partial x_j} \right)}_{= du_i/dt} = \rho F_{vi} + \frac{\partial \sigma_{ij}}{\partial x_j}
+    </div>
+    <p>Cela conduit à l'équation de Cauchy :</p>
+    <div class="formula-box">
+        <strong>Équation de conservation de la quantité de mouvement (forme non conservative ou équation de Cauchy) :</strong>
+        <div class="katex-display">
+            \rho \frac{d\vec{u}}{dt} = \rho \vec{F}_v + \nabla \cdot \sigma
+        </div>
+         <p>En notation indicielle :</p>
+        <div class="katex-display">
+             \rho \frac{du_i}{dt} = \rho F_{vi} + \frac{\partial \sigma_{ij}}{\partial x_j}
+        </div>
+         <p>Rappel : $\frac{d\vec{u}}{dt} = \frac{\partial \vec{u}}{\partial t} + (\vec{u} \cdot \nabla) \vec{u}$ est l'accélération de la particule fluide.</p>
+    </div>
+
+    <p><strong>Cas d'un fluide parfait (non visqueux) :</strong> Pour un fluide parfait au repos ou en mouvement, le tenseur des contraintes se réduit à la pression isotrope : $\sigma_{ij} = -P \delta_{ij}$, où $P$ est la pression thermodynamique et $\delta_{ij}$ est le symbole de Kronecker.</p>
+    <p>La divergence du tenseur des contraintes devient $\frac{\partial \sigma_{ij}}{\partial x_j} = \frac{\partial (-P \delta_{ij})}{\partial x_j} = -\frac{\partial P}{\partial x_i}$. Le vecteur $\nabla \cdot \sigma$ est donc $-\nabla P$.</p>
+    <p>L'équation de mouvement devient alors l'<strong>équation d'Euler</strong> :</p>
+    <div class="formula-box">
+        <strong>Équation d'Euler (fluide parfait) :</strong>
+        <div class="katex-display">
+            \rho \frac{d\vec{u}}{dt} = \rho \vec{F}_v - \nabla P
+        </div>
+         <p>Ou :</p>
+        <div class="katex-display">
+             \frac{\partial \vec{u}}{\partial t} + (\vec{u} \cdot \nabla) \vec{u} = \vec{F}_v - \frac{1}{\rho} \nabla P
+        </div>
+    </div>
+
+    <h3>iii. Équation de conservation de l'énergie</h3>
+    <p>Le premier principe de la thermodynamique pour un système matériel s'écrit : la variation de l'énergie totale $E$ du système est égale à la somme du travail des forces extérieures $P_{ext}$ et de la chaleur reçue par le système $\dot{Q}$ (puissance thermique).</p>
+    <div class="katex-display">
+        \frac{dE}{dt} = P_{ext} + \dot{Q}
+    </div>
+    <p>L'énergie totale $E$ est la somme de l'énergie cinétique $E_c$ et de l'énergie interne $U$ : $E = E_c + U$.</p>
+    <ul>
+        <li>Énergie cinétique : $E_c = \int_{V(t)} \frac{1}{2} \rho |\vec{u}|^2 \, dV$</li>
+        <li>Énergie interne : $U = \int_{V(t)} \rho e \, dV$, où $e$ est l'énergie interne massique.</li>
+    </ul>
+    <p>La puissance des forces extérieures $P_{ext}$ est la somme de la puissance des forces de volume $P_{vol}$ et de la puissance des forces de surface $P_{surf}$ :</p>
+    <ul>
+        <li>$P_{vol} = \int_{V(t)} \rho \vec{F}_v \cdot \vec{u} \, dV$</li>
+        <li>$P_{surf} = \oint_{S(t)} \vec{T} \cdot \vec{u} \, dS = \oint_{S(t)} (\sigma \cdot \vec{n}) \cdot \vec{u} \, dS = \oint_{S(t)} (\sigma^T \cdot \vec{u}) \cdot \vec{n} \, dS$
+        <br>En utilisant la divergence : $P_{surf} = \int_{V(t)} \nabla \cdot (\sigma^T \cdot \vec{u}) \, dV = \int_{V(t)} \frac{\partial (\sigma_{ji} u_i)}{\partial x_j} dV$ (si $\sigma$ est symétrique, $\sigma^T=\sigma$).</li>
+    </ul>
+    <p>La puissance thermique $\dot{Q}$ reçue par le système est la somme de la chaleur volumique (source interne, ex: rayonnement) et de la chaleur surfacique (conduction à travers la surface) :</p>
+    <ul>
+        <li>$\dot{Q}_{vol} = \int_{V(t)} \rho r \, dV$, où $r$ est le taux de chaleur massique reçu par source interne.</li>
+        <li>$\dot{Q}_{surf} = - \oint_{S(t)} \vec{q} \cdot \vec{n} \, dS$, où $\vec{q}$ est le vecteur flux de chaleur (sortant). Le signe moins indique que la chaleur *reçue* correspond à un flux entrant.
+        <br>En utilisant la divergence : $\dot{Q}_{surf} = - \int_{V(t)} \nabla \cdot \vec{q} \, dV$.</li>
+    </ul>
+    <p>L'équation globale de l'énergie devient donc :</p>
+     <div class="katex-display">
+        \frac{d}{dt} \int_{V(t)} \rho (e + \frac{1}{2} u^2) \, dV = \int_{V(t)} \rho \vec{F}_v \cdot \vec{u} \, dV + \int_{V(t)} \nabla \cdot (\sigma^T \cdot \vec{u}) \, dV + \int_{V(t)} \rho r \, dV - \int_{V(t)} \nabla \cdot \vec{q} \, dV
+    </div>
+    <p>En appliquant le théorème de transport à l'énergie totale et en passant à la forme locale (lemme fondamental), on obtient l'équation locale de conservation de l'énergie totale :</p>
+     <div class="katex-display">
+        \rho \frac{d}{dt} (e + \frac{1}{2} u^2) = \rho \vec{F}_v \cdot \vec{u} + \nabla \cdot (\sigma^T \cdot \vec{u}) + \rho r - \nabla \cdot \vec{q}
+    </div>
+
+    <p>On peut obtenir une équation pour l'énergie interne $e$ en soustrayant l'équation de l'énergie cinétique. L'équation de l'énergie cinétique s'obtient en multipliant scalairement l'équation de Cauchy par $\vec{u}$ :</p>
+     <div class="katex-display">
+        \rho \vec{u} \cdot \frac{d\vec{u}}{dt} = \rho \frac{d}{dt} (\frac{1}{2} u^2) = \rho \vec{F}_v \cdot \vec{u} + (\nabla \cdot \sigma) \cdot \vec{u}
+    </div>
+    <p>En soustrayant cette équation de l'équation de l'énergie totale, on obtient :</p>
+     <div class="katex-display">
+        \rho \frac{de}{dt} = \nabla \cdot (\sigma^T \cdot \vec{u}) - (\nabla \cdot \sigma) \cdot \vec{u} + \rho r - \nabla \cdot \vec{q}
+    </div>
+    <p>Le terme $\nabla \cdot (\sigma^T \cdot \vec{u}) - (\nabla \cdot \sigma) \cdot \vec{u}$ peut se simplifier. En indices : $\frac{\partial (\sigma_{ji} u_i)}{\partial x_j} - \frac{\partial \sigma_{kj}}{\partial x_j} u_k = (\frac{\partial \sigma_{ji}}{\partial x_j}) u_i + \sigma_{ji} \frac{\partial u_i}{\partial x_j} - \frac{\partial \sigma_{kj}}{\partial x_j} u_k$. Si on remplace l'indice muet $k$ par $i$, on voit que les premiers et derniers termes s'annulent, il reste $\sigma_{ji} \frac{\partial u_i}{\partial x_j}$. Si $\sigma$ est symétrique ($\sigma_{ji}=\sigma_{ij}$), ce terme est $\sigma_{ij} \frac{\partial u_i}{\partial x_j}$.</p>
+
+    <div class="formula-box">
+        <strong>Équation de conservation de l'énergie interne :</strong>
+        <div class="katex-display">
+            \rho \frac{de}{dt} = \sigma_{ij} \frac{\partial u_i}{\partial x_j} + \rho r - \nabla \cdot \vec{q}
+        </div>
+         <p>Le terme $\sigma_{ij} \frac{\partial u_i}{\partial x_j}$ représente la puissance des contraintes internes (transformée en chaleur ou énergie interne).</p>
+          <p>En notation indicielle complète :</p>
+        <div class="katex-display">
+            \rho \frac{de}{dt} = \sigma_{ij} \frac{\partial u_i}{\partial x_j} + \rho r - \frac{\partial q_k}{\partial x_k}
+        </div>
+    </div>
+
+    <p><strong>Loi de Fourier :</strong> Le flux de chaleur par conduction est souvent modélisé par la loi de Fourier : $\vec{q} = -k \nabla T$, où $k$ est la conductivité thermique et $T$ la température.</p>
+     <div class="katex-display">
+        q_i = -k \frac{\partial T}{\partial x_i}
+    </div>
+    <p><strong>Fluide Newtonien :</strong> Pour un fluide Newtonien, $\sigma_{ij} = -P \delta_{ij} + \tau_{ij}$, où $\tau_{ij}$ est le tenseur des contraintes visqueuses :</p>
+    <div class="katex-display">
+        \tau_{ij} = \mu \left( \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i} \right) + \lambda (\nabla \cdot \vec{u}) \delta_{ij} = 2 \mu \epsilon_{ij} + \lambda \epsilon_{kk} \delta_{ij}
+    </div>
+    <p>Le terme de puissance des contraintes devient $\sigma_{ij} \frac{\partial u_i}{\partial x_j} = (-P \delta_{ij} + \tau_{ij}) \frac{\partial u_i}{\partial x_j} = -P \frac{\partial u_i}{\partial x_i} + \tau_{ij} \frac{\partial u_i}{\partial x_j}$.</p>
+    <p>Le terme $\tau_{ij} \frac{\partial u_i}{\partial x_j} = \Phi$ est la <strong>fonction de dissipation visqueuse</strong> (toujours positive ou nulle), représentant la puissance mécanique irréversiblement convertie en chaleur par la viscosité.</p>
+    <p>L'équation de l'énergie interne devient :</p>
+    <div class="katex-display">
+         \rho \frac{de}{dt} = -P (\nabla \cdot \vec{u}) + \Phi + \rho r + \nabla \cdot (k \nabla T)
+    </div>
+     <p>En introduisant l'enthalpie massique $h = e + P/\rho$, on a $e = h - P/\rho$. Donc $\frac{de}{dt} = \frac{dh}{dt} - \frac{1}{\rho} \frac{dP}{dt} + \frac{P}{\rho^2} \frac{d\rho}{dt}$. En utilisant la continuité $\frac{d\rho}{dt} = -\rho (\nabla \cdot \vec{u})$, on a $\rho \frac{de}{dt} = \rho \frac{dh}{dt} - \frac{dP}{dt} - P (\nabla \cdot \vec{u})$.</p>
+    <p>En substituant dans l'équation précédente, on obtient l'équation en termes d'enthalpie :</p>
+     <div class="formula-box">
+        <strong>Équation de l'énergie (enthalpie) :</strong>
+        <div class="katex-display">
+            \rho \frac{dh}{dt} = \frac{dP}{dt} + \Phi + \rho r + \nabla \cdot (k \nabla T)
+        </div>
+    </div>
+
+    <hr>
+
+    <h1>Chapitre V : Application aux Écoulements des Fluides Parfaits</h1>
+
+    <h2>1. Dynamique des fluides parfaits</h2>
+
+    <h3>1.1 Introduction</h3>
+    <p>La dynamique des fluides parfaits concerne le mouvement des fluides considérés comme <strong>non visqueux</strong> ($\mu = 0, \lambda = 0$). Dans ce cas, le tenseur des contraintes se réduit à la pression : $\sigma_{ij} = -P \delta_{ij}$.</p>
+
+    <h3>1.2 Les équations d'Euler</h3>
+    <p>En mouvement, les forces agissant sur une particule de fluide parfait sont :</p>
+    <ul>
+        <li>Les forces de volume (ex: gravité $\rho \vec{g}$).</li>
+        <li>Les forces de surface dues à la pression ($-\nabla P$).</li>
+        <li>Les forces d'inertie (implicitement prises en compte par le terme $\rho d\vec{u}/dt$).</li>
+    </ul>
+    <p>L'équation de mouvement est l'équation d'Euler, dérivée précédemment :</p>
+    <div class="katex-display">
+        \rho \frac{d\vec{u}}{dt} = \rho \vec{F}_v - \nabla P
+    </div>
+    <p>Ou sous forme développée :</p>
+     <div class="katex-display">
+        \frac{\partial \vec{u}}{\partial t} + (\vec{u} \cdot \nabla) \vec{u} = \vec{F}_v - \frac{1}{\rho} \nabla P
+    </div>
+    <p><strong>Cas statique :</strong> Si le fluide est au repos ($\vec{u}=\vec{0}$), on retrouve l'équation de l'hydrostatique : $\nabla P = \rho \vec{F}_v$.</p>
+    <p><strong>Projection cartésienne :</strong> En projetant sur les axes $Ox_1, Ox_2, Ox_3$, et en notant $\vec{F}_v = (F_{v1}, F_{v2}, F_{v3})$ et $\vec{u} = (u_1, u_2, u_3)$, on obtient :</p>
+    <div class="katex-display">
+        \frac{\partial u_1}{\partial t} + u_1 \frac{\partial u_1}{\partial x_1} + u_2 \frac{\partial u_1}{\partial x_2} + u_3 \frac{\partial u_1}{\partial x_3} = F_{v1} - \frac{1}{\rho} \frac{\partial P}{\partial x_1}
+    </div>
+     <div class="katex-display">
+        \frac{\partial u_2}{\partial t} + u_1 \frac{\partial u_2}{\partial x_1} + u_2 \frac{\partial u_2}{\partial x_2} + u_3 \frac{\partial u_2}{\partial x_3} = F_{v2} - \frac{1}{\rho} \frac{\partial P}{\partial x_2}
+    </div>
+     <div class="katex-display">
+        \frac{\partial u_3}{\partial t} + u_1 \frac{\partial u_3}{\partial x_1} + u_2 \frac{\partial u_3}{\partial x_2} + u_3 \frac{\partial u_3}{\partial x_3} = F_{v3} - \frac{1}{\rho} \frac{\partial P}{\partial x_3}
+    </div>
+    <p>Ces équations sont valables pour un fluide non visqueux, compressible ou incompressible.</p>
+
+    <h3>1.3 La relation de Bernoulli</h3>
+    <p>Considérons l'équation d'Euler pour un fluide parfait, et utilisons l'identité pour l'accélération convective : $(\vec{u} \cdot \nabla) \vec{u} = \nabla (\frac{u^2}{2}) - \vec{u} \times (\nabla \times \vec{u})$.</p>
+     <div class="katex-display">
+         \frac{\partial \vec{u}}{\partial t} + \nabla \left(\frac{u^2}{2}\right) - \vec{u} \times (\nabla \times \vec{u}) = \vec{F}_v - \frac{1}{\rho} \nabla P
+    </div>
+    <p><strong>Hypothèses pour Bernoulli :</strong></p>
+    <ol>
+        <li><strong>Écoulement permanent :</strong> $\frac{\partial \vec{u}}{\partial t} = \vec{0}$.</li>
+        <li><strong>Fluide incompressible :</strong> $\rho = \text{cte}$.</li>
+        <li><strong>Force de volume dérivant d'un potentiel :</strong> $\vec{F}_v = -\nabla \Omega$ (par exemple, pour la gravité $\vec{g} = (0, 0, -g)$ si $Oz$ est vertical ascendant, $\Omega = g z$).</li>
+        <li><strong>Écoulement irrotationnel :</strong> $\nabla \times \vec{u} = \vec{0}$. Cette condition est souvent vérifiée si le fluide provient d'un réservoir au repos ou si la viscosité est négligeable partout.</li>
+    </ol>
+    <p>Sous ces hypothèses, l'équation d'Euler devient :</p>
+    <div class="katex-display">
+         \nabla \left(\frac{u^2}{2}\right) - \vec{u} \times \underbrace{(\nabla \times \vec{u})}_{\vec{0}} = -\nabla \Omega - \frac{1}{\rho} \nabla P
+    </div>
+     <div class="katex-display">
+         \nabla \left(\frac{u^2}{2}\right) + \nabla \Omega + \frac{1}{\rho} \nabla P = \vec{0}
+    </div>
+     <div class="katex-display">
+         \nabla \left( \frac{u^2}{2} + \Omega + \frac{P}{\rho} \right) = \vec{0}
+    </div>
+    <p>Ceci signifie que la quantité entre parenthèses est constante dans tout le domaine où les hypothèses sont valides :</p>
+    <div class="formula-box">
+        <strong>Équation de Bernoulli (fluide parfait, incompressible, permanent, irrotationnel, forces conservatives) :</strong>
+        <div class="katex-display">
+            \frac{u^2}{2} + \Omega + \frac{P}{\rho} = \text{constante}
+        </div>
+         <p>Si la seule force de volume est la gravité ($\Omega = g z$), où $z$ est l'altitude :</p>
+         <div class="katex-display">
+            \frac{u^2}{2} + g z + \frac{P}{\rho} = \text{constante}
+        </div>
+    </div>
+     <p><strong>Remarque :</strong> Si l'écoulement n'est pas irrotationnel ($\nabla \times \vec{u} \neq \vec{0}$), mais reste permanent, incompressible avec forces conservatives, l'équation est : $\nabla (\frac{u^2}{2} + \Omega + \frac{P}{\rho}) = \vec{u} \times (\nabla \times \vec{u})$. Le terme de gauche n'est nul que le long d'une ligne de courant (car $\vec{u} \times (\nabla \times \vec{u})$ est orthogonal à $\vec{u}$). Dans ce cas, la constante de Bernoulli est valable le long d'une ligne de courant, mais peut varier d'une ligne à l'autre.</p>
+
+    <h3>1.4 Interprétation Énergétique</h3>
+    <p>L'équation de Bernoulli peut être interprétée en termes d'énergie par unité de masse (en multipliant par $\rho$) ou par unité de poids (en divisant par $g$). Divisons par $g$ :</p>
+    <div class="katex-display">
+        \frac{u^2}{2g} + z + \frac{P}{\rho g} = H = \text{constante (en mètres)}
+    </div>
+    <ul>
+        <li>$\frac{u^2}{2g}$ : <strong>Hauteur cinétique</strong> (énergie cinétique par unité de poids).</li>
+        <li>$z$ : <strong>Hauteur potentielle</strong> ou <strong>altitude</strong> (énergie potentielle de pesanteur par unité de poids).</li>
+        <li>$\frac{P}{\rho g}$ : <strong>Hauteur piézométrique</strong> (énergie due à la pression par unité de poids).</li>
+        <li>$H$ : <strong>Charge totale</strong> (énergie totale par unité de poids), constante le long d'une ligne de courant (ou partout si irrotationnel).</li>
+        <li>$z + \frac{P}{\rho g}$ : <strong>Hauteur piézométrique totale</strong> ou côte piézométrique $h_p$.</li>
+    </ul>
+
+    <h3>1.5 Interprétation graphique</h3>
+    <p>Sur un schéma d'écoulement, on peut représenter ces hauteurs verticalement :</p>
+    <ul>
+        <li>Le niveau $z$ est la côte géométrique du point considéré par rapport à un plan de référence horizontal.</li>
+        <li>Le niveau $h_p = z + P/(\rho g)$ est le niveau atteint par le fluide dans un tube piézométrique connecté au point considéré. La ligne reliant ces niveaux est la <strong>ligne piézométrique</strong>.</li>
+        <li>Le niveau $H = h_p + u^2/(2g)$ est la hauteur totale. La ligne reliant ces niveaux est la <strong>ligne de charge</strong>. Pour un fluide parfait dans les conditions de Bernoulli, la ligne de charge est horizontale.</li>
+    </ul>
+
+    <div class="placeholder" style="width: 500px;">
+        Placeholder: Diagram showing a streamline with reference plane, geometric height z, piezometric height hp, total head H, piezometric line, and total energy line.
+        <!-- Example: <img src="placeholder_bernoulli_lines.png" alt="Bernoulli graphical interpretation"> -->
+    </div>
+
+    <h3>1.6 Application du théorème de Bernoulli</h3>
+    <p>Pour appliquer le théorème de Bernoulli entre deux points A et B d'un écoulement :</p>
+    <ol>
+        <li><strong>Vérifier les hypothèses :</strong> Fluide parfait? Incompressible? Écoulement permanent? Forces conservatives? Écoulement irrotationnel (ou A et B sur la même ligne de courant)?</li>
+        <li><strong>Choisir les points A et B :</strong> Choisir des points où certaines grandeurs sont connues ou recherchées (ex: surface libre, sortie à l'air libre, point de vitesse nulle, section large...).</li>
+        <li><strong>Choisir un plan de référence :</strong> Définir un niveau $z=0$ pour les altitudes.</li>
+        <li><strong>Écrire l'équation :</strong> $\frac{u_A^2}{2g} + z_A + \frac{P_A}{\rho g} = \frac{u_B^2}{2g} + z_B + \frac{P_B}{\rho g}$.</li>
+    </ol>
+
+    <h4>a. Formule de Torricelli (Vidange d'un réservoir)</h4>
+    <p>Considérons un grand réservoir contenant un fluide, percé d'un petit orifice de section $S$ à une profondeur $h$ sous la surface libre. On cherche la vitesse d'écoulement $V_B$ à la sortie de l'orifice (dans la section contractée $\omega$).</p>
+    <div class="placeholder" style="width: 400px;">
+        Placeholder: Diagram of a tank draining through an orifice (Point A on free surface, Point B at orifice exit, height h).
+        <!-- Example: <img src="placeholder_torricelli.png" alt="Torricelli setup"> -->
+    </div>
+    <p><strong>Hypothèses :</strong> Fluide parfait, incompressible, permanent, gravité seule force ($\Omega=gz$), écoulement irrotationnel (si l'orifice est bien profilé).
+    <br><strong>Points :</strong> A à la surface libre, B à la sortie de l'orifice (section contractée).
+    <br><strong>Référence :</strong> $z=0$ au niveau de l'orifice B.</p>
+    <ul>
+        <li>Point A : $z_A = h$, $P_A = P_{atm}$ (pression atmosphérique), $u_A \approx 0$ (grand réservoir).</li>
+        <li>Point B : $z_B = 0$, $P_B = P_{atm}$ (jet libre dans l'atmosphère), $u_B = V_B$ (vitesse recherchée).</li>
+    </ul>
+    <p>Appliquons Bernoulli entre A et B :</p>
+     <div class="katex-display">
+         \frac{u_A^2}{2g} + z_A + \frac{P_A}{\rho g} = \frac{u_B^2}{2g} + z_B + \frac{P_B}{\rho g}
+    </div>
+    <div class="katex-display">
+         \frac{0^2}{2g} + h + \frac{P_{atm}}{\rho g} = \frac{V_B^2}{2g} + 0 + \frac{P_{atm}}{\rho g}
+    </div>
+     <div class="katex-display">
+         h = \frac{V_B^2}{2g} \implies V_B = \sqrt{2gh}
+    </div>
+    <p>C'est la formule de Torricelli : la vitesse d'éjection est la même que celle d'un corps tombant en chute libre d'une hauteur $h$.</p>
+    <p>Le débit volumique à la sortie est $Q_v = \omega V_B$. La section contractée $\omega$ est généralement plus petite que la section $S$ de l'orifice ($\omega = C_c S$, où $C_c$ est le coefficient de contraction). On peut écrire $Q_v = C_c S \sqrt{2gh} = C_d S \sqrt{2gh}$, où $C_d$ est le coefficient de débit de l'orifice.</p>
+
+
+    <h4>b. Tube de Pitot (Mesure de vitesse)</h4>
+    <p>Le tube de Pitot est un instrument permettant de mesurer la vitesse locale d'un écoulement.</p>
+    <div class="placeholder" style="width: 500px;">
+        Placeholder: Diagram of a Pitot tube in a flow field (Point A stagnation point, Point B static pressure point, manometer measuring PA-PB).
+        <!-- Example: <img src="placeholder_pitot_tube.png" alt="Pitot tube"> -->
+    </div>
+    <p>Il est constitué d'un tube coudé face à l'écoulement (point A, dit point d'arrêt ou de stagnation) et d'une prise de pression statique sur le côté (point B, où la vitesse n'est pas perturbée, $u_B = V$, vitesse de l'écoulement non perturbé).</p>
+    <p><strong>Hypothèses :</strong> Fluide parfait (ou effets visqueux négligeables localement), incompressible, permanent, A et B à la même altitude ($z_A = z_B$, ou tube horizontal), A et B sur la même ligne de courant.</p>
+    <ul>
+        <li>Point A (stagnation) : $u_A = 0$, $P_A$ (pression d'arrêt ou totale).</li>
+        <li>Point B (statique) : $u_B = V$ (vitesse locale), $P_B$ (pression statique).</li>
+    </ul>
+     <p>Appliquons Bernoulli entre A et B (en choisissant $z_A=z_B=0$):</p>
+     <div class="katex-display">
+         \frac{u_A^2}{2g} + z_A + \frac{P_A}{\rho g} = \frac{u_B^2}{2g} + z_B + \frac{P_B}{\rho g}
+    </div>
+    <div class="katex-display">
+         \frac{0^2}{2g} + 0 + \frac{P_A}{\rho g} = \frac{V^2}{2g} + 0 + \frac{P_B}{\rho g}
+    </div>
+     <div class="katex-display">
+         \frac{V^2}{2g} = \frac{P_A - P_B}{\rho g} \implies V = \sqrt{\frac{2(P_A - P_B)}{\rho}}
+    </div>
+    <p>La différence de pression $P_A - P_B$ (appelée pression dynamique) est mesurée, souvent à l'aide d'un manomètre différentiel. Si le manomètre utilise un fluide de densité $\rho_{mano}$ et indique une dénivellation $\Delta h$, alors $P_A - P_B = \rho_{mano} g \Delta h$. La vitesse est alors $V = \sqrt{\frac{2 \rho_{mano} g \Delta h}{\rho}}$.</p>
+
+    <h4>c. Tube de Venturi (Mesure de débit)</h4>
+    <p>Le tube de Venturi est un appareil inséré dans une conduite pour mesurer le débit. Il consiste en un rétrécissement suivi d'un élargissement progressif.</p>
+    <div class="placeholder" style="width: 500px;">
+        Placeholder: Diagram of a Venturi tube (Section 1 wide, Section 2 narrow, manomenter measuring P1-P2).
+        <!-- Example: <img src="placeholder_venturi_tube.png" alt="Venturi tube"> -->
+    </div>
+    <p>On mesure la différence de pression entre la section large (1) et la section rétrécie (2).</p>
+    <p><strong>Hypothèses :</strong> Fluide parfait (ou pertes de charge négligeables entre 1 et 2), incompressible, permanent, tube horizontal ($z_1 = z_2$). On considère les vitesses moyennes $u_1, u_2$ et pressions $P_1, P_2$ dans les sections $S_1, S_2$. Les points 1 et 2 sont sur une ligne de courant moyenne.</p>
+    <p>Continuité (incompressible) : $S_1 u_1 = S_2 u_2 \implies u_1 = \frac{S_2}{S_1} u_2$.</p>
+    <p>Bernoulli entre 1 et 2 (avec $z_1=z_2$) :</p>
+    <div class="katex-display">
+         \frac{u_1^2}{2g} + \frac{P_1}{\rho g} = \frac{u_2^2}{2g} + \frac{P_2}{\rho g}
+    </div>
+    <div class="katex-display">
+         \frac{P_1 - P_2}{\rho g} = \frac{u_2^2 - u_1^2}{2g}
+    </div>
+     <p>Substituons $u_1$ :</p>
+    <div class="katex-display">
+         \frac{P_1 - P_2}{\rho g} = \frac{u_2^2 - (S_2/S_1)^2 u_2^2}{2g} = \frac{u_2^2}{2g} \left( 1 - \left(\frac{S_2}{S_1}\right)^2 \right)
+    </div>
+    <p>On peut en tirer la vitesse $u_2$ dans la section rétrécie :</p>
+     <div class="katex-display">
+         u_2 = \sqrt{\frac{2(P_1 - P_2)}{\rho \left( 1 - (S_2/S_1)^2 \right)}}
+    </div>
+    <p>Le débit volumique est $Q_v = S_2 u_2$ :</p>
+     <div class="katex-display">
+         Q_v = S_2 \sqrt{\frac{2(P_1 - P_2)}{\rho \left( 1 - (S_2/S_1)^2 \right)}} = \frac{S_2}{\sqrt{1 - (S_2/S_1)^2}} \sqrt{\frac{2(P_1 - P_2)}{\rho}}
+    </div>
+    <p>La différence de pression $P_1 - P_2$ est mesurée par un manomètre différentiel.</p>
+
+    <h3>1.7 Généralisation de l'équation de Bernoulli (Fluides réels)</h3>
+
+    <h4>i. Cas des fluides réels (fluides visqueux)</h4>
+    <p>Pour un fluide réel (visqueux), l'écoulement s'effectue avec frottement. La viscosité provoque une dissipation d'énergie le long de l'écoulement. Par conséquent, le bilan énergétique par unité de poids (la charge totale) n'est plus constant mais diminue dans le sens de l'écoulement.</p>
+    <p>On dit qu'il se produit une <strong>perte de charge</strong>. Entre deux points A et B de l'écoulement (A en amont de B), l'équation de Bernoulli généralisée s'écrit (pour un fluide incompressible en écoulement permanent avec gravité) :</p>
+    <div class="formula-box">
+        <strong>Équation de Bernoulli généralisée (avec pertes de charge) :</strong>
+        <div class="katex-display">
+             \left( \frac{u_A^2}{2g} + z_A + \frac{P_A}{\rho g} \right) - \left( \frac{u_B^2}{2g} + z_B + \frac{P_B}{\rho g} \right) = \Delta H_{A \to B}
+        </div>
+         <p>Ou :</p>
+         <div class="katex-display">
+             H_A - H_B = \Delta H_{A \to B} \quad (\text{avec } H = \frac{u^2}{2g} + z + \frac{P}{\rho g})
+        </div>
+    </div>
+    <p>$\Delta H_{A \to B}$ représente la <strong>perte de charge</strong> entre les points A et B (exprimée en mètres de fluide). C'est une quantité toujours positive ($\Delta H \ge 0$), représentant l'énergie mécanique (par unité de poids) dissipée en chaleur par les frottements visqueux entre A et B.</p>
+    <p>Le calcul des pertes de charge $\Delta H$ est un problème central en hydraulique et fait appel à des formules empiriques ou à des analyses plus détaillées des écoulements visqueux.</p>
+
+    <hr>
+
+    <h1>Chapitre VI : Application aux Écoulements des Fluides Visqueux</h1>
+
+    <h2>1. Dynamique des fluides visqueux</h2>
+    <p>Nous avons déjà vu qu'un milieu continu en mouvement est caractérisé par l'équation de conservation de quantité de mouvement (équation de Cauchy) :</p>
+    <div class="katex-display">
+        \rho \frac{du_i}{dt} = \rho F_{vi} + \frac{\partial \sigma_{ij}}{\partial x_j}
+    </div>
+    <p>Pour relier les contraintes $\sigma_{ij}$ au mouvement, il faut une <strong>loi de comportement</strong>. Si on considère un <strong>fluide Newtonien isotrope</strong>, la loi de comportement relie le tenseur des contraintes $\sigma_{ij}$ au tenseur des taux de déformation $\epsilon_{ij} = \frac{1}{2} (\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i})$ :</p>
+     <div class="katex-display">
+        \sigma_{ij} = -P \delta_{ij} + \tau_{ij}
+    </div>
+    <p>où $P$ est la pression thermodynamique et $\tau_{ij}$ est le tenseur des contraintes visqueuses (ou déviateur des contraintes pour un fluide incompressible) :</p>
+    <div class="katex-display">
+        \tau_{ij} = 2 \mu \epsilon_{ij} + \lambda \epsilon_{kk} \delta_{ij} = \mu \left( \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i} \right) + \lambda (\nabla \cdot \vec{u}) \delta_{ij}
+    </div>
+    <p>Ici, $\mu$ est la viscosité dynamique (ou première viscosité) et $\lambda$ est la seconde viscosité (souvent reliée à $\mu$ par l'hypothèse de Stokes $\lambda = -2/3 \mu$, bien que cette hypothèse ne soit pas toujours justifiée).</p>
+    <p>En combinant ces relations, le tenseur des contraintes s'écrit :</p>
+     <div class="katex-display">
+        \sigma_{ij} = -P \delta_{ij} + \mu \left( \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i} \right) + \lambda (\nabla \cdot \vec{u}) \delta_{ij}
+    </div>
+
+    <p><strong>Composantes du tenseur des contraintes visqueuses $\tau_{ij}$ :</strong></p>
+    <ul>
+        <li>Normales (i=j) :
+            $\tau_{11} = 2\mu \frac{\partial u_1}{\partial x_1} + \lambda (\nabla \cdot \vec{u})$<br>
+            $\tau_{22} = 2\mu \frac{\partial u_2}{\partial x_2} + \lambda (\nabla \cdot \vec{u})$<br>
+            $\tau_{33} = 2\mu \frac{\partial u_3}{\partial x_3} + \lambda (\nabla \cdot \vec{u})$
+        </li>
+        <li>Tangentielles (i $\neq$ j) :
+            $\tau_{12} = \tau_{21} = \mu \left( \frac{\partial u_1}{\partial x_2} + \frac{\partial u_2}{\partial x_1} \right)$<br>
+            $\tau_{13} = \tau_{31} = \mu \left( \frac{\partial u_1}{\partial x_3} + \frac{\partial u_3}{\partial x_1} \right)$<br>
+            $\tau_{23} = \tau_{32} = \mu \left( \frac{\partial u_2}{\partial x_3} + \frac{\partial u_3}{\partial x_2} \right)$
+        </li>
+    </ul>
+    <p>Notez que $\sigma_{11} = -P + \tau_{11}$, $\sigma_{12} = \tau_{12}$, etc.</p>
+
+    <h3>Équations de Navier-Stokes</h3>
+    <p>En substituant l'expression de $\sigma_{ij}$ pour un fluide Newtonien dans l'équation de Cauchy $\rho \frac{du_i}{dt} = \rho F_{vi} + \frac{\partial \sigma_{ij}}{\partial x_j}$, on obtient :</p>
+    <div class="katex-display">
+         \rho \frac{du_i}{dt} = \rho F_{vi} + \frac{\partial}{\partial x_j} \left[ -P \delta_{ij} + \mu \left( \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i} \right) + \lambda (\nabla \cdot \vec{u}) \delta_{ij} \right]
+    </div>
+    <div class="katex-display">
+         \rho \frac{du_i}{dt} = \rho F_{vi} - \frac{\partial P}{\partial x_i} + \frac{\partial}{\partial x_j} \left[ \mu \left( \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i} \right) \right] + \frac{\partial}{\partial x_i} (\lambda (\nabla \cdot \vec{u}))
+    </div>
+    <p>Si on suppose que les coefficients de viscosité $\mu$ et $\lambda$ sont <strong>constants</strong> (uniformes dans l'espace), on peut les sortir des dérivées :</p>
+     <div class="katex-display">
+          \rho \frac{du_i}{dt} = \rho F_{vi} - \frac{\partial P}{\partial x_i} + \mu \frac{\partial^2 u_i}{\partial x_j \partial x_j} + \mu \frac{\partial}{\partial x_i} \left( \frac{\partial u_j}{\partial x_j} \right) + \lambda \frac{\partial}{\partial x_i} (\nabla \cdot \vec{u})
+    </div>
+     <p>En reconnaissant le Laplacien $\Delta u_i = \frac{\partial^2 u_i}{\partial x_j \partial x_j}$ et la divergence $\nabla \cdot \vec{u} = \frac{\partial u_j}{\partial x_j}$, on obtient les <strong>équations de Navier-Stokes</strong> pour un fluide compressible à viscosités constantes :</p>
+    <div class="formula-box">
+        <strong>Équations de Navier-Stokes (Compressible, $\mu, \lambda$ constants) :</strong>
+        <div class="katex-display">
+             \rho \frac{d\vec{u}}{dt} = \rho \vec{F}_v - \nabla P + \mu \Delta \vec{u} + (\mu + \lambda) \nabla (\nabla \cdot \vec{u})
+        </div>
+         <p>En notation indicielle :</p>
+        <div class="katex-display">
+             \rho \left( \frac{\partial u_i}{\partial t} + u_j \frac{\partial u_i}{\partial x_j} \right) = \rho F_{vi} - \frac{\partial P}{\partial x_i} + \mu \frac{\partial^2 u_i}{\partial x_j^2} + (\mu + \lambda) \frac{\partial}{\partial x_i} \left( \frac{\partial u_k}{\partial x_k} \right)
+        </div>
+    </div>
+
+    <p><strong>Cas d'un fluide incompressible :</strong> Si le fluide est incompressible, alors $\rho = \text{cte}$ et $\nabla \cdot \vec{u} = 0$. Les équations de Navier-Stokes se simplifient considérablement :</p>
+    <div class="formula-box">
+        <strong>Équations de Navier-Stokes (Incompressible, $\rho, \mu$ constants) :</strong>
+        <div class="katex-display">
+             \rho \frac{d\vec{u}}{dt} = \rho \vec{F}_v - \nabla P + \mu \Delta \vec{u}
+        </div>
+         <p>Ou sous forme développée :</p>
+        <div class="katex-display">
+             \rho \left( \frac{\partial \vec{u}}{\partial t} + (\vec{u} \cdot \nabla) \vec{u} \right) = \rho \vec{F}_v - \nabla P + \mu \Delta \vec{u}
+        </div>
+    </div>
+     <p>Ces équations, couplées à l'équation de continuité $\nabla \cdot \vec{u} = 0$, forment le système de base pour décrire les écoulements de fluides incompressibles visqueux (eau, huile, air à faible vitesse...).</p>
+    <p><strong>Projection cartésienne (incompressible) :</strong></p>
+    <div class="katex-display">
+         \rho \left( \frac{\partial u_1}{\partial t} + u_1 \frac{\partial u_1}{\partial x_1} + u_2 \frac{\partial u_1}{\partial x_2} + u_3 \frac{\partial u_1}{\partial x_3} \right) = \rho F_{v1} - \frac{\partial P}{\partial x_1} + \mu \left( \frac{\partial^2 u_1}{\partial x_1^2} + \frac{\partial^2 u_1}{\partial x_2^2} + \frac{\partial^2 u_1}{\partial x_3^2} \right)
+    </div>
+    <p>(Équations similaires pour $u_2$ et $u_3$).</p>
+
+    <h2>2. Équation de conservation de l'énergie (Fluide visqueux)</h2>
+    <p>Nous reprenons l'équation de l'énergie interne pour un fluide Newtonien :</p>
+    <div class="katex-display">
+         \rho \frac{de}{dt} = -P (\nabla \cdot \vec{u}) + \Phi + \rho r + \nabla \cdot (k \nabla T)
+    </div>
+    <p>où $\Phi = \tau_{ij} \frac{\partial u_i}{\partial x_j} = 2 \mu \epsilon_{ij} \epsilon_{ij} + \lambda (\epsilon_{kk})^2$ est la fonction de dissipation visqueuse (toujours $\ge 0$), $\rho r = \psi$ est le terme de source de chaleur volumique, et $\vec{q} = -k \nabla T$ (loi de Fourier, avec $k$ conductivité thermique).</p>
+
+    <p><strong>Formes alternatives de l'équation de l'énergie :</strong></p>
+    <ul>
+        <li><strong>En fonction de l'enthalpie ($h = e+P/\rho$) :</strong>
+            <div class="katex-display">
+                \rho \frac{dh}{dt} = \frac{dP}{dt} + \Phi + \psi + \nabla \cdot (k \nabla T)
+            </div>
+        </li>
+        <li><strong>En fonction de l'entropie ($de = TdS - Pd(1/\rho)$) :</strong>
+             <div class="katex-display">
+                \rho T \frac{dS}{dt} = \Phi + \psi + \nabla \cdot (k \nabla T)
+            </div>
+            <p>(Cette forme montre que la dissipation visqueuse $\Phi$, les sources $\psi$ et la conduction thermique sont les sources d'irréversibilité et donc de création d'entropie).</p>
+        </li>
+         <li><strong>En fonction de la température (si $h(T,P)$ et $k$ sont connus) :</strong>
+             <p>En utilisant $dh = C_p dT + \left(\frac{\partial h}{\partial P}\right)_T dP$ et $(\frac{\partial h}{\partial P})_T = \frac{1}{\rho}(1 - \beta T)$ (où $C_p$ est la capacité thermique à pression constante et $\beta = \frac{1}{V}(\frac{\partial V}{\partial T})_P = -\frac{1}{\rho}(\frac{\partial \rho}{\partial T})_P$ est le coefficient de dilatation thermique), on obtient :</p>
+             <div class="katex-display">
+                \rho C_p \frac{dT}{dt} - \beta T \frac{dP}{dt} = \Phi + \psi + \nabla \cdot (k \nabla T)
+            </div>
+        </li>
+    </ul>
+
+    <h2>3. Résumé : Formulation mathématique des problèmes de Mécanique des fluides (Écoulement Laminaire)</h2>
+    <p>Les grandeurs locales et instantanées que l'on cherche à calculer sont en général au nombre de six (pour un fluide simple) : la pression $P$, la masse volumique $\rho$, la température $T$, et les trois composantes de la vitesse $\vec{u} = (u_1, u_2, u_3)$.</p>
+    <p>Ces 6 inconnues sont liées par 6 équations couplées, qui expriment pour un fluide visqueux Newtonien :</p>
+    <ol>
+        <li><strong>L'équation d'état thermodynamique :</strong> Relie $P, \rho, T$. Ex: $f(P, \rho, T) = 0$ (pour un gaz parfait, $P = \rho R_s T$).</li>
+        <li><strong>La conservation de la masse (Continuité) :</strong> $\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \vec{u}) = 0$.</li>
+        <li><strong>La loi fondamentale de la dynamique (Navier-Stokes, 3 équations scalaires) :</strong> $\rho \frac{d\vec{u}}{dt} = \rho \vec{F}_v - \nabla P + \mu \Delta \vec{u} + (\mu + \lambda) \nabla (\nabla \cdot \vec{u})$.</li>
+        <li><strong>La loi de conservation de l'énergie (1 équation scalaire) :</strong> Par exemple, $\rho C_p \frac{dT}{dt} - \beta T \frac{dP}{dt} = \Phi + \psi + \nabla \cdot (k \nabla T)$.</li>
+    </ol>
+    <p>Ce système est généralement complexe. Des simplifications sont souvent nécessaires.</p>
+
+    <p><strong>Cas d'un fluide incompressible ($\rho=\text{cte}$, $\nabla \cdot \vec{u}=0$) :</strong></p>
+    <ul>
+        <li>L'équation d'état disparaît (ou est triviale $\rho=\text{cte}$).</li>
+        <li>La température est découplée du système vitesse-pression si les propriétés ($\mu, C_p, k, \beta$) ne dépendent pas fortement de $T$ et si la dissipation $\Phi$ et les sources $\psi$ sont négligeables ou connues.</li>
+        <li>Le système se réduit à 4 équations pour 4 inconnues ($\vec{u}, P$):</li>
+    </ul>
+    <table>
+        <tr><th>Équation</th><th>Formulation ($\rho, \mu$ constants)</th></tr>
+        <tr><td>Continuité</td><td>$\nabla \cdot \vec{u} = 0$</td></tr>
+        <tr><td>Navier-Stokes</td><td>$\rho \left( \frac{\partial \vec{u}}{\partial t} + (\vec{u} \cdot \nabla) \vec{u} \right) = \rho \vec{F}_v - \nabla P + \mu \Delta \vec{u}$</td></tr>
+    </table>
+    <p>L'équation de l'énergie (si nécessaire pour trouver T) devient :</p>
+    <table>
+         <tr><td>Énergie</td><td>$\rho C_p \frac{dT}{dt} = \Phi + \psi + \nabla \cdot (k \nabla T)$ (où $\beta=0$ pour $\rho$=cte, et $dP/dt$ n'intervient plus directement)</td></tr>
+    </table>
+
+
+    <p><strong>Cas d'un fluide parfait ($\mu=0, \lambda=0, k=0, \Phi=0$) et non chauffé ($\psi=0$) :</strong></p>
+    <ul>
+        <li>Navier-Stokes devient Euler : $\rho \frac{d\vec{u}}{dt} = \rho \vec{F}_v - \nabla P$.</li>
+        <li>L'équation de l'énergie se simplifie, par exemple $\rho C_p \frac{dT}{dt} - \beta T \frac{dP}{dt} = 0$. Pour un gaz parfait ($P=\rho R_s T$, $C_p$=cte, $\beta=1/T$), cela conduit à $\rho C_p \frac{dT}{dt} - \frac{dP}{dt} = 0$, ce qui est cohérent avec une évolution isentropique ($P/\rho^\gamma = \text{cte}$).</li>
+    </ul>
+
+    <h2>4. Quelques solutions analytiques des équations de Navier-Stokes</h2>
+    <p>Les équations de Navier-Stokes sont non linéaires et difficiles à résoudre en général. Cependant, des solutions analytiques exactes existent pour des géométries simples et des conditions d'écoulement particulières.</p>
+
+    <h3>4.1 Écoulement Laminaire entre 2 plaques parallèles fixes (Écoulement de Poiseuille Plan)</h3>
+    <p>Considérons un écoulement entre deux plaques planes, parallèles, infinies et fixes.</p>
+    <div class="placeholder" style="width: 400px;">
+        Placeholder: Diagram of flow between two fixed parallel plates (coordinates x1, x2, h separation).
+        <!-- Example: <img src="placeholder_poiseuille_plan.png" alt="Planar Poiseuille Flow Setup"> -->
+    </div>
+
+    <p><strong>Hypothèses :</strong></p>
+    <ol>
+        <li>Fluide <strong>incompressible</strong> ($\rho = \text{cte}$) et Newtonien ($\mu = \text{cte}$).</li>
+        <li>Plaques <strong>parallèles infinies</strong> dans les directions $x_1$ (écoulement) et $x_3$. On suppose $\frac{\partial}{\partial x_3} = 0$.</li>
+        <li>Écoulement <strong>laminaire unidimensionnel</strong> : $\vec{u} = (u_1(x_2), 0, 0)$. Donc $u_2 = u_3 = 0$.</li>
+        <li>Écoulement <strong>permanent</strong> : $\frac{\partial}{\partial t} = 0$.</li>
+        <li>Forces de volume négligées ($\vec{F}_v = \vec{0}$) ou seulement la gravité perpendiculaire à l'écoulement (compensée par le gradient de pression hydrostatique).</li>
+    </ol>
+
+    <p><strong>Analyse des équations :</strong></p>
+    <ul>
+        <li><strong>Continuité ($\nabla \cdot \vec{u} = 0$) :</strong> $\frac{\partial u_1}{\partial x_1} + \frac{\partial u_2}{\partial x_2} + \frac{\partial u_3}{\partial x_3} = 0$. Avec $u_2=u_3=0$, cela donne $\frac{\partial u_1}{\partial x_1} = 0$. Comme on a supposé $u_1$ fonction de $x_2$ seulement, $u_1 = u_1(x_2)$.</li>
+        <li><strong>Navier-Stokes (incompressible, permanent, $\vec{F}_v=\vec{0}$) :</strong> $\rho (\vec{u} \cdot \nabla) \vec{u} = - \nabla P + \mu \Delta \vec{u}$.
+            <ul>
+                <li>Composante $x_1$ : $\rho (u_1 \frac{\partial u_1}{\partial x_1} + u_2 \frac{\partial u_1}{\partial x_2} + u_3 \frac{\partial u_1}{\partial x_3}) = - \frac{\partial P}{\partial x_1} + \mu (\frac{\partial^2 u_1}{\partial x_1^2} + \frac{\partial^2 u_1}{\partial x_2^2} + \frac{\partial^2 u_1}{\partial x_3^2})$.
+                <br>Avec les hypothèses, $u_1$ ne dépend que de $x_2$, et $u_2=u_3=0$. L'équation se réduit à :
+                $0 = - \frac{\partial P}{\partial x_1} + \mu \frac{d^2 u_1}{d x_2^2}$.
+                </li>
+                <li>Composante $x_2$ : $0 = - \frac{\partial P}{\partial x_2} + \mu (\dots) = - \frac{\partial P}{\partial x_2}$. Donc $P$ ne dépend pas de $x_2$.</li>
+                <li>Composante $x_3$ : $0 = - \frac{\partial P}{\partial x_3} + \mu (\dots) = - \frac{\partial P}{\partial x_3}$. Donc $P$ ne dépend pas de $x_3$.</li>
+            </ul>
+        </li>
+    </ul>
+    <p>Conclusion : La pression $P$ ne dépend que de $x_1$, $P=P(x_1)$. L'équation en $x_1$ devient une équation différentielle ordinaire pour $u_1(x_2)$ :</p>
+    <div class="katex-display">
+        \mu \frac{d^2 u_1}{d x_2^2} = \frac{dP}{dx_1} \qquad (1)
+    </div>
+    <p>Comme le membre de gauche dépend de $x_2$ et le membre de droite de $x_1$, les deux doivent être égaux à une constante. Donc $\frac{dP}{dx_1} = \text{constante}$. Le gradient de pression moteur de l'écoulement est constant.</p>
+    <p><strong>Intégration :</strong> On intègre deux fois l'équation (1) par rapport à $x_2$ :</p>
+    <div class="katex-display">
+        \mu \frac{d u_1}{d x_2} = \left( \frac{dP}{dx_1} \right) x_2 + A
+    </div>
+    <div class="katex-display">
+        \mu u_1(x_2) = \left( \frac{dP}{dx_1} \right) \frac{x_2^2}{2} + A x_2 + B
+    </div>
+    <p>où $A$ et $B$ sont des constantes d'intégration déterminées par les conditions aux limites.</p>
+    <p><strong>Conditions aux limites (Poiseuille) :</strong> Le fluide adhère aux parois fixes. Si les plaques sont situées en $x_2 = 0$ et $x_2 = h$ :</p>
+    <ul>
+        <li>$u_1(0) = 0 \implies B = 0$.</li>
+        <li>$u_1(h) = 0 \implies (\frac{dP}{dx_1}) \frac{h^2}{2} + A h = 0 \implies A = - \frac{h}{2} \frac{dP}{dx_1}$.</li>
+    </ul>
+    <p>En substituant A et B, on obtient le profil de vitesse parabolique :</p>
+     <div class="formula-box">
+        <strong>Profil de vitesse (Poiseuille Plan) :</strong>
+        <div class="katex-display">
+            u_1(x_2) = \frac{1}{2\mu} \left( \frac{dP}{dx_1} \right) (x_2^2 - h x_2) = - \frac{1}{2\mu} \left( \frac{dP}{dx_1} \right) x_2 (h - x_2)
+        </div>
+         <p>Note: l'écoulement se fait des hautes pressions vers les basses pressions, donc $\frac{dP}{dx_1}$ est négatif, et $u_1(x_2)$ est positif pour $0 < x_2 < h$.</p>
+    </div>
+    <div class="placeholder" style="width: 400px;">
+        Placeholder: Diagram showing the parabolic velocity profile for Poiseuille flow.
+        <!-- Example: <img src="placeholder_poiseuille_profile.png" alt="Planar Poiseuille Velocity Profile"> -->
+    </div>
+
+    <h3>4.2 Écoulement Plan de Couette</h3>
+    <p>C'est un écoulement entre deux plaques parallèles, mais l'une des plaques est mobile.</p>
+    <div class="placeholder" style="width: 400px;">
+        Placeholder: Diagram of Couette flow setup (bottom plate fixed x2=0, top plate moving at U at x2=h).
+        <!-- Example: <img src="placeholder_couette_setup.png" alt="Couette Flow Setup"> -->
+    </div>
+    <p><strong>Hypothèses :</strong> Mêmes hypothèses que pour Poiseuille, sauf pour les conditions aux limites.</p>
+    <p><strong>Rappel de l'équation générale du mouvement :</strong></p>
+    <div class="katex-display">
+        u_1(x_2) = \frac{1}{2\mu} \left( \frac{dP}{dx_1} \right) x_2^2 + \frac{A}{\mu} x_2 + \frac{B}{\mu}
+    </div>
+    <p>(On a renommé les constantes $A/\mu \to A'$ et $B/\mu \to B'$ si on veut la forme $u_1(x_2) = \frac{1}{2\mu} (\frac{dP}{dx_1}) x_2^2 + A' x_2 + B'$).</p>
+    <p><strong>Conditions aux limites (Couette) :</strong> Plaque inférieure fixe à $x_2=0$, plaque supérieure mobile à la vitesse $U$ à $x_2=h$.</p>
+    <ul>
+        <li>$u_1(0) = 0 \implies B = 0$.</li>
+        <li>$u_1(h) = U \implies \mu U = (\frac{dP}{dx_1}) \frac{h^2}{2} + A h \implies A = \frac{\mu U}{h} - \frac{h}{2} \frac{dP}{dx_1}$.</li>
+    </ul>
+    <p>Le profil de vitesse général est la superposition d'un profil parabolique (dû au gradient de pression) et d'un profil linéaire (dû au mouvement de la plaque) :</p>
+    <div class="formula-box">
+        <strong>Profil de vitesse (Couette Plan Général) :</strong>
+        <div class="katex-display">
+            u_1(x_2) = \underbrace{\frac{1}{2\mu} \left( \frac{dP}{dx_1} \right) (x_2^2 - h x_2)}_{\text{Partie Poiseuille}} + \underbrace{\frac{U}{h} x_2}_{\text{Partie Couette pure}}
+        </div>
+    </div>
+
+    <p><strong>Cas particulier : Écoulement de Couette pur</strong></p>
+    <p>Si le gradient de pression est nul ($\frac{dP}{dx_1} = 0$), l'écoulement est uniquement dû au mouvement de la plaque supérieure.</p>
+    <p>Dans ce cas, $A = \mu U/h$ et $B=0$. Le profil de vitesse est linéaire :</p>
+     <div class="formula-box">
+        <strong>Profil de vitesse (Couette Pur, dP/dx1=0) :</strong>
+        <div class="katex-display">
+            u_1(x_2) = \frac{U}{h} x_2
+        </div>
+    </div>
+    <div class="placeholder" style="width: 400px;">
+        Placeholder: Diagram showing the linear velocity profile for pure Couette flow.
+        <!-- Example: <img src="placeholder_couette_profile.png" alt="Pure Couette Velocity Profile"> -->
+    </div>
+
+    <h3>4.3 Écoulement de Poiseuille dans une conduite cylindrique</h3>
+    <p>Considérons l'écoulement laminaire, permanent, incompressible dans une conduite cylindrique de rayon $R$ sous l'effet d'un gradient de pression constant $dP/dx$. On utilise les coordonnées cylindriques $(r, \theta, x)$ avec $x$ le long de l'axe.</p>
+     <p><strong>Hypothèses :</strong> $\vec{u} = (0, 0, u_x(r))$, $\partial/\partial t = 0$, $\partial/\partial \theta = 0$, $\partial u_x / \partial x = 0$ (continuité), $P=P(x)$.</p>
+    <p>L'équation de Navier-Stokes en $x$ se réduit à (en coordonnées cylindriques) :</p>
+     <div class="katex-display">
+         0 = - \frac{dP}{dx} + \mu \left( \frac{1}{r} \frac{d}{dr} \left( r \frac{d u_x}{dr} \right) \right)
+    </div>
+    <p>Intégration et conditions aux limites ($u_x(R)=0$, $du_x/dr(0)=0$ par symétrie) donnent le profil parabolique :</p>
+    <div class="formula-box">
+        <strong>Profil de vitesse (Poiseuille Cylindrique) :</strong>
+        <div class="katex-display">
+            u_x(r) = - \frac{1}{4\mu} \left( \frac{dP}{dx} \right) (R^2 - r^2)
+        </div>
+    </div>
+    <p>Le débit volumique est $Q_v = \int_0^R u_x(r) 2\pi r dr = - \frac{\pi R^4}{8\mu} \frac{dP}{dx}$. C'est la loi de Hagen-Poiseuille.</p>
+
+    <hr>
+
+</body>
+</html>
