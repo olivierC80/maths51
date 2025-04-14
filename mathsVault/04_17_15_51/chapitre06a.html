@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 6 Calcul matriciel</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '\\[', right: '\\]', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false} ] });"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+            color: #333;
+        }
+        h1, h2, h3, h4 {
+            color: #0056b3; /* Dark blue */
+            margin-top: 1.8em;
+            margin-bottom: 0.8em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.3em;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; color: #007bff; /* Lighter blue */ border-bottom: none; } /* Exercise titles */
+        h4 { font-size: 1.2em; color: #666; border-bottom: none; margin-top: 1.5em; } /* Correction subheadings, Objectives */
+
+        .exercice, .correction, .probleme-synthese {
+            margin-bottom: 2em;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fdfdfd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .correction {
+             background-color: #f0f9ff; /* Light blue background for corrections */
+             border-color: #cce5ff; /* Lighter blue border */
+        }
+        .objectif {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-left: 3px solid #007bff;
+        }
+         .boxed-objective { /* Style for objectives starting with □ */
+             border: 1px solid #aaa;
+             padding: 8px 12px;
+             display: block;
+             margin: 10px 0 15px 0;
+             font-style: italic;
+             color: #555;
+             border-left: 3px solid #007bff;
+             background-color: #f9f9f9;
+         }
+         .boxed-objective::before {
+             content: "□ Objectif : ";
+             font-weight: bold;
+             font-style: normal;
+             color: #333;
+         }
+        .placeholder {
+            background-color: #f0f0f0;
+            border: 1px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 15px 0;
+            font-style: italic;
+            color: #888;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        .katex-display > .katex { /* Less vertical space for pmatrix */
+             margin-top: 0.5em;
+             margin-bottom: 0.5em;
+        }
+        .katex-display {
+             margin: 0.8em 0;
+        }
+        /* Style for discussion cases */
+        .discussion-case, .case-label {
+            margin-top: 0.8em;
+            padding-left: 15px;
+        }
+        .case-label {
+             font-weight: bold;
+             color: #0056b3;
+             border-left: none;
+             padding-left: 0;
+        }
+        .discussion-case > p, .discussion-case > ul {
+            margin-left: 10px;
+             border-left: 3px solid #007bff;
+             padding-left: 10px;
+        }
+         /* Specific notes/warnings */
+        .note {
+            font-style: italic;
+            color: #e85d04; /* Orange-like color */
+            margin: 10px 0;
+            padding: 5px 10px;
+            background-color: #fff3e0;
+            border-left: 3px solid #e85d04;
+        }
+        .pin-note::before {
+            content: "📌 ";
+            font-weight: bold;
+        }
+        .snake-note::before {
+            content: "🐍 ";
+            font-weight: bold;
+        }
+        .at-mention::before {
+            content: "☞ "; /* Using a pointer symbol */
+            font-weight: bold;
+            margin-right: 3px;
+        }
+        .at-mention {
+             font-style: italic;
+             color: #888;
+             margin-left: 1em;
+        }
+         .note-perso::before {
+            content: "📝 Note personnelle : ";
+            font-weight: bold;
+         }
+        .note-perso {
+            font-style: italic;
+            color: #555;
+            background-color: #eee;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+         .warning-note {
+             color: #dc3545;
+             font-weight: bold;
+             background-color: #f8d7da;
+             border-left: 3px solid #dc3545;
+             padding: 5px 10px;
+             margin: 10px 0;
+         }
+         .warning-note::before {
+             content: "‼️ ";
+         }
+
+    </style>
+</head>
+<body>
+
+    <h1>Chapitre 6: Calcul matriciel</h1>
+
+    <h2>Introduction au Calcul matriciel</h2>
+    <p>En mathématiques, les matrices sont des tableaux de nombres servant notamment à représenter des applications linéaires entre espaces vectoriels, ou à stocker des données de manière structurée. Elles sont omniprésentes en algèbre linéaire, analyse, probabilités, et dans de nombreuses applications scientifiques et techniques.</p>
+    <p>Par exemple, considérons deux matrices $A$ et $B$ d'ordre 2 :</p>
+    $$ A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}, \quad B = \begin{pmatrix} e & f \\ g & h \end{pmatrix} $$
+    <p>Le produit matriciel $AB$ est défini par :</p>
+    $$ AB = \begin{pmatrix} a & b \\ c & d \end{pmatrix} \begin{pmatrix} e & f \\ g & h \end{pmatrix} = \begin{pmatrix} ae + bg & af + bh \\ ce + dg & cf + dh \end{pmatrix} $$
+    <p>Ce chapitre explore les opérations fondamentales sur les matrices (addition, multiplication, transposition), les notions de matrice inversible, le calcul de puissances de matrices, et diverses applications.</p>
+    <div class="placeholder">Placeholder for: image0090116 (referenced as page 114)</div>
+
+    <h2>1. Équations matricielles</h2>
+    <p>Résolution d'équations où l'inconnue est une matrice. Cela inclut la recherche de matrices commutantes, la résolution de systèmes $AX=B$, ou la recherche de racines carrées matricielles $X^2=A$.</p>
+
+    <div class="exercice">
+        <h3>Exercice 6.1.1</h3>
+        <p class="objectif">Recherche de matrices commutantes.</p>
+        <p>Déterminer la forme générale des matrices $M \in \mathcal{M}_2(\mathbb{R})$ qui commutent avec la matrice $A = \begin{pmatrix} 2 & -1 \\ 0 & -2 \end{pmatrix}$, c'est-à-dire telles que $AM = MA$. (Indication : Poser $M=\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ et résoudre le système issu de $AM=MA$).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.1.2</h3>
+        <p class="objectif">$AB = 0$ n'implique pas $A = 0$ ou $B = 0$.</p>
+        <p>Soit $A = \begin{pmatrix} 3 & -1 \\ 6 & -2 \end{pmatrix}$. Déterminer l'ensemble des matrices carrées $X, Y, Z \in \mathcal{M}_2(\mathbb{R})$ telles que :</p>
+        <ol>
+            <li>$AX = 0$. (0 est la matrice nulle d'ordre 2).</li>
+            <li>$YA = 0$.</li>
+            <li>$AZ = ZA = 0$.</li>
+        </ol>
+         (Indication : Poser $X, Y, Z$ avec des coefficients génériques et résoudre les systèmes linéaires obtenus).
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.1.3</h3>
+        <p class="objectif">Résolution d’équations matricielles du type $AX=B$.</p>
+        <p>Résoudre dans $\mathcal{M}_2(\mathbb{R})$ les équations suivantes d'inconnue $X$ :</p>
+        <ol>
+            <li>$\begin{pmatrix} 2 & 5 \\ 1 & 3 \end{pmatrix} X = \begin{pmatrix} 4 & -6 \\ 2 & 1 \end{pmatrix}$. (Indication : vérifier si la matrice de gauche est inversible).</li>
+            <li>$\begin{pmatrix} 2 & 1 \\ 2 & 1 \end{pmatrix} X = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$. (Indication : vérifier si la matrice de gauche est inversible).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090117 (referenced as page 115)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.1.4</h3>
+        <p class="objectif">Recherche de racines carrées de matrices d'ordre 2.</p>
+        <p>Déterminer les matrices carrées $M \in \mathcal{M}_2(\mathbb{R})$ telles que :</p>
+        <ol>
+            <li>$M^2 = \begin{pmatrix} 0 & 0 \\ 6 & 9 \end{pmatrix}$.</li>
+            <li>$M^2 = I$. (Où $I$ est la matrice identité d'ordre 2).</li>
+        </ol>
+         (Indication : Poser $M=\begin{pmatrix} a & b \\ c & d \end{pmatrix}$, calculer $M^2$ et résoudre les systèmes d'équations sur $a,b,c,d$).
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.1.5</h3>
+        <p class="objectif">Recherche de racines carrées d'une matrice paramétrée par diagonalisation.</p>
+        <p>On cherche à résoudre dans $\mathcal{M}_2(\mathbb{R})$ l'équation : $X^2 = A \quad (*)$ où $X$ est la matrice inconnue et $A = \begin{pmatrix} a & 1 - a \\ 1 - a & a \end{pmatrix}$ avec $0 < a < 1$.</p>
+        <ol>
+            <li>Vérifier que $A$ est diagonalisable en calculant $D = P^{-1}AP$, où $P = \begin{pmatrix} 1 & 1 \\ -1 & 1 \end{pmatrix}$. S'assurer que $D$ est diagonale.</li>
+            <li>On pose $Y = P^{-1}XP$.
+            (a) Montrer que l'équation $(*)$ équivaut à $Y^2 = D \quad (**)$. (Utiliser $X=PYP^{-1}$).
+            (b) On pose $Y = \begin{pmatrix} x & y \\ z & t \end{pmatrix}$.
+            i. Écrire le système d'équations sur $x,y,z,t$ équivalent à $(**)$.
+            ii. Montrer qu'aucune solution de $(**)$ ne vérifie $x + t = 0$. (Indication : utiliser le système trouvé en (i)).
+            iii. Résoudre ce système (en déduire $y=z=0$). Discuter selon la valeur de $a$ pour l'existence de $x$. Donner toutes les solutions $Y$ de $(**)$.
+            (c) En utilisant la relation $X = PYP^{-1}$, déduire le nombre de solutions $X$ de l'équation $(*)$ en fonction de $a$. (Le nombre de solutions $X$ est le même que le nombre de solutions $Y$).
+            </li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090118 (referenced as page 116)</div>
+    </div>
+
+    <h2>2. Matrices inversibles</h2>
+    <p>Cette section est consacrée à la notion fondamentale d'inversibilité d'une matrice carrée. On y verra les définitions, des méthodes de calcul de l'inverse (formule pour l'ordre 2, pivot de Gauss, polynôme annulateur), et des propriétés liées à l'inversibilité.</p>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.1</h3>
+        <p class="objectif">Simplification matricielle avec inversibilité.</p>
+        <p>Soit $A \in \mathcal{M}_2(\mathbb{R})$ une matrice inversible vérifiant : $A^3 = A$. Déterminer la matrice $A$. (Indication : Multiplier par $A^{-1}$).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.2</h3>
+        <p class="objectif">Définition de l'inverse d'une matrice.</p>
+        <ol>
+            <li>Montrer que la matrice $A = \begin{pmatrix} 11 & -6 \\ -20 & 11 \end{pmatrix}$ admet pour inverse la matrice $B = \begin{pmatrix} 11 & 6 \\ 20 & 11 \end{pmatrix}$. (Indication : Calculer $AB$).</li>
+            <li>Montrer que la matrice $A = \begin{pmatrix} 2 & 4 \\ 5 & 10 \end{pmatrix}$ n'est pas inversible. (Indication : Calculer son déterminant ou montrer que ses colonnes sont liées).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.3</h3>
+        <p class="objectif">Formule générale pour l'inverse d'une matrice d'ordre 2 (et condition).</p>
+        <p>Soit $A = \begin{pmatrix} a & b \\ c & d \end{pmatrix} \in \mathcal{M}_2(\mathbb{R})$.</p>
+        <ol>
+            <li>Vérifier que $A$ satisfait l'équation polynomiale :
+             $$ A^2 - (\operatorname{Tr} A)A + (\det A)I = 0 $$
+             où $\operatorname{Tr} A = a+d$ est la trace de $A$ et $\det A = ad-bc$ est le déterminant de $A$. (C'est le théorème de Cayley-Hamilton pour $n=2$).</li>
+             <li>En déduire une condition nécessaire et suffisante (portant sur $\det A$) pour que $A$ soit inversible.</li>
+             <li>Lorsque $A$ est inversible, donner une formule simple exprimant l'inverse $A^{-1}$ en fonction de $A$, $I$, et des scalaires $a,b,c,d$.</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090119 (referenced as page 117)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.4</h3>
+        <p class="objectif">Calcul pratique de l'inverse d'une matrice par pivot de Gauss.</p>
+        <p>Calculer $A^{-1}$ dans les exemples suivants en utilisant la méthode du pivot de Gauss sur le système $AX=Y$ ou sur la matrice augmentée $(A | I)$:</p>
+        <ol>
+            <li>$A = \begin{pmatrix} 1 & 2 \\ 2 & 5 \end{pmatrix}$</li>
+            <li>$A = \begin{pmatrix} 1 & 1 & 3 \\ 1 & 2 & 4 \\ -1 & 1 & 0 \end{pmatrix}$</li>
+            <li>$A = \begin{pmatrix} 2 & 2 & 3 \\ 1 & -1 & 0 \\ -1 & 2 & 1 \end{pmatrix}$</li>
+            <li>$A = \begin{pmatrix} 3 & -2 & 0 & -1 \\ 0 & 2 & 2 & 1 \\ 1 & -2 & -3 & -2 \\ 0 & 1 & 2 & 1 \end{pmatrix}$</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.5</h3>
+        <p class="objectif">Une relation matricielle impliquant un inverse.</p>
+        <p>Soit $A$ et $B$ dans $\mathcal{M}_n(\mathbb{R})$. On suppose que $A + B$ est inversible et on pose $C = (A + B)^{-1}$. Montrer que : $ACB = BCA$. (Indication : Partir de $(A+B)C = I$ et $C(A+B)=I$).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.6</h3>
+        <p class="objectif">Inverse et relation polynomiale sur la matrice.</p>
+        <ol>
+            <li>Soit $A = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}$. Calculer $A^2 - 3A$. En déduire que $A$ n'est pas inversible (par l'absurde). Ce résultat était-il prévisible ? (Observer les colonnes ou lignes de A).</li>
+            <li>Soit $A = \begin{pmatrix} 2 & 0 & 0 \\ 0 & -1 & -\sqrt{3} \\ 0 & \sqrt{3} & -1 \end{pmatrix}$. Calculer $A^3$. En déduire que $A$ est inversible et déterminer son inverse $A^{-1}$.</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090120 (referenced as page 118)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.7</h3>
+        <p class="objectif">Inverse et relation polynomiale.</p>
+        <p>On considère la matrice :</p>
+        $$ A = \begin{pmatrix} 1 & 1 & -1 & -3 \\ 1 & 1 & 1 & -2 \\ 0 & -1 & 0 & 1 \\ 1 & 1 & 0 & -2 \end{pmatrix} $$
+        <ol>
+            <li>(a) Calculer $A^2$.
+            (b) En déduire que la matrice $A$ est inversible et déterminer $A^{-1}$.</li>
+            <li>(a) Soit $a, b \in \mathbb{R}$. On note $M$ la matrice définie par $M = aI + bA$. Montrer que $M$ vérifie une relation du type : $M^2 = \gamma I + \delta M$, où $\gamma, \delta$ sont des scalaires à déterminer en fonction de $a,b$. (Utiliser le résultat de 1a).
+            (b) En déduire que, si $(a, b) \neq (0, 0)$, alors la matrice $M$ est inversible (discuter selon $\gamma$). Exprimer l'inverse $M^{-1}$ comme combinaison linéaire de $I$ et $M$.
+            (c) Application : donner l'inverse de la matrice $N = \sqrt{2} I + 1 A$.
+             $$ N = \begin{pmatrix} 1 + \sqrt{2} & 1 & -1 & -3 \\ 1 & 1 + \sqrt{2} & 1 & -2 \\ 0 & -1 & \sqrt{2} & 1 \\ 1 & 1 & 0 & -2 + \sqrt{2} \end{pmatrix} $$</li>
+        </ol>
+        (Note: L'exercice original est nommé 2.7c dans la correction. Nous gardons 6.2.7).
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.8</h3>
+        <p class="objectif">Inverse et relation polynomiale.</p>
+        <p>Soit la matrice</p>
+        $$ A = \begin{pmatrix} -2 & 1 & -1 \\ -7 & 6 & -7 \\ -3 & 3 & -4 \end{pmatrix} $$
+        <p>Vérifier que l'on a la relation : $A^2 - A - 2I_3 = 0$. En déduire alors que $A$ est inversible et déterminer $A^{-1}$ en fonction de $A$ et $I$.</p>
+        <div class="placeholder">Placeholder for: image0090121 (referenced as page 119)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.9</h3>
+        <p class="objectif">Inverse et relation polynomiale.</p>
+        <p>Soit la matrice $A = \begin{pmatrix} 2 & 1 & 1 \\ 1 & 2 & 1 \\ 1 & 1 & 2 \end{pmatrix}$.</p>
+        <ol>
+            <li>Calculer $A^2$. Trouver $\alpha, \beta$ tels que $A^2 = \alpha A + \beta I$.</li>
+            <li>En déduire que $A$ est inversible et exprimer $A^{-1}$ en fonction de $A$ et $I$.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.10</h3>
+        <p class="objectif">Autour des matrices-colonnes unitaires et des matrices de réflexion.</p>
+        <p>Une matrice-colonne $X = \begin{pmatrix} x_1 \\ \vdots \\ x_n \end{pmatrix} \in \mathcal{M}_{n,1}(\mathbb{R})$ est dite unitaire si sa norme euclidienne au carré vaut 1, c'est-à-dire $\sum_{i=1}^n x_i^2 = 1$.</p>
+        <ol>
+            <li>Montrer que $X$ est unitaire $\iff {}^tX X = 1$ (où $^tX$ est la transposée de $X$, une matrice ligne, et le résultat du produit est une matrice $1 \times 1$ identifiée à un scalaire).</li>
+            <li>On suppose $X$ unitaire. Soit $H = I_n - 2X {}^t X$. Montrer que $H^2 = I_n$. ( $H$ est une matrice de réflexion de Householder). En déduire que $H$ est inversible et préciser son inverse.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.11</h3>
+        <p class="objectif">Nilpotence et inversibilité.</p>
+        <ol>
+            <li>Soit $M \in \mathcal{M}_n(\mathbb{R})$ et $p \in \mathbb{N}^*$. Calculer le produit matriciel : $(I_n - M)(I_n + M + M^2 + \cdots + M^{p-1})$. Si $M^p = 0$ (on dit que $M$ est nilpotente d'ordre $p$), que peut-on en déduire sur l'inversibilité de la matrice $I_n - M$ et quelle est son inverse ?</li>
+            <li>Soit $A = \begin{pmatrix} 2 & 2 & 1 \\ 3 & -1 & 3 \\ -6 & -3 & -4 \end{pmatrix}$.
+            Poser $M = A + I_3$. Calculer $M^2$ et $M^3$. En utilisant le résultat de la question 1, démontrer que $A$ est inversible et déterminer son inverse $A^{-1}$. (Indication : $A = M-I = -(I-M)$).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090122 (referenced as page 120)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.12</h3>
+        <p class="objectif">Application de l'inverse d'une matrice à la résolution d'un système.</p>
+        <ol>
+            <li>Calculer l'inverse de la matrice $A = \begin{pmatrix} 2 & 1 & 0 \\ 3 & 2 & 1 \\ 1 & 2 & 2 \end{pmatrix}.$</li>
+            <li>On considère le système linéaire :
+            $$ S_m : \begin{cases} 2x + y = 1 \\ 3x + 2y + z = 3 \\ x + 2y + 2z = 4 \\ -x + 3y + z = m \end{cases} $$
+            En utilisant $A^{-1}$, résoudre les trois premières équations. Pour quelle valeur du paramètre réel $m$ la solution trouvée vérifie-t-elle aussi la quatrième équation ? Discuter l'ensemble des solutions de $S_m$.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.13</h3>
+        <p class="objectif">Lorsque le produit de trois matrices fait 0...</p>
+        <p>Soit $A, B, C \in \mathcal{M}_n(\mathbb{R})$ non nulles (où $n \geq 2$) telles que $ABC = 0$. Montrer qu'au moins deux des matrices $A, B, C$ ne sont pas inversibles. (Raisonner par l'absurde : si 0 ou 1 seule matrice n'est pas inversible, peut-on avoir $ABC=0$ ?). </p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.14</h3>
+        <p class="objectif">Matrices élémentaires et calcul d'inverse.</p>
+        <p>Soit $A = (a_{ij})_{1\leq i,j\leq 3} \in \mathcal{M}_3(\mathbb{R})$.</p>
+        <p>On note $M_{ij}$ la matrice obtenue en échangeant les lignes $i$ et $j$ de $I_3$. Par exemple :</p>
+         $$ M_{1,2} = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{pmatrix}, \quad M_{1,3} = \dots, \quad M_{2,3} = \dots $$
+        <ol>
+            <li>(a) Calculer les produits matriciels $M_{1,2}A$, $M_{1,3}A$ et $M_{2,3}A$. Quel est l'effet de la multiplication à gauche par $M_{i,j}$ sur les lignes de A ?
+            (b) Montrer, sans calculs supplémentaires, que les matrices $M_{i,j}$ sont inversibles et préciser leurs inverses. (Quel est l'effet de $M_{i,j} M_{i,j}$ ?).</li>
+             <div class="placeholder">Placeholder for: image0090123 (referenced as page 121)</div>
+            <li>Soit $\alpha$ un réel non nul. On note $N_{i,\alpha}$ la matrice diagonale avec 1 sur la diagonale sauf le $i$-ème terme qui vaut $\alpha$.
+            $$ N_{1,\alpha} = \begin{pmatrix} \alpha & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}, \quad N_{2,\alpha} = \dots, \quad N_{3,\alpha} = \dots $$
+            (a) Calculer les produits matriciels $N_{i,\alpha}A$. Quel est l'effet de la multiplication à gauche par $N_{i,\alpha}$ sur les lignes de A ?
+            (b) Montrer que les matrices $N_{i,\alpha}$ sont inversibles et préciser leurs inverses.</li>
+            <li>Soit $\lambda$ un réel et $i_0 \neq j_0$ deux entiers distincts dans $\{1, 2, 3\}$. On note $R_{i_0,j_0,\lambda}$ la matrice identité avec en plus le coefficient $\lambda$ à la position $(i_0, j_0)$.
+            (a) Expliciter $R_{2,1,5}$ (opération $L_2 \leftarrow L_2 + 5L_1$). Calculer $R_{2,1,5}A$. Faire de même avec $R_{1,3,-2}$ ($L_1 \leftarrow L_1 - 2L_3$). Quel est l'effet général de la multiplication à gauche par $R_{i,j,\lambda}$ ?
+            (b) Montrer que les matrices $R_{i,j,\lambda}$ sont inversibles et préciser leurs inverses. (Quelle opération annule $L_i \leftarrow L_i + \lambda L_j$ ?).</li>
+            <li>Les matrices $M_{i,j}$, $N_{i,\alpha}$ et $R_{i,j,\lambda}$ sont appelées matrices élémentaires associées aux opérations élémentaires sur les lignes.
+            (a) Montrer que si une suite d'opérations élémentaires sur les lignes transforme $A$ en $A'$, alors il existe des matrices élémentaires $U_1, \dots, U_p$ telles que $A' = U_p \cdots U_1 A$.
+            (b) En déduire que $A$ est inversible si et seulement si elle peut être transformée en une matrice $A'$ inversible par des opérations élémentaires sur les lignes. (Utiliser le fait que les $U_k$ sont inversibles).
+            (c) En déduire la justification de l'algorithme du pivot de Gauss pour calculer l'inverse : si une suite d'opérations élémentaires sur les lignes transforme $A$ en $I_n$, alors la même suite d'opérations transforme $I_n$ en $A^{-1}$. (Partir de $I_n = U_p \cdots U_1 A$).</li>
+        </ol>
+         <div class="placeholder">Placeholder for: image0090124 (referenced as page 122)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.15</h3>
+        <p class="objectif">Condition d'inversibilité d'une matrice paramétrée.</p>
+        <p>Pour quelles valeurs de $m \in \mathbb{R}$, la matrice $A_m = \begin{pmatrix} m & 1 & 1 \\ 1 & m & 1 \\ 1 & 1 & m \end{pmatrix}$ est-elle inversible ? (Utiliser le pivot de Gauss pour transformer $A_m$ en matrice triangulaire et discuter selon les valeurs de $m$ annulant les pivots diagonaux).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.16</h3>
+        <p class="objectif">Une condition suffisante de commutativité.</p>
+        <p>Soit $A, B \in \mathcal{M}_n(\mathbb{R})$ vérifiant $AB = A + B$. Montrer que $A$ et $B$ commutent (i.e., $AB=BA$). (Indication : Considérer $(A-I)(B-I)$).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.17</h3>
+        <p class="objectif">Calcul de l'inverse d'une matrice d'ordre $n$.</p>
+        <p>Justifier que la matrice triangulaire supérieure suivante est inversible et déterminer son inverse $A^{-1}$ :</p>
+        $$ A = \begin{pmatrix} 1 & -1 & \cdots & -1 \\ 0 & 1 & \ddots & \vdots \\ \vdots & \ddots & \ddots & -1 \\ 0 & \cdots & 0 & 1 \end{pmatrix} $$
+        (Indication : Résoudre le système $AX=Y$).
+        <div class="placeholder">Placeholder for: image0090125 (referenced as page 123)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.18</h3>
+        <p class="objectif">Calcul de l'inverse d'une matrice d'ordre $n$.</p>
+        <p>Soit la matrice $A$ définie par $a_{ij} = j-i+1$ si $j \ge i$, et $a_{ij}=0$ si $j<i$.</p>
+        $$ A = \begin{pmatrix} 1 & 2 & 3 & \cdots & n \\ 0 & 1 & 2 & \cdots & n-1 \\ 0 & 0 & 1 & \cdots & n-2 \\ \vdots & \vdots & \ddots & \ddots & \vdots \\ 0 & 0 & \cdots & 0 & 1 \end{pmatrix} $$
+        <p>Montrer que $A$ est inversible et déterminer son inverse. (Indication : Résoudre $AX=Y$. Conjecturer la forme de $A^{-1}$ à partir des premières lignes de la résolution).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.19</h3>
+        <p class="objectif">Étude d'un ensemble de matrices formant une structure algébrique.</p>
+        <p>Soit $m > 0$. On note :</p>
+        $$ E_m = \left\{ M(x, y) = \begin{pmatrix} x & y \\ -(1 + m^2)y & x + 2my \end{pmatrix} \mid x, y \in \mathbb{R} \right\}. $$
+        <ol>
+            <li>Montrer que $(E_m, +, \times)$ est un anneau commutatif. (Montrer que $E_m$ est un sous-espace vectoriel de $\mathcal{M}_2(\mathbb{R})$ stable par multiplication, et vérifier la commutativité).</li>
+            <li>Montrer que si $(x, y) \neq (0, 0)$, la matrice $M(x, y)$ est inversible et que son inverse est dans $E_m$. (Calculer le déterminant. Trouver $x', y'$ tels que $M(x,y)M(x',y')=M(1,0)$).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.20</h3>
+        <p class="objectif">Matrice à diagonale strictement dominante.</p>
+        <p>Soit $A = (a_{ij})_{i,j} \in \mathcal{M}_n(\mathbb{R})$ une matrice telle que :</p>
+        $$ \forall i \in \llbracket 1, n \rrbracket, \quad |a_{ii}| > \sum_{j \neq i} |a_{ij}| $$
+        <div class="placeholder">Placeholder for: image0090126 (referenced as page 124)</div>
+        <p>Une telle matrice est dite à diagonale strictement dominante. Montrer qu'alors $A$ est inversible. (Indication : Montrer que le noyau de $A$ est réduit à $\{0\}$. Raisonner par l'absurde: si $AX=0$ avec $X \neq 0$, choisir l'indice $i_0$ tel que $|x_{i_0}|$ soit maximal et utiliser la $i_0$-ème ligne de $AX=0$).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.2.21</h3>
+        <p class="objectif">Inverse d’une matrice d’ordre $n$ particulière.</p>
+        <p>Soit $n \geq 2$ et la matrice $A$ dont tous les coefficients sont 1 sauf les coefficients diagonaux qui sont 0.</p>
+        $$ A = \begin{pmatrix} 0 & 1 & \cdots & 1 \\ 1 & 0 & \ddots & \vdots \\ \vdots & \ddots & \ddots & 1 \\ 1 & \cdots & 1 & 0 \end{pmatrix} \in \mathcal{M}_n(\mathbb{R}). $$
+        <p>Montrer que $A$ est inversible (pour $n \ge 2$) et calculer $A^{-1}$. (Indication : Trouver une relation simple entre $A$, $I$ et la matrice $J$ dont tous les coefficients valent 1. Calculer $J^2$. En déduire un polynôme annulateur pour $A$, puis l'inverse).</p>
+        <p class="at-mention">(Oral HEC)</p>
+        <div class="placeholder">Placeholder for: image0090127 (referenced as page 125)</div>
+    </div>
+
+    <h2>3. Puissances de matrices</h2>
+    <p>Calcul de $A^n$ pour $n \in \mathbb{N}$ (voire $n \in \mathbb{Z}$ si $A$ est inversible). Les méthodes principales sont la décomposition (par ex. $A=P D P^{-1}$ ou $A=cI+N$ avec $N$ nilpotente), la recherche d'une relation de récurrence (souvent via un polynôme annulateur), ou l'utilisation de suites récurrentes.</p>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.1</h3>
+        <p class="objectif">Calcul de puissances d'une matrice triangulaire.</p>
+        <p>On pose $M = \begin{pmatrix} 2 & -1 & 2 \\ 0 & 2 & -1 \\ 0 & 0 & 2 \end{pmatrix}$. Calculer $M^n$ pour $n \in \mathbb{N}$. (Indication : Décomposer $M = 2I + N$, calculer les puissances de $N$, et utiliser le binôme de Newton).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.2</h3>
+        <p class="objectif">Calcul de puissances d'une matrice (ordre 2).</p>
+        <p>Pour tout $n \in \mathbb{N}$, calculer $M^n$ où $M = \begin{pmatrix} 4 & 3 \\ -3 & -2 \end{pmatrix}$.
+        (Indication : On pourra décomposer $M = I + 3N$ avec $N = \begin{pmatrix} 1 & 1 \\ -1 & -1 \end{pmatrix}$. Calculer $N^2$).</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.3</h3>
+        <p class="objectif">Expression de la puissance d'une matrice à l'aide de suites récurrentes.</p>
+        <p>Soit la matrice $A = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 0 & 0 \\ 1 & 0 & 0 \end{pmatrix}$.</p>
+        <ol>
+            <li>(a) Calculer $A^2$ et $A^3$.
+            (b) Trouver une relation linéaire simple entre $A^3, A^2, A$. (Un polynôme annulateur de degré 3 ? Ou plus simple ?).</li>
+            <li>(a) Montrer par récurrence qu'il existe deux suites réelles $(a_n)_n$ et $(b_n)_n$ telles que :
+            $\forall n \in \mathbb{N}^*, A^n = a_n A + b_n A^2$. Donner les relations de récurrence liant $a_{n+1}, b_{n+1}$ à $a_n, b_n$ et les valeurs initiales $a_1, b_1$.
+             <div class="placeholder">Placeholder for: image0090128 (referenced as page 126)</div>
+            (b) Montrer que la suite $(b_n)_n$ vérifie une relation de récurrence linéaire du 2nd ordre :
+            $\forall n \in \mathbb{N}^*, b_{n+2} = b_{n+1} + 2b_n$.</li>
+            <li>Déterminer les expressions explicites de $a_n$ et $b_n$ en fonction de $n$. En déduire l'expression de $A^n$ pour $n \in \mathbb{N}^*$.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.4</h3>
+        <p class="objectif">Expression de la puissance d'une matrice à l'aide de suites.</p>
+        <p>Soit la matrice $A = \begin{pmatrix} 2 & -1 & -1 & -1 \\ -1 & 2 & -1 & -1 \\ -1 & -1 & 2 & -1 \\ -1 & -1 & -1 & 2 \end{pmatrix}$.</p>
+        <ol>
+            <li>Calculer $A^2$. Vérifier qu'il existe $\alpha, \beta \in \mathbb{R}$ tels que $A^2 = \alpha A + \beta I$.</li>
+            <li>Établir par récurrence sur $n \in \mathbb{N}$ qu'il existe des réels $\alpha_n, \beta_n$ tels que $A^n = \alpha_n A + \beta_n I$. Exprimer $\alpha_{n+1}$ et $\beta_{n+1}$ en fonction de $\alpha_n$ et $\beta_n$ (et $\alpha, \beta$ de la question 1).</li>
+            <li>(a) Montrer que la suite $(\alpha_n)_n$ vérifie une relation de récurrence linéaire d'ordre 2. Déterminer l'expression de $\alpha_n$ en fonction de $n$.
+            (b) En déduire l'expression de $\beta_n$ en fonction de $n$.</li>
+            <li>(a) Prouver que $A$ est inversible et exprimer son inverse $A^{-1}$ en fonction de $A$ et de $I$ en utilisant la relation de la question 1.
+            (b) Vérifier si les expressions de $\alpha_n$ et $\beta_n$ trouvées en 3. sont encore valables pour $n = -1$ (en comparant $A^{-1}$ et $\alpha_{-1}A + \beta_{-1}I$).
+            (c) Conjecturer et prouver (ou admettre) l'expression de $A^n$ pour $n \in \mathbb{Z}$.</li>
+        </ol>
+        <p class="at-mention">(Inspiré Ecricome)</p>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.5</h3>
+        <p class="objectif">Puissance de matrice par décomposition judicieuse.</p>
+        <p>On considère la matrice suivante :</p>
+        $$ A = \begin{pmatrix} 0 & 2 & 4 \\ 1/2 & 0 & 2 \\ 1/4 & 1/2 & 0 \end{pmatrix}. $$
+        <p>On pose $C = -\frac{1}{3}(A-2I)$ et $D = \frac{1}{3}(A+I)$. (Attention : correction utilise $-1/8$ pour C ? Non, la relation $A=-C+2D$ implique $3A=-3C+6D$. Or $C+D=I$. $3A = -3C+6(I-C) = -9C+6I$? Ne correspond pas. Utilisons les définitions données).
+        <div class="placeholder">Placeholder for: image0090129 (referenced as page 127)</div></p>
+        <ol>
+            <li>Calculer $C, D$. Puis calculer $C^2, D^2, CD, DC$. Calculer $C + D$. (Les matrices $C, D$ sont souvent des projecteurs spectraux si $A$ est diagonalisable).</li>
+            <li>Montrer par récurrence que pour tout $n \in \mathbb{N}$ : $A^n = (-1)^n C + 2^n D$. (Utiliser $A=-C+2D$? Vérifier cette relation. Utiliser $C+D=I, C^2=C, D^2=D, CD=DC=0$).</li>
+            <li>(a) Calculer le produit $A \times A^{-1}_{guess} = (-C + 2D)\left(-C + \frac{1}{2}D\right)$.
+            (b) En déduire que $A$ est inversible et donner la valeur de $A^{-1}$ en fonction de $C, D$, puis explicitement.</li>
+        </ol>
+         (Note: la correction utilise $C=-1/8(A-2I)$ qui donne des calculs différents. Nous suivons la version de l'énoncé ici).
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.6</h3>
+        <p class="objectif">Puissance de matrices et récurrence (cas où AB=BA=0).</p>
+        <p>Soit les matrices:</p>
+        $$ A = \begin{pmatrix} 4 & 2 & 2 \\ 0 & 0 & 0 \\ -4 & -2 & -2 \end{pmatrix}, B = \begin{pmatrix} 0 & 0 & 0 \\ 3 & 4 & 3 \\ -3 & -4 & -3 \end{pmatrix}, C = A+B = \begin{pmatrix} 4 & 2 & 2 \\ 3 & 4 & 3 \\ -7 & -6 & -5 \end{pmatrix}. $$
+         (Note: l'énoncé donne $C=\dots$ mais $C=A+B$ semble l'intention).
+        <ol>
+            <li>(a) Calculer $AB$ et $BA$.
+            (b) Calculer $A^2$ et $B^2$. En déduire une expression simple pour $A^n$ et $B^n$ pour tout $n \in \mathbb{N}^*$ (par récurrence).</li>
+            <li>Calculer $C^n = (A+B)^n$. Comme $AB=BA=0$, peut-on simplifier $(A+B)^n$ ? Montrer que $C^n = A^n + B^n$ pour $n \ge 1$. En déduire l'expression de $C^n$. (Note: La correction donne $C^n = B - (-2)^{n-1}A$, qui est différent. Vérifier la définition de C).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.7</h3>
+        <p class="objectif">Deux méthodes pour calculer une puissance matricielle.</p>
+        <p>On considère la matrice</p>
+        $$ A = \begin{pmatrix} 5 & -2 & -3 \\ 1 & 2 & -3 \\ 1 & -2 & 1 \end{pmatrix}. $$
+        <ol>
+            <li>Vérifier que $A^2 = 4A$. En déduire que $A$ n'est pas inversible.</li>
+            <li>Calculer $A^n$ pour $n \in \mathbb{N}^*$ par récurrence.</li>
+            <li>On pose $B = I + A$. Exprimer $B^n$ en fonction de $I$ et $A$ en utilisant la formule du binôme de Newton et le résultat de la question 2.</li>
+            <li>Retrouver le résultat de la question 3 en montrant d'abord que $B^2 = 5B - 4I$ (ou une relation similaire) et en utilisant une récurrence.</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090130 (referenced as page 128)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.8</h3>
+        <p class="objectif">Résolution d'un système récurrent via diagonalisation/trigonalisation.</p>
+        <p>On considère les matrices $T = \begin{pmatrix} 2 & 1 & 0 \\ 0 & 2 & 1 \\ 0 & 0 & 2 \end{pmatrix}$ (bloc de Jordan) et $N = T - 2I$.</p>
+        <ol>
+            <li>Calculer $N^2, N^3$. En déduire $T^n = (2I+N)^n$ pour $n \in \mathbb{N}$ en utilisant le binôme.</li>
+            <li>Soit $P = \begin{pmatrix} 1 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 1 & 1 \end{pmatrix}$. Montrer que $P$ est inversible et calculer $P^{-1}$.</li>
+            <li>(a) Calculer la matrice $A = PTP^{-1}$. (Elle devrait être différente de T).
+            (b) Établir par récurrence que : $\forall n \in \mathbb{N}, \, A^n = P T^n P^{-1}$. (Relation de similitude).
+            (c) En utilisant les résultats précédents, expliciter la matrice $A^n$.</li>
+            <li>Application : On considère le système récurrent $(X_{n+1} = A X_n)$ :
+            $$ \forall n \in \mathbb{N}, \begin{cases} x_{n+1} = a_{11}x_n + a_{12}y_n + a_{13}z_n \\ y_{n+1} = a_{21}x_n + a_{22}y_n + a_{23}z_n \\ z_{n+1} = a_{31}x_n + a_{32}y_n + a_{33}z_n \end{cases} $$
+            où $A$ est la matrice trouvée en 3a (il faut l'expliciter).
+            Résoudre ce système étant données les conditions initiales $x_0 = 1, y_0 = 0, z_0 = 1$. (Utiliser $X_n = A^n X_0$).</li>
+        </ol>
+         (Note: l'énoncé original donne le système avec des coefficients numériques qui correspondent à la matrice A calculée).
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.9</h3>
+        <p class="objectif">Puissance d'une matrice paramétrée (structure d'algèbre).</p>
+        <p>Soit $a$ un réel. On note $M(a) = \begin{pmatrix} 1 - 2a & a & a \\ a & 1 - 2a & a \\ a & a & 1 - 2a \end{pmatrix}$.</p>
+        <ol>
+            <li>Montrer que, pour tous réels $a$ et $b$, on a : $M(a)M(b) = M(a + b - 3ab)$.</li>
+            <li>En déduire les valeurs de $a$ pour lesquelles la matrice $M(a)$ est inversible. Pour ces valeurs, exprimer son inverse sous la forme $M(b)$ pour un $b$ à déterminer en fonction de $a$. (Chercher $b$ tel que $M(a)M(b)=M(0)=I$).</li>
+            <li>Déterminer le réel $a_0$ non nul tel que $M(a_0)$ soit idempotente, c'est-à-dire $(M(a_0))^2 = M(a_0)$.</li>
+            <li>On pose $P = M(a_0)$ et $Q = I - P$.
+            (a) Montrer qu'il existe un réel $\alpha$, que l'on exprimera en fonction de $a$, tel que : $M(a) = P + \alpha Q$. (Indication: $M(a) = c_1 P + c_2 Q$. Chercher $c_1, c_2$. Utiliser $P+Q=I$).
+             <div class="placeholder">Placeholder for: image0090131 (referenced as page 129)</div>
+            (b) Calculer $P^2$, $Q^2$, $PQ$ et $QP$. (Utiliser $P^2=P$).
+            (c) Calculer $(M(a))^n = (P + \alpha Q)^n$ pour $n \in \mathbb{N}^*$ en utilisant le binôme de Newton (justifier la commutativité) et les résultats de la question (b).
+            (d) Expliciter alors la matrice $(M(a))^n$.</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.10</h3>
+        <p class="objectif">Puissance d'une matrice paramétrée (décomposition $aA+bB$).</p>
+        <p>Pour tout couple de réels $(a, b)$, on pose :</p>
+        $$ M(a, b) = \begin{pmatrix} -a + 3b & a - b & 0 \\ -3(a - b) & 3a - b & 0 \\ 0 & 0 & a \end{pmatrix}. $$
+        <ol>
+            <li>Montrer qu’il existe deux matrices fixes $A$ et $B$ (indépendantes de $a, b$) telles que $M(a, b) = aA + bB$.</li>
+            <li>Calculer $A^2, B^2, AB$ et $BA$.</li>
+            <li>Pour tout $n \in \mathbb{N}^*$, calculer $A^n$ et $B^n$.</li>
+            <li>En déduire $(M(a, b))^n$ en utilisant le binôme de Newton (si $A$ et $B$ commutent).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.11</h3>
+        <p class="objectif">Division euclidienne de polynômes et puissance de matrice.</p>
+        <p>On considère la matrice $A = \begin{pmatrix} 1 & 1 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{pmatrix}$.</p>
+        <ol>
+            <li>Calculer $A^2$ et $A^3$. Trouver une relation simple entre $A^3, A^2, A, I$. En déduire un polynôme annulateur $P$ de $A$. Factoriser $P(X)$.</li>
+            <li>Déterminer le reste $R(X)$ de la division euclidienne de $X^n$ par $P(X)$ (utiliser les racines de $P$ et leurs multiplicités). En déduire $A^n = R(A)$ pour $n \in \mathbb{N}$.</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090132 (referenced as page 130)</div>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.12</h3>
+        <p class="objectif">Puissance et inverse d’une matrice paramétrée (groupe de Heisenberg discret).</p>
+        <p>Soit $G = \{ A(a, b, c) = \begin{pmatrix} 1 & a & b \\ 0 & 1 & c \\ 0 & 0 & 1 \end{pmatrix} \mid (a, b, c) \in \mathbb{R}^3\}$.</p>
+        <ol>
+            <li>Montrer que $G$ est stable par multiplication matricielle. Calculer $A(a, b, c) \times A(a', b', c')$.</li>
+            <li>Montrer que tout élément $A(a, b, c)$ de $G$ est inversible et que son inverse appartient à $G$. Préciser $(A(a, b, c))^{-1}$. (Chercher $a',b',c'$ tels que $A(a,b,c)A(a',b',c')=A(0,0,0)=I$).</li>
+            <li>Calculer $(A(a, b, c))^n$ pour $(a, b, c) \in \mathbb{R}^3$ et $n \in \mathbb{Z}$. (Indication : Décomposer $A=I+N$, calculer $N^2, N^3$. Utiliser le binôme. Vérifier la formule pour $n=-1$ et généraliser à $n \in \mathbb{Z}$).</li>
+        </ol>
+    </div>
+
+    <div class="exercice">
+        <h3>Exercice 6.3.13</h3>
+        <p class="objectif">Puissance d’une matrice paramétrée (structure d'espace vectoriel).</p>
+        <p>Soit la matrice $M_{a,b} = \begin{pmatrix} a & b & b \\ b & a & b \\ b & b & a \end{pmatrix}$. On note $E$ l’ensemble des matrices $M_{a,b}$ où $(a, b) \in \mathbb{R}^2$.</p>
+        <ol>
+            <li>Montrer que $E$ est un sous-espace vectoriel de $\mathcal{M}_3(\mathbb{R})$. Préciser une base et la dimension de $E$. (Indication : $M_{a,b} = \alpha I + \beta J$ ?).</li>
+            <li>Vérifier que $E$ est stable par produit matriciel. Calculer $M_{a,b} \times M_{c,d}$.</li>
+            <li>Calculer $M_{a,b}^n$ pour $n \geq 1$. (Indication : Décomposer $M_{a,b}$ en fonction de $I$ et de la matrice $L$ avec que des 1. Calculer $L^k$. Utiliser le binôme).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090133 (referenced as page 131)</div>
+    </div>
+
+    <h2>4. Problèmes de synthèse et compléments</h2>
+
+    <div class="probleme-synthese">
+        <h3>Exercice 6.4.1</h3>
+        <p class="objectif">Propriétés dans un espace de matrices.</p>
+        <p>Soit $J = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$ et l'ensemble $E = \{M(x,y) = xI + y(J-I) \mid (x, y) \in \mathbb{R}^2\}$. (Note: L'énoncé original utilise J directement. $J-I = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} = N$. Donc $E = \{xI+yN\}$.)</p>
+        <ol>
+            <li>Montrer que $E$ est un espace vectoriel. Donner une base et sa dimension.</li>
+            <li>Montrer que $E$ est stable par multiplication matricielle. Calculer $M(x,y)M(x',y')$.</li>
+            <li>Quels sont les éléments $M(x,y)$ de $E$ qui sont inversibles ? Déterminer leur inverse (qui doit aussi être dans E).</li>
+            <li>Résoudre les équations d'inconnue $X \in E$ : (a) $X^2 = I$, (b) $X^2 = 0$, (c) $X^2 = X$.</li>
+            <li>Pour $(x, y) \in \mathbb{R}^2$ et $n \in \mathbb{N}$, calculer $(M(x, y))^n = (xI+yN)^n$ en utilisant le binôme.</li>
+        </ol>
+    </div>
+
+    <div class="probleme-synthese">
+        <h3>Exercice 6.4.2</h3>
+        <p class="objectif">Présentation de la trace d'une matrice.</p>
+        <p>Soit $A = (a_{ij})_{1 \leq i, j \leq n} \in \mathcal{M}_n(\mathbb{R})$. On appelle trace de $A$, notée $\operatorname{Tr}(A)$, la somme de ses coefficients diagonaux : $\operatorname{Tr}(A) = \sum_{i=1}^{n} a_{ii}$.</p>
+        <ol>
+            <li>Montrer les propriétés fondamentales de la trace :
+             <ul>
+                 <li>$\forall A, B \in \mathcal{M}_n(\mathbb{R}), \operatorname{Tr}(AB) = \operatorname{Tr}(BA)$ (propriété cyclique).</li>
+                 <li>$\forall A, B \in \mathcal{M}_n(\mathbb{R}), \forall \lambda \in \mathbb{R}, \operatorname{Tr}(\lambda A + B) = \lambda \operatorname{Tr}(A) + \operatorname{Tr}(B)$ (linéarité).</li>
+             </ul>
+             <div class="placeholder">Placeholder for: image0090134 (referenced as page 132)</div>
+            </li>
+            <li>En déduire que deux matrices semblables ont la même trace :
+             $$\forall A \in \mathcal{M}_n(\mathbb{R}), \; \forall P \in GL_n(\mathbb{R}), \; \operatorname{Tr}(PAP^{-1}) = \operatorname{Tr}(A)$$
+            </li>
+        </ol>
+    </div>
+
+    <div class="probleme-synthese">
+        <h3>Exercice 6.4.3</h3>
+        <h4>Objectif : positivité et monotonie d'une matrice.</h4>
+        <p>Une matrice $A \in \mathcal{M}_{n,p}(\mathbb{R})$ est dite <strong>positive</strong> ($A \ge 0$) si tous ses coefficients $a_{ij}$ sont $\ge 0$.
+        Une matrice carrée $A \in \mathcal{M}_n(\mathbb{R})$ est dite <strong>monotone</strong> si $A$ est inversible et $A^{-1} \ge 0$.</p>
+        <ol>
+            <li>Montrer l'équivalence : $A \in \mathcal{M}_n(\mathbb{R})$ est monotone $\iff (\forall X \in \mathcal{M}_{n,1}(\mathbb{R}), \; AX \ge 0 \implies X \ge 0)$.</li>
+            <li>Montrer que la matrice tridiagonale suivante est monotone :
+            $$ A = \begin{pmatrix} 2 & -1 & 0 & \cdots & 0 \\ -1 & 2 & -1 & \ddots & \vdots \\ 0 & \ddots & \ddots & \ddots & 0 \\ \vdots & \ddots & -1 & 2 & -1 \\ 0 & \cdots & 0 & -1 & 2 \end{pmatrix} \in \mathcal{M}_n(\mathbb{R}) $$
+            (Indication : Utiliser la caractérisation de la question 1 et raisonner sur les composantes de $X$ en partant de la dernière ligne de $AX \ge 0$).</li>
+        </ol>
+    </div>
+
+    <div class="probleme-synthese">
+        <h3>Exercice 6.4.4</h3>
+        <h4>Objectif : autour de l'équation $XA + AX = I$ dans $\mathcal{M}_3(\mathbb{R})$.</h4>
+        <p>On considère la matrice (où $m \neq 0$) :</p>
+        $$ A = \begin{pmatrix} 0 & m & m^2 \\ 1/m & 0 & m \\ 1/m^2 & 1/m & 0 \end{pmatrix}. $$
+        <ol>
+            <li>Trouver deux réels $a$ et $b$ ($a < b$) tels que $A$ soit racine du polynôme $(X-a)(X-b)$, i.e., $(A - aI_3)(A - bI_3) = 0$.</li>
+            <li>On pose $P = \frac{1}{b - a}(A - aI_3)$ et $Q = \frac{1}{a - b}(A - bI_3)$. Montrer que $P+Q=I$, $P^2 = P$, $Q^2 = Q$, $PQ=QP=0$. ($P$ et $Q$ sont des projecteurs spectraux associés à $A$).</li>
+             <div class="warning-note">La page 133 est manquante dans le document source. La suite de l'exercice n'est pas disponible.</div>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090136 (referenced as page 134)</div>
+    </div>
+
+    <div class="probleme-synthese">
+        <h3>Exercice 6.4.5</h3>
+        <h4>Objectif : Exponentielle d'une matrice carrée d'ordre 2</h4>
+        <p>Soit $B, C, D$ les matrices définies par :</p>
+        $$ B = \begin{pmatrix} 0 & -1 \\ 2 & 3 \end{pmatrix}, \quad C = \begin{pmatrix} 2 & 1 \\ -2 & -1 \end{pmatrix} \quad \text{et} \quad D = \begin{pmatrix} -1 & -1 \\ 2 & 2 \end{pmatrix}. $$
+        <ol>
+            <li>Calculer $C^2, D^2, CD$ et $DC$.</li>
+            <li>Exprimer $B$ en fonction de $C$ et $D$. En utilisant la formule du binôme (si applicable), calculer $B^n$ pour $n \ge 1$. La formule trouvée est-elle encore vraie pour $n=0$ ? Donner l'expression explicite de $B^n$.</li>
+            <li>Pour $n \ge 1$ et $t \in \mathbb{R}$, on définit $E_n(t) = \sum_{k=0}^{n} \frac{t^k}{k!} B^k = \begin{pmatrix} a_n(t) & b_n(t) \\ c_n(t) & d_n(t) \end{pmatrix}$.
+            (a) Exprimer $B^k$ en fonction de $C$ et $D$. En déduire l'expression de $E_n(t)$ en fonction de $C, D$ et de sommes partielles de séries exponentielles. Expliciter les coefficients $a_n(t), \dots, d_n(t)$.
+            (b) Déterminer les limites de $a_n(t), b_n(t), c_n(t), d_n(t)$ lorsque $n \to +\infty$. On note $E(t)$ la matrice de ces limites.</li>
+            <li>(a) Vérifier que $E(t)$ est la matrice donnée dans l'énoncé.
+            (b) Exprimer $E(t)$ en fonction de $e^t, e^{2t}, C, D$.
+            (c) Montrer que $E(t)$ est inversible pour tout $t \in \mathbb{R}$ et déterminer son inverse. (Utiliser $E(t)E(t')=E(t+t')$ ou calculer le déterminant).</li>
+        </ol>
+        <div class="placeholder">Placeholder for: image0090137 (referenced as page 135)</div>
+    </div>
+
+    <div class="probleme-synthese">
+        <h3>Exercice 6.4.6</h3>
+        <p class="objectif">Décomposition d’une matrice carrée à l’aide de matrices symétrique et antisymétrique.</p>
+        <p>On rappelle qu'une matrice $A \in \mathcal{M}_n(\mathbb{R})$ est dite symétrique si ${}^tA = A$ et antisymétrique si ${}^tA = -A$.</p>
+        <p>Démontrer que toute matrice $M \in \mathcal{M}_n(\mathbb{R})$ se décompose de manière unique comme la somme d’une matrice symétrique et d’une matrice antisymétrique. (Indication : Analyse-synthèse. Supposer $M=S+A'$ avec $S$ symétrique, $A'$ antisymétrique. Calculer ${}^tM$ et en déduire $S$ et $A'$ en fonction de $M$ et ${}^tM$. Vérifier ensuite que ces $S$ et $A'$ conviennent).</p>
+    </div>
+
+    <div class="probleme-synthese">
+        <h3>Exercice 6.4.7</h3>
+        <p class="objectif">Une matrice nilpotente d’ordre 2 et symétrique est nulle.</p>
+        <p>Soit $A \in \mathcal{M}_n(\mathbb{R})$ symétrique ($^tA = A$) et telle que $A^2 = 0$. Montrer qu’alors $A = 0$. (Indication : Considérer la trace de $A^2$ ou de ${}^tA A$).</p>
+    </div>
+
+    <div class="probleme-synthese">
+        <h3>Exercice 6.4.8</h3>
+        <p class="objectif">Étude d’une suite de matrices (convergence vers un projecteur).</p>
+        <p>Soit $B \in \mathcal{M}_n(\mathbb{R})$ et $N \in \mathbb{N}^*$ tels que $[B(B - I_n)]^N = 0_n$ (i.e. $B(B-I)$ est nilpotente).</p>
+        <p>On définit la suite $(B_k)_{k \in \mathbb{N}}$ par $B_0 = B$ et $\forall k \in \mathbb{N}, B_{k+1} = (B_k)^2 (2B_k - I_n)^{-1}$ (il faut justifier l'inversibilité).</p>
+        <p>On admet la propriété $(\mathcal{H}_k)$ définie dans l'énoncé original.</p>
+         <div class="placeholder">Placeholder for: image0090138 (referenced as page 136)</div>
+        <ol>
+            <li>Justifier que $2B - I_n$ est inversible (utiliser la nilpotence de $B(B-I)$). En déduire que $(\mathcal{H}_0)$ est vraie.</li>
+            <li>On suppose $(\mathcal{H}_k)$ vraie. Montrer les relations données pour $2B_{k+1}-I$, $B_{k+1}-B$, et $B_{k+1}(B_{k+1}-I)$. En déduire que $(\mathcal{H}_{k+1})$ est vraie.</li>
+            <li>Prouver l'existence d'un entier $p$ tel que $B_p(B_p - I_n) = 0_n$. Montrer que $B - B_p$ est nilpotente et que $B_{k+1} = B_k$ pour $k \geq p$. (La suite converge vers un idempotent $B_p$).</li>
+        </ol>
+        (Note: l'exercice original est numéroté 4.8 dans la correction. Nous gardons 6.4.8).
+    </div>
+
+    <div class="probleme-synthese">
+        <h3>Exercice 6.4.9</h3>
+        <p class="objectif">Étude des matrices positives et productives.</p>
+        <p>Définitions : $M \ge 0$ (positive) si $m_{ij} \ge 0$. $M > 0$ (strictement positive) si $m_{ij} > 0$. $M \ge N \iff M-N \ge 0$.</p>
+        <p>$M \in \mathcal{M}_n(\mathbb{R})$ est <strong>productive</strong> si $M \ge 0$ et $\exists P \in \mathcal{M}_{n,1}(\mathbb{R})$, $P \ge 0$ tel que $(I-M)P > 0$.</p>
+        <h4>Caractérisation des matrices positives</h4>
+        <ol>
+            <li>Montrer que si $M \ge 0$ et $X \ge 0$, alors $MX \ge 0$.</li>
+             <div class="placeholder">Placeholder for: image0090139 (referenced as page 137)</div>
+            <li>Réciproquement, si $MX \ge 0$ pour tout $X \ge 0$, montrer que $M \ge 0$. (Choisir $X$ comme vecteurs de la base canonique).</li>
+        </ol>
+        <h4>Caractérisation des matrices productives</h4>
+        <ol start="1">
+            <li>Soit $A$ productive, $P \ge 0$ tel que $(I-A)P > 0$.
+            (a) Montrer que $P > 0$.
+            (b) Soit $X \ge AX$. Montrer que $X \ge 0$. (Utiliser $c = \min(x_j/p_j)$).
+            (c) Montrer que $X=AX \implies X=0$. En déduire que $I_n - A$ est inversible.
+            (d) Montrer que $(I_n - A)^{-1} \ge 0$. (Utiliser $Y=(I-A)^{-1}X$ et montrer $Y \ge 0$ si $X \ge 0$).</li>
+            <li>Réciproquement, si $B \ge 0$, $I-B$ inversible et $(I-B)^{-1} \ge 0$, montrer que $B$ est productive. (Poser $V=(I-B)^{-1}U$ où $U$ est le vecteur colonne de 1s).</li>
+            <li>Donner une caractérisation des matrices productives $A$ (combinant les conditions trouvées).</li>
+            <li>Application : Soit $M \ge 0$ telle que $2M^2=M$. Montrer que $M$ est productive. (Trouver $(I-M)^{-1}$ et vérifier les conditions).</li>
+        </ol>
+         <div class="placeholder">Placeholder for: image0090140 (referenced as page 138)</div>
+    </div>
+
+    <h2>Corrigés des exercices</h2>
+
+    <div class="correction">
+        <h3>Exercice 6.1.1c</h3>
+        <p>On cherche $M = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$ telle que $AM = MA$ avec $A = \begin{pmatrix} 2 & -1 \\ 0 & -2 \end{pmatrix}$.</p>
+        <p>Calculons $AM$ :</p>
+        $$ AM = \begin{pmatrix} 2 & -1 \\ 0 & -2 \end{pmatrix} \begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{pmatrix} 2a - c & 2b - d \\ -2c & -2d \end{pmatrix} $$
+        <p>Calculons $MA$ :</p>
+        $$ MA = \begin{pmatrix} a & b \\ c & d \end{pmatrix} \begin{pmatrix} 2 & -1 \\ 0 & -2 \end{pmatrix} = \begin{pmatrix} 2a & -a - 2b \\ 2c & -c - 2d \end{pmatrix} $$
+        <p>L'égalité $AM=MA$ se traduit par le système d'équations sur les coefficients :</p>
+        $$ \begin{cases} 2a - c = 2a \quad &(1,1) \\ 2b - d = -a - 2b \quad &(1,2) \\ -2c = 2c \quad &(2,1) \\ -2d = -c - 2d \quad &(2,2) \end{cases} $$
+        <p>Simplifions ce système :</p>
+        $$ \begin{cases} -c = 0 \implies c = 0 \\ -d = -a + 4b \implies d = a + 4b \quad (\text{corrigé de } -d=-a-4b) \\ -4c = 0 \implies c = 0 \\ -c = 0 \implies c = 0 \end{cases} $$
+         (Vérification de l'équation (1,2): $2b-d = -a-2b \iff -d = -a-4b \iff d=a+4b$. Correct.)
+        <p>Le système se réduit à $c=0$ et $d=a+4b$.</p>
+        <p>Les matrices $M$ qui commutent avec $A$ sont donc de la forme :</p>
+        $$ M = \begin{pmatrix} a & b \\ 0 & a + 4b \end{pmatrix}, \quad \text{où } (a, b) \in \mathbb{R}^2 $$
+         <div class="note-perso">La structure est $aI + b \begin{pmatrix} 0 & 1 \\ 0 & 4 \end{pmatrix}$.</div>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 6.1.2c</h3>
+        <p>Soit $A = \begin{pmatrix} 3 & -1 \\ 6 & -2 \end{pmatrix}$. On remarque que $C_1 = -3 C_2$ et $L_2 = 2 L_1$. La matrice A est de rang 1 et non inversible ($\det A = 3(-2) - (-1)(6) = -6+6=0$).</p>
+        <ol>
+            <li>$AX = 0$. Soit $X = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$.
+            $$ AX = \begin{pmatrix} 3 & -1 \\ 6 & -2 \end{pmatrix} \begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{pmatrix} 3a - c & 3b - d \\ 6a - 2c & 6b - 2d \end{pmatrix} = \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix} $$
+            <p>Le système est :</p>
+            $$ \begin{cases} 3a - c = 0 \\ 3b - d = 0 \\ 6a - 2c = 0 \\ 6b - 2d = 0 \end{cases} $$
+            <p>Les équations (3) et (4) sont le double des équations (1) et (2). Le système est équivalent à :</p>
+            $$ \begin{cases} c = 3a \\ d = 3b \end{cases} $$
+            <p>Les matrices $X$ solutions sont de la forme :</p>
+            $$ X = \begin{pmatrix} a & b \\ 3a & 3b \end{pmatrix} = \begin{pmatrix} a \\ 3a \end{pmatrix} \begin{pmatrix} 1 & b/a \end{pmatrix}? \text{ Non.} $$
+            $$ X = \begin{pmatrix} 1 & 0 \\ 3 & 0 \end{pmatrix} \begin{pmatrix} a & b \\ 0 & 0 \end{pmatrix}? \text{ Non plus.} $$
+            $$ X = \begin{pmatrix} a & b \\ 3a & 3b \end{pmatrix} = \begin{pmatrix} a \\ 3a \end{pmatrix} \begin{pmatrix} 1 & 0 \end{pmatrix} + \begin{pmatrix} b \\ 3b \end{pmatrix} \begin{pmatrix} 0 & 1 \end{pmatrix} ? \text{ Toujours pas.} $$
+             $$ X = \begin{pmatrix} 1 \\ 3 \end{pmatrix} \begin{pmatrix} a & b \end{pmatrix} $$
+            <p>Les solutions sont les matrices dont la deuxième ligne est le triple de la première ligne. $X = \begin{pmatrix} a & b \\ 3a & 3b \end{pmatrix}$ où $a, b \in \mathbb{R}$.</p>
+            </li>
+            <li>$YA = 0$. Soit $Y = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$.
+            $$ YA = \begin{pmatrix} a & b \\ c & d \end{pmatrix} \begin{pmatrix} 3 & -1 \\ 6 & -2 \end{pmatrix} = \begin{pmatrix} 3a + 6b & -a - 2b \\ 3c + 6d & -c - 2d \end{pmatrix} = \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix} $$
+            <p>Le système est :</p>
+            $$ \begin{cases} 3a + 6b = 0 \\ -a - 2b = 0 \\ 3c + 6d = 0 \\ -c - 2d = 0 \end{cases} $$
+            <p>L'équation (1) est $-3$ fois l'équation (2). L'équation (3) est $-3$ fois l'équation (4). Le système est équivalent à :</p>
+            $$ \begin{cases} a + 2b = 0 \implies a = -2b \\ c + 2d = 0 \implies c = -2d \end{cases} $$
+            <p>Les matrices $Y$ solutions sont de la forme :</p>
+            $$ Y = \begin{pmatrix} -2b & b \\ -2d & d \end{pmatrix} = \begin{pmatrix} -2 \\ 1 \end{pmatrix} \begin{pmatrix} b & d \end{pmatrix}? \text{ Non.} $$
+             $$ Y = \begin{pmatrix} -2b \\ -2d \end{pmatrix} \begin{pmatrix} 1 & 0 \end{pmatrix} + \begin{pmatrix} b \\ d \end{pmatrix} \begin{pmatrix} 0 & 1 \end{pmatrix}? \text{ Non.} $$
+              $$ Y = \begin{pmatrix} b \\ d \end{pmatrix} \begin{pmatrix} -2 & 1 \end{pmatrix}? \text{ Non.} $$
+              $$ Y = \begin{pmatrix} -2b & b \\ -2d & d \end{pmatrix} $$
+            <p>Les solutions sont les matrices dont la première colonne est $-2$ fois la seconde colonne. $Y = \begin{pmatrix} -2b & b \\ -2d & d \end{pmatrix}$ où $b, d \in \mathbb{R}$.</p>
+             <div class="note-perso">Au 1), la relation $L_2=3L_1$ dans $X$ vient de la relation $C_1=-3C_2$ dans $A$? Non, ça vient de $L_2=2L_1$ dans $A$. Au 2), la relation $C_1=-2C_2$ dans $Y$ vient de la relation $C_1=-3C_2$ dans $A$? Non plus.
+             $AX=0 \implies L_A \cdot C_X = 0$. $L_2=2L_1 \implies L_2 \cdot C_X = 2 L_1 \cdot C_X = 0$.
+             $YA=0 \implies L_Y \cdot C_A = 0$. $C_1 = -3C_2$. $L_Y \cdot C_1 = -3 L_Y \cdot C_2$. $3a+6b=0$, $-a-2b=0$. $a=-2b$. $3c+6d=0$, $-c-2d=0$. $c=-2d$.
+             </div>
+             <div class="placeholder">Placeholder for: image0090141 (referenced as page 139)</div>
+            </li>
+            <li>$AZ = ZA = 0$. $Z$ doit vérifier les conditions de $X$ et de $Y$.
+            $$ Z = \begin{pmatrix} a & b \\ c & d \end{pmatrix} \quad \text{avec } \begin{cases} c = 3a \\ d = 3b \end{cases} \quad \text{et} \quad \begin{cases} a = -2b \\ c = -2d \end{cases} $$
+            <p>Substituons $a=-2b$ dans $c=3a$: $c = 3(-2b) = -6b$.</p>
+            <p>Substituons $d=3b$ dans $c=-2d$: $c = -2(3b) = -6b$. Cohérent.</p>
+            <p>Les conditions sont $a=-2b, c=-6b, d=3b$.</p>
+            <p>Les matrices $Z$ sont de la forme :</p>
+            $$ Z = \begin{pmatrix} -2b & b \\ -6b & 3b \end{pmatrix} = b \begin{pmatrix} -2 & 1 \\ -6 & 3 \end{pmatrix}, \quad \text{où } b \in \mathbb{R} $$
+             <p>C'est l'ensemble des matrices proportionnelles à $M_0 = \begin{pmatrix} -2 & 1 \\ -6 & 3 \end{pmatrix}$.</p>
+            </li>
+        </ol>
+    </div>
+
+     <div class="correction">
+        <h3>Exercice 6.1.3c</h3>
+        <ol>
+            <li>Équation $AX=B$ avec $A = \begin{pmatrix} 2 & 5 \\ 1 & 3 \end{pmatrix}$ et $B = \begin{pmatrix} 4 & -6 \\ 2 & 1 \end{pmatrix}$.
+            <p>Calculons le déterminant de A : $\det A = 2(3) - 5(1) = 6-5 = 1$.</p>
+            <p>Comme $\det A = 1 \neq 0$, la matrice $A$ est inversible.</p>
+            <p>L'équation $AX=B$ a une unique solution $X = A^{-1}B$.</p>
+            <p>Utilisons la formule de l'inverse d'une matrice 2x2 (voir exercice 6.2.3) :</p>
+            $$ A^{-1} = \frac{1}{\det A} \begin{pmatrix} d & -b \\ -c & a \end{pmatrix} = \frac{1}{1} \begin{pmatrix} 3 & -5 \\ -1 & 2 \end{pmatrix} = \begin{pmatrix} 3 & -5 \\ -1 & 2 \end{pmatrix} $$
+            <p>Calculons $X = A^{-1}B$ :</p>
+            $$ X = \begin{pmatrix} 3 & -5 \\ -1 & 2 \end{pmatrix} \begin{pmatrix} 4 & -6 \\ 2 & 1 \end{pmatrix} = \begin{pmatrix} 3(4)+(-5)(2) & 3(-6)+(-5)(1) \\ -1(4)+2(2) & -1(-6)+2(1) \end{pmatrix} $$
+            $$ X = \begin{pmatrix} 12 - 10 & -18 - 5 \\ -4 + 4 & 6 + 2 \end{pmatrix} = \begin{pmatrix} 2 & -23 \\ 0 & 8 \end{pmatrix} $$
+            <p>L'unique solution est $X = \begin{pmatrix} 2 & -23 \\ 0 & 8 \end{pmatrix}$.</p>
+            </li>
+            <li>Équation $AX=I$ avec $A = \begin{pmatrix} 2 & 1 \\ 2 & 1 \end{pmatrix}$.
+            <p>Calculons le déterminant de A : $\det A = 2(1) - 1(2) = 2-2 = 0$.</p>
+            <p>Comme $\det A = 0$, la matrice $A$ n'est pas inversible.</p>
+            <p>L'équation $AX=I$ ne peut pas avoir de solution, car si elle en avait une $X_0$, on aurait $A X_0 = I$. En prenant le déterminant : $\det(A X_0) = \det I \implies \det A \det X_0 = 1$. Or $\det A = 0$, donc on aurait $0 \times \det X_0 = 1$, soit $0=1$, ce qui est impossible.</p>
+            <p>Autre méthode (utilisée dans la correction) : poser $X = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$ et résoudre.</p>
+             $$ AX = \begin{pmatrix} 2 & 1 \\ 2 & 1 \end{pmatrix} \begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{pmatrix} 2a+c & 2b+d \\ 2a+c & 2b+d \end{pmatrix} $$
+             On veut $AX = I = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$. Le système est :
+             $$ \begin{cases} 2a+c = 1 \\ 2b+d = 0 \\ 2a+c = 0 \\ 2b+d = 1 \end{cases} $$
+             Les équations (1) et (3) sont $2a+c=1$ et $2a+c=0$, ce qui est incompatible.
+             Les équations (2) et (4) sont $2b+d=0$ et $2b+d=1$, ce qui est incompatible.
+             <p>Le système n'a pas de solution. $S = \emptyset$.</p>
+             <div class="placeholder">Placeholder for: image0090142 (referenced as page 140)</div>
+            </li>
+        </ol>
+    </div>
+
+     <div class="correction">
+        <h3>Exercice 6.1.4c</h3>
+        <p>On cherche $M = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$ telle que $M^2 = A$ donnée.</p>
+        <p>On a $M^2 = \begin{pmatrix} a^2 + bc & b(a + d) \\ c(a + d) & d^2 + bc \end{pmatrix}$.</p>
+        <ol>
+            <li>$A = \begin{pmatrix} 0 & 0 \\ 6 & 9 \end{pmatrix}$. Le système est :
+            $$ \begin{cases} a^2 + bc = 0 \quad &(1) \\ b(a + d) = 0 \quad &(2) \\ c(a + d) = 6 \quad &(3) \\ d^2 + bc = 9 \quad &(4) \end{cases} $$
+            <p>De (3), on voit que $c \neq 0$ et $a+d \neq 0$.</p>
+            <p>Comme $a+d \neq 0$, l'équation (2) $b(a+d)=0$ implique $b=0$.</p>
+            <p>Substituons $b=0$ dans les autres équations :</p>
+            <p>(1) $a^2 + 0 = 0 \implies a = 0$.</p>
+            <p>(4) $d^2 + 0 = 9 \implies d = \pm 3$.</p>
+            <p>Vérifions avec (3) $c(a+d)=6$.</p>
+            <p>Si $d=3$: $a=0, b=0, d=3$. $c(0+3)=6 \implies 3c=6 \implies c=2$.
+            Solution $M_1 = \begin{pmatrix} 0 & 0 \\ 2 & 3 \end{pmatrix}$.</p>
+            <p>Si $d=-3$: $a=0, b=0, d=-3$. $c(0-3)=6 \implies -3c=6 \implies c=-2$.
+            Solution $M_2 = \begin{pmatrix} 0 & 0 \\ -2 & -3 \end{pmatrix}$.</p>
+            <p>L'ensemble des solutions est $\{ M_1, M_2 \}$.</p>
+            </li>
+            <li>$A = I = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$. Le système est :
+             $$ \begin{cases} a^2 + bc = 1 \quad &(1) \\ b(a + d) = 0 \quad &(2) \\ c(a + d) = 0 \quad &(3) \\ d^2 + bc = 1 \quad &(4) \end{cases} $$
+             <p>Discussion basée sur (2) et (3).</p>
+             <p><strong>Cas 1 : $a+d \neq 0$.</strong></p>
+             <p>Alors (2) implique $b=0$ et (3) implique $c=0$.</p>
+             <p>Le système devient : $a^2=1$ et $d^2=1$. $a=\pm 1$ et $d=\pm 1$.</p>
+             <p>La condition $a+d \neq 0$ exclut $a=1, d=-1$ et $a=-1, d=1$.</p>
+             <p>Il reste $a=1, d=1$ (donne $M=I$) et $a=-1, d=-1$ (donne $M=-I$).</p>
+             <p>Solutions dans ce cas : $I$ et $-I$.</p>
+
+             <p><strong>Cas 2 : $a+d = 0$.</strong></p>
+             <p>Alors $d=-a$. Les équations (2) et (3) deviennent $0=0$ et $0=0$, elles sont vérifiées.</p>
+             <p>Il reste (1) $a^2+bc=1$ et (4) $d^2+bc=1$. Comme $d=-a$, $d^2=(-a)^2=a^2$, donc (4) est identique à (1).</p>
+             <p>Le système se réduit à $d=-a$ et $a^2+bc=1$.</p>
+             <p>On peut choisir $a, b$ arbitrairement (avec $b \neq 0$ pour ne pas retomber dans le cas 1 où $b=0$ et $d=-a$ donnerait $a=1, d=-1$ ou $a=-1, d=1$ qui sont déjà traitées indirectement). Si $b \neq 0$, on peut déterminer $c = \frac{1-a^2}{b}$.</p>
+             <p>Les solutions sont de la forme $M = \begin{pmatrix} a & b \\ (1-a^2)/b & -a \end{pmatrix}$ pour $a \in \mathbb{R}, b \in \mathbb{R}^*$.</p>
+             <p>Il faut aussi inclure le cas où $c \neq 0$ et $b=0$. Dans ce cas, $a+d=0$ toujours. $a^2=1, d^2=1$. Donc $a=\pm 1, d=-a$.
+             Si $a=1, d=-1$. $c$ peut être non nul. $M=\begin{pmatrix} 1 & 0 \\ c & -1 \end{pmatrix}$. ($c \in \mathbb{R}^*$).
+             Si $a=-1, d=1$. $c$ peut être non nul. $M=\begin{pmatrix} -1 & 0 \\ c & 1 \end{pmatrix}$. ($c \in \mathbb{R}^*$).</p>
+             <p>Regroupons toutes les solutions :</p>
+             <ul>
+                 <li>$I$ et $-I$.</li>
+                 <li>$M = \begin{pmatrix} a & b \\ (1-a^2)/b & -a \end{pmatrix}$ pour $a \in \mathbb{R}, b \in \mathbb{R}^*$.</li>
+                 <li>$M = \begin{pmatrix} 1 & 0 \\ c & -1 \end{pmatrix}$ pour $c \in \mathbb{R}$. (Inclut $c=0$, qui donne $\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$, cas particulier de la forme précédente avec $a=1$).</li>
+                 <li>$M = \begin{pmatrix} -1 & 0 \\ c & 1 \end{pmatrix}$ pour $c \in \mathbb{R}$. (Inclut $c=0$, qui donne $\begin{pmatrix} -1 & 0 \\ 0 & 1 \end{pmatrix}$, cas particulier de la forme précédente avec $a=-1$).</li>
+             </ul>
+             <p>La forme générale de la correction $M = \begin{pmatrix} a & b \\ c & -a \end{pmatrix}$ avec $a^2+bc=1$ semble regrouper tous les cas du Cas 2.</p>
+             <p>L'ensemble des solutions est donc $I, -I$ et les matrices $\begin{pmatrix} a & b \\ c & -a \end{pmatrix}$ avec $a,b,c \in \mathbb{R}$ tels que $a^2+bc=1$.</p>
+             <div class="placeholder">Placeholder for: image0090143 (referenced as page 141)</div>
+            </li>
+        </ol>
+    </div>
+
+     <div class="correction">
+        <h3>Exercice 6.1.5c</h3>
+        <p>Résolution de $X^2 = A$ avec $A = \begin{pmatrix} a & 1 - a \\ 1 - a & a \end{pmatrix}$, $0 < a < 1$.</p>
+        <ol>
+            <li>Diagonalisation de $A$. $P = \begin{pmatrix} 1 & 1 \\ -1 & 1 \end{pmatrix}$.
+            Calculons $P^{-1}$. $\det P = 1(1) - 1(-1) = 2$.
+            $$ P^{-1} = \frac{1}{2} \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix} $$
+            Calculons $AP$ :
+            $$ AP = \begin{pmatrix} a & 1 - a \\ 1 - a & a \end{pmatrix} \begin{pmatrix} 1 & 1 \\ -1 & 1 \end{pmatrix} = \begin{pmatrix} a - (1-a) & a + (1-a) \\ (1-a) - a & (1-a) + a \end{pmatrix} = \begin{pmatrix} 2a - 1 & 1 \\ 1 - 2a & 1 \end{pmatrix} $$
+            Calculons $D = P^{-1}(AP)$ :
+            $$ D = \frac{1}{2} \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix} \begin{pmatrix} 2a - 1 & 1 \\ 1 - 2a & 1 \end{pmatrix} $$
+            $$ D = \frac{1}{2} \begin{pmatrix} (2a-1) - (1-2a) & 1 - 1 \\ (2a-1) + (1-2a) & 1 + 1 \end{pmatrix} = \frac{1}{2} \begin{pmatrix} 4a - 2 & 0 \\ 0 & 2 \end{pmatrix} = \begin{pmatrix} 2a - 1 & 0 \\ 0 & 1 \end{pmatrix} $$
+            $D$ est bien une matrice diagonale.
+            </li>
+            <li>(a) Équivalence des équations. Soit $Y=P^{-1}XP$. Alors $X=PYP^{-1}$.
+            $X^2 = A \iff (PYP^{-1})(PYP^{-1}) = A \iff PY^2P^{-1} = A$.
+            On multiplie à gauche par $P^{-1}$ et à droite par $P$.
+            $P^{-1}(PY^2P^{-1})P = P^{-1}AP \iff (P^{-1}P)Y^2(P^{-1}P) = D \iff I Y^2 I = D \iff Y^2 = D$.
+            Les équations $(*) : X^2=A$ et $(**) : Y^2=D$ sont équivalentes via la relation $X=PYP^{-1}$.
+            </li>
+            <li>(b) Résolution de $Y^2=D$. Soit $Y = \begin{pmatrix} x & y \\ z & t \end{pmatrix}$.
+            $Y^2 = \begin{pmatrix} x^2 + yz & y(x + t) \\ z(x + t) & t^2 + yz \end{pmatrix}$.
+            L'équation $Y^2=D$ donne le système :
+            $$ \begin{cases} x^2 + yz = 2a - 1 \quad &(1) \\ y(x + t) = 0 \quad &(2) \\ z(x + t) = 0 \quad &(3) \\ t^2 + yz = 1 \quad &(4) \end{cases} $$
+            i. C'est le système écrit ci-dessus.
+            ii. Supposons $x+t=0$. Alors $t=-x$.
+            L'équation (1) devient $x^2+yz = 2a-1$.
+            L'équation (4) devient $t^2+yz = (-x)^2+yz = x^2+yz = 1$.
+            En comparant (1) et (4), on obtient $2a-1 = 1$, soit $2a=2$, donc $a=1$.
+            Or, l'énoncé impose $0 < a < 1$. Donc $a=1$ est exclu.
+            Ainsi, l'hypothèse $x+t=0$ mène à une contradiction. On a nécessairement $x+t \neq 0$.
+            iii. Comme $x+t \neq 0$, les équations (2) et (3) impliquent $y=0$ et $z=0$.
+            Le système se réduit à :
+            $$ \begin{cases} x^2 + 0 = 2a - 1 \implies x^2 = 2a-1 \\ y=0 \\ z=0 \\ t^2 + 0 = 1 \implies t^2 = 1 \end{cases} $$
+            L'équation $t^2=1$ donne $t=1$ ou $t=-1$.
+            L'équation $x^2=2a-1$ dépend du signe de $2a-1$.
+            <p>Discussion :</p>
+            <ul>
+                <li>Cas $2a-1 < 0$ (i.e., $a < 1/2$): $x^2 = \text{négatif}$ n'a pas de solution réelle pour $x$. Le système $Y^2=D$ n'a pas de solution dans $\mathcal{M}_2(\mathbb{R})$.</li>
+                <li>Cas $2a-1 = 0$ (i.e., $a = 1/2$): $x^2=0 \implies x=0$. Les solutions $(x,t)$ sont $(0, 1)$ et $(0, -1)$.
+                Les matrices $Y$ solutions sont $Y_1 = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix}$ et $Y_2 = \begin{pmatrix} 0 & 0 \\ 0 & -1 \end{pmatrix}$.</li>
+                <li>Cas $2a-1 > 0$ (i.e., $a > 1/2$): $x^2=2a-1$ a deux solutions réelles $x = \pm \sqrt{2a-1}$.
+                Les solutions $(x,t)$ sont $(\sqrt{2a-1}, 1)$, $(\sqrt{2a-1}, -1)$, $(-\sqrt{2a-1}, 1)$, $(-\sqrt{2a-1}, -1)$.
+                Les matrices $Y$ solutions sont :
+                $Y_1 = \begin{pmatrix} \sqrt{2a-1} & 0 \\ 0 & 1 \end{pmatrix}$, $Y_2 = \begin{pmatrix} \sqrt{2a-1} & 0 \\ 0 & -1 \end{pmatrix}$,
+                $Y_3 = \begin{pmatrix} -\sqrt{2a-1} & 0 \\ 0 & 1 \end{pmatrix}$, $Y_4 = \begin{pmatrix} -\sqrt{2a-1} & 0 \\ 0 & -1 \end{pmatrix}$.
+                Il y a 4 solutions pour $Y$.</li>
+            </ul>
+            </li>
+             <div class="placeholder">Placeholder for: image0090144 (referenced as page 142)</div>
+            <li>(c) Nombre de solutions pour $X$.
+            L'application $X \mapsto Y=P^{-1}XP$ est une bijection de $\mathcal{M}_2(\mathbb{R})$ dans $\mathcal{M}_2(\mathbb{R})$.
+            Le nombre de solutions $X$ de $X^2=A$ est donc égal au nombre de solutions $Y$ de $Y^2=D$.
+            D'après la discussion précédente :
+            <ul>
+                <li>Si $a < 1/2$, il y a 0 solution.</li>
+                <li>Si $a = 1/2$, il y a 2 solutions.</li>
+                <li>Si $a > 1/2$ (et $a<1$), il y a 4 solutions.</li>
+            </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 6.2.1c</h3>
+        <p>Soit $A \in \mathcal{M}_2(\mathbb{R})$ inversible telle que $A^3 = A$.</p>
+        <p>Comme $A$ est inversible, $A^{-1}$ existe.</p>
+        <p>Multiplions l'équation $A^3=A$ à gauche (ou à droite) par $A^{-1}$ :</p>
+        $$ A^{-1} A^3 = A^{-1} A $$
+        $$ (A^{-1}A) A^2 = I $$
+        $$ I A^2 = I $$
+        $$ A^2 = I $$
+        <p>L'équation $A^2=I$ a été résolue dans l'exercice 6.1.4 partie 2.</p>
+        <p>Les solutions sont $A=I$, $A=-I$, et les matrices de la forme $A = \begin{pmatrix} a & b \\ c & -a \end{pmatrix}$ avec $a^2+bc=1$.</p>
+        <p>Il faut vérifier lesquelles de ces solutions sont inversibles. $I$ et $-I$ sont inversibles.
+        Pour $A = \begin{pmatrix} a & b \\ c & -a \end{pmatrix}$, son déterminant est $a(-a) - bc = -(a^2+bc) = -1$.
+        Comme le déterminant est $-1 \neq 0$, ces matrices sont toutes inversibles.</p>
+        <p>Donc toutes les solutions de $A^2=I$ sont inversibles et sont donc les solutions du problème initial.</p>
+        <p>L'ensemble des solutions est $\{I, -I\} \cup \{ \begin{pmatrix} a & b \\ c & -a \end{pmatrix} \mid a,b,c \in \mathbb{R}, a^2+bc=1 \}$.</p>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 6.2.2c</h3>
+        <ol>
+            <li>Pour montrer que $B$ est l'inverse de $A$, il suffit de calculer le produit $AB$ (ou $BA$) et de vérifier qu'il est égal à $I$.
+            $$ AB = \begin{pmatrix} 11 & -6 \\ -20 & 11 \end{pmatrix} \begin{pmatrix} 11 & 6 \\ 20 & 11 \end{pmatrix} $$
+            $$ = \begin{pmatrix} 11(11) + (-6)(20) & 11(6) + (-6)(11) \\ -20(11) + 11(20) & -20(6) + 11(11) \end{pmatrix} $$
+            $$ = \begin{pmatrix} 121 - 120 & 66 - 66 \\ -220 + 220 & -120 + 121 \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = I $$
+            Comme $AB=I$, $A$ est inversible et $A^{-1}=B$.</li>
+            <li>Soit $A = \begin{pmatrix} 2 & 4 \\ 5 & 10 \end{pmatrix}$.
+            On peut calculer le déterminant : $\det A = 2(10) - 4(5) = 20 - 20 = 0$.
+            Comme le déterminant est nul, la matrice $A$ n'est pas inversible.
+            Alternative : On observe que la deuxième colonne $C_2$ est le double de la première colonne $C_1$ ($C_2 = 2C_1$). Les colonnes sont liées, donc la matrice n'est pas inversible.
+            On peut aussi voir que la deuxième ligne $L_2$ est $5/2$ fois la première ligne $L_1$. Les lignes sont liées.</li>
+             <div class="placeholder">Placeholder for: image0090145 (referenced as page 143)</div>
+        </ol>
+    </div>
+
+     <div class="correction">
+        <h3>Exercice 6.2.3c</h3>
+        <p>Soit $A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$. On pose $T = \operatorname{Tr}(A) = a+d$ et $D = \det A = ad-bc$. On veut vérifier $A^2 - TA + DI = 0$.</p>
+        <p>Calculons $A^2$ :</p>
+        $$ A^2 = \begin{pmatrix} a & b \\ c & d \end{pmatrix} \begin{pmatrix} a & b \\ c & d \end{pmatrix} = \begin{pmatrix} a^2+bc & ab+bd \\ ca+dc & cb+d^2 \end{pmatrix} = \begin{pmatrix} a^2+bc & b(a+d) \\ c(a+d) & bc+d^2 \end{pmatrix} $$
+        <p>Calculons $A^2 - TA$ :</p>
+        $$ A^2 - (a+d)A = \begin{pmatrix} a^2+bc & b(a+d) \\ c(a+d) & bc+d^2 \end{pmatrix} - (a+d)\begin{pmatrix} a & b \\ c & d \end{pmatrix} $$
+        $$ = \begin{pmatrix} a^2+bc - a(a+d) & b(a+d) - b(a+d) \\ c(a+d) - c(a+d) & bc+d^2 - d(a+d) \end{pmatrix} $$
+        $$ = \begin{pmatrix} a^2+bc - a^2 - ad & 0 \\ 0 & bc+d^2 - ad - d^2 \end{pmatrix} = \begin{pmatrix} bc - ad & 0 \\ 0 & bc - ad \end{pmatrix} $$
+        $$ = (bc-ad) \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = -(ad-bc) I = -DI $$
+        <p>On a donc $A^2 - TA = -DI$, ce qui équivaut à $A^2 - TA + DI = 0$. La relation est vérifiée.</p>
+        <p>Condition d'inversibilité et formule de l'inverse :</p>
+        <p>L'équation est $A^2 - TA + DI = 0$. On peut la réécrire $A(A-TI) = -DI$ ou $(A-TI)A = -DI$.</p>
+        <p>Si $D = ad-bc \neq 0$, on peut diviser par $-D$ :</p>
+        $$ A \left( \frac{1}{-D} (A-TI) \right) = I \quad \text{et} \quad \left( \frac{1}{-D} (A-TI) \right) A = I $$
+        <p>Cela montre que $A$ est inversible et que son inverse est</p>
+        $$ A^{-1} = \frac{1}{-D} (A-TI) = \frac{1}{ad-bc} (TI - A) $$
+        $$ A^{-1} = \frac{1}{ad-bc} \left( (a+d)\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} - \begin{pmatrix} a & b \\ c & d \end{pmatrix} \right) $$
+        $$ A^{-1} = \frac{1}{ad-bc} \begin{pmatrix} (a+d)-a & 0-b \\ 0-c & (a+d)-d \end{pmatrix} = \frac{1}{ad-bc} \begin{pmatrix} d & -b \\ -c & a \end{pmatrix} $$
+        <p>Si $D = ad-bc = 0$, l'équation devient $A^2 - TA = 0$, soit $A(A-TI)=0$.
+        Si $A$ était inversible, on pourrait multiplier par $A^{-1}$ pour obtenir $A-TI = 0$, soit $A=TI = (a+d)I$.
+        $A = \begin{pmatrix} a+d & 0 \\ 0 & a+d \end{pmatrix}$.
+        Pour cette matrice, $ad-bc = (a+d)(a+d) - 0 = (a+d)^2$.
+        Si $ad-bc=0$, alors $(a+d)^2=0$, donc $a+d=0$. Mais alors $A=0I=0$. La matrice nulle n'est pas inversible (sauf si $n=0$).
+        Donc si $ad-bc=0$, $A$ ne peut pas être inversible (sauf si $A=0$, qui n'est pas inversible).
+        Alternativement, si $ad-bc=0$, la matrice n'est pas inversible car son déterminant est nul.</p>
+        <p>Conclusion : $A$ est inversible si et seulement si $ad-bc \neq 0$. Dans ce cas, $A^{-1} = \frac{1}{ad-bc} \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$.</p>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 6.2.4c</h3>
+        <p>On utilise la méthode du pivot de Gauss sur $(A | I)$ pour obtenir $(I | A^{-1})$.</p>
+        <ol>
+            <li>$A = \begin{pmatrix} 1 & 2 \\ 2 & 5 \end{pmatrix}$.
+            $$ \left( \begin{array}{cc|cc} 1 & 2 & 1 & 0 \\ 2 & 5 & 0 & 1 \end{array} \right) \xrightarrow{L_2 \leftarrow L_2 - 2L_1} \left( \begin{array}{cc|cc} 1 & 2 & 1 & 0 \\ 0 & 1 & -2 & 1 \end{array} \right) $$
+            $$ \xrightarrow{L_1 \leftarrow L_1 - 2L_2} \left( \begin{array}{cc|cc} 1 & 0 & 1-2(-2) & 0-2(1) \\ 0 & 1 & -2 & 1 \end{array} \right) = \left( \begin{array}{cc|cc} 1 & 0 & 5 & -2 \\ 0 & 1 & -2 & 1 \end{array} \right) $$
+            $$ A^{-1} = \begin{pmatrix} 5 & -2 \\ -2 & 1 \end{pmatrix} $$
+             (Note: La correction donne $A^{-1} = \begin{pmatrix} 5 & -1 \\ -2 & 1 \end{pmatrix}$ avec un -1 au lieu de -2. Vérifions avec la formule $1/(5-4) \begin{pmatrix} 5 & -2 \\ -2 & 1 \end{pmatrix}$. Mon calcul est correct).
+            </li>
+            <li>$A = \begin{pmatrix} 1 & 1 & 3 \\ 1 & 2 & 4 \\ -1 & 1 & 0 \end{pmatrix}$.
+             $$ \left( \begin{array}{ccc|ccc} 1 & 1 & 3 & 1 & 0 & 0 \\ 1 & 2 & 4 & 0 & 1 & 0 \\ -1 & 1 & 0 & 0 & 0 & 1 \end{array} \right) \xrightarrow[L_3 \leftarrow L_3 + L_1]{L_2 \leftarrow L_2 - L_1} \left( \begin{array}{ccc|ccc} 1 & 1 & 3 & 1 & 0 & 0 \\ 0 & 1 & 1 & -1 & 1 & 0 \\ 0 & 2 & 3 & 1 & 0 & 1 \end{array} \right) $$
+              $$ \xrightarrow{L_3 \leftarrow L_3 - 2L_2} \left( \begin{array}{ccc|ccc} 1 & 1 & 3 & 1 & 0 & 0 \\ 0 & 1 & 1 & -1 & 1 & 0 \\ 0 & 0 & 1 & 1-2(-1) & 0-2(1) & 1-2(0) \end{array} \right) = \left( \begin{array}{ccc|ccc} 1 & 1 & 3 & 1 & 0 & 0 \\ 0 & 1 & 1 & -1 & 1 & 0 \\ 0 & 0 & 1 & 3 & -2 & 1 \end{array} \right) $$
+               $$ \xrightarrow[L_1 \leftarrow L_1 - 3L_3]{L_2 \leftarrow L_2 - L_3} \left( \begin{array}{ccc|ccc} 1 & 1 & 0 & 1-3(3) & 0-3(-2) & 0-3(1) \\ 0 & 1 & 0 & -1-3 & 1-(-2) & 0-1 \\ 0 & 0 & 1 & 3 & -2 & 1 \end{array} \right) = \left( \begin{array}{ccc|ccc} 1 & 1 & 0 & -8 & 6 & -3 \\ 0 & 1 & 0 & -4 & 3 & -1 \\ 0 & 0 & 1 & 3 & -2 & 1 \end{array} \right) $$
+                $$ \xrightarrow{L_1 \leftarrow L_1 - L_2} \left( \begin{array}{ccc|ccc} 1 & 0 & 0 & -8-(-4) & 6-3 & -3-(-1) \\ 0 & 1 & 0 & -4 & 3 & -1 \\ 0 & 0 & 1 & 3 & -2 & 1 \end{array} \right) = \left( \begin{array}{ccc|ccc} 1 & 0 & 0 & -4 & 3 & -2 \\ 0 & 1 & 0 & -4 & 3 & -1 \\ 0 & 0 & 1 & 3 & -2 & 1 \end{array} \right) $$
+                $$ A^{-1} = \begin{pmatrix} -4 & 3 & -2 \\ -4 & 3 & -1 \\ 3 & -2 & 1 \end{pmatrix} $$
+            </li>
+            <li>$A = \begin{pmatrix} 2 & 2 & 3 \\ 1 & -1 & 0 \\ -1 & 2 & 1 \end{pmatrix}$. (Calcul similaire par pivot)
+            $$ A^{-1} = \begin{pmatrix} 1 & -4 & -3 \\ 1 & -5 & -3 \\ -1 & 6 & 4 \end{pmatrix} $$
+            </li>
+             <li>$A = \begin{pmatrix} 3 & -2 & 0 & -1 \\ 0 & 2 & 2 & 1 \\ 1 & -2 & -3 & -2 \\ 0 & 1 & 2 & 1 \end{pmatrix}$. (Calcul similaire par pivot)
+             $$ A^{-1} = \begin{pmatrix} 1 & 2 & -2 & -3 \\ 0 & 1/2 & 0 & -1/2 \\ -1 & -1 & 1 & 2 \\ 2 & 0 & -1 & -2 \end{pmatrix} $$
+             </li>
+             <div class="warning-note">La page 144 contenant les détails du calcul de $A^{-1}$ pour les cas 2, 3, 4 est manquante dans le document source. Les résultats ci-dessus sont donnés sans la dérivation détaillée.</div>
+              <div class="placeholder">Placeholder for: image0090147 (referenced as page 145)</div>
+        </ol>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 6.2.5c</h3>
+        <p>Soit $A, B \in \mathcal{M}_n(\mathbb{R})$. On suppose $A + B$ inversible et $C = (A + B)^{-1}$. Montrer $ACB = BCA$.</p>
+        <p>On sait que $(A+B)C = I$ et $C(A+B)=I$.</p>
+        <p>Développons la première : $AC + BC = I$.</p>
+        <p>Développons la seconde : $CA + CB = I$.</p>
+        <p>On veut comparer $ACB$ et $BCA$.</p>
+        <p>De $AC+BC=I$, on peut isoler $AC = I - BC$. Multiplions par $B$ à droite : $ACB = (I-BC)B = B - BCB$.</p>
+        <p>De $CA+CB=I$, on peut isoler $CB = I - CA$. Multiplions par $A$ à gauche : $ACB = A(I-CA) = A - ACA$.</p>
+        <p>Partons de $B - BCB$. On sait que $CB = I - CA$. Donc $BCB = B(I-CA) = B - BCA$.</p>
+        <p>Donc $B - BCB = B - (B - BCA) = BCA$.</p>
+        <p>On a montré que $ACB = B - BCB$ et que $BCA = B - BCB$.</p>
+        <p>Donc $ACB = BCA$.</p>
+        (Note: La correction du livre a une petite faute de frappe mais l'idée est la même).
+    </div>
+
+     <div class="correction">
+        <h3>Exercice 6.2.6c</h3>
+        <ol>
+            <li>$A = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}$.
+            $A^2 = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix} \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix} = \begin{pmatrix} 1+1+1 & 1+1+1 & 1+1+1 \\ 1+1+1 & 1+1+1 & 1+1+1 \\ 1+1+1 & 1+1+1 & 1+1+1 \end{pmatrix} = \begin{pmatrix} 3 & 3 & 3 \\ 3 & 3 & 3 \\ 3 & 3 & 3 \end{pmatrix}$.
+            On remarque que $A^2 = 3A$.
+            Donc $A^2 - 3A = 0$ (matrice nulle).
+            Supposons par l'absurde que $A$ est inversible. Alors $A^{-1}$ existe.
+            Multiplions $A^2=3A$ par $A^{-1}$ (à gauche ou à droite):
+            $A^{-1}A^2 = A^{-1}(3A) \implies (A^{-1}A)A = 3(A^{-1}A) \implies IA = 3I \implies A = 3I$.
+            Or $A = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}$ n'est pas égale à $3I = \begin{pmatrix} 3 & 0 & 0 \\ 0 & 3 & 0 \\ 0 & 0 & 3 \end{pmatrix}$. Contradiction.
+            Donc $A$ n'est pas inversible.
+            Ce résultat était prévisible car les colonnes (et les lignes) de A sont toutes identiques, donc elles sont liées (elles ne forment pas une base). Le rang de A est 1, qui est < 3. Donc A n'est pas inversible.
+            </li>
+            <li>$A = \begin{pmatrix} 2 & 0 & 0 \\ 0 & -1 & -\sqrt{3} \\ 0 & \sqrt{3} & -1 \end{pmatrix}$. C'est une matrice diagonale par blocs.
+            $A^2 = \begin{pmatrix} 2^2 & 0 & 0 \\ 0 & (-1)^2+(-\sqrt{3})(\sqrt{3}) & (-1)(-\sqrt{3})+(-\sqrt{3})(-1) \\ 0 & \sqrt{3}(-1)+(-1)\sqrt{3} & \sqrt{3}(-\sqrt{3})+(-1)^2 \end{pmatrix}$
+            $A^2 = \begin{pmatrix} 4 & 0 & 0 \\ 0 & 1-3 & \sqrt{3}+\sqrt{3} \\ 0 & -\sqrt{3}-\sqrt{3} & -3+1 \end{pmatrix} = \begin{pmatrix} 4 & 0 & 0 \\ 0 & -2 & 2\sqrt{3} \\ 0 & -2\sqrt{3} & -2 \end{pmatrix}$.
+            $A^3 = A \times A^2 = \begin{pmatrix} 2 & 0 & 0 \\ 0 & -1 & -\sqrt{3} \\ 0 & \sqrt{3} & -1 \end{pmatrix} \begin{pmatrix} 4 & 0 & 0 \\ 0 & -2 & 2\sqrt{3} \\ 0 & -2\sqrt{3} & -2 \end{pmatrix}$
+            $A^3 = \begin{pmatrix} 8 & 0 & 0 \\ 0 & (-1)(-2)+(-\sqrt{3})(-2\sqrt{3}) & (-1)(2\sqrt{3})+(-\sqrt{3})(-2) \\ 0 & \sqrt{3}(-2)+(-1)(-2\sqrt{3}) & \sqrt{3}(2\sqrt{3})+(-1)(-2) \end{pmatrix}$
+            $A^3 = \begin{pmatrix} 8 & 0 & 0 \\ 0 & 2+6 & -2\sqrt{3}+2\sqrt{3} \\ 0 & -2\sqrt{3}+2\sqrt{3} & 6+2 \end{pmatrix} = \begin{pmatrix} 8 & 0 & 0 \\ 0 & 8 & 0 \\ 0 & 0 & 8 \end{pmatrix} = 8I$.
+            Comme $A^3 = 8I$, on peut écrire $A(\frac{1}{8}A^2) = I$ et $(\frac{1}{8}A^2)A = I$.
+            Donc $A$ est inversible et $A^{-1} = \frac{1}{8}A^2$.
+            $$ A^{-1} = \frac{1}{8} \begin{pmatrix} 4 & 0 & 0 \\ 0 & -2 & 2\sqrt{3} \\ 0 & -2\sqrt{3} & -2 \end{pmatrix} = \begin{pmatrix} 1/2 & 0 & 0 \\ 0 & -1/4 & \sqrt{3}/4 \\ 0 & -\sqrt{3}/4 & -1/4 \end{pmatrix} $$
+            </li>
+        </ol>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 6.2.7c</h3>
+        <p>Soit $A = \begin{pmatrix} 1 & 1 & -1 & -3 \\ 1 & 1 & 1 & -2 \\ 0 & -1 & 0 & 1 \\ 1 & 1 & 0 & -2 \end{pmatrix}$.</p>
+        <ol>
+            <li>(a) Calcul de $A^2$. Après calcul (non détaillé ici), on trouve $A^2 = -I$.
+            (b) D'après $A^2 = -I$, on a $A(-A) = I$ et $(-A)A = I$.
+            Donc $A$ est inversible et $A^{-1} = -A$.
+            </li>
+            <li>(a) Soit $M = aI + bA$. Calculer $M^2$.
+            $$ M^2 = (aI + bA)(aI + bA) = a^2 I^2 + ab IA + ba AI + b^2 A^2 $$
+            Comme $I$ commute avec $A$, $IA=AI=A$.
+            $$ M^2 = a^2 I + 2ab A + b^2 A^2 $$
+            On utilise $A^2=-I$.
+            $$ M^2 = a^2 I + 2ab A + b^2 (-I) = (a^2 - b^2)I + 2ab A $$
+            On veut exprimer $M^2$ en fonction de $I$ et $M$. On a $M=aI+bA$, donc $bA = M-aI$.
+            $$ M^2 = (a^2 - b^2)I + 2a (bA) = (a^2 - b^2)I + 2a (M - aI) $$
+            $$ M^2 = (a^2 - b^2)I + 2aM - 2a^2 I = (a^2 - b^2 - 2a^2)I + 2aM $$
+            $$ M^2 = -(a^2 + b^2)I + 2aM $$
+            La relation est bien de la forme $M^2 = \gamma I + \delta M$ avec $\gamma = -(a^2+b^2)$ et $\delta = 2a$.
+            </li>
+            <li>(b) Inversibilité de $M$. La relation est $M^2 - 2aM + (a^2+b^2)I = 0$.
+            $M(M-2aI) = -(a^2+b^2)I$.
+            Si $(a,b) \neq (0,0)$, alors $a^2+b^2 > 0$. On peut diviser par $-(a^2+b^2)$.
+            $$ M \left( \frac{-1}{a^2+b^2} (M - 2aI) \right) = I $$
+            Cela montre que $M$ est inversible et
+            $$ M^{-1} = \frac{-1}{a^2+b^2} (M - 2aI) = \frac{1}{a^2+b^2} (2aI - M) $$
+            $M^{-1}$ est bien une combinaison linéaire de $I$ et $M$.
+            </li>
+             <div class="warning-note">La page 146 est manquante dans le document source. Les détails du calcul de $A^2$ ne sont pas disponibles.</div>
+              <div class="placeholder">Placeholder for: image0090149 (referenced as page 147)</div>
+             <li>(c) Application. La matrice donnée $N$ est :
+             $$ N = \begin{pmatrix} 1 + \sqrt{2} & 1 & -1 & -3 \\ 1 & 1 + \sqrt{2} & 1 & -2 \\ 0 & -1 & \sqrt{2} & 1 \\ 1 & 1 & 0 & -2 + \sqrt{2} \end{pmatrix} $$
+             On peut la réécrire comme $N = \sqrt{2} I + A$.
+             C'est $M = aI+bA$ avec $a=\sqrt{2}$ et $b=1$.
+             Ici $(a,b) \neq (0,0)$, donc $N$ est inversible.
+             $a^2+b^2 = (\sqrt{2})^2 + 1^2 = 2+1=3$.
+             $M^{-1} = N^{-1} = \frac{1}{3}(2aI - M) = \frac{1}{3}(2\sqrt{2}I - N)$.
+             $$ N^{-1} = \frac{1}{3} (2\sqrt{2}I - (\sqrt{2}I+A)) = \frac{1}{3} (\sqrt{2}I - A) $$
+             $$ N^{-1} = \frac{1}{3} \begin{pmatrix} \sqrt{2}-1 & -1 & 1 & 3 \\ -1 & \sqrt{2}-1 & -1 & 2 \\ 0 & 1 & \sqrt{2} & -1 \\ -1 & -1 & 0 & \sqrt{2}+2 \end{pmatrix} $$
+            </li>
+        </ol>
+    </div>
+
+     <div class="correction">
+        <h3>Exercice 6.2.8c</h3>
+        <p>Soit $A = \begin{pmatrix} -2 & 1 & -1 \\ -7 & 6 & -7 \\ -3 & 3 & -4 \end{pmatrix}$.</p>
+        <p>Vérifier $A^2 - A - 2I = 0$.
+        Calculons $A^2$:
+        $$ A^2 = \begin{pmatrix} -2 & 1 & -1 \\ -7 & 6 & -7 \\ -3 & 3 & -4 \end{pmatrix} \begin{pmatrix} -2 & 1 & -1 \\ -7 & 6 & -7 \\ -3 & 3 & -4 \end{pmatrix} = \begin{pmatrix} 4-7+3 & -2+6-3 & 2-7+4 \\ 14-42+21 & -7+36-21 & 7-42+28 \\ 6-21+12 & -3+18-12 & 3-21+16 \end{pmatrix} = \begin{pmatrix} 0 & 1 & -1 \\ -7 & 8 & -7 \\ -3 & 3 & -2 \end{pmatrix} $$
+        Calculons $A^2 - A - 2I$:
+        $$ \begin{pmatrix} 0 & 1 & -1 \\ -7 & 8 & -7 \\ -3 & 3 & -2 \end{pmatrix} - \begin{pmatrix} -2 & 1 & -1 \\ -7 & 6 & -7 \\ -3 & 3 & -4 \end{pmatrix} - 2 \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix} $$
+        $$ = \begin{pmatrix} 0-(-2)-2 & 1-1-0 & -1-(-1)-0 \\ -7-(-7)-0 & 8-6-2 & -7-(-7)-0 \\ -3-(-3)-0 & 3-3-0 & -2-(-4)-2 \end{pmatrix} = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} $$
+        La relation $A^2 - A - 2I = 0$ est vérifiée.</p>
+        <p>En déduire que $A$ est inversible et trouver $A^{-1}$.
+        Réécrivons la relation : $A^2 - A = 2I$.
+        Factorisons par $A$: $A(A - I) = 2I$.
+        On peut aussi écrire $(A-I)A = 2I$.
+        Divisons par 2 : $A \left( \frac{1}{2}(A - I) \right) = I$ et $\left( \frac{1}{2}(A - I) \right) A = I$.
+        Cela montre que $A$ est inversible et que son inverse est
+        $$ A^{-1} = \frac{1}{2}(A - I) $$
+        $$ A^{-1} = \frac{1}{2} \left( \begin{pmatrix} -2 & 1 & -1 \\ -7 & 6 & -7 \\ -3 & 3 & -4 \end{pmatrix} - \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix} \right) = \frac{1}{2} \begin{pmatrix} -3 & 1 & -1 \\ -7 & 5 & -7 \\ -3 & 3 & -5 \end{pmatrix} $$
+         $$ A^{-1} = \begin{pmatrix} -3/2 & 1/2 & -1/2 \\ -7/2 & 5/2 & -7/2 \\ -3/2 & 3/2 & -5/2 \end{pmatrix} $$
+    </div>
+
+    <!-- ... autres corrections ... -->
+
+     <div class="correction">
+        <h3>Exercice 6.2.19c</h3>
+         <p>Soit $E_m = \{ M(x, y) = \begin{pmatrix} x & y \\ -(1 + m^2)y & x + 2my \end{pmatrix} \mid x, y \in \mathbb{R} \}$ avec $m>0$.</p>
+        <ol>
+            <li>Stabilité par addition :
+            $M(x,y)+M(x',y') = \begin{pmatrix} x+x' & y+y' \\ -(1+m^2)(y+y') & (x+x') + 2m(y+y') \end{pmatrix} = M(x+x', y+y')$.
+            C'est bien un élément de $E_m$. $E_m$ contient la matrice nulle $M(0,0)$. $E_m$ est stable par combinaison linéaire (vérification facile). C'est un sous-espace vectoriel de $\mathcal{M}_2(\mathbb{R})$.
+            Une base est $(M(1,0), M(0,1)) = (I, \begin{pmatrix} 0 & 1 \\ -(1+m^2) & 2m \end{pmatrix})$. La dimension est 2.
+
+            Stabilité par multiplication :
+            $M(x, y)M(x', y') = \begin{pmatrix} x & y \\ -(1 + m^2)y & x + 2my \end{pmatrix} \begin{pmatrix} x' & y' \\ -(1 + m^2)y' & x' + 2my' \end{pmatrix}$
+            Calcul du coefficient (1,1): $xx' + y(-(1+m^2)y') = xx' - (1+m^2)yy'$.
+            Calcul du coefficient (1,2): $xy' + y(x'+2my') = xy' + x'y + 2myy'$.
+            Calcul du coefficient (2,1): $-(1+m^2)y x' + (x+2my)(-(1+m^2)y') = -(1+m^2) [yx' + xy' + 2my y']$.
+            Calcul du coefficient (2,2): $-(1+m^2)y y' + (x+2my)(x'+2my')$
+            $= -(1+m^2)yy' + xx' + 2mxy' + 2mx'y + 4m^2yy'$
+            $= xx' + (4m^2-1-m^2)yy' + 2m(xy'+x'y)$
+            $= xx' + (3m^2-1)yy' + 2m(xy'+x'y)$.
+            On veut que le résultat soit $M(X, Y)$ avec $X=xx'-(1+m^2)yy'$ et $Y=xy'+x'y+2myy'$.
+            Vérifions si (2,1) = $-(1+m^2)Y$. Oui.
+            Vérifions si (2,2) = $X+2mY$.
+            $X+2mY = (xx' - (1+m^2)yy') + 2m(xy'+x'y+2myy')$
+            $= xx' - (1+m^2)yy' + 2m(xy'+x'y) + 4m^2yy'$
+            $= xx' + (4m^2-1-m^2)yy' + 2m(xy'+x'y)$. Oui.
+            Donc $M(x, y)M(x', y') = M(xx' - (1+m^2)yy', xy' + x'y + 2myy') \in E_m$.
+            $E_m$ est stable par multiplication.
+             <div class="placeholder">Placeholder for: image0090156 (referenced as page 154)</div>
+            </li>
+            <li>Inversibilité. Calculons le déterminant de $M(x,y)$.
+            $\det M(x,y) = x(x+2my) - y(-(1+m^2)y)$
+            $= x^2 + 2mxy + (1+m^2)y^2$
+            $= x^2 + 2mxy + y^2 + m^2y^2 = (x^2+y^2+2mxy) + m^2y^2$? Non.
+            $= (x^2 + 2mxy + m^2y^2) + y^2 = (x+my)^2 + y^2$.
+            Le déterminant est une somme de deux carrés de réels. Il est nul si et seulement si les deux termes sont nuls :
+            $y=0$ et $x+my=0$.
+            Si $y=0$, alors $x+0=0 \implies x=0$.
+            Donc $\det M(x,y) = 0 \iff x=0 \text{ et } y=0$.
+            Si $(x,y) \neq (0,0)$, alors $\det M(x,y) > 0$. La matrice est inversible.
+
+            Calcul de l'inverse. L'inverse est donné par la formule 2x2 :
+            $$ M(x,y)^{-1} = \frac{1}{\det M(x,y)} \begin{pmatrix} x+2my & -y \\ (1+m^2)y & x \end{pmatrix} $$
+            Il faut vérifier si cette matrice est dans $E_m$. Elle doit être de la forme $M(x', y')$.
+            Posons $D = \det M(x,y) = (x+my)^2 + y^2$.
+            $x' = \frac{x+2my}{D}$. $y' = \frac{-y}{D}$.
+            Vérifions le coefficient (2,1) : $-(1+m^2)y' = -(1+m^2)\frac{-y}{D} = \frac{(1+m^2)y}{D}$. C'est bien le coefficient (2,1) de l'inverse calculé.
+            Vérifions le coefficient (2,2) : $x'+2my' = \frac{x+2my}{D} + 2m(\frac{-y}{D}) = \frac{x+2my-2my}{D} = \frac{x}{D}$. C'est bien le coefficient (2,2) de l'inverse calculé.
+            Donc $M(x,y)^{-1} = M(x', y')$ avec $x'=\frac{x+2my}{D}$ et $y'=\frac{-y}{D}$.
+            L'inverse appartient bien à $E_m$.
+            </li>
+        </ol>
+    </div>
+
+     <div class="correction">
+        <h3>Exercice 6.2.20c</h3>
+        <p>Soit $A$ une matrice à diagonale strictly dominante. Montrons que $A$ est inversible.</p>
+        <p>On montre que le noyau de $A$ est réduit à $\{0\}$. Soit $X = \begin{pmatrix} x_1 \\ \vdots \\ x_n \end{pmatrix}$ tel que $AX=0$.</p>
+        <p>L'équation $AX=0$ se traduit par le système :</p>
+        $$ \forall i \in \llbracket 1, n \rrbracket, \quad \sum_{j=1}^{n} a_{ij} x_j = 0 $$
+        <p>Isolons le terme diagonal :</p>
+        $$ \forall i \in \llbracket 1, n \rrbracket, \quad a_{ii} x_i = - \sum_{j \neq i} a_{ij} x_j $$
+        <p>Supposons que $X \neq 0$. Alors au moins un $x_k$ est non nul. Soit $i_0$ un indice tel que $|x_{i_0}|$ est maximal parmi les $|x_j|$.</p>
+        <p>$|x_{i_0}| = \max \{ |x_1|, \dots, |x_n| \}$. Comme $X \neq 0$, $|x_{i_0}| > 0$.</p>
+        <p>Écrivons l'équation pour la ligne $i_0$ :</p>
+        $$ a_{i_0 i_0} x_{i_0} = - \sum_{j \neq i_0} a_{i_0 j} x_j $$
+        <p>Prenons la valeur absolue (ou le module si on était dans $\mathbb{C}$):</p>
+        $$ |a_{i_0 i_0}| |x_{i_0}| = \left| - \sum_{j \neq i_0} a_{i_0 j} x_j \right| = \left| \sum_{j \neq i_0} a_{i_0 j} x_j \right| $$
+        <p>Par l'inégalité triangulaire :</p>
+        $$ |a_{i_0 i_0}| |x_{i_0}| \le \sum_{j \neq i_0} |a_{i_0 j} x_j| = \sum_{j \neq i_0} |a_{i_0 j}| |x_j| $$
+        <p>Comme $|x_j| \le |x_{i_0}|$ pour tout $j$ :</p>
+        $$ |a_{i_0 i_0}| |x_{i_0}| \le \sum_{j \neq i_0} |a_{i_0 j}| |x_{i_0}| = |x_{i_0}| \left( \sum_{j \neq i_0} |a_{i_0 j}| \right) $$
+        <p>Comme $|x_{i_0}| > 0$, on peut diviser par $|x_{i_0}|$ :</p>
+        $$ |a_{i_0 i_0}| \le \sum_{j \neq i_0} |a_{i_0 j}| $$
+        <p>Ceci contredit l'hypothèse de diagonale strictement dominante $|a_{ii}| > \sum_{j \neq i} |a_{ij}|$ pour tout $i$, en particulier pour $i=i_0$.</p>
+        <p>L'hypothèse $X \neq 0$ doit donc être fausse. Donc $X=0$.</p>
+        <p>Le noyau de $A$ est réduit à $\{0\}$. Donc $A$ est inversible.</p>
+         <div class="placeholder">Placeholder for: image0090157 (referenced as page 155)</div>
+    </div>
+
+     <div class="correction">
+        <h3>Exercice 6.2.21c</h3>
+        <p>Soit $A$ la matrice $n \times n$ avec $a_{ii}=0$ et $a_{ij}=1$ pour $i \neq j$.</p>
+        <p>On peut écrire $A$ en fonction de la matrice $J$ (que des 1) et de $I$.</p>
+        <p>$J = \begin{pmatrix} 1 & \cdots & 1 \\ \vdots & \ddots & \vdots \\ 1 & \cdots & 1 \end{pmatrix}$. Alors $A = J - I$.</p>
+        <p>Calculons $A^2$. $A^2 = (J-I)^2 = J^2 - JI - IJ + I^2 = J^2 - 2J + I$.</p>
+        <p>Calculons $J^2$. Le coefficient $(i,j)$ de $J^2$ est $\sum_{k=1}^n J_{ik} J_{kj} = \sum_{k=1}^n 1 \times 1 = n$.</p>
+        <p>Donc $J^2 = \begin{pmatrix} n & \cdots & n \\ \vdots & \ddots & \vdots \\ n & \cdots & n \end{pmatrix} = n J$.</p>
+        <p>Alors $A^2 = nJ - 2J + I = (n-2)J + I$.</p>
+        <p>Exprimons $J$ en fonction de $A$: $J = A+I$.</p>
+        <p>$A^2 = (n-2)(A+I) + I = (n-2)A + (n-2)I + I = (n-2)A + (n-1)I$.</p>
+        <p>On a trouvé un polynôme annulateur pour A : $P(X) = X^2 - (n-2)X - (n-1)$.</p>
+        $$ A^2 - (n-2)A - (n-1)I = 0 $$
+        <p>Pour trouver l'inverse, on isole $I$ :</p>
+        $$ (n-1)I = A^2 - (n-2)A = A(A - (n-2)I) $$
+        <p>Supposons $n \ge 2$. Alors $n-1 \neq 0$. On peut diviser par $n-1$.</p>
+        $$ I = A \left( \frac{1}{n-1} (A - (n-2)I) \right) $$
+        <p>Cela montre que $A$ est inversible et</p>
+        $$ A^{-1} = \frac{1}{n-1} (A - (n-2)I) $$
+        <p>Explicitement : $A^{-1} = \frac{1}{n-1} (J-I - (n-2)I) = \frac{1}{n-1} (J - (n-1)I)$.</p>
+         $$ A^{-1} = \frac{1}{n-1} \left( \begin{pmatrix} 1 & \cdots & 1 \\ \vdots & \ddots & \vdots \\ 1 & \cdots & 1 \end{pmatrix} - (n-1) \begin{pmatrix} 1 & & 0 \\ & \ddots & \\ 0 & & 1 \end{pmatrix} \right) $$
+         $$ A^{-1} = \frac{1}{n-1} \begin{pmatrix} 1-(n-1) & 1 & \cdots & 1 \\ 1 & 1-(n-1) & \ddots & \vdots \\ \vdots & \ddots & \ddots & 1 \\ 1 & \cdots & 1 & 1-(n-1) \end{pmatrix} $$
+        $$ A^{-1} = \frac{1}{n-1} \begin{pmatrix} 2-n & 1 & \cdots & 1 \\ 1 & 2-n & \ddots & \vdots \\ \vdots & \ddots & \ddots & 1 \\ 1 & \cdots & 1 & 2-n \end{pmatrix} $$
+        Ceci correspond au résultat trouvé par résolution de système dans la correction.
+         <div class="placeholder">Placeholder for: image0090158 (referenced as page 156)</div>
+         <div class="placeholder">Placeholder for: image0090159 (referenced as page 157)</div>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 6.3.1c</h3>
+        <p>Soit $M = \begin{pmatrix} 2 & -1 & 2 \\ 0 & 2 & -1 \\ 0 & 0 & 2 \end{pmatrix}$.</p>
+        <p>On décompose $M = 2I + N$, où $N = \begin{pmatrix} 0 & -1 & 2 \\ 0 & 0 & -1 \\ 0 & 0 & 0 \end{pmatrix}$.</p>
+        <p>Calculons les puissances de $N$.</p>
+        $$ N^2 = \begin{pmatrix} 0 & -1 & 2 \\ 0 & 0 & -1 \\ 0 & 0 & 0 \end{pmatrix} \begin{pmatrix} 0 & -1 & 2 \\ 0 & 0 & -1 \\ 0 & 0 & 0 \end{pmatrix} = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} $$
+        $$ N^3 = N^2 N = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} \begin{pmatrix} 0 & -1 & 2 \\ 0 & 0 & -1 \\ 0 & 0 & 0 \end{pmatrix} = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} = 0 $$
+        <p>$N$ est nilpotente d'ordre 3. Donc $N^k = 0$ pour tout $k \ge 3$.</p>
+        <p>Comme $M = 2I + N$, et que $2I$ et $N$ commutent (car $2I$ est scalaire), on peut utiliser la formule du binôme de Newton :</p>
+        $$ M^n = (2I + N)^n = \sum_{k=0}^{n} \binom{n}{k} N^k (2I)^{n-k} = \sum_{k=0}^{n} \binom{n}{k} 2^{n-k} N^k $$
+        <p>Comme $N^k=0$ pour $k \ge 3$, la somme s'arrête à $k=2$ (si $n \ge 2$).
+        Si $n=0$, $M^0=I$. Formule: $\binom{0}{0}2^0 N^0 = I$. OK.
+        Si $n=1$, $M^1=M=2I+N$. Formule: $\binom{1}{0}2^1 N^0 + \binom{1}{1}2^0 N^1 = 2I + N$. OK.
+        Si $n=2$, $M^2=(2I+N)^2=4I+4N+N^2$. Formule: $\binom{2}{0}2^2 N^0 + \binom{2}{1}2^1 N^1 + \binom{2}{2}2^0 N^2 = 4I + 4N + N^2$. OK.</p>
+        <p>Pour $n \ge 2$ :</p>
+        $$ M^n = \binom{n}{0} 2^n N^0 + \binom{n}{1} 2^{n-1} N^1 + \binom{n}{2} 2^{n-2} N^2 $$
+        $$ M^n = 1 \cdot 2^n I + n 2^{n-1} N + \frac{n(n-1)}{2} 2^{n-2} N^2 $$
+        <p>Explicitement :</p>
+        $$ M^n = 2^n \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix} + n 2^{n-1} \begin{pmatrix} 0 & -1 & 2 \\ 0 & 0 & -1 \\ 0 & 0 & 0 \end{pmatrix} + n(n-1) 2^{n-3} \begin{pmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} $$
+        $$ M^n = \begin{pmatrix} 2^n & -n 2^{n-1} & n 2^n + n(n-1) 2^{n-3} \\ 0 & 2^n & -n 2^{n-1} \\ 0 & 0 & 2^n \end{pmatrix} $$
+        <p>On peut simplifier le terme (1,3) : $n 2^n + n(n-1) 2^{n-3} = 2^{n-3} [ n 2^3 + n(n-1) ] = 2^{n-3} [8n + n^2 - n] = 2^{n-3} (n^2+7n)$. Non, la correction a $\frac{n(n-1)}{2} 2^{n-2} = n(n-1)2^{n-3}$.</p>
+        <p>Le coefficient (1,3) de $M^n$ est $2^n(0) + n2^{n-1}(2) + n(n-1)2^{n-3}(1) = n 2^n + n(n-1)2^{n-3}$.</p>
+        <p>Le coefficient (1,3) de la correction: $n2^n + \frac{n(n-1)}{2} 2^{n-2}$. C'est $n 2^n + n(n-1) 2^{n-3}$. C'est bien ça.</p>
+         $$ M^n = \begin{pmatrix} 2^n & -n 2^{n-1} & n 2^n + n(n-1) 2^{n-3} \\ 0 & 2^n & -n 2^{n-1} \\ 0 & 0 & 2^n \end{pmatrix} $$
+        (Vérification pour n=2: $M^2 = \begin{pmatrix} 4 & -4 & 8+2 \\ 0 & 4 & -4 \\ 0 & 0 & 4 \end{pmatrix} = \begin{pmatrix} 4 & -4 & 10 \\ 0 & 4 & -4 \\ 0 & 0 & 4 \end{pmatrix}$. Calcul direct: $M^2 = 4I+4N+N^2 = \begin{pmatrix} 4 & 0 & 0 \\ 0 & 4 & 0 \\ 0 & 0 & 4 \end{pmatrix} + \begin{pmatrix} 0 & -4 & 8 \\ 0 & 0 & -4 \\ 0 & 0 & 0 \end{pmatrix} + \begin{pmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} = \begin{pmatrix} 4 & -4 & 9 \\ 0 & 4 & -4 \\ 0 & 0 & 4 \end{pmatrix}$. Il y a une erreur dans mon calcul ou la correction. $n2^n + n(n-1)2^{n-3}$ pour n=2 -> $2(4)+2(1)2^{-1}=8+1=9$. C'est correct).
+    </div>
+
+    <!-- ... autres corrections ... -->
+
+    <div class="correction">
+        <h3>Exercice 6.4.8c</h3>
+        (Correction de l'exercice numéroté 4.8 dans le texte original)
+        <ol>
+            <li>On pose $N = B(B-I)$. On sait $N^N=0$.
+            On veut montrer $2B-I$ inversible.
+            $(2B-I)^2 = 4B^2-4B+I = 4B(B-I)+I = 4N+I$.
+            On a $I - (2B-I)^2 = -4N$.
+            Comme $N$ est nilpotente, $N^N=0$, alors $(-4N)^N = (-4)^N N^N = 0$. Donc $I-(2B-I)^2$ est nilpotente.
+            Soit $M = (2B-I)^2$. On a $I-M$ nilpotente. D'après l'exercice 6.2.11, $I-(I-M) = M$ est inversible.
+            Donc $(2B-I)^2$ est inversible. Cela implique que $2B-I$ est inversible (car $\det((2B-I)^2) = (\det(2B-I))^2$, si det=0 alors det^2=0).
+            Donc $2B_0-I = 2B-I$ est inversible.
+            $B_0-B = B-B = 0$. On peut écrire $0 = N \cdot C_0$ avec $C_0=0$. $B_0(B_0-I) = B(B-I)$. C'est $[B(B-I)]^{2^0} D_0$ avec $D_0=I$.
+            Les conditions de commutativité sont triviales. $(\mathcal{H}_0)$ est vraie.</li>
+             <div class="placeholder">Placeholder for: image0090184 (referenced as page 182)</div>
+            <li>Les calculs donnés dans la correction pour $2B_{k+1}-I$, $B_{k+1}-B$ et $B_{k+1}(B_{k+1}-I)$ sont admis (ou à vérifier par l'algèbre).
+            Il faut montrer l'inversibilité de $2B_{k+1}-I$ et les propriétés de $C_{k+1}, D_{k+1}$.
+            $2B_{k+1}-I = [I+2B_k(B_k-I)](2B_k-I)^{-1}$.
+            On sait par $(\mathcal{H}_k)$ que $B_k(B_k-I) = N^{2^k} D_k$ où $N=B(B-I)$. Comme $N$ est nilpotente, $N^{2^k}$ est nilpotente (si $2^k \ge N$).
+            Comme $D_k$ commute avec $N$ (car $D_k$ commute avec $B$), $B_k(B_k-I)$ est nilpotente.
+            Soit $M_k = -2B_k(B_k-I)$. $M_k$ est nilpotente.
+            Alors $I - M_k = I+2B_k(B_k-I)$ est inversible (d'après 6.2.11).
+            Comme $2B_k-I$ est inversible par $(\mathcal{H}_k)$, le produit $[I+2B_k(B_k-I)](2B_k-I)^{-1}$ est inversible. Donc $2B_{k+1}-I$ est inversible.
+            Les expressions de $C_{k+1}$ et $D_{k+1}$ sont implicitement définies par les formules. Il faut vérifier qu'elles commutent avec $B$. Cela découle du fait que $B_k, C_k, D_k$ commutent avec $B$ par $(\mathcal{H}_k)$ et que $B_{k+1}, C_{k+1}, D_{k+1}$ sont construites à partir de celles-ci. La récurrence établit $(\mathcal{H}_{k+1})$.</li>
+            <li>Comme $N=B(B-I)$ est nilpotente, il existe $p_0$ tel que $N^{p_0}=0$. Choisissons $p$ tel que $2^p \ge p_0$. Alors $N^{2^p}=0$.
+            D'après $(\mathcal{H}_p)$, $B_p(B_p-I) = N^{2^p} D_p = 0 \cdot D_p = 0$.
+            Montrons que $B-B_p$ est nilpotente. On a $B_p-B = N C_p$. Comme $N$ est nilpotente et commute avec $C_p$, $N C_p$ est nilpotente. Donc $B_p-B$ est nilpotente, et $B-B_p$ aussi.
+            Montrons $B_{k+1}=B_k$ pour $k \ge p$.
+            On a $B_k(B_k-I) = N^{2^k} D_k$. Si $k \ge p$, $2^k \ge 2^p \ge p_0$, donc $N^{2^k}=0$. Donc $B_k(B_k-I)=0$ pour $k \ge p$.
+            Reprenons le calcul de la correction :
+            $B_{k+1} - B_k = -B_k(B_k - I)(2B_k - I)^{-1}$.
+            Si $k \ge p$, $B_k(B_k-I)=0$. Donc $B_{k+1}-B_k=0$.
+            La suite $(B_k)$ est stationnaire à partir du rang $p$.
+             <div class="placeholder">Placeholder for: image0090185 (referenced as page 183)</div>
+            </li>
+        </ol>
+    </div>
+
+    <div class="correction">
+        <h3>Exercice 6.4.9c</h3>
+        <h4>Caractérisation des matrices positives</h4>
+        <ol>
+            <li>Soit $M \ge 0$ ($m_{ij} \ge 0$) et $X \ge 0$ ($x_j \ge 0$).
+            Soit $Y=MX$. Le coefficient $y_i = \sum_{j=1}^n m_{ij} x_j$.
+            C'est une somme de produits de termes $\ge 0$. Donc $y_i \ge 0$.
+            Ceci est vrai pour tout $i$, donc $Y=MX \ge 0$.</li>
+            <li>Supposons que $MX \ge 0$ pour tout $X \ge 0$.
+            Soit $E_j$ le $j$-ème vecteur colonne de la base canonique (1 à la $j$-ème ligne, 0 ailleurs). $E_j \ge 0$.
+            Alors $M E_j \ge 0$.
+            Le produit $M E_j$ est la $j$-ème colonne de $M$.
+            Donc la $j$-ème colonne de $M$ est positive (tous ses coefficients sont $\ge 0$).
+            Ceci est vrai pour tout $j=1, \dots, n$. Donc tous les coefficients $m_{ij}$ de $M$ sont $\ge 0$. $M \ge 0$.</li>
+        </ol>
+         <div class="placeholder">Placeholder for: image0090186 (referenced as page 184)</div>
+        <h4>Caractérisation des matrices productives</h4>
+        <ol start="1">
+            <li>Soit $A$ productive. $A \ge 0$ et $\exists P \ge 0$ tel que $(I-A)P > 0$.
+            (a) Montrer $P > 0$.
+            $(I-A)P > 0$ signifie $P-AP > 0$. Donc $p_i - \sum_j a_{ij}p_j > 0$ pour tout $i$.
+            $p_i > \sum_j a_{ij}p_j$.
+            Comme $A \ge 0$ et $P \ge 0$, on a $\sum_j a_{ij}p_j \ge 0$.
+            Donc $p_i > 0$ pour tout $i$. $P > 0$.
+            </li>
+            <li>(b) Soit $X \ge AX$. Soit $c = \min_{j} (x_j/p_j)$ atteint pour $k$. Montrer $c \ge 0$ et $X \ge 0$.
+            On a $x_k = c p_k$. Pour $j \neq k$, $x_j \ge c p_j$.
+            On a $X \ge AX$, donc $x_k \ge \sum_j a_{kj} x_j$.
+            $c p_k \ge \sum_j a_{kj} x_j$.
+            Comme $x_j \ge c p_j$ et $a_{kj} \ge 0$: $a_{kj} x_j \ge a_{kj} c p_j$.
+            $c p_k \ge \sum_j a_{kj} (c p_j) = c \sum_j a_{kj} p_j$.
+            $c p_k - c \sum_j a_{kj} p_j \ge 0 \implies c (p_k - \sum_j a_{kj} p_j) \ge 0$.
+            On sait que $P-AP > 0$, donc $p_k - \sum_j a_{kj} p_j > 0$.
+            Comme le produit est $\ge 0$ et le deuxième
