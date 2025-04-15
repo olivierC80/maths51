@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 18: Variables aléatoires discrètes</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" crossorigin="anonymous">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            margin-top: 40px;
+        }
+        h3 {
+            margin-top: 25px;
+            font-size: 1.2em;
+        }
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            background-color: #eee;
+            color: #777;
+            font-style: italic;
+        }
+        .exercice, .correction {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .objectif {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .objectif strong, .objectif em { /* For 🟨 and 📌 */
+            color: #b35900; /* Amber/Orange color */
+            font-style: normal; /* Override italic */
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .katex-display { /* Ensure display math has space */
+            margin: 1em 0;
+        }
+        a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code {
+          background-color: #f0f0f0;
+          padding: 2px 4px;
+          border-radius: 3px;
+        }
+        .check-objectif { /* For □ */
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            border: 1px solid #ccc;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .error-note {
+            color: red;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Chapitre 18: Variables aléatoires discrètes</h1>
+
+    <div class="placeholder">[Placeholder: image0090646]</div>
+
+    <section id="va_tres_discretes">
+        <h2>1. Variables aléatoires (très) discrètes</h2>
+        <p>Cette section introduit les variables aléatoires discrètes (VAD), qui prennent un nombre fini ou dénombrable de valeurs. On y étudie leur loi de probabilité (donnée par \(P(X=k)\)), leur fonction de répartition, leur espérance (valeur moyenne) et leur variance (mesure de dispersion). Les exercices portent sur la détermination de ces caractéristiques pour des VAD issues d'expériences aléatoires simples.</p>
+
+        <div class="exercice" id="ex18.1.1">
+            <h3>Exercice 18.1.1</h3>
+            <p class="objectif"><em>🟨 Objectif** : calcul d'un nombre moyen à l'aide de l'espérance.</em></p>
+            <p>Dix urnes sont numérotées de 1 à 10. Pour tout numéro \(k\) de 1 à 10, l'urne portant le numéro \(k\) contient une boule jaune et \(k\) boules rouges (soit \(k+1\) boules au total).</p>
+            <p>On tire au hasard une boule de chaque urne (10 tirages indépendants). Quel est le nombre moyen de boules jaunes tirées ?</p>
+             <p><small>Voir la <a href="#cor18.1.1">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.1.2">
+            <h3>Exercice 18.1.2</h3>
+            <p class="objectif"><em>🟨 Objectif** : loi du plus grand numéro sur un lancer de deux dés.</em></p>
+            <ol>
+                <li>On lance deux dés cubiques équilibrés. Soit \(X\) la v.a.r égale au plus grand des deux points obtenus.
+                <ol type="a">
+                    <li>Déterminer la fonction de répartition \(F_X(k) = P(X \leq k)\) pour \(k \in \llbracket 1; 6 \rrbracket\).</li>
+                    <li>En déduire la loi de probabilité de la variable \(X\).</li>
+                </ol>
+                </li>
+                <li>Reprendre la question 1. pour un lancer de trois dés.</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.1.2">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.1.3">
+            <h3>Exercice 18.1.3</h3>
+            <p class="objectif"><em>🟨 Objectif** : recherche du nombre de jetons pour que le jeu soit équitable.</em></p>
+            <p>Un sac contient \(n\) jetons (\(n \geq 17\)) dont cinq rouges (R) et dix blancs (B), les autres \(n-15\) étant verts (V). Un joueur tire un jeton au hasard.</p>
+            <ul>
+                <li>S'il est rouge, il gagne 5 euros.</li>
+                <li>S'il est blanc il perd 3 euros.</li>
+                <li>S'il est vert, il procède à un second tirage sans remettre le 1er jeton.
+                    <ul>
+                        <li>Si le 2nd jeton est rouge, il gagne 4 euros.</li>
+                        <li>Si le 2nd jeton est blanc, il perd 1 euro.</li>
+                        <li>Si le 2nd jeton est vert, la partie est nulle (gain 0).</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Soit \(X\) la variable aléatoire associée au gain algébrique du joueur.</p>
+            <ol>
+                <li>Établir, en fonction de \(n\), la loi de probabilité de \(X\).</li>
+                <div class="placeholder">[Placeholder: image0090647]</div>
+                <li>Calculer \(E(X)\), et en déduire la valeur de \(n\) pour laquelle le jeu est équitable (\(E(X)=0\)).</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.1.3">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.1.4">
+            <h3>Exercice 18.1.4</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> **Objectif :** QCM et probabilité de réussite à l'examen.</p>
+            <p>Un questionnaire à choix multiple (QCM) est constitué de dix questions indépendantes. Pour chacune d'elles, quatre réponses sont proposées, dont une seule est exacte.</p>
+            <ol>
+                <li>Un candidat répond au hasard à chaque question. Soit \(X\) la variable aléatoire égale au nombre de réponses exactes fournies.
+                <ol type="a">
+                    <li>Quelle est la loi de \(X\) ? Déterminer \(E(X)\).</li>
+                    <li>Quelle est la probabilité que le candidat soit reçu à l'examen, si on lui demande d'avoir au moins cinq réponses correctes (\(X \ge 5\))?</li>
+                </ol>
+                </li>
+                <li>Reprendre la question 1.b. pour un candidat qui connaît la réponse à trois des questions posées et répond au hasard aux sept autres.</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.1.4">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.1.5">
+            <h3>Exercice 18.1.5</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> **Objectif :** nombre de cibles touchées par des tireurs à l'arc.</p>
+            <p>Trois tireurs à l'arc (discernables) sont devant sept cibles (discernables) ; chacun d'eux choisit une cible au hasard (chaque tireur a \(1/7\) de chance de choisir une cible donnée, indépendamment des autres) et ils tirent en même temps. Ils ne ratent jamais la cible choisie.</p>
+            <p>On note \(X\) le nombre de cibles distinctes touchées ; déterminer la loi de \(X\).</p>
+             <p><small>Voir la <a href="#cor18.1.5">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.1.6">
+            <h3>Exercice 18.1.6</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> **Objectif :** loi du nombre de personnes montant dans un certain wagon.</p>
+            <p>À la gare, dans trois wagons \(W_1\), \(W_2\) et \(W_3\) d'un train initialement vide, \(n\) personnes (discernables) se répartissent au hasard et indépendamment les unes des autres (chaque personne choisit un des 3 wagons avec équiprobabilité).</p>
+            <span class="error-note">(Le texte suivant semble être un extrait de solution de l'exercice 18.1.4 et non lié à 18.1.6)</span>
+            <!--
+            Pour la question 1(a), la variable aléatoire $X$ suit une loi binomiale de paramètres $n = 10$ et $p = \frac{1}{4}$. L'espérance $E(X)$ peut être calculée comme suit :
+            $E(X) = np = 10 \cdot \frac{1}{4} = 2.5$
+            Pour la question 1(b), nous devons trouver la probabilité que $X \geq 5$. Cela peut être calculé en utilisant la fonction de répartition cumulative de la loi binomiale.
+            -->
+            <div class="placeholder">[Placeholder: image0090648]</div>
+            <p>Pour \(i \in \{1, 2, 3\}\), on note \(X_i\) la variable aléatoire égale au nombre de personnes montant dans le wagon \(W_i\):</p>
+            <ol>
+                <li>Pour tout \(i \in \{1, 2, 3\}\), déterminer la loi, l'espérance et la variance de \(X_i\).</li>
+                <li>Que vaut \(X_1 + X_2 + X_3\) ? En déduire la loi de \(X_1 + X_2\).</li>
+                <li>Pour tout \(j \in \{0, \ldots, n\}\) et tout \(k \in \{0, \ldots, n\}\) tels que \(j+k \le n\), calculer \(P((X_1 = j) \cap (X_2 = k))\).</li>
+                <li>Les variables aléatoires \(X_1\) et \(X_2\) sont-elles indépendantes ?</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.1.6">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.1.7">
+            <h3>Exercice 18.1.7</h3>
+            <p class="objectif"><span class="check-objectif"></span> Objectif : loi d'un min et d'un max.</p>
+            <p>Les trois questions sont indépendantes.</p>
+            <p>Une urne contient trois boules numérotées 1, 2, 3.</p>
+            <ol>
+                <li>On en tire \(n\) une à une et avec remise. Soit \(X\) le plus petit des numéros obtenus. Calculer \(P(X \geq i)\) pour tout \(i \in \{1, 2, 3\}\). En déduire la loi de \(X\).</li>
+                <li>Soit \(Y\) le plus grand des numéros obtenus lors de ces \(n\) tirages. Calculer \(P(Y \leq j)\) pour tout \(j \in \{1, 2, 3\}\). En déduire la loi de \(Y\).</li>
+                <li>On effectue des tirages successifs d'une boule avec remise, jusqu'à obtenir pour la première fois, un numéro déjà tiré. On note alors \(Z\) le rang aléatoire de ce dernier tirage. C'est ainsi, par exemple, que si l'on a obtenu successivement les numéros 1-2-3-3, la variable \(Z\) prend la valeur 4, alors que si l'on a obtenu 1-2-2, la variable \(Z\) prend la valeur 3. Déterminer la loi de \(Z\) et calculer son espérance et sa variance.</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.1.7">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.1.8">
+            <h3>Exercice 18.1.8</h3>
+            <p class="objectif"><span class="check-objectif"></span> **Objectif**: attente d'un \(2^e\) succès.</p>
+            <p>Dans un sac, il y a deux boules blanches (B) et quatre boules noires (N). On les tire toutes une à une et sans remise.</p>
+            <div class="placeholder">[Placeholder: image0090649]</div>
+            <p>Soit \(X\) la variable aléatoire égale au rang de la \(1^{\text{re}}\) boule blanche tirée et \(Y\) la variable aléatoire égale au rang de la \(2^{\text{e}}\) boule blanche tirée. Déterminer les lois de \(X\) et \(Y\).</p>
+             <p><small>Voir la <a href="#cor18.1.8">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.1.9">
+            <h3>Exercice 18.1.9</h3>
+            <p class="objectif"><span class="check-objectif"></span> **Objectif :** étude d’une variable définie selon le résultat d’une autre variable.</p>
+            <p>On a dans une urne 9 jetons numérotés de 1 à 9. On effectue 9 tirages successifs d’un jeton avec remise. Soit \(X\) le nombre de jetons obtenus où un numéro pair y était inscrit (il y a 4 numéros pairs: 2, 4, 6, 8).</p>
+            <ol>
+                <li>Donner la loi de \(X\) et calculer \(E(X)\).</li>
+                <li>On définit la variable aléatoire \(Y\) par :
+                    <ul>
+                        <li>Si \(X = 0\), on tire un jeton au hasard dans l’urne et \(Y\) prend alors la valeur du numéro du jeton tiré.</li>
+                        <li>Si \(X = k > 0\) alors \(Y = k\).</li>
+                    </ul>
+                Donner la loi de \(Y\) et calculer \(E(Y)\).</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.1.9">correction</a>.</small></p>
+       </div>
+
+    </section>
+
+    <div class="placeholder">[Placeholder: image0090650]</div>
+
+    <section id="va_suites">
+        <h2>2. Variables aléatoires et suites</h2>
+        <p>Cette section explore les liens entre les probabilités et les suites, notamment via les chaînes de Markov implicites. On étudie l'évolution de la loi de probabilité d'une variable aléatoire au fil du temps (défini par un indice \(n\)), souvent à l'aide de relations de récurrence sur les probabilités \(P(X_n=k)\) ou sur l'espérance \(E(X_n)\).</p>
+
+        <div class="exercice" id="ex18.2.1">
+            <h3>Exercice 18.2.1</h3>
+            <p class="objectif"><strong>Objectif</strong> : loi du déplacement d'un pion sur les sommets d'un carré.</p>
+            <p>Les sommets d'un carré sont numérotés 1, 2, 3 et 4 dans cet ordre. Un pion se déplace aléatoirement sur les sommets selon le protocole suivant :</p>
+            <ul>
+                <li>Au départ (\(n=0\)), le pion est sur le sommet 1.</li>
+                <li>Lorsque le pion est sur un sommet à l'instant \(n\), il se déplace à l'instant \(n+1\) sur l'un quelconque des trois autres sommets, avec équiprobabilité (probabilité 1/3 pour chaque sommet cible).</li>
+            </ul>
+            <p>Pour tout \(n \in \mathbb{N}\), on note \(X_n\) la variable aléatoire égale au numéro du sommet où se situe le pion à l'instant \(n\). On a \(X_0 = 1\).</p>
+            <ol>
+                <li>(a) Utiliser la formule des probabilités totales pour établir que, pour tout \(n \in \mathbb{N}\), on a :
+                \[P(X_{n+1} = 1) = \frac{1}{3}P(X_n = 2) + \frac{1}{3}P(X_n = 3) + \frac{1}{3}P(X_n = 4).\]
+                (b) En déduire que, pour tout \(n \in \mathbb{N}\), on a :
+                \[P(X_{n+1} = 1) = -\frac{1}{3}P(X_n = 1) + \frac{1}{3}.\]
+                (c) Donner alors, pour tout \(n \in \mathbb{N}\), la valeur de \(P(X_n = 1)\).</li>
+                <li>Par symétrie (ou calcul analogue), montrer que, pour tout \(n \in \mathbb{N}\), \(P(X_n = 2) = P(X_n = 3) = P(X_n = 4)\), puis en déduire \(P(X_n=2)\). <span class="error-note">(Corrigé demande de montrer $P(X_n=2) = 1/4 - 1/4(-1/3)^n$. Vérifier la symétrie).</span></li>
+                <li>Déterminer l'espérance de \(X_n\).</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.2.1">correction</a>.</small></p>
+       </div>
+
+        <div class="placeholder">[Placeholder: image0090651]</div>
+
+        <div class="exercice" id="ex18.2.2">
+            <h3>Exercice 18.2.2</h3>
+            <p class="objectif"><strong>Objectif</strong> : échange d'urnes pour des boules et évolution au cours des expériences.</p>
+            <p>On répartit \(n\) boules numérotées de 1 à \(n\) dans 2 urnes \(U_1\) et \(U_2\). Initialement, \(m\) boules sont dans \(U_1\) (\(0 \le m \le n\)).</p>
+            <p>Une action consiste à : choisir un numéro de jeton au hasard (de 1 à \(n\)), et changer d'urne la boule portant ce numéro. On note \(X_r\) la variable aléatoire égale au nombre de boules dans \(U_1\) après \(r\) actions.</p>
+            <ol>
+                <li>Déterminer la loi de \(X_1\) ainsi que son espérance. (Partant de \(X_0=m\)).</li>
+                <li>Déterminer la loi de \(X_{r+1}\) conditionnellement à \((X_r=k)\). En déduire une relation de récurrence liant \(E(X_{r+1})\) et \(E(X_r)\).</li>
+                <li>En déduire la valeur de \(E(X_r)\) pour tout \(r \ge 0\).</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.2.2">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.2.3">
+            <h3>Exercice 18.2.3</h3>
+            <p class="objectif"><strong>Objectif</strong> : obtention de la première fois Pile-Face.</p>
+            <p>On réalise une suite de lancers d'une pièce équilibrée. On note \(P_k\) (resp. \(F_k\)) l'événement : « on obtient pile (resp. face) au \(k\)-ème lancer ».</p>
+            <p>On note \(X\) la variable aléatoire qui prend la valeur \(k\) si l'on obtient pour la première fois la séquence Pile-Face (PF) aux lancers \(k-1\) et \(k\) (\(k \geq 2\)). \(X\) prend la valeur 0 si l'on n'obtient jamais une telle succession (événement de probabilité nulle, voir 17.5).</p>
+            <ol>
+                <li>(a) Calculer \(P(X = 2)\) et \(P(X = 3)\).</li>
+                <li>(b) Écrire, pour tout entier \(k\) supérieur ou égal à 3, l'événement \((X = k)\) comme réunion d'événements incompatibles liés aux séquences ne contenant pas PF.</li>
+                <li>(c) Déterminer \(P(X = k)\) pour tout entier \(k \geq 2\).</li>
+                <li>(d) Vérifier que \(\sum_{k=2}^\infty P(X=k) = 1\), et donc \(P(X=0)=0\).</li>
+                <li>On se propose de retrouver le résultat de la question 1(c) par une autre méthode.
+                <ol type="a">
+                    <li>Montrer que, si \(k \geq 3\) et si le premier lancer est un Pile, alors l'événement \((X = k)\) ne peut se réaliser que si la séquence est \(P_1 P_2 \dots P_{k-1} F_k\).</li>
+                    <div class="placeholder">[Placeholder: image0090652]</div>
+                    <li>(b) En utilisant la formule des probabilités totales avec le système \((P_1, F_1)\), montrer que :
+                    \[\forall k \geq 3 \quad P(X = k) = \frac{1}{2} P(X = k - 1) + P(F_1 \cap P_2 \dots P_{k-1} F_k)? \]
+                    <span class="error-note">(Le corrigé donne $P(X=k) = \frac{1}{2}P(X=k-1) + \frac{1}{2^k}$).</span></li>
+                    <li>(c) On pose, pour tout entier \(k \geq 2, u_k = 2^k P(X = k)\). Montrer que la suite \((u_k)_{k \geq 3}\) est arithmétique. Retrouver \(P(X=k)\).</li>
+                </ol>
+                </li>
+                <li>Montrer que \(X\) a une espérance \(E(X)\), puis la calculer.</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.2.3">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.2.4">
+            <h3>Exercice 18.2.4</h3>
+            <p class="objectif"><strong>Objectif</strong> : caractérisation d'une loi de Poisson conditionnée par une autre loi de Poisson.</p>
+            <p>Dans cet exercice, \(p \in ]0, 1[\).</p>
+            <ol>
+                <li>Dans cette question, \(\lambda > 0\). On considère deux variables aléatoires discrètes \(X\) et \(Y\), définies sur le même espace probabilisé, indépendantes, telles que \(X\) suit la loi de Poisson de paramètre \(\lambda p\) (\(X \sim \mathcal{P}(\lambda p)\)) et \(Y\) suit la loi de Poisson de paramètre \(\lambda (1 - p)\) (\(Y \sim \mathcal{P}(\lambda(1-p))\)).
+                <ol type="a">
+                    <li>Donner la loi de la variable aléatoire \(X + Y\).</li>
+                    <li>Montrer que, pour tout \(n \in \mathbb{N}\), la loi de \(X\) conditionnellement à l'événement \((X + Y = n)\) est la loi binomiale \(B(n, p)\), c'est-à-dire que :
+                    \[\forall k \in \llbracket 0, n \rrbracket, \quad P_{(X+Y=n)}(X = k) = \binom{n}{k} p^k (1 - p)^{n - k}.\]</li>
+                </ol>
+                </li>
+                <li>Dans cette question, on étudie la réciproque. On considère deux variables aléatoires discrètes \(X\) et \(Y\), définies sur le même espace probabilisé, à valeurs dans \(\mathbb{N}\), indépendantes, telles que, pour tout entier naturel \(n\), on a \(P(X + Y = n) \neq 0\), et qui vérifient la relation suivante, valable pour tout entier naturel \(n\) :
+                \[\forall k \in \llbracket 0, n \rrbracket, \quad P_{(X+Y=n)}(X = k) = \binom{n}{k} p^k (1 - p)^{n - k}.\]
+                <div class="placeholder">[Placeholder: image0090653]</div>
+                Pour tout entier naturel \(n\), on pose :
+                \[u_n = \frac{n!P(X=n)}{p^n}, \quad v_n = \frac{n!P(Y=n)}{(1-p)^n}, \quad w_n = n!P(X+Y=n).
+                \]
+                <ol type="a">
+                    <li>Montrer que pour tout couple \((k, n)\) d'entiers naturels tels que \(k \leq n\), on a la relation suivante : \(u_k v_{n-k} = w_n \quad (R)\).</li>
+                    <li>Utiliser la relation \((R)\) avec deux valeurs de \(k\) bien choisies pour justifier que :
+                        i. \(v_0 \neq 0\)
+                        ii. la suite \((u_n)\) est géométrique de raison \(\lambda = \frac{v_1}{v_0}\).</li>
+                    <li>(c) Montrer également que la suite \((v_n)_n\) est géométrique et que sa raison est aussi égale à \(\lambda\).</li>
+                    <li>(d) En déduire que : \(\forall k \in \mathbb{N}, P(X=k) = \frac{u_0}{v_0} \frac{(\lambda p)^k}{k!}\)? <span class="error-note">(Corrigé a $u_0 (\lambda p)^k / k!$).</span></li>
+                    <li>(e) Utiliser le fait que \(\sum P(X=k) = 1\) pour déterminer \(u_0\) et conclure que \(X\) suit la loi de Poisson de paramètre \(\lambda p\). On montrerait de même que \(Y \sim \mathcal{P}(\lambda(1-p))\).</li>
+                </ol>
+                </li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.2.4">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.2.5">
+            <h3>Exercice 18.2.5</h3>
+            <p class="objectif"><strong>Objectif : tirage et remplacement éventuel de boules.</strong></p>
+            <p>Dans tout le problème, \(a\) et \(b\) désignent des entiers naturels tous deux non nuls et l'on note \(N = a + b\).</p>
+            <p>On considère une urne contenant initialement \(a\) boules blanches (B) et \(b\) boules noires (N). On effectue des tirages successifs, au hasard et avec remise conditionnelle d’une boule, en procédant comme suit :</p>
+            <ul>
+                <li>si la boule tirée est B, elle est remise dans l’urne.</li>
+                <li>si la boule tirée est N, elle n’est pas remise, mais remplacée par une boule B.</li>
+            </ul>
+            <div class="placeholder">[Placeholder: image0090654]</div>
+            <h4>Partie I</h4>
+            <p>Soit \(Y : \Omega \to \mathbb{R}\) la variable aléatoire égale au nombre de tirages nécessaires à l'obtention d'une première boule blanche.</p>
+            <ol>
+                <li>Préciser l'ensemble des valeurs prises par \(Y\).</li>
+                <li>Pour tout entier \(k\) dans \(Y(\Omega)\), calculer \(P(Y = k)\).</li>
+                <li>Vérifier que : \(P(Y = b + 1) = \frac{b! a^0 (a+1)\dots(a+b-1)}{N^{b+1}}\)? <span class="error-note">(Corrigé a $\frac{b!}{N^b}$. Probablement une erreur dans le calcul du corrigé ou une mauvaise interprétation de la formule générale).</span></li>
+                <li>Soit \(M \in \mathbb{N}^*\) et \((a_k)\) une suite. Établir : \(\sum_{k=1}^{M} k (a_{k-1} - a_k) = \left( \sum_{k=0}^{M-1} a_k \right) - M a_M.\)</li>
+                <li>En utilisant Q3 et Q4 avec \(a_k = \frac{b!}{(b-k)! N^k}\), en déduire que : \(E(Y) = \sum_{k=0}^{b} \frac{b!}{(b - k)! N^k}.\)</li>
+            </ol>
+            <h4>Partie II</h4>
+            <p>Dans cette partie, on note :</p>
+            <ul>
+                <li>\(q_n = P(N_n)\) où \(N_n\): « la \(n\)-ème boule tirée est noire » (\(n \ge 1\)).</li>
+                <li>\(X_n\) = nombre de boules noires obtenues au cours des \(n\) premiers tirages (\(n \ge 0, X_0=0\)).</li>
+                <li>\(p_{n, k} = P(X_n = k)\) (\(k \ge 0, n \ge 0\)).</li>
+            </ul>
+            <ol>
+                <li>Calculer \(p_{n, 0}\) et \(p_{n, n}\) (pour \(n \le b\)). Que vaut \(\sum_{k=0}^{n} p_{n, k}\) ?</li>
+
+                <div class="placeholder">[Placeholder: image0090655]</div>
+
+                <li>Démontrer la formule suivante, valable pour \(n \geq 1\) et \(k \in \llbracket 1, \min(n, b) \rrbracket\) :
+                \[(A): \quad N p_{n, k} = (a+k) p_{n-1, k} + (b+1-k) p_{n-1, k-1}.
+                \]</li>
+                <li>Calcul de l'espérance de \(X_n\) :
+                <ol type="a">
+                    <li>À l'aide de \((A)\), démontrer pour \(n \geq 1\) :
+                    \[E(X_n) = \left(1 - \frac{1}{N}\right) E(X_{n-1}) + \frac{b}{N}.
+                    \]</li>
+                    <li>Écrire une fonction Pascal (ou autre langage) pour calculer \(E(X_{2009})\) pour \(b=10, N=100\).</li>
+                    <li>Prouver que : \(E(X_n) = b \left(1 - \left(1 - \frac{1}{N}\right)^n \right).\)<span class="error-note">(Corrigé a $(1-1/N)^b$? Non, puissance n).</span></li>
+                </ol>
+                </li>
+                <li>Calcul de \(q_n\) :
+                <ol type="a">
+                    <li>Établir pour \(n \ge 0\): \(N q_{n+1} = \sum_{k=0}^{n} (b-k) p_{n, k}.\)</li>
+                    <li>Exprimer \(q_{n+1}\) en fonction de \(E(X_n)\) et en déduire \(q_{n+1}\) en fonction de \(n, b, N\).</li>
+                </ol>
+                </li>
+                <li>Calcul de la variance de \(X_n\) : On pose \(u_n = E(X_n (X_n - 1))\).
+                <ol type="a">
+                    <li>Montrer que : \(N u_n = (N-2)u_{n-1} + 2(b-1)E(X_{n-1})\)? <span class="error-note">(Corrigé a une somme plus complexe).</span></li>
+                    <div class="placeholder">[Placeholder: image0090656]</div>
+                    <li>(b) En déduire que \((u_n)\) satisfait : \(u_n = \left(1 - \frac{2}{N}\right)u_{n-1} + \frac{2b(b-1)}{N}\left(1 - \left(1 - \frac{1}{N}\right)^{n-1}\right).\)</li>
+                    <li>(c) Démontrer par récurrence que : \(u_n = b(b-1)\left(1 + \left(1 - \frac{2}{N}\right)^n - 2\left(1 - \frac{1}{N}\right)^n\right).\)</li>
+                    <li>(d) Donner alors \(V(X_n)\) puis sa limite quand \(n \to +\infty\).</li>
+                </ol>
+                </li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.2.5">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.2.6">
+            <h3>Exercice 18.2.6</h3>
+            <p class="objectif"><strong>Objectif : nombre de marches gravies avec deux types de pas.</strong></p>
+            <p>Un personnage gravit un escalier. Avant chaque pas, il lance une pièce donnant Pile (P) avec prob \(p\) (\(0 < p < 1/2\)) et Face (F) avec prob \(q=1-p\). Si P, il monte 1 marche. Si F, il monte 2 marches.</p>
+            <ol>
+                <li>Pour \(n \geq 1\), soit \(X_n\) le nombre total de marches gravies après \(n\) pas et \(X'_n\) le nombre de fois où il a progressé de 2 marches (obtenu Face) au cours de ces \(n\) pas. Déterminer une relation simple entre \(X_n\) et \(X'_n\). Quelle est la loi de \(X'_n\)?</li>
+                <li>Soit \(Y_n\) le nombre de pas juste nécessaires pour atteindre ou dépasser la \(n\)-ème marche (\(n \ge 1\)).
+                <ol type="a">
+                    <li>Quelles sont les valeurs prises par \(Y_n\) ?</li>
+                    <li>Déterminer les lois de \(Y_1, Y_2\) et leurs espérances.</li>
+                    <li>Montrer que pour \(k \in Y_n(\Omega)\) et \(n \geq 3\) :
+                    \[P(Y_n = k) = p P(Y_{n-1} = k-1) + q P(Y_{n-2} = k-1)\]
+                    (Conditionner par le premier pas).</li>
+                    <li>(d) Montrer que pour \(n \geq 3\) :
+                    \[E(Y_n) = p E(Y_{n-1}) + q E(Y_{n-2}) + 1\]</li>
+                </ol>
+                </li>
+                <li>Soit \(E\) l'ensemble des suites \((u_n)_{n \ge 1}\) telles que pour \(n \geq 3\) :
+                \[u_n = p u_{n-1} + q u_{n-2} + 1\]
+                <span class="error-note">(Corrigé utilise $1-p$ au lieu de q).</span>
+                <ol type="a">
+                    <li>Montrer qu'il existe \(\alpha \in \mathbb{R}\) tel que la suite \((\alpha n)_n\) appartienne à \(E\).</li>
+                    <li>Montrer qu'une suite \(u = (u_n)\) appartient à \(E\) si et seulement si la suite \(v_n = u_n - \alpha n\) vérifie la relation de récurrence linéaire homogène \(v_n = p v_{n-1} + q v_{n-2}\) pour \(n \geq 3\).</li>
+                    <li>(c) En déduire la valeur de \(E(Y_n)\) en fonction de \(n, p\).</li>
+                </ol>
+                </li>
+            </ol>
+            <p><em>(Source: ESCP)</em></p>
+
+            <div class="placeholder">[Placeholder: image0090657]</div>
+             <p><small>Voir la <a href="#cor18.2.6">correction</a>.</small></p>
+       </div>
+
+    </section>
+
+    <div class="placeholder">[Placeholder: image0090658 page 652]</div>
+
+    <section id="va_matrices">
+        <h2>3. Variables aléatoires et matrices</h2>
+        <p>Cette section illustre l'utilisation de l'algèbre linéaire, en particulier le calcul matriciel, pour étudier l'évolution de lois de probabilités au cours du temps (chaînes de Markov discrètes finies). L'état du système à l'instant \(n\) est décrit par un vecteur de probabilités \(V_n\), et l'évolution est donnée par \(V_{n+1} = M V_n\), où \(M\) est la matrice de transition. La diagonalisation de \(M\) permet souvent d'obtenir explicitement \(V_n = M^n V_0\) et sa limite.</p>
+
+        <div class="exercice" id="ex18.3.1">
+            <h3>Exercice 18.3.1</h3>
+            <p class="objectif"><strong>Objectif : application du calcul matriciel à la détermination d'une loi d'une variable.</strong></p>
+            <p>On considère la matrice \(M\) et \(N\) définies par :</p>
+            \[M = \begin{pmatrix}
+            a & b & b & b \\
+            b & a & b & b \\
+            b & b & a & b \\
+            b & b & b & a
+            \end{pmatrix}
+            \quad \text{et} \quad
+            N = \begin{pmatrix}
+            b & b & b & b \\
+            b & b & b & b \\
+            b & b & b & b \\
+            b & b & b & b
+            \end{pmatrix}
+            \quad \text{où} \quad a \in \mathbb{R}, b \in \mathbb{R}^*.
+            \]
+            <ol>
+                <li>(a) Calculer \(N^2\). Démontrer que pour tout entier \(k \geq 1\), il existe un réel \(u_k\) tel que \(N^k = u_k N\). Déterminer \(u_k\) puis \(N^k\) en fonction de \(k\). Cette formule est-elle valable pour \(k = 0\) ?</li>
+                <li>(b) Déterminer des réels \(x\) et \(y\) tels que \(M = x N + y I_4\).</li>
+                <li>(c) En déduire pour tout entier \(n \geq 1\), la valeur de \(M^n\) en fonction de \(I_4\), de \(N\) et de \(n\). On montrera que :
+                \[M^n = (a - b)^n I_4 + \frac{(a + 3b)^n - (a - b)^n}{4b} N.
+                \]</li>
+                <li>On considère un damier de 4 cases numérotées 0, 1, 2 et 3, sur lequel se déplace un pion. On note \(X_n\) le numéro de la case sur laquelle se trouve le pion à l'instant n. On fait les hypothèses suivantes :
+                <ul>
+                    <li>À l'instant 0, il se trouve sur la case 0 (\(X_0=0\)).</li>
+                    <li>Si à l'instant \(n\) il est sur une case, il reste sur cette case à l'instant \(n + 1\) avec proba \(p_s = 1/2\) et va sur l'une des 3 autres avec proba \(p_a = 1/6\) pour chacune.</li>
+                </ul>
+                <ol type="a">
+                    <li>Exprimer \(P(X_{n+1} = i)\) pour \(i=0,1,2,3\) en fonction de \(P(X_n = j)\) pour \(j=0,1,2,3\).</li>
+
+                    <div class="placeholder">[Placeholder: image0090659]</div>
+
+                    <li>On note \(V_{n}= \begin{pmatrix} P(X_{n}=0)\\ P(X_{n}=1)\\ P(X_{n}=2)\\ P(X_{n}=3) \end{pmatrix}\). Déterminer une matrice \(M\) telle que : \(\forall n \in \mathbb{N}, V_{n+1}=M V_{n}\).</li>
+                    <li>Montrer que : \(\forall n \in \mathbb{N}, V_{n}=M^{n} V_{0}\).</li>
+                    <li>En déduire \(\lim_{n \to +\infty} P(X_n=i)\) pour \(i=0,1,2,3\).</li>
+                </ol>
+                </li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.3.1">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.3.2">
+            <h3>Exercice 18.3.2</h3>
+            <p class="objectif"><strong>Objectif</strong> : échange de boules entre urnes.</p>
+            <p>On considère deux urnes \(U\) (contient 2 Blanches initialement) et \(V\) (contient 2 Noires initialement).
+            À chaque étape, on tire une boule de U et une boule de V et on les échange.</p>
+            <p>Pour \(n \in \mathbb{N}\), on note \(X_{n}\) la variable aléatoire égale au nombre de boules blanches dans l'urne \(U\) avant le \((n+1)\)-ème tirage (\(X_0=2\)).</p>
+            <p>Pour \(n \in \mathbb{N}\), on pose \(C_{n}= \begin{pmatrix} P(X_{n}=0)\\ P(X_{n}=1)\\ P(X_{n}=2) \end{pmatrix}\).</p>
+            <ol>
+                <li>On note \(M\) la matrice de transition \(M_{i+1, j+1} = P(X_{n+1}=i | X_n=j)\) pour \(i,j \in \{0,1,2\}\).
+                <ol type="a">
+                    <li>Montrer que \(M= \begin{pmatrix} 0 & 1/4 & 0\\ 1 & 1/2 & 1\\ 0 & 1/4 & 0 \end{pmatrix}\) (on justifiera les coefficients).</li>
+                    <li>Établir que : \(\forall n \in \mathbb{N}, C_{n+1}=M C_{n}\). En déduire que : \(\forall n \in \mathbb{N}, C_{n}=M^{n} C_{0}\).</li>
+                </ol>
+                </li>
+                <li>(a) Déterminer les valeurs propres de \(M\) ainsi que les sous-espaces propres associés.</li>
+
+                <div class="placeholder">[Placeholder: image0090660]</div>
+
+                <li>(b) Établir qu'en posant \(D = \begin{pmatrix} 1 & 0 & 0 \\ 0 & -1/2 & 0 \\ 0 & 0 & 0 \end{pmatrix}\), il existe une matrice \(P\) inversible (matrice de passage) telle que \(M = PDP^{-1}\). Expliciter la matrice \(P\). <span class="error-note">(Ordre des vp dans D différent du corrigé).</span></li>
+                <li>(c) Pour tout \(n \in \mathbb{N}\), donner la relation liant \(M^n\) et \(D^n\).</li>
+                <li>(d) Calculer \(P^{-1}\). En déduire \(P^{-1}C_0\), puis \(D^n P^{-1}C_0\), puis \(C_n = M^n C_0\). Donner enfin, pour tout \(n \in \mathbb{N}\), la loi de \(X_n\). <span class="error-note">(Corrigé donne la dernière colonne de P⁻¹ seulement).</span></li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.3.2">correction</a>.</small></p>
+       </div>
+
+    </section>
+
+    <div class="placeholder">[Placeholder: image0090661]</div>
+
+    <section id="va_usuelles">
+        <h2>4. Variables aléatoires et lois usuelles</h2>
+        <p>Cette section approfondit l'étude des lois de probabilités discrètes usuelles (Bernoulli, binomiale, géométrique, Poisson, uniforme discrète) et explore des situations où ces lois apparaissent, parfois conditionnellement. On y trouve des calculs d'espérance, de variance, des propriétés liées à l'indépendance, et l'étude de variables construites à partir d'autres (sup, min, somme conditionnelle).</p>
+
+        <div class="exercice" id="ex18.4.1">
+            <h3>Exercice 18.4.1</h3>
+            <p class="objectif"><strong>Objectif : nouvelle écriture de l'espérance d'une v.a.d finie à valeurs dans \(\mathbb{N}\).</strong></p>
+            <p>Soit \(X\) une variable aléatoire telle que \(X(\Omega) \subset \mathbb{N}\). Montrer que si \(E(X)\) existe, alors :</p>
+            \[E(X) = \sum_{k=1}^{\infty} P(X \geq k)\]
+            <p>Si \(X(\Omega) = \llbracket 0, n \rrbracket\), vérifier que cela donne \(E(X) = \sum_{k=1}^{n} P(X \geq k)\).</p>
+             <p><small>Voir la <a href="#cor18.4.1">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.4.2">
+            <h3>Exercice 18.4.2</h3>
+            <p class="objectif"><strong>Objectif : lois de la différence de deux lois géométriques.</strong></p>
+            <p>Soit \(X\) et \(Y\) deux variables aléatoires indépendantes à valeurs dans \(\mathbb{N}^*\), où \(X \hookrightarrow \mathcal{G}(p)\) avec \(0 < p < 1\). <span class="error-note">(Le corrigé suppose Y à valeurs dans N).</span></p>
+            <p>Soit la variable \(Z\) définie par : \(Z = \max(0, X-Y)\).</p>
+            <p>Déterminer la loi de \(Z\) en fonction de celle de \(Y\) et montrer qu'elle ne dépend que de \(E((1-p)^Y)\).</p>
+             <p><small>Voir la <a href="#cor18.4.2">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.4.3">
+            <h3>Exercice 18.4.3</h3>
+            <p class="objectif"><strong>Objectif : loi conditionnelle sachant \(A\) alors que l'on connait la loi conditionnelle sachant \(\bar{A}\).</strong></p>
+            <p>Soit \(X\) une v.a. suivant la loi binomiale \(B(n, p)\) avec \(n \geq 2\) et \(0 < p < 1\).</p>
+            <p>On définit une variable aléatoire \(Y\) de la manière suivante :</p>
+            <ul>
+                <li>pour tout \(k \in \llbracket 1, n \rrbracket\), si l'événement \((X = k)\) est réalisé, alors l'événement \((Y = k)\) est réalisé.</li>
+                <li>la loi de \(Y\) sachant \((X = 0)\) est la loi uniforme sur \(\llbracket 1, n \rrbracket\).</li>
+            </ul>
+            <ol>
+                <li>Déterminer la loi de probabilité de \(Y\).</li>
+                <li>Calculer \(E(Y)\).</li>
+                <li>Déterminer la loi de probabilité conditionnelle de \(X\) sachant \((Y=k)\)? <span class="error-note">(Corrigé demande $Y$ sachant $X \neq 0$).</span></li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.4.3">correction</a>.</small></p>
+       </div>
+
+        <div class="placeholder">[Placeholder: image0090662]</div>
+
+        <div class="exercice" id="ex18.4.4">
+            <h3>Exercice 18.4.4</h3>
+            <p class="objectif"><strong>Objectif :</strong> encadrement de l’espérance d’un sup de deux lois de Poisson de même paramètre.</p>
+            <p>Soit \(X\) et \(Y\) des variables aléatoires indépendantes suivant une même loi de Poisson de paramètre \(\lambda > 0\).</p>
+            <ol>
+                <li>Déterminer la loi de \(Z = \max(X, Y)\) (via la fonction de répartition \(P(Z \le k)\)). Donner alors un équivalent de \(P(Z=k)\) lorsque \(k \to +\infty\).</li>
+                <li>Vérifier que \(Z\) a une espérance et qu’elle satisfait l’encadrement :
+                \[ \lambda \leq E(Z) \leq 2\lambda \]</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.4.4">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.4.5">
+            <h3>Exercice 18.4.5</h3>
+            <p class="objectif"><strong>Objectif :</strong> nombre de changements de couleur lors d’un tirage de boules.</p>
+            <p>Une urne contient une boule blanche, une boule verte et une boule rouge. Pour \(n \in \mathbb{N}^*\), on tire successivement avec remise \(n\) boules de cette urne. Pour \(i \in \llbracket 2, n \rrbracket\), on dit qu’il y a changement de couleur au \(i\)-ème tirage si la \(i\)-ème boule tirée n’a pas la même couleur que la \((i-1)\)-ème boule tirée. On note \(X\) la variable aléatoire égale au nombre de changements de couleur obtenus au cours des \(n\) tirages.</p>
+            <ol>
+                <li>Justifier que la loi de \(X\) est donnée par :
+                \[ \forall i \in \llbracket 0, n-1 \rrbracket, \quad P(X = i) = \binom{n-1}{i} \left(\frac{2}{3}\right)^i \left(\frac{1}{3}\right)^{n-1-i}. \]
+                <span class="error-note">(Le corrigé a une formule différente $\binom{n-1}{i} 3 \cdot 2^i / 3^n$. Vérifions).</span></li>
+                <li>Reconnaître la loi de \(X\); puis donner son espérance et sa variance.</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.4.5">correction</a>.</small></p>
+       </div>
+
+        <div class="placeholder">[Placeholder: image0090663 page 657]</div>
+
+        <div class="exercice" id="ex18.4.6">
+            <h3>Exercice 18.4.6</h3>
+            <p class="objectif"><strong>Objectif**: loi d’une variable définie suivant la parité des valeurs d’une loi de Poisson.</p>
+            <p>Soit \(X \hookrightarrow \mathcal{P}(\lambda)\) où \(\lambda > 0\).
+            On définit la variable aléatoire \(Y\) par :</p>
+            \[Y = \begin{cases}
+            X/2 & \text{ si } X \text{ est paire} \\
+            -(X+1)/2 & \text{ si } X \text{ est impaire}
+            \end{cases}
+            \]
+            <span class="error-note">(Corrigé a $Y=0$ si X impaire. Utilisons la version du corrigé).</span>
+             \[Y = \begin{cases}
+            X/2 & \text{ si } X \text{ est paire} \\
+            0 & \text{ si } X \text{ est impaire}
+            \end{cases}
+            \]
+            <p>Déterminer la loi de \(Y\), son espérance et sa variance.</p>
+             <p><small>Voir la <a href="#cor18.4.6">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.4.7">
+            <h3>Exercice 18.4.7</h3>
+            <p class="objectif"><strong>Objectif**: sup de lois géométriques.</p>
+            <h4>Partie 1 : Préliminaire</h4>
+            <p>Dans cette partie, \(x\) désigne un réel élément de \([0, 1[\).</p>
+            <ol>
+                <li>(a) Pour \(n \in \mathbb{N}^*\) et \(t \in [0, x]\), simplifier \(\sum_{p=1}^{n} t^{p-1}\).</li>
+                <li>(b) En déduire que : \(\sum_{p=1}^{n} \frac{x^p}{p} = -\ln(1 - x) - \int_{0}^{x} \frac{t^n}{1 - t} \, dt.\)</li>
+                <li>(c) Établir que : \(\lim_{n \to +\infty} \int_{0}^{x} \frac{t^n}{1 - t} \, dt = 0.\)</li>
+                <li>(d) En déduire que \(\sum_{k=1}^{+\infty} \frac{x^k}{k} = -\ln(1 - x).\)</li>
+                <li>(a) Vérifier : \(\frac{x^{n+1}}{n(n + 1)} = x (\frac{x^n}{n} - \frac{x^{n+1}}{n+1}) / x\)? Non. \(\frac{1}{n(n+1)}=\frac{1}{n}-\frac{1}{n+1}\).</li>
+                <li>(b) En déduire que \(\sum_{n=1}^{+\infty} \frac{x^{n+1}}{n(n + 1)}\) converge et que sa somme est \(x + (1 - x) \ln(1 - x).\)</li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090664]</div>
+
+            <h4>Partie 2 : Étude d'une variable aléatoire</h4>
+            <p>On considère une suite \((X_i)_{i \in \mathbb{N}}\) de v.a. indépendantes sur \((\Omega, \mathcal{A}, P)\), suivant \(\mathcal{G}(p)\) (\(0 < p < 1\)). \(q = 1 - p\).</p>
+            <p>On considère \(N\) une v.a. sur \((\Omega, \mathcal{A}, P)\) indépendante des \(X_i\), de loi \(P(N = n) = \frac{1}{n(n+1)}\) pour \(n \in \mathbb{N}^*\).</p>
+            <p>On pose \(Z = \max(X_0, X_1, \ldots, X_N)\) et \(Z_n = \max(X_0, X_1, \ldots, X_n)\).</p>
+            <ol start="2">
+                <li>Étude de \(Z_n\)
+                <ol type="a">
+                    <li>Montrer : \(P(X_i \leq k) = 1 - q^k\). (\(k \in \mathbb{N}^*\)).</li>
+                    <li>En déduire : \(P(Z_n \leq k) = (1 - q^k)^{n+1}\).</li>
+                </ol>
+                </li>
+                <li>Étude de \(Z\)
+                <ol type="a">
+                    <li>Montrer : \(P(Z \leq k) = \sum_{n=1}^{+\infty} \frac{(1 - q^k)^{n+1}}{n(n+1)}\).</li>
+                    <li>En déduire \(P(Z \leq k)\) explicitement en fonction de \(k\) (utiliser Partie 1 avec \(x=1-q^k\)).</li>
+                    <li>Montrer \(P(Z = k) = P(Z \leq k) - P(Z \leq k - 1)\).</li>
+
+                    <div class="placeholder">[Placeholder: image0090665]</div>
+
+                    <li>(d) En déduire \(P(Z = k)\) explicitement en fonction de \(k\).</li>
+                </ol>
+                </li>
+                <li>Existence des espérances de \(N\) et de \(Z\).
+                <ol type="a">
+                    <li>Vérifier que \(N\) n'admet pas d'espérance.</li>
+                    <li>Montrer que \(Z\) possède une espérance et la calculer.</li>
+                </ol>
+                </li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.4.7">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.4.8">
+            <h3>Exercice 18.4.8</h3>
+            <p><strong>Objectif : étude de la famille de Panjer.</strong></p>
+            <h4>Rappel</h4>
+            <p>Pour \(n \in \mathbb{N}\) et \(|x| < 1\), \(\sum_{k=0}^{+\infty} \binom{n+k-1}{k} x^k = \frac{1}{(1-x)^n}\).</p>
+            <h4>Définition</h4>
+            <p>\(N\) v.a. sur \(\mathbb{N}\), \(p_k=P(N=k)\). Loi de Panjer si \(\exists (a,b)\) tq \(\forall k \ge 1, p_k = (a+b/k)p_{k-1}\).</p>
+            <h4>Partie 1 : quelques exemples</h4>
+            <ol>
+                <li>(a) Déterminer \(E(N)\) et \(V(N)\) en fonction de \(a\) et \(b\) (si elles existent).</li>
+                <li>(b) Montrer \(E(N) = V(N) \iff a = 0\).</li>
+                <li>Si \(N \sim \mathcal{P}(\lambda)\), montrer qu'elle vérifie (1) et trouver \(a, b\).</li>
+                <div class="placeholder">[Placeholder: image0090666 page 660]</div>
+                <li>Si \(N \sim \mathcal{B}(n, p)\), montrer qu'elle vérifie (1) et trouver \(a, b\).</li>
+                <li>Si \(N \sim BN(n, p)\), loi binomiale négative (\(p_k = \binom{n+k-1}{k} p^k (1-p)^n\), \(k \in \mathbb{N}\)).
+                <ol type="a">
+                    <li>Si \(n=1\), reconnaître la loi de \(N+1\).</li>
+                    <li>Montrer que \(N\) vérifie (1) et trouver \(a, b\).</li>
+                </ol>
+                </li>
+            </ol>
+            <h4>Partie 2 : les 3 lois ci-dessus sont les seules de la famille de Panjer</h4>
+            <ol>
+                <li>Si \(a=0\), montrer que \(N \sim \mathcal{P}(b)\).</li>
+                <li>Si \(a \neq 0\), montrer \(p_k = p_0 \frac{a^k}{k!} \prod_{i=0}^{k-1} (\Delta + i)\) où \(\Delta = 1+b/a\).</li>
+                <li>Si \(0 < a < 1\), montrer que \(N \sim BN(\Delta, a)\). (Nécessite \(\Delta > 0\)).</li>
+                <li>Si \(a < 0\), montrer que \(N \sim \mathcal{B}(-\Delta, -a/(1-a))\). (Nécessite \(-\Delta \in \mathbb{N}^*\)).</li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090667]</div>
+
+            <h4>Partie 3 : algorithme de Panjer</h4>
+            <p>\(X = \sum_{i=1}^N U_i\), \(U_i\) iid indep de \(N\). \(q_k=P(U_i=k)\).</p>
+            <ol>
+                <li>Montrer \(E(U_1 | S_n = j) = j/n\).</li>
+                <li>Montrer \(P_{(S_n = j)}(U_1 = k) = \frac{q_k q_{j-k, n-1}}{q_{j,n}}\).</li>
+                <li>\(N\) suit Panjer. \(r_k=P(X=k)\).
+                <ol type="a">
+                    <li>Exprimer \(r_0\) en fonction des \(p_k\) et \(q_0\).</li>
+                    <li>Montrer \(r_j = \sum_{n=1}^\infty (a+b E(U_1/j | S_n=j)) p_{n-1} q_{j,n}\)?</li>
+
+                    <div class="placeholder">[Placeholder: image0090668]</div>
+
+                    <li>(c) Montrer \(q_{j,n} = \sum_{k=0}^j q_k q_{j-k, n-1}\) et en déduire l'algorithme de Panjer :
+                    \[\forall j \in \mathbb{N}^*, r_j = \frac{1}{1 - a q_0} \sum_{k=1}^{j} \left( a + \frac{b k}{j} \right) q_k r_{j-k}\]</li>
+                </ol>
+                </li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.4.8">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.4.9">
+            <h3>Exercice 18.4.9</h3>
+            <p><strong>Objectif : fonction génératrice.</strong></p>
+            <p>Soit \(X \hookrightarrow \mathcal{P}(\lambda)\), \(\lambda > 0\).</p>
+            <ol>
+                <li>(a) Montrer \(P(|X - \lambda| \geq \lambda) \leq \frac{1}{\lambda}\) (Bienaymé-Tchebychev).</li>
+                <li>(b) En déduire \(P(X \geq 2\lambda) \leq \frac{1}{\lambda}\).</li>
+                <li>Soit \(Z\) une v.a. discrète \(E(Z)=0, V(Z)=\sigma^2\).
+                <ol type="a">
+                    <li>Montrer \(\forall a > 0, \forall x \geq 0, P(Z \geq a) \leq P((Z + x)^2 \geq (a + x)^2)\).</li>
+                    <li>Montrer \(P(Z \geq a) \leq \frac{E((Z+x)^2)}{(a+x)^2} = \frac{\sigma^2 + x^2}{(a + x)^2}\).</li>
+                    <li>Montrer \(\forall a > 0, P(Z \geq a) \leq \frac{\sigma^2}{\sigma^2 + a^2}\) (Optimiser en \(x\)).</li>
+                    <li>En déduire \(P(X \geq 2\lambda) \leq \frac{\lambda}{\lambda + \lambda^2} = \frac{1}{1+\lambda}\). <span class="error-note">(Corrigé a $1/(1+\lambda)$).</span></li>
+                </ol>
+                </li>
+                <li>Fonction génératrice \(G_X(t) = E(t^X)\).
+                <ol type="a">
+                    <li>Justifier l'existence et calculer \(G_X(t)\).</li>
+                    <li>Montrer \(\forall t \geq 1, \forall a > 0, P(X \geq a) \leq \frac{G_X(t)}{t^a}\) (Inégalité de Markov généralisée).</li>
+                    <li>En déduire \(P(X \geq 2\lambda) \leq \left( \frac{e}{2} \right)^\lambda\)? <span class="error-note">(Corrigé a $(e/4)^\lambda$. Vérifier l'optimisation en t).</span></li>
+                </ol>
+                </li>
+            </ol>
+            <p><em>(Source: ESCP)</em></p>
+
+            <div class="placeholder">[Placeholder: image0090669 page 663]</div>
+             <p><small>Voir la <a href="#cor18.4.9">correction</a>.</small></p>
+       </div>
+
+    </section>
+
+    <section id="synthese_complements_2">
+        <h2>5. Compléments et problèmes de synthèse</h2>
+        <p>Cette section continue d'explorer des problèmes variés et des concepts plus avancés liés aux variables aléatoires discrètes.</p>
+
+        <div class="exercice" id="ex18.5.1">
+            <h3>Exercice 18.5.1</h3>
+            <p class="objectif"><strong>Objectif :</strong> loi définie sur l'obtention d'un nouveau numéro lors de tirages successifs avec remise.</p>
+            <p>On effectue des tirages avec remise dans une urne contenant \(n\) boules numérotées de 1 à \(n\) (\(n \geq 2\)).
+            On définit \(U_1 = 1\) et \(\forall i \geq 2\), \(U_i = 1\) si au \(i\)-ème tirage on obtient un numéro qui n'a pas été obtenu aux \((i-1)\) premiers tirages, et \(U_i = 0\) sinon.
+            \(T_i\) est le numéro obtenu au \(i\)-ème tirage.</p>
+            <ol>
+                <li>Donner la loi de \(U_2\).</li>
+                <li>(a) Donner la loi de \(T_i\).
+                (b) Montrer : \(\forall i \in \llbracket 2, n \rrbracket, \ P(U_i = 1) = \left(1 - \frac{i-1}{n}\right)?\) <span class="error-note">(Corrigé a $(1-1/n)^{i-1}$. Vérifier).</span>
+                (c) Vérifier si la formule reste valable pour \(i = 1\).</li>
+            </ol>
+            <p>Pour \(k \geq 1\), on note \(V_k(n)\) la variable aléatoire égale au nombre de numéros distincts obtenus au cours des \(k\) premiers tirages.</p>
+            <ol start="3">
+                <li>(a) Exprimer \(V_k(n)\) en fonction des variables \(U_i\).</li>
+                <li>(b) En déduire \(E(V_k(n))\) en fonction de \(n\) et \(k\).</li>
+                <li>(c) Montrer que \(\lim_{n \to +\infty} E(V_k(n)) = k.\)</li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090670]</div>
+             <p><small>Voir la <a href="#cor18.5.1">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.2">
+            <h3>Exercice 18.5.2</h3>
+            <p class="objectif"><strong>Objectif : utilisation de la fonction d'antirépartition pour déterminer la loi d'une variable.</strong></p>
+            <p>Une urne contient \(n\) boules numérotées de 1 à \(n\); on extrait au hasard, une à une, avec remise, des boules de cette urne. Soit \(X\) la variable aléatoire égale au rang de la 1<sup>re</sup> boule dont le numéro est supérieur ou égal à celui de la boule précédente. On pose \(X = n + 1\) si ce cas n'arrive jamais (i.e., si la suite des numéros est strictement décroissante).</p>
+            <ol>
+                <li>Donner \(X(\Omega)\). Déterminer \(P(X > k)\) pour \(k \in \llbracket 1, n \rrbracket\).</li>
+                <li>En déduire la loi de \(X\).</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.5.2">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.3">
+            <h3>Exercice 18.5.3</h3>
+            <p class="objectif"><strong>Objectif : recherche d'un paramètre pour définir une loi.</strong></p>
+            <p>Soit \(n \geq 1\) et \(\alpha \in \mathbb{R}\). On considère une application \(P_X\) définie sur \(\llbracket 0 ; n \rrbracket\) par</p>
+            \[\forall k \in \llbracket 0 ; n \rrbracket, \ P_X(k) = P(X = k) = \alpha \frac{\binom{n}{k}}{k + 1}.\]
+            <ol>
+                <li>Déterminer \(\alpha\) pour que \(P_X\) soit une loi de probabilité (vérifier positivité et somme = 1).</li>
+                <li>Calculer \(E(X + 1)\) puis \(E(X)\).</li>
+                <li>Calculer \(E((X + 1)(X+2))\)? <span class="error-note">(Corrigé a $E(X(X+1))$).</span> En déduire \(V(X)\).</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.5.3">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.4">
+            <h3>Exercice 18.5.4</h3>
+            <p class="objectif"><strong>Objectif : lois autour d'un lancer de pièces de deux joueurs.</strong></p>
+            <p>Soit \(n \geq 2\). Deux joueurs A et B lancent une pièce équilibrée \(n\) fois chacun (lancers indépendants).</p>
+            <p>\(X\)=nombre de Faces obtenus par A; \(Y\)=nombre de Faces obtenus par B; \(Z = X + Y\); \(T = X - Y\).</p>
+
+            <div class="placeholder">[Placeholder: image0090671]</div>
+
+            <ol>
+                <li>(a) Déterminer la loi de \(X\) et de \(Y\). (b) Déterminer la loi de \(Z\).</li>
+                <li>(a) Donner \(P(Z = 1)\). (b) Donner \(P(Z = n)\).</li>
+                <li>(a) Exprimer \((Z = n)\) à l'aide des \((X = j)\) et \((Y = k)\).</li>
+                <li>(b) En déduire la valeur de \(S = \sum_{j=0}^{n} \binom{n}{j}^2\). <span class="error-note">(Corrigé a $\binom{n}{n-j}$).</span></li>
+                <li>(a) Exprimer \((T = 0)\) (i.e. \(X=Y\)) à l'aide des \((X = j)\) et \((Y = k)\).</li>
+                <li>(b) Déduire alors du 3.b. la probabilité \(P(T = 0)\).</li>
+                <li>\(Z\) et \(T\) sont-elles indépendantes ?</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.5.4">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.5">
+            <h3>Exercice 18.5.5</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> Objectif : un nombre de « pile » identique pour 2 joueurs.</p>
+            <p>Deux joueurs A et B lancent une pièce de monnaie parfaitement équilibrée, \(n\) fois chacun. Calculer la probabilité qu'ils obtiennent le même nombre de fois « pile ».</p>
+            <p>On admettra que \(\sum_{k=0}^{n} \binom{n}{k}^{2} = \binom{2n}{n}\).</p>
+             <p><small>Voir la <a href="#cor18.5.5">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.6">
+            <h3>Exercice 18.5.6</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> Objectif : nombre de correspondants lors d'une \(1^{\text{re}}\) série d'appels puis lors d'une \(2^{\text{nde}}\) série.</p>
+            <ol>
+                <li>Une secrétaire effectue \(n\) appels indépendants vers \(n\) correspondants distincts (\(n \geq 2\)). Probabilité de succès (obtenir le correspondant) est \(p\). \(X\) = nombre de correspondants obtenus. Quelle est la loi de \(X\), \(E(X)\), \(V(X)\) ?</li>
+                <li>Après ces \(n\) appels, elle rappelle les \(n-X\) correspondants non obtenus. \(Y\) = nombre de correspondants obtenus lors de cette 2ème série. \(Z=X+Y\).
+                <ol type="a">
+                    <li>Valeurs prises par \(Z\).</li>
+                    <li>Calculer \(P(Z = 0)\) et \(P(Z = 1)\).</li>
+                    <li>Calculer la loi conditionnelle de \(Y\) sachant \((X=k)\). Donner \(P_{(X=k)}(Y=h)\).</li>
+                    <li>Montrer \(P(Z = s) = \sum_{k=0}^s P(X = k \cap Y = s - k)\).</li>
+                    <li>Calculer \(P(Z = s)\) et montrer que \(Z \sim \mathcal{B}(n, 1-q^2)\). <span class="error-note">(Corrigé a $p(1+q)$).</span></li>
+                </ol>
+                </li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090672]</div>
+             <p><small>Voir la <a href="#cor18.5.6">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.7">
+            <h3>Exercice 18.5.7</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> **Objectif : probabilité de finir un jeu vidéo.**</p>
+            <p>Jeu vidéo à \(N\) niveaux (\(N \ge 3\)). On commence au niveau 1. Réussir niveau \(k\) permet de passer au \(k+1\). Échouer arrête le jeu. Probabilité de réussir le niveau \(k\) (si on y parvient) est \(1/k\).</p>
+            <p>\(X_N\) = nombre de niveaux entièrement franchis (si on échoue au niveau \(k+1\), \(X_N=k\); si on réussit le niveau \(N\), \(X_N=N\)).</p>
+            <div class="placeholder">[Placeholder: image0090673]</div>
+            <ol>
+                <li>Démontrer que : \(P(X_N = k) = \frac{k}{(k + 1)!}\) pour \(k = 1, \ldots, N - 1\) et \(P(X_N = N) = \frac{1}{N!}\).</li>
+                <li>Calculer \(E(X_N + 1)\). En déduire \(E(X_N) = S_{N} - 1\) avec \(S_N = \sum_{k=0}^{N} \frac{1}{k!}\). Que vaut \(\lim_{N \to +\infty} E(X_N)\) ?</li>
+                <li>Exprimer \(E(X_N^2 - 1)\) <span class="error-note">(Corrigé a $E[(X_N+1)(X_N-1)]$)</span> à l'aide de \(S_{N-2}\)? <span class="error-note">(Corrigé a $S_{N-3}$).</span> En déduire \(V(X_N)\). Montrer que \(\lim_{N \to +\infty} V(X_N) = e\)? <span class="error-note">(Corrigé a $3e-e^2$).</span></li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.5.7">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.8">
+            <h3>Exercice 18.5.8</h3>
+            <p><strong>Objectif : introduction à la fonction génératrice d'une variable.</strong></p>
+            <p>On lance \(n\) boules discernables au hasard dans \(N\) cases numérotées (\(N \ge 2\)). Lancer \(i\) va dans case \(C_i\). Les \(C_i\) sont iid, \(P(C_i=j)=1/N\).</p>
+            <p>\(T_n\) = nombre de cases non vides après \(n\) lancers.</p>
+            <ol>
+                <li>Valeurs prises par \(T_n\).</li>
+                <li>Lois de \(T_1\) et \(T_2\).</li>
+                <li>Calculer \(P(T_n = 1)\) et \(P(T_n = n)\) (si \(n \le N\)).</li>
+                <li>Justifier \(\forall k \in \llbracket 1, \min(n+1, N) \rrbracket\),
+                \[P(T_{n+1} = k) = \frac{k}{N} P(T_n = k) + \frac{N - k + 1}{N} P(T_n = k - 1)\]
+                (Conditionner par la case du (n+1)-ème lancer).</li>
+                <li>Fonction génératrice \(G_n(x) = \sum_{k=1}^{\min(n, N)} P(T_n = k) x^k\). <span class="error-note">(Corrigé a $k=1..n$).</span>
+                <ol type="a">
+                    <li>Que vaut \(G_n(1)\)?</li>
+                    <li>Exprimer \(E(T_n)\) en fonction de \(G'_n(1)\).</li>
+                    <li>Montrer que : \(G_{n+1}(x) = \frac{x(1 - x)}{N} G'_n(x) + xG_n(x)\).</li>
+
+                    <div class="placeholder">[Placeholder: image009067418]</div>
+
+                    <li>(d) En déduire que : \(E(T_{n+1}) = \left(1 - \frac{1}{N}\right)E(T_n) + 1.\)</li>
+                    <li>(e) Prouver enfin que : \(E(T_n) = N \left[1 - \left(1 - \frac{1}{N}\right)^n\right].\)</li>
+                </ol>
+                </li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.5.8">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.9">
+            <h3>Exercice 18.5.9</h3>
+            <p><strong>Objectif :** reformer des paires.</p>
+            <p>Urne avec \(2n\) boules, 2 de chaque numéro \(1, \dots, n\) (\(n \ge 2\)). Tirages successifs simultanés de 2 boules.</p>
+            <ul>
+                <li>Si même numéro: paire reconstituée, on retire les 2 boules.</li>
+                <li>Si numéros différents: on remet les 2 boules.</li>
+            </ul>
+            <p>On continue jusqu'à avoir reconstitué les \(n\) paires.</p>
+            <p>\(T_i\) = nombre de tirages pour reconstituer \(i\) paires (\(i \in \llbracket 1, n \rrbracket\)).</p>
+            <ol>
+                <li>(a) Déterminer la loi de \(T_1\) et reconnaître cette loi.</li>
+                <li>(b) Donner \(E(T_1)\).</li>
+                <li>On pose \(X_1 = T_1\) et \(X_i = T_i - T_{i-1}\) pour \(i \in \llbracket 2, n \rrbracket\).
+                <ol type="a">
+                    <li>Que représente \(X_i\) ?</li>
+                    <li>Déterminer la loi de \(X_i\) (\(i \in \llbracket 1, n \rrbracket\)) et son espérance.</li>
+                    <li>En déduire que \(T_n\) admet une espérance et \(E(T_n) = \sum_{i=1}^n (2(n-i)+1)\)? <span class="error-note">(Corrigé a $n^2$).</span></li>
+                </ol>
+                </li>
+                <li>On effectue exactement \(n\) tirages (pas forcément jusqu'au bout). \(S_n\) = nombre de paires reconstituées.
+                <ol type="a">
+                    <li>Calculer \(P(S_n = 0)\).</li>
+                    <li>Déterminer \(\lim_{n \to +\infty} P(S_n = 0)\).</li>
+                    <li>Montrer que \(P(S_n = n) = \frac{n! 2^n}{(2n)!}\)? <span class="error-note">(Vérifier).</span></li>
+                </ol>
+                </li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090675]</div>
+             <p><small>Voir la <a href="#cor18.5.9">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.10">
+            <h3>Exercice 18.5.10</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif">  **Objectif : loi de l'écart de numéros tirés.**</p>
+            <p>Urne avec \(n\) boules (\(1..n\)). 3 tirages avec remise (\(T_1, T_2, T_3\)). \(X = \max(T_1, T_2, T_3) - \min(T_1, T_2, T_3)\).</p>
+            <ol>
+                <li>Déterminer la loi de \(X\). (\(X(\Omega) = \llbracket 0, n-1 \rrbracket\)).</li>
+                <li>En déduire \(E(X)\).</li>
+                <li>Trouver un polynôme \(P\) tel que \(P(x + 1) - P(x) = x^4\)? <span class="error-note">(Corrigé mentionne $nx^3-x^4$).</span> En déduire \(V(X)\).</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.5.10">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.11">
+            <h3>Exercice 18.5.11</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif">  **Objectif : résultats sur la fonction génératrice d'une v.a.d. finie.**</p>
+            <p>Fonction génératrice \(G_X(t) = E(t^X) = \sum_{k \in X(\Omega)} P(X = k)t^k\).</p>
+
+            <div class="placeholder">[Placeholder: image0090676]</div>
+
+            <ol>
+                <li>Relation entre \(E(t^X)\) et \(G_X\). (Définition).</li>
+                <li>(a) Que valent \(G_X(1)\), \(G'_X(1)\)?
+                (b) Relation entre \(E(X^{\underline{n}}) = E(X(X-1)\cdots (X-n+1))\) et \(G_X^{(n)}(1)\).
+                (c) Montrer que \(G_X\) détermine la loi de \(X\).
+                (d) Déterminer \(G_X\) pour \(X \sim \mathcal{U}(\llbracket 1,n \rrbracket)\), \(X \sim \mathcal{B}(p)\), \(X \sim \mathcal{B}(n,p)\).</li>
+            </ol>
+             <p><small>Voir la <a href="#cor18.5.11">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.12">
+            <h3>Exercice 18.5.12</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> **Objectif : loi de l'évolution d'un mobile sur une droite graduée.**</p>
+            <p>Mobile partant de 0. À chaque étape (indépendante), avance de 1 (prob \(p\)) ou recule de 1 (prob \(1-p\)). \(X_n\) = abscisse après \(n\) déplacements.</p>
+            <p>Donner la loi de \(X_n\), son espérance et sa variance. (Lien avec Binomiale).</p>
+             <p><small>Voir la <a href="#cor18.5.12">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.13">
+            <h3>Exercice 18.5.13</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> **Objectif : plus grand numéro sur tirage dans des urnes différentes.**</p>
+            <p>On dispose de \(k\) urnes (\(k \ge 1\)) contenant chacune \(n\) boules (\(1..n\)). On tire une boule de chaque urne (\(Y_1, \dots, Y_k\)). \(X_n = \max(Y_1, \dots, Y_k)\).</p>
+            <ol>
+                <li>Déterminer la loi de \(X_n\) (via \(P(X_n \le i)\)).</li>
+                <li>Donner \(E(X_n)\) sous forme de somme.</li>
+                <li>Montrer que : \(E(X_n) \underset{n \to + \infty}{\sim} n \frac{k}{k+1}\). (Utiliser \(E(X)=\sum P(X \ge i)\) et somme de Riemann).</li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090677 page 671]</div>
+             <p><small>Voir la <a href="#cor18.5.13">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.14"> <!-- Numéro est 18.5.12 dans l'original, mais c'est un doublon -->
+            <h3>Exercice 18.5.14 (Marche aléatoire 2D)</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> **Objectif : résultats sur une marche aléatoire 2D.**</p>
+            <p>Puce partant de O. Sauts équiprobables (+i, -i, +j, -j). \(M_n=(X_n, Y_n)\) position après n sauts.</p>
+            <ol>
+                <li>\(T_n = X_n - X_{n-1}\).
+                <ol type="a">
+                    <li>Loi, E, V de \(T_n\).</li>
+                    <li>Exprimer \(X_n\) avec les \(T_i\).</li>
+                    <li>Calculer \(E(X_n)\).</li>
+                    <li>Calculer \(E(X_n^2)\).</li>
+                </ol>
+                </li>
+                <li>\(Z_n = OM_n = \sqrt{X_n^2+Y_n^2}\).
+                <ol type="a">
+                    <li>\(X_n, Y_n\) indépendantes?</li>
+                    <li>Calculer \(E(Z_n^2)\). En déduire \(E(Z_n) \le \sqrt{n}\)?</li>
+                </ol>
+                </li>
+                <li>Probabilité de retour à l'origine \(P(M_n=0)\).
+                <ol type="a">
+                    <li>Condition sur \(n\) pour que \(P(M_n=0) \neq 0\).</li>
+                    <li>Exprimer \(P(M_{2m}=0)\) à l'aide de coefficients binomiaux.</li>
+                </ol>
+                </li>
+            </ol>
+            <span class="error-note">(Contenu basé sur la structure du corrigé 18.5.14 qui diffère de l'énoncé 18.5.12 initial).</span>
+
+            <div class="placeholder">[Placeholder: image0090678]</div>
+             <p><small>Voir la <a href="#cor18.5.14">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex18.5.15">
+            <h3>Exercice 18.5.15</h3>
+            <p class="objectif"><strong>Objectif : présentation de l'entropie d'une v.a.d finie.</strong></p>
+            <p>Entropie \(H(X) = \sum_{k \in X(\Omega)} f(P(X=k))\) où \(f(x) = -x \ln x\) si \(x>0\), \(f(0)=0\).</p>
+            <ol>
+                <li>Calculer \(H(X)\) si \(X \sim \mathcal{U}(\llbracket 1,n \rrbracket)\) et si \(X\) est certaine.</li>
+                <li>Étudier \(g(x) = f(x) + x - 1\). En déduire \(\sum f(n p_k) \le 0\) où \(n=\text{card}(X(\Omega))\). Montrer \(H(X) \leq \ln n\).</li>
+                <li>Montrer \(H(X)=0 \iff X\) est certaine.</li>
+                <li>Montrer \(H(X)=\ln n \iff X\) suit la loi uniforme.</li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090679]</div>
+             <p><small>Voir la <a href="#cor18.5.15">correction</a>.</small></p>
+       </div>
+
+    </section>
+
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
