@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapitre 17: Probabilités infinies</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" crossorigin="anonymous">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            margin-top: 40px;
+        }
+        h3 {
+            margin-top: 25px;
+            font-size: 1.2em;
+        }
+        .placeholder {
+            border: 1px dashed #ccc;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            background-color: #eee;
+            color: #777;
+            font-style: italic;
+        }
+        .exercice, .correction {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .objectif {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .objectif strong {
+            color: #333;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .katex-display { /* Ensure display math has space */
+            margin: 1em 0;
+        }
+        a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code {
+          background-color: #f0f0f0;
+          padding: 2px 4px;
+          border-radius: 3px;
+        }
+        .check-objectif {
+            display: inline-block;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .error-note {
+            color: red;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Chapitre 17: Probabilités infinies</h1>
+
+    <div class="placeholder">[Placeholder: image0090630]</div>
+    <p>Ce chapitre étend les notions de probabilités aux espaces non finis, notamment les espaces dénombrables. On introduit la notion de tribu (ou \(\sigma\)-algèbre) et de mesure de probabilité sur ces espaces. Les concepts clés incluent la \(\sigma\)-additivité, la convergence des suites d'événements (limite monotone), et les séries de probabilités.</p>
+
+    <section id="proba_infinies">
+        <h2>Probabilités sur des espaces infinis dénombrables</h2>
+
+        <div class="exercice" id="ex17.1">
+            <h3>Exercice 17.1</h3>
+            <p class="objectif"><strong>Objectif : lancer infini d'une pièce.</strong></p>
+            <p>On lance une pièce une infinité de fois. Pour tout \(k \in \mathbb{N}^*\), on note \(A_k\) l'événement : « le k-ème lancer donne pile ».</p>
+            <ol>
+                <li>Décrire par une phrase chacun des évènements suivants :
+                \[E_1 = \bigcap_{k=5}^{+\infty} A_k, \quad E_2 = \left( \bigcap_{k=1}^{4} \overline{A_k} \right) \cap \left( \bigcap_{k=5}^{+\infty} A_k \right), \quad E_3 = \bigcup_{k=5}^{+\infty} A_k\]
+                </li>
+                <li>Écrire à l'aide des \(A_k\) l'évènement : « on obtient au moins une fois pile après le \(n\)-ème lancer ».</li>
+                <li>Écrire à l'aide des \(A_k\) les évènements :
+                <ol type="a">
+                    <li>\(B_n\) : « on n'obtient plus que des piles à partir du \(n\)-ème lancer »</li>
+                    <li>\(B\) : « on n'obtient plus que des piles à partir d'un certain lancer »</li>
+                </ol>
+                </li>
+            </ol>
+             <p><small>Voir la <a href="#cor17.1">correction</a>.</small></p>
+        </div>
+
+        <div class="exercice" id="ex17.2">
+            <h3>Exercice 17.2</h3>
+            <p class="objectif"><strong>Objectif : tirages successifs jusqu'au succès.</strong></p>
+            <p>On sait que la probabilité d'atteindre une cible est \(\frac{2}{3}\) à chaque tir, les tirs étant indépendants. On effectue une succession de tirs sur la cible jusqu'à l'atteindre.</p>
+            <p>Que peut-on dire sur la probabilité d'atteindre la cible en un nombre fini de tirs ? Est-on quasi-certain d'atteindre la cible ?</p>
+             <p><small>Voir la <a href="#cor17.2">correction</a>.</small></p>
+        </div>
+
+        <div class="exercice" id="ex17.3">
+            <h3>Exercice 17.3</h3>
+            <p class="objectif"><strong>Objectif : tirages successifs dans une urne.</strong></p>
+            <p>Soit une urne avec une boule blanche (B), une boule noire (N) et une boule rouge (R). On y effectue des tirages successifs avec remise.</p>
+            <p>On notera \(B\) l'évènement « on a obtenu au moins une boule blanche au cours des tirages ».</p>
+            <ol>
+                <li>Écrire l'évènement \(B\) (ou son contraire \(\overline{B}\)) de trois manières différentes en utilisant les événements suivants:
+                    <ul>
+                        <li>\(A_n\) : « on n'a obtenu aucune blanche sur les \(n\) premiers tirages » (\(\overline{B} = \cap A_n\)).</li>
+                        <div class="placeholder">[Placeholder: image0090631 page 627]</div>
+                        <li>\(B_n\) : « on obtient une blanche pour la première fois au \(n\)-ème tirage » (\(B = \cup B_n\)).</li>
+                        <li>\(C_n\) : « on obtient au moins une blanche sur les \(n\) premiers tirages » (\(B = \cup C_n\)).</li>
+                    </ul>
+                </li>
+                <li>Proposer alors trois calculs pour déterminer \(P(B)\) en utilisant les propriétés de convergence des probabilités (limite monotone, \(\sigma\)-additivité). Comment peut-on interpréter le résultat obtenu ?</li>
+            </ol>
+             <p><small>Voir la <a href="#cor17.3">correction</a>.</small></p>
+        </div>
+
+        <div class="exercice" id="ex17.4">
+            <h3>Exercice 17.4</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> Objectif : temps d'attente d'un motif (PP).</p>
+            <p>On a une pièce donnant pile (P) avec la probabilité \(p=3/4\) et face (F) avec \(q=1/4\). On la lance indéfiniment. On note \(C_n\) l'événement : « on obtient la séquence PP pour la première fois aux lancers \(n-1\) et \(n\) » (pour \(n \geq 2\)).</p>
+            <ol>
+                <li>Calculer \(P(C_2)\) et \(P(C_3)\).</li>
+                <li>En conditionnant par le résultat du premier lancer (ou des deux premiers lancers), montrer que :
+                \[\forall n \geq 4, P(C_n) = q P(C_{n-1}) + pq P(C_{n-2})\]
+                 <span class="error-note">(Le corrigé utilise $1/4 P(C_{n-1}) + 3/16 P(C_{n-2})$).</span>
+                </li>
+                <li>En déduire \(P(C_n)\) pour tout \(n \ge 2\). Calculer \(\sum_{n=2}^{+\infty} P(C_n)\). Qu'en déduire sur la probabilité d'obtenir PP un jour ?</li>
+            </ol>
+             <p><small>Voir la <a href="#cor17.4">correction</a>.</small></p>
+        </div>
+
+        <div class="exercice" id="ex17.5">
+            <h3>Exercice 17.5</h3>
+            <p class="objectif"><input type="checkbox" disabled class="check-objectif"> Objectif : absence d'un motif (FP).</p>
+            <ol>
+                <li>On effectue \(n\) lancers indépendants d'une pièce pour laquelle obtenir face (F) a une probabilité égale à \(p \in ]0; 1[\) (Pile (P) a probabilité \(q=1-p\)). Quelle est la probabilité \(E_n\) qu'au cours des \(n\) lancers on n'ait jamais la séquence FP ?</li>
+                <li>Est-il possible que l'on n'ait jamais la séquence FP sur un nombre infini de lancers (i.e., quelle est la limite de \(P(E_n)\) quand \(n \to \infty\)) ?</li>
+            </ol>
+             <p><small>Voir la <a href="#cor17.5">correction</a>.</small></p>
+        </div>
+
+        <div class="placeholder">[Placeholder: image0090632]</div>
+
+        <div class="exercice" id="ex17.6">
+            <h3>Exercice 17.6</h3>
+            <p class="objectif"><strong>Objectif</strong> : le 5 !, le 7 !, le 5 !, le 7 !, ... <span class="error-note">(Titre étrange).</span></p>
+            <ol>
+                <li>On jette 2 dés équilibrés simultanément. Donner pour tout \(k \in \llbracket 2, 12 \rrbracket\), la probabilité \(p_k\) que la somme des résultats fasse \(k\).</li>
+                <li>On répète l’expérience précédente (lancers indépendants) jusqu’à ce qu’une somme de 5 ou 7 apparaisse pour la première fois. On désigne par \(E_n\) l’évènement « une somme de 5 apparaît au \(n\)-ème double jet et sur les \((n - 1)\) premiers lancers ni la somme 5 ni la somme 7 n’est apparue ».
+                <ol type="a">
+                    <li>Calculer \(P(E_n)\).</li>
+                    <li>Soit \(E\) l'événement : « on obtient une somme de 5 avant d'obtenir une somme de 7 ». Décrire \(E\) en fonction des \(E_n\) et en déduire \(P(E)\).</li>
+                </ol>
+                </li>
+            </ol>
+             <p><small>Voir la <a href="#cor17.6">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex17.7">
+            <h3>Exercice 17.7</h3>
+            <p class="objectif"><strong>Objectif</strong> : une partie de dé qui finit (bien ou mal).</p>
+            <p>Alain (A) et Béatrice (B) jouent avec un dé équilibré selon les règles suivantes :</p>
+            <ul>
+                <li>A lance (lancer 1). Si 1: A gagne. Si 2 ou 3: B joue. Si 4, 5 ou 6: partie nulle.</li>
+                <li>Si B joue (lancer 2): Si 1, 2 ou 3: B gagne. Si 4 ou 5: A rejoue. Si 6: partie nulle.</li>
+                <li>Le jeu continue ainsi, A jouant aux lancers impairs, B aux lancers pairs, jusqu'à ce qu'un joueur gagne ou que la partie soit déclarée nulle.</li>
+            </ul>
+            <p>Calculer la probabilité de :</p>
+            <ol>
+                <li>\(A_{2k+1}\) : « Alain gagne exactement au \((2k + 1)\)-ème lancer » (\(k \ge 0\)).</li>
+                <li>\(A\) : « Alain gagne ».</li>
+                <li>\(B_{2k}\): « Béatrice gagne exactement au \(2k\)-ème lancer » (\(k \ge 1\)). Et \(B\) : « Béatrice gagne ».</li>
+                <li>\(C\) : « la partie s’arrête sans vainqueur ».</li>
+                <li>\(D\) : « la partie ne s’arrête pas ».</li>
+            </ol>
+             <p><small>Voir la <a href="#cor17.7">correction</a>.</small></p>
+       </div>
+
+        <div class="placeholder">[Placeholder: image0090633]</div>
+
+        <div class="exercice" id="ex17.8">
+            <h3>Exercice 17.8</h3>
+            <p class="objectif"><strong>Objectif : tirages successifs dans une urne.</strong> <span class="error-note">(Le contexte est un choix de porte).</span></p>
+            <p>Dans un jeu télévisé, le présentateur propose au candidat à la fin d’une épreuve de choisir entre 3 portes : Gauche (G), Milieu (M) ou Droite (D). On suppose que les choix successifs des candidats au fil des émissions sont indépendants et équiprobables (\(P(G)=P(M)=P(D)=1/3\)).</p>
+            <p>On note \(D_n\) : « c’est au bout de \(n\) émissions (\(n \ge 2\)) que pour la première fois deux portes différentes ont été choisies ».</p>
+            <p>On note également \(U\) : « les candidats choisissent toujours la même porte ».</p>
+            <ol>
+                <li>(a) Calculer \(P(D_n)\) pour \(n \geq 2\).</li>
+                <li>(b) Écrire \(\bar{U}\) (l'événement contraire de U) en fonction des \(D_n\). En déduire la probabilité \(P(\bar{U})\) puis \(P(U)\).</li>
+                <li>On note \(P_n\) l'événement: « après \(n\) émissions (\(n \ge 1\)), au moins une porte n’a toujours pas été choisie ».</li>
+                <li>(a) Calculer \(P(P_n)\) pour \(n \geq 1\) (utiliser la formule du crible).</li>
+                <li>(b) On note \(T_n\) : « les trois portes ont été choisies pour la première fois à la \(n\)-ème émission » (\(n \ge 3\)). Exprimer \(T_n\) à l'aide des \(P_k\). En déduire \(P(T_n)\).</li>
+                <li>(c) Soit \(P\) l'événement: « les trois portes finissent par être choisies ». Calculer \(P(P)\). Que peut-on en déduire ?</li>
+            </ol>
+             <p><small>Voir la <a href="#cor17.8">correction</a>.</small></p>
+       </div>
+
+        <div class="exercice" id="ex17.9">
+            <h3>Exercice 17.9</h3>
+            <p class="objectif"><strong>Objectif : différence de 2 entre succès et échecs.</strong></p>
+            <p>Un joueur vise une cible avec une fléchette. À chaque lancer (indépendant), il atteint la cible (Succès S) avec la probabilité \(p \in ]0;1[\) ou la rate (Échec E) avec la probabilité \(q=1-p\). Il effectue une série de lancers.</p>
+            <p>Il est désigné comme vainqueur lorsque, pour la première fois, le nombre de succès excède de 2 le nombre d'échecs.</p>
+            <p>Il perd lorsque, pour la première fois, le nombre d'échecs excède de 2 le nombre de succès.</p>
+            <p>On arrête la partie lorsque le joueur gagne ou perd.</p>
+            <p>On note \(A_n\) : « le joueur gagne au \(n\)-ème lancer », \(B_n\) : « le joueur perd au \(n\)-ème lancer », \(A = \cup A_n\), \(B = \cup B_n\).</p>
+            <ol>
+                <li>Calculer \(P(A_n)\) et \(P(B_n)\). (Remarquer que \(n\) doit être pair. Modéliser par une marche aléatoire sur \(\mathbb{Z}\) où S = +1, E = -1. On démarre en 0. Gagner = atteindre +2 pour la 1ère fois. Perdre = atteindre -2 pour la 1ère fois).</li>
+
+                <div class="placeholder">[Placeholder: image0090634]</div>
+
+                <li>En déduire \(P(A)\) et \(P(B)\). Déterminer la probabilité pour que la partie dure indéfiniment (\(1-P(A)-P(B)\)).</li>
+            </ol>
+             <p><small>Voir la <a href="#cor17.9">correction</a>.</small></p>
+       </div>
+
+    </section>
+
+    <div class="placeholder">[Placeholder: image0090635 page 631]</div>
+
+    <section id="corrections">
+        <h2>Corrigés des exercices</h2>
+
+        <div class="correction" id="cor17.1">
+            <h3><a href="#ex17.1">Correction Exercice 17.1</a></h3>
+            <ol>
+                <li>Description des événements :
+                    <ul>
+                        <li>\(E_1 = \bigcap_{k=5}^{+\infty} A_k\): "Tous les lancers à partir du 5ème (inclus) donnent Pile".</li>
+                        <li>\(E_2 = (\cap_{k=1}^4 \overline{A_k}) \cap (\cap_{k=5}^\infty A_k)\): "Les 4 premiers lancers donnent Face, et tous les lancers suivants (à partir du 5ème) donnent Pile".</li>
+                        <li>\(E_3 = \bigcup_{k=5}^{+\infty} A_k\): "Au moins un lancer à partir du 5ème (inclus) donne Pile".</li>
+                    </ul>
+                </li>
+                <li>Événement "on obtient au moins une fois pile après le \(n\)-ème lancer" :
+                C'est la réunion des événements \(A_k\) pour \(k > n\).
+                \[ \bigcup_{k=n+1}^{+\infty} A_k \]
+                </li>
+                <li>Événements :
+                <ol type="a">
+                    <li>\(B_n\) : « on n'obtient que des piles à partir du \(n\)-ème lancer ». Cela signifie que \(A_n, A_{n+1}, A_{n+2}, \dots\) se réalisent tous.
+                    \[ B_n = \bigcap_{k=n}^{+\infty} A_k \]</li>
+                    <li>\(B\) : « on n'obtient plus que des piles à partir d'un certain lancer ». Cela signifie qu'il existe un rang \(n\) à partir duquel on n'a que des Piles. C'est la réunion des \(B_n\) pour tous les rangs \(n\) possibles (à partir de \(n=1\)).
+                    \[ B = \bigcup_{n=1}^{+\infty} B_n = \bigcup_{n=1}^{+\infty} \left( \bigcap_{k=n}^{+\infty} A_k \right) \]
+                    (Cet événement est parfois appelé "limite supérieure des \(A_n^c\)" ou lié à la "queue" de la suite d'événements).</li>
+                </ol>
+                </li>
+            </ol>
+        </div>
+
+        <div class="correction" id="cor17.2">
+            <h3><a href="#ex17.2">Correction Exercice 17.2</a></h3>
+             <p>Probabilité d'atteindre la cible \(p=2/3\). Probabilité de rater \(q=1-p=1/3\).</p>
+             <p>Soit \(A\) l'événement "on atteint la cible en un nombre fini de tirs".
+             Soit \(A_n\) l'événement "on atteint la cible pour la première fois au n-ème tir" (\(n \ge 1\)).
+             L'événement \(A_n\) se réalise si on rate les \(n-1\) premiers tirs et on réussit le n-ème.
+             Par indépendance des tirs, \(P(A_n) = q^{n-1} p = (1/3)^{n-1} (2/3)\).</p>
+             <p>L'événement \(A\) est la réunion des événements \(A_n\) pour \(n=1, 2, 3, \dots\).
+             \[ A = \bigcup_{n=1}^\infty A_n \]
+             Les événements \(A_n\) sont deux à deux incompatibles (on ne peut pas atteindre la cible pour la première fois à la fois au n-ème et au m-ème tir si \(n \neq m\)).
+             Par \(\sigma\)-additivité de la probabilité :
+             \[ P(A) = P(\bigcup_{n=1}^\infty A_n) = \sum_{n=1}^\infty P(A_n) \]
+             \[ P(A) = \sum_{n=1}^\infty (1/3)^{n-1} (2/3) \]
+             C'est la somme d'une série géométrique de premier terme \(a = (1/3)^0 (2/3) = 2/3\) et de raison \(r = 1/3\).
+             Comme \(|r|<1\), la série converge et sa somme est \(\frac{a}{1-r}\).
+             \[ P(A) = \frac{2/3}{1 - 1/3} = \frac{2/3}{2/3} = 1 \]
+             L'événement \(A\) a une probabilité de 1. On dit qu'il est <strong>presque sûr</strong> ou <strong>quasi-certain</strong>.
+             Cela signifie qu'il est quasi-certain d'atteindre la cible en un nombre fini de tirs.</p>
+
+             <div class="placeholder">[Placeholder: image0090636 page 632]</div>
+        </div>
+
+        <div class="correction" id="cor17.3">
+            <h3><a href="#ex17.3">Correction Exercice 17.3</a></h3>
+             <p>Urne {B, N, R}. Tirages successifs avec remise.</p>
+             <ol>
+                 <li>Événement \(B\) = "obtenir au moins une blanche".
+                 \(\overline{B}\) = "n'obtenir aucune blanche".
+                 - Avec \(A_n\) = "aucune blanche sur les \(n\) premiers tirages".
+                   \(\overline{B}\) signifie qu'à chaque tirage \(k\), on n'a pas tiré de blanche. L'événement "ne pas tirer de blanche au k-ème tirage" a une probabilité 2/3.
+                   \(A_n\) est l'intersection des événements "pas de blanche au tir k" pour \(k=1..n\). \(P(A_n) = (2/3)^n\).
+                   La suite \((A_n)\) est décroissante (\(A_{n+1} \subset A_n\)).
+                   L'événement \(\overline{B}\) signifie qu'on n'obtient jamais de blanche, c'est l'intersection de tous les \(A_n\):
+                   \[ \overline{B} = \bigcap_{n=1}^\infty A_n \]
+                   Alors \(B = \overline{\cap A_n} = \cup \overline{A_n}\)? Non. \(B = (\cap A_n)^c\).
+
+                 - Avec \(B_n\) = "première blanche au n-ème tirage".
+                   L'événement \(B\) signifie qu'on obtient une blanche pour la première fois à un certain rang \(n\).
+                   \[ B = \bigcup_{n=1}^\infty B_n \]
+                   Les \(B_n\) sont deux à deux incompatibles.
+
+                 - Avec \(C_n\) = "au moins une blanche sur les \(n\) premiers tirages".
+                   L'événement \(B\) signifie qu'il existe un \(n\) tel qu'on ait eu au moins une blanche lors des \(n\) premiers tirages.
+                   La suite \((C_n)\) est croissante (\(C_n \subset C_{n+1}\)).
+                   Si on obtient au moins une blanche au cours de l'infinité de tirages, c'est qu'il existe un \(n\) où on a obtenu au moins une blanche.
+                   \[ B = \bigcup_{n=1}^\infty C_n \]
+                 </li>
+                 <li>Calcul de \(P(B)\):
+                 - Méthode 1 (avec \(A_n\)): Utilisation de la limite monotone pour l'intersection.
+                   \(P(\overline{B}) = P(\bigcap_{n=1}^\infty A_n) = \lim_{n \to \infty} P(A_n)\) (car \(A_n\) décroissante).
+                   \(P(A_n) = (2/3)^n\). \(\lim_{n \to \infty} (2/3)^n = 0\) (car \(|2/3|<1\)).
+                   Donc \(P(\overline{B}) = 0\).
+                   Alors \(P(B) = 1 - P(\overline{B}) = 1 - 0 = 1\).
+                 - Méthode 2 (avec \(B_n\)): Utilisation de la \(\sigma\)-additivité.
+                   \(P(B_n)\) = Prob(pas de B aux \(n-1\) premiers, B au n-ème).
+                   \( = (2/3)^{n-1} (1/3)\).
+                   \(P(B) = \sum_{n=1}^\infty P(B_n) = \sum_{n=1}^\infty (2/3)^{n-1} (1/3)\).
+                   Série géométrique de premier terme \(a=(1/3)\) et raison \(r=2/3\).
+                   Somme \( = \frac{a}{1-r} = \frac{1/3}{1-2/3} = \frac{1/3}{1/3} = 1\).
+                 - Méthode 3 (avec \(C_n\)): Utilisation de la limite monotone pour la réunion.
+                   \(P(C_n) = 1 - P(\overline{C_n})\). \(\overline{C_n}\) est l'événement \(A_n\).
+                   \(P(C_n) = 1 - P(A_n) = 1 - (2/3)^n\).
+                   \(P(B) = P(\bigcup_{n=1}^\infty C_n) = \lim_{n \to \infty} P(C_n)\) (car \(C_n\) croissante).
+                   \(\lim_{n \to \infty} (1 - (2/3)^n) = 1 - 0 = 1\).
+                 Interprétation: L'événement \(B\) est quasi-certain. Il est presque sûr qu'on finira par tirer une boule blanche si on effectue une infinité de tirages.
+                 </li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090637]</div>
+        </div>
+
+        <div class="correction" id="cor17.4">
+            <h3><a href="#ex17.4">Correction Exercice 17.4</a></h3>
+             <p>\(p=3/4\), \(q=1/4\). \(C_n\) = "PP pour la 1ère fois en (n-1, n)".</p>
+             <ol>
+                 <li>Calculs initiaux:
+                 \(P(C_2) = P(P_1 P_2) = p \times p = p^2 = (3/4)^2 = 9/16\).
+                 \(P(C_3) = P(F_1 P_2 P_3)\) (car si \(P_1 P_2\), on s'arrête en 2).
+                 \( = q p p = qp^2 = (1/4)(3/4)^2 = (1/4)(9/16) = 9/64\).
+                 </li>
+                 <li>Relation de récurrence \(P(C_n)\) pour \(n \ge 4\).
+                 On conditionne par le premier lancer.
+                 Soit \(E\) l'événement "PP pour la 1ère fois en (n-1, n)". \(P(C_n) = P(E)\).
+                 \(P(E) = P(E|F_1)P(F_1) + P(E|P_1)P(P_1)\).
+                 - Si le 1er lancer est F (prob \(q\)), pour avoir \(E\), il faut obtenir PP pour la 1ère fois en \((n-1, n)\) mais en commençant au lancer 2. Cela revient à chercher \(C_{n-1}\) dans une séquence de \(n-1\) lancers. Donc \(P(E|F_1) = P(C_{n-1})\).
+                 - Si le 1er lancer est P (prob \(p\)). On regarde le 2ème lancer.
+                   - Si le 2ème est F (prob \(q\)). La séquence est PF... Pour avoir \(E\), il faut obtenir PP pour la 1ère fois en \((n-1, n)\) en commençant au lancer 3. Cela revient à chercher \(C_{n-2}\) dans une séquence de \(n-2\) lancers. \(P(E|P_1 F_2) = P(C_{n-2})\).
+                   - Si le 2ème est P (prob \(p\)). La séquence est PP... L'événement \(E\) (1ère fois en \(n-1, n\) avec \(n \ge 4\)) ne peut pas se produire car on a déjà eu PP en (1, 2). \(P(E|P_1 P_2) = 0\).
+                 Donc, \(P(E|P_1) = P(E|P_1 F_2) P(F_2|P_1) + P(E|P_1 P_2) P(P_2|P_1)\)
+                 \( = P(C_{n-2}) q + 0 \cdot p = q P(C_{n-2})\).
+                 Finalement, \(P(C_n) = P(C_{n-1}) q + (q P(C_{n-2})) p = q P(C_{n-1}) + pq P(C_{n-2})\).
+                 Avec \(q=1/4, p=3/4\), \(pq=3/16\).
+                 \[ P(C_n) = \frac{1}{4} P(C_{n-1}) + \frac{3}{16} P(C_{n-2}) \]
+                 Cette relation est valable pour \(n \ge 4\). (Elle est aussi valable pour \(n=3\)? \(P(C_3)=9/64\). \(\frac{1}{4}P(C_2)+\frac{3}{16}P(C_1)\)? \(C_1\) n'existe pas. Si on pose \(u_n=P(C_n)\), la relation est \(u_n = q u_{n-1} + pq u_{n-2}\) pour \(n \ge 4\)).
+                 <span class="error-note">(Le corrigé a la même relation mais l'applique pour $n \ge 3$. Vérifions pour n=3 : $u_3 = q u_2 + pq u_1$? Pas de $u_1$. Le corrigé a $u_1=0$. $u_3 = q u_2 + 0 = (1/4)(9/16) = 9/64$. Cela fonctionne si $u_1=0$. Mais $C_n$ est défini pour $n \ge 2$).</span>
+                 </li>
+                 <li>Calcul de \(P(C_n)\) et somme.
+                 La suite \((u_n)_{n \ge 2}\) vérifie \(u_n = \frac{1}{4} u_{n-1} + \frac{3}{16} u_{n-2}\) pour \(n \ge 4\).
+                 Équation caractéristique : \(r^2 - \frac{1}{4}r - \frac{3}{16} = 0\). Multiplions par 16: \(16r^2 - 4r - 3 = 0\).
+                 \(\Delta = (-4)^2 - 4(16)(-3) = 16 + 192 = 208 = 16 \times 13\). \(\sqrt{\Delta} = 4\sqrt{13}\).
+                 Racines \(r = \frac{4 \pm 4\sqrt{13}}{32} = \frac{1 \pm \sqrt{13}}{8}\).
+                 Soit \(r_1 = \frac{1+\sqrt{13}}{8}\), \(r_2 = \frac{1-\sqrt{13}}{8}\).
+                 \(u_n = A r_1^n + B r_2^n\) pour \(n \ge 2\).
+                 Conditions initiales \(u_2=9/16\), \(u_3=9/64\).
+                 \(n=2: A r_1^2 + B r_2^2 = 9/16\).
+                 \(n=3: A r_1^3 + B r_2^3 = 9/64\).
+                 \(r_1+r_2=1/4\), \(r_1 r_2 = -3/16\).
+                 Système linéaire en A, B. Résolution... (Le corrigé trouve A et B).
+                 Somme \(\sum_{n=2}^\infty P(C_n)\). C'est la probabilité \(P(E)\) que l'événement PP se produise un jour.
+                 Puisque \(|r_1| < 1\) et \(|r_2| < 1\) (\(\sqrt{13} \approx 3.6\), \(|1\pm\sqrt{13}| < 1+3.6 = 4.6\), \(|r| < 4.6/8 < 1\)), les séries géométriques \(\sum r_1^n\) et \(\sum r_2^n\) convergent.
+                 \[ \sum_{n=2}^\infty u_n = A \sum_{n=2}^\infty r_1^n + B \sum_{n=2}^\infty r_2^n \]
+                 \[ = A \frac{r_1^2}{1-r_1} + B \frac{r_2^2}{1-r_2} \]
+                 En utilisant les valeurs de A et B trouvées dans le corrigé, on obtient Somme = 1.
+                 Cela signifie que l'événement "obtenir PP un jour" est quasi-certain.
+                 </li>
+            </ol>
+        </div>
+
+        <div class="correction" id="cor17.5">
+            <h3><a href="#ex17.5">Correction Exercice 17.5</a></h3>
+             <ol>
+                 <li>Probabilité \(P(E_n)\) de ne jamais avoir FP en \(n\) lancers.
+                 Soit \(E_n\) l'événement. Soit \(u_n = P(E_n)\).
+                 Conditionnons par le premier lancer:
+                 \(u_n = P(E_n|P_1)P(P_1) + P(E_n|F_1)P(F_1)\).
+                 - Si on commence par P (prob \(q\)), pour ne pas avoir FP, il faut que la suite restante de \(n-1\) lancers n'ait pas FP. \(P(E_n|P_1) = u_{n-1}\).
+                 - Si on commence par F (prob \(p\)), pour ne pas avoir FP, il faut que la suite restante de \(n-1\) lancers ne commence pas par P. Elle ne doit contenir que des F.
+                   La seule séquence possible commençant par F et sans FP est FFF...F.
+                   Donc, si on commence par F, pour être dans \(E_n\), il faut que les \(n-1\) lancers suivants soient aussi F.
+                   \(P(E_n|F_1)\) est la probabilité d'avoir F...F (n fois) sachant qu'on a eu F au premier. C'est la probabilité d'avoir F...F (n-1 fois), soit \(p^{n-1}\).
+                 Donc \(u_n = u_{n-1} q + p^{n-1} p = q u_{n-1} + p^n\) pour \(n \ge 1\).
+                 \(u_0=1\) (0 lancer, pas de FP).
+                 \(u_1 = q u_0 + p^1 = q+p=1\). (1 lancer, pas de FP).
+                 \(u_2 = q u_1 + p^2 = q+p^2\). (Séquences possibles: PP, PF, FP, FF. Séquences sans FP: PP, PF, FF. Probas \(q^2, qp, p^2\). Somme \(q^2+qp+p^2 = q(q+p)+p^2 = q+p^2\). OK).
+                 C'est une suite arithmético-géométrique. \(u_n = q u_{n-1} + p^n\).
+                 Le corrigé donne une autre approche: \(P(E_n) = \sum_{k=0}^n q^k p^{n-k}\)? Non.
+                 Il obtient \(P(E_n) = q^n + p q^{n-1} + \dots + p^k q^{n-k} + \dots + p^{n-1}q + p^n\)? Non plus.
+                 Il obtient \(P(E_n) = \frac{p^{n+1}-q^{n+1}}{p-q}\) pour \(p \neq q\).
+                 Vérifions cette formule. \(u_n = \frac{p^{n+1}-q^{n+1}}{p-q}\).
+                 \(u_0 = (p-q)/(p-q)=1\). OK.
+                 \(q u_{n-1} + p^n = q \frac{p^n-q^n}{p-q} + p^n = \frac{q p^n - q^{n+1} + p^n(p-q)}{p-q} = \frac{qp^n-q^{n+1}+p^{n+1}-p^n q}{p-q} = \frac{p^{n+1}-q^{n+1}}{p-q} = u_n\). La formule est correcte.
+                 Si \(p=q=1/2\), la formule donne \(0/0\). Le corrigé donne \(P(E_n)=(n+1)/2^n\). Vérifions la récurrence \(u_n = \frac{1}{2} u_{n-1} + (\frac{1}{2})^n\).
+                 \(u_0=1\). \(u_1=1/2(1)+(1/2)^1 = 1\). OK.
+                 \(u_2=1/2(1)+(1/2)^2 = 1/2+1/4=3/4\). Formule donne \((2+1)/2^2=3/4\). OK.
+                 Supposons \(u_{n-1}=n/2^{n-1}\). \(u_n = \frac{1}{2} \frac{n}{2^{n-1}} + \frac{1}{2^n} = \frac{n}{2^n} + \frac{1}{2^n} = \frac{n+1}{2^n}\). Vrai.
+                 </li>
+                 <li>Probabilité de ne jamais avoir FP. C'est \(\lim_{n \to \infty} P(E_n)\).
+                 - Si \(p \neq q\): \(P(E_n) = \frac{p^{n+1}-q^{n+1}}{p-q}\). Comme \(|p|<1\) et \(|q|<1\), \(p^{n+1} \to 0\) et \(q^{n+1} \to 0\). La limite est 0.
+                 - Si \(p = q = 1/2\): \(P(E_n) = (n+1)/2^n\). Par croissances comparées, \(\lim (n+1)/2^n = 0\).
+                 Dans tous les cas, la limite est 0. Il est quasi-certain d'obtenir la séquence FP un jour.
+                 </li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090639]</div>
+        </div>
+
+        <div class="correction" id="cor17.6">
+            <h3><a href="#ex17.6">Correction Exercice 17.6</a></h3>
+             <ol>
+                 <li>Probabilité \(p_k\) d'obtenir une somme \(k\).
+                 Il y a \(6 \times 6 = 36\) issues équiprobables \((d_1, d_2)\).
+                 Nombre de cas pour chaque somme:
+                 k=2: (1,1) - 1 cas. p2=1/36.
+                 k=3: (1,2),(2,1) - 2 cas. p3=2/36.
+                 k=4: (1,3),(2,2),(3,1) - 3 cas. p4=3/36.
+                 k=5: (1,4),(2,3),(3,2),(4,1) - 4 cas. p5=4/36=1/9.
+                 k=6: (1,5),(2,4),(3,3),(4,2),(5,1) - 5 cas. p6=5/36.
+                 k=7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) - 6 cas. p7=6/36=1/6.
+                 k=8: (2,6),(3,5),(4,4),(5,3),(6,2) - 5 cas. p8=5/36.
+                 k=9: (3,6),(4,5),(5,4),(6,3) - 4 cas. p9=4/36=1/9.
+                 k=10: (4,6),(5,5),(6,4) - 3 cas. p10=3/36.
+                 k=11: (5,6),(6,5) - 2 cas. p11=2/36.
+                 k=12: (6,6) - 1 cas. p12=1/36.
+                 (Vérif: 1+2+3+4+5+6+5+4+3+2+1 = 36).
+                 </li>
+                 <li>Arrêt lorsque somme = 5 ou 7.
+                 \(p_5 = 4/36 = 1/9\). \(p_7 = 6/36 = 1/6\).
+                 Probabilité d'arrêt à un lancer donné = \(p_5+p_7 = 1/9+1/6 = (2+3)/18 = 5/18\).
+                 Probabilité de non-arrêt = \(1 - 5/18 = 13/18\).
+                 \(E_n\) = "non-arrêt aux lancers 1 à n-1, ET somme=5 au lancer n".
+                 (a) \(P(E_n)\): Par indépendance des lancers.
+                     \(P(E_n) = P(\text{non-arrêt})^{n-1} \times P(\text{somme}=5)\)
+                     \( = (13/18)^{n-1} \times (1/9)\).
+                 (b) \(E\) = "obtenir 5 avant 7".
+                     \(E\) est réalisé si on s'arrête sur un 5. C'est la réunion (disjointe) des \(E_n\) pour \(n \ge 1\).
+                     \(E = \bigcup_{n=1}^\infty E_n\).
+                     \(P(E) = \sum_{n=1}^\infty P(E_n) = \sum_{n=1}^\infty (13/18)^{n-1} (1/9)\).
+                     Série géométrique de premier terme \(a=1/9\) et raison \(r=13/18\). \(|r|<1\).
+                     Somme = \(\frac{a}{1-r} = \frac{1/9}{1 - 13/18} = \frac{1/9}{5/18} = \frac{1}{9} \times \frac{18}{5} = \frac{2}{5}\).
+                     \(P(E) = 2/5\).
+                 </li>
+            </ol>
+        </div>
+
+        <div class="correction" id="cor17.7">
+             <h3><a href="#ex17.7">Correction Exercice 17.7</a></h3>
+             Probabilités pour chaque lancer: P(A gagne | A joue)=1/6. P(B joue | A joue)=2/6=1/3. P(nul | A joue)=3/6=1/2.
+             P(B gagne | B joue)=3/6=1/2. P(A joue | B joue)=2/6=1/3. P(nul | B joue)=1/6.
+             <ol>
+                 <li>\(A_{2k+1}\) : A gagne au (2k+1)-ème lancer.
+                 Il faut que A passe la main k fois (A fait 2/3), B passe la main k fois (B fait 4/5), et A gagne au (2k+1)ème lancer.
+                 Lancer 1: A fait 2/3 (prob 1/3).
+                 Lancer 2: B fait 4/5 (prob 1/3).
+                 Lancer 3: A fait 2/3 (prob 1/3).
+                 ...
+                 Lancer 2k: B fait 4/5 (prob 1/3).
+                 Lancer 2k+1: A fait 1 (prob 1/6).
+                 Le chemin est A(2/3) -> B(4/5) -> A(2/3) -> ... -> B(4/5) -> A(1).
+                 La probabilité de la séquence de résultats des dés est:
+                 \( (\frac{2}{6} \times \frac{2}{6})^k \times \frac{1}{6} = (\frac{1}{3} \times \frac{1}{3})^k \times \frac{1}{6} = (\frac{1}{9})^k \frac{1}{6} \).
+                 \(P(A_{2k+1}) = (1/9)^k (1/6)\).
+                 </li>
+                 <li>\(A\) = "Alain gagne". \(A = \bigcup_{k=0}^\infty A_{2k+1}\). Incompatibles.
+                 \(P(A) = \sum_{k=0}^\infty P(A_{2k+1}) = \sum_{k=0}^\infty \frac{1}{6} (\frac{1}{9})^k\).
+                 Série géom. raison \(r=1/9\). Somme \( = \frac{1/6}{1-1/9} = \frac{1/6}{8/9} = \frac{1}{6}\frac{9}{8} = \frac{3}{16}\).
+                 </li>
+                 <li>\(B_{2k}\) = "Béatrice gagne au 2k-ème lancer". (\(k \ge 1\)).
+                 Chemin: A(2/3) -> B(4/5) -> ... -> A(2/3) -> B(1/2/3).
+                 Il y a \(k-1\) passages de B à A et \(k\) passages de A à B.
+                 A fait 2/3 k fois. B fait 4/5 k-1 fois. B gagne au lancer 2k (prob 1/2).
+                 Prob = \( (\frac{1}{3})^k (\frac{1}{3})^{k-1} \times \frac{1}{2} \)? Non.
+                 Prob(A passe main) = 1/3. Prob(B passe main) = 1/3.
+                 Chemin: A(1/3) -> B(1/3) -> A(1/3) -> ... -> A(1/3) -> B(gagne: 1/2).
+                 Il y a k 'A(1/3)' et k 'B(...)'.
+                 \(P(B_{2k}) = (1/3 \times 1/3)^{k-1} \times (1/3) \times (1/2)\)?
+                 Recommençons:
+                 Pour \(B_{2k}\): A(2/3) puis B(4/5) ... (k-1) fois ... A(2/3) puis B(1/2/3).
+                 Prob de A(2/3) = 1/3. Prob de B(4/5) = 1/3. Prob de B(1/2/3) = 1/2.
+                 Séquence de transitions: (A->B) (B->A) (A->B) ... (B->A) (A->B) (B gagne).
+                 Il y a \(k-1\) fois la paire (A->B)(B->A) de probabilité \((1/3)(1/3)=1/9\).
+                 Puis (A->B) de prob 1/3. Puis (B gagne) de prob 1/2.
+                 \(P(B_{2k}) = (1/9)^{k-1} \times (1/3) \times (1/2) = \frac{1}{6} (1/9)^{k-1}\) pour \(k \ge 1\).
+                 \(B = \cup B_{2k}\).
+                 \(P(B) = \sum_{k=1}^\infty \frac{1}{6} (1/9)^{k-1} = \frac{1}{6} \sum_{j=0}^\infty (1/9)^j = \frac{1}{6} \frac{1}{1-1/9} = \frac{1}{6}\frac{9}{8} = \frac{3}{16}\).
+                 </li>
+                 <li>\(C\) = "partie nulle".
+                 Nulle au lancer \(2k+1\) (impair, A joue): (A->B)(B->A)...(A->B)(B->A) puis A(4/5/6).
+                 Prob = \((1/9)^k \times (1/2)\).
+                 Nulle au lancer \(2k\) (pair, B joue): (A->B)(B->A)...(B->A)(A->B) puis B(6).
+                 Prob = \((1/9)^{k-1} \times (1/3) \times (1/6)\).
+                 \(P(C) = \sum_{k=0}^\infty (1/9)^k (1/2) + \sum_{k=1}^\infty (1/9)^{k-1} (1/18)\).
+                 Première somme = \(\frac{1/2}{1-1/9} = \frac{1/2}{8/9} = 9/16\).
+                 Seconde somme = \(\frac{1}{18} \sum_{j=0}^\infty (1/9)^j = \frac{1}{18}\frac{1}{1-1/9} = \frac{1}{18}\frac{9}{8} = 1/16\).
+                 \(P(C) = 9/16 + 1/16 = 10/16 = 5/8\).
+                 </li>
+                 <li>\(D\) = "partie ne s'arrête pas".
+                 Cela signifie qu'on a la séquence infinie A(2/3) -> B(4/5) -> A(2/3) -> ...
+                 La probabilité d'une séquence de longueur \(2k\) de ce type est \((1/3 \times 1/3)^k = (1/9)^k\).
+                 Quand \(k \to \infty\), cette probabilité tend vers 0. L'événement D est de probabilité nulle.
+                 Vérification: \(P(A)+P(B)+P(C) = 3/16 + 3/16 + 10/16 = (3+3+10)/16 = 16/16 = 1\).
+                 Donc \(P(D)=0\). La partie s'arrête presque sûrement.
+                 </li>
+            </ol>
+
+            <div class="placeholder">[Placeholder: image0090640]</div>
+        </div>
+
+        <div class="correction" id="cor17.8">
+             <h3><a href="#ex17.8">Correction Exercice 17.8</a></h3>
+             <p>3 portes G, M, D. Choix équiprobable (1/3) et indépendants.</p>
+             <ol>
+                 <li>\(D_n\) = "1ère fois 2 portes différentes en émission n" (\(n \ge 2\)).
+                 Cela signifie que les \(n-1\) premières émissions ont vu la même porte choisie, et la n-ème une porte différente.
+                 - Choisir la porte initiale (3 choix). Prob = 1.
+                 - Avoir cette porte aux lancers 1 à n-1: prob \((1/3)^{n-1}\).
+                 - Avoir une porte différente au lancer n: prob \(2/3\).
+                 Il faut choisir la porte initiale unique des n-1 premiers lancers (3 choix).
+                 \(P(D_n) = 3 \times (1/3)^{n-1} \times (2/3)\) ? Non.
+                 L'événement \(D_n\) est: \( (G...G D \text{ ou } G...G M) \text{ ou } (M...M G \text{ ou } M...M D) \text{ ou } (D...D G \text{ ou } D...D M) \).
+                 Il y a 3 choix pour la première porte. Il y a 2 choix pour la porte différente à l'étape n.
+                 Probabilité d'une séquence fixée (e.g., G...G D) = \((1/3)^{n-1} (1/3)\)? Non.
+                 Prob(G...G) (n-1 fois) = \((1/3)^{n-1}\). Prob(D au n-ième) = 1/3.
+                 Prob(G...G D) = \((1/3)^n\). Il y a 3 choix pour la 1ere porte, 2 pour la différente. Total 6 séquences.
+                 \(P(D_n) = 6 \times (1/3)^n\)? Non.
+                 Recommençons: Événement "les \(n-1\) premiers choix sont identiques" = \(E_{n-1}\).
+                 \(P(E_{n-1}) = P(G...G) + P(M...M) + P(D...D) = 3 \times (1/3)^{n-1}\).
+                 \(D_n\) = "\(E_{n-1}\) et (choix \(n\) est différent de choix \(n-1\))".
+                 Prob(choix n \(\neq\) choix n-1) = 2/3.
+                 \(P(D_n) = P(E_{n-1}) \times P(\text{différent au n-ième | } E_{n-1})\).
+                 \( = 3 (1/3)^{n-1} \times (2/3)\) car le n-ième choix est indépendant.
+                 \(P(D_n) = 3 \frac{1}{3^{n-1}} \frac{2}{3} = \frac{6}{3^n} = \frac{2}{3^{n-1}}\) pour \(n \ge 2\).
+                 <span class="error-note">(Corrigé a $6/3^n$. C'est $2 \times 3 / 3^n = 2/3^{n-1}$).</span>
+                 </li>
+                 <li>\(U\) = "toujours la même porte". \(\overline{U}\) = "au moins deux portes différentes sont choisies".
+                 \(\overline{U}\) est l'événement où l'on s'arrête à un certain temps \(n\), i.e., où \(D_n\) se réalise pour un \(n\).
+                 \(\overline{U} = \bigcup_{n=2}^\infty D_n\). Les \(D_n\) sont incompatibles.
+                 \(P(\overline{U}) = \sum_{n=2}^\infty P(D_n) = \sum_{n=2}^\infty \frac{2}{3^{n-1}}\).
+                 Posons \(k=n-1\). \(n=2 \implies k=1\).
+                 \( = \sum_{k=1}^\infty \frac{2}{3^k} = 2 \sum_{k=1}^\infty (1/3)^k \). Série géom. \(|1/3|<1\).
+                 Somme = \(2 \times (\text{somme totale} - \text{terme } k=0) = 2 (\frac{1}{1-1/3} - (1/3)^0) = 2 (\frac{1}{2/3} - 1) = 2(3/2 - 1) = 2(1/2) = 1\).
+                 Donc \(P(\overline{U})=1\).
+                 Alors \(P(U) = 1 - P(\overline{U}) = 1 - 1 = 0\). Il est quasi-impossible de toujours choisir la même porte.
+                 </li>
+                 <li>\(P_n\) = "après \(n\) émissions, au moins une porte n'a pas été choisie".
+                 \(\overline{P_n}\) = "les 3 portes ont été choisies au moins une fois lors des n premières émissions".
+                 (a) Calcul de \(P(P_n)\). C'est \(P(A_G \cup A_M \cup A_D)\) où \(A_X\) = "porte X non choisie".
+                     Par formule du crible:
+                     \(P(P_n) = \sum P(A_i) - \sum P(A_i \cap A_j) + P(A_G \cap A_M \cap A_D)\).
+                     \(P(A_i)\) = Prob que les n choix soient parmi les 2 autres portes = \((2/3)^n\). Il y a 3 termes.
+                     \(P(A_i \cap A_j)\) = Prob que les n choix soient sur la 1 porte restante = \((1/3)^n\). Il y a \(\binom{3}{2}=3\) termes.
+                     \(P(A_G \cap A_M \cap A_D)\) = Prob que les n choix ne soient sur aucune porte = 0.
+                     \(P(P_n) = 3 (2/3)^n - 3 (1/3)^n + 0 = 3 \frac{2^n}{3^n} - 3 \frac{1}{3^n} = \frac{3 \cdot 2^n - 3}{3^n}\).
+                 </li>
+
+                 <div class="placeholder">[Placeholder: image0090643]</div>
+
+                 <li>(b) \(T_n\) = "3 portes choisies pour la 1ère fois en émission n" (\(n \ge 3\)).
+                     \(T_n\) signifie que après \(n-1\) émissions, 1 ou 2 portes n'avaient pas été choisies (i.e., \(P_{n-1}\) est réalisé), ET après n émissions, 0 porte n'a pas été choisie (i.e., \(P_n\) n'est pas réalisé).
+                     L'événement est \(\overline{P_n} \cap P_{n-1}\).
+                     Comme la suite d'événements \((\overline{P_n})\) est croissante (\(\overline{P_n} \subset \overline{P_{n+1}}\)), on a \(P(T_n) = P(\overline{P_n}) - P(\overline{P_{n-1}})\)? Non.
+                     L'événement "les 3 portes ont été choisies au moins une fois après n étapes" est \(\overline{P_n}\).
+                     L'événement \(T_n\) est \(\overline{P_n} \setminus \overline{P_{n-1}}\).
+                     Puisque \(\overline{P_{n-1}} \subset \overline{P_n}\), on a \(P(T_n) = P(\overline{P_n}) - P(\overline{P_{n-1}})\).
+                     \(P(\overline{P_n}) = 1 - P(P_n) = 1 - \frac{3 \cdot 2^n - 3}{3^n}\).
+                     \(P(T_n) = (1 - \frac{3 \cdot 2^n - 3}{3^n}) - (1 - \frac{3 \cdot 2^{n-1} - 3}{3^{n-1}})\)
+                     \( = \frac{3 \cdot 2^{n-1} - 3}{3^{n-1}} - \frac{3 \cdot 2^n - 3}{3^n} = \frac{3(3 \cdot 2^{n-1} - 3) - (3 \cdot 2^n - 3)}{3^n} \)
+                     \( = \frac{9 \cdot 2^{n-1} - 9 - 6 \cdot 2^{n-1} + 3}{3^n} = \frac{3 \cdot 2^{n-1} - 6}{3^n} \).
+                     <span class="error-note">(Le corrigé donne $P(T_n) = P(P_{n-1})-P(P_n)$. C'est correct. Le calcul final est différent. $P(P_{n-1}) - P(P_n) = (\frac{3 \cdot 2^{n-1}-3}{3^{n-1}}) - (\frac{3 \cdot 2^n - 3}{3^n}) = \frac{9 \cdot 2^{n-1} - 9 - (3 \cdot 2^n - 3)}{3^n} = \frac{9 \cdot 2^{n-1} - 6 \cdot 2^{n-1} - 6}{3^n} = \frac{3 \cdot 2^{n-1} - 6}{3^n}$. C'est la même chose).</span>
+                 </li>
+                 <li>(c) \(P\) = "les 3 portes finissent par être choisies". \(P = \bigcup_{n=3}^\infty T_n\).
+                     \(P(P) = \sum_{n=3}^\infty P(T_n) = \lim_{N \to \infty} \sum_{n=3}^N (P(\overline{P_n}) - P(\overline{P_{n-1}}))\).
+                     C'est une somme télescopique: \(\lim_{N \to \infty} (P(\overline{P_N}) - P(\overline{P_2}))\).
+                     \(\lim P(\overline{P_N}) = \lim (1 - P(P_N)) = 1 - \lim P(P_N)\).
+                     \(\lim P(P_N) = \lim (3(2/3)^N - 3(1/3)^N) = 3(0) - 3(0) = 0\).
+                     Donc \(\lim P(\overline{P_N}) = 1\).
+                     \(P(\overline{P_2}) = 1 - P(P_2) = 1 - (3(2/3)^2 - 3(1/3)^2) = 1 - (3(4/9) - 3(1/9)) = 1 - (12/9 - 3/9) = 1 - 9/9 = 0\).
+                     Donc \(P(P) = 1 - 0 = 1\).
+                     L'événement P est quasi-certain. Il est presque sûr que les 3 portes finiront par être choisies.
+                 </li>
+            </ol>
+        </div>
+
+        <div class="placeholder">[Placeholder: image0090644]</div>
+
+        <div class="correction" id="cor17.9">
+            <h3><a href="#ex17.9">Correction Exercice 17.9</a></h3>
+             <p>Succès (S) prob \(p\), Échec (E) prob \(q=1-p\). \(N_S(n)\) nb succès en n lancers, \(N_E(n)\) nb échecs. \(N_S+N_E=n\).</p>
+             <p>Gagner en n \(\iff N_S(n) - N_E(n) = 2\) et pour \(k<n\), \(|N_S(k)-N_E(k)| < 2\).</p>
+             <p>Perdre en n \(\iff N_E(n) - N_S(n) = 2\) et pour \(k<n\), \(|N_S(k)-N_E(k)| < 2\).</p>
+             <p>Soit \(X_k\) la variable aléatoire associée au k-ème lancer (+1 si S, -1 si E). \(Z_n = \sum_{k=1}^n X_k = N_S(n)-N_E(n)\).</p>
+             <p>Gagner en n \(\iff Z_n = 2\) et \(Z_k \in \{-1, 0, 1\}\) for \(k=1..n-1\).</p>
+             <p>Perdre en n \(\iff Z_n = -2\) et \(Z_k \in \{-1, 0, 1\}\) for \(k=1..n-1\).</p>
+             <p>Notons que \(Z_n = N_S - (n-N_S) = 2N_S - n\).
+             \(Z_n\) et \(n\) ont même parité. Pour atteindre \(\pm 2\), \(n\) doit être pair. \(A_n = B_n = \emptyset\) si n impair.</p>
+             <ol>
+                 <li>Calcul de \(P(A_n)\) et \(P(B_n)\).
+                 Soit \(n=2k\).
+                 \(Z_{2k}=2 \iff 2N_S-2k=2 \iff 2N_S=2k+2 \iff N_S=k+1\). (Nb échecs \(N_E = k-1\)).
+                 \(Z_{2k}=-2 \iff 2N_S-2k=-2 \iff 2N_S=2k-2 \iff N_S=k-1\). (Nb échecs \(N_E = k+1\)).
+                 C'est un problème de premier passage pour une marche aléatoire réfléchie aux bords \(\pm 2\)? Non, absorbants.
+                 Considérons les chemins sur \(\mathbb{Z}\) partant de 0, avec pas +1 (prob p) ou -1 (prob q), qui atteignent +2 pour la 1ère fois à l'étape n=2k.
+                 Le nombre de chemins de \(0\) à \(2\) en \(n=2k\) pas, avec \(k+1\) pas +1 et \(k-1\) pas -1, est \(\binom{n}{N_S} = \binom{2k}{k+1}\).
+                 Il faut enlever les chemins qui ont touché +2 ou -2 avant l'étape n.
+                 Utilisons le principe de réflexion. Le nombre de chemins de 0 à 2 qui touchent -2 est égal au nombre de chemins de 0 à -6? Non.
+                 Le nombre de chemins de (0,0) à (n, 2) qui touchent ou traversent y=-2 est le nombre de chemins de (0,-4) à (n, 2)? Non plus.
+                 Le corrigé utilise une approche différente. \(A_n\) se réalise si \(n=2k\), on a \(k+1\) succès et \(k-1\) échecs, le dernier pas est un succès (on était en +1), et on n'a jamais touché +2 ou -2 avant.
+                 Soit \(p_n = P(A_n)\). Le corrigé donne \(p_{2k} = (2pq)^{k-1}p^2\) et \(q_n = P(B_n) = (2pq)^{k-1}q^2\).
+                 Pourquoi? Cela suppose que les étapes intermédiaires sont des paires SE ou ES?
+                 \(Z_1 \in \{1, -1\}\). \(Z_2 \in \{2, 0, -2\}\). \(Z_3 \in \{3, 1, -1, -3\}\).
+                 Pour \(A_2\): SS. Prob \(p^2\). Correct (\(k=1\)).
+                 Pour \(A_4\): Séquence de 4 lancers, \(N_S=3, N_E=1\). Finir en +2 sans toucher \(\pm 2\) avant.
+                 Il faut \(Z_1, Z_2, Z_3 \in \{-1, 0, 1\}\). \(Z_4=2\).
+                 Si \(Z_4=2\), il faut 3 S, 1 E.
+                 Chemins possibles: SSSE (Z=1,2,3,2 Non), SSES(Z=1,2,1,2 OK), SESS(Z=1,0,1,2 OK), ESSS(Z=-1,0,1,2 OK).
+                 Il faut exclure ceux qui touchent +2 avant. Aucun.
+                 Il faut exclure ceux qui touchent -2 avant. Aucun car on finit en +2.
+                 Prob = \(\binom{4}{3} p^3 q = 4p^3q\)? Non, l'ordre compte.
+                 Prob(SSES) = p^3q. Prob(SESS)=p^2qp=p^3q. Prob(ESSS)=qp^3.
+                 Total \(3 p^3 q\)? Non plus.
+                 Reprenons le corrigé. Il dit \(P(A_n) = (2pq)^{(n-2)/2} p^2\) pour n pair.
+                 \(n=2\): \(P(A_2)=(2pq)^0 p^2 = p^2\). OK.
+                 \(n=4\): \(P(A_4)=(2pq)^1 p^2 = 2p^3q\).
+                 Quelles sont les séquences pour \(A_4\)? Il faut finir en +2. \(Z_4=2\). 3S, 1E.
+                 Les chemins doivent rester dans \([-1, 1]\) pour \(k=1, 2, 3\).
+                 Z1=1 (S). Z2=0 (SE) ou Z2=2 (SS, exclu).
+                 Z1=-1 (E). Z2=0 (ES) ou Z2=-2 (EE, exclu).
+                 Chemins possibles sans toucher \(\pm 2\) avant n=4:
+                 S E S S (Z: 1, 0, 1, 2). Prob p q p p = \(p^3 q\).
+                 S E E S? Non (Z: 1, 0, -1, 0).
+                 E S S S (Z: -1, 0, 1, 2). Prob q p p p = \(p^3 q\).
+                 E S E S? Non (Z: -1, 0, -1, 0).
+                 Total \(P(A_4) = p^3q + p^3q = 2 p^3 q\). La formule du corrigé est correcte.
+                 Donc \(P(A_n) = (2pq)^{(n-2)/2} p^2\) pour \(n\) pair \(\ge 2\).
+                 Et \(P(B_n) = (2pq)^{(n-2)/2} q^2\) pour \(n\) pair \(\ge 2\).
+                 </li>
+
+                 <div class="placeholder">[Placeholder: image0090645]</div>
+
+                 <li>Sommes \(P(A)\) et \(P(B)\).
+                 \(A = \cup_{k=1}^\infty A_{2k}\). Incompatibles.
+                 \(P(A) = \sum_{k=1}^\infty P(A_{2k}) = \sum_{k=1}^\infty (2pq)^{(2k-2)/2} p^2 = \sum_{k=1}^\infty (2pq)^{k-1} p^2\).
+                 Série géométrique de premier terme \(a=p^2\) et raison \(r=2pq\).
+                 Il faut \(|r|<1\) pour converger. \(2pq = 2p(1-p)\). Max en \(p=1/2\), vaut \(2(1/2)(1/2)=1/2\).
+                 Comme \(p \neq 1/2\), on a \(2pq < 1/2 < 1\). La série converge.
+                 Somme \( = \frac{a}{1-r} = \frac{p^2}{1-2pq}\).
+                 \(P(B) = \sum_{k=1}^\infty P(B_{2k}) = \sum_{k=1}^\infty (2pq)^{k-1} q^2 = \frac{q^2}{1-2pq}\).
+                 Probabilité que la partie dure indéfiniment = \(P(C) = 1 - P(A) - P(B)\).
+                 \(P(C) = 1 - \frac{p^2}{1-2pq} - \frac{q^2}{1-2pq} = \frac{1-2pq - p^2 - q^2}{1-2pq}\).
+                 Numérateur \( = 1 - (p^2+2pq+q^2) = 1 - (p+q)^2 = 1 - 1^2 = 0\).
+                 Donc \(P(C) = 0\). La partie s'arrête presque sûrement.
+                 </li>
+            </ol>
+        </div>
+
+    </section>
+
+    <div class="placeholder">[Placeholder: image0090646]</div>
+    <div class="placeholder">[Placeholder: image0090647]</div>
+    <div class="placeholder">[Placeholder: image0090648]</div>
+    <div class="placeholder">[Placeholder: image0090649]</div>
+    <div class="placeholder">[Placeholder: image0090650]</div>
+    <div class="placeholder">[Placeholder: image0090651]</div>
+    <div class="placeholder">[Placeholder: image0090652]</div>
+
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // customised options
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
