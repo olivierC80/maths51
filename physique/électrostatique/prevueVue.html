@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preuves & Auto-Évaluation : Électrostatique</title>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --easy-color: #5cb85c;
+            --medium-color: #f0ad4e;
+            --difficult-color: #d9534f;
+            --confused-color: #777;
+            --light-bg: #f4f4f4;
+            --border-color: #e0e0e0;
+            --proof-bg: #f0f8ff; /* Alice blue background for proofs */
+            --proof-border: #add8e6; /* Light blue border */
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: var(--light-bg);
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px 15px; /* Adjusted padding for mobile */
+            border-radius: 0; /* No radius on mobile for full width */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-height: 100vh;
+        }
+        @media (min-width: 600px) {
+            .container {
+                 padding: 30px;
+                 border-radius: 8px;
+                 margin: 20px auto;
+            }
+        }
+
+        h1, h2, h3 { color: var(--primary-color); }
+        h1 { text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 20px; font-size: 1.6em; }
+        h2 { margin-top: 2em; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        h3 { margin-top: 1.5em; color: #00679e; margin-bottom: 0.5em;}
+
+        .controls {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .controls button {
+            padding: 8px 15px; margin: 5px; background-color: #dc3545;
+            color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;
+        }
+        .controls button:hover { background-color: #c82333; }
+
+        .proof-block {
+            border: 1px solid var(--proof-border);
+            background-color: var(--proof-bg);
+            padding: 15px;
+            margin-top: 1em;
+            margin-bottom: 1.5em;
+            border-radius: 5px;
+            transition: border-left-color 0.3s ease;
+             border-left-width: 5px;
+             border-left-color: transparent; /* Default */
+        }
+        /* Difficulty styling */
+        .proof-block.difficulty-easy { border-left-color: var(--easy-color); }
+        .proof-block.difficulty-medium { border-left-color: var(--medium-color); }
+        .proof-block.difficulty-difficult { border-left-color: var(--difficult-color); }
+        .proof-block.difficulty-confused { border-left-color: var(--confused-color); }
+
+        .difficulty-selector {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #aaa;
+            font-size: 0.9em;
+        }
+        .difficulty-selector strong { display: block; margin-bottom: 8px; }
+        .difficulty-selector label { margin-right: 10px; cursor: pointer; display: inline-block; margin-bottom: 5px; }
+        .difficulty-selector input[type="radio"] { margin-right: 4px; accent-color: var(--primary-color); }
+        .difficulty-selector button {
+            margin-left: 10px; font-size: 0.8em; cursor: pointer; background: none;
+            border: 1px solid #ccc; color: #555; padding: 2px 5px; border-radius: 3px;
+            vertical-align: middle;
+        }
+        .difficulty-selector button:hover { background: #eee; }
+
+        .katex-display { margin: 1em 0; padding: 0.5em; background-color: #e0e8f0; border-radius: 4px; overflow-x: auto; }
+        code { background-color: #eee; padding: 0.2em 0.4em; border-radius: 3px; font-family: 'Courier New', Courier, monospace; }
+        .note { font-style: italic; color: #555; font-size: 0.9em; margin-top: 0.5em; }
+        strong.statement { color: #c82333; font-weight: bold; } /* Distinct color for statements */
+
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+
+        <h1>Preuves & Auto-Évaluation : Électrostatique</h1>
+
+        <div class="controls">
+            <button @click="clearAllProgress">Réinitialiser Toutes les Évaluations</button>
+        </div>
+
+        <p>Lisez chaque justification ou preuve, puis évaluez votre niveau de compréhension. Votre progression est sauvegardée localement.</p>
+
+        <!-- Sections du cours avec les preuves -->
+        <h2>1. Charge électrique. Densités de charge.</h2>
+        <div class="proof-block" :class="getDifficultyClass(101)">
+             <h3>Justification des Densités et Intégrales</h3>
+             <div v-html="getProofHtml(101)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="101" v-model="proofItems[101].difficulty"></component>
+             </div>
+        </div>
+
+        <h2>2. Force d'interaction : loi de Coulomb</h2>
+        <div class="proof-block" :class="getDifficultyClass(201)">
+             <h3>Loi de Coulomb & Propriétés</h3>
+             <div v-html="getProofHtml(201)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="201" v-model="proofItems[201].difficulty"></component>
+             </div>
+        </div>
+         <div class="proof-block" :class="getDifficultyClass(202)">
+             <h3>Preuve de l'Action-Réaction ($\vec{F}_{2 \to 1} = - \vec{F}_{1 \to 2}$)</h3>
+             <div v-html="getProofHtml(202)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="202" v-model="proofItems[202].difficulty"></component>
+             </div>
+         </div>
+         <div class="proof-block" :class="getDifficultyClass(203)">
+              <h3>Principe de Superposition (Force)</h3>
+              <div v-html="getProofHtml(203)"></div>
+              <div class="difficulty-selector">
+                  <strong>Votre compréhension :</strong>
+                  <component :is="'difficulty-selector'" :item-id="203" v-model="proofItems[203].difficulty"></component>
+              </div>
+         </div>
+
+
+        <h2>3. Champ électrostatique $\vec{E}$ : expressions et propriétés de symétrie</h2>
+        <div class="proof-block" :class="getDifficultyClass(301)">
+             <h3>Définition et Unité du Champ $\vec{E}$</h3>
+             <div v-html="getProofHtml(301)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="301" v-model="proofItems[301].difficulty"></component>
+             </div>
+        </div>
+        <div class="proof-block" :class="getDifficultyClass(302)">
+             <h3>Champ $\vec{E}$ créé par une charge ponctuelle</h3>
+             <div v-html="getProofHtml(302)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="302" v-model="proofItems[302].difficulty"></component>
+             </div>
+        </div>
+        <div class="proof-block" :class="getDifficultyClass(303)">
+             <h3>Champ $\vec{E}$ créé par une distribution continue (Superposition)</h3>
+             <div v-html="getProofHtml(303)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="303" v-model="proofItems[303].difficulty"></component>
+             </div>
+        </div>
+        <div class="proof-block" :class="getDifficultyClass(304)">
+             <h3>Justification des propriétés de symétrie (Principe de Curie)</h3>
+             <div v-html="getProofHtml(304)"></div> <!-- Correction incluse ici -->
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="304" v-model="proofItems[304].difficulty"></component>
+             </div>
+        </div>
+
+
+        <h2>4. Circulation du champ $\vec{E}$ et potentiel $V$. Flux de $\vec{E}$ et théorème de Gauss</h2>
+         <div class="proof-block" :class="getDifficultyClass(401)">
+             <h3>Preuve du caractère conservatif de $\vec{E}$ ($\oint \vec{E} \cdot d\vec{l} = 0$)</h3>
+             <div v-html="getProofHtml(401)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="401" v-model="proofItems[401].difficulty"></component>
+             </div>
+         </div>
+         <div class="proof-block" :class="getDifficultyClass(402)">
+             <h3>Existence du potentiel $V$ et relation $\vec{E} = -\vec{\nabla} V$</h3>
+             <div v-html="getProofHtml(402)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="402" v-model="proofItems[402].difficulty"></component>
+             </div>
+         </div>
+         <div class="proof-block" :class="getDifficultyClass(403)">
+             <h3>Relation $V(B) - V(A) = - \int_A^B \vec{E} \cdot d\vec{l}$</h3>
+             <div v-html="getProofHtml(403)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="403" v-model="proofItems[403].difficulty"></component>
+             </div>
+         </div>
+         <div class="proof-block" :class="getDifficultyClass(404)">
+             <h3>Preuve du Théorème de Gauss ($\oint_{\mathcal{S}} \vec{E} \cdot d\vec{S} = Q_{int}/\epsilon_0$)</h3>
+             <div v-html="getProofHtml(404)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="404" v-model="proofItems[404].difficulty"></component>
+             </div>
+         </div>
+
+        <h2>5. Lignes de champ électrostatique et équipotentielles</h2>
+         <div class="proof-block" :class="getDifficultyClass(501)">
+             <h3>Propriétés des lignes de champ et équipotentielles</h3>
+             <div v-html="getProofHtml(501)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="501" v-model="proofItems[501].difficulty"></component>
+             </div>
+         </div>
+         <div class="proof-block" :class="getDifficultyClass(502)">
+             <h3>Preuve de l'orthogonalité lignes de champ / équipotentielles</h3>
+             <div v-html="getProofHtml(502)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="502" v-model="proofItems[502].difficulty"></component>
+             </div>
+         </div>
+         <div class="proof-block" :class="getDifficultyClass(503)">
+             <h3>Justification densité des équipotentielles $\propto ||\vec{E}||$</h3>
+             <div v-html="getProofHtml(503)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="503" v-model="proofItems[503].difficulty"></component>
+             </div>
+         </div>
+
+
+        <h2>6. Opérateurs vectoriels et théorèmes</h2>
+         <div class="proof-block" :class="getDifficultyClass(601)">
+             <h3>Définitions et théorèmes admis</h3>
+             <div v-html="getProofHtml(601)"></div>
+             <div class="difficulty-selector">
+                 <strong>Votre compréhension :</strong>
+                 <component :is="'difficulty-selector'" :item-id="601" v-model="proofItems[601].difficulty"></component>
+             </div>
+        </div>
+
+
+        <h2>7. Les relations fondamentales de l'électrostatique</h2>
+         <div class="proof-block" :class="getDifficultyClass(701)">
+              <h3>Dérivation des formes locales ($\vec{\nabla} \times \vec{E} = \vec{0}$ et $\vec{\nabla} \cdot \vec{E} = \rho/\epsilon_0$)</h3>
+              <div v-html="getProofHtml(701)"></div>
+              <div class="difficulty-selector">
+                  <strong>Votre compréhension :</strong>
+                  <component :is="'difficulty-selector'" :item-id="701" v-model="proofItems[701].difficulty"></component>
+              </div>
+         </div>
+         <div class="proof-block" :class="getDifficultyClass(702)">
+              <h3>Dérivation des équations de Poisson et de Laplace</h3>
+              <div v-html="getProofHtml(702)"></div>
+              <div class="difficulty-selector">
+                  <strong>Votre compréhension :</strong>
+                  <component :is="'difficulty-selector'" :item-id="702" v-model="proofItems[702].difficulty"></component>
+              </div>
+         </div>
+
+        <h2>8. Expressions intégrales du champ $\vec{E}$ et du potentiel $V$</h2>
+         <div class="proof-block" :class="getDifficultyClass(801)">
+              <h3>Dérivation du potentiel $V(M)$ créé par une charge ponctuelle $Q$</h3>
+              <div v-html="getProofHtml(801)"></div>
+              <div class="difficulty-selector">
+                  <strong>Votre compréhension :</strong>
+                  <component :is="'difficulty-selector'" :item-id="801" v-model="proofItems[801].difficulty"></component>
+              </div>
+         </div>
+         <div class="proof-block" :class="getDifficultyClass(802)">
+              <h3>Justification de l'expression intégrale de $V(M)$ (Superposition)</h3>
+              <div v-html="getProofHtml(802)"></div>
+              <div class="difficulty-selector">
+                  <strong>Votre compréhension :</strong>
+                  <component :is="'difficulty-selector'" :item-id="802" v-model="proofItems[802].difficulty"></component>
+              </div>
+         </div>
+
+        <h2>9. Méthodes de calcul des champs et potentiels électrostatiques</h2>
+         <div class="proof-block" :class="getDifficultyClass(901)">
+              <h3>Synthèse des Méthodes</h3>
+              <div v-html="getProofHtml(901)"></div>
+              <div class="difficulty-selector">
+                  <strong>Votre compréhension :</strong>
+                  <component :is="'difficulty-selector'" :item-id="901" v-model="proofItems[901].difficulty"></component>
+              </div>
+         </div>
+
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'vueProofsElectrostatiqueProgress'; // Clé localStorage
+
+        // === Data Structure for Proofs ===
+        // Using an object where keys are IDs for easier access
+        const proofData = {
+            101: { title: "Justification Densités et Intégrales", html: `
+                <p>Les concepts de quantification et de conservation de la charge sont des postulats fondamentaux.</p>
+                <p>Les densités $\\lambda, \\sigma, \\rho$ sont des <strong>définitions</strong> pour modéliser macroscopiquement.</p>
+                <p>Les intégrales $Q = \\int dq$ découlent de la définition de l'intégrale comme somme d'éléments infinitésimaux.</p>` },
+            201: { title: "Loi de Coulomb & Propriétés", html: `
+                <p>La loi $\\vec{F}_{1 \\to 2} = \\frac{1}{4 \\pi \\epsilon_0} \\frac{q_1 q_2}{r_{12}^2} \\vec{u}_{1 \\to 2}$ est une <strong>loi expérimentale</strong>.</p>
+                <p>Les propriétés (radiale, $1/r^2$, etc.) sont incluses dans la formule.</p>` },
+            202: { title: "Preuve de l'Action-Réaction", html: `
+                <p>Force de $q_2$ sur $q_1$ : $ \\vec{F}_{2 \\to 1} = \\frac{1}{4 \\pi \\epsilon_0} \\frac{q_2 q_1}{r_{21}^2} \\vec{u}_{2 \\to 1} $.</p>
+                <p>On a $r_{21} = r_{12}$ et $\\vec{u}_{2 \\to 1} = \\frac{\\vec{P_2 P_1}}{r_{21}} = \\frac{-\\vec{P_1 P_2}}{r_{12}} = - \\vec{u}_{1 \\to 2}$.</p>
+                <p>Donc, $ \\vec{F}_{2 \\to 1} = \\frac{1}{4 \\pi \\epsilon_0} \\frac{q_1 q_2}{r_{12}^2} (-\\vec{u}_{1 \\to 2}) = - \\vec{F}_{1 \\to 2}$.</p>
+                <p class="note">Conforme à la 3ème loi de Newton.</p>` },
+            203: { title: "Principe de Superposition (Force)", html: `<p>C'est un <strong>principe fondamental</strong> vérifié expérimentalement : l'interaction entre deux charges n'est pas affectée par les autres. La force totale est la somme vectorielle.</p>` },
+            301: { title: "Définition et Unité du Champ E", html: `<p>La relation $\\vec{E}(M) = \\frac{\\vec{F}_{source \\to q_{test}}}{q_{test}}$ est la <strong>définition</strong> du champ $\\vec{E}$.</p>` },
+            302: { title: "Champ E créé par une charge ponctuelle", html: `
+                <p>Force de $Q$ sur $q_{test}$ : $ \\vec{F}_{Q \\to q_{test}} = \\frac{1}{4 \\pi \\epsilon_0} \\frac{Q q_{test}}{r^2} \\vec{u}_r $.</p>
+                <p>Par définition : $ \\vec{E}(M) = \\frac{\\vec{F}_{Q \\to q_{test}}}{q_{test}} = \\frac{1}{q_{test}} ( \\frac{1}{4 \\pi \\epsilon_0} \\frac{Q q_{test}}{r^2} \\vec{u}_r ) = \\frac{1}{4 \\pi \\epsilon_0} \\frac{Q}{r^2} \\vec{u}_r $. </p>
+                <p class="note">Indépendant de $q_{test}$.</p>` },
+            303: { title: "Champ E par distribution continue (Superposition)", html: `
+                <p>Force totale sur $q_{test}$ : $\\vec{F}_{tot} = \\int_{Distr} d\\vec{F}$ avec $ d\\vec{F} = \\frac{dq \\, q_{test}}{4 \\pi \\epsilon_0 ||\\vec{PM}||^2} \\vec{u}_{P \\to M} $. </p>
+                <p>Champ total $\\vec{E}(M) = \\vec{F}_{tot} / q_{test} = \\int_{Distr} \\frac{d\\vec{F}}{q_{test}} = \\int_{Distr} d\\vec{E}(M)$. </p>
+                <p>Donc $ \\vec{E}(M) = \\int_{Distr} \\frac{dq}{4 \\pi \\epsilon_0 ||\\vec{PM}||^3} \\vec{PM} $.</p>` },
+            304: { title: "Justification des propriétés de symétrie (Principe de Curie)", html: `
+                <p>Le principe de Curie est un principe général. Appliquons-le :</p>
+                <ul>
+                    <li><strong class="statement">Plan de symétrie $\\Pi_s$ :</strong> Soit $M \\in \\Pi_s$.
+                        Considérons $dq$ en $P$ et $dq'=dq$ en $P'$ (symétrique de $P$/$\\Pi_s$). Soit $\\vec{r}=\\vec{PM}, \\vec{r}'=\\vec{P'M}$. Par symétrie, $r=r'$.
+                        Le champ du couple $(P, P')$ est $ d\\vec{E}_{couple} = \\frac{dq}{4 \\pi \\epsilon_0 r^3} (\\vec{r} + \\vec{r}') $.
+                        Le vecteur $\\vec{r} + \\vec{r}'$ est contenu dans $\\Pi_s$ (car $M, P, P'$ forment un triangle isocèle dont la base $PP'$ est $\\perp \\Pi_s$ et $M \\in \\Pi_s$).
+                        Si $P$ est dans $\\Pi_s$ ($P=P'$), alors $\\vec{r} = \\vec{PM}$ est dans $\\Pi_s$, et $d\\vec{E} = \\frac{dq}{4 \\pi \\epsilon_0 r^3} \\vec{r}$ est aussi dans $\\Pi_s$.
+                        En intégrant toutes ces contributions (couples ou points sur $\\Pi_s$), le champ total $\\vec{E}(M)$ est dans $\\Pi_s$.
+                    </li>
+                    <li><strong class="statement">Plan d'antisymétrie $\\Pi_a$ :</strong> Mêmes notations, mais $dq'=-dq$.
+                        $ d\\vec{E}_{couple} = \\frac{dq}{4 \\pi \\epsilon_0 r^3} (\\vec{r} - \\vec{r}') = \\frac{dq}{4 \\pi \\epsilon_0 r^3} \\vec{P'P} $.
+                        Le vecteur $\\vec{P'P}$ est orthogonal à $\\Pi_a$.
+                        Si $P \\in \\Pi_a$, alors $dq = -dq = 0$.
+                        Le champ total $\\vec{E}(M)$ pour $M \\in \\Pi_a$ est donc orthogonal à $\\Pi_a$.
+                    </li>
+                    <li><strong class="statement">Invariance translation/rotation :</strong> Si $\\rho$ est invariant, $\\vec{E}$ doit l'être aussi. Si $\\rho$ ne dépend pas d'une coordonnée, $\\vec{E}$ ne peut pas en dépendre non plus.</li>
+                </ul>` }, // Correction intégrée ici
+             401: { title: "Preuve du caractère conservatif de E", html: `
+                <p>Pour une charge ponctuelle $Q$ : $\\vec{E}_Q = \\frac{Q}{4 \\pi \\epsilon_0 r^2} \\vec{u}_r$.</p>
+                <p>En sphériques, $d\\vec{l} = dr \\vec{u}_r + r d\\theta \\vec{u}_\\theta + r \\sin\\theta d\\phi \\vec{u}_\\phi$.</p>
+                <p>$\\vec{E}_Q \\cdot d\\vec{l} = \\frac{Q}{4 \\pi \\epsilon_0 r^2} dr = - d(\\frac{Q}{4 \\pi \\epsilon_0 r})$. C'est une différentielle exacte.</p>
+                <p>$\\int_A^B \\vec{E}_Q \\cdot d\\vec{l} = - [\\frac{Q}{4 \\pi \\epsilon_0 r}]_A^B$.</p>
+                <p>Sur une courbe fermée ($A=B$), l'intégrale est nulle : $\\oint \\vec{E}_Q \\cdot d\\vec{l} = 0$.</p>
+                <p>Par superposition, $\\oint \\vec{E}_{tot} \\cdot d\\vec{l} = \\oint (\\sum_i \\vec{E}_{Q_i}) \\cdot d\\vec{l} = \\sum_i (\\oint \\vec{E}_{Q_i} \\cdot d\\vec{l}) = 0$.</p>` },
+            402: { title: "Existence de V et relation E = -grad V", html: `
+                <p>Théorème mathématique : si $\\oint \\vec{A} \\cdot d\\vec{l} = 0$ pour tout contour fermé, alors $\\vec{A}$ dérive d'un potentiel scalaire $f$ : $\\vec{A} = \\vec{\\nabla} f$.</p>
+                <p>Comme $\\oint \\vec{E} \\cdot d\\vec{l} = 0$, il existe $V$ tel que $\\vec{E} = -\\vec{\\nabla} V$. (Le signe '-' est une convention).</p>
+                <p>$V$ est défini à une constante près.</p>` },
+            403: { title: "Relation V(B) - V(A)", html: `
+                <p>Par définition mathématique : $\\int_A^B \\vec{\\nabla} V \\cdot d\\vec{l} = V(B) - V(A)$.</p>
+                <p>Comme $\\vec{\\nabla} V = -\\vec{E}$, on a $\\int_A^B (-\\vec{E}) \\cdot d\\vec{l} = V(B) - V(A)$.</p>
+                <p>Donc $V(B) - V(A) = - \\int_A^B \\vec{E} \\cdot d\\vec{l}$.</p>` },
+            404: { title: "Preuve du Théorème de Gauss", html: `
+                <p>Pour une charge ponctuelle $Q$ en $O$. Flux $d\\Phi = \\vec{E}_Q \\cdot d\\vec{S} = \\frac{Q}{4 \\pi \\epsilon_0 r^2} \\vec{u}_r \\cdot d\\vec{S}$.</p>
+                <p>On reconnaît l'angle solide $d\\Omega = \\frac{\\vec{u}_r \\cdot d\\vec{S}}{r^2}$. Donc $d\\Phi = \\frac{Q}{4 \\pi \\epsilon_0} d\\Omega$.</p>
+                <p>Flux total $\\Phi = \\oint_{\\mathcal{S}} d\\Phi = \\frac{Q}{4 \\pi \\epsilon_0} \\oint_{\\mathcal{S}} d\\Omega$.</p>
+                <p>Si $Q$ est intérieur à $\\mathcal{S}$, $\\oint d\\Omega = 4\\pi \\implies \\Phi = Q_{int}/\\epsilon_0$.</p>
+                <p>Si $Q$ est extérieur à $\\mathcal{S}$, $\\oint d\\Omega = 0 \\implies \\Phi = 0 = Q_{int}/\\epsilon_0$.</p>
+                <p>Par superposition, le théorème est vrai pour toute distribution.</p>` },
+            501: { title: "Propriétés lignes de champ / équipotentielles", html: `
+                <ul>
+                    <li><strong class="statement">Non-croisement :</strong> Sinon $\\vec{E}$ aurait 2 directions en un point.</li>
+                    <li><strong class="statement">Travail nul sur équipotentielle :</strong> $W_{A \\to B} = -q (V(B) - V(A))$. Si $V(A)=V(B)$, $W=0$.</li>
+                </ul>` },
+             502: { title: "Preuve de l'orthogonalité", html: `
+                <p>Déplacement $d\\vec{l}$ sur une équipotentielle $\\implies dV = 0$.</p>
+                <p>Or $dV = \\vec{\\nabla} V \\cdot d\\vec{l} = (-\\vec{E}) \\cdot d\\vec{l}$.</p>
+                <p>Donc $-\\vec{E} \\cdot d\\vec{l} = 0$, soit $\\vec{E} \\perp d\\vec{l}$ pour tout $d\\vec{l}$ tangent à l'équipotentielle.</p>
+                <p>Les lignes de champ (tangentes à $\\vec{E}$) sont donc perpendiculaires aux équipotentielles.</p>` },
+             503: { title: "Justification densité équipotentielles", html: `
+                 <p>Soit $\\Delta n$ la distance normale entre $V$ et $V+\\Delta V$.</p>
+                 <p>$\\Delta V \\approx |\\vec{\\nabla} V \\cdot (\\Delta n \\vec{n})| = |(-\\vec{E}) \\cdot (\\Delta n \\vec{n})| = ||\\vec{E}|| \\Delta n$ (si $\\vec{n}$ aligné avec $\\vec{E}$).</p>
+                 <p>Pour $\\Delta V$ fixé, $||\\vec{E}||$ grand $\\implies \\Delta n$ petit (équipotentielles resserrées).</p>` },
+             601: { title: "Opérateurs et théorèmes admis", html: `
+                 <p>Les opérateurs grad, div, rot, laplacien sont des définitions mathématiques.</p>
+                 <p>Les théorèmes de Stokes et Green-Ostrogradsky sont admis (vus en maths).</p>` },
+             701: { title: "Dérivation formes locales (Maxwell statique)", html: `
+                <ul>
+                    <li><strong class="statement">Rot E = 0 :</strong> $\\oint \\vec{E} \\cdot d\\vec{l} = 0$. Par Stokes, $\\iint_{\\mathcal{S}} (\\vec{\\nabla} \\times \\vec{E}) \\cdot d\\vec{S} = 0$. Vrai pour tout $\\mathcal{S} \\implies \\vec{\\nabla} \\times \\vec{E} = \\vec{0}$.</li>
+                    <li><strong class="statement">Div E = rho/eps0 :</strong> $\\oint \\vec{E} \\cdot d\\vec{S} = Q_{int}/\\epsilon_0 = \\iiint \\rho/\\epsilon_0 d\\tau$. Par Ostrogradsky, $\\oint \\vec{E} \\cdot d\\vec{S} = \\iiint (\\vec{\\nabla} \\cdot \\vec{E}) d\\tau$. Vrai pour tout $\\mathcal{V} \\implies \\vec{\\nabla} \\cdot \\vec{E} = \\rho/\\epsilon_0$.</li>
+                </ul>` },
+            702: { title: "Dérivation équations Poisson / Laplace", html: `
+                 <p>On combine $\\vec{\\nabla} \\cdot \\vec{E} = \\rho/\\epsilon_0$ et $\\vec{E} = -\\vec{\\nabla} V$.</p>
+                 <p>$\\vec{\\nabla} \\cdot (-\\vec{\\nabla} V) = \\rho/\\epsilon_0 \\implies -\\Delta V = \\rho/\\epsilon_0$.</p>
+                 <p>Soit $\\Delta V = -\\rho/\\epsilon_0$ (Poisson).</p>
+                 <p>Si $\\rho = 0$, alors $\\Delta V = 0$ (Laplace).</p>` },
+            801: { title: "Dérivation potentiel V par charge ponctuelle", html: `
+                 <p>$V(M) - V(\\infty) = - \\int_\\infty^M \\vec{E}_Q \\cdot d\\vec{l}$. Avec $V(\\infty)=0$.</p>
+                 <p>$V(M) = \\int_M^\\infty \\vec{E}_Q \\cdot d\\vec{l} = \\int_{r_M}^\\infty \\frac{Q}{4 \\pi \\epsilon_0 r'^2} dr'$.</p>
+                 <p>$V(M) = \\frac{Q}{4 \\pi \\epsilon_0} [ -1/r' ]_{r_M}^\\infty = \\frac{Q}{4 \\pi \\epsilon_0} (0 - (-1/r_M))$.</p>
+                 <p>$V(M) = \\frac{1}{4 \\pi \\epsilon_0} \\frac{Q}{r_M}$.</p>` },
+            802: { title: "Justification expression intégrale de V", html: `
+                 <p>Le potentiel est un scalaire, le principe de superposition s'applique.</p>
+                 <p>$dV(M) = \\frac{dq}{4 \\pi \\epsilon_0 ||\\vec{PM}||}$ (potentiel d'une charge ponctuelle $dq$).</p>
+                 <p>$V(M) = \\int_{Distr} dV(M) = \\int_{Distr} \\frac{dq}{4 \\pi \\epsilon_0 ||\\vec{PM}||}$.</p>` },
+            901: { title: "Synthèse des Méthodes", html: `
+                 <p>Cette section récapitule les méthodes découlant des principes précédents :</p>
+                 <ol>
+                    <li>Intégration directe (basée sur superposition de Coulomb).</li>
+                    <li>Théorème de Gauss (application directe du théorème).</li>
+                    <li>Équations de Poisson/Laplace (basées sur les formes locales de Maxwell).</li>
+                 </ol>
+                 <p>Pas de nouvelles preuves ici.</p>` }
+        };
+
+        // === Vue Component for Difficulty Selector ===
+        Vue.component('difficulty-selector', {
+            props: ['itemId', 'value'], // value sera lié par v-model
+            template: `
+                <div>
+                    <label :for="'diff-' + itemId + '-easy'">
+                        <input type="radio" :id="'diff-' + itemId + '-easy'" :name="'difficulty-' + itemId" value="easy" :checked="value === 'easy'" @change="$emit('input', 'easy')"> Facile
+                    </label>
+                    <label :for="'diff-' + itemId + '-medium'">
+                        <input type="radio" :id="'diff-' + itemId + '-medium'" :name="'difficulty-' + itemId" value="medium" :checked="value === 'medium'" @change="$emit('input', 'medium')"> Moyen
+                    </label>
+                    <label :for="'diff-' + itemId + '-difficult'">
+                        <input type="radio" :id="'diff-' + itemId + '-difficult'" :name="'difficulty-' + itemId" value="difficult" :checked="value === 'difficult'" @change="$emit('input', 'difficult')"> Difficile
+                    </label>
+                    <label :for="'diff-' + itemId + '-confused'">
+                        <input type="radio" :id="'diff-' + itemId + '-confused'" :name="'difficulty-' + itemId" value="confused" :checked="value === 'confused'" @change="$emit('input', 'confused')"> Pas compris
+                    </label>
+                    <button v-if="value" @click="$emit('input', null)" title="Effacer l'évaluation">X</button>
+                </div>
+            `
+        });
+
+        // === Main Vue Instance ===
+        new Vue({
+            el: '#app',
+            data: {
+                baseProofData: proofData,
+                proofItems: {}, // Object to hold reactive state { id: { title, html, difficulty } }
+            },
+            watch: {
+                // Watch for changes in difficulties to save progress
+                proofItems: {
+                    handler(newItemsState) {
+                        this.saveProgress(newItemsState);
+                    },
+                    deep: true
+                }
+            },
+            methods: {
+                initializeState() {
+                    const savedProgress = localStorage.getItem(STORAGE_KEY);
+                    let progressMap = {}; // { id: difficulty }
+                    if (savedProgress) {
+                        try {
+                            const parsed = JSON.parse(savedProgress);
+                            // Ensure it's an object (or convert from old array format if needed)
+                            if(Array.isArray(parsed)) { // Compatibility with potential old format
+                                parsed.forEach(p => { if(p.id) progressMap[p.id] = p.difficulty; });
+                            } else if (typeof parsed === 'object' && parsed !== null) {
+                                progressMap = parsed;
+                            }
+                        } catch (e) {
+                            console.error("Erreur chargement progression:", e);
+                            localStorage.removeItem(STORAGE_KEY);
+                        }
+                    }
+
+                    // Build the reactive proofItems object
+                    let reactiveItems = {};
+                    for (const id in this.baseProofData) {
+                        reactiveItems[id] = {
+                            ...this.baseProofData[id], // Copy title and html
+                            difficulty: progressMap[id] || null // Load saved difficulty or default to null
+                        };
+                    }
+                     // Use Vue.set or replace the object to ensure reactivity if adding keys later,
+                     // but here we initialize it completely, so direct assignment is fine.
+                     this.proofItems = reactiveItems;
+                },
+
+                saveProgress(itemsState) {
+                    // Save only the difficulties mapped by ID
+                    const progressToSave = {};
+                    for (const id in itemsState) {
+                        if (itemsState[id].difficulty !== null) {
+                            progressToSave[id] = itemsState[id].difficulty;
+                        }
+                    }
+                    try {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(progressToSave));
+                    } catch (e) {
+                        console.error("Erreur sauvegarde progression:", e);
+                    }
+                },
+
+                clearAllProgress() {
+                    if (confirm("Réinitialiser toutes vos évaluations de compréhension ?")) {
+                        localStorage.removeItem(STORAGE_KEY);
+                        // Re-initialize state by resetting difficulties
+                        let clearedItems = {};
+                        for (const id in this.baseProofData) {
+                             clearedItems[id] = { ...this.baseProofData[id], difficulty: null };
+                        }
+                        this.proofItems = clearedItems; // This will trigger the watcher to save the cleared state
+                        alert("Évaluations réinitialisées.");
+                    }
+                },
+
+                getProofHtml(id) {
+                    // Helper to get HTML, useful if proofItems wasn't fully initialized yet
+                    return this.proofItems[id] ? this.proofItems[id].html : '';
+                },
+
+                 getDifficultyClass(id) {
+                     const item = this.proofItems[id];
+                     return item && item.difficulty ? 'difficulty-' + item.difficulty : '';
+                 },
+
+                renderKatex() {
+                    this.$nextTick(() => {
+                        if (window.renderMathInElement) {
+                            renderMathInElement(this.$el, {
+                                delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ],
+                                throwOnError: false
+                            });
+                        } else { console.warn("KaTeX not loaded yet."); }
+                    });
+                }
+            },
+            mounted() {
+                this.initializeState();
+                this.renderKatex();
+            },
+            updated() {
+                // Re-render KaTeX if the DOM updates (though less likely needed here than Q/A toggle)
+                this.renderKatex();
+            }
+        });
+    </script>
+
+</body>
+</html>
