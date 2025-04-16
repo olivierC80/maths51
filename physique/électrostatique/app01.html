@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Électrostatique - Cours & Auto-Évaluation</title>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1tBCyoTUqwOrfPVCafEPWtFOsqrz" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --easy-color: #5cb85c;
+            --medium-color: #f0ad4e;
+            --difficult-color: #d9534f;
+            --confused-color: #777;
+            --light-bg: #f9f9f9;
+            --border-color: #e0e0e0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0; /* No margin for full width */
+            background-color: var(--light-bg);
+            color: #333;
+        }
+        .app-container {
+            max-width: 900px; /* Max width for larger screens */
+            margin: 0 auto; /* Center on larger screens */
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-height: 100vh;
+        }
+        /* Navigation */
+        .app-nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: var(--primary-color);
+            padding: 10px 0;
+            position: sticky; /* Keep nav on top */
+            top: 0;
+            z-index: 100;
+        }
+        .app-nav button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+        .app-nav button.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+        }
+        .app-nav button:hover:not(.active) {
+             background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 15px;
+        }
+        @media (min-width: 600px) {
+            .content-area {
+                padding: 20px 30px;
+            }
+        }
+
+        /* Course Section Styling */
+        .course-section {
+            margin-bottom: 2em;
+            padding-bottom: 1em;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .course-section h2, .course-section h3 {
+            color: var(--primary-color);
+            display: flex; /* Use flexbox for title and indicator */
+            justify-content: space-between; /* Push indicator to the right */
+            align-items: center;
+        }
+        .difficulty-indicator {
+            font-size: 0.8em;
+            padding: 3px 8px;
+            border-radius: 10px;
+            color: white;
+            margin-left: 10px; /* Space from title */
+            white-space: nowrap; /* Prevent wrapping */
+        }
+        .difficulty-indicator-easy { background-color: var(--easy-color); }
+        .difficulty-indicator-medium { background-color: var(--medium-color); }
+        .difficulty-indicator-difficult { background-color: var(--difficult-color); }
+        .difficulty-indicator-confused { background-color: var(--confused-color); }
+
+        /* Q&A Section Styling */
+        .qa-controls {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .qa-controls button {
+            padding: 8px 12px;
+            margin: 5px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .qa-controls button:hover {
+            background-color: #5a6268;
+        }
+        .qa-controls button.clear {
+             background-color: var(--difficult-color);
+        }
+         .qa-controls button.clear:hover {
+             background-color: #c82333;
+        }
+
+        .qa-item {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+            border-left-width: 5px; /* Prepare space for colored border */
+            border-left-color: transparent; /* Default transparent */
+        }
+        .qa-item.difficulty-easy { border-left-color: var(--easy-color); }
+        .qa-item.difficulty-medium { border-left-color: var(--medium-color); }
+        .qa-item.difficulty-difficult { border-left-color: var(--difficult-color); }
+        .qa-item.difficulty-confused { border-left-color: var(--confused-color); }
+
+        .question {
+            background-color: #e7f1ff;
+            padding: 12px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+        }
+        .question::after {
+            content: '+'; /* Use unicode characters for better rendering */
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: var(--primary-color);
+            transition: transform 0.2s ease-in-out;
+        }
+        .question.active::after {
+            content: '−';
+            transform: translateY(-50%) rotate(180deg);
+        }
+        .answer {
+            padding: 15px;
+            background-color: #fdfdfd;
+            border-top: 1px solid #eee;
+        }
+        .difficulty-selector {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+            font-size: 0.9em;
+        }
+        .difficulty-selector strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .difficulty-selector label {
+            margin-right: 10px;
+            cursor: pointer;
+            display: inline-block; /* Better spacing */
+            margin-bottom: 5px; /* Spacing on mobile */
+        }
+        .difficulty-selector input[type="radio"] {
+            margin-right: 4px;
+            accent-color: var(--primary-color);
+        }
+        .difficulty-selector button {
+            margin-left: 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            background: none; border: 1px solid #ccc; color: #555;
+            padding: 2px 5px; border-radius: 3px; vertical-align: middle;
+        }
+         .difficulty-selector button:hover { background: #eee; }
+
+        /* KaTeX and Code styling */
+        .katex-display { margin: 0.8em 0; padding: 0.5em; background-color: #f0f0f5; border-radius: 4px; overflow-x: auto; }
+        code { background-color: #eee; padding: 0.2em 0.4em; border-radius: 3px; font-family: 'Courier New', Courier, monospace; }
+        h1, h2, h3 { color: var(--primary-color); }
+        h1 { text-align: center; margin-bottom: 1em; font-size: 1.5em; }
+        h2 { margin-top: 1.5em; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+
+        /* Transitions */
+        .fade-enter-active, .fade-leave-active { transition: opacity .4s; }
+        .fade-enter, .fade-leave-to { opacity: 0; }
+    </style>
+</head>
+<body>
+    <div id="app" class="app-container">
+        <nav class="app-nav">
+            <button @click="setView('cours')" :class="{ active: activeView === 'cours' }">Cours</button>
+            <button @click="setView('qa')" :class="{ active: activeView === 'qa' }">Q/A & Évaluation</button>
+        </nav>
+
+        <div class="content-area">
+            <!-- Course View -->
+            <div v-if="activeView === 'cours'">
+                <h1>Cours d'Électrostatique</h1>
+                <div v-for="section in courseContent" :key="section.id" class="course-section">
+                    <h2 :id="section.id">
+                        <span>{{ section.title }}</span>
+                        <span v-if="getCourseSectionDifficultyClass(section.id)"
+                              :class="['difficulty-indicator', getCourseSectionDifficultyClass(section.id)]">
+                            {{ getCourseSectionDifficultyText(section.id) }}
+                        </span>
+                    </h2>
+                    <div v-html="section.html"></div>
+                </div>
+            </div>
+
+            <!-- Q&A View -->
+            <div v-if="activeView === 'qa'">
+                <h1>Questions-Réponses & Auto-Évaluation</h1>
+
+                <div class="qa-controls">
+                    <button @click="openAll">Tout Ouvrir</button>
+                    <button @click="closeAll">Tout Fermer</button>
+                    <button @click="clearAllProgress" class="clear">Réinitialiser Progression</button>
+                </div>
+
+                <p>Cliquez sur une question, lisez la réponse, et évaluez votre compréhension. Votre progression est sauvegardée.</p>
+
+                <div v-for="item in qaItems" :key="item.id"
+                     :class="['qa-item', item.difficulty ? 'difficulty-' + item.difficulty : '']">
+
+                    <div class="question" @click="toggleAnswer(item)" :class="{ active: item.isOpen }">
+                        <span v-html="item.question"></span>
+                    </div>
+
+                     <transition name="fade">
+                        <div class="answer" v-show="item.isOpen">
+                            <div v-html="item.answer"></div>
+                            <div class="difficulty-selector">
+                                <strong>Évaluation :</strong>
+                                <div>
+                                    <label :for="'diff-' + item.id + '-easy'">
+                                        <input type="radio" :id="'diff-' + item.id + '-easy'" :name="'difficulty-' + item.id" value="easy" v-model="item.difficulty"> Facile
+                                    </label>
+                                    <label :for="'diff-' + item.id + '-medium'">
+                                        <input type="radio" :id="'diff-' + item.id + '-medium'" :name="'difficulty-' + item.id" value="medium" v-model="item.difficulty"> Moyen
+                                    </label>
+                                    <label :for="'diff-' + item.id + '-difficult'">
+                                        <input type="radio" :id="'diff-' + item.id + '-difficult'" :name="'difficulty-' + item.id" value="difficult" v-model="item.difficulty"> Difficile
+                                    </label>
+                                    <label :for="'diff-' + item.id + '-confused'">
+                                        <input type="radio" :id="'diff-' + item.id + '-confused'" :name="'difficulty-' + item.id" value="confused" v-model="item.difficulty"> Pas compris
+                                    </label>
+                                     <button v-if="item.difficulty" @click="item.difficulty = null" title="Effacer l'évaluation">X</button>
+                                </div>
+                            </div>
+                        </div>
+                     </transition>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY_QA = 'vueQaElectrostatiqueProgress'; // Clé pour localStorage Q&A
+        const STORAGE_KEY_VIEW = 'vueQaElectrostatiqueActiveView'; // Clé pour vue active
+
+        // Remplacez les [...] par le contenu HTML réel du cours et des Q/A
+        const courseData = [
+            { id: 's1', title: '1. Charge électrique. Densités de charge.', html: `
+                <p>La charge électrique est une propriété fondamentale [...]. Elle est quantifiée ($e \\approx 1.602 \\times 10^{-19}$ C) et conservée.</p>
+                <p>Densités continues :</p>
+                <ul>
+                    <li>Linéique $\\lambda$ (C/m): $dq = \\lambda dl$</li>
+                    <li>Surfacique $\\sigma$ (C/m²): $dq = \\sigma dS$</li>
+                    <li>Volumique $\\rho$ (C/m³): $dq = \\rho d\\tau$</li>
+                </ul>
+                <p>Charge totale $Q = \\int dq$.</p>
+            `},
+            { id: 's2', title: '2. Force d\'interaction : loi de Coulomb', html: `
+                <p>Force de $q_1$ sur $q_2$ :</p>
+                $$ \\vec{F}_{1 \\to 2} = \\frac{1}{4 \\pi \\epsilon_0} \\frac{q_1 q_2}{r_{12}^2} \\vec{u}_{1 \\to 2} $$
+                <p>Propriétés : radiale, $1/r^2$, proportionnelle aux charges, action/réaction.</p>
+                <p><strong>Principe de superposition :</strong> La force totale est la somme vectorielle des forces individuelles.</p>
+                $$ \\vec{F}_{tot \\to q} = \\sum_{i} \\vec{F}_{i \\to q} $$
+            `},
+            { id: 's3', title: '3. Champ électrostatique E : expressions et symétries', html: `
+                <p>Définition : $\\vec{E}(M) = \\frac{\\vec{F}_{source \\to q_{test}}}{q_{test}}$ (N/C ou V/m).</p>
+                <p>Champ par charge ponctuelle $Q$ en $O$: $ \\vec{E}(M) = \\frac{1}{4 \\pi \\epsilon_0} \\frac{Q}{r^2} \\vec{u}_r $.</p>
+                <p>Champ par distribution continue (superposition) :</p>
+                $$ \\vec{E}(M) = \\int_{Distr} \\frac{dq}{4 \\pi \\epsilon_0 ||\\vec{PM}||^3} \\vec{PM} $$
+                <p><strong>Symétries (Principe de Curie) :</strong> Le champ $\\vec{E}$ hérite des symétries de $\\rho$. Un plan de symétrie (antisymétrie) pour $\\rho$ est un plan de symétrie (antisymétrie) pour $\\vec{E}$.</p>
+            `},
+            { id: 's4', title: '4. Circulation de E, potentiel V. Flux de E, théorème de Gauss', html: `
+                <p>Circulation : $\\mathcal{C}_{A \\to B}(\\vec{E}) = \\int_A^B \\vec{E} \\cdot d\\vec{l}$.</p>
+                <p>Champ conservatif : $ \\oint_{\\mathcal{C}} \\vec{E} \\cdot d\\vec{l} = 0 $. Implique existence du potentiel $V$.</p>
+                <p>Potentiel $V$ : $\\vec{E} = - \\vec{\\nabla} V$. $V(B) - V(A) = - \\int_A^B \\vec{E} \\cdot d\\vec{l}$.</p>
+                <p>Flux : $\\Phi_{\\mathcal{S}}(\\vec{E}) = \\iint_{\\mathcal{S}} \\vec{E} \\cdot d\\vec{S}$.</p>
+                <p><strong>Théorème de Gauss :</strong> Pour une surface fermée $\\mathcal{S}$ :</p>
+                $$ \\oint_{\\mathcal{S}} \\vec{E} \\cdot d\\vec{S} = \\frac{Q_{int}}{\\epsilon_0} $$
+                <p>Utile pour les hautes symétries.</p>
+            `},
+            { id: 's5', title: '5. Lignes de champ et équipotentielles', html: `
+                <p><strong>Lignes de champ :</strong> Courbes tangentes à $\\vec{E}$ en tout point. Orientées de + vers -. Densité $\\propto ||\\vec{E}||$. Ne se croisent pas.</p>
+                <p><strong>Équipotentielles ($V=Cste$) :</strong> Surfaces (ou lignes en 2D) où $V$ est constant. Toujours <strong>perpendiculaires</strong> aux lignes de champ. $\\Delta W = -q \\Delta V = 0$ pour déplacement sur une équipotentielle.</p>
+            `},
+            { id: 's6', title: '6. Opérateurs vectoriels et théorèmes', html: `
+                <ul>
+                    <li>Gradient: $\\vec{\\nabla} f$. $\\vec{E} = -\\vec{\\nabla} V$.</li>
+                    <li>Divergence: $\\vec{\\nabla} \\cdot \\vec{A}$.</li>
+                    <li>Rotationnel: $\\vec{\\nabla} \\times \\vec{A}$.</li>
+                    <li>Laplacien: $\\Delta f = \\vec{\\nabla} \\cdot (\\vec{\\nabla} f)$.</li>
+                </ul>
+                <p>Théorème de Stokes: $\\oint_{\\mathcal{C}} \\vec{A} \\cdot d\\vec{l} = \\iint_{\\mathcal{S}} (\\vec{\\nabla} \\times \\vec{A}) \\cdot d\\vec{S}$.</p>
+                <p>Théorème d'Ostrogradsky: $\\oint_{\\mathcal{S}} \\vec{A} \\cdot d\\vec{S} = \\iiint_{\\mathcal{V}} (\\vec{\\nabla} \\cdot \\vec{A}) \\, d\\tau$.</p>
+            `},
+            { id: 's7', title: '7. Relations fondamentales de l\'électrostatique', html: `
+                <p>Formes intégrales : $\\oint \\vec{E} \\cdot d\\vec{l} = 0$ et $\\oint \\vec{E} \\cdot d\\vec{S} = Q_{int}/\\epsilon_0$.</p>
+                <p><strong>Formes locales (Maxwell statique) :</strong></p>
+                <ul>
+                    <li>$\\boxed{\\vec{\\nabla} \\times \\vec{E} = \\vec{0}}$</li>
+                    <li>$\\boxed{\\vec{\\nabla} \\cdot \\vec{E} = \\frac{\\rho}{\\epsilon_0}}$ (Maxwell-Gauss)</li>
+                </ul>
+                <p>Équation de Poisson: $\\boxed{\\Delta V = -\\frac{\\rho}{\\epsilon_0}}$.</p>
+                <p>Équation de Laplace (si $\\rho=0$): $\\boxed{\\Delta V = 0}$.</p>
+             `},
+             { id: 's8', title: '8. Expressions intégrales de E et V', html: `
+                <p>Potentiel par charge $Q$ ($V(\\infty)=0$): $ V(M) = \\frac{1}{4 \\pi \\epsilon_0} \\frac{Q}{r} $.</p>
+                <p>Potentiel par distribution ($V(\\infty)=0$):</p>
+                $$ V(M) = \\int_{Distr} \\frac{dq}{4 \\pi \\epsilon_0 ||\\vec{PM}||} $$
+                <p>Champ par distribution :</p>
+                 $$ \\vec{E}(M) = \\int_{Distr} \\frac{dq}{4 \\pi \\epsilon_0 ||\\vec{PM}||^3} \\vec{PM} $$
+             `},
+             { id: 's9', title: '9. Méthodes de calcul', html: `
+                <ol>
+                    <li><strong>Intégration directe :</strong> Calculer $V$ (scalaire) puis $\\vec{E} = -\\vec{\\nabla} V$, ou calculer $\\vec{E}$ (vectoriel) directement. Général mais parfois complexe.</li>
+                    <li><strong>Théorème de Gauss :</strong> Pour hautes symétries (sphère, cylindre $\\infty$, plan $\\infty$). Trouver $||\vec{E}||$ puis $V$. Très efficace si applicable.</li>
+                    <li><strong>Équations de Poisson/Laplace :</strong> Résoudre $\\Delta V = -\\rho/\\epsilon_0$ ou $\\Delta V = 0$ avec conditions aux limites. Plus avancé.</li>
+                </ol>
+             `}
+        ];
+
+        const qaData = [
+            { id: 1, question: `Quelles sont les trois types de densités de charge [...]?`, answer: `<p>[...]</p><ul><li>$\\lambda$ (C/m) [...]</li><li>$\\sigma$ (C/m²) [...]</li><li>$\\rho$ (C/m³) [...]</li></ul>` },
+            { id: 2, question: `Énoncez la loi de Coulomb [...]?`, answer: `<p>[...]</p>$$ \\vec{F}_{1 \\to 2} = \\frac{1}{4 \\pi \\epsilon_0} \\frac{q_1 q_2}{r_{12}^2} \\vec{u}_{1 \\to 2} $$<p>[...]</p>` },
+            { id: 3, question: `Qu'est-ce que le principe de superposition [...]?`, answer: `<p>[...] somme vectorielle [...]</p>$$ \\vec{F}_{tot \\to q} = \\sum_{i} \\vec{F}_{i \\to q} $$<p>[...]</p>` },
+            { id: 4, question: `Comment définit-on le champ $\\vec{E}$ [...]?`, answer: `<p>[...] $\\vec{E}(M) = \\frac{\\vec{F}_{source \\to q_{test}}}{q_{test}}$ [...] (N/C ou V/m).</p>` },
+            { id: 5, question: `Quelle est l'expression du champ $\\vec{E}$ créé par une distribution volumique $\\rho$ ?`, answer: `<p>[...]</p>$$ \\vec{E}(M) = \\iiint_{\\mathcal{V}} \\frac{\\rho(P) d\\tau_P}{4 \\pi \\epsilon_0 ||\\vec{PM}||^3} \\vec{PM} $$<p>[...]</p>` },
+            { id: 6, question: `Qu'implique le principe de Curie pour $\\vec{E}$ ?`, answer: `<p>[...] symétries causes $\\rightarrow$ effets. [...]</p>` },
+            { id: 7, question: `Pourquoi $\\vec{E}$ est conservatif [...]?`, answer: `<p>[...] $\\oint \\vec{E} \\cdot d\\vec{l} = 0$. [...] $\\vec{E} = - \\vec{\\nabla} V$. [...]</p>` },
+            { id: 8, question: `Énoncez le théorème de Gauss [...]?`, answer: `<p>[...] flux à travers surface fermée [...]</p>$$ \\oint_{\\mathcal{S}} \\vec{E} \\cdot d\\vec{S} = \\frac{Q_{int}}{\\epsilon_0} $$<p>[...]</p>` },
+            { id: 9, question: `Quand le théorème de Gauss est-il utile [...]?`, answer: `<p>[...] hautes symétries (sphérique, cylindrique $\\infty$, plan $\\infty$) [...] simplifie $\\oint \\vec{E} \\cdot d\\vec{S}$.</p>` },
+            { id: 10, question: `Relation lignes de champ / équipotentielles ?`, answer: `<p>[...] toujours <strong>orthogonales</strong>. [...] $\\vec{E} = -\\vec{\\nabla} V$ [...]</p>` },
+            { id: 11, question: `Quelles sont les 2 équations locales fondamentales [...]?`, answer: `<p>[...]</p><ul><li>$\\vec{\\nabla} \\cdot \\vec{E} = \\rho/\\epsilon_0$ (Maxwell-Gauss)</li><li>$\\vec{\\nabla} \\times \\vec{E} = \\vec{0}$ (Conservatif)</li></ul>` },
+            { id: 12, question: `Équation de Poisson / Laplace ?`, answer: `<p>Poisson : $\\Delta V = - \\rho/\\epsilon_0$. [...] Laplace (si $\\rho=0$) : $\\Delta V = 0$.</p>` },
+            { id: 13, question: `Utilité théorèmes Stokes / Ostrogradsky ?`, answer: `<p>[...] passer d'intégral $\\leftrightarrow$ local. Stokes $\\rightarrow (\\nabla \\times E = 0)$, Ostrogradsky $\\rightarrow (\\nabla \\cdot E = \\rho/\\epsilon_0)$.</p>` },
+            { id: 14, question: `Expression intégrale de $V(M)$ par $\\sigma$ ?`, answer: `<p>[...] ($V(\\infty)=0$)</p>$$ V(M) = \\iint_{\\mathcal{S}} \\frac{\\sigma(P) dS_P}{4 \\pi \\epsilon_0 ||\\vec{PM}||} $$<p>[...]</p>` },
+            { id: 15, question: `Citez 3 méthodes de calcul E et V.`, answer: `<p>[...]</p><ol><li>Intégration directe</li><li>Théorème de Gauss (symétries)</li><li>Éqs Poisson/Laplace (conditions limites)</li></ol>` }
+        ];
+
+        // Mapping : ID Section Cours -> Array [IDs Q/A associées]
+        const courseQaRelationMapping = {
+          's1': [1],
+          's2': [2, 3],
+          's3': [4, 5, 6],
+          's4': [7, 8, 9],
+          's5': [10],
+          's6': [13], // Relie à Stokes/Ostrogradsky
+          's7': [11, 12], // Relie à Maxwell local et Poisson/Laplace
+          's8': [14], // Relie à l'expression intégrale de V
+          's9': [15] // Relie aux méthodes
+        };
+
+
+        new Vue({
+            el: '#app',
+            data: {
+                activeView: 'cours', // 'cours' or 'qa'
+                courseContent: courseData,
+                baseQaItems: qaData,
+                qaItems: [], // Sera peuplé dans mounted
+                courseQaMapping: courseQaRelationMapping,
+                difficultyTexts: { // Pour affichage textuel des indicateurs
+                    easy: "Maîtrisé",
+                    medium: "Moyen",
+                    difficult: "Difficile",
+                    confused: "À revoir"
+                }
+            },
+             watch: {
+                // Sauvegarde la vue active
+                activeView(newView) {
+                    try { localStorage.setItem(STORAGE_KEY_VIEW, newView); } catch(e) {}
+                },
+                // Sauvegarde la progression Q/A
+                qaItems: {
+                    handler(newItems) { this.saveQaProgress(newItems); },
+                    deep: true
+                }
+            },
+            methods: {
+                // --- Navigation ---
+                setView(view) {
+                    this.activeView = view;
+                    window.scrollTo(0, 0); // Scroll to top on view change
+                },
+
+                // --- Initialisation ---
+                initializeState() {
+                    this.loadActiveView();
+                    this.loadQaProgress();
+                },
+                loadActiveView() {
+                    const savedView = localStorage.getItem(STORAGE_KEY_VIEW);
+                    if (savedView === 'cours' || savedView === 'qa') {
+                        this.activeView = savedView;
+                    } else {
+                        this.activeView = 'cours'; // Default view
+                    }
+                },
+                loadQaProgress() {
+                    const savedProgress = localStorage.getItem(STORAGE_KEY_QA);
+                    let progressMap = {};
+                    if (savedProgress) {
+                        try {
+                            const parsedProgress = JSON.parse(savedProgress);
+                            parsedProgress.forEach(p => { progressMap[p.id] = p; });
+                        } catch (e) {
+                            console.error("Erreur lecture progression Q/A:", e);
+                            localStorage.removeItem(STORAGE_KEY_QA);
+                        }
+                    }
+                    this.qaItems = this.baseQaItems.map(baseItem => {
+                        const savedItem = progressMap[baseItem.id];
+                        return {
+                            ...baseItem,
+                            isOpen: savedItem ? savedItem.isOpen : false,
+                            difficulty: savedItem ? savedItem.difficulty : null
+                        };
+                    });
+                },
+
+                // --- Q/A Interactivity & Progress ---
+                toggleAnswer(item) {
+                    item.isOpen = !item.isOpen;
+                },
+                saveQaProgress(itemsToSave) {
+                    const progressToSave = itemsToSave.map(item => ({
+                        id: item.id,
+                        isOpen: item.isOpen,
+                        difficulty: item.difficulty
+                    }));
+                    try {
+                        localStorage.setItem(STORAGE_KEY_QA, JSON.stringify(progressToSave));
+                    } catch (e) {
+                        console.error("Erreur sauvegarde progression Q/A:", e);
+                    }
+                },
+                clearAllProgress() {
+                    if (confirm("Réinitialiser la progression Q/A ?")) {
+                        localStorage.removeItem(STORAGE_KEY_QA);
+                        this.loadQaProgress(); // Reload initial state
+                        alert("Progression réinitialisée.");
+                    }
+                },
+                openAll() { this.qaItems.forEach(item => item.isOpen = true); },
+                closeAll() { this.qaItems.forEach(item => item.isOpen = false); },
+
+                // --- Course Difficulty Indicators ---
+                getRelatedQaDifficulties(courseSectionId) {
+                    const relatedQaIds = this.courseQaMapping[courseSectionId];
+                    if (!relatedQaIds || relatedQaIds.length === 0) {
+                        return []; // No related Q/A items
+                    }
+                    // Find the actual QA items and extract their difficulties
+                    return this.qaItems
+                        .filter(qaItem => relatedQaIds.includes(qaItem.id))
+                        .map(qaItem => qaItem.difficulty)
+                        .filter(difficulty => difficulty !== null); // Only consider assessed items
+                },
+                getCourseSectionDifficultyClass(courseSectionId) {
+                    const difficulties = this.getRelatedQaDifficulties(courseSectionId);
+                    if (difficulties.length === 0) return null; // No assessment yet
+
+                    // Determine dominant difficulty (priority: confused > difficult > medium > easy)
+                    if (difficulties.includes('confused')) return 'difficulty-indicator-confused';
+                    if (difficulties.includes('difficult')) return 'difficulty-indicator-difficult';
+                    if (difficulties.includes('medium')) return 'difficulty-indicator-medium';
+                    if (difficulties.every(d => d === 'easy')) return 'difficulty-indicator-easy';
+
+                    return 'difficulty-indicator-medium'; // Default if mixed easy/medium
+                },
+                 getCourseSectionDifficultyText(courseSectionId) {
+                    const difficulties = this.getRelatedQaDifficulties(courseSectionId);
+                    if (difficulties.length === 0) return null;
+
+                    if (difficulties.includes('confused')) return this.difficultyTexts.confused;
+                    if (difficulties.includes('difficult')) return this.difficultyTexts.difficult;
+                    if (difficulties.includes('medium')) return this.difficultyTexts.medium;
+                    if (difficulties.every(d => d === 'easy')) return this.difficultyTexts.easy;
+
+                    return this.difficultyTexts.medium; // Default if mixed easy/medium
+                 },
+
+                // --- KaTeX Rendering ---
+                renderKatex() {
+                    this.$nextTick(() => {
+                        if (window.renderMathInElement) {
+                            renderMathInElement(this.$el, {
+                                delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true} ],
+                                throwOnError: false
+                            });
+                        } else { console.warn("KaTeX not loaded yet."); }
+                    });
+                }
+            },
+            mounted() {
+                this.initializeState();
+                this.renderKatex();
+            },
+            updated() {
+                this.renderKatex();
+            }
+        });
+    </script>
+</body>
+</html>
