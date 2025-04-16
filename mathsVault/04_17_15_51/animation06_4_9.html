@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice 6.4.9 - Matrices Positives et Productives (Animé)</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <!-- Votre CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '\\[', right: '\\]', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false} ] });"></script>
+  <style>
+/* Styles de base fournis dans la requête précédente */
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+    color: #333;
+}
+h1, h2, h3, h4 {
+    color: #0056b3; /* Dark blue */
+    margin-top: 1.8em;
+    margin-bottom: 0.8em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 2.2em; }
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.4em; color: #007bff; /* Lighter blue */ border-bottom: none; } /* Exercise titles */
+h4 { font-size: 1.2em; color: #666; border-bottom: none; margin-top: 1.5em; } /* Correction subheadings */
+
+.enonce, .correction {
+    margin-bottom: 2em;
+    padding: 15px 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.correction {
+     background-color: #f0f9ff; /* Light blue background for corrections */
+     border-color: #cce5ff; /* Lighter blue border */
+}
+
+ul, ol {
+    padding-left: 25px;
+}
+li {
+    margin-bottom: 0.5em;
+}
+.katex-display > .katex {
+     margin-top: 0.5em;
+     margin-bottom: 0.5em;
+}
+.katex-display {
+     margin: 0.8em 0;
+}
+.image-ref {
+     font-size: 0.9em;
+     color: #888;
+     text-align: right;
+     margin-top: 1em;
+     margin-bottom: 1em;
+}
+hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 2em 0;
+}
+.container { /* Ajout simple pour centrer */
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 15px;
+}
+
+/* Styles pour l'animation */
+.step {
+    border-left: 3px solid #007bff;
+    padding-left: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px; /* Sera annulé quand caché */
+    background-color: #fff;
+    border-radius: 0 5px 5px 0;
+
+    /* Initialement caché */
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    margin-bottom: 0; /* Pas de marge quand caché */
+    padding-top: 0;   /* Pas de padding quand caché */
+    padding-bottom: 0;/* Pas de padding quand caché */
+    border-left-width: 0; /* Pas de bordure quand caché */
+
+
+    /* Transition pour l'apparition */
+    transition: opacity 0.6s ease-in-out,
+                max-height 0.6s ease-in-out,
+                margin-bottom 0.6s ease-in-out,
+                padding-top 0.6s ease-in-out,
+                padding-bottom 0.6s ease-in-out,
+                border-left-width 0.3s ease-in-out; /* Bordure plus rapide */
+}
+
+.step.visible {
+    opacity: 1;
+    max-height: 1500px; /* Assez grand pour contenir le texte */
+    margin-bottom: 15px; /* Rétablir la marge */
+    padding-top: 10px;   /* Rétablir le padding */
+    padding-bottom: 10px;/* Rétablir le padding */
+    border-left-width: 3px; /* Rétablir la bordure */
+}
+
+#next-step-btn {
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    transition: background-color 0.3s ease;
+}
+
+#next-step-btn:hover {
+    background-color: #0056b3;
+}
+
+#next-step-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#final-message {
+    padding: 10px;
+    background-color: #e8f5e9; /* Vert clair */
+    border: 1px solid #c8e6c9; /* Vert plus foncé */
+    border-radius: 5px;
+}
+
+/* Styles pour les sous-questions dans la correction */
+.step p > strong {
+    color: #333; /* Un peu plus foncé pour les titres de question/correction */
+}
+
+/* Rendre les listes dans les étapes plus claires */
+.step ul, .step ol {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-left: 20px; /* Moins d'indentation peut-être */
+}
+    
+  </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Exercice 6.4.9 : Matrices Positives et Productives</h1>
+
+        <div class="enonce">
+            <h2>Énoncé</h2>
+            <p><strong>Objectif : étude des matrices positives et productives</strong>.</p>
+            <p>Dans tout le problème, $n$ désigne un entier supérieur ou égal à 2.<br>
+            Une matrice $M$ de $\mathcal{M}_n(\mathbb{R})$ ou de $\mathcal{M}_{n,1}(\mathbb{R})$ est dite <strong>positive</strong> si et seulement si tous les coefficients de $M$ sont positifs ou nuls. On notera alors $M \geq 0$.<br>
+            Une matrice $M$ de $\mathcal{M}_n(\mathbb{R})$ ou de $\mathcal{M}_{n,1}(\mathbb{R})$ est dite <strong>strictement positive</strong> si et seulement si tous les coefficients de $M$ sont strictement positifs. On notera alors $M > 0$.<br>
+            Si $M$ et $N$ sont deux matrices de $\mathcal{M}_n(\mathbb{R})$ ou de $\mathcal{M}_{n,1}(\mathbb{R})$, la notation $M \geq N$ (respectivement $M > N$) signifie que $M - N \geq 0$ (respectivement $M - N > 0$).<br>
+            Une matrice $M$ de $\mathcal{M}_n(\mathbb{R})$ est dite <strong>productive</strong> si et seulement si elle vérifie les deux conditions suivantes : $M$ est positive et il existe une matrice positive $P$ de $\mathcal{M}_{n,1}(\mathbb{R})$ telle que $P - MP > 0$.</p>
+
+            <h4>Caractérisation des matrices positives</h4>
+            <p>Soit $M$ une matrice de $\mathcal{M}_n(\mathbb{R})$.</p>
+            <ol>
+                <li>Montrer que, si $M$ est positive, alors, pour toute matrice positive $X$ de $\mathcal{M}_{n,1}(\mathbb{R})$, le produit $MX$ est positif.</li>
+                <li>Réciproquement, montrer que, si, pour toute matrice positive $X$ de $\mathcal{M}_{n,1}(\mathbb{R})$, le produit $M X$ est positif, alors la matrice $M$ est positive.</li>
+            </ol>
+
+            <h4>Caractérisation des matrices productives</h4>
+            <p>1. Soit $A$ une matrice productive de $\mathcal{M}_{n}(\mathbb{R})$ ... et $P$ une matrice positive ... telles que $P - A P > 0$. ...</p>
+            <ol type="a">
+                <li>Montrer que $P > 0$.</li>
+                <li>Soit $X \in \mathcal{M}_{n,1}(\mathbb{R})$ telle que $X \geqslant A X$. ... Établir que $c \left( p_{k} - \sum_{j=1}^{n} a_{kj} p_{j} \right) \geqslant 0$. En déduire que $c \geqslant 0$ et que $X$ est positive.</li>
+                <li>Soit $X \in \mathcal{M}_{n,1}(\mathbb{R})$ telle que $X = A X$. ... montrer que $X$ est nulle. En déduire que $I_{n} - A$ est inversible...</li>
+                <li>Montrer que, pour toute matrice positive $X$, la matrice $Y = (I_{n} - A)^{-1} X$ est positive. En déduire que $(I_{n} - A)^{-1}$ est positive.</li>
+            </ol>
+             <p>2. Dans cette question, on considère une matrice positive $B$ ... telle que $I_{n} - B$ soit inversible et $(I_{n} - B)^{-1}$ soit positive. ... Montrer que $V - B V > 0$. Conclure.</p>
+             <p>3. Donner une caractérisation des matrices productives.</p>
+             <p>4. **Application :** Soit $M \geq 0$ telle que $2 M^{2} = M$. Vérifier que $(I_{n} - M)(I_{n} + 2 M) = I_{n}$ et en déduire que $M$ est productive.</p>
+        </div>
+
+        <hr>
+
+        <div class="correction">
+            <h2>Correction Animée</h2>
+            <button id="next-step-btn">Afficher l'étape suivante</button>
+            <div id="correction-steps">
+
+                <!-- Étape 1: Caractérisation des matrices positives, Q1 -->
+                <div class="step">
+                    <h4>Caractérisation des matrices positives - Question 1</h4>
+                    <p><strong>Question :</strong> Montrer que, si $M \geq 0$, alors pour tout $X \geq 0$, on a $MX \geq 0$.</p>
+                    <p><strong>Correction :</strong> Soit $M = (m_{ij}) \geq 0$ (i.e., $\forall i, j, m_{ij} \geq 0$) et $X = \begin{pmatrix} x_1 \\ \vdots \\ x_n \end{pmatrix} \geq 0$ (i.e., $\forall j, x_j \geq 0$).<br>
+                    On pose $Y = MX$. Le coefficient $y_i$ de $Y$ est donné par la $i$-ème ligne de $M$ multipliée par $X$ :
+                    $$ y_i = \sum_{j=1}^n m_{ij}x_j $$
+                    Comme $m_{ij} \geq 0$ et $x_j \geq 0$ pour tous $i, j$, chaque terme $m_{ij}x_j$ est positif ou nul. La somme de termes positifs ou nuls est positive ou nulle.<br>
+                    Donc, $\forall i \in [[1, n]], y_i \geq 0$. Ainsi, $Y = MX$ est positive ($MX \geq 0$).</p>
+                </div>
+
+                <!-- Étape 2: Caractérisation des matrices positives, Q2 -->
+                <div class="step">
+                    <h4>Caractérisation des matrices positives - Question 2</h4>
+                    <p><strong>Question :</strong> Réciproquement, si pour tout $X \geq 0$, on a $MX \geq 0$, montrer que $M \geq 0$.</p>
+                    <p><strong>Correction :</strong> On suppose que pour toute matrice-colonne $X \geq 0$, le produit $MX$ est positif. Pour montrer que $M=(m_{ij})$ est positive, il faut montrer que $m_{ij} \geq 0$ pour tout $i, j$.<br>
+                    Choisissons une matrice $X$ particulière. Soit $E_j$ la $j$-ème matrice colonne de la base canonique de $\mathcal{M}_{n,1}(\mathbb{R})$. $E_j$ a un 1 à la $j$-ème ligne et des 0 ailleurs. Clairement, $E_j \geq 0$.<br>
+                    Par hypothèse, le produit $M E_j$ doit être positif.<br>
+                    Calculons $M E_j$. Le produit de la matrice $M$ par la $j$-ème colonne de la base canonique $E_j$ donne la $j$-ème colonne de la matrice $M$.
+                    $$ ME_j = \begin{pmatrix} m_{1j} \\ m_{2j} \\ \vdots \\ m_{nj} \end{pmatrix} $$
+                    Puisque $ME_j \geq 0$, tous ses coefficients doivent être positifs ou nuls. Donc, $\forall i \in [[1, n]], m_{ij} \geq 0$.<br>
+                    Ce raisonnement est valable pour tout choix de $j \in [[1, n]]$. En choisissant successivement $X = E_1, X = E_2, \ldots, X = E_n$, on montre que tous les coefficients $m_{ij}$ de $M$ sont positifs ou nuls.<br>
+                    Donc, $M \geq 0$.</p>
+                </div>
+
+                 <!-- Étape 3: Caractérisation des matrices productives, Q1a -->
+                <div class="step">
+                    <h4>Caractérisation des matrices productives - Question 1(a)</h4>
+                    <p><strong>Question :</strong> $A$ productive, $P \geq 0$ tel que $P - AP > 0$. Montrer que $P > 0$.</p>
+                    <p><strong>Correction :</strong> On a $P - AP > 0$, ce qui signifie que tous les coefficients de $P - AP$ sont strictement positifs. Cela s'écrit aussi $P > AP$.<br>
+                    Chaque coefficient $p_i$ de $P$ est donc strictement supérieur au coefficient correspondant $(AP)_i$ de $AP$.<br>
+                    $$ p_i > (AP)_i = \sum_{j=1}^n a_{ij} p_j $$
+                    Comme $A$ est productive, elle est positive ($A \geq 0$, donc $a_{ij} \geq 0$). On sait aussi que $P \geq 0$ (donc $p_j \geq 0$).<br>
+                    Le produit $AP$ a donc tous ses coefficients positifs ou nuls : $(AP)_i = \sum_{j=1}^n a_{ij} p_j \geq 0$.<br>
+                    Puisque $p_i > (AP)_i$ et $(AP)_i \geq 0$, on en déduit que $p_i > 0$ pour tout $i$.<br>
+                    Donc, la matrice $P$ est strictement positive ($P > 0$).</p>
+                </div>
+
+                 <!-- Étape 4: Caractérisation des matrices productives, Q1b -->
+                <div class="step">
+                    <h4>Caractérisation des matrices productives - Question 1(b)</h4>
+                    <p><strong>Question :</strong> $X \geq AX$, $c = \min_j (x_j/p_j) = x_k/p_k$. Montrer $c ( p_{k} - \sum a_{kj} p_{j} ) \geq 0$, puis $c \geq 0$ et $X \geq 0$.</p>
+                    <p><strong>Correction :</strong>
+                    On a $X \geq AX$, ce qui signifie $\forall i, x_i \geq (AX)_i = \sum_{j=1}^n a_{ij} x_j$.<br>
+                    C'est vrai en particulier pour l'indice $k$ :
+                    $$ x_k \geq \sum_{j=1}^n a_{kj} x_j $$
+                    $$ x_k - \sum_{j=1}^n a_{kj} x_j \geq 0 $$
+                    On sait que $P > 0$ (d'après 1a), donc tous les $p_j > 0$. La définition de $c$ est valide.
+                    On a $c = x_k/p_k$, donc $x_k = c p_k$.
+                    Par définition de $c$ comme minimum, on a $\forall j \in [[1, n]], \frac{x_j}{p_j} \geq c$. Comme $p_j > 0$, cela donne $x_j \geq c p_j$.
+                    Injectons cela dans l'inégalité pour $x_k$ :
+                    $$ c p_k \geq \sum_{j=1}^n a_{kj} x_j $$
+                    Comme $a_{kj} \geq 0$, on peut utiliser $x_j \geq c p_j$ :
+                    $$ \sum_{j=1}^n a_{kj} x_j \geq \sum_{j=1}^n a_{kj} (c p_j) = c \sum_{j=1}^n a_{kj} p_j $$
+                    Donc, $c p_k \geq c \sum_{j=1}^n a_{kj} p_j$.
+                    Réarrangeons : $c p_k - c \sum_{j=1}^n a_{kj} p_j \geq 0$.
+                    $$ c \left( p_k - \sum_{j=1}^n a_{kj} p_j \right) \geq 0 $$
+                    C'est la première inégalité demandée.<br>
+                    Maintenant, considérons le terme $\left( p_k - \sum_{j=1}^n a_{kj} p_j \right)$. C'est le $k$-ème coefficient de la matrice $P - AP$. Par hypothèse, $P - AP > 0$, donc tous ses coefficients sont strictement positifs. En particulier, $p_k - \sum_{j=1}^n a_{kj} p_j > 0$.<br>
+                    Puisque $c \times (\text{nombre} > 0) \geq 0$, on doit avoir $c \geq 0$.<br>
+                    Enfin, on sait que $\forall i, x_i \geq c p_i$. Comme $c \geq 0$ et $p_i > 0$, on a $c p_i \geq 0$. Donc $x_i \geq 0$ pour tout $i$.<br>
+                    Cela signifie que la matrice $X$ est positive ($X \geq 0$).</p>
+                </div>
+
+                <!-- Étape 5: Caractérisation des matrices productives, Q1c -->
+                <div class="step">
+                    <h4>Caractérisation des matrices productives - Question 1(c)</h4>
+                     <p><strong>Question :</strong> Si $X=AX$, montrer $X=0$. En déduire $I_n-A$ inversible.</p>
+                     <p><strong>Correction :</strong>
+                     Supposons $X = AX$. Cela implique $X \geq AX$. D'après la question 1(b), si $X \geq AX$, alors $X \geq 0$. Donc $X$ est positive.<br>
+                     Considérons maintenant $-X$. Si $X = AX$, alors $-X = -AX = A(-X)$.
+                     Donc, $-X$ vérifie aussi la condition $-X = A(-X)$, ce qui implique $-X \geq A(-X)$.<br>
+                     En appliquant à nouveau le résultat de 1(b) à la matrice $Y = -X$, on trouve que $Y \geq 0$, c'est-à-dire $-X \geq 0$.<br>
+                     On a donc montré $X \geq 0$ et $-X \geq 0$.
+                     Si $X \geq 0$, tous les $x_i \geq 0$.
+                     Si $-X \geq 0$, tous les $-x_i \geq 0$, ce qui signifie $x_i \leq 0$.
+                     La seule possibilité pour que $x_i \geq 0$ et $x_i \leq 0$ est que $x_i = 0$. Ceci étant vrai pour tout $i$, la matrice $X$ est la matrice nulle ($X = 0$).<br>
+                     On a montré que l'équation $(I_n - A)X = 0$ (qui est équivalente à $X = AX$) admet comme unique solution $X = 0$.<br>
+                     Cela signifie que le noyau de la matrice $I_n - A$ est réduit au vecteur nul. D'après le théorème du rang (ou la caractérisation des matrices inversibles), cela implique que la matrice $I_n - A$ est inversible.</p>
+                </div>
+
+                <!-- Étape 6: Caractérisation des matrices productives, Q1d -->
+                <div class="step">
+                    <h4>Caractérisation des matrices productives - Question 1(d)</h4>
+                    <p><strong>Question :</strong> Montrer que pour tout $X \geq 0$, $Y = (I_n-A)^{-1} X$ est positive. En déduire $(I_n-A)^{-1} \geq 0$.</p>
+                    <p><strong>Correction :</strong>
+                    Soit $X \geq 0$. On pose $Y = (I_n - A)^{-1} X$.
+                    En multipliant par $(I_n - A)$ à gauche, on obtient : $(I_n - A)Y = X$.
+                    Cela s'écrit $Y - AY = X$. Comme $X \geq 0$, on a $Y - AY \geq 0$, c'est-à-dire $Y \geq AY$.<br>
+                    Nous sommes exactement dans les conditions d'application de la question 1(b) (avec $Y$ jouant le rôle de $X$). La conclusion de 1(b) est que la matrice $Y$ doit être positive ($Y \geq 0$).<br>
+                    On a donc montré que pour toute matrice positive $X$, l'image $(I_n - A)^{-1} X$ est une matrice positive.<br>
+                    Ceci est la condition de la première partie (Caractérisation des matrices positives, question 2), appliquée à la matrice $M = (I_n - A)^{-1}$.<br>
+                    En utilisant le résultat de la question 2 de la première partie, on peut conclure que la matrice $(I_n - A)^{-1}$ est elle-même positive : $(I_n - A)^{-1} \geq 0$.</p>
+                </div>
+
+                <!-- Étape 7: Caractérisation des matrices productives, Q2 -->
+                <div class="step">
+                    <h4>Caractérisation des matrices productives - Question 2</h4>
+                    <p><strong>Question :</strong> $B \geq 0$, $I_n-B$ inversible, $(I_n-B)^{-1} \geq 0$. $U = \begin{pmatrix} 1 \\ \vdots \\ 1 \end{pmatrix}$, $V = (I_n-B)^{-1} U$. Montrer $V - BV > 0$. Conclure.</p>
+                     <p><strong>Correction :</strong>
+                     On a $V = (I_n - B)^{-1} U$.
+                     Multiplions par $(I_n - B)$ à gauche : $(I_n - B)V = U$.
+                     Ceci s'écrit $V - BV = U$.<br>
+                     La matrice $U$ est la matrice colonne dont tous les coefficients valent 1. Elle est donc strictement positive ($U > 0$).<br>
+                     On a donc montré que $V - BV > 0$.<br>
+                     Il nous faut vérifier que $V$ est positive pour pouvoir utiliser la définition d'une matrice productive.
+                     On sait que $(I_n - B)^{-1} \geq 0$ (par hypothèse) et que $U > 0$ (donc $U \geq 0$).
+                     D'après la question 1 de la première partie (Caractérisation des matrices positives), le produit d'une matrice positive par une matrice colonne positive est une matrice colonne positive.
+                     Donc, $V = (I_n - B)^{-1} U \geq 0$.<br>
+                     Nous avons trouvé une matrice $V \geq 0$ telle que $V - BV > 0$. Par définition, cela signifie que la matrice $B$ est productive.
+                     <br><strong>Conclusion :</strong> Une matrice $B \geq 0$ telle que $I_n - B$ est inversible et $(I_n - B)^{-1} \geq 0$ est une matrice productive.</p>
+                </div>
+
+                <!-- Étape 8: Caractérisation des matrices productives, Q3 -->
+                <div class="step">
+                    <h4>Caractérisation des matrices productives - Question 3</h4>
+                    <p><strong>Question :</strong> Donner une caractérisation des matrices productives.</p>
+                    <p><strong>Correction :</strong>
+                    La question 1 a montré que si $A$ est productive, alors :
+                    <ul>
+                        <li>$A \geq 0$ (par définition)</li>
+                        <li>$I_n - A$ est inversible (d'après 1c)</li>
+                        <li>$(I_n - A)^{-1} \geq 0$ (d'après 1d)</li>
+                    </ul>
+                    La question 2 a montré la réciproque : si une matrice $B$ vérifie $B \geq 0$, $I_n - B$ est inversible, et $(I_n - B)^{-1} \geq 0$, alors $B$ est productive.<br>
+                    <br>
+                    On a donc l'équivalence suivante (Caractérisation de Leontief-Hawkins-Simon) :
+                    <p style="text-align: center; font-weight: bold;">
+                    $A$ est productive $\iff$
+                    $\begin{cases}
+                    A \geq 0 \\
+                    I_n - A \ \text{est inversible} \\
+                    (I_n - A)^{-1} \geq 0
+                    \end{cases}$
+                    </p>
+                    </p>
+                </div>
+
+                <!-- Étape 9: Caractérisation des matrices productives, Q4 (Application) -->
+                <div class="step">
+                    <h4>Caractérisation des matrices productives - Question 4 (Application)</h4>
+                    <p><strong>Question :</strong> $M \geq 0$ et $2 M^2 = M$. Vérifier $(I_n - M)(I_n + 2 M) = I_n$ et en déduire que $M$ est productive.</p>
+                     <p><strong>Correction :</strong>
+                     Vérifions le produit :
+                     $$ (I_n - M)(I_n + 2 M) = I_n(I_n + 2M) - M(I_n + 2M) $$
+                     $$ = I_n \cdot I_n + I_n \cdot (2M) - M \cdot I_n - M \cdot (2M) $$
+                     $$ = I_n + 2M - M - 2M^2 $$
+                     $$ = I_n + M - 2M^2 $$
+                     On utilise l'hypothèse $2M^2 = M$ :
+                     $$ = I_n + M - M = I_n $$
+                     Donc, $(I_n - M)(I_n + 2 M) = I_n$.<br>
+                     Ceci montre que la matrice $I_n - M$ est inversible, et son inverse est $(I_n - M)^{-1} = I_n + 2M$.<br>
+                     Maintenant, utilisons la caractérisation de la question 3. Pour montrer que $M$ est productive, il faut vérifier les trois conditions :
+                     <ol>
+                        <li>$M \geq 0$ : C'est donné par l'énoncé de la question.</li>
+                        <li>$I_n - M$ est inversible : On vient de le montrer.</li>
+                        <li>$(I_n - M)^{-1} \geq 0$ : On a trouvé $(I_n - M)^{-1} = I_n + 2M$. Comme $M \geq 0$, tous les coefficients de $2M$ sont $\geq 0$. La matrice identité $I_n$ a des 1 sur la diagonale (donc $\geq 0$) et des 0 ailleurs. La somme de deux matrices positives est positive. Donc $I_n + 2M \geq 0$. Ainsi, $(I_n - M)^{-1} \geq 0$.</li>
+                     </ol>
+                      Les trois conditions de la caractérisation sont vérifiées. On en déduit que $M$ est productive.</p>
+                </div>
+
+                <!-- État final -->
+                <div id="final-message" style="display: none; margin-top: 20px; font-weight: bold; color: green;">
+                    Fin de la correction.
+                </div>
+
+            </div> <!-- Fin de #correction-steps -->
+        </div> <!-- Fin de .correction -->
+
+    </div> <!-- Fin de .container -->
+
+    <!-- Votre JavaScript -->
+    <script >
+document.addEventListener('DOMContentLoaded', () => {
+    const steps = document.querySelectorAll('.correction .step');
+    const nextButton = document.getElementById('next-step-btn');
+    const finalMessage = document.getElementById('final-message');
+    let currentStepIndex = 0;
+
+    // Initialement, aucune étape n'est visible
+
+    nextButton.addEventListener('click', () => {
+        if (currentStepIndex < steps.length) {
+            // Rendre l'étape courante visible
+            steps[currentStepIndex].classList.add('visible');
+
+            // Passer à l'index suivant
+            currentStepIndex++;
+
+            // Si c'était la dernière étape, désactiver le bouton et afficher le message final
+            if (currentStepIndex === steps.length) {
+                nextButton.disabled = true;
+                nextButton.textContent = "Correction terminée";
+                finalMessage.style.display = 'block'; // Afficher le message de fin
+            }
+        }
+    });
+
+    // Optionnel : Re-render KaTeX après chaque transition si nécessaire
+    // En général, auto-render gère bien le contenu initial, mais si des problèmes apparaissent:
+    /*
+    steps.forEach(step => {
+        step.addEventListener('transitionend', (event) => {
+            if (event.propertyName === 'max-height' && step.classList.contains('visible')) {
+                renderMathInElement(step, {
+                     delimiters: [
+                         {left: '$$', right: '$$', display: true},
+                         {left: '\\[', right: '\\]', display: true},
+                         {left: '$', right: '$', display: false},
+                         {left: '\\(', right: '\\)', display: false}
+                     ]
+                });
+            }
+        });
+    });
+    */
+     // Assurez-vous que KaTeX est rendu une fois que tout est prêt au cas où l'auto-render n'aurait pas tout pris
+     if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+             delimiters: [
+                 {left: '$$', right: '$$', display: true},
+                 {left: '\\[', right: '\\]', display: true},
+                 {left: '$', right: '$', display: false},
+                 {left: '\\(', right: '\\)', display: false}
+             ]
+        });
+    }
+
+
+});
+      
+    </script>
+</body>
+</html>
