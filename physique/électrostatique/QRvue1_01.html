@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Évaluation (avec sauvegarde) : Électrostatique (Prépa)</title>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1tBCyoTUqwOrfPVCafEPWtFOsqrz" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> --> <!-- Vue 3 alternative -->
+    <style>
+        /* Styles identiques à la version précédente */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 10px; /* Reduced margin */
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .controls button {
+            padding: 8px 15px;
+            margin: 0 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .controls button:hover {
+            background-color: #0056b3;
+        }
+        .controls button.clear {
+             background-color: #dc3545;
+        }
+         .controls button.clear:hover {
+             background-color: #c82333;
+        }
+
+        .qa-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+        .qa-item.difficulty-easy { border-left: 5px solid #5cb85c; }
+        .qa-item.difficulty-medium { border-left: 5px solid #f0ad4e; }
+        .qa-item.difficulty-difficult { border-left: 5px solid #d9534f; }
+        .qa-item.difficulty-confused { border-left: 5px solid #777; }
+
+        .question {
+            background-color: #e7f1ff;
+            padding: 12px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 1px solid #d0e0f0;
+            position: relative;
+        }
+        .question:hover {
+            background-color: #d0e0f0;
+        }
+        .question::after {
+            content: '+';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: #0056b3;
+            transition: transform 0.2s ease-in-out;
+        }
+        .question.active::after {
+            content: '−';
+            transform: translateY(-50%) rotate(180deg);
+        }
+        .answer {
+            padding: 15px;
+            background-color: #fdfdfd;
+            border-top: 1px solid #eee;
+        }
+        .difficulty-selector {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+            font-size: 0.9em;
+        }
+        .difficulty-selector strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .difficulty-selector label {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .difficulty-selector input[type="radio"] {
+            margin-right: 5px;
+            accent-color: #0056b3;
+        }
+        .difficulty-selector button { /* Style for the small clear button inside */
+            margin-left: 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            background: none;
+            border: 1px solid #ccc;
+            color: #555;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+         .difficulty-selector button:hover {
+            background: #eee;
+            border-color: #aaa;
+         }
+
+        .katex-display {
+            margin: 0.8em 0;
+            padding: 0.5em;
+            background-color: #f0f0f5;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #eee;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        /* Fade transition */
+        .fade-enter-active, .fade-leave-active {
+          transition: opacity .4s;
+        }
+        .fade-enter, .fade-leave-to {
+          opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+        <h1>Auto-Évaluation (avec sauvegarde) : Électrostatique (Prépa)</h1>
+
+        <div class="controls">
+            <button @click="openAll">Tout Ouvrir</button>
+            <button @click="closeAll">Tout Fermer</button>
+            <button @click="clearAllProgress" class="clear">Réinitialiser Progression</button>
+        </div>
+
+        <p>Cliquez sur une question pour afficher la réponse et évaluez votre compréhension. Votre progression est sauvegardée localement.</p>
+
+        <div v-for="item in qaItems" :key="item.id"
+             :class="['qa-item', item.difficulty ? 'difficulty-' + item.difficulty : '']">
+
+            <div class="question" @click="toggleAnswer(item)" :class="{ active: item.isOpen }">
+                <span v-html="item.question"></span>
+            </div>
+
+             <transition name="fade">
+                <div class="answer" v-show="item.isOpen">
+                    <div v-html="item.answer"></div>
+                    <div class="difficulty-selector">
+                        <strong>Évaluez votre compréhension :</strong>
+                        <div>
+                            <label :for="'diff-' + item.id + '-easy'">
+                                <input type="radio" :id="'diff-' + item.id + '-easy'" :name="'difficulty-' + item.id" value="easy" v-model="item.difficulty">
+                                Facile
+                            </label>
+                            <label :for="'diff-' + item.id + '-medium'">
+                                <input type="radio" :id="'diff-' + item.id + '-medium'" :name="'difficulty-' + item.id" value="medium" v-model="item.difficulty">
+                                Moyen
+                            </label>
+                            <label :for="'diff-' + item.id + '-difficult'">
+                                <input type="radio" :id="'diff-' + item.id + '-difficult'" :name="'difficulty-' + item.id" value="difficult" v-model="item.difficulty">
+                                Difficile
+                            </label>
+                            <label :for="'diff-' + item.id + '-confused'">
+                                <input type="radio" :id="'diff-' + item.id + '-confused'" :name="'difficulty-' + item.id" value="confused" v-model="item.difficulty">
+                                Pas compris
+                            </label>
+                             <button v-if="item.difficulty" @click="item.difficulty = null">Effacer</button>
+                        </div>
+                    </div>
+                </div>
+             </transition>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'vueQaElectrostatiqueProgress'; // Clé pour localStorage
+
+        new Vue({
+            el: '#app',
+            data: {
+                // Les questions/réponses de base (ne seront pas modifiées)
+                baseQaItems: [
+                     // Section 1
+                    { id: 1, question: `...`, answer: `...` }, // Mettre les vraies Q/A ici
+                    // ... (copier toutes les questions/réponses de l'exemple précédent ici) ...
+                     {
+                        id: 1,
+                        question: `Quelles sont les trois types de densités de charge utilisées pour décrire les distributions continues ? Donnez leurs unités.`,
+                        answer: `<p>Pour décrire les distributions continues de charges, on utilise :</p>
+                                <ul>
+                                    <li>La <strong>densité linéique de charge $\\lambda$</strong> (en C/m) pour une charge répartie sur une ligne ($dq = \\lambda dl$).</li>
+                                    <li>La <strong>densité surfacique de charge $\\sigma$</strong> (en C/m²) pour une charge répartie sur une surface ($dq = \\sigma dS$).</li>
+                                    <li>La <strong>densité volumique de charge $\\rho$</strong> (en C/m³) pour une charge répartie dans un volume ($dq = \\rho d\\tau$).</li>
+                                </ul>`
+                    },
+                    {
+                        id: 2,
+                        question: `Énoncez la loi de Coulomb décrivant la force entre deux charges ponctuelles $q_1$ et $q_2$.`,
+                        answer: `<p>La force $\\vec{F}_{1 \\to 2}$ exercée par une charge ponctuelle $q_1$ située en $P_1$ sur une charge ponctuelle $q_2$ située en $P_2$ est donnée par :</p>
+                                 $$ \\vec{F}_{1 \\to 2} = \\frac{1}{4 \\pi \\epsilon_0} \\frac{q_1 q_2}{r_{12}^2} \\vec{u}_{1 \\to 2} $$
+                                 <p>Où $\\epsilon_0$ est la permittivité du vide, $r_{12}$ est la distance entre les charges, et $\\vec{u}_{1 \\to 2}$ est le vecteur unitaire dirigé de $P_1$ vers $P_2$.</p>`
+                    },
+                    {
+                        id: 3,
+                        question: `Qu'est-ce que le principe de superposition en électrostatique ?`,
+                        answer: `<p>Le principe de superposition stipule que la force totale exercée sur une charge par un ensemble d'autres charges est la <strong>somme vectorielle</strong> des forces individuelles exercées par chacune de ces charges.</p>
+                                 $$ \\vec{F}_{tot \\to q} = \\sum_{i} \\vec{F}_{i \\to q} $$
+                                 <p>Ce principe s'applique aussi au champ électrostatique $\\vec{E}$ et au potentiel $V$. Pour les distributions continues, la somme devient une intégrale.</p>`
+                    },
+                    {
+                        id: 4,
+                        question: `Comment définit-on le champ électrostatique $\\vec{E}$ en un point M ? Quelle est son unité ?`,
+                        answer: `<p>Le champ électrostatique $\\vec{E}$ créé par une distribution de charges sources en un point $M$ est la force $\\vec{F}$ que subirait une charge test positive $q_{test}$ placée en $M$, divisée par cette charge :</p>
+                                 $$ \\vec{E}(M) = \\frac{\\vec{F}_{source \\to q_{test}}}{q_{test}} $$
+                                 <p>Le champ $\\vec{E}$ est une propriété vectorielle de l'espace, indépendante de la charge test. Son unité est le Newton par Coulomb (N/C) ou, de manière équivalente, le Volt par mètre (V/m).</p>`
+                    },
+                    {
+                        id: 5,
+                        question: `Quelle est l'expression du champ $\\vec{E}$ créé par une distribution volumique de charge $\\rho$ ?`,
+                        answer: `<p>Le champ $\\vec{E}$ créé en un point $M$ par une distribution volumique de charge $\\rho(P)$ occupant un volume $\\mathcal{V}$ est donné par l'intégrale :</p>
+                                 $$ \\vec{E}(M) = \\iiint_{\\mathcal{V}} \\frac{\\rho(P) d\\tau_P}{4 \\pi \\epsilon_0 ||\\vec{PM}||^3} \\vec{PM} $$
+                                 <p>Où $P$ est un point source dans le volume $\\mathcal{V}$, $d\\tau_P$ est un élément de volume en $P$, et $\\vec{PM}$ est le vecteur allant du point source $P$ au point d'observation $M$.</p>`
+                    },
+                    {
+                        id: 6,
+                        question: `Qu'implique le principe de Curie pour le champ électrostatique $\\vec{E}$ ?`,
+                        answer: `<p>Le principe de Curie stipule que les symétries de la distribution de charges (les causes) doivent se retrouver dans le champ électrostatique $\\vec{E}$ (l'effet).</p>
+                                <p>Par exemple :</p>
+                                <ul>
+                                    <li>Si la distribution admet un plan de symétrie $\\Pi_s$, alors en tout point $M \\in \\Pi_s$, $\\vec{E}(M)$ est contenu dans $\\Pi_s$.</li>
+                                    <li>Si la distribution admet un plan d'antisymétrie $\\Pi_a$, alors en tout point $M \\in \\Pi_a$, $\\vec{E}(M)$ est orthogonal à $\\Pi_a$.</li>
+                                    <li>Si la distribution est invariante par translation ou rotation, $\\vec{E}$ ne dépend pas de la coordonnée correspondante.</li>
+                                </ul>`
+                    },
+                    {
+                        id: 7,
+                        question: `Pourquoi dit-on que le champ électrostatique $\\vec{E}$ est conservatif ? Quelle en est la conséquence principale ?`,
+                        answer: `<p>Le champ électrostatique $\\vec{E}$ est dit conservatif car sa circulation le long de n'importe quelle courbe fermée $\\mathcal{C}$ est nulle :</p>
+                                $$ \\oint_{\\mathcal{C}} \\vec{E} \\cdot d\\vec{l} = 0 $$
+                                <p>La conséquence principale est que $\\vec{E}$ dérive d'un potentiel scalaire $V$, appelé potentiel électrostatique, tel que $\\vec{E} = - \\vec{\\nabla} V$. La circulation de $\\vec{E}$ entre deux points A et B ne dépend donc que des potentiels en A et B ($V(B)-V(A) = - \\int_A^B \\vec{E} \\cdot d\\vec{l}$) et non du chemin suivi.</p>`
+                    },
+                    {
+                        id: 8,
+                        question: `Énoncez le théorème de Gauss pour le champ électrostatique $\\vec{E}$.`,
+                        answer: `<p>Le théorème de Gauss stipule que le flux du champ électrostatique $\\vec{E}$ à travers une surface fermée $\\mathcal{S}$ (surface de Gauss) est égal à la charge électrique totale $Q_{int}$ contenue à l'intérieur de cette surface, divisée par la permittivité du vide $\\epsilon_0$ :</p>
+                                $$ \\Phi_{\\mathcal{S}_{fermée}}(\\vec{E}) = \\oint_{\\mathcal{S}} \\vec{E} \\cdot d\\vec{S} = \\frac{Q_{int}}{\\epsilon_0} $$
+                                <p>Où $Q_{int} = \\iiint_{\\mathcal{V}_{int}} \\rho \\, d\\tau$, $\\mathcal{V}_{int}$ étant le volume délimité par $\\mathcal{S}$.</p>`
+                    },
+                    {
+                        id: 9,
+                        question: `Dans quelles situations le théorème de Gauss est-il particulièrement utile pour calculer $\\vec{E}$ ?`,
+                        answer: `<p>Le théorème de Gauss est particulièrement utile lorsque la distribution de charges présente un haut degré de symétrie (sphérique, cylindrique infinie, planaire infinie). Dans ces cas, on peut choisir une surface de Gauss $\\mathcal{S}$ adaptée à la symétrie telle que :</p>
+                                <ul>
+                                    <li>Le champ $\\vec{E}$ a une norme constante sur (au moins une partie de) la surface $\\mathcal{S}$.</li>
+                                    <li>Le champ $\\vec{E}$ est soit perpendiculaire (normal), soit parallèle (tangent) à la surface $\\mathcal{S}$ en tout point.</li>
+                                </ul>
+                                 <p>Cela simplifie grandement le calcul de l'intégrale de flux $\\oint \\vec{E} \\cdot d\\vec{S}$, permettant d'isoler facilement la norme de $\\vec{E}$.</p>`
+                    },
+                    {
+                         id: 10,
+                         question: `Quelle est la relation géométrique entre les lignes de champ $\\vec{E}$ et les surfaces équipotentielles $V=Cste$ ?`,
+                         answer: `<p>Les lignes de champ électrostatique sont <strong>toujours orthogonales</strong> (perpendiculaires) aux surfaces équipotentielles.</p>
+                                 <p>Cela découle de la relation $\\vec{E} = -\\vec{\\nabla} V$. Le gradient $\\vec{\\nabla} V$ est normal aux surfaces de niveau de $V$ (les équipotentielles). Comme $\\vec{E}$ est colinéaire à $-\\vec{\\nabla} V$, $\\vec{E}$ est aussi normal aux équipotentielles.</p>
+                                 <p>Intuitivement, si on se déplace le long d'une équipotentielle ($dV=0$), le travail de la force électrique ($\\vec{F} \\cdot d\\vec{l} = q\\vec{E} \\cdot d\\vec{l}$) doit être nul, ce qui implique $\\vec{E} \\perp d\\vec{l}$ pour tout déplacement $d\\vec{l}$ sur l'équipotentielle.</p>`
+                     },
+                     {
+                         id: 11,
+                         question: `Quelles sont les deux équations locales (différentielles) fondamentales de l'électrostatique dans le vide ?`,
+                         answer: `<p>Les deux équations locales fondamentales de l'électrostatique dans le vide (équations de Maxwell statiques) sont :</p>
+                                <ul>
+                                    <li><strong>Équation de Maxwell-Gauss :</strong> $\\vec{\\nabla} \\cdot \\vec{E} = \\frac{\\rho}{\\epsilon_0}$ (La divergence de $\\vec{E}$ est liée à la densité de charge locale $\\rho$).</li>
+                                    <li><strong>Caractère conservatif :</strong> $\\vec{\\nabla} \\times \\vec{E} = \\vec{0}$ (Le rotationnel de $\\vec{E}$ est nul).</li>
+                                </ul>`
+                    },
+                    {
+                         id: 12,
+                         question: `Qu'est-ce que l'équation de Poisson et quand devient-elle l'équation de Laplace ?`,
+                         answer: `<p>L'équation de Poisson relie le potentiel électrostatique $V$ à la densité volumique de charge $\\rho$ :</p>
+                                 $$ \\Delta V = - \\frac{\\rho}{\\epsilon_0} $$
+                                 <p>Où $\\Delta = \\vec{\\nabla} \\cdot \\vec{\\nabla} = \\nabla^2$ est l'opérateur Laplacien.</p>
+                                 <p>Dans les régions de l'espace où la densité de charge est nulle ($\\rho = 0$), l'équation de Poisson se réduit à l'<strong>équation de Laplace</strong> :</p>
+                                 $$ \\Delta V = 0 $$`
+                    },
+                    {
+                         id: 13,
+                         question: `À quoi servent les théorèmes de Stokes et d'Ostrogradsky en électrostatique ?`,
+                         answer: `<p>Ces théorèmes d'analyse vectorielle permettent de passer des formes intégrales aux formes locales des lois de l'électrostatique :</p>
+                                 <ul>
+                                    <li><strong>Théorème de Stokes (rotationnel-circulation) :</strong> $\\oint_{\\mathcal{C}} \\vec{E} \\cdot d\\vec{l} = \\iint_{\\mathcal{S}} (\\vec{\\nabla} \\times \\vec{E}) \\cdot d\\vec{S}$. Appliqué à $\\oint \\vec{E} \\cdot d\\vec{l} = 0$, il mène à $\\vec{\\nabla} \\times \\vec{E} = \\vec{0}$.</li>
+                                    <li><strong>Théorème d'Ostrogradsky (divergence-flux) :</strong> $\\oint_{\\mathcal{S}} \\vec{E} \\cdot d\\vec{S} = \\iiint_{\\mathcal{V}} (\\vec{\\nabla} \\cdot \\vec{E}) \\, d\\tau$. Appliqué au théorème de Gauss $\\oint \\vec{E} \\cdot d\\vec{S} = Q_{int}/\\epsilon_0 = \\iiint (\\rho/\\epsilon_0) d\\tau$, il mène à $\\vec{\\nabla} \\cdot \\vec{E} = \\rho/\\epsilon_0$.</li>
+                                 </ul>`
+                    },
+                    {
+                         id: 14,
+                         question: `Quelle est l'expression intégrale permettant de calculer directement le potentiel $V(M)$ créé par une distribution surfacique $\\sigma$ (avec $V(\\infty)=0$) ?`,
+                         answer: `<p>Le potentiel $V$ créé en un point $M$ par une distribution surfacique de charge $\\sigma(P)$ sur une surface $\\mathcal{S}$ est donné par l'intégrale de surface (en supposant $V(\\infty)=0$) :</p>
+                                 $$ V(M) = \\iint_{\\mathcal{S}} \\frac{\\sigma(P) dS_P}{4 \\pi \\epsilon_0 ||\\vec{PM}||} $$
+                                  <p>Où $P$ est un point source sur la surface $\\mathcal{S}$, $dS_P$ est un élément de surface en $P$, et $||\\vec{PM}||$ est la distance entre le point source $P$ et le point d'observation $M$.</p>`
+                    },
+                    {
+                         id: 15,
+                         question: `Citez les trois principales méthodes pour calculer le champ $\\vec{E}$ et le potentiel $V$ en électrostatique.`,
+                         answer: `<p>Les trois principales méthodes sont :</p>
+                                 <ol>
+                                     <li><strong>Calcul direct par intégration :</strong> Utiliser les expressions intégrales pour $V$ ou $\\vec{E}$ basées sur la loi de Coulomb et le principe de superposition. Souvent, on calcule $V$ (scalaire) puis $\\vec{E} = -\\vec{\\nabla} V$.</li>
+                                     <li><strong>Utilisation du théorème de Gauss :</strong> Applicable uniquement aux cas de haute symétrie (sphérique, cylindrique, planaire). Permet de trouver facilement $||\\vec{E}||$, puis $V$ par intégration de $\\vec{E}$.</li>
+                                     <li><strong>Résolution des équations de Poisson ou de Laplace :</strong> Résoudre $\\Delta V = -\\rho/\\epsilon_0$ ou $\\Delta V = 0$ avec des conditions aux limites appropriées pour trouver $V$, puis calculer $\\vec{E} = -\\vec{\\nabla} V$.</li>
+                                 </ol>`
+                    }
+                ],
+                // L'état actuel, chargé depuis localStorage ou initialisé
+                qaItems: []
+            },
+             watch: {
+                // Surveiller les changements dans qaItems (y compris dans les objets enfants)
+                qaItems: {
+                    handler(newItems) {
+                        this.saveProgress(newItems);
+                    },
+                    deep: true // Important pour détecter les changements de isOpen et difficulty
+                }
+            },
+            methods: {
+                initializeItems() {
+                    const savedProgress = localStorage.getItem(STORAGE_KEY);
+                    let progressMap = {};
+                    if (savedProgress) {
+                        try {
+                            // On attend un tableau d'objets {id, isOpen, difficulty}
+                            const parsedProgress = JSON.parse(savedProgress);
+                            // Convertir en Map pour un accès rapide par ID
+                            parsedProgress.forEach(p => { progressMap[p.id] = p; });
+                        } catch (e) {
+                            console.error("Erreur lors de la lecture de la progression sauvegardée :", e);
+                            localStorage.removeItem(STORAGE_KEY); // Supprimer les données corrompues
+                        }
+                    }
+
+                    // Créer le tableau qaItems en fusionnant baseQaItems et la progression
+                    this.qaItems = this.baseQaItems.map(baseItem => {
+                        const savedItem = progressMap[baseItem.id];
+                        return {
+                            ...baseItem, // Copie les propriétés de base (id, question, answer)
+                            isOpen: savedItem ? savedItem.isOpen : false, // Utilise l'état sauvegardé ou false
+                            difficulty: savedItem ? savedItem.difficulty : null // Utilise l'état sauvegardé ou null
+                        };
+                    });
+                },
+                toggleAnswer(item) {
+                    item.isOpen = !item.isOpen;
+                    // La sauvegarde est gérée par le watcher
+                },
+                saveProgress(itemsToSave) {
+                    // Ne sauvegarder que l'état (id, isOpen, difficulty)
+                    const progressToSave = itemsToSave.map(item => ({
+                        id: item.id,
+                        isOpen: item.isOpen,
+                        difficulty: item.difficulty
+                    }));
+                    try {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(progressToSave));
+                    } catch (e) {
+                        console.error("Erreur lors de la sauvegarde de la progression :", e);
+                    }
+                },
+                clearAllProgress() {
+                    if (confirm("Êtes-vous sûr de vouloir réinitialiser toute votre progression ?")) {
+                        localStorage.removeItem(STORAGE_KEY);
+                        // Réinitialiser l'état actuel sans recharger la page
+                        this.qaItems = this.baseQaItems.map(baseItem => ({
+                             ...baseItem,
+                             isOpen: false,
+                             difficulty: null
+                         }));
+                        // Pas besoin de saveProgress ici car le watcher s'en chargera
+                        alert("Progression réinitialisée.");
+                    }
+                },
+                 openAll() {
+                    this.qaItems.forEach(item => item.isOpen = true);
+                 },
+                 closeAll() {
+                    this.qaItems.forEach(item => item.isOpen = false);
+                 },
+                // Fonction pour déclencher le rendu KaTeX
+                renderKatex() {
+                    this.$nextTick(() => { // Attendre que Vue ait mis à jour le DOM
+                        if (window.renderMathInElement) {
+                            renderMathInElement(this.$el, {
+                                delimiters: [
+                                    {left: '$$', right: '$$', display: true},
+                                    {left: '$', right: '$', display: false},
+                                    {left: '\\(', right: '\\)', display: false},
+                                    {left: '\\[', right: '\\]', display: true}
+                                ],
+                                throwOnError : false
+                            });
+                        } else {
+                            console.warn("KaTeX auto-render script not loaded yet.");
+                        }
+                    });
+                }
+            },
+            mounted() {
+                // 1. Initialiser les items en chargeant la progression
+                this.initializeItems();
+                // 2. Rendre KaTeX après l'initialisation
+                this.renderKatex();
+            },
+            updated() {
+                // Re-rendre KaTeX après chaque mise à jour (si un élément est ouvert/fermé)
+                 this.renderKatex();
+            }
+        });
+    </script>
+
+</body>
+</html>
