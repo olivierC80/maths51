@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compléments de calcul algébrique et de trigonométrie</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+        h3, h4 { color: #0056b3; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        .intro-text { font-style: italic; color: #555; }
+        .definition, .theorem, .proof, .example, .exercise, .property, .comment, .skill {
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 4px solid #0056b3;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .definition .title, .theorem .title, .proof .title, .example .title, .exercise .title, .property .title, .comment .title, .skill .title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #004085;
+        }
+        .proof { border-left-color: #17a2b8; }
+        .proof .title { color: #0c5460; }
+        .example { border-left-color: #28a745; }
+        .example .title { color: #155724; }
+        .exercise { border-left-color: #ffc107; }
+        .exercise .title { color: #856404; }
+        code { background-color: #e9ecef; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { display: block; text-align: center; margin: 1em 0; }
+        /* Specific KaTeX styling if needed */
+    </style>
+</head>
+<body>
+
+    <h3 id="calcul-algebrique-trigo">Compléments de calcul algébrique et de trigonométrie</h3>
+    <p class="intro-text">
+        Cette section « boîte à outils » complète l'enseignement du lycée sur un certain nombre de points importants pour la suite : calculs de sommes et de produits, dont la formule du binôme; résolution de petits systèmes linéaires par l'algorithme du pivot; manipulation d'inégalités et résolution d'inéquations; utilisation du cercle trigonométrique, manipulation des lignes et fonctions trigonométriques.
+    </p>
+
+    <h4 id="sommes-produits">a) Sommes et produits</h4>
+
+    <div class="definition">
+        <span class="title">Définition : Somme et Produit d'une famille finie</span>
+        Soit $I$ un ensemble fini d'indices et $(a_i)_{i \in I}$ une famille de nombres réels.
+        <ul>
+            <li>La <strong>somme</strong> des éléments de cette famille est notée $\sum_{i \in I} a_i$.</li>
+            <li>Le <strong>produit</strong> des éléments de cette famille est notée $\prod_{i \in I} a_i$.</li>
+        </ul>
+        Cas particuliers importants :
+        <ul>
+            <li>Si $I = \{1, 2, \dots, n\}$, on note $\sum_{i=1}^n a_i = a_1 + a_2 + \dots + a_n$.</li>
+            <li>Si $I = \{1, 2, \dots, n\}$, on note $\prod_{i=1}^n a_i = a_1 \times a_2 \times \dots \times a_n$.</li>
+            <li>Si $I$ est vide ($I = \emptyset$), par convention :
+                <ul>
+                    <li>La somme vide vaut 0 : $\sum_{i \in \emptyset} a_i = 0$.</li>
+                    <li>Le produit vide vaut 1 : $\prod_{i \in \emptyset} a_i = 1$.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="example">
+        <span class="title">Exemple</span>
+        <ul>
+            <li>$\sum_{k=1}^4 k = 1 + 2 + 3 + 4 = 10$.</li>
+            <li>$\prod_{k=1}^3 (k+1) = (1+1) \times (2+1) \times (3+1) = 2 \times 3 \times 4 = 24$.</li>
+            <li>$\sum_{k=2}^5 \frac{1}{k} = \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \frac{1}{5} = \frac{30+20+15+12}{60} = \frac{77}{60}$.</li>
+        </ul>
+    </div>
+
+    <div class="property">
+        <span class="title">Propriétés des sommes et produits</span>
+        Soient $(a_i)_{i \in I}$ et $(b_i)_{i \in I}$ deux familles de réels indexées par le même ensemble fini $I$, et $\lambda \in \mathbb{R}$.
+        <ul>
+            <li>Linéarité de la somme : $\sum_{i \in I} (a_i + b_i) = \sum_{i \in I} a_i + \sum_{i \in I} b_i$</li>
+            <li>Homogénéité de la somme : $\sum_{i \in I} (\lambda a_i) = \lambda \sum_{i \in I} a_i$</li>
+            <li>Multiplicativité du produit : $\prod_{i \in I} (a_i b_i) = (\prod_{i \in I} a_i) (\prod_{i \in I} b_i)$</li>
+            <li>Produit et puissance : $\prod_{i \in I} (\lambda a_i) = \lambda^{|I|} \prod_{i \in I} a_i$, où $|I|$ est le nombre d'éléments dans $I$.</li>
+        </ul>
+    </div>
+
+    <div class="definition">
+        <span class="title">Définition : Sommes et Produits Télescopiques</span>
+        Une somme est dite <strong>télescopique</strong> si elle est de la forme $\sum_{k=m}^n (u_{k+1} - u_k)$.
+        Un produit est dit <strong>télescopique</strong> s'il est de la forme $\prod_{k=m}^n \frac{u_{k+1}}{u_k}$ (avec $u_k \neq 0$).
+    </div>
+
+    <div class="theorem">
+        <span class="title">Théorème : Calcul des sommes et produits télescopiques</span>
+        Pour $m \le n$ entiers :
+        <ul>
+            <li>$\sum_{k=m}^n (u_{k+1} - u_k) = u_{n+1} - u_m$.</li>
+            <li>$\prod_{k=m}^n \frac{u_{k+1}}{u_k} = \frac{u_{n+1}}{u_m}$ (si $u_k \neq 0$ pour $k=m, \dots, n+1$).</li>
+        </ul>
+    </div>
+
+    <div class="proof">
+        <span class="title">Preuve (Somme)</span>
+        On développe la somme :
+        $$ \sum_{k=m}^n (u_{k+1} - u_k) = (u_{m+1} - u_m) + (u_{m+2} - u_{m+1}) + \dots + (u_n - u_{n-1}) + (u_{n+1} - u_n) $$
+        Les termes intermédiaires s'annulent deux à deux. Il reste $u_{n+1} - u_m$.
+        La preuve pour le produit est similaire en écrivant le produit des fractions.
+    </div>
+
+    <div class="example">
+        <span class="title">Exemple</span>
+        Calculer $S = \sum_{k=1}^n \frac{1}{k(k+1)}$.
+        On remarque que $\frac{1}{k(k+1)} = \frac{1}{k} - \frac{1}{k+1} = -( \frac{1}{k+1} - \frac{1}{k})$.
+        Soit $u_k = \frac{1}{k}$. Alors $S = \sum_{k=1}^n -(u_{k+1} - u_k) = -\sum_{k=1}^n (u_{k+1} - u_k)$.
+        C'est une somme télescopique (au signe près).
+        $S = -(u_{n+1} - u_1) = -( \frac{1}{n+1} - \frac{1}{1} ) = 1 - \frac{1}{n+1} = \frac{n}{n+1}$.
+    </div>
+
+    <div class="skill">
+        <span class="title">Capacité : Changement d'indice</span>
+        Il est souvent utile de changer la variable d'indice dans une somme ou un produit. Par exemple, poser $j = k+1$. Si $k$ va de $m$ à $n$, alors $j$ va de $m+1$ à $n+1$.
+        $$ \sum_{k=m}^n a_k = \sum_{j=m+1}^{n+1} a_{j-1} $$
+        <span class="title">Capacité : Regroupement de termes</span>
+        On peut séparer une somme en plusieurs parties ou regrouper des termes. Par exemple, séparer les termes pairs et impairs.
+        $$ \sum_{k=1}^{2n} a_k = \sum_{p=1}^n a_{2p} + \sum_{p=0}^{n-1} a_{2p+1} $$
+    </div>
+
+    <div class="comment">
+        <span class="title">Commentaire</span>
+        Dans la pratique, on peut écrire les calculs intermédiaires avec des points de suspension pour visualiser, par exemple, l'annulation dans une somme télescopique.
+    </div>
+
+    <div class="theorem">
+        <span class="title">Théorème : Sommes usuelles</span>
+        Pour tout entier $n \ge 1$ :
+        <ul>
+            <li>Somme des premiers entiers : $\sum_{k=1}^n k = \frac{n(n+1)}{2}$.</li>
+            <li>Somme des premiers carrés : $\sum_{k=1}^n k^2 = \frac{n(n+1)(2n+1)}{6}$.</li>
+            <li>Somme géométrique (pour $x \in \mathbb{R}, x \neq 1$) : $\sum_{k=0}^n x^k = \frac{1 - x^{n+1}}{1 - x}$. Si $x=1$, $\sum_{k=0}^n 1 = n+1$.</li>
+        </ul>
+    </div>
+
+    <div class="proof">
+        <span class="title">Preuve (Somme des entiers)</span>
+        Méthode 1 (Gauss) : Soit $S = \sum_{k=1}^n k$.
+        $S = 1 + 2 + \dots + (n-1) + n$
+        $S = n + (n-1) + \dots + 2 + 1$
+        En additionnant terme à terme :
+        $2S = (1+n) + (2+n-1) + \dots + (n-1+2) + (n+1)$
+        $2S = (n+1) + (n+1) + \dots + (n+1) + (n+1)$ (n termes)
+        $2S = n(n+1)$, donc $S = \frac{n(n+1)}{2}$.
+        Méthode 2 (Récurrence) :
+        Initialisation (n=1) : $\sum_{k=1}^1 k = 1$. $\frac{1(1+1)}{2} = 1$. C'est vrai.
+        Hérédité : Supposons $\sum_{k=1}^n k = \frac{n(n+1)}{2}$ pour un $n \ge 1$.
+        Montrons que $\sum_{k=1}^{n+1} k = \frac{(n+1)(n+2)}{2}$.
+        $\sum_{k=1}^{n+1} k = (\sum_{k=1}^n k) + (n+1) \stackrel{HR}{=} \frac{n(n+1)}{2} + (n+1) = (n+1)(\frac{n}{2} + 1) = (n+1)(\frac{n+2}{2}) = \frac{(n+1)(n+2)}{2}$.
+        La formule est vraie pour $n+1$.
+        Conclusion : Par récurrence, la formule est vraie pour tout $n \ge 1$.
+
+        <span class="title">Preuve (Somme géométrique, x != 1)</span>
+        Soit $S_n = \sum_{k=0}^n x^k = 1 + x + x^2 + \dots + x^n$.
+        $x S_n = x + x^2 + \dots + x^n + x^{n+1}$.
+        $S_n - x S_n = (1 + x + \dots + x^n) - (x + x^2 + \dots + x^{n+1}) = 1 - x^{n+1}$.
+        $(1-x) S_n = 1 - x^{n+1}$.
+        Comme $x \neq 1$, $1-x \neq 0$, on peut diviser : $S_n = \frac{1 - x^{n+1}}{1 - x}$.
+
+        *(La preuve pour la somme des carrés est souvent vue en exercice, par exemple par récurrence ou en utilisant $\sum (k+1)^3 - k^3$).*
+    </div>
+
+    <div class="theorem">
+        <span class="title">Théorème : Factorisation de $a^n - b^n$</span>
+        Pour tous réels $a, b$ et tout entier $n \ge 1$ :
+        $$ a^n - b^n = (a - b) \sum_{k=0}^{n-1} a^{n-1-k} b^k $$
+        Soit $a^n - b^n = (a - b) (a^{n-1} + a^{n-2}b + \dots + a b^{n-2} + b^{n-1})$.
+    </div>
+
+    <div class="proof">
+        <span class="title">Preuve</span>
+        Si $a=b$, les deux côtés valent 0. Supposons $a \neq b$.
+        Si $a=0$, $-b^n = (-b) (b^{n-1})$ si $n \ge 1$. Vrai.
+        Si $b=0$, $a^n = a (a^{n-1})$. Vrai.
+        Supposons $a, b \neq 0$ et $a \neq b$.
+        On part de la somme géométrique avec $x = b/a$ (supposons $a \neq 0$).
+        $\sum_{k=0}^{n-1} (\frac{b}{a})^k = \frac{1 - (b/a)^n}{1 - b/a} = \frac{1 - b^n/a^n}{(a-b)/a} = \frac{(a^n - b^n)/a^n}{(a-b)/a} = \frac{a^n - b^n}{a^n} \frac{a}{a-b} = \frac{a^n - b^n}{a^{n-1}(a-b)}$.
+        Donc, $\sum_{k=0}^{n-1} \frac{b^k}{a^k} = \frac{a^n - b^n}{a^{n-1}(a-b)}$.
+        Multiplions par $a^{n-1}(a-b)$ :
+        $(a-b) a^{n-1} \sum_{k=0}^{n-1} (\frac{b}{a})^k = a^n - b^n$.
+        $(a-b) \sum_{k=0}^{n-1} a^{n-1} \frac{b^k}{a^k} = a^n - b^n$.
+        $(a-b) \sum_{k=0}^{n-1} a^{n-1-k} b^k = a^n - b^n$. C.Q.F.D.
+
+        Autre preuve (directe) :
+        $(a-b) \sum_{k=0}^{n-1} a^{n-1-k} b^k = a \sum_{k=0}^{n-1} a^{n-1-k} b^k - b \sum_{k=0}^{n-1} a^{n-1-k} b^k$
+        $= \sum_{k=0}^{n-1} a^{n-k} b^k - \sum_{k=0}^{n-1} a^{n-1-k} b^{k+1}$
+        Dans la seconde somme, posons $j=k+1$. Quand $k$ va de 0 à $n-1$, $j$ va de 1 à $n$.
+        $= \sum_{k=0}^{n-1} a^{n-k} b^k - \sum_{j=1}^{n} a^{n-j} b^j$
+        Réindexons la seconde somme avec $k$ :
+        $= (a^n b^0 + \sum_{k=1}^{n-1} a^{n-k} b^k) - (\sum_{k=1}^{n-1} a^{n-k} b^k + a^{n-n} b^n)$
+        $= a^n + \sum_{k=1}^{n-1} a^{n-k} b^k - \sum_{k=1}^{n-1} a^{n-k} b^k - b^n = a^n - b^n$.
+    </div>
+
+    <div class="example">
+        <span class="title">Exemple</span>
+        Factoriser $x^3 - 8 = x^3 - 2^3$. Ici $a=x, b=2, n=3$.
+        $x^3 - 2^3 = (x-2) (x^{3-1-0} 2^0 + x^{3-1-1} 2^1 + x^{3-1-2} 2^2)$
+        $= (x-2) (x^2 \cdot 1 + x^1 \cdot 2 + x^0 \cdot 4) = (x-2)(x^2 + 2x + 4)$.
+    </div>
+
+    <div class="definition">
+        <span class="title">Définition : Sommes doubles</span>
+        Soit $I$ et $J$ deux ensembles finis d'indices et $(a_{i,j})$ une famille de réels indexée par $I \times J$.
+        La somme double est $\sum_{i \in I} \sum_{j \in J} a_{i,j} = \sum_{i \in I} (\sum_{j \in J} a_{i,j})$.
+    </div>
+
+    <div class="theorem">
+        <span class="title">Théorème : Interversion de l'ordre de sommation</span>
+        Pour une famille finie $(a_{i,j})_{i \in I, j \in J}$:
+        $$ \sum_{i \in I} \sum_{j \in J} a_{i,j} = \sum_{j \in J} \sum_{i \in I} a_{i,j} = \sum_{(i,j) \in I \times J} a_{i,j} $$
+    </div>
+
+    <div class="theorem">
+        <span class="title">Théorème : Produit de deux sommes finies</span>
+        $$ \left( \sum_{i \in I} a_i \right) \left( \sum_{j \in J} b_j \right) = \sum_{i \in I} \sum_{j \in J} a_i b_j $$
+    </div>
+
+    <div class="proof">
+        <span class="title">Preuve (Produit de sommes)</span>
+        Soit $A = \sum_{i \in I} a_i$. Alors $A \left( \sum_{j \in J} b_j \right) = \sum_{j \in J} (A b_j)$ par homogénéité.
+        Ensuite, $A b_j = (\sum_{i \in I} a_i) b_j = \sum_{i \in I} (a_i b_j)$ par homogénéité.
+        Donc $\left( \sum_{i \in I} a_i \right) \left( \sum_{j \in J} b_j \right) = \sum_{j \in J} \left( \sum_{i \in I} a_i b_j \right)$.
+        Par le théorème d'interversion, ceci est égal à $\sum_{i \in I} \left( \sum_{j \in J} a_i b_j \right) = \sum_{i \in I} \sum_{j \in J} a_i b_j$.
+    </div>
+
+    <div class="example">
+        <span class="title">Exemple : Sommes Triangulaires</span>
+        Calculer $S = \sum_{i=1}^n \sum_{j=1}^i a_{i,j}$. Ceci est une somme sur l'ensemble d'indices $T = \{ (i,j) \in \mathbb{N}^2 \mid 1 \le j \le i \le n \}$.
+        On peut intervertir l'ordre de sommation. Il faut décrire $T$ par $j$ d'abord.
+        Le plus petit $j$ est 1. Le plus grand est $n$.
+        Pour un $j$ fixé (entre 1 et $n$), $i$ doit vérifier $j \le i \le n$.
+        Donc $T = \{ (i,j) \in \mathbb{N}^2 \mid 1 \le j \le n, j \le i \le n \}$.
+        $$ S = \sum_{j=1}^n \sum_{i=j}^n a_{i,j} $$
+        Exemple concret : Calculer $\sum_{i=1}^n \sum_{j=1}^i 1$.
+        $\sum_{i=1}^n (\sum_{j=1}^i 1) = \sum_{i=1}^n i = \frac{n(n+1)}{2}$.
+        Interversion : $\sum_{j=1}^n \sum_{i=j}^n 1 = \sum_{j=1}^n (n - j + 1)$.
+        Posons $k = n-j+1$. Quand $j=1, k=n$. Quand $j=n, k=1$.
+        La somme est $\sum_{k=1}^n k = \frac{n(n+1)}{2}$. Les deux méthodes donnent le même résultat.
+    </div>
+
+    <div class="definition">
+        <span class="title">Rappel : Factorielle</span>
+        Pour tout entier $n \ge 0$, la factorielle de $n$, notée $n!$, est définie par :
+        $0! = 1$
+        $n! = n \times (n-1) \times \dots \times 2 \times 1 = \prod_{k=1}^n k$ pour $n \ge 1$.
+        Propriété : $(n+1)! = (n+1) \times n!$ pour $n \ge 0$.
+    </div>
+
+    <div class="definition">
+        <span class="title">Rappel : Coefficients Binomiaux</span>
+        Pour $n, k$ entiers naturels avec $0 \le k \le n$, le coefficient binomial "k parmi n" (ou "n choisir k") est :
+        $$ \binom{n}{k} = \frac{n!}{k!(n-k)!} $$
+        <span class="title">Convention</span>
+        On étend la définition en posant $\binom{n}{k} = 0$ si $k < 0$ ou $k > n$.
+    </div>
+
+    <div class="property">
+        <span class="title">Propriétés des Coefficients Binomiaux</span>
+        Pour $n, k$ entiers :
+        <ul>
+            <li>Symétrie : $\binom{n}{k} = \binom{n}{n-k}$ (pour $0 \le k \le n$)</li>
+            <li>Cas particuliers : $\binom{n}{0} = 1$, $\binom{n}{n} = 1$, $\binom{n}{1} = n$ (pour $n \ge 1$)</li>
+            <li>Formule de Pascal : $\binom{n}{k} + \binom{n}{k+1} = \binom{n+1}{k+1}$ (pour $0 \le k \le n$)</li>
+        </ul>
+    </div>
+
+    <div class="proof">
+        <span class="title">Preuve (Formule de Pascal)</span>
+        Pour $0 \le k < n$:
+        $\binom{n}{k} + \binom{n}{k+1} = \frac{n!}{k!(n-k)!} + \frac{n!}{(k+1)!(n-k-1)!}$
+        On met au même dénominateur $(k+1)!(n-k)!$ :
+        $= \frac{n!(k+1)}{(k+1)k!(n-k)!} + \frac{n!(n-k)}{(k+1)!(n-k)(n-k-1)!}$
+        $= \frac{n!(k+1)}{(k+1)!(n-k)!} + \frac{n!(n-k)}{(k+1)!(n-k)!}$
+        $= \frac{n!(k+1 + n-k)}{(k+1)!(n-k)!} = \frac{n!(n+1)}{(k+1)!(n-k)!}$
+        $= \frac{(n+1)!}{(k+1)!((n+1)-(k+1))!} = \binom{n+1}{k+1}$.
+        Si $k=n$, $\binom{n}{n} + \binom{n}{n+1} = 1 + 0 = 1$. Et $\binom{n+1}{n+1} = 1$. C'est vrai aussi.
+        Si $k=-1$, $\binom{n}{-1} + \binom{n}{0} = 0 + 1 = 1$. Et $\binom{n+1}{0} = 1$. C'est vrai aussi (avec la convention).
+    </div>
+
+    <div class="theorem">
+        <span class="title">Théorème : Formule du Binôme de Newton</span>
+        Pour tous réels $a, b$ et tout entier naturel $n$ :
+        $$ (a+b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k $$
+        Développé : $(a+b)^n = \binom{n}{0}a^n + \binom{n}{1}a^{n-1}b + \binom{n}{2}a^{n-2}b^2 + \dots + \binom{n}{n-1}ab^{n-1} + \binom{n}{n}b^n$.
+    </div>
+
+    <div class="proof">
+        <span class="title">Preuve (par récurrence sur n)</span>
+        Initialisation (n=0) : $(a+b)^0 = 1$. $\sum_{k=0}^0 \binom{0}{k} a^{0-k} b^k = \binom{0}{0} a^0 b^0 = 1 \times 1 \times 1 = 1$. Vrai.
+        Hérédité : Supposons la formule vraie pour un rang $n \ge 0$. Montrons-la pour $n+1$.
+        $(a+b)^{n+1} = (a+b)(a+b)^n \stackrel{HR}{=} (a+b) \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k$
+        $= a \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k + b \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k$
+        $= \sum_{k=0}^n \binom{n}{k} a^{n+1-k} b^k + \sum_{k=0}^n \binom{n}{k} a^{n-k} b^{k+1}$
+        Dans la seconde somme, posons $j=k+1$. Si $k$ va de 0 à $n$, $j$ va de 1 à $n+1$. $k = j-1$.
+        $= \sum_{k=0}^n \binom{n}{k} a^{n+1-k} b^k + \sum_{j=1}^{n+1} \binom{n}{j-1} a^{n-(j-1)} b^j$
+        Renommons $j$ en $k$ dans la seconde somme :
+        $= \sum_{k=0}^n \binom{n}{k} a^{n+1-k} b^k + \sum_{k=1}^{n+1} \binom{n}{k-1} a^{n+1-k} b^k$
+        On isole les termes $k=0$ de la première somme et $k=n+1$ de la seconde :
+        $= \binom{n}{0} a^{n+1} b^0 + \sum_{k=1}^n \binom{n}{k} a^{n+1-k} b^k + \sum_{k=1}^n \binom{n}{k-1} a^{n+1-k} b^k + \binom{n}{n} a^{n+1-(n+1)} b^{n+1}$
+        $= \binom{n}{0} a^{n+1} + \sum_{k=1}^n \left[ \binom{n}{k} + \binom{n}{k-1} \right] a^{n+1-k} b^k + \binom{n}{n} b^{n+1}$
+        En utilisant la formule de Pascal $\binom{n}{k} + \binom{n}{k-1} = \binom{n+1}{k}$ pour $1 \le k \le n$:
+        $= \binom{n}{0} a^{n+1} + \sum_{k=1}^n \binom{n+1}{k} a^{n+1-k} b^k + \binom{n}{n} b^{n+1}$
+        Or $\binom{n}{0} = 1 = \binom{n+1}{0}$ et $\binom{n}{n} = 1 = \binom{n+1}{n+1}$.
+        $= \binom{n+1}{0} a^{n+1} b^0 + \sum_{k=1}^n \binom{n+1}{k} a^{n+1-k} b^k + \binom{n+1}{n+1} a^0 b^{n+1}$
+        $= \sum_{k=0}^{n+1} \binom{n+1}{k} a^{n+1-k} b^k$.
+        La formule est vraie au rang $n+1$.
+        Conclusion : Par récurrence, la formule du binôme est vraie pour tout $n \ge 0$.
+    </div>
+
+     <div class="example">
+        <span class="title">Exemple</span>
+        Développer $(x+2)^4$.
+        Ici $a=x, b=2, n=4$.
+        $(x+2)^4 = \sum_{k=0}^4 \binom{4}{k} x^{4-k} 2^k$
+        $= \binom{4}{0}x^4 2^0 + \binom{4}{1}x^3 2^1 + \binom{4}{2}x^2 2^2 + \binom{4}{3}x^1 2^3 + \binom{4}{4}x^0 2^4$
+        Les coefficients binomiaux sont : $\binom{4}{0}=1, \binom{4}{1}=4, \binom{4}{2}=\frac{4 \times 3}{2}=6, \binom{4}{3}=\binom{4}{1}=4, \binom{4}{4}=1$.
+        $= 1 \cdot x^4 \cdot 1 + 4 \cdot x^3 \cdot 2 + 6 \cdot x^2 \cdot 4 + 4 \cdot x \cdot 8 + 1 \cdot 1 \cdot 16$
+        $= x^4 + 8x^3 + 24x^2 + 32x + 16$.
+    </div>
+
+    <div class="exercise">
+        <span class="title">Exercices (Section a)</span>
+        <ol>
+            <li>Calculer $\sum_{k=1}^5 k(k-1)$ et $\prod_{k=1}^4 (k^2 - 5)$.</li>
+            <li>Calculer la somme télescopique $\sum_{k=1}^{100} (\sqrt{k+1} - \sqrt{k})$.</li>
+            <li>Montrer par récurrence que $\sum_{k=1}^n k^3 = \left( \frac{n(n+1)}{2} \right)^2$.</li>
+            <li>Calculer $\sum_{k=1}^n \sum_{j=k}^n \frac{1}{j}$ en intervertissant l'ordre de sommation.</li>
+            <li>Calculer $\sum_{k=0}^n \binom{n}{k}$ et $\sum_{k=0}^n (-1)^k \binom{n}{k}$ en utilisant la formule du binôme.</li>
+            <li>Développer $(1-x)^5$ à l'aide de la formule du binôme.</li>
+        </ol>
+    </div>
+
+    <!-- ===================================================================== -->
+    <h4 id="resolution-systemes-pivot">b) Résolution de petits systèmes linéaires par la méthode du pivot</h4>
+
+    <div class="definition">
+        <span class="title">Définition : Système Linéaire</span>
+        Un système linéaire de $p$ équations à $n$ inconnues $x_1, \dots, x_n$ à coefficients réels est un ensemble d'équations de la forme :
+        $$
+        (S) : \begin{cases}
+        a_{11} x_1 + a_{12} x_2 + \dots + a_{1n} x_n = b_1 \\
+        a_{21} x_1 + a_{22} x_2 + \dots + a_{2n} x_n = b_2 \\
+        \vdots \\
+        a_{p1} x_1 + a_{p2} x_2 + \dots + a_{pn} x_n = b_p
+        \end{cases}
+        $$
+        où les $a_{ij}$ (coefficients) et $b_i$ (seconds membres) sont des réels donnés.
+        Résoudre le système signifie trouver tous les n-uplets $(x_1, \dots, x_n)$ de réels vérifiant toutes les équations simultanément.
+    </div>
+
+    <div class="comment">
+        <span class="title">Interprétation Géométrique (Cas simples)</span>
+        <ul>
+            <li><strong>2 équations, 2 inconnues (n=p=2)</strong>: Chaque équation $ax+by=c$ représente une droite dans le plan $\mathbb{R}^2$. Résoudre le système revient à trouver l'intersection des deux droites.
+                <ul>
+                    <li>Un point d'intersection unique : solution unique.</li>
+                    <li>Droites confondues : infinité de solutions (tous les points de la droite).</li>
+                    <li>Droites parallèles distinctes : aucune solution.</li>
+                </ul>
+            </li>
+            <li><strong>3 équations, 3 inconnues (n=p=3)</strong>: Chaque équation $ax+by+cz=d$ représente un plan dans l'espace $\mathbb{R}^3$. Résoudre le système revient à trouver l'intersection des trois plans. Les cas possibles sont plus variés :
+                <ul>
+                    <li>Un point d'intersection unique.</li>
+                    <li>Une droite d'intersection (infinité de solutions).</li>
+                    <li>Un plan d'intersection (si les 3 équations décrivent le même plan, infinité de solutions).</li>
+                    <li>Aucune intersection commune (aucune solution).</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="definition">
+        <span class="title">Définition : Opérations Élémentaires sur les Lignes</span>
+        Les opérations élémentaires sur les lignes (équations) d'un système $(S)$, qui transforment le système en un système équivalent (ayant les mêmes solutions), sont :
+        <ol>
+            <li><strong>Échange de deux lignes $L_i$ et $L_j$ :</strong> Noté $L_i \leftrightarrow L_j$.</li>
+            <li><strong>Multiplication d'une ligne $L_i$ par un réel non nul $\lambda$ :</strong> Noté $L_i \leftarrow \lambda L_i$ (où $\lambda \neq 0$).</li>
+            <li><strong>Ajout à une ligne $L_i$ d'un multiple d'une autre ligne $L_j$ :</strong> Noté $L_i \leftarrow L_i + \lambda L_j$ (où $j \neq i$).</li>
+        </ol>
+    </div>
+
+    <div class="skill">
+        <span class="title">Algorithme du Pivot de Gauss</span>
+        Le but est de transformer le système initial $(S)$ en un système $(S')$ équivalent, de forme échelonnée (triangulaire supérieure), plus simple à résoudre.
+        <strong>Étapes générales (pour un système $n \times n$):</strong>
+        1.  <strong>Choix du pivot :</strong> Choisir un coefficient non nul $a_{i1}$ dans la première colonne (si possible $a_{11}$). Si tous les $a_{i1}$ sont nuls, passer à la colonne suivante. S'il faut, échanger la ligne $L_i$ avec la ligne $L_1$ ($L_1 \leftrightarrow L_i$) pour amener ce pivot en position $(1,1)$.
+        2.  <strong>Élimination :</strong> Pour chaque ligne $L_k$ ($k > 1$) où le coefficient $a_{k1}$ est non nul, utiliser l'opération $L_k \leftarrow L_k - \frac{a_{k1}}{a_{11}} L_1$ pour annuler le coefficient devant $x_1$ dans la ligne $L_k$.
+        3.  <strong>Récurrence :</strong> Répéter les étapes 1 et 2 sur le sous-système formé par les lignes $L_2, \dots, L_n$ et les inconnues $x_2, \dots, x_n$.
+        4.  <strong>Résolution :</strong> Une fois le système sous forme triangulaire supérieure, le résoudre par "remontée" : calculer la dernière inconnue à partir de la dernière équation, puis substituer sa valeur dans l'équation précédente pour trouver l'avant-dernière inconnue, et ainsi de suite.
+
+        <strong>Cas particuliers :</strong>
+        <ul>
+            <li>Si à une étape on obtient une ligne de la forme $0 x_1 + \dots + 0 x_n = b$ avec $b \neq 0$, le système n'a pas de solution (système incompatible).</li>
+            <li>Si on obtient une ligne $0 x_1 + \dots + 0 x_n = 0$, cette équation est redondante et peut être ignorée.</li>
+            <li>Si le système échelonné final a moins d'équations non nulles que d'inconnues, il y aura une infinité de solutions (des variables peuvent être choisies comme paramètres).</li>
+        </ul>
+    </div>
+
+    <div class="example">
+        <span class="title">Exemple : Résolution d'un système 3x3</span>
+        Résoudre le système :
+        $$
+        (S) : \begin{cases}
+        x + 2y + z = 7 & (L_1) \\
+        2x - y + 3z = 7 & (L_2) \\
+        3x + y - z = 2 & (L_3)
+        \end{cases}
+        $$
+        Pivot : $a_{11}=1$.
+        Élimination sous le pivot :
+        $L_2 \leftarrow L_2 - 2L_1$
+        $L_3 \leftarrow L_3 - 3L_1$
+        $$
+        (S') : \begin{cases}
+        x + 2y + z = 7 & (L_1) \\
+        0x - 5y + z = -7 & (L_2') \\
+        0x - 5y - 4z = -19 & (L_3')
+        \end{cases}
+        $$
+        Pivot pour le sous-système : $a'_{22}=-5$.
+        Élimination sous le pivot :
+        $L_3' \leftarrow L_3' - L_2'$ (car $-5 / -5 = 1$)
+        $$
+        (S'') : \begin{cases}
+        x + 2y + z = 7 & (L_1) \\
+        -5y + z = -7 & (L_2') \\
+        0y - 5z = -12 & (L_3'')
+        \end{cases}
+        $$
+        Le système est triangulaire. Résolution par remontée :
+        *   $(L_3'')$ : $-5z = -12 \implies z = \frac{12}{5}$.
+        *   $(L_2')$ : $-5y + z = -7 \implies -5y + \frac{12}{5} = -7 \implies -5y = -7 - \frac{12}{5} = -\frac{35+12}{5} = -\frac{47}{5} \implies y = \frac{47}{25}$.
+        *   $(L_1)$ : $x + 2y + z = 7 \implies x + 2(\frac{47}{25}) + \frac{12}{5} = 7 \implies x + \frac{94}{25} + \frac{60}{25} = 7 \implies x + \frac{154}{25} = \frac{175}{25} \implies x = \frac{175-154}{25} = \frac{21}{25}$.
+
+        La solution unique est $(x, y, z) = (\frac{21}{25}, \frac{47}{25}, \frac{12}{5})$.
+    </div>
+
+    <div class="exercise">
+        <span class="title">Exercices (Section b)</span>
+        <ol>
+            <li>Résoudre le système suivant par la méthode du pivot :
+            $$ \begin{cases} 2x + y = 5 \\ x - 3y = -1 \end{cases} $$
+            Quelle est l'interprétation géométrique ?</li>
+            <li>Résoudre le système suivant par la méthode du pivot :
+            $$ \begin{cases} x + y + z = 1 \\ x + 2y + 3z = 0 \\ x + 3y + 5z = -1 \end{cases} $$
+            Discuter le nombre de solutions.</li>
+             <li>Résoudre le système suivant par la méthode du pivot :
+            $$ \begin{cases} x + y - z = 3 \\ 2x - y + z = 0 \\ x + 2y - 2z = 1 \end{cases} $$
+            Discuter le nombre de solutions.</li>
+        </ol>
+    </div>
+
+    <!-- ===================================================================== -->
+    <h4 id="inegalites">c) Inégalités</h4>
+
+    <div class="property">
+        <span class="title">Propriétés de la Relation d'Ordre sur $\mathbb{R}$</span>
+        La relation $\le$ sur $\mathbb{R}$ est une relation d'ordre total. Elle est compatible avec les opérations :
+        <ul>
+            <li>Si $a \le b$, alors $a+c \le b+c$ pour tout $c \in \mathbb{R}$.</li>
+            <li>Si $a \le b$ et $c \ge 0$, alors $ac \le bc$.</li>
+            <li>Si $a \le b$ et $c \le 0$, alors $ac \ge bc$. (Inversion du sens de l'inégalité)</li>
+            <li>Si $0 < a \le b$, alors $\frac{1}{a} \ge \frac{1}{b}$. (La fonction inverse est décroissante sur $\mathbb{R}^{+*}$)</li>
+            <li>Si $a \le b < 0$, alors $\frac{1}{a} \ge \frac{1}{b}$. (La fonction inverse est décroissante sur $\mathbb{R}^{-*}$)</li>
+        </ul>
+    </div>
+
+    <div class="definition">
+        <span class="title">Définition : Intervalles de $\mathbb{R}$</span>
+        Un intervalle de $\mathbb{R}$ est un sous-ensemble $I$ de $\mathbb{R}$ tel que pour tous $x, y \in I$, tout réel $z$ compris entre $x$ et $y$ appartient aussi à $I$.
+        Les types d'intervalles sont :
+        <ul>
+            <li>Bornés : $[a, b]$, $[a, b[$, $]a, b]$, $]a, b[$ (pour $a \le b$)</li>
+            <li>Non bornés : $[a, +\infty[$, $]a, +\infty[$, $]-\infty, b]$, $]-\infty, b[$, $]-\infty, +\infty[ = \mathbb{R}$</li>
+        </ul>
+    </div>
+
+    <div class="skill">
+        <span class="title">Capacité : Majoration, Minoration, Encadrement</span>
+        <ul>
+            <li><strong>Majorer/Minorer une somme :</strong> Si $a_k \le M_k$ pour $k=1..n$, alors $\sum a_k \le \sum M_k$. Si $a_k \ge m_k$, alors $\sum a_k \ge \sum m_k$.</li>
+            <li><strong>Majorer/Minorer un produit (termes positifs) :</strong> Si $0 \le a_k \le M_k$ pour $k=1..n$, alors $\prod a_k \le \prod M_k$. Si $0 < m_k \le a_k$, alors $\prod a_k \ge \prod m_k$. Attention aux signes !</li>
+            <li><strong>Encadrer un quotient :</strong> Pour encadrer $A/B$, encadrer $A$ et $1/B$ (ce qui nécessite un encadrement de $B$ et de connaître son signe).</li>
+        </ul>
+    </div>
+
+     <div class="skill">
+        <span class="title">Capacité : Résolution d'inéquations</span>
+        Pour résoudre une inéquation (par exemple $f(x) > 0$), on utilise souvent :
+        <ol>
+            <li><strong>Factorisation :</strong> Ramener l'inéquation à une forme $g(x) > 0$ (ou $\ge, <, \le 0$) où $g(x)$ est factorisé.</li>
+            <li><strong>Tableau de signes :</strong> Étudier le signe de chaque facteur dans un tableau, puis déterminer le signe du produit ou quotient $g(x)$.</li>
+            <li><strong>Conclure :</strong> Identifier les intervalles où l'inégalité est vérifiée.</li>
+        </ol>
+    </div>
+
+    <div class="example">
+        <span class="title">Exemple : Résoudre une inéquation</span>
+        Résoudre $\frac{x+1}{x-2} \le 3$.
+        1. Ramener à 0 : $\frac{x+1}{x-2} - 3 \le 0$.
+        2. Mettre au même dénominateur : $\frac{x+1 - 3(x-2)}{x-2} \le 0 \implies \frac{x+1 - 3x + 6}{x-2} \le 0 \implies \frac{-2x + 7}{x-2} \le 0$.
+        3. Tableau de signes :
+           La valeur qui annule le numérateur est $x = 7/2 = 3.5$.
+           La valeur qui annule le dénominateur (valeur interdite) est $x=2$.
+
+           | $x$        | $-\infty$   |     $2$     |    $7/2$    | $+\infty$   |
+           |------------|-------------|-------------|-------------|-------------|
+           | $-2x+7$    |      +      |      +      |      0      |      -      |
+           | $x-2$      |      -      |      0      |      +      |      +      |
+           | $\frac{-2x+7}{x-2}$ |      -      | \!$\|$ \!   |      +      |      0      |      -      |
+
+        4. Conclusion : On cherche $\frac{-2x + 7}{x-2} \le 0$.
+           L'ensemble des solutions est $S = ]-\infty, 2[ \cup [7/2, +\infty[$.
+    </div>
+
+    <div class="definition">
+        <span class="title">Définition : Valeur Absolue</span>
+        Pour $x \in \mathbb{R}$, la valeur absolue de $x$, notée $|x|$, est :
+        $$ |x| = \begin{cases} x & \text{si } x \ge 0 \\ -x & \text{si } x < 0 \end{cases} $$
+        C'est la distance de $x$ à 0 sur la droite réelle. $|x-a|$ est la distance entre $x$ et $a$.
+        Propriétés : $|x| \ge 0$, $|x|=0 \iff x=0$, $|-x|=|x|$, $|xy|=|x||y|$, $|\frac{x}{y}| = \frac{|x|}{|y|}$ (si $y \neq 0$).
+    </div>
+
+    <div class="theorem">
+        <span class="title">Théorème : Inégalité Triangulaire</span>
+        Pour tous réels $a, b$ :
+        $$ |a+b| \le |a| + |b| $$
+        Généralisation : $|\sum_{k=1}^n a_k| \le \sum_{k=1}^n |a_k|$.
+        Autre forme (inégalité triangulaire inverse) : $||a| - |b|| \le |a-b|$.
+    </div>
+
+    <div class="proof">
+        <span class="title">Preuve (Inégalité triangulaire)</span>
+        On sait que $x \le |x|$ et $-x \le |x|$ pour tout $x$.
+        Donc $a \le |a|$ et $b \le |b|$, d'où $a+b \le |a| + |b|$.
+        Aussi, $-a \le |a|$ et $-b \le |b|$, d'où $-(a+b) = (-a)+(-b) \le |a| + |b|$.
+        On a donc $a+b \le |a| + |b|$ et $-(a+b) \le |a| + |b|$.
+        Ceci signifie que $\max(a+b, -(a+b)) \le |a| + |b|$.
+        Or, $|a+b| = \max(a+b, -(a+b))$.
+        Donc $|a+b| \le |a| + |b|$.
+    </div>
+
+     <div class="comment">
+        <span class="title">Interprétation de $|x - a| < b$</span>
+        Soit $a \in \mathbb{R}$ et $b > 0$.
+        L'inégalité $|x - a| < b$ signifie que la distance entre $x$ et $a$ est strictement inférieure à $b$.
+        Cela équivaut à $-b < x - a < b$, soit $a - b < x < a + b$.
+        L'ensemble des solutions est l'intervalle ouvert $]a-b, a+b[$.
+        De même, $|x - a| \le b$ équivaut à $x \in [a-b, a+b]$.
+    </div>
+
+    <div class="definition">
+        <span class="title">Définition : Parties Majorées, Minorées, Bornées</span>
+        Soit $A$ une partie non vide de $\mathbb{R}$.
+        <ul>
+            <li>$A$ est <strong>majorée</strong> s'il existe un réel $M$ tel que $\forall x \in A, x \le M$. $M$ est appelé un <strong>majorant</strong> de $A$.</li>
+            <li>$A$ est <strong>minorée</strong> s'il existe un réel $m$ tel que $\forall x \in A, x \ge m$. $m$ est appelé un <strong>minorant</strong> de $A$.</li>
+            <li>$A$ est <strong>bornée</strong> si elle est à la fois majorée et minorée. Cela équivaut à : il existe $K \ge 0$ tel que $\forall x \in A, |x| \le K$.</li>
+        </ul>
+        <ul>
+            <li>Si $A$ admet un plus grand élément, il est unique et appelé le <strong>maximum</strong> de $A$, noté $\max A$. C'est un majorant qui appartient à $A$.</li>
+            <li>Si $A$ admet un plus petit élément, il est unique et appelé le <strong>minimum</strong> de $A$, noté $\min A$. C'est un minorant qui appartient à $A$.</li>
+        </ul>
+        *(La notion de borne supérieure (sup) et borne inférieure (inf) sera vue plus tard, elles existent toujours pour des parties non vides majorées/minorées, mais n'appartiennent pas forcément à l'ensemble).*
+    </div>
+
+    <div class="example">
+        <span class="title">Exemple</span>
+        Soit $A = ]0, 1]$.
+        $A$ est majoré (par 1, ou 2, ou 10...). $1$ est le plus petit des majorants (borne sup). $1 \in A$, donc $1 = \max A$.
+        $A$ est minoré (par 0, ou -1...). $0$ est le plus grand des minorants (borne inf). $0 \notin A$, donc $A$ n'a pas de minimum.
+        $A$ est borné.
+    </div>
+
+    <div class="definition">
+        <span class="title">Définition : Partie Entière (Fonction Plancher)</span>
+        Pour tout réel $x$, la <strong>partie entière</strong> de $x$, notée $\lfloor x \rfloor$, est le plus grand entier relatif inférieur ou égal à $x$.
+        $$ \lfloor x \rfloor = \max \{ k \in \mathbb{Z} \mid k \le x \} $$
+        Caractérisation : $\lfloor x \rfloor$ est l'unique entier vérifiant :
+        $$ \lfloor x \rfloor \in \mathbb{Z} \quad \text{et} \quad \lfloor x \rfloor \le x < \lfloor x \rfloor + 1 $$
+        On a aussi l'encadrement $x-1 < \lfloor x \rfloor \le x$.
+    </div>
+
+    <div class="example">
+        <span class="title">Exemple</span>
+        $\lfloor 3.14 \rfloor = 3$, $\lfloor 5 \rfloor = 5$, $\lfloor -2.7 \rfloor = -3$, $\lfloor -0.5 \rfloor = -1$.
+    </div>
+
+    <div class="property">
+        <span class="title">Propriétés de la Partie Entière</span>
+        <ul>
+            <li>$\forall x \in \mathbb{R}, \forall n \in \mathbb{Z}, \lfloor x+n \rfloor = \lfloor x \rfloor + n$.</li>
+            <li>$\forall x, y \in \mathbb{R}, \lfloor x \rfloor + \lfloor y \rfloor \le \lfloor x+y \rfloor$. (L'égalité n'est pas toujours vraie).</li>
+        </ul>
+    </div>
+
+    <div class="exercise">
+        <span class="title">Exercices (Section c)</span>
+        <ol>
+            <li>Résoudre l'inéquation $x^2 - 5x + 6 > 0$.</li>
+            <li>Résoudre l'inéquation $\frac{1}{x} < \frac{1}{2}$.</li>
+            <li>Soit $x \in [1, 4]$. Donner un encadrement de $f(x) = \frac{x+1}{x+2}$.</li>
+            <li>Résoudre l'équation $|2x-1| = |x+3|$.</li>
+            <li>Résoudre l'inéquation $|x-2| \le 1$. Interpréter géométriquement.</li>
+            <li>Soit $A = \{ (-1)^n + \frac{1}{n} \mid n \in \mathbb{N}^* \}$. L'ensemble A est-il majoré, minoré, borné ? Admet-il un maximum, un minimum ?</li>
+            <li>Montrer que pour tout réel $x$, $\lfloor x \rfloor + \lfloor -x \rfloor = 0$ si $x \in \mathbb{Z}$ et $-1$ si $x \notin \mathbb{Z}$.</li>
+            <li>Résoudre l'équation $\lfloor 2x-1 \rfloor = 3$.</li>
+        </ol>
+    </div>
+
+    <!-- ===================================================================== -->
+    <h4 id="trigonometrie">d) Trigonométrie</h4>
+
+    <div class="definition">
+        <span class="title">Définition : Cercle Trigonométrique et Paramétrisation</span>
+        Le <strong>cercle trigonométrique</strong> est le cercle de centre l'origine $O(0,0)$ et de rayon 1 dans le plan muni d'un repère orthonormé $(O, \vec{i}, \vec{j})$. Son équation cartésienne est $x^2 + y^2 = 1$.
+        À tout réel $t$, on associe un unique point $M(t)$ sur le cercle trigonométrique en "enroulant" la droite réelle autour du cercle, à partir du point $A(1,0)$, dans le sens trigonométrique (anti-horaire) si $t>0$, et dans le sens horaire si $t<0$. La longueur de l'arc $\widehat{AM(t)}$ est $|t|$.
+        Le réel $t$ est une mesure de l'angle $(\vec{i}, \vec{OM(t)})$ en radians.
+        Les coordonnées de $M(t)$ sont $(\cos t, \sin t)$.
+        $$ \forall t \in \mathbb{R}, \quad \cos^2 t + \sin^2 t = 1 $$
+    </div>
+
+    <div class="definition">
+        <span class="title">Définition : Congruence Modulo $2\pi$</span>
+        Deux réels $a$ et $b$ sont dits <strong>congrus modulo $2\pi$</strong> si leur différence est un multiple entier de $2\pi$. On note :
+        $$ a \equiv b \pmod{2\pi} \iff \exists k \in \mathbb{Z}, a - b = k \cdot 2\pi $$
+        Signification : $a$ et $b$ correspondent au même point sur le cercle trigonométrique.
+        $\cos(a) = \cos(b)$ et $\sin(a) = \sin(b)$ si $a \equiv b \pmod{2\pi}$.
+    </div>
+
+    <div class="property">
+        <span class="title">Propriétés : Angles Associés</span>
+        Pour tout réel $x$ :
+        <ul>
+            <li>$\cos(-x) = \cos(x)$, $\sin(-x) = -\sin(x)$ (cosinus est paire, sinus est impaire)</li>
+            <li>$\cos(\pi + x) = -\cos(x)$, $\sin(\pi + x) = -\sin(x)$ (symétrie centrale par rapport à O)</li>
+            <li>$\cos(\pi - x) = -\cos(x)$, $\sin(\pi - x) = \sin(x)$ (symétrie par rapport à l'axe Oy)</li>
+            <li>$\cos(\frac{\pi}{2} + x) = -\sin(x)$, $\sin(\frac{\pi}{2} + x) = \cos(x)$ (rotation de $+\pi/2$)</li>
+            <li>$\cos(\frac{\pi}{2} - x) = \sin(x)$, $\sin(\frac{\pi}{2} - x) = \cos(x)$ (symétrie par rapport à la droite $y=x$)</li>
+        </ul>
+    </div>
+
+    <div class="property">
+        <span class="title">Valeurs Usuelles</span>
+        <center>
+        | $x$        | $0$    | $\pi/6$        | $\pi/4$        | $\pi/3$        | $\pi/2$ |
+        |------------|--------|----------------|----------------|----------------|---------|
+        | $\cos(x)$  | $1$    | $\sqrt{3}/2$   | $\sqrt{2}/2$   | $1/2$          | $0$     |
+        | $\sin(x)$  | $0$    | $1/2$          | $\sqrt{2}/2$   | $\sqrt{3}/2$   | $1$     |
+        | $\tan(x)$  | $0$    | $1/\sqrt{3}$   | $1$            | $\sqrt{3}$     | indéf.  |
+        </center>
+    </div>
+
+    <div class="skill">
+        <span class="title">Capacité : Résolution d'équations et inéquations trigonométriques simples</span>
+        L'utilisation du cercle trigonométrique est essentielle pour résoudre des équations comme $\cos x = a$, $\sin x = b$, $\tan x = c$, ou des inéquations comme $\cos x \ge a$.
+        <ul>
+            <li>$\cos x = \cos \alpha \iff x \equiv \alpha \pmod{2\pi}$ ou $x \equiv -\alpha \pmod{2\pi}$.</li>
+            <li>$\sin x = \sin \alpha \iff x \equiv \alpha \pmod{2\pi}$ ou $x \equiv \pi-\alpha \pmod{2\pi}$.</li>
+            <li>$\tan x = \tan \alpha \iff x \equiv \alpha \pmod{\pi}$ (pour $\alpha \neq \pi/2 + k\pi$).</li>
+        </ul>
+        Pour les inéquations, on identifie l'arc de cercle correspondant et on en déduit les intervalles solutions pour $x$.
+    </div>
+
+     <div class="example">
+        <span class="title">Exemple : Résoudre $\sin x = 1/2$</span>
+        On sait que $\sin(\pi/6) = 1/2$.
+        Les solutions sont $x \equiv \pi/6 \pmod{2\pi}$ ou $x \equiv \pi - \pi/6 \pmod{2\pi}$.
+        Soit $x \equiv \pi/6 \pmod{2\pi}$ ou $x \equiv 5\pi/6 \pmod{2\pi}$.
+        L'ensemble des solutions est $\{ \frac{\pi}{6} + 2k\pi \mid k \in \mathbb{Z} \} \cup \{ \frac{5\pi}{6} + 2k\pi \mid k \in \mathbb{Z} \}$.
+    </div>
+
+    <div class="theorem">
+        <span class="title">Théorème : Formules d'Addition</span>
+        Pour tous réels $a, b$ :
+        <ul>
+            <li>$\cos(a + b) = \cos a \cos b - \sin a \sin b$</li>
+            <li>$\cos(a - b) = \cos a \cos b + \sin a \sin b$</li>
+            <li>$\sin(a + b) = \sin a \cos b + \cos a \sin b$</li>
+            <li>$\sin(a - b) = \sin a \cos b - \cos a \sin b$</li>
+        </ul>
+    </div>
+
+    <div class="proof">
+        <span class="title">Justification Géométrique (pour $\cos(a-b)$)</span>
+        Considérons les points $M(a)$ et $M(b)$ sur le cercle trigonométrique. Leurs coordonnées sont $(\cos a, \sin a)$ et $(\cos b, \sin b)$.
+        La distance $M(a)M(b)^2$ peut être calculée de deux façons :
+        1.  Avec les coordonnées : $d^2 = (\cos a - \cos b)^2 + (\sin a - \sin b)^2$
+            $d^2 = \cos^2 a - 2\cos a \cos b + \cos^2 b + \sin^2 a - 2\sin a \sin b + \sin^2 b$
+            $d^2 = (\cos^2 a + \sin^2 a) + (\cos^2 b + \sin^2 b) - 2(\cos a \cos b + \sin a \sin b)$
+            $d^2 = 1 + 1 - 2(\cos a \cos b + \sin a \sin b) = 2 - 2(\cos a \cos b + \sin a \sin b)$.
+        2.  Avec le produit scalaire $\vec{OM(a)} \cdot \vec{OM(b)}$. L'angle entre les vecteurs est $(a-b)$ (à $2\pi$ près).
+            $\vec{OM(a)} \cdot \vec{OM(b)} = ||\vec{OM(a)}|| \cdot ||\vec{OM(b)}|| \cos(a-b) = 1 \cdot 1 \cdot \cos(a-b) = \cos(a-b)$.
+            Avec les coordonnées, le produit scalaire est $(\cos a)(\cos b) + (\sin a)(\sin b)$.
+            Donc $\cos(a-b) = \cos a \cos b + \sin a \sin b$.
+        Les autres formules s'en déduisent :
+        *   $\cos(a+b) = \cos(a - (-b)) = \cos a \cos(-b) + \sin a \sin(-b) = \cos a \cos b - \sin a \sin b$.
+        *   $\sin(a+b) = \cos(\frac{\pi}{2} - (a+b)) = \cos((\frac{\pi}{2}-a) - b)$
+            $= \cos(\frac{\pi}{2}-a)\cos b + \sin(\frac{\pi}{2}-a)\sin b = \sin a \cos b + \cos a \sin b$.
+        *   $\sin(a-b) = \sin(a+(-b)) = \sin a \cos(-b) + \cos a \sin(-b) = \sin a \cos b - \cos a \sin b$.
+    </div>
+
+    <div class="theorem">
+        <span class="title">Théorème : Formules de Duplication</span>
+        Pour tout réel $a$ :
+        <ul>
+            <li>$\cos(2a) = \cos^2 a - \sin^2 a = 2\cos^2 a - 1 = 1 - 2\sin^2 a$</li>
+            <li>$\sin(2a) = 2 \sin a \cos a$</li>
+        </ul>
+        Ces formules permettent d'exprimer $\cos^2 a = \frac{1+\cos(2a)}{2}$ et $\sin^2 a = \frac{1-\cos(2a)}{2}$ (formules de linéarisation).
+    </div>
+
+    <div class="skill">
+        <span class="title">Capacité : Formules de factorisation (Produit vers Somme)</span>
+        À partir des formules d'addition, on peut retrouver rapidement :
+        <ul>
+            <li>$\cos a \cos b = \frac{1}{2} [ \cos(a-b) + \cos(a+b) ]$</li>
+            <li>$\sin a \sin b = \frac{1}{2} [ \cos(a-b) - \cos(a+b) ]$</li>
+            <li>$\sin a \cos b = \frac{1}{2} [ \sin(a+b) + \sin(a-b) ]$</li>
+            <li>$\cos a \sin b = \frac{1}{2} [ \sin(a+b) - \sin(a-b) ]$</li>
+        </ul>
+        (Pour les retrouver : écrire $\cos(a-b)$ et $\cos(a+b)$, puis les sommer ou soustraire.)
+    </div>
+
+    <div class="definition">
+        <span class="title">Fonctions Circulaires</span>
+        Les fonctions cosinus ($\cos$) et sinus ($\sin$) sont définies sur $\mathbb{R}$.
+        <ul>
+            <li>Domaine : $\mathbb{R}$</li>
+            <li>Image : $[-1, 1]$</li>
+            <li>Périodicité : $2\pi$-périodiques ($\cos(x+2\pi) = \cos x, \sin(x+2\pi) = \sin x$)</li>
+            <li>Parité : cos est paire, sin est impaire.</li>
+            <li>Dérivabilité : Elles sont dérivables sur $\mathbb{R}$.</li>
+        </ul>
+    </div>
+
+    <div class="theorem">
+        <span class="title">Dérivées des Fonctions Sinus et Cosinus</span>
+        $$ (\sin x)' = \cos x \quad ; \quad (\cos x)' = -\sin x $$
+    </div>
+    <div class="proof">
+        <span class="title">Justification (Rappel Terminale)</span>
+        Les dérivées sont admises en Terminale, basées sur les limites :
+        $\lim_{h \to 0} \frac{\sin h}{h} = 1$ et $\lim_{h \to 0} \frac{\cos h - 1}{h} = 0$.
+        $(\sin x)' = \lim_{h \to 0} \frac{\sin(x+h) - \sin x}{h} = \lim_{h \to 0} \frac{\sin x \cos h + \cos x \sin h - \sin x}{h}$
+        $= \lim_{h \to 0} \left( \sin x \frac{\cos h - 1}{h} + \cos x \frac{\sin h}{h} \right)$
+        $= (\sin x) \cdot 0 + (\cos x) \cdot 1 = \cos x$.
+        La preuve pour $(\cos x)'$ est similaire.
+    </div>
+
+    <div class="theorem">
+        <span class="title">Inégalité $|\sin x| \le |x|$</span>
+        Pour tout réel $x$, $|\sin x| \le |x|$.
+    </div>
+
+    <div class="proof">
+        <span class="title">Preuve (Idée géométrique pour $x \in [0, \pi/2]$)</span>
+        Sur le cercle trigonométrique, pour un angle $x \in [0, \pi/2]$, la longueur de l'arc $AM(x)$ est $x$. Le segment $[M(x)H]$ où $H$ est la projection de $M(x)$ sur l'axe des abscisses a pour longueur $\sin x$. La longueur de la corde $[AM(x)]$ est $\sqrt{(\cos x - 1)^2 + (\sin x)^2}$.
+        Intuitivement, la longueur de la corde est inférieure à la longueur de l'arc.
+        Une preuve plus rigoureuse utilise l'étude de la fonction $f(x) = x - \sin x$.
+        $f'(x) = 1 - \cos x$. Comme $\cos x \le 1$, $f'(x) \ge 0$. Donc $f$ est croissante sur $\mathbb{R}$.
+        Pour $x \ge 0$, $f(x) \ge f(0)=0$, donc $x \ge \sin x$.
+        Pour $x < 0$, posons $y=-x > 0$. $\sin x = \sin(-y) = -\sin y$. On a $y \ge \sin y$. $-x \ge -\sin x$, soit $x \le \sin x$.
+        Donc $\sin x \le x$ si $x \ge 0$ et $\sin x \ge x$ si $x < 0$.
+        Considérons $g(x) = \sin x - (-x) = \sin x + x$. $g'(x) = \cos x + 1 \ge 0$. $g$ est croissante.
+        Pour $x \ge 0$, $g(x) \ge g(0)=0$, donc $\sin x + x \ge 0$, $\sin x \ge -x$.
+        Pour $x < 0$, $g(x) \le g(0)=0$, donc $\sin x + x \le 0$, $\sin x \le -x$.
+        Conclusion : pour tout $x$, $-|x| \le \sin x \le |x|$, ce qui est équivalent à $|\sin x| \le |x|$.
+    </div>
+
+    <div class="definition">
+        <span class="title">Fonction Tangente</span>
+        La fonction tangente est définie par $\tan x = \frac{\sin x}{\cos x}$.
+        <ul>
+            <li>Domaine : $D_{\tan} = \mathbb{R} \setminus \{ \frac{\pi}{2} + k\pi \mid k \in \mathbb{Z} \}$.</li>
+            <li>Périodicité : $\pi$-périodique ($\tan(x+\pi) = \tan x$).</li>
+            <li>Parité : impaire ($\tan(-x) = -\tan x$).</li>
+            <li>Dérivabilité : dérivable sur son domaine.</li>
+        </ul>
+        Interprétation : $\tan x$ est l'ordonnée du point d'intersection de la droite $(OM(x))$ avec la tangente au cercle au point $A(1,0)$.
+    </div>
+
+    <div class="theorem">
+        <span class="title">Dérivée de la Fonction Tangente</span>
+        Pour $x \in D_{\tan}$:
+        $$ (\tan x)' = \frac{1}{\cos^2 x} = 1 + \tan^2 x $$
+    </div>
+
+    <div class="proof">
+        <span class="title">Preuve</span>
+        $(\tan x)' = \left(\frac{\sin x}{\cos x}\right)' = \frac{(\sin x)' \cos x - \sin x (\cos x)'}{\cos^2 x}$
+        $= \frac{(\cos x) \cos x - \sin x (-\sin x)}{\cos^2 x} = \frac{\cos^2 x + \sin^2 x}{\cos^2 x} = \frac{1}{\cos^2 x}$.
+        Or, $\frac{1}{\cos^2 x} = \frac{\cos^2 x + \sin^2 x}{\cos^2 x} = 1 + \frac{\sin^2 x}{\cos^2 x} = 1 + (\tan x)^2$.
+    </div>
+
+    <div class="property">
+        <span class="title">Propriétés de la Tangente</span>
+        <ul>
+            <li>$\tan(\pi+x) = \tan x$</li>
+            <li>$\tan(\pi-x) = -\tan x$</li>
+            <li>$\tan(-x) = -\tan x$</li>
+            <li>Valeurs usuelles : voir tableau plus haut.</li>
+        </ul>
+    </div>
+
+    <div class="theorem">
+        <span class="title">Formules d'Addition pour la Tangente</span>
+        Pour $a, b, a\pm b$ dans le domaine de tan :
+        $$ \tan(a+b) = \frac{\tan a + \tan b}{1 - \tan a \tan b} $$
+        $$ \tan(a-b) = \frac{\tan a - \tan b}{1 + \tan a \tan b} $$
+        Cas particulier (duplication) : $\tan(2a) = \frac{2\tan a}{1 - \tan^2 a}$.
+    </div>
+
+    <div class="skill">
+        <span class="title">Capacité : Expression de $\cos t, \sin t, \tan t$ en fonction de $u = \tan(t/2)$</span>
+        Ces formules sont utiles en intégration (changement de variable de Bioche). Soit $u = \tan(t/2)$, pour $t \neq \pi + 2k\pi$:
+        $$ \cos t = \frac{1 - u^2}{1 + u^2} \quad ; \quad \sin t = \frac{2u}{1 + u^2} \quad ; \quad \tan t = \frac{2u}{1 - u^2} $$
+    </div>
+    <div class="proof">
+        <span class="title">Dérivation (Idée)</span>
+        On utilise les formules de duplication :
+        $\cos t = \cos(2 \cdot t/2) = \cos^2(t/2) - \sin^2(t/2)$.
+        On divise par $1 = \cos^2(t/2) + \sin^2(t/2)$ (licite si $t/2 \neq \pi/2 + k\pi$)
+        $\cos t = \frac{\cos^2(t/2) - \sin^2(t/2)}{\cos^2(t/2) + \sin^2(t/2)}$. On divise numérateur et dénominateur par $\cos^2(t/2)$ :
+        $\cos t = \frac{1 - \tan^2(t/2)}{1 + \tan^2(t/2)} = \frac{1 - u^2}{1 + u^2}$.
+        De même pour $\sin t = \sin(2 \cdot t/2) = 2 \sin(t/2) \cos(t/2)$.
+        $\sin t = \frac{2 \sin(t/2) \cos(t/2)}{\cos^2(t/2) + \sin^2(t/2)}$. On divise numérateur et dénominateur par $\cos^2(t/2)$ :
+        $\sin t = \frac{2 \tan(t/2)}{1 + \tan^2(t/2)} = \frac{2u}{1 + u^2}$.
+        Enfin, $\tan t = \frac{\sin t}{\cos t} = \frac{2u/(1+u^2)}{(1-u^2)/(1+u^2)} = \frac{2u}{1-u^2}$.
+    </div>
+
+
+    <div class="exercise">
+        <span class="title">Exercices (Section d)</span>
+        <ol>
+            <li>Calculer $\cos(5\pi/12)$ et $\sin(5\pi/12)$ en utilisant $5\pi/12 = \pi/4 + \pi/6$.</li>
+            <li>Résoudre dans $\mathbb{R}$ l'équation $\cos(2x) = \sin(x)$.</li>
+            <li>Résoudre dans $[0, 2\pi]$ l'inéquation $\tan x \ge 1$.</li>
+            <li>Exprimer $\cos(3x)$ en fonction de $\cos x$. (Utiliser $\cos(3x)=\cos(2x+x)$).</li>
+            <li>Linéariser $\cos^3 x$. (Utiliser $\cos x = \frac{e^{ix}+e^{-ix}}{2}$ ou les formules de duplication).</li>
+            <li>Montrer que pour $a, b \neq \pi/2 + k\pi$, si $a+b \neq \pi/2 + k\pi$, alors $\tan a + \tan b = \frac{\sin(a+b)}{\cos a \cos b}$.</li>
+            <li>Calculer $\tan(\pi/8)$ en utilisant $\tan(2a)$.</li>
+        </ol>
+    </div>
+
+<script>
+    // Ensure KaTeX renders after the page loads
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            // customised options
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false}
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
