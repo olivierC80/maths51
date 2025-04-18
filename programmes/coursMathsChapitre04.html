@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techniques de Calcul Différentiel et Intégral</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+        h3, h4, h5 { color: #0056b3; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 30px; }
+        h4 { margin-top: 40px; font-size: 1.4em; }
+        h5 { font-size: 1.2em; border-bottom: none; }
+        .intro-text { font-style: italic; color: #555; }
+        .intro-text ul { font-style: normal; color: #333; margin-top: 10px; }
+        .definition, .theorem, .proof, .example, .exercise, .property, .comment, .skill, .reminder {
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 4px solid #0056b3;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .definition .title, .theorem .title, .proof .title, .example .title, .exercise .title, .property .title, .comment .title, .skill .title, .reminder .title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #004085;
+        }
+        .proof { border-left-color: #17a2b8; }
+        .proof .title { color: #0c5460; }
+        .example { border-left-color: #28a745; }
+        .example .title { color: #155724; }
+        .exercise { border-left-color: #ffc107; }
+        .exercise .title { color: #856404; }
+        .reminder { border-left-color: #6c757d; }
+        .reminder .title { color: #343a40; }
+        code { background-color: #e9ecef; padding: 2px 4px; border-radius: 3px; }
+        .katex-display { display: block; text-align: center; margin: 1em 0; }
+        .figure { text-align: center; margin: 20px 0; }
+        .figure img { max-width: 100%; height: auto; border: 1px solid #ccc; }
+        .figure figcaption { font-style: italic; color: #555; margin-top: 5px; }
+        /* Table styling */
+        .content-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .content-table th, .content-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .content-table th { background-color: #f2f2f2; color: #333; }
+        /* Hide the syllabus tables in the final output if desired */
+        /* .content-table { display: none; } */
+    </style>
+</head>
+<body>
+
+<h3 id="calcul-diff-int">Techniques fondamentales de calcul différentiel et intégral</h3>
+<p class="intro-text">
+    Le point de vue adopté dans cette section est pratique : il s'agit, en prenant appui sur les acquis du lycée, de mettre en œuvre les techniques de base de l'analyse. La mise en place rigoureuse des notions abordées fait l'objet de sections ultérieures.
+    <br>Les objectifs de formation sont les suivants :
+    <ul>
+        <li>l'introduction de fonctions pour établir des inégalités et résoudre des problèmes d'optimisation;</li>
+        <li>la manipulation des fonctions classiques dont le corpus est étendu;</li>
+        <li>le calcul de dérivées et de primitives;</li>
+        <li>la mise en pratique, sur des exemples simples, de l'intégration par parties et du changement de variable;</li>
+        <li>l'application des deux points précédents aux équations différentielles.</li>
+    </ul>
+    Le cours sur les équations différentielles est illustré par des exemples issus des autres disciplines scientifiques.
+</p>
+
+<h4>A - Fonctions d'une variable réelle à valeurs réelles ou complexes</h4>
+
+<h5 id="fonctions-generalites">a) Généralités sur les fonctions</h5>
+
+<!-- The following table is from the syllabus description and can be hidden if not needed in the final course page -->
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr><td>Ensemble de définition. Représentation graphique d'une fonction $f$ à valeurs réelles.</td><td>Les étudiants doivent savoir déduire de la représentation graphique de $f$ celles de fonctions obtenues par des transformations simples, comme $x \mapsto f(x+a)$ ou $x \mapsto f(ax)$.</td></tr>
+        <tr><td>Parité, imparité, périodicité.</td><td>Interprétation géométrique de ces propriétés. Utilisation pour la réduction du domaine d'étude.</td></tr>
+        <tr><td>Somme, produit, composée.</td><td></td></tr>
+        <tr><td>Monotonie (large et stricte). Fonctions majorées, minorées, bornées.</td><td>Traduction géométrique de ces propriétés. La fonction $f$ est bornée si et seulement si $|f|$ est majorée.</td></tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <span class="title">Définition : Fonction et Ensemble de Définition</span>
+    Une <strong>fonction</strong> $f$ d'une variable réelle à valeurs réelles (ou complexes) associe à certains réels $x$ au plus une valeur $f(x)$.
+    L'<strong>ensemble de définition</strong> de $f$, noté $\mathcal{D}_f$, est l'ensemble des réels $x$ pour lesquels $f(x)$ est défini (calculable).
+</div>
+
+<div class="definition">
+    <span class="title">Définition : Représentation Graphique</span>
+    La <strong>représentation graphique</strong> (ou graphe) d'une fonction $f: \mathcal{D}_f \to \mathbb{R}$ dans un repère $(O, \vec{i}, \vec{j})$ du plan est l'ensemble des points $M(x, y)$ tels que $x \in \mathcal{D}_f$ et $y = f(x)$.
+    $$ \mathcal{C}_f = \{ M(x, f(x)) \mid x \in \mathcal{D}_f \} $$
+</div>
+
+<div class="skill">
+    <span class="title">Capacité : Transformations Graphiques</span>
+    Soit $\mathcal{C}_f$ le graphe de $f$.
+    <ul>
+        <li>Le graphe de $g(x) = f(x) + b$ s'obtient par translation de $\mathcal{C}_f$ de vecteur $b\vec{j}$.</li>
+        <li>Le graphe de $g(x) = f(x-a)$ s'obtient par translation de $\mathcal{C}_f$ de vecteur $a\vec{i}$.</li>
+        <li>Le graphe de $g(x) = -f(x)$ s'obtient par symétrie de $\mathcal{C}_f$ par rapport à l'axe $(Ox)$.</li>
+        <li>Le graphe de $g(x) = f(-x)$ s'obtient par symétrie de $\mathcal{C}_f$ par rapport à l'axe $(Oy)$.</li>
+        <li>Le graphe de $g(x) = k f(x)$ ($k>0$) s'obtient par dilatation/contraction verticale de $\mathcal{C}_f$.</li>
+        <li>Le graphe de $g(x) = f(kx)$ ($k>0$) s'obtient par dilatation/contraction horizontale de $\mathcal{C}_f$.</li>
+        <li>Le graphe de $g(x) = |f(x)|$ s'obtient en conservant la partie de $\mathcal{C}_f$ au-dessus de $(Ox)$ et en remplaçant la partie en dessous par son symétrique par rapport à $(Ox)$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <span class="title">Définition : Parité, Imparité, Périodicité</span>
+    Soit $f$ une fonction définie sur $\mathcal{D}_f$.
+    <ul>
+        <li>$f$ est <strong>paire</strong> si $\mathcal{D}_f$ est symétrique par rapport à 0 (i.e., $x \in \mathcal{D}_f \implies -x \in \mathcal{D}_f$) et si $\forall x \in \mathcal{D}_f, f(-x) = f(x)$.
+            <br><em>Interprétation géométrique :</em> Le graphe $\mathcal{C}_f$ est symétrique par rapport à l'axe des ordonnées $(Oy)$.</li>
+        <li>$f$ est <strong>impaire</strong> si $\mathcal{D}_f$ est symétrique par rapport à 0 et si $\forall x \in \mathcal{D}_f, f(-x) = -f(x)$.
+            <br><em>Interprétation géométrique :</em> Le graphe $\mathcal{C}_f$ est symétrique par rapport à l'origine $O$.</li>
+        <li>$f$ est <strong>périodique</strong> de période $T$ ($T>0$) si $\forall x \in \mathcal{D}_f, x+T \in \mathcal{D}_f$ et $f(x+T) = f(x)$.
+            <br><em>Interprétation géométrique :</em> Le graphe $\mathcal{C}_f$ est invariant par translation de vecteur $T\vec{i}$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    <span class="title">Réduction du Domaine d'Étude</span>
+    Ces propriétés permettent de réduire l'intervalle d'étude de la fonction.
+    <ul>
+        <li>Si $f$ est paire ou impaire, on l'étudie sur $\mathcal{D}_f \cap [0, +\infty[$.</li>
+        <li>Si $f$ est périodique de période $T$, on l'étudie sur un intervalle de longueur $T$, par exemple $[0, T] \cap \mathcal{D}_f$ ou $[-T/2, T/2] \cap \mathcal{D}_f$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <span class="title">Opérations sur les Fonctions</span>
+    Soient $f$ et $g$ deux fonctions définies respectivement sur $\mathcal{D}_f$ et $\mathcal{D}_g$.
+    <ul>
+        <li><strong>Somme :</strong> $(f+g)(x) = f(x) + g(x)$, définie sur $\mathcal{D}_f \cap \mathcal{D}_g$.</li>
+        <li><strong>Produit :</strong> $(f \times g)(x) = f(x) \times g(x)$, définie sur $\mathcal{D}_f \cap \mathcal{D}_g$.</li>
+        <li><strong>Produit par un scalaire :</strong> $(\lambda f)(x) = \lambda f(x)$ ($\lambda \in \mathbb{R}$ ou $\mathbb{C}$), définie sur $\mathcal{D}_f$.</li>
+        <li><strong>Composition :</strong> $(g \circ f)(x) = g(f(x))$, définie pour $x \in \mathcal{D}_f$ tel que $f(x) \in \mathcal{D}_g$.
+            <br>$\mathcal{D}_{g \circ f} = \{ x \in \mathcal{D}_f \mid f(x) \in \mathcal{D}_g \}$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <span class="title">Monotonie et Fonctions Bornées</span>
+    Soit $f$ une fonction définie sur un intervalle $I \subseteq \mathcal{D}_f$.
+    <ul>
+        <li>$f$ est <strong>croissante</strong> sur $I$ si $\forall x, y \in I, (x \le y \implies f(x) \le f(y))$.</li>
+        <li>$f$ est <strong>strictement croissante</strong> sur $I$ si $\forall x, y \in I, (x < y \implies f(x) < f(y))$.</li>
+        <li>$f$ est <strong>décroissante</strong> sur $I$ si $\forall x, y \in I, (x \le y \implies f(x) \ge f(y))$.</li>
+        <li>$f$ est <strong>strictement décroissante</strong> sur $I$ si $\forall x, y \in I, (x < y \implies f(x) > f(y))$.</li>
+        <li>$f$ est <strong>monotone</strong> sur $I$ si elle est croissante ou décroissante sur $I$.</li>
+        <li>$f$ est <strong>majorée</strong> sur $I$ s'il existe $M \in \mathbb{R}$ tel que $\forall x \in I, f(x) \le M$.</li>
+        <li>$f$ est <strong>minorée</strong> sur $I$ s'il existe $m \in \mathbb{R}$ tel que $\forall x \in I, f(x) \ge m$.</li>
+        <li>$f$ est <strong>bornée</strong> sur $I$ si elle est majorée et minorée sur $I$.</li>
+    </ul>
+</div>
+
+<div class="property">
+    <span class="title">Caractérisation Fonction Bornée</span>
+    Une fonction $f$ à valeurs réelles est bornée sur $I$ si et seulement si la fonction $|f|$ est majorée sur $I$.
+    (i.e., $\exists K \ge 0, \forall x \in I, |f(x)| \le K$).
+</div>
+
+<div class="comment">
+    <span class="title">Traduction Géométrique</span>
+    <ul>
+        <li>Fonction croissante : le graphe "monte".</li>
+        <li>Fonction décroissante : le graphe "descend".</li>
+        <li>Fonction majorée par $M$ : le graphe est situé sous la droite horizontale $y=M$.</li>
+        <li>Fonction minorée par $m$ : le graphe est situé au-dessus de la droite horizontale $y=m$.</li>
+        <li>Fonction bornée : le graphe est contenu dans une bande horizontale comprise entre $y=m$ et $y=M$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <span class="title">Exercices (Section A-a)</span>
+    <ol>
+        <li>Déterminer l'ensemble de définition des fonctions $f(x) = \sqrt{x^2-1}$, $g(x) = \ln(\sin x)$, $h(x) = \frac{1}{e^x-1}$.</li>
+        <li>Étudier la parité et la périodicité des fonctions $f(x) = \cos(3x)$, $g(x) = x \sin x$, $h(x) = \tan(x/2)$.</li>
+        <li>Tracer le graphe de $f(x)=1/x$. En déduire les graphes de $g(x)=1/(x-1)$ et $h(x)=1+1/x$.</li>
+        <li>La fonction $f(x) = \frac{\sin x}{x}$ est-elle bornée sur $\mathbb{R}^*$ ?</li>
+    </ol>
+</div>
+
+
+<h5 id="fonctions-derivation">b) Dérivation</h5>
+
+<!-- Syllabus table -->
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr><td>Dérivée d'une fonction.</td><td>Notations $f'(x)$, $\frac{d}{dx}(f(x))$. Ces résultats sont rappelés, avec la définition de la dérivée et l'équation de la tangente; ils ne sont pas démontrés à ce stade.</td></tr>
+        <tr><td>Dérivée d'une combinaison linéaire, d'un produit, d'un quotient, d'une composée.</td><td>Exemples simples de calculs de dérivées partielles. Résultats admis à ce stade.</td></tr>
+        <tr><td>Caractérisation des fonctions constantes, (dé)croissantes, strictement (dé)croissantes, parmi les fonctions dérivables sur un intervalle.</td><td>Application : recherche d'extremums, démonstration d'inégalités.</td></tr>
+        <tr><td>Tableau de variations. Étude pratique d'une fonction. Tracé du graphe.</td><td></td></tr>
+        <tr><td>Représentation graphique et dérivée d'une fonction réciproque.</td><td>La formule donnant la dérivée est admise, mais on en donne l'interprétation géométrique.</td></tr>
+        <tr><td>Fonction de classe $\mathcal{C}^1$. Dérivées d'ordre supérieur.</td><td></td></tr>
+    </tbody>
+</table>
+
+<div class="reminder">
+    <span class="title">Rappel : Définition de la Dérivée</span>
+    Soit $f$ une fonction définie sur un intervalle $I$ et $x_0 \in I$. $f$ est <strong>dérivable</strong> en $x_0$ si le taux d'accroissement $\frac{f(x) - f(x_0)}{x - x_0}$ admet une limite finie quand $x \to x_0$ ($x \neq x_0$).
+    Cette limite est le <strong>nombre dérivé</strong> de $f$ en $x_0$, noté $f'(x_0)$.
+    $$ f'(x_0) = \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0} = \lim_{h \to 0} \frac{f(x_0+h) - f(x_0)}{h} $$
+    La fonction $x \mapsto f'(x)$ est la <strong>fonction dérivée</strong> de $f$.
+    Notations : $f'$, $\frac{df}{dx}$, $Df$.
+</div>
+
+<div class="property">
+    <span class="title">Interprétation Géométrique et Tangente</span>
+    Si $f$ est dérivable en $x_0$, le nombre dérivé $f'(x_0)$ est le coefficient directeur de la <strong>tangente</strong> à la courbe $\mathcal{C}_f$ au point d'abscisse $x_0$. L'équation de cette tangente est :
+    $$ y = f(x_0) + f'(x_0) (x - x_0) $$
+</div>
+
+<div class="theorem">
+    <span class="title">Opérations sur les Dérivées (Admises à ce stade)</span>
+    Si $f$ et $g$ sont dérivables sur un intervalle $I$ et $\lambda \in \mathbb{R}$ (ou $\mathbb{C}$):
+    <ul>
+        <li>$(\lambda f + g)' = \lambda f' + g'$</li>
+        <li>$(f \times g)' = f'g + fg'$</li>
+        <li>Si $g$ ne s'annule pas sur $I$: $(\frac{1}{g})' = -\frac{g'}{g^2}$ et $(\frac{f}{g})' = \frac{f'g - fg'}{g^2}$</li>
+        <li>Si $f$ est dérivable sur $I$ et $g$ est dérivable sur un intervalle $J$ contenant $f(I)$: $(g \circ f)' = (g' \circ f) \times f'$. En notation de Leibniz : $\frac{d(g \circ f)}{dx} = \frac{dg}{df} \times \frac{df}{dx}$.</li>
+    </ul>
+</div>
+
+<div class="example">
+    <span class="title">Exemple : Dérivée d'une composée</span>
+    Soit $h(x) = \sin(x^2+1)$. $h = g \circ f$ avec $f(x) = x^2+1$ et $g(u) = \sin u$.
+    $f'(x) = 2x$ et $g'(u) = \cos u$.
+    $h'(x) = g'(f(x)) \times f'(x) = \cos(x^2+1) \times (2x) = 2x \cos(x^2+1)$.
+</div>
+
+<div class="theorem">
+    <span class="title">Lien entre Dérivée et Monotonie (Admis à ce stade)</span>
+    Soit $f$ une fonction dérivable sur un intervalle $I$.
+    <ul>
+        <li>$f$ est constante sur $I \iff \forall x \in I, f'(x) = 0$.</li>
+        <li>$f$ est croissante sur $I \iff \forall x \in I, f'(x) \ge 0$.</li>
+        <li>$f$ est décroissante sur $I \iff \forall x \in I, f'(x) \le 0$.</li>
+        <li>Si $\forall x \in I, f'(x) > 0$ (sauf éventuellement en un nombre fini de points où elle est nulle), alors $f$ est strictement croissante sur $I$.</li>
+        <li>Si $\forall x \in I, f'(x) < 0$ (sauf éventuellement en un nombre fini de points où elle est nulle), alors $f$ est strictement décroissante sur $I$.</li>
+    </ul>
+</div>
+
+<div class="skill">
+    <span class="title">Application : Recherche d'Extremums et Inégalités</span>
+    <ul>
+        <li>Si $f$ est dérivable sur $]a,b[$ et admet un extremum local (maximum ou minimum) en $c \in ]a,b[$, alors $f'(c)=0$. (Attention, la réciproque est fausse).</li>
+        <li>Pour prouver une inégalité $f(x) \ge g(x)$ sur $I$, on peut étudier le signe de la fonction $h(x) = f(x) - g(x)$ en utilisant le signe de sa dérivée $h'(x)$.</li>
+    </ul>
+</div>
+
+<div class="skill">
+    <span class="title">Étude Pratique d'une Fonction</span>
+    Une étude typique comprend les étapes suivantes :
+    1.  Déterminer l'ensemble de définition $\mathcal{D}_f$.
+    2.  Réduire le domaine d'étude (parité, périodicité).
+    3.  Calculer les limites aux bornes du domaine d'étude. Identifier les asymptotes éventuelles (verticales, horizontales, obliques).
+    4.  Calculer la dérivée $f'(x)$.
+    5.  Étudier le signe de $f'(x)$.
+    6.  Dresser le tableau de variations complet (incluant signe de $f'$, variations de $f$, limites et valeurs particulières).
+    7.  Tracer la représentation graphique $\mathcal{C}_f$.
+</div>
+<div class="figure">
+    <!-- Placeholder for an image -->
+    <div style="width:300px; height:200px; border:1px solid #ccc; margin:auto; display:flex; align-items:center; justify-content:center; background:#eee;">Exemple de Tableau de Variations et Graphe (Figure)</div>
+    <figcaption>Tableau de variations et graphe associé.</figcaption>
+</div>
+
+<div class="property">
+    <span class="title">Fonction Réciproque</span>
+    Si $f$ est une fonction continue et strictement monotone sur un intervalle $I$, elle réalise une bijection de $I$ sur l'intervalle image $J=f(I)$. Sa fonction réciproque $f^{-1}$ est définie sur $J$, continue et strictement monotone de même sens que $f$.
+    Les graphes $\mathcal{C}_f$ et $\mathcal{C}_{f^{-1}}$ sont symétriques par rapport à la droite d'équation $y=x$.
+    Si de plus $f$ est dérivable en $x_0 \in I$ et $f'(x_0) \neq 0$, alors $f^{-1}$ est dérivable en $y_0 = f(x_0)$ et :
+    $$ (f^{-1})'(y_0) = \frac{1}{f'(x_0)} = \frac{1}{f'(f^{-1}(y_0))} $$
+    <em>Commentaire :</em> La formule de la dérivée est admise à ce stade. Géométriquement, les pentes des tangentes à $\mathcal{C}_f$ en $(x_0, y_0)$ et à $\mathcal{C}_{f^{-1}}$ en $(y_0, x_0)$ sont inverses l'une de l'autre, car les tangentes sont symétriques par rapport à $y=x$.
+</div>
+
+<div class="figure">
+    <!-- Placeholder for an image -->
+    <div style="width:250px; height:250px; border:1px solid #ccc; margin:auto; display:flex; align-items:center; justify-content:center; background:#eee;">Fonction et Réciproque (Figure)</div>
+    <figcaption>Graphes symétriques de f et f⁻¹ par rapport à y=x.</figcaption>
+</div>
+
+
+<div class="definition">
+    <span class="title">Fonctions de Classe $\mathcal{C}^k$</span>
+    <ul>
+        <li>Une fonction $f$ est de <strong>classe $\mathcal{C}^0$</strong> sur $I$ si elle est continue sur $I$.</li>
+        <li>Une fonction $f$ est de <strong>classe $\mathcal{C}^1$</strong> sur $I$ si elle est dérivable sur $I$ et si sa dérivée $f'$ est continue sur $I$.</li>
+        <li>On définit par récurrence les <strong>dérivées d'ordre supérieur</strong> : $f^{(0)} = f$, $f^{(n+1)} = (f^{(n)})'$. On note aussi $f'' = f^{(2)}$, $f''' = f^{(3)}$, etc.</li>
+        <li>Une fonction $f$ est de <strong>classe $\mathcal{C}^k$</strong> sur $I$ ($k \in \mathbb{N}^*$) si elle est $k$ fois dérivable sur $I$ et si sa dérivée $k$-ième $f^{(k)}$ est continue sur $I$.</li>
+        <li>Une fonction $f$ est de <strong>classe $\mathcal{C}^\infty$</strong> sur $I$ si elle est de classe $\mathcal{C}^k$ pour tout $k \in \mathbb{N}$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <span class="title">Exercices (Section A-b)</span>
+    <ol>
+        <li>Calculer la dérivée des fonctions suivantes : $f(x) = x^2 e^{-x}$, $g(x) = \frac{\ln x}{x}$, $h(x) = \sqrt{1+\cos^2 x}$.</li>
+        <li>Étudier les variations et tracer le graphe de $f(x) = x + \frac{1}{x}$.</li>
+        <li>Montrer que pour tout $x > 0$, $\ln(x) \le x-1$. (Étudier $f(x)=x-1-\ln x$).</li>
+        <li>Soit $f(x) = x^3 + x$. Montrer que $f$ admet une fonction réciproque $f^{-1}$ définie sur $\mathbb{R}$. Calculer $(f^{-1})'(2)$.</li>
+        <li>Calculer la dérivée seconde de $f(x) = \arctan(x)$.</li>
+    </ol>
+</div>
+
+
+<h5 id="fonctions-usuelles">c) Fonctions usuelles</h5>
+
+<!-- Syllabus table -->
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr><td>Fonctions exponentielle, logarithme népérien, puissances.</td><td>Dérivée, variations, représentation graphique. Les fonctions puissances sont définies sur $\mathbb{R}_+^*$ et prolongées en 0 le cas échéant. Seules les fonctions puissances entières sont en outre définies sur $\mathbb{R}^*_-$. Logarithme décimal, logarithme en base 2.</td></tr>
+        <tr><td>Relations $(xy)^\alpha = x^\alpha y^\alpha$, $x^{\alpha+\beta} = x^\alpha x^\beta$, $(x^\alpha)^\beta = x^{\alpha\beta}$.</td><td></td></tr>
+         <tr><td>Croissances comparées des fonctions logarithme, puissances et exponentielle.</td><td></td></tr>
+         <tr><td>Inégalités $\exp(x) \ge 1+x$, $\ln(1+x) \le x$.</td><td></td></tr>
+        <tr><td>Fonctions circulaires réciproques Arcsin, Arccos, Arctan.</td><td>Dérivée, variations, représentation graphique.</td></tr>
+         <tr><td>Fonctions hyperboliques sh, ch, th.</td><td>Dérivée, variations, représentation graphique. Les fonctions hyperboliques réciproques sont hors programme. La seule formule exigible est $\operatorname{ch}^2(x) - \operatorname{sh}^2(x) = 1$.</td></tr>
+    </tbody>
+</table>
+
+<div class="reminder">
+    <span class="title">Rappel : Fonctions Exponentielle et Logarithme Népérien</span>
+    <ul>
+        <li><strong>Exponentielle :</strong> $\exp(x) = e^x$. Domaine $\mathbb{R}$, Image $\mathbb{R}_+^*$. Strictement croissante. Dérivée $(e^x)' = e^x$. $e^0=1$. $e^{a+b}=e^a e^b$. $e^{-a}=1/e^a$.</li>
+        <li><strong>Logarithme Népérien :</strong> $\ln(x)$. Domaine $\mathbb{R}_+^*$, Image $\mathbb{R}$. Strictement croissante. C'est la fonction réciproque de exp. Dérivée $(\ln x)' = 1/x$. $\ln(1)=0, \ln(e)=1$. $\ln(ab)=\ln a + \ln b$. $\ln(a/b)=\ln a - \ln b$. $\ln(a^n)=n\ln a$.</li>
+    </ul>
+</div>
+<div class="figure">
+    <div style="display: flex; justify-content: space-around;">
+        <div style="width:200px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#eee;">Graphe exp(x) (Figure)</div>
+        <div style="width:200px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#eee;">Graphe ln(x) (Figure)</div>
+    </div>
+    <figcaption>Graphes des fonctions exponentielle et logarithme népérien.</figcaption>
+</div>
+
+<div class="definition">
+    <span class="title">Fonctions Puissances</span>
+    Pour $x > 0$ et $\alpha \in \mathbb{R}$, on définit la fonction puissance $x \mapsto x^\alpha$ par :
+    $$ x^\alpha = e^{\alpha \ln x} $$
+    <ul>
+        <li>Domaine : $\mathbb{R}_+^*$ (en général).</li>
+        <li>Si $\alpha > 0$, on peut prolonger par continuité en 0 en posant $0^\alpha = 0$.</li>
+        <li>Si $\alpha = 0$, $x^0 = 1$ pour $x>0$.</li>
+        <li>Si $\alpha < 0$, la fonction tend vers $+\infty$ en $0^+$.</li>
+        <li>Si $\alpha \in \mathbb{N}$ (entier naturel), $x^\alpha = x \times \dots \times x$ ($\alpha$ fois) est définie sur $\mathbb{R}$.</li>
+        <li>Si $\alpha \in \mathbb{Z}$ (entier relatif négatif, $\alpha = -n, n \in \mathbb{N}^*$), $x^\alpha = 1/x^n$ est définie sur $\mathbb{R}^*$.</li>
+        <li>Dérivée : $(x^\alpha)' = (e^{\alpha \ln x})' = (\alpha/x) e^{\alpha \ln x} = (\alpha/x) x^\alpha = \alpha x^{\alpha - 1}$.</li>
+        <li>Variations : dépendent du signe de $\alpha$. Croissante si $\alpha>0$, constante si $\alpha=0$, décroissante si $\alpha<0$.</li>
+    </ul>
+</div>
+
+<div class="property">
+    <span class="title">Règles de Calcul (pour $x, y > 0$)</span>
+    $$ (xy)^\alpha = x^\alpha y^\alpha \quad ; \quad \left(\frac{x}{y}\right)^\alpha = \frac{x^\alpha}{y^\alpha} \quad ; \quad x^{\alpha+\beta} = x^\alpha x^\beta \quad ; \quad x^{\alpha-\beta} = \frac{x^\alpha}{x^\beta} \quad ; \quad (x^\alpha)^\beta = x^{\alpha\beta} $$
+</div>
+
+<div class="comment">
+    <span class="title">Logarithmes en Base $a$</span>
+    Pour $a > 0, a \neq 1$, le logarithme en base $a$, noté $\log_a$, est défini pour $x>0$ par $\log_a(x) = \frac{\ln x}{\ln a}$.
+    Cas courants : $\log_{10}$ (log décimal), $\log_2$.
+</div>
+
+<div class="theorem">
+    <span class="title">Croissances Comparées (Limites usuelles en $+\infty$)</span>
+    Pour tous $\alpha > 0, \beta > 0$:
+    $$ \lim_{x \to +\infty} \frac{(\ln x)^\beta}{x^\alpha} = 0 \quad ; \quad \lim_{x \to +\infty} \frac{x^\alpha}{e^{\beta x}} = 0 \quad ; \quad \lim_{x \to +\infty} \frac{(\ln x)^\beta}{e^{\beta x}} = 0 $$
+    En $0^+$:
+    $$ \lim_{x \to 0^+} x^\alpha |\ln x|^\beta = 0 $$
+    (L'exponentielle l'emporte sur les puissances, qui l'emportent sur le logarithme).
+</div>
+
+<div class="theorem">
+    <span class="title">Inégalités de Référence</span>
+    <ul>
+        <li>$\forall x \in \mathbb{R}, e^x \ge 1+x$. (Égalité ssi $x=0$)
+            <br><em>Preuve :</em> Étudier $f(x) = e^x - (1+x)$. $f'(x) = e^x - 1$. $f'(x)=0 \iff x=0$. $f$ a un minimum en $x=0$ qui vaut $f(0)=e^0-(1+0)=0$. Donc $f(x) \ge 0$.</li>
+        <li>$\forall x > -1, \ln(1+x) \le x$. (Égalité ssi $x=0$)
+            <br><em>Preuve :</em> Étudier $g(x) = x - \ln(1+x)$ sur $]-1, +\infty[$. $g'(x) = 1 - \frac{1}{1+x} = \frac{x}{1+x}$. $g'(x)=0 \iff x=0$. $g$ a un minimum en $x=0$ qui vaut $g(0)=0-\ln(1)=0$. Donc $g(x) \ge 0$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <span class="title">Fonctions Circulaires Réciproques</span>
+    <ul>
+        <li><strong>Arcsinus :</strong> $\arcsin x$. C'est la réciproque de la restriction de $\sin$ à $[-\pi/2, \pi/2]$.
+            <br>Domaine $[-1, 1]$, Image $[-\pi/2, \pi/2]$. Strictement croissante. Impaire.
+            <br>$\arcsin(\sin y) = y$ si $y \in [-\pi/2, \pi/2]$. $\sin(\arcsin x) = x$ si $x \in [-1, 1]$.
+            <br>Dérivée : $(\arcsin x)' = \frac{1}{\sqrt{1-x^2}}$ sur $]-1, 1[$.
+        </li>
+        <li><strong>Arccosinus :</strong> $\arccos x$. C'est la réciproque de la restriction de $\cos$ à $[0, \pi]$.
+            <br>Domaine $[-1, 1]$, Image $[0, \pi]$. Strictement décroissante.
+            <br>$\arccos(\cos y) = y$ si $y \in [0, \pi]$. $\cos(\arccos x) = x$ si $x \in [-1, 1]$.
+            <br>Relation : $\arcsin x + \arccos x = \pi/2$.
+            <br>Dérivée : $(\arccos x)' = -\frac{1}{\sqrt{1-x^2}}$ sur $]-1, 1[$.
+        </li>
+        <li><strong>Arctangente :</strong> $\arctan x$. C'est la réciproque de la restriction de $\tan$ à $]-\pi/2, \pi/2[$.
+            <br>Domaine $\mathbb{R}$, Image $]-\pi/2, \pi/2[$. Strictement croissante. Impaire.
+            <br>$\arctan(\tan y) = y$ si $y \in ]-\pi/2, \pi/2[$. $\tan(\arctan x) = x$ si $x \in \mathbb{R}$.
+            <br>Dérivée : $(\arctan x)' = \frac{1}{1+x^2}$ sur $\mathbb{R}$.
+            <br>Limites : $\lim_{x \to +\infty} \arctan x = \pi/2$, $\lim_{x \to -\infty} \arctan x = -\pi/2$.
+        </li>
+    </ul>
+</div>
+<div class="figure">
+    <div style="display: flex; justify-content: space-around;">
+        <div style="width:150px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#eee;">Graphe arcsin(x)</div>
+        <div style="width:150px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#eee;">Graphe arccos(x)</div>
+        <div style="width:150px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#eee;">Graphe arctan(x)</div>
+    </div>
+    <figcaption>Graphes des fonctions circulaires réciproques.</figcaption>
+</div>
+
+<div class="definition">
+    <span class="title">Fonctions Hyperboliques</span>
+    Pour $x \in \mathbb{R}$:
+    <ul>
+        <li><strong>Cosinus hyperbolique :</strong> $\operatorname{ch}(x) = \frac{e^x + e^{-x}}{2}$. Fonction paire. $\operatorname{ch}(0)=1$. Graphe = chaînette.</li>
+        <li><strong>Sinus hyperbolique :</strong> $\operatorname{sh}(x) = \frac{e^x - e^{-x}}{2}$. Fonction impaire. $\operatorname{sh}(0)=0$.</li>
+        <li><strong>Tangente hyperbolique :</strong> $\operatorname{th}(x) = \frac{\operatorname{sh}(x)}{\operatorname{ch}(x)} = \frac{e^x - e^{-x}}{e^x + e^{-x}}$. Fonction impaire. Domaine $\mathbb{R}$, Image $]-1, 1[$.</li>
+    </ul>
+</div>
+
+<div class="property">
+    <span class="title">Propriétés des Fonctions Hyperboliques</span>
+    <ul>
+        <li>Relation fondamentale : $\operatorname{ch}^2(x) - \operatorname{sh}^2(x) = 1$.</li>
+        <li>Dérivées : $(\operatorname{ch} x)' = \operatorname{sh} x$, $(\operatorname{sh} x)' = \operatorname{ch} x$, $(\operatorname{th} x)' = \frac{1}{\operatorname{ch}^2 x} = 1 - \operatorname{th}^2 x$.</li>
+        <li>Variations : ch est décroissante sur $\mathbb{R}_-$, croissante sur $\mathbb{R}_+$. sh et th sont strictement croissantes sur $\mathbb{R}$.</li>
+        <li>Limites : $\lim_{x\to+\infty} \operatorname{ch} x = +\infty$, $\lim_{x\to+\infty} \operatorname{sh} x = +\infty$, $\lim_{x\to+\infty} \operatorname{th} x = 1$. (Limites opposées en $-\infty$ pour sh et th).</li>
+    </ul>
+    <em>Commentaire :</em> Les fonctions hyperboliques réciproques (Argsh, Argch, Argth) sont hors programme.
+</div>
+<div class="figure">
+     <div style="display: flex; justify-content: space-around;">
+        <div style="width:150px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#eee;">Graphe ch(x)</div>
+        <div style="width:150px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#eee;">Graphe sh(x)</div>
+        <div style="width:150px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#eee;">Graphe th(x)</div>
+    </div>
+    <figcaption>Graphes des fonctions hyperboliques.</figcaption>
+</div>
+
+<div class="exercise">
+    <span class="title">Exercices (Section A-c)</span>
+    <ol>
+        <li>Simplifier $\ln(e^3) - \ln(1/e)$. Calculer $8^{2/3}$.</li>
+        <li>Comparer $\lim_{x \to +\infty} \frac{x^2}{e^x}$ et $\lim_{x \to +\infty} \frac{(\ln x)^3}{\sqrt{x}}$.</li>
+        <li>Résoudre l'équation $\arcsin(x) = \arccos(1/3)$.</li>
+        <li>Calculer la dérivée de $f(x) = \arctan(\frac{1+x}{1-x})$. Simplifier l'expression.</li>
+        <li>Montrer que $\operatorname{ch}(a+b) = \operatorname{ch} a \operatorname{ch} b + \operatorname{sh} a \operatorname{sh} b$.</li>
+        <li>Résoudre l'équation $\operatorname{sh}(x) = 1$.</li>
+    </ol>
+</div>
+
+<h5 id="fonctions-complexes-derivation">d) Dérivation d'une fonction complexe d'une variable réelle</h5>
+
+<!-- Syllabus table -->
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr><td>Dérivée d'une fonction à valeurs complexes.</td><td>La dérivée est définie par les parties réelle et imaginaire.</td></tr>
+         <tr><td>Dérivée d'une combinaison linéaire, d'un produit, d'un quotient.</td><td>Brève extension des résultats sur les fonctions à valeurs réelles.</td></tr>
+        <tr><td>Dérivée de $\exp(\varphi)$ où $\varphi$ est une fonction dérivable à valeurs complexes.</td><td></td></tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <span class="title">Fonction Complexe d'une Variable Réelle</span>
+    Une fonction $f$ d'une variable réelle $t$ à valeurs complexes associe à $t \in I \subseteq \mathbb{R}$ un nombre complexe $f(t)$. On peut l'écrire sous la forme:
+    $$ f(t) = u(t) + i v(t) $$
+    où $u(t) = \operatorname{Re}(f(t))$ et $v(t) = \operatorname{Im}(f(t))$ sont des fonctions réelles de la variable réelle $t$.
+</div>
+
+<div class="definition">
+    <span class="title">Dérivée d'une Fonction Complexe</span>
+    La fonction $f(t) = u(t) + i v(t)$ est <strong>dérivable</strong> en $t_0$ si ses parties réelle $u$ et imaginaire $v$ sont dérivables en $t_0$. Sa dérivée est alors :
+    $$ f'(t_0) = u'(t_0) + i v'(t_0) $$
+    Autrement dit, $(\operatorname{Re} f)' = \operatorname{Re}(f')$ et $(\operatorname{Im} f)' = \operatorname{Im}(f')$.
+</div>
+
+<div class="property">
+    <span class="title">Extension des Règles de Dérivation</span>
+    Les règles de dérivation pour les combinaisons linéaires, produits, quotients s'étendent aux fonctions à valeurs complexes (avec $\lambda \in \mathbb{C}$ pour les combinaisons linéaires).
+    Par exemple, si $f(t)$ et $g(t)$ sont dérivables :
+    <ul>
+        <li>$(f+g)'(t) = f'(t) + g'(t)$</li>
+        <li>$(\lambda f)'(t) = \lambda f'(t)$ pour $\lambda \in \mathbb{C}$</li>
+        <li>$(fg)'(t) = f'(t)g(t) + f(t)g'(t)$</li>
+        <li>$(\frac{f}{g})'(t) = \frac{f'(t)g(t) - f(t)g'(t)}{(g(t))^2}$ (si $g(t) \neq 0$)</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <span class="title">Dérivée de l'Exponentielle Complexe Composée</span>
+    Si $\varphi: I \to \mathbb{C}$ est une fonction dérivable de la variable réelle $t$, alors la fonction $f(t) = e^{\varphi(t)}$ est dérivable sur $I$ et :
+    $$ f'(t) = \varphi'(t) e^{\varphi(t)} $$
+</div>
+
+<div class="proof">
+    <span class="title">Preuve (Idée)</span>
+    Soit $\varphi(t) = a(t) + i b(t)$.
+    $f(t) = e^{a(t)} e^{i b(t)} = e^{a(t)} (\cos(b(t)) + i \sin(b(t)))$.
+    $f(t) = \underbrace{e^{a(t)}\cos(b(t))}_{u(t)} + i \underbrace{e^{a(t)}\sin(b(t))}_{v(t)}$.
+    On calcule $u'(t)$ et $v'(t)$ en utilisant les règles de dérivation réelles (produit, composée).
+    $u'(t) = a'(t)e^{a(t)}\cos(b(t)) - e^{a(t)}b'(t)\sin(b(t))$
+    $v'(t) = a'(t)e^{a(t)}\sin(b(t)) + e^{a(t)}b'(t)\cos(b(t))$
+    $f'(t) = u'(t) + i v'(t)$
+    $= e^{a(t)} [ (a'(t)\cos(b(t)) - b'(t)\sin(b(t))) + i(a'(t)\sin(b(t)) + b'(t)\cos(b(t))) ]$
+    $= e^{a(t)} [ a'(t)(\cos(b(t)) + i\sin(b(t))) + i b'(t)(i\sin(b(t)) + \cos(b(t))) ]$
+    $= e^{a(t)} [ a'(t)e^{ib(t)} + ib'(t)e^{ib(t)} ]$
+    $= e^{a(t)} e^{ib(t)} (a'(t) + ib'(t))$
+    $= e^{\varphi(t)} \varphi'(t)$.
+</div>
+
+<div class="example">
+    <span class="title">Exemple</span>
+    Soit $f(t) = e^{(1+i)t} = e^t e^{it}$.
+    Ici $\varphi(t) = (1+i)t$, donc $\varphi'(t) = 1+i$.
+    $f'(t) = (1+i) e^{(1+i)t}$.
+    Vérification : $f(t) = e^t \cos t + i e^t \sin t$.
+    $f'(t) = (e^t\cos t - e^t\sin t) + i (e^t\sin t + e^t\cos t)$
+    $= e^t(\cos t - \sin t) + i e^t(\sin t + \cos t)$.
+    $(1+i)e^{(1+i)t} = (1+i)(e^t \cos t + i e^t \sin t)$
+    $= e^t [ (1)(\cos t) + (1)(i \sin t) + (i)(\cos t) + (i)(i \sin t) ]$
+    $= e^t [ \cos t + i \sin t + i \cos t - \sin t ]$
+    $= e^t [ (\cos t - \sin t) + i (\sin t + \cos t) ]$. Les deux expressions coïncident.
+</div>
+
+<div class="exercise">
+    <span class="title">Exercices (Section A-d)</span>
+    <ol>
+        <li>Soit $f(t) = \frac{1}{t+i}$. Calculer $f'(t)$.</li>
+        <li>Soit $f(t) = (t+it^2)^3$. Calculer $f'(t)$ de deux manières (formule du produit/chaîne et développement puis dérivation).</li>
+        <li>Calculer la dérivée de $g(t) = e^{i \sin t}$.</li>
+    </ol>
+</div>
+
+
+<h4>B - Primitives et équations différentielles linéaires</h4>
+
+<h5 id="calcul-primitives">a) Calcul de primitives</h5>
+
+<!-- Syllabus table -->
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr><td>Primitives d'une fonction définie sur un intervalle à valeurs complexes. Lien entre intégrales et primitives.</td><td>Description de l'ensemble des primitives d'une fonction sur un intervalle connaissant l'une d'entre elles. On rappelle sans démonstration que, pour une fonction continue $f$, $x \mapsto \int_a^x f(t) dt$ a pour dérivée $f$. On pourra noter $\int f(t)dt$ une primitive générique de $f$.</td></tr>
+        <tr><td>Calcul des primitives, application au calcul d'intégrales.</td><td>Primitives de $x \mapsto e^{\lambda x}$ pour $\lambda \in \mathbb{C}$, application aux primitives de $x \mapsto e^{ax}\cos(bx)$ et $x \mapsto e^{ax}\sin(bx)$.</td></tr>
+        <tr><td>Primitives des fonctions exponentielle, logarithme, puissances, trigonométriques et hyperboliques, et des fonctions $x \mapsto \frac{1}{1+x^2}$, $x \mapsto \frac{1}{\sqrt{1-x^2}}$.</td><td>Les étudiants doivent savoir calculer les primitives de fonctions du type $x \mapsto \frac{1}{ax^2+bx+c}$ et reconnaître les dérivées de fonctions composées.</td></tr>
+         <tr><td>Intégration par parties, changement de variable.</td><td>Pour les applications pratiques, on ne demande pas de rappeler les hypothèses de régularité.</td></tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <span class="title">Primitive d'une Fonction</span>
+    Soit $f: I \to \mathbb{C}$ une fonction définie sur un intervalle $I$ de $\mathbb{R}$.
+    Une fonction $F: I \to \mathbb{C}$ est une <strong>primitive</strong> de $f$ sur $I$ si $F$ est dérivable sur $I$ et $F' = f$.
+</div>
+
+<div class="property">
+    <span class="title">Ensemble des Primitives</span>
+    Si $F$ est une primitive de $f$ sur l'intervalle $I$, alors l'ensemble de toutes les primitives de $f$ sur $I$ est l'ensemble des fonctions $G(x) = F(x) + C$, où $C$ est une constante complexe.
+    On note souvent $\int f(x) dx$ une primitive générique de $f$.
+</div>
+
+<div class="theorem">
+    <span class="title">Théorème Fondamental de l'Analyse (Partie 1, Rappel Admis)</span>
+    Si $f: I \to \mathbb{C}$ est une fonction continue sur l'intervalle $I$, et $a \in I$, alors la fonction $F(x) = \int_a^x f(t) dt$ est l'unique primitive de $f$ sur $I$ qui s'annule en $a$. En particulier, $F'(x) = f(x)$ pour tout $x \in I$.
+    Toute fonction continue sur un intervalle admet des primitives.
+</div>
+
+<div class="property">
+    <span class="title">Lien Primitive - Intégrale</span>
+    Si $F$ est une primitive quelconque de $f$ (continue sur $[a,b]$), alors :
+    $$ \int_a^b f(t) dt = [F(t)]_a^b = F(b) - F(a) $$
+</div>
+
+<div class="skill">
+    <span class="title">Primitives de $e^{\lambda x}$ et Applications</span>
+    Soit $\lambda \in \mathbb{C}^*$. Une primitive de $f(x) = e^{\lambda x}$ est $F(x) = \frac{1}{\lambda} e^{\lambda x}$.
+    Application au calcul de primitives de $e^{ax}\cos(bx)$ et $e^{ax}\sin(bx)$ ($a,b \in \mathbb{R}$).
+    On utilise l'exponentielle complexe : $e^{ax}\cos(bx) = \operatorname{Re}(e^{ax} e^{ibx}) = \operatorname{Re}(e^{(a+ib)x})$.
+    Une primitive de $e^{(a+ib)x}$ est $\frac{1}{a+ib} e^{(a+ib)x}$.
+    $\int e^{ax}\cos(bx) dx = \operatorname{Re}\left( \frac{1}{a+ib} e^{(a+ib)x} \right) + C$
+    $\int e^{ax}\sin(bx) dx = \operatorname{Im}\left( \frac{1}{a+ib} e^{(a+ib)x} \right) + C$
+    En pratique, on calcule $\frac{1}{a+ib} = \frac{a-ib}{a^2+b^2}$ et $e^{(a+ib)x} = e^{ax}(\cos(bx)+i\sin(bx))$ puis on prend la partie réelle ou imaginaire.
+</div>
+
+<div class="property">
+    <span class="title">Tableau des Primitives Usuelles (à une constante près)</span>
+    Sur un intervalle approprié :
+    <center>
+    | Fonction $f(x)$              | Primitive $F(x)$                | Intervalle(s)                     |
+    |-------------------------------|-----------------------------------|-----------------------------------|
+    | $x^n$ ($n \in \mathbb{Z}, n \neq -1$) | $\frac{x^{n+1}}{n+1}$          | $\mathbb{R}$, $\mathbb{R}^*$, ... |
+    | $x^\alpha$ ($\alpha \in \mathbb{R}, \alpha \neq -1$) | $\frac{x^{\alpha+1}}{\alpha+1}$ | $\mathbb{R}_+^*$                 |
+    | $1/x$                         | $\ln|x|$                          | $\mathbb{R}_+^*$ ou $\mathbb{R}_-^*$ |
+    | $e^x$                         | $e^x$                             | $\mathbb{R}$                      |
+    | $\sin x$                      | $-\cos x$                         | $\mathbb{R}$                      |
+    | $\cos x$                      | $\sin x$                          | $\mathbb{R}$                      |
+    | $\tan x$                      | $-\ln|\cos x|$                    | $]-\pi/2+k\pi, \pi/2+k\pi[$     |
+    | $\operatorname{sh} x$         | $\operatorname{ch} x$             | $\mathbb{R}$                      |
+    | $\operatorname{ch} x$         | $\operatorname{sh} x$             | $\mathbb{R}$                      |
+    | $\operatorname{th} x$         | $\ln(\operatorname{ch} x)$        | $\mathbb{R}$                      |
+    | $\frac{1}{1+x^2}$             | $\arctan x$                       | $\mathbb{R}$                      |
+    | $\frac{1}{\sqrt{1-x^2}}$      | $\arcsin x$                       | $]-1, 1[$                         |
+    | $\frac{1}{\cos^2 x} = 1+\tan^2 x$ | $\tan x$                        | $]-\pi/2+k\pi, \pi/2+k\pi[$     |
+    | $\frac{1}{\operatorname{ch}^2 x} = 1-\operatorname{th}^2 x$ | $\operatorname{th} x$           | $\mathbb{R}$                      |
+    </center>
+    Et plus généralement, reconnaître les formes $u' f'(u)$ :
+    | Forme $f(x)$ | Primitive $F(x)$ |
+    |--------------|------------------|
+    | $u'(x) [u(x)]^\alpha$ ($\alpha \neq -1$) | $\frac{[u(x)]^{\alpha+1}}{\alpha+1}$ |
+    | $\frac{u'(x)}{u(x)}$ | $\ln|u(x)|$ |
+    | $u'(x) e^{u(x)}$ | $e^{u(x)}$ |
+    | $u'(x) \sin(u(x))$ | $-\cos(u(x))$ |
+    | $u'(x) \cos(u(x))$ | $\sin(u(x))$ |
+</div>
+
+<div class="skill">
+    <span class="title">Primitives de $\frac{1}{ax^2+bx+c}$</span>
+    On se ramène, par mise sous forme canonique du trinôme et changement de variable affine, à des primitives de type $\int \frac{du}{u^2+1} = \arctan u$ ou $\int \frac{du}{u^2-1} = \frac{1}{2}\ln|\frac{u-1}{u+1}|$ ou $\int \frac{du}{u^2}$.
+    Exemple : $\int \frac{dx}{x^2+2x+5} = \int \frac{dx}{(x+1)^2+4} = \int \frac{dx}{4[((x+1)/2)^2+1]}$.
+    Poser $u = (x+1)/2$, $du = dx/2$.
+    $= \int \frac{2du}{4[u^2+1]} = \frac{1}{2} \int \frac{du}{u^2+1} = \frac{1}{2} \arctan u + C = \frac{1}{2} \arctan\left(\frac{x+1}{2}\right) + C$.
+</div>
+
+<div class="theorem">
+    <span class="title">Intégration par Parties (IPP)</span>
+    Si $u$ et $v$ sont deux fonctions de classe $\mathcal{C}^1$ sur $[a,b]$ (à valeurs réelles ou complexes) :
+    $$ \int_a^b u'(t) v(t) dt = [u(t)v(t)]_a^b - \int_a^b u(t) v'(t) dt $$
+    Formulation avec les primitives : $\int u'v = uv - \int uv'$.
+</div>
+
+<div class="example">
+    <span class="title">Exemple d'IPP</span>
+    Calculer $I = \int_0^1 x e^x dx$.
+    Poser $u'(x) = e^x \implies u(x) = e^x$.
+    Poser $v(x) = x \implies v'(x) = 1$.
+    $u, v$ sont $\mathcal{C}^1$.
+    $I = [x e^x]_0^1 - \int_0^1 1 \cdot e^x dx = (1e^1 - 0e^0) - [e^x]_0^1 = e - (e^1 - e^0) = e - (e - 1) = 1$.
+</div>
+
+<div class="theorem">
+    <span class="title">Changement de Variable</span>
+    Soit $f$ une fonction continue sur un intervalle $J$. Soit $\varphi: [a,b] \to J$ une fonction de classe $\mathcal{C}^1$. Alors :
+    $$ \int_a^b f(\varphi(t)) \varphi'(t) dt = \int_{\varphi(a)}^{\varphi(b)} f(x) dx $$
+    <em>Utilisation pratique :</em> Pour calculer $\int_\alpha^\beta f(x) dx$.
+    On pose $x = \varphi(t)$. Alors $dx = \varphi'(t) dt$.
+    Il faut trouver les nouvelles bornes $a, b$ telles que $\varphi(a)=\alpha$ et $\varphi(b)=\beta$.
+    L'intégrale devient $\int_a^b f(\varphi(t)) \varphi'(t) dt$.
+    Ou bien, on calcule une primitive $G(t)$ de $f(\varphi(t))\varphi'(t)$, puis la primitive de $f(x)$ est $F(x) = G(\varphi^{-1}(x))$.
+</div>
+
+<div class="example">
+    <span class="title">Exemple de Changement de Variable</span>
+    Calculer $I = \int_1^e \frac{(\ln x)^2}{x} dx$.
+    Poser $u = \ln x$. $du = \frac{1}{x} dx$.
+    Bornes : si $x=1$, $u=\ln 1 = 0$. Si $x=e$, $u=\ln e = 1$.
+    $I = \int_0^1 u^2 du = [\frac{u^3}{3}]_0^1 = \frac{1^3}{3} - \frac{0^3}{3} = \frac{1}{3}$.
+    Autre exemple : Calculer $J = \int_0^{\pi/4} \frac{1}{\cos^2 x} dx$.
+    On sait qu'une primitive de $1/\cos^2 x$ est $\tan x$.
+    $J = [\tan x]_0^{\pi/4} = \tan(\pi/4) - \tan(0) = 1 - 0 = 1$.
+    Calculer $K = \int_0^1 \sqrt{1-x^2} dx$ (Aire d'un quart de disque unité).
+    Poser $x = \sin t$. $dx = \cos t dt$.
+    Bornes : si $x=0$, $\sin t = 0 \implies t=0$. Si $x=1$, $\sin t = 1 \implies t=\pi/2$.
+    $\sqrt{1-x^2} = \sqrt{1-\sin^2 t} = \sqrt{\cos^2 t} = |\cos t|$. Pour $t \in [0, \pi/2]$, $\cos t \ge 0$.
+    $K = \int_0^{\pi/2} \cos(t) (\cos t dt) = \int_0^{\pi/2} \cos^2 t dt$.
+    Linéariser : $\cos^2 t = \frac{1+\cos(2t)}{2}$.
+    $K = \int_0^{\pi/2} \frac{1+\cos(2t)}{2} dt = \frac{1}{2} [t + \frac{\sin(2t)}{2}]_0^{\pi/2}$
+    $= \frac{1}{2} [ (\frac{\pi}{2} + \frac{\sin(\pi)}{2}) - (0 + \frac{\sin(0)}{2}) ] = \frac{1}{2} (\frac{\pi}{2}) = \frac{\pi}{4}$.
+</div>
+
+<div class="exercise">
+    <span class="title">Exercices (Section B-a)</span>
+    <ol>
+        <li>Calculer une primitive de $f(x) = \frac{1}{x \ln x}$ sur $]1, +\infty[$.</li>
+        <li>Calculer $\int_0^{\pi/2} e^x \sin(x) dx$.</li>
+        <li>Calculer $\int \frac{dx}{x^2-4}$ (utiliser décomposition en éléments simples ou $\int du/(u^2-1)$).</li>
+        <li>Calculer $\int x \arctan x dx$ par IPP.</li>
+        <li>Calculer $\int_0^1 \frac{e^x}{1+e^{2x}} dx$ en posant $u=e^x$.</li>
+    </ol>
+</div>
+
+
+<h5 id="eq-diff-ordre1">b) Équations différentielles linéaires du premier ordre</h5>
+
+<!-- Syllabus table -->
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr><td>Équation différentielle linéaire du premier ordre $y' + a(x) y = b(x)$ où $a$ et $b$ sont des fonctions réelles ou complexes définies et continues sur un intervalle $I$ de $\mathbb{R}$.</td><td>Équation homogène associée. Cas particulier où la fonction $a$ est constante.</td></tr>
+        <tr><td>Ensemble des solutions de l'équation homogène.</td><td></td></tr>
+         <tr><td>Principe de superposition.</td><td></td></tr>
+        <tr><td>Description de l'ensemble des solutions de l'équation à partir d'une solution particulière et des solutions de l'équation homogène associée.</td><td></td></tr>
+        <tr><td>Méthode de la variation de la constante.</td><td></td></tr>
+        <tr><td>Existence et unicité de la solution d'un problème de Cauchy.</td><td></td></tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <span class="title">Équation Différentielle Linéaire d'Ordre 1</span>
+    Soient $a, b: I \to \mathbb{K}$ (où $\mathbb{K}=\mathbb{R}$ ou $\mathbb{C}$) deux fonctions continues sur un intervalle $I$.
+    L'équation différentielle linéaire d'ordre 1 est :
+    $$ (E): \quad y'(x) + a(x) y(x) = b(x) $$
+    où l'inconnue est une fonction $y: I \to \mathbb{K}$ dérivable.
+    L'<strong>équation homogène associée</strong> est :
+    $$ (H): \quad y'(x) + a(x) y(x) = 0 $$
+    Cas particulier : Si $a(x) = a_0$ est constante, on parle d'équation à coefficient constant.
+</div>
+
+<div class="theorem">
+    <span class="title">Solutions de l'Équation Homogène (H)</span>
+    Soit $A(x)$ une primitive de $a(x)$ sur $I$.
+    Les solutions de l'équation homogène $(H): y' + a(x)y = 0$ sur $I$ sont les fonctions de la forme :
+    $$ y_H(x) = C e^{-A(x)} $$
+    où $C \in \mathbb{K}$ est une constante quelconque.
+    L'ensemble des solutions de (H) est un espace vectoriel de dimension 1 (une droite vectorielle).
+</div>
+<div class="proof">
+    <span class="title">Preuve (Idée)</span>
+    $y' + a(x)y = 0 \iff y'/y = -a(x)$ (si $y \neq 0$).
+    En intégrant : $\ln|y| = -A(x) + k$.
+    $|y| = e^{-A(x)+k} = e^k e^{-A(x)}$.
+    $y = \pm e^k e^{-A(x)}$. Posons $C = \pm e^k$. $y(x) = C e^{-A(x)}$ (avec $C \neq 0$).
+    La solution $y=0$ correspond à $C=0$.
+    Vérification : Si $y(x) = C e^{-A(x)}$, alors $y'(x) = C (-A'(x)) e^{-A(x)} = -C a(x) e^{-A(x)} = -a(x) y(x)$.
+    Donc $y' + a(x)y = 0$.
+</div>
+
+<div class="property">
+    <span class="title">Principe de Superposition</span>
+    Si $y_1$ est solution de $y' + a(x)y = b_1(x)$ et $y_2$ est solution de $y' + a(x)y = b_2(x)$, alors $y_1 + y_2$ est solution de $y' + a(x)y = b_1(x) + b_2(x)$.
+    Si $y_p$ est une solution particulière de $(E)$, et $z$ est une solution de $(E)$, alors $z - y_p$ est solution de $(H)$.
+</div>
+
+<div class="theorem">
+    <span class="title">Structure de l'Ensemble des Solutions de (E)</span>
+    L'ensemble des solutions de l'équation complète $(E): y' + a(x)y = b(x)$ est de la forme :
+    $$ y(x) = y_p(x) + y_H(x) = y_p(x) + C e^{-A(x)} $$
+    où $y_p$ est UNE solution particulière de $(E)$, et $y_H(x) = C e^{-A(x)}$ est la solution générale de l'équation homogène $(H)$.
+    Pour résoudre $(E)$, il suffit donc de trouver UNE solution particulière $y_p$.
+</div>
+
+<div class="skill">
+    <span class="title">Méthode de la Variation de la Constante</span>
+    Pour trouver une solution particulière $y_p$ de $(E)$, on cherche une solution de la forme de la solution homogène, mais où la constante $C$ est remplacée par une fonction $C(x)$.
+    On pose $y_p(x) = C(x) e^{-A(x)}$.
+    On dérive : $y_p'(x) = C'(x) e^{-A(x)} + C(x) (-a(x) e^{-A(x)})$.
+    On reporte dans $(E)$:
+    $[C'(x) e^{-A(x)} - a(x) C(x) e^{-A(x)}] + a(x) [C(x) e^{-A(x)}] = b(x)$
+    $C'(x) e^{-A(x)} = b(x)$
+    $C'(x) = b(x) e^{A(x)}$.
+    Il suffit alors de trouver une primitive de $b(x) e^{A(x)}$ pour obtenir $C(x)$, et donc $y_p(x) = C(x) e^{-A(x)}$.
+</div>
+
+<div class="example">
+    <span class="title">Exemple : Résoudre $y' - \frac{1}{x} y = x$ sur $]0, +\infty[$</span>
+    Ici $a(x) = -1/x$, $b(x) = x$. $I = ]0, +\infty[$.
+    1.  **Équation homogène :** $y' - \frac{1}{x} y = 0$.
+        Une primitive de $a(x)$ est $A(x) = -\ln x = \ln(1/x)$.
+        $y_H(x) = C e^{-A(x)} = C e^{\ln x} = C x$.
+    2.  **Solution particulière (Variation de la constante) :**
+        On pose $y_p(x) = C(x) x$.
+        $y_p'(x) = C'(x) x + C(x)$.
+        Reportons dans l'équation complète :
+        $(C'(x) x + C(x)) - \frac{1}{x} (C(x) x) = x$
+        $C'(x) x + C(x) - C(x) = x$
+        $C'(x) x = x$. Comme $x \neq 0$, $C'(x) = 1$.
+        On peut choisir $C(x) = x$.
+        Donc $y_p(x) = x \cdot x = x^2$.
+    3.  **Solution générale :**
+        $y(x) = y_p(x) + y_H(x) = x^2 + Cx$, où $C \in \mathbb{R}$ (ou $\mathbb{C}$).
+</div>
+
+<div class="theorem">
+    <span class="title">Problème de Cauchy</span>
+    Soit $x_0 \in I$ et $y_0 \in \mathbb{K}$. Le problème de Cauchy pour $(E)$ consiste à trouver une solution $y$ de $(E)$ vérifiant la condition initiale $y(x_0) = y_0$.
+    Ce problème admet une unique solution sur $I$.
+</div>
+
+<div class="example">
+    <span class="title">Exemple : Résoudre $y' + 2y = 0$ avec $y(0)=3$</span>
+    Équation homogène à coef constant. $a(x)=2$. $A(x)=2x$.
+    Solution générale $y_H(x) = C e^{-2x}$.
+    Condition initiale : $y(0)=3 \implies C e^{-2(0)} = 3 \implies C e^0 = 3 \implies C = 3$.
+    La solution unique est $y(x) = 3 e^{-2x}$.
+</div>
+
+<div class="exercise">
+    <span class="title">Exercices (Section B-b)</span>
+    <ol>
+        <li>Résoudre sur $\mathbb{R}$ l'équation différentielle $y' + y = e^{-x}$.</li>
+        <li>Résoudre sur $]0, +\infty[$ l'équation $xy' + y = \cos x$.</li>
+        <li>Trouver la solution de $y' - (\tan x) y = \sin x$ sur $]-\pi/2, \pi/2[$ telle que $y(0)=1$.</li>
+        <li>Un circuit RC série est régi par $R \frac{dq}{dt} + \frac{1}{C}q = E(t)$. Trouver $q(t)$ si $E(t) = E_0$ (constante) et $q(0)=0$.</li>
+    </ol>
+</div>
+
+
+<h5 id="eq-diff-ordre2-coeffs-csts">c) Équations différentielles linéaires du second ordre à coefficients constants</h5>
+
+<!-- Syllabus table -->
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr><td>Équation différentielle linéaire du second ordre à coefficients constants $y'' + ay' + by = f(x)$ où $a$ et $b$ sont des scalaires et $f$ est une fonction réelle ou complexe, définie et continue sur un intervalle.</td><td>Équation homogène associée.</td></tr>
+        <tr><td>Ensemble des solutions de l'équation homogène.</td><td>Si $a$ et $b$ sont réels, description des solutions réelles.</td></tr>
+         <tr><td>Principe de superposition.</td><td></td></tr>
+        <tr><td>Description de l'ensemble des solutions de l'équation à partir d'une solution particulière et des solutions de l'équation homogène associée.</td><td>Les étudiants doivent savoir déterminer une solution particulière dans le cas d'un second membre polynôme, de la forme $x \mapsto A e^{\lambda x}$ avec $(A, \lambda) \in \mathbb{C}^2$, $x \mapsto B \cos(\omega x)$ et $x \mapsto B \sin(\omega x)$ avec $(B, \omega) \in \mathbb{R}^2$.</td></tr>
+         <tr><td>Existence et unicité de la solution d'un problème de Cauchy.</td><td>La démonstration de ce résultat est hors programme.</td></tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <span class="title">Équation Différentielle Linéaire d'Ordre 2 à Coeffs Constants</span>
+    Soient $a, b \in \mathbb{K}$ (coefficients constants) et $f: I \to \mathbb{K}$ une fonction continue sur un intervalle $I$.
+    L'équation différentielle est :
+    $$ (E): \quad y''(x) + a y'(x) + b y(x) = f(x) $$
+    où l'inconnue est une fonction $y: I \to \mathbb{K}$ deux fois dérivable.
+    L'<strong>équation homogène associée</strong> est :
+    $$ (H): \quad y''(x) + a y'(x) + b y(x) = 0 $$
+    L'<strong>équation caractéristique</strong> associée à (H) est :
+    $$ r^2 + ar + b = 0 $$
+    C'est une équation du second degré dans $\mathbb{C}$ d'inconnue $r$.
+</div>
+
+<div class="theorem">
+    <span class="title">Solutions de l'Équation Homogène (H)</span>
+    Soient $r_1, r_2$ les racines (distinctes ou confondues) dans $\mathbb{C}$ de l'équation caractéristique $r^2+ar+b=0$.
+    La forme de la solution générale $y_H(x)$ de (H) dépend des racines :
+    <ul>
+        <li><strong>Cas 1 : Deux racines réelles distinctes $r_1 \neq r_2$</strong> ($\Delta = a^2-4b > 0$).
+            <br> $y_H(x) = C_1 e^{r_1 x} + C_2 e^{r_2 x}$, où $C_1, C_2 \in \mathbb{K}$.</li>
+        <li><strong>Cas 2 : Une racine réelle double $r_0$</strong> ($\Delta = a^2-4b = 0$).
+            <br> $y_H(x) = (C_1 + C_2 x) e^{r_0 x}$, où $C_1, C_2 \in \mathbb{K}$.</li>
+        <li><strong>Cas 3 : Deux racines complexes conjuguées $r_{1,2} = \alpha \pm i \beta$</strong> ($\Delta = a^2-4b < 0$, avec $a, b \in \mathbb{R}$, et $\beta \neq 0$).
+            <br> En restant dans $\mathbb{C}$, la solution est $y_H(x) = C_1 e^{(\alpha+i\beta)x} + C_2 e^{(\alpha-i\beta)x}$, ($C_1, C_2 \in \mathbb{C}$).
+            <br> Pour obtenir les solutions réelles, on réécrit :
+            <br> $y_H(x) = e^{\alpha x} ( (C_1+C_2)\cos(\beta x) + i(C_1-C_2)\sin(\beta x) )$
+            <br> La forme générale des solutions réelles est :
+            <br> $y_H(x) = e^{\alpha x} (K_1 \cos(\beta x) + K_2 \sin(\beta x))$, où $K_1, K_2 \in \mathbb{R}$.</li>
+    </ul>
+    Dans tous les cas, l'ensemble des solutions de (H) est un espace vectoriel de dimension 2.
+</div>
+
+<div class="property">
+    <span class="title">Principe de Superposition et Structure des Solutions</span>
+    Le principe de superposition s'applique comme pour l'ordre 1.
+    La solution générale de l'équation complète $(E): y''+ay'+by=f(x)$ est de la forme :
+    $$ y(x) = y_p(x) + y_H(x) $$
+    où $y_p$ est UNE solution particulière de $(E)$ et $y_H$ est la solution générale de l'équation homogène $(H)$.
+</div>
+
+<div class="skill">
+    <span class="title">Recherche d'une Solution Particulière $y_p$</span>
+    La méthode générale (variation des constantes pour l'ordre 2) est plus complexe et souvent hors programme simplifié. On se concentre sur des formes spécifiques du second membre $f(x)$ :
+    <ul>
+        <li><strong>Si $f(x)$ est un polynôme de degré $n$ :</strong>
+            <ul>
+                <li>Si $b \neq 0$ (i.e., 0 n'est pas racine de l'équation caractéristique), chercher $y_p$ sous forme de polynôme de degré $n$.</li>
+                <li>Si $b = 0$ et $a \neq 0$ (i.e., 0 est racine simple), chercher $y_p$ sous forme de polynôme de degré $n+1$ sans terme constant (ou $x \times \text{Polynôme}_n$).</li>
+                <li>Si $b = 0$ et $a = 0$ (i.e., 0 est racine double), chercher $y_p$ sous forme $x^2 \times \text{Polynôme}_n$. (Équation $y''=f(x)$).</li>
+            </ul>
+         </li>
+        <li><strong>Si $f(x) = A e^{\lambda x}$ ($A, \lambda \in \mathbb{C}$) :</strong>
+            <ul>
+                <li>Si $\lambda$ n'est pas racine de l'équation caractéristique, chercher $y_p(x) = K e^{\lambda x}$ (avec $K$ à déterminer).</li>
+                <li>Si $\lambda$ est racine simple, chercher $y_p(x) = K x e^{\lambda x}$.</li>
+                <li>Si $\lambda$ est racine double, chercher $y_p(x) = K x^2 e^{\lambda x}$.</li>
+            </ul>
+         </li>
+        <li><strong>Si $f(x) = B \cos(\omega x)$ ou $B \sin(\omega x)$ ($B, \omega \in \mathbb{R}$, $a, b \in \mathbb{R}$) :</strong>
+            On passe en complexes. On résout $y''+ay'+by = B e^{i\omega x}$. Soit $y_{p, \mathbb{C}}$ une solution particulière complexe. Alors $y_p(x) = \operatorname{Re}(y_{p, \mathbb{C}})$ est solution pour $f(x)=B\cos(\omega x)$ et $y_p(x) = \operatorname{Im}(y_{p, \mathbb{C}})$ est solution pour $f(x)=B\sin(\omega x)$.
+            On applique la méthode pour $f(x)=Ae^{\lambda x}$ avec $\lambda = i\omega$ :
+            <ul>
+                <li>Si $i\omega$ n'est pas racine de l'équation caractéristique, chercher $y_{p, \mathbb{C}} = K e^{i\omega x}$ ($K \in \mathbb{C}$).</li>
+                <li>Si $i\omega$ est racine (simple, car les racines complexes sont conjuguées si a,b réels), chercher $y_{p, \mathbb{C}} = K x e^{i\omega x}$ ($K \in \mathbb{C}$).</li>
+            </ul>
+            Alternativement (sans passer en complexe): chercher $y_p(x) = K_1 \cos(\omega x) + K_2 \sin(\omega x)$ si $i\omega$ n'est pas racine, ou $y_p(x) = x(K_1 \cos(\omega x) + K_2 \sin(\omega x))$ si $i\omega$ est racine.
+         </li>
+         <li><strong>Principe de superposition :</strong> Si $f(x) = f_1(x) + f_2(x)$, et si $y_{p1}$ est solution pour $f_1$, $y_{p2}$ solution pour $f_2$, alors $y_{p1}+y_{p2}$ est solution pour $f$.</li>
+    </ul>
+</div>
+
+<div class="example">
+    <span class="title">Exemple : Résoudre $y'' - 3y' + 2y = e^{3x}$</span>
+    1.  **Équation homogène :** $y'' - 3y' + 2y = 0$.
+        Éq. caractéristique : $r^2 - 3r + 2 = 0$. Racines $r_1=1, r_2=2$.
+        $y_H(x) = C_1 e^x + C_2 e^{2x}$.
+    2.  **Solution particulière :** Second membre $f(x)=e^{3x}$. $\lambda=3$.
+        $3$ n'est pas racine de l'éq. caractéristique ($1, 2$).
+        On cherche $y_p(x) = K e^{3x}$.
+        $y_p'(x) = 3K e^{3x}$, $y_p''(x) = 9K e^{3x}$.
+        Reportons dans l'équation complète :
+        $(9K e^{3x}) - 3(3K e^{3x}) + 2(K e^{3x}) = e^{3x}$
+        $9K - 9K + 2K = 1 \implies 2K = 1 \implies K = 1/2$.
+        $y_p(x) = \frac{1}{2} e^{3x}$.
+    3.  **Solution générale :**
+        $y(x) = y_p(x) + y_H(x) = \frac{1}{2} e^{3x} + C_1 e^x + C_2 e^{2x}$.
+</div>
+
+<div class="example">
+    <span class="title">Exemple : Résoudre $y'' + y = \cos x$</span>
+    1.  **Équation homogène :** $y'' + y = 0$.
+        Éq. caractéristique : $r^2 + 1 = 0$. Racines $r = \pm i$. ($\alpha=0, \beta=1$).
+        $y_H(x) = K_1 \cos x + K_2 \sin x$.
+    2.  **Solution particulière :** Second membre $f(x)=\cos x = \operatorname{Re}(e^{ix})$. $\lambda = i$.
+        $i$ est racine de l'éq. caractéristique. Cas de résonance.
+        On cherche une solution particulière de $y''+y=e^{ix}$ sous la forme $y_{p, \mathbb{C}}(x) = K x e^{ix}$.
+        $y' = K e^{ix} + K ix e^{ix} = K(1+ix)e^{ix}$.
+        $y'' = K i e^{ix} + K i e^{ix} + K i^2 x e^{ix} = K(2i - x)e^{ix}$.
+        Reportons dans $y''+y=e^{ix}$:
+        $K(2i - x)e^{ix} + K x e^{ix} = e^{ix}$
+        $K(2i - x + x) = 1 \implies 2iK = 1 \implies K = \frac{1}{2i} = -\frac{i}{2}$.
+        $y_{p, \mathbb{C}}(x) = -\frac{i}{2} x e^{ix} = -\frac{i}{2} x (\cos x + i \sin x) = -\frac{i}{2} x \cos x + \frac{1}{2} x \sin x$.
+        On cherche une solution pour $\cos x = \operatorname{Re}(e^{ix})$. On prend la partie réelle de $y_{p, \mathbb{C}}$:
+        $y_p(x) = \operatorname{Re}(y_{p, \mathbb{C}}(x)) = \frac{1}{2} x \sin x$.
+    3.  **Solution générale :**
+        $y(x) = y_p(x) + y_H(x) = \frac{1}{2} x \sin x + K_1 \cos x + K_2 \sin x$.
+</div>
+
+
+<div class="theorem">
+    <span class="title">Problème de Cauchy (Ordre 2)</span>
+    Soit $x_0 \in I$ et $(y_0, y'_0) \in \mathbb{K}^2$. Le problème de Cauchy pour $(E)$ consiste à trouver une solution $y$ de $(E)$ vérifiant les conditions initiales $y(x_0) = y_0$ et $y'(x_0) = y'_0$.
+    Ce problème admet une unique solution sur $I$. (Résultat admis).
+</div>
+
+<div class="exercise">
+    <span class="title">Exercices (Section B-c)</span>
+    <ol>
+        <li>Résoudre les équations différentielles suivantes :
+            a) $y'' - 5y' + 6y = 0$
+            b) $y'' + 4y' + 4y = 0$
+            c) $y'' + 2y' + 5y = 0$ (donner les solutions réelles)
+        </li>
+        <li>Résoudre $y'' - y = x^2$.</li>
+        <li>Résoudre $y'' + \omega^2 y = \cos(\omega_0 t)$ avec $\omega \neq \omega_0$ puis $\omega = \omega_0$. (Oscillateur harmonique forcé).</li>
+        <li>Trouver la solution de $y'' + 9y = 0$ vérifiant $y(0)=1$ et $y'(0)=0$.</li>
+    </ol>
+</div>
+
+
+<script>
+    // Ensure KaTeX renders after the page loads
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            // customised options
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false}
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
