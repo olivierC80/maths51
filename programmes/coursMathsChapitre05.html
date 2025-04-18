@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Nombres Réels et Suites Numériques</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; }
+        h4 { color: #17a2b8; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px;}
+        .definition, .theorem, .proof, .exercise, .example, .comment {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+
+        .definition strong, .theorem strong, .exercise strong { color: #333; }
+
+        /* Style pour les tables si on en garde */
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .content-table th, .content-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .content-table th {
+            background-color: #f2f2f2;
+        }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Nombres réels et suites numériques</h1>
+
+<p class="intro-text">
+    L'objectif de cette section est de donner une base solide à l'étude des suites réelles. On insiste sur le caractère fondamental de la propriété de la borne supérieure.
+    <br>Dans l'étude des suites, on distingue nettement les aspects qualitatifs (monotonie, convergence, divergence) des aspects quantitatifs (majoration, encadrement, vitesse de convergence ou de divergence).
+</p>
+
+<h2 id="ensembles-nombres-usuels">a) Ensembles de nombres usuels</h2>
+
+<div class="definition">
+    <strong>Ensembles de nombres usuels :</strong>
+    <ul>
+        <li>$\mathbb{N} = \{0, 1, 2, 3, \dots\}$ : Ensemble des <strong>entiers naturels</strong>.</li>
+        <li>$\mathbb{Z} = \{\dots, -2, -1, 0, 1, 2, \dots\}$ : Ensemble des <strong>entiers relatifs</strong>.</li>
+        <li>$\mathbb{D} = \{ \frac{a}{10^k} \mid a \in \mathbb{Z}, k \in \mathbb{N} \}$ : Ensemble des <strong>nombres décimaux</strong> (ceux ayant un développement décimal fini).</li>
+        <li>$\mathbb{Q} = \{ \frac{p}{q} \mid p \in \mathbb{Z}, q \in \mathbb{N}^* \}$ : Ensemble des <strong>nombres rationnels</strong> (ceux pouvant s'écrire comme une fraction d'entiers).</li>
+        <li>$\mathbb{R}$ : Ensemble des <strong>nombres réels</strong>. Intuitivement, les nombres correspondant aux points d'une droite graduée. Il contient $\mathbb{Q}$ mais aussi d'autres nombres.</li>
+        <li>$\mathbb{R} \setminus \mathbb{Q}$ : Ensemble des <strong>nombres irrationnels</strong> (ceux qui ne sont pas rationnels, comme $\sqrt{2}$, $\pi$, $e$).</li>
+    </ul>
+    On a les inclusions strictes : $\mathbb{N} \subset \mathbb{Z} \subset \mathbb{D} \subset \mathbb{Q} \subset \mathbb{R}$.
+</div>
+
+<div class="comment">
+    <strong>Commentaire :</strong> Les constructions rigoureuses des ensembles $\mathbb{N}, \mathbb{Z}, \mathbb{Q}$ et surtout $\mathbb{R}$ (par exemple, via les coupures de Dedekind ou les suites de Cauchy) sont complexes et considérées hors programme à ce niveau. On admet l'existence de $\mathbb{R}$ avec ses propriétés usuelles (opérations, ordre, et la propriété fondamentale de la borne supérieure vue plus loin).
+</div>
+
+<div class="definition">
+    <strong>Approximations décimales :</strong> Soit $x \in \mathbb{R}$ et $n \in \mathbb{N}$.
+    <ul>
+        <li>La <strong>valeur décimale approchée par défaut</strong> de $x$ à la précision $10^{-n}$ (ou à $n$ décimales) est le plus grand nombre décimal $d_n$ de la forme $\frac{k}{10^n}$ ($k \in \mathbb{Z}$) tel que $d_n \le x$. On a $d_n \le x < d_n + 10^{-n}$.</li>
+        <li>La <strong>valeur décimale approchée par excès</strong> de $x$ à la précision $10^{-n}$ est le plus petit nombre décimal $e_n$ de la forme $\frac{k}{10^n}$ ($k \in \mathbb{Z}$) tel que $x \le e_n$. On a $e_n - 10^{-n} < x \le e_n$. (Note: $e_n = d_n + 10^{-n}$ si $x$ n'est pas lui-même un décimal avec $n$ chiffres après la virgule).</li>
+    </ul>
+    L'encadrement $d_n \le x \le e_n$ donne $e_n - d_n \le 10^{-n}$.
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> Pour $x = \pi \approx 3.1415926...$
+    <ul>
+        <li>À $10^{-2}$ près : $d_2 = 3.14$, $e_2 = 3.15$. On a $3.14 \le \pi < 3.15$.</li>
+        <li>À $10^{-3}$ près : $d_3 = 3.141$, $e_3 = 3.142$. On a $3.141 \le \pi < 3.142$.</li>
+    </ul>
+    Pour $x = 2.5$.
+    <ul>
+       <li>À $10^{-1}$ près : $d_1 = 2.5$, $e_1 = 2.5$.</li>
+       <li>À $10^{-2}$ près : $d_2 = 2.50$, $e_2 = 2.50$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Densité de $\mathbb{Q}$ et $\mathbb{R} \setminus \mathbb{Q}$ dans $\mathbb{R}$) :</strong>
+    Tout intervalle ouvert non vide de $\mathbb{R}$ contient au moins un nombre rationnel et au moins un nombre irrationnel.
+    <br> Autrement dit, pour tous $a, b \in \mathbb{R}$ tels que $a < b$, il existe $q \in \mathbb{Q}$ tel que $a < q < b$, et il existe $x \in \mathbb{R} \setminus \mathbb{Q}$ tel que $a < x < b$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (pour $\mathbb{Q}$) :</strong> Soit $I = ]a, b[$ avec $a < b$. La longueur de l'intervalle est $b-a > 0$. On peut trouver un entier $n \in \mathbb{N}^*$ tel que $\frac{1}{n} < b-a$ (propriété d'Archimède, conséquence de la construction de $\mathbb{R}$). Considérons les multiples de $\frac{1}{n}$ : $\frac{k}{n}$ pour $k \in \mathbb{Z}$. L'un de ces multiples doit tomber dans l'intervalle $]a, b[$. Plus formellement, soit $k = \lfloor n a \rfloor + 1$. Alors $\frac{k-1}{n} \le a < \frac{k}{n}$. On montre que $\frac{k}{n} < b$. En effet, $\frac{k}{n} = \frac{k-1}{n} + \frac{1}{n} \le a + \frac{1}{n} < a + (b-a) = b$. Donc $a < \frac{k}{n} < b$, et $\frac{k}{n} \in \mathbb{Q}$.
+    <br><strong>Idée de preuve (pour $\mathbb{R} \setminus \mathbb{Q}$) :</strong> Soit $I = ]a, b[$. D'après la densité de $\mathbb{Q}$, il existe $q_1, q_2 \in \mathbb{Q}$ tels que $a < q_1 < q_2 < b$. Soit $\alpha \in \mathbb{R} \setminus \mathbb{Q}$ (par exemple $\alpha = \sqrt{2}$). On considère le nombre $x = q_1 + \frac{\alpha}{m}$ pour un entier $m \in \mathbb{N}^*$ assez grand. Si $x$ était rationnel, alors $\frac{\alpha}{m} = x - q_1$ serait rationnel, et donc $\alpha = m(x-q_1)$ serait rationnel, ce qui est faux. Donc $x$ est irrationnel. On peut choisir $m$ assez grand pour que $q_1 < x < q_2$, et donc $a < x < b$. (Par exemple, choisir $m$ tel que $0 < \frac{\alpha}{m} < q_2 - q_1$).
+</div>
+
+<div class="definition">
+    <strong>Droite réelle achevée $\overline{\mathbb{R}}$ :</strong> On définit l'ensemble $\overline{\mathbb{R}} = \mathbb{R} \cup \{-\infty, +\infty\}$. C'est l'ensemble des nombres réels auquel on ajoute deux éléments, $-\infty$ (moins l'infini) et $+\infty$ (plus l'infini).
+    <br> On étend la relation d'ordre $\le$ à $\overline{\mathbb{R}}$ en posant :
+    <ul>
+        <li>$\forall x \in \mathbb{R}, -\infty \le x \le +\infty$.</li>
+        <li>$-\infty \le -\infty$ et $+\infty \le +\infty$.</li>
+        <li>$-\infty < +\infty$.</li>
+    </ul>
+    Certaines opérations sont étendues (par exemple $x + (+\infty) = +\infty$ si $x \ne -\infty$, $x \times (+\infty) = +\infty$ si $x > 0$, etc.), mais attention aux formes indéterminées ($+\infty - \infty$, $0 \times \infty$, $\frac{\infty}{\infty}$, $\frac{0}{0}$, ...).
+</div>
+
+<div class="exercise">
+    <strong>Exercice 1 :</strong>
+    <ol>
+        <li>Donner la nature (naturel, relatif, décimal, rationnel, irrationnel) des nombres suivants : $-7$, $\frac{12}{4}$, $0.125$, $\frac{1}{3}$, $\sqrt{9}$, $\sqrt{10}$, $\frac{\pi}{2}$.</li>
+        <li>Donner les valeurs décimales approchées par défaut et par excès à $10^{-4}$ près de $\sqrt{2} \approx 1.41421356...$</li>
+        <li>Montrer qu'entre deux nombres rationnels distincts, il existe toujours un nombre irrationnel.</li>
+    </ol>
+</div>
+
+
+<h2 id="propriete-borne-sup">b) Propriété de la borne supérieure</h2>
+
+<div class="definition">
+    <strong>Majorant, Minorant, Partie majorée, minorée :</strong> Soit $X$ une partie non vide de $\mathbb{R}$.
+    <ul>
+        <li>Un nombre réel $M$ est un <strong>majorant</strong> de $X$ si $\forall x \in X, x \le M$.</li>
+        <li>$X$ est dite <strong>majorée</strong> s'il existe au moins un majorant pour $X$.</li>
+        <li>Un nombre réel $m$ est un <strong>minorant</strong> de $X$ si $\forall x \in X, x \ge m$.</li>
+        <li>$X$ est dite <strong>minorée</strong> s'il existe au moins un minorant pour $X$.</li>
+        <li>$X$ est dite <strong>bornée</strong> si elle est à la fois majorée et minorée.</li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong>
+    <ul>
+        <li>$X = [0, 1]$. Majorants : $1, 2, \pi, ...$. Minorants : $0, -1, -10, ...$. $X$ est bornée.</li>
+        <li>$Y = \mathbb{N} = \{0, 1, 2, ...\}$. Minorants : $0, -1, ...$. $Y$ est minorée (par 0). $Y$ n'est pas majorée.</li>
+        <li>$Z = \{ \frac{1}{n} \mid n \in \mathbb{N}^* \} = \{1, 1/2, 1/3, ...\}$. Majorants : $1, 2, ...$. Minorants : $0, -1, ...$. $Z$ est bornée.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Borne supérieure ($\sup$) et Borne inférieure ($\inf$) :</strong> Soit $X$ une partie non vide de $\mathbb{R}$.
+    <ul>
+        <li>Si $X$ est majorée, sa <strong>borne supérieure</strong>, notée $\sup X$, est le plus petit des majorants de $X$. C'est l'unique réel $S$ vérifiant :
+            <ol>
+                <li>$S$ est un majorant de $X$ ($\forall x \in X, x \le S$).</li>
+                <li>Pour tout $\epsilon > 0$, il existe $x \in X$ tel que $S - \epsilon < x \le S$. (Caractérisation).</li>
+            </ol>
+        </li>
+        <li>Si $X$ est minorée, sa <strong>borne inférieure</strong>, notée $\inf X$, est le plus grand des minorants de $X$. C'est l'unique réel $I$ vérifiant :
+            <ol>
+                <li>$I$ est un minorant de $X$ ($\forall x \in X, x \ge I$).</li>
+                <li>Pour tout $\epsilon > 0$, il existe $x \in X$ tel que $I \le x < I + \epsilon$. (Caractérisation).</li>
+            </ol>
+        </li>
+    </ul>
+    Si $X$ n'est pas majorée, on convient que $\sup X = +\infty$. Si $X$ n'est pas minorée, on convient que $\inf X = -\infty$.
+    <br>Si $\sup X \in X$, on dit que $X$ admet un <strong>plus grand élément</strong> (ou maximum), noté $\max X$.
+    <br>Si $\inf X \in X$, on dit que $X$ admet un <strong>plus petit élément</strong> (ou minimum), noté $\min X$.
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong>
+    <ul>
+        <li>$X = [0, 1]$. $\sup X = 1$ (et c'est un max). $\inf X = 0$ (et c'est un min).</li>
+        <li>$Y = ]0, 1[$. $\sup Y = 1$ (pas de max). $\inf Y = 0$ (pas de min).</li>
+        <li>$Z = \{ \frac{1}{n} \mid n \in \mathbb{N}^* \}$. $\sup Z = 1$ (c'est un max). $\inf Z = 0$ (pas de min).</li>
+        <li>$\mathbb{N}$. $\inf \mathbb{N} = 0$ (c'est un min). $\sup \mathbb{N} = +\infty$ (non majoré).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Propriété de la borne supérieure - Axiome de $\mathbb{R}$) :</strong>
+    Toute partie non vide et majorée de $\mathbb{R}$ admet une borne supérieure dans $\mathbb{R}$.
+    <br> (Équivalent) Toute partie non vide et minorée de $\mathbb{R}$ admet une borne inférieure dans $\mathbb{R}$.
+</div>
+
+<div class="comment">
+    <strong>Commentaire :</strong> C'est une propriété fondamentale qui distingue $\mathbb{R}$ de $\mathbb{Q}$. Par exemple, l'ensemble $A = \{ x \in \mathbb{Q} \mid x^2 < 2 \}$ est une partie non vide et majorée de $\mathbb{Q}$ (par exemple, par 2), mais elle n'admet pas de borne supérieure *dans* $\mathbb{Q}$. Sa borne supérieure dans $\mathbb{R}$ est $\sqrt{2}$, qui n'est pas rationnel. Cet axiome garantit que la droite réelle n'a pas de "trous".
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Caractérisation des intervalles) :</strong>
+    Une partie $X$ de $\mathbb{R}$ est un intervalle si et seulement si pour tous $a, b \in X$ tels que $a \le b$, on a $[a, b] \subset X$.
+    <br> (Autrement dit, si $X$ contient deux points $a$ et $b$, il contient tous les points situés entre $a$ et $b$).
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong>
+    <br> ($\implies$) Si $X$ est un intervalle (par exemple $]c, d[$, $[c, d]$, etc.), il est clair par définition des intervalles que s'il contient $a$ et $b$ avec $a \le b$, il contient tout $x$ tel que $a \le x \le b$.
+    <br> ($\impliedby$) Soit $X$ une partie vérifiant la propriété : $\forall a, b \in X, a \le b \implies [a, b] \subset X$.
+    Soit $I = \inf X$ et $S = \sup X$ (dans $\overline{\mathbb{R}}$). On montre que $X$ est l'un des 4 intervalles d'extrémités $I$ et $S$ : $]I, S[$, $[I, S[$, $]I, S]$, $[I, S]$.
+    Prenons $x \in ]I, S[$. Comme $I = \inf X$, $x$ n'est pas un minorant, donc il existe $a \in X$ tel que $a < x$. Comme $S = \sup X$, $x$ n'est pas un majorant, donc il existe $b \in X$ tel que $x < b$. Comme $a < x < b$, on a $a, b \in X$. Par hypothèse sur $X$, $[a, b] \subset X$. Comme $x \in [a, b]$, on a $x \in X$. Donc $]I, S[ \subset X$.
+    Ensuite, on vérifie si $I$ ou $S$ appartiennent à $X$ pour déterminer la nature exacte de l'intervalle (ouvert, fermé, semi-ouvert). Par exemple, $X$ contient $I$ si et seulement si $I \in X$. $X$ contient $S$ si et seulement si $S \in X$.
+    On conclut que $X$ est bien l'un des intervalles d'extrémités $I$ et $S$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice 2 :</strong>
+    <ol>
+        <li>Déterminer (s'ils existent) les bornes supérieure, inférieure, maximum, minimum des ensembles suivants :
+            <ul>
+                <li>$A = \{ (-1)^n + \frac{1}{n+1} \mid n \in \mathbb{N} \}$</li>
+                <li>$B = \{ x \in \mathbb{R} \mid x^2 < 4 \}$</li>
+                <li>$C = \{ \frac{n}{n+1} \mid n \in \mathbb{N} \}$</li>
+                <li>$D = \mathbb{Q} \cap [0, \sqrt{2}]$</li>
+            </ul>
+        </li>
+        <li>Soient $A$ et $B$ deux parties non vides et majorées de $\mathbb{R}$. On pose $A+B = \{ a+b \mid a \in A, b \in B \}$. Montrer que $A+B$ est majorée et que $\sup(A+B) = \sup A + \sup B$.</li>
+        <li>L'ensemble $\mathbb{Z}$ est-il un intervalle ? Justifier.</li>
+    </ol>
+</div>
+
+
+<h2 id="suites-reelles-generalites">c) Généralités sur les suites réelles</h2>
+
+<div class="definition">
+    <strong>Suite réelle :</strong> Une suite réelle est une application $u$ d'une partie de $\mathbb{N}$ (généralement $\mathbb{N}$ ou $\mathbb{N}^* = \{1, 2, ...\}$) à valeurs dans $\mathbb{R}$.
+    <br> On note la suite $(u_n)_{n \in \mathbb{N}}$ (ou $(u_n)_{n \ge n_0}$) et $u_n = u(n)$ est le terme d'indice $n$ (ou terme général) de la suite.
+</div>
+
+<div class="definition">
+    <strong>Propriétés des suites :</strong> Soit $(u_n)_{n \in \mathbb{N}}$ une suite réelle.
+    <ul>
+        <li>$(u_n)$ est <strong>majorée</strong> si l'ensemble $\{u_n \mid n \in \mathbb{N}\}$ est majoré. (i.e., $\exists M \in \mathbb{R}, \forall n \in \mathbb{N}, u_n \le M$).</li>
+        <li>$(u_n)$ est <strong>minorée</strong> si l'ensemble $\{u_n \mid n \in \mathbb{N}\}$ est minoré. (i.e., $\exists m \in \mathbb{R}, \forall n \in \mathbb{N}, u_n \ge m$).</li>
+        <li>$(u_n)$ est <strong>bornée</strong> si elle est majorée et minorée.</li>
+        <li>$(u_n)$ est <strong>stationnaire</strong> s'il existe un rang $N \in \mathbb{N}$ tel que $\forall n \ge N, u_{n+1} = u_n$.</li>
+        <li>$(u_n)$ est <strong>croissante</strong> si $\forall n \in \mathbb{N}, u_{n+1} \ge u_n$.</li>
+        <li>$(u_n)$ est <strong>décroissante</strong> si $\forall n \in \mathbb{N}, u_{n+1} \le u_n$.</li>
+        <li>$(u_n)$ est <strong>monotone</strong> si elle est croissante ou décroissante.</li>
+        <li>Les qualificatifs "strictement" s'appliquent si les inégalités sont strictes ($<, >$).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Caractérisation d'une suite bornée) :</strong>
+    Une suite $(u_n)_{n \in \mathbb{N}}$ est bornée si et seulement si la suite $(|u_n|)_{n \in \mathbb{N}}$ est majorée.
+    <br>(i.e., $\exists K \ge 0, \forall n \in \mathbb{N}, |u_n| \le K$).
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong>
+    <br> ($\implies$) Supposons $(u_n)$ bornée. Alors il existe $m, M \in \mathbb{R}$ tels que $\forall n, m \le u_n \le M$.
+    Soit $K = \max(|m|, |M|)$. $K \ge 0$.
+    Si $u_n \ge 0$, alors $|u_n| = u_n \le M \le |M| \le K$.
+    Si $u_n < 0$, alors $|u_n| = -u_n \le -m \le |m| \le K$.
+    Dans tous les cas, $|u_n| \le K$. Donc $(|u_n|)$ est majorée par $K$.
+    <br> ($\impliedby$) Supposons qu'il existe $K \ge 0$ tel que $\forall n, |u_n| \le K$.
+    Par définition de la valeur absolue, cela signifie $-K \le u_n \le K$ pour tout $n$.
+    Donc $(u_n)$ est minorée par $-K$ et majorée par $K$. Elle est donc bornée.
+</div>
+
+<div class="definition">
+    <strong>Modes de définition d'une suite :</strong>
+    <ul>
+        <li><strong>Explicite :</strong> Le terme $u_n$ est donné par une formule dépendant de $n$. $u_n = f(n)$.
+            <br><em>Exemple :</em> $u_n = \frac{n^2}{n+1}$, $v_n = (-1)^n$.</li>
+        <li><strong>Par récurrence :</strong> Le premier terme (ou les premiers termes) est donné, et une relation lie $u_{n+1}$ (ou $u_{n+k}$) aux termes précédents. $u_{n+1} = f(u_n)$, ou $u_{n+2} = f(u_{n+1}, u_n)$, etc.
+            <br><em>Exemples :</em>
+            <ul>
+                <li>Suite arithmétique : $u_0$ donné, $u_{n+1} = u_n + r$.</li>
+                <li>Suite géométrique : $u_0$ donné, $u_{n+1} = q \cdot u_n$.</li>
+                <li>Suite de Fibonacci : $F_0=0, F_1=1$, $F_{n+2} = F_{n+1} + F_n$.</li>
+                <li>$u_0 = 2$, $u_{n+1} = \sqrt{u_n}$.</li>
+            </ul>
+        </li>
+        <li><strong>Implicite :</strong> Le terme $u_n$ est défini comme une solution d'une équation ou par une propriété dépendant de $n$.
+            <br><em>Exemple :</em> Pour $n \ge 1$, $u_n$ est l'unique solution positive de l'équation $x^n + x - 1 = 0$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice 3 :</strong>
+    <ol>
+        <li>Soit la suite $(u_n)$ définie par $u_n = \frac{2n-1}{n+3}$ pour $n \in \mathbb{N}$. Montrer qu'elle est bornée. Étudier sa monotonie.</li>
+        <li>Soit la suite $(v_n)$ définie par $v_0 = 1$ et $v_{n+1} = v_n + \frac{1}{v_n}$. Montrer que $(v_n)$ est strictement croissante. Est-elle majorée ? (Indication : si elle était majorée, elle convergerait vers une limite $\ell$. Quelle serait la valeur de $\ell$ ?)</li>
+        <li>Écrire les 5 premiers termes de la suite $(w_n)$ définie par $w_0=1, w_1=2$ et $w_{n+2} = \frac{w_{n+1} + w_n}{2}$.</li>
+    </ol>
+</div>
+
+
+<h2 id="limite-suite-reelle">d) Limite d'une suite réelle</h2>
+
+<div class="definition">
+    <strong>Limite finie :</strong> Soit $(u_n)_{n \in \mathbb{N}}$ une suite réelle et $\ell \in \mathbb{R}$. On dit que $(u_n)$ converge vers $\ell$ (ou admet $\ell$ pour limite) si :
+    $$ \forall \epsilon > 0, \exists N \in \mathbb{N}, \forall n \in \mathbb{N}, (n \ge N \implies |u_n - \ell| \le \epsilon) $$
+    Cela signifie que les termes $u_n$ deviennent arbitrairement proches de $\ell$ pour $n$ assez grand.
+    <br> Notations : $u_n \to \ell$, $u_n \xrightarrow[n \to \infty]{} \ell$, $\lim_{n \to \infty} u_n = \ell$.
+    <br> Une suite qui admet une limite finie est dite <strong>convergente</strong>.
+</div>
+
+<div class="definition">
+    <strong>Limite infinie :</strong> Soit $(u_n)_{n \in \mathbb{N}}$ une suite réelle.
+    <ul>
+        <li>On dit que $(u_n)$ tend vers $+\infty$ si :
+        $$ \forall A \in \mathbb{R}, \exists N \in \mathbb{N}, \forall n \in \mathbb{N}, (n \ge N \implies u_n \ge A) $$
+        Notation : $u_n \to +\infty$, $\lim_{n \to \infty} u_n = +\infty$.</li>
+        <li>On dit que $(u_n)$ tend vers $-\infty$ si :
+        $$ \forall B \in \mathbb{R}, \exists N \in \mathbb{N}, \forall n \in \mathbb{N}, (n \ge N \implies u_n \le B) $$
+        Notation : $u_n \to -\infty$, $\lim_{n \to \infty} u_n = -\infty$.</li>
+    </ul>
+    Une suite qui n'est pas convergente est dite <strong>divergente</strong>. Une suite qui tend vers $+\infty$ ou $-\infty$ est donc divergente. Il existe des suites divergentes qui n'ont pas de limite (finie ou infinie), comme $u_n = (-1)^n$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Unicité de la limite) :</strong> Si une suite $(u_n)$ admet une limite (finie ou infinie), cette limite est unique.
+</div>
+
+<div class="proof">
+    <strong>Preuve (cas limite finie) :</strong> Supposons que $u_n \to \ell_1$ et $u_n \to \ell_2$ avec $\ell_1 \neq \ell_2$. Soit $\epsilon = \frac{|\ell_1 - \ell_2|}{3} > 0$.
+    Comme $u_n \to \ell_1$, il existe $N_1 \in \mathbb{N}$ tel que $n \ge N_1 \implies |u_n - \ell_1| \le \epsilon$.
+    Comme $u_n \to \ell_2$, il existe $N_2 \in \mathbb{N}$ tel que $n \ge N_2 \implies |u_n - \ell_2| \le \epsilon$.
+    Soit $N = \max(N_1, N_2)$. Pour $n \ge N$, on a :
+    $$ |\ell_1 - \ell_2| = |(\ell_1 - u_n) + (u_n - \ell_2)| \le |\ell_1 - u_n| + |u_n - \ell_2| \le \epsilon + \epsilon = 2\epsilon $$
+    Donc $|\ell_1 - \ell_2| \le 2 \times \frac{|\ell_1 - \ell_2|}{3} = \frac{2}{3} |\ell_1 - \ell_2|$.
+    Comme $|\ell_1 - \ell_2| > 0$, on peut diviser par $|\ell_1 - \ell_2|$, ce qui donne $1 \le \frac{2}{3}$, ce qui est absurde.
+    Donc l'hypothèse $\ell_1 \neq \ell_2$ est fausse. Conclusion : $\ell_1 = \ell_2$.
+    (La preuve pour les limites infinies est similaire ou plus simple).
+</div>
+
+<div class="theorem">
+    <strong>Théorème :</strong> Toute suite convergente est bornée.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Soit $(u_n)$ une suite convergeant vers $\ell \in \mathbb{R}$.
+    Appliquons la définition de la limite avec $\epsilon = 1$. Il existe $N \in \mathbb{N}$ tel que pour tout $n \ge N$, $|u_n - \ell| \le 1$.
+    Cela implique $\ell - 1 \le u_n \le \ell + 1$ pour $n \ge N$.
+    Les termes $u_N, u_{N+1}, \dots$ sont donc bornés (minorés par $\ell-1$, majorés par $\ell+1$).
+    Les termes $u_0, u_1, \dots, u_{N-1}$ forment un ensemble fini, donc ils sont bornés. Soit $m_0 = \min(u_0, \dots, u_{N-1})$ et $M_0 = \max(u_0, \dots, u_{N-1})$.
+    Alors, pour tout $n \in \mathbb{N}$, on a :
+    $u_n \ge \min(m_0, \ell - 1)$
+    $u_n \le \max(M_0, \ell + 1)$
+    Donc la suite $(u_n)$ est minorée et majorée, elle est bornée.
+</div>
+
+<div class="comment">
+    <strong>Attention :</strong> La réciproque est fausse. Une suite bornée n'est pas nécessairement convergente (exemple : $u_n = (-1)^n$ est bornée par 1, mais ne converge pas).
+</div>
+
+<div class="theorem">
+    <strong>Opérations sur les limites :</strong> Soient $(u_n)$ et $(v_n)$ deux suites réelles, $\lambda \in \mathbb{R}$. Sous réserve d'existence des limites et d'absence de formes indéterminées, on a :
+    <ul>
+        <li><strong>Somme :</strong> Si $u_n \to L_1$ et $v_n \to L_2$ (où $L_1, L_2 \in \overline{\mathbb{R}}$), alors $u_n + v_n \to L_1 + L_2$.
+            <br><em>Formes indéterminées :</em> $+\infty - \infty$.</li>
+        <li><strong>Produit par un scalaire :</strong> Si $u_n \to L$ (où $L \in \overline{\mathbb{R}}$), alors $\lambda u_n \to \lambda L$.
+            <br>(Convention : $0 \times \pm\infty = 0$ dans ce contexte si $\lambda=0$, mais attention à $0 \times \infty$ comme forme indéterminée générale).</li>
+        <li><strong>Produit :</strong> Si $u_n \to L_1$ et $v_n \to L_2$ (où $L_1, L_2 \in \overline{\mathbb{R}}$), alors $u_n v_n \to L_1 L_2$.
+            <br><em>Forme indéterminée :</em> $0 \times \infty$.</li>
+        <li><strong>Quotient :</strong> Si $u_n \to L_1$ et $v_n \to L_2 \ne 0$ (où $L_1 \in \overline{\mathbb{R}}, L_2 \in \overline{\mathbb{R}} \setminus \{0\}$), et $v_n \neq 0$ APCR, alors $\frac{u_n}{v_n} \to \frac{L_1}{L_2}$.
+            <br><em>Formes indéterminées :</em> $\frac{0}{0}$, $\frac{\infty}{\infty}$.
+            <br><em>Cas $L_2 = 0$ :</em> Si $v_n \to 0^+$ (en restant positif) et $L_1 > 0$, alors $\frac{u_n}{v_n} \to +\infty$. Adapter pour les autres signes et $L_1 = \pm \infty$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Produit d'une suite bornée par une suite de limite nulle) :</strong>
+    Si $(u_n)$ est une suite bornée et $(v_n)$ est une suite telle que $\lim_{n \to \infty} v_n = 0$, alors $\lim_{n \to \infty} (u_n v_n) = 0$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> $(u_n)$ est bornée, donc il existe $K \ge 0$ tel que $|u_n| \le K$ pour tout $n$.
+    Soit $\epsilon > 0$. Comme $v_n \to 0$, il existe $N \in \mathbb{N}$ tel que pour $n \ge N$, $|v_n - 0| = |v_n| \le \frac{\epsilon}{K+1}$ (on utilise $K+1$ pour éviter la division par zéro si $K=0$).
+    Alors pour $n \ge N$, on a :
+    $|u_n v_n - 0| = |u_n| |v_n| \le K |v_n| \le K \frac{\epsilon}{K+1} \le \epsilon$.
+    Donc $u_n v_n \to 0$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Passage à la limite dans les inégalités) :</strong>
+    Soient $(u_n)$ et $(v_n)$ deux suites réelles convergentes, $u_n \to \ell_1$ et $v_n \to \ell_2$.
+    S'il existe un rang $N_0$ tel que $\forall n \ge N_0, u_n \le v_n$, alors $\ell_1 \le \ell_2$.
+</div>
+
+<div class="comment">
+    <strong>Attention :</strong> Le passage à la limite ne conserve pas les inégalités strictes.
+    Par exemple, $u_n = \frac{1}{n+2} > 0 = v_n$ pour tout $n \in \mathbb{N}$, mais $\lim u_n = 0$ et $\lim v_n = 0$, donc $\lim u_n \le \lim v_n$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème (Signe de la limite) :</strong>
+    Soit $(u_n)$ une suite convergeant vers $\ell \in \mathbb{R}$.
+    Si $\ell > 0$, alors il existe un rang $N$ tel que $\forall n \ge N, u_n > 0$.
+    (De même, si $\ell < 0$, alors $u_n < 0$ APCR).
+</div>
+
+<div class="proof">
+    <strong>Preuve (cas $\ell > 0$) :</strong> Prenons $\epsilon = \frac{\ell}{2} > 0$.
+    Comme $u_n \to \ell$, il existe $N \in \mathbb{N}$ tel que $n \ge N \implies |u_n - \ell| \le \epsilon$.
+    Ceci signifie $\ell - \epsilon \le u_n \le \ell + \epsilon$.
+    En particulier, $u_n \ge \ell - \epsilon = \ell - \frac{\ell}{2} = \frac{\ell}{2}$.
+    Comme $\ell > 0$, on a $\frac{\ell}{2} > 0$. Donc $u_n > 0$ pour $n \ge N$.
+</div>
+
+<div class="theorem">
+    <strong>Théorèmes d'existence de limites par comparaison :</strong>
+    Soient $(u_n), (v_n), (w_n)$ des suites réelles.
+    <ul>
+        <li><strong>Théorème d'encadrement (ou des gendarmes) :</strong>
+            Si $u_n \le v_n \le w_n$ à partir d'un certain rang, et si $\lim u_n = \lim w_n = \ell \in \mathbb{R}$, alors $(v_n)$ converge et $\lim v_n = \ell$.</li>
+        <li><strong>Comparaison (limite $+\infty$) :</strong>
+            Si $u_n \le v_n$ à partir d'un certain rang, et si $\lim u_n = +\infty$, alors $\lim v_n = +\infty$.</li>
+        <li><strong>Comparaison (limite $-\infty$) :</strong>
+            Si $u_n \le v_n$ à partir d'un certain rang, et si $\lim v_n = -\infty$, alors $\lim u_n = -\infty$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (Gendarmes) :</strong> Soit $\epsilon > 0$.
+    Il existe $N_1$ tel que $n \ge N_1 \implies |u_n - \ell| \le \epsilon$, soit $\ell - \epsilon \le u_n \le \ell + \epsilon$.
+    Il existe $N_2$ tel que $n \ge N_2 \implies |w_n - \ell| \le \epsilon$, soit $\ell - \epsilon \le w_n \le \ell + \epsilon$.
+    Il existe $N_0$ tel que $n \ge N_0 \implies u_n \le v_n \le w_n$.
+    Soit $N = \max(N_0, N_1, N_2)$. Pour $n \ge N$, on a :
+    $\ell - \epsilon \le u_n \le v_n \le w_n \le \ell + \epsilon$.
+    Donc $\ell - \epsilon \le v_n \le \ell + \epsilon$, ce qui signifie $|v_n - \ell| \le \epsilon$.
+    Ceci prouve que $v_n \to \ell$.
+</div>
+
+<div class="comment">
+    <strong>Utilisation pratique :</strong> Pour montrer que $u_n \to \ell$, on cherche souvent à majorer $|u_n - \ell|$ par une suite $v_n$ qui tend vers 0.
+    Si $|u_n - \ell| \le v_n$ et $v_n \to 0$, alors par encadrement $(-v_n \le u_n - \ell \le v_n)$, on a $u_n - \ell \to 0$, donc $u_n \to \ell$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice 4 :</strong>
+    <ol>
+        <li>Calculer les limites des suites suivantes :
+            <ul>
+                <li>$a_n = \frac{3n^2 - 5n + 1}{2n^2 + n + 4}$</li>
+                <li>$b_n = \sqrt{n+1} - \sqrt{n}$ (Indication : quantité conjuguée)</li>
+                <li>$c_n = \frac{n \sin(n)}{n^2 + 1}$</li>
+                <li>$d_n = \sum_{k=0}^n (\frac{1}{3})^k$</li>
+                <li>$e_n = (-1)^n n$</li>
+             </ul>
+        </li>
+        <li>Montrer en utilisant la définition que $\lim_{n \to \infty} \frac{1}{n^2} = 0$.</li>
+        <li>Soit $(u_n)$ une suite telle que $u_n \to +\infty$. Montrer que $(u_n)$ n'est pas majorée. La réciproque est-elle vraie ?</li>
+    </ol>
+</div>
+
+
+<h2 id="suites-monotones">e) Suites monotones</h2>
+
+<div class="theorem">
+    <strong>Théorème de la limite monotone :</strong>
+    <ul>
+        <li>Toute suite réelle croissante et majorée est convergente. Sa limite est $\sup \{u_n \mid n \in \mathbb{N}\}$.</li>
+        <li>Toute suite réelle décroissante et minorée est convergente. Sa limite est $\inf \{u_n \mid n \in \mathbb{N}\}$.</li>
+        <li>Toute suite réelle croissante et non majorée tend vers $+\infty$.</li>
+        <li>Toute suite réelle décroissante et non minorée tend vers $-\infty$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Preuve (cas croissant majoré) :</strong> Soit $(u_n)$ une suite croissante et majorée.
+    L'ensemble $X = \{u_n \mid n \in \mathbb{N}\}$ est non vide et majoré. D'après la propriété de la borne supérieure, $X$ admet une borne supérieure $\ell = \sup X \in \mathbb{R}$. Montrons que $u_n \to \ell$.
+    Soit $\epsilon > 0$. Par caractérisation de la borne supérieure, $\ell - \epsilon$ n'est pas un majorant de $X$. Donc il existe un indice $N$ tel que $u_N > \ell - \epsilon$.
+    Comme la suite $(u_n)$ est croissante, pour tout $n \ge N$, on a $u_n \ge u_N$.
+    Donc, pour tout $n \ge N$, on a $\ell - \epsilon < u_N \le u_n$.
+    D'autre part, comme $\ell$ est un majorant de $X$, on a $u_n \le \ell$ pour tout $n$.
+    Ainsi, pour tout $n \ge N$, on a $\ell - \epsilon < u_n \le \ell$.
+    Cela implique $\ell - \epsilon < u_n < \ell + \epsilon$, soit $|u_n - \ell| < \epsilon$. (On peut mettre $\le \epsilon$ si on veut).
+    Ceci prouve que $u_n \to \ell$.
+    Les autres cas se démontrent de manière analogue ou en considérant $(-u_n)$.
+</div>
+
+<div class="definition">
+    <strong>Suites adjacentes :</strong> Deux suites réelles $(u_n)$ et $(v_n)$ sont dites <strong>adjacentes</strong> si :
+    <ol>
+        <li>L'une est croissante (disons $(u_n)$).</li>
+        <li>L'autre est décroissante (donc $(v_n)$).</li>
+        <li>La différence $v_n - u_n$ tend vers 0. ($\lim_{n \to \infty} (v_n - u_n) = 0$).</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Théorème des suites adjacentes :</strong>
+    Si deux suites $(u_n)$ et $(v_n)$ sont adjacentes, alors elles convergent et elles ont la même limite $\ell$.
+    De plus, pour tout $n \in \mathbb{N}$, on a $u_n \le \ell \le v_n$ (si $(u_n)$ est croissante et $(v_n)$ décroissante).
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Supposons $(u_n)$ croissante, $(v_n)$ décroissante et $v_n - u_n \to 0$.
+    Considérons la suite $(w_n) = (v_n - u_n)$. Par hypothèse, $w_n \to 0$.
+    $w_{n+1} - w_n = (v_{n+1} - u_{n+1}) - (v_n - u_n) = (v_{n+1} - v_n) - (u_{n+1} - u_n)$.
+    Comme $(v_n)$ est décroissante, $v_{n+1} - v_n \le 0$.
+    Comme $(u_n)$ est croissante, $u_{n+1} - u_n \ge 0$, donc $-(u_{n+1} - u_n) \le 0$.
+    Ainsi, $w_{n+1} - w_n \le 0$. La suite $(w_n)$ est décroissante.
+    Comme $w_n \to 0$, on doit avoir $w_n \ge 0$ pour tout $n$. (Une suite décroissante qui tend vers 0 est positive).
+    Donc $v_n - u_n \ge 0$, soit $u_n \le v_n$ pour tout $n$.
+    On a alors : $u_0 \le u_1 \le \dots \le u_n \le v_n \le v_{n-1} \le \dots \le v_1 \le v_0$.
+    La suite $(u_n)$ est croissante et majorée (par $v_0$). Donc elle converge vers une limite $\ell_1 = \sup \{u_n\}$.
+    La suite $(v_n)$ est décroissante et minorée (par $u_0$). Donc elle converge vers une limite $\ell_2 = \inf \{v_n\}$.
+    On sait que $v_n - u_n \to 0$. Par opération sur les limites, $\lim (v_n - u_n) = \lim v_n - \lim u_n = \ell_2 - \ell_1$.
+    Donc $\ell_2 - \ell_1 = 0$, soit $\ell_1 = \ell_2$. Notons $\ell$ cette limite commune.
+    De plus, comme $(u_n)$ croît vers $\ell$ et $(v_n)$ décroît vers $\ell$, et $u_n \le v_n$, on a $u_n \le \ell \le v_n$ pour tout $n$.
+</div>
+
+<div class="example">
+    <strong>Exemple : Approximation décimale d'un réel.</strong>
+    Soit $x \in \mathbb{R}$. Soit $d_n$ la valeur approchée par défaut à $10^{-n}$ près, et $e_n = d_n + 10^{-n}$ (qui est la valeur par excès si $x$ n'est pas décimal).
+    Alors $(d_n)$ est croissante ($d_n \le x$), $(e_n)$ est décroissante ($e_n \ge x$).
+    Et $e_n - d_n = 10^{-n} \to 0$.
+    Les suites $(d_n)$ et $(e_n)$ sont adjacentes et convergent vers $x$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice 5 :</strong>
+    <ol>
+        <li>Soit $(u_n)$ la suite définie par $u_0 = 0$ et $u_{n+1} = \sqrt{2 + u_n}$.
+            a) Montrer que $0 \le u_n \le 2$ pour tout $n$.
+            b) Montrer que $(u_n)$ est croissante.
+            c) En déduire que $(u_n)$ converge et déterminer sa limite.</li>
+        <li>On considère les suites $(u_n)$ et $(v_n)$ définies par $u_n = \sum_{k=0}^n \frac{1}{k!}$ et $v_n = u_n + \frac{1}{n \cdot n!}$ pour $n \ge 1$.
+            a) Montrer que $(u_n)$ est croissante.
+            b) Montrer que $(v_n)$ est décroissante à partir de $n=2$.
+            c) Montrer que $\lim (v_n - u_n) = 0$.
+            d) Conclure. (La limite commune est le nombre $e$).</li>
+    </ol>
+</div>
+
+
+<h2 id="suites-extraites">f) Suites extraites</h2>
+
+<div class="definition">
+    <strong>Suite extraite (ou sous-suite) :</strong> Soit $(u_n)_{n \in \mathbb{N}}$ une suite réelle. Une suite $(v_k)_{k \in \mathbb{N}}$ est une <strong>suite extraite</strong> de $(u_n)$ s'il existe une application $\phi: \mathbb{N} \to \mathbb{N}$ strictement croissante telle que $v_k = u_{\phi(k)}$ pour tout $k \in \mathbb{N}$.
+    <br>L'application $\phi$ sélectionne une infinité d'indices de la suite $(u_n)$ dans l'ordre croissant : $\phi(0) < \phi(1) < \phi(2) < \dots$
+</div>
+
+<div class="example">
+    <strong>Exemples :</strong> Soit $u_n = (-1)^n$.
+    <ul>
+        <li>$(u_{2k})_{k \in \mathbb{N}}$ est une suite extraite (avec $\phi(k) = 2k$). $u_{2k} = (-1)^{2k} = 1$. La suite extraite est constante égale à 1.</li>
+        <li>$(u_{2k+1})_{k \in \mathbb{N}}$ est une suite extraite (avec $\phi(k) = 2k+1$). $u_{2k+1} = (-1)^{2k+1} = -1$. La suite extraite est constante égale à -1.</li>
+        <li>$(u_{k^2})_{k \in \mathbb{N}}$ est une suite extraite (avec $\phi(k) = k^2$). $u_{k^2} = (-1)^{k^2}$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème :</strong> Si une suite $(u_n)$ converge vers une limite $L$ (finie ou infinie), alors toute suite extraite $(u_{\phi(k)})$ de $(u_n)$ converge vers la même limite $L$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (cas $L \in \mathbb{R}$) :</strong> Soit $\epsilon > 0$. Comme $u_n \to L$, il existe $N \in \mathbb{N}$ tel que $n \ge N \implies |u_n - L| \le \epsilon$.
+    Soit $(u_{\phi(k)})$ une suite extraite. Comme $\phi: \mathbb{N} \to \mathbb{N}$ est strictement croissante, on a $\phi(k) \ge k$ pour tout $k$. (Preuve par récurrence : $\phi(0) \ge 0$. Si $\phi(k) \ge k$, alors $\phi(k+1) > \phi(k) \ge k$, donc $\phi(k+1) \ge k+1$).
+    Donc, si on choisit $k \ge N$, on a $\phi(k) \ge k \ge N$.
+    Par conséquent, pour $k \ge N$, l'indice $n = \phi(k)$ est $\ge N$, et on a $|u_{\phi(k)} - L| \le \epsilon$.
+    Ceci montre que $u_{\phi(k)} \to L$ quand $k \to \infty$.
+    La preuve s'adapte pour $L = \pm \infty$.
+</div>
+
+<div class="comment">
+    <strong>Utilisation (Contraposée) :</strong> Pour montrer qu'une suite $(u_n)$ diverge, il suffit de trouver deux suites extraites qui convergent vers des limites différentes, ou une suite extraite qui diverge.
+    <br><em>Exemple :</em> $u_n = (-1)^n$. $u_{2k} \to 1$ et $u_{2k+1} \to -1$. Comme les limites sont différentes, la suite $(u_n)$ diverge.
+</div>
+
+<div class="comment">
+    <strong>Cas particulier :</strong> Si les deux suites extraites $(u_{2n})$ et $(u_{2n+1})$ convergent vers la même limite $\ell$, alors la suite $(u_n)$ converge vers $\ell$.
+    <br><em>Preuve :</em> Soit $\epsilon > 0$.
+    $u_{2n} \to \ell \implies \exists N_1, n \ge N_1 \implies |u_{2n} - \ell| \le \epsilon$.
+    $u_{2n+1} \to \ell \implies \exists N_2, n \ge N_2 \implies |u_{2n+1} - \ell| \le \epsilon$.
+    Soit $N = \max(2N_1, 2N_2+1)$.
+    Si $k \ge N$ et $k$ est pair, $k=2n$ avec $n \ge N/2 \ge N_1$. Alors $|u_k - \ell| = |u_{2n} - \ell| \le \epsilon$.
+    Si $k \ge N$ et $k$ est impair, $k=2n+1$ avec $n \ge (N-1)/2 \ge N_2$. Alors $|u_k - \ell| = |u_{2n+1} - \ell| \le \epsilon$.
+    Dans tous les cas, $k \ge N \implies |u_k - \ell| \le \epsilon$. Donc $u_n \to \ell$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Bolzano-Weierstrass :</strong>
+    De toute suite réelle bornée, on peut extraire une sous-suite convergente.
+</div>
+
+<div class="proof">
+    <strong>Principe de démonstration par dichotomie :</strong>
+    Soit $(u_n)$ une suite bornée. Il existe $a_0, b_0 \in \mathbb{R}$ tels que $u_n \in [a_0, b_0]$ pour tout $n$. L'intervalle $I_0 = [a_0, b_0]$ contient donc tous les termes de la suite.
+    On coupe $I_0$ en deux intervalles de longueur moitié : $[a_0, \frac{a_0+b_0}{2}]$ et $[\frac{a_0+b_0}{2}, b_0]$. Au moins l'un de ces deux intervalles contient une infinité de termes de la suite $(u_n)$ (car la suite a une infinité de termes au total). On choisit l'un de ces intervalles, qu'on appelle $I_1 = [a_1, b_1]$. On a $b_1 - a_1 = \frac{b_0 - a_0}{2}$.
+    On choisit un terme $u_{\phi(1)}$ tel que $u_{\phi(1)} \in I_1$ et $\phi(1) > \phi(0)$ (où $u_{\phi(0)}$ est un terme quelconque dans $I_0$, on peut prendre $u_0$).
+    On recommence : on coupe $I_1$ en deux, on choisit une moitié $I_2 = [a_2, b_2]$ qui contient une infinité de termes de la suite. On a $b_2 - a_2 = \frac{b_1 - a_1}{2} = \frac{b_0 - a_0}{4}$. On choisit un terme $u_{\phi(2)}$ tel que $u_{\phi(2)} \in I_2$ et $\phi(2) > \phi(1)$.
+    On construit ainsi par récurrence :
+    <ul>
+        <li>Une suite d'intervalles emboîtés $I_0 \supset I_1 \supset I_2 \supset \dots \supset I_k \supset \dots$</li>
+        <li>$I_k = [a_k, b_k]$ avec $b_k - a_k = \frac{b_0 - a_0}{2^k} \to 0$.</li>
+        <li>Une suite d'indices $(\phi(k))_{k \in \mathbb{N}}$ strictement croissante ($\phi(0) < \phi(1) < \dots$).</li>
+        <li>Une suite extraite $(u_{\phi(k)})_{k \in \mathbb{N}}$ telle que $u_{\phi(k)} \in I_k$ pour tout $k$.</li>
+    </ul>
+    La suite $(a_k)$ est croissante (car $I_{k+1} \subset I_k$) et majorée (par $b_0$). Elle converge vers une limite $\ell_a$.
+    La suite $(b_k)$ est décroissante (car $I_{k+1} \subset I_k$) et minorée (par $a_0$). Elle converge vers une limite $\ell_b$.
+    Comme $b_k - a_k \to 0$, on a $\ell_b - \ell_a = 0$, donc $\ell_a = \ell_b$. Notons $\ell$ cette limite commune.
+    On a $a_k \le u_{\phi(k)} \le b_k$ pour tout $k$.
+    Comme $a_k \to \ell$ et $b_k \to \ell$, par le théorème des gendarmes, la suite extraite $(u_{\phi(k)})$ converge vers $\ell$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice 6 :</strong>
+    <ol>
+        <li>Soit $u_n = \sin(\frac{n \pi}{2})$.
+            a) Donner les suites extraites $(u_{2k})$ et $(u_{2k+1})$.
+            b) Étudier la convergence de $(u_{4k})$, $(u_{4k+1})$, $(u_{4k+2})$, $(u_{4k+3})$.
+            c) La suite $(u_n)$ est-elle convergente ? Est-elle bornée ? Admet-elle une sous-suite convergente ?</li>
+        <li>Montrer que toute suite réelle $(u_n)$ admet une sous-suite monotone. (Indication : considérer les "pics" de la suite, i.e., les indices $n$ tels que $u_n \ge u_m$ pour tout $m > n$).</li>
+        <li>Soit $(u_n)$ une suite telle que les suites extraites $(u_{2n})$, $(u_{2n+1})$ et $(u_{3n})$ convergent. Montrer que $(u_n)$ converge. (Indication : considérer les limites des sous-suites de $(u_{6n})$).</li>
+    </ol>
+</div>
+
+
+<h2 id="traduction-sequentielle">g) Traduction séquentielle de certaines propriétés</h2>
+
+<div class="definition">
+    <strong>Partie dense :</strong> Une partie $A$ de $\mathbb{R}$ est dite <strong>dense</strong> dans $\mathbb{R}$ si tout intervalle ouvert non vide de $\mathbb{R}$ contient au moins un élément de $A$.
+    <br> (i.e., $\forall a, b \in \mathbb{R}, a < b \implies ]a, b[ \cap A \neq \emptyset$).
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation séquentielle de la densité :</strong>
+    Une partie $A$ de $\mathbb{R}$ est dense dans $\mathbb{R}$ si et seulement si pour tout réel $x \in \mathbb{R}$, il existe une suite $(a_n)_{n \in \mathbb{N}}$ d'éléments de $A$ qui converge vers $x$.
+    $$ A \text{ dense dans } \mathbb{R} \iff (\forall x \in \mathbb{R}, \exists (a_n)_{n \in \mathbb{N}} \in A^{\mathbb{N}}, a_n \to x) $$
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong>
+    <br> ($\implies$) Supposons $A$ dense dans $\mathbb{R}$. Soit $x \in \mathbb{R}$. Pour tout $n \in \mathbb{N}^*$, l'intervalle $]x - \frac{1}{n}, x + \frac{1}{n}[$ est un intervalle ouvert non vide. Comme $A$ est dense, il contient un élément $a_n \in A$.
+    On a donc $x - \frac{1}{n} < a_n < x + \frac{1}{n}$, ce qui s'écrit $|a_n - x| < \frac{1}{n}$.
+    Comme $\frac{1}{n} \to 0$, par le théorème des gendarmes (ou la définition), on a $a_n \to x$. La suite $(a_n)_{n \ge 1}$ est une suite d'éléments de $A$ qui converge vers $x$.
+    <br> ($\impliedby$) Supposons que pour tout $x \in \mathbb{R}$, il existe une suite $(a_n)$ d'éléments de $A$ telle que $a_n \to x$.
+    Soit $]a, b[$ un intervalle ouvert non vide ($a < b$). Choisissons $x = \frac{a+b}{2} \in ]a, b[$. Par hypothèse, il existe une suite $(a_n)$ d'éléments de $A$ telle que $a_n \to x$.
+    Soit $\epsilon = \frac{b-a}{2} > 0$. Comme $a_n \to x$, il existe $N$ tel que $n \ge N \implies |a_n - x| < \epsilon$.
+    Pour $n \ge N$, on a $x - \epsilon < a_n < x + \epsilon$.
+    $x - \epsilon = \frac{a+b}{2} - \frac{b-a}{2} = a$.
+    $x + \epsilon = \frac{a+b}{2} + \frac{b-a}{2} = b$.
+    Donc, pour $n \ge N$, on a $a < a_n < b$, ce qui signifie $a_n \in ]a, b[$.
+    Comme $a_n \in A$, on a trouvé un élément de $A$ dans l'intervalle $]a, b[$. Donc $A$ est dense dans $\mathbb{R}$.
+</div>
+
+<div class="theorem">
+    <strong>Densité des ensembles usuels :</strong>
+    Les ensembles $\mathbb{D}$ (décimaux), $\mathbb{Q}$ (rationnels) et $\mathbb{R} \setminus \mathbb{Q}$ (irrationnels) sont denses dans $\mathbb{R}$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong>
+    <ul>
+        <li><strong>Pour $\mathbb{Q}$ et $\mathbb{R} \setminus \mathbb{Q}$ :</strong> C'est le théorème vu en section (a).</li>
+        <li><strong>Pour $\mathbb{D}$ :</strong> On a vu en (a) que pour tout $x \in \mathbb{R}$ et tout $n \in \mathbb{N}$, il existe une valeur décimale approchée par défaut $d_n = \frac{k_n}{10^n} \in \mathbb{D}$ telle que $d_n \le x < d_n + 10^{-n}$. Ceci implique $|x - d_n| < 10^{-n}$. Comme $10^{-n} \to 0$, la suite $(d_n)$ d'éléments de $\mathbb{D}$ converge vers $x$. Par la caractérisation séquentielle, $\mathbb{D}$ est dense dans $\mathbb{R}$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation séquentielle de la borne supérieure/inférieure :</strong>
+    Soit $X$ une partie non vide de $\mathbb{R}$.
+    <ul>
+        <li>Si $X$ est majorée, alors $\sup X$ est la limite d'une suite d'éléments de $X$.
+            <br> (i.e., $\exists (x_n)_{n \in \mathbb{N}} \in X^{\mathbb{N}}, x_n \to \sup X$).</li>
+        <li>Si $X$ n'est pas majorée ($\sup X = +\infty$), alors il existe une suite $(x_n)_{n \in \mathbb{N}}$ d'éléments de $X$ telle que $x_n \to +\infty$.</li>
+        <li>Si $X$ est minorée, alors $\inf X$ est la limite d'une suite d'éléments de $X$.
+            <br> (i.e., $\exists (y_n)_{n \in \mathbb{N}} \in X^{\mathbb{N}}, y_n \to \inf X$).</li>
+        <li>Si $X$ n'est pas minorée ($\inf X = -\infty$), alors il existe une suite $(y_n)_{n \in \mathbb{N}}$ d'éléments de $X$ telle que $y_n \to -\infty$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Preuve (cas $\sup X = S \in \mathbb{R}$) :</strong>
+    Soit $S = \sup X$. Par la caractérisation de la borne supérieure, pour tout $\epsilon > 0$, il existe $x \in X$ tel que $S - \epsilon < x \le S$.
+    Appliquons ceci pour $\epsilon = \frac{1}{n+1}$ (pour $n \in \mathbb{N}$). Pour chaque $n$, il existe $x_n \in X$ tel que $S - \frac{1}{n+1} < x_n \le S$.
+    Comme $S - \frac{1}{n+1} \to S$ et $S \to S$, par le théorème des gendarmes, la suite $(x_n)$ (qui est une suite d'éléments de $X$) converge vers $S$.
+
+    <strong>Preuve (cas $\sup X = +\infty$) :</strong>
+    Dire que $X$ n'est pas majorée signifie que pour tout réel $A$, $A$ n'est pas un majorant de $X$. Donc $\forall A \in \mathbb{R}, \exists x \in X, x > A$.
+    Appliquons ceci pour $A = n$ (pour $n \in \mathbb{N}$). Pour chaque $n$, il existe $x_n \in X$ tel que $x_n > n$.
+    Comme $n \to +\infty$, par comparaison, la suite $(x_n)$ (qui est une suite d'éléments de $X$) tend vers $+\infty$.
+    Les preuves pour $\inf X$ sont similaires.
+</div>
+
+<div class="exercise">
+    <strong>Exercice 7 :</strong>
+    <ol>
+        <li>Montrer que l'ensemble $A = \{ \frac{p}{2^k} \mid p \in \mathbb{Z}, k \in \mathbb{N} \}$ est dense dans $\mathbb{R}$.</li>
+        <li>Soit $X = \{ \cos(n) \mid n \in \mathbb{N} \}$. $X$ est une partie de $[-1, 1]$, donc elle est bornée. Elle admet une borne supérieure $S$ et une borne inférieure $I$. Montrer qu'il existe une suite d'entiers $(\phi(k))$ telle que $\cos(\phi(k)) \to S$. (On ne demande pas de calculer $S$).</li>
+        <li>En utilisant la densité de $\mathbb{Q}$, montrer que tout réel est limite d'une suite de rationnels strictement croissante.</li>
+    </ol>
+</div>
+
+
+<h2 id="suites-complexes">h) Suites complexes</h2>
+
+<div class="definition">
+    <strong>Suite complexe :</strong> Une suite complexe est une application $z$ de $\mathbb{N}$ (ou $\mathbb{N}^*$) à valeurs dans $\mathbb{C}$. On la note $(z_n)_{n \in \mathbb{N}}$.
+    Chaque terme $z_n$ peut s'écrire sous forme algébrique $z_n = x_n + i y_n$, où $(x_n)$ est la suite des parties réelles et $(y_n)$ est la suite des parties imaginaires.
+</div>
+
+<div class="definition">
+    <strong>Limite d'une suite complexe :</strong> Soit $(z_n)_{n \in \mathbb{N}}$ une suite complexe et $L \in \mathbb{C}$. On dit que $(z_n)$ converge vers $L$ si la suite réelle $(|z_n - L|)$ tend vers 0.
+    $$ \lim_{n \to \infty} z_n = L \iff \lim_{n \to \infty} |z_n - L| = 0 $$
+    Ceci est équivalent à :
+    $$ \forall \epsilon > 0, \exists N \in \mathbb{N}, \forall n \in \mathbb{N}, (n \ge N \implies |z_n - L| \le \epsilon) $$
+    Une suite complexe qui admet une limite (finie, dans $\mathbb{C}$) est dite <strong>convergente</strong>. Sinon, elle est <strong>divergente</strong>.
+    (On ne définit pas de limite infinie pour les suites complexes de manière standard).
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation par parties réelle et imaginaire :</strong>
+    Soit $(z_n)_{n \in \mathbb{N}}$ une suite complexe avec $z_n = x_n + i y_n$, et soit $L = a + ib \in \mathbb{C}$ (avec $x_n, y_n, a, b \in \mathbb{R}$).
+    La suite $(z_n)$ converge vers $L$ si et seulement si la suite $(x_n)$ converge vers $a$ ET la suite $(y_n)$ converge vers $b$.
+    $$ \lim_{n \to \infty} z_n = L \iff \left( \lim_{n \to \infty} x_n = a \quad \text{et} \quad \lim_{n \to \infty} y_n = b \right) $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> On utilise les inégalités :
+    $|x_n - a| = |\text{Re}(z_n - L)| \le |z_n - L|$
+    $|y_n - b| = |\text{Im}(z_n - L)| \le |z_n - L|$
+    $|z_n - L| = \sqrt{(x_n - a)^2 + (y_n - b)^2} \le \sqrt{(|x_n - a| + |y_n - b|)^2} = |x_n - a| + |y_n - b|$. (Ou $|z_n - L| \le \sqrt{2} \max(|x_n-a|, |y_n-b|)$ etc.)
+
+    ($\implies$) Si $z_n \to L$, alors $|z_n - L| \to 0$.
+    Comme $0 \le |x_n - a| \le |z_n - L|$ et $0 \le |y_n - b| \le |z_n - L|$, par le théorème des gendarmes, $|x_n - a| \to 0$ (donc $x_n \to a$) et $|y_n - b| \to 0$ (donc $y_n \to b$).
+
+    ($\impliedby$) Si $x_n \to a$ et $y_n \to b$, alors $|x_n - a| \to 0$ et $|y_n - b| \to 0$.
+    La somme $|x_n - a| + |y_n - b| \to 0 + 0 = 0$.
+    Comme $0 \le |z_n - L| \le |x_n - a| + |y_n - b|$, par le théorème des gendarmes, $|z_n - L| \to 0$. Donc $z_n \to L$.
+</div>
+
+<div class="comment">
+    <strong>Extension des résultats :</strong> La plupart des résultats sur les limites de suites réelles s'étendent aux suites complexes (via la caractérisation par parties réelle et imaginaire ou en travaillant avec les modules) :
+    <ul>
+        <li>Unicité de la limite.</li>
+        <li>Toute suite convergente est bornée (au sens où la suite des modules $(|z_n|)$ est bornée).</li>
+        <li>Opérations sur les limites (somme, produit, quotient) fonctionnent de la même manière (attention aux formes indéterminées et division par zéro).</li>
+        <li>Produit d'une suite bornée par une suite de limite nulle tend vers 0.</li>
+        <li>Si $z_n \to L$, alors toute sous-suite $z_{\phi(k)} \to L$.</li>
+    </ul>
+    <strong>Ce qui ne s'étend pas :</strong> Les résultats liés à la relation d'ordre ($\le$) n'ont pas de sens direct dans $\mathbb{C}$. En particulier :
+    <ul>
+        <li>Pas de théorème de la limite monotone.</li>
+        <li>Pas de théorème des gendarmes direct (mais on peut l'appliquer aux modules ou aux parties réelles/imaginaires).</li>
+        <li>Pas de suites adjacentes.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Bolzano-Weierstrass (complexe) :</strong>
+    De toute suite complexe bornée (i.e., $(|z_n|)$ est majorée), on peut extraire une sous-suite convergente (vers une limite dans $\mathbb{C}$).
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Soit $(z_n)$ une suite complexe bornée, $z_n = x_n + i y_n$.
+    Si $(z_n)$ est bornée, il existe $K \ge 0$ tel que $|z_n| \le K$.
+    Alors $|x_n| = |\text{Re}(z_n)| \le |z_n| \le K$ et $|y_n| = |\text{Im}(z_n)| \le |z_n| \le K$.
+    Les suites réelles $(x_n)$ et $(y_n)$ sont donc bornées.
+    D'après le théorème de Bolzano-Weierstrass réel, on peut extraire de $(x_n)$ une sous-suite $(x_{\phi(k)})$ qui converge vers $a \in \mathbb{R}$.
+    Considérons maintenant la suite $(y_{\phi(k)})$. C'est une suite réelle qui est bornée (car $|y_{\phi(k)}| \le K$). On peut donc en extraire une sous-suite $(y_{\phi(\psi(j))})$ qui converge vers $b \in \mathbb{R}$.
+    Comme $(x_{\phi(\psi(j))})$ est une sous-suite de la suite convergente $(x_{\phi(k)})$, elle converge aussi vers $a$.
+    Posons $\sigma(j) = \phi(\psi(j))$. L'application $\sigma: \mathbb{N} \to \mathbb{N}$ est strictement croissante (composée de deux applications strictement croissantes).
+    La suite extraite $(z_{\sigma(j)})$ a pour partie réelle $(x_{\sigma(j)})$ qui converge vers $a$, et pour partie imaginaire $(y_{\sigma(j)})$ qui converge vers $b$.
+    D'après la caractérisation par parties réelle et imaginaire, la suite extraite $(z_{\sigma(j)})$ converge vers $L = a + ib$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice 8 :</strong>
+    <ol>
+        <li>Étudier la convergence des suites complexes suivantes :
+            <ul>
+                <li>$a_n = \frac{n + i}{in^2 + 1}$</li>
+                <li>$b_n = (\frac{1+i}{2})^n$</li>
+                <li>$c_n = e^{i n \pi / 3}$</li>
+                <li>$d_n = n (\cos(\frac{1}{n}) + i \sin(\frac{1}{n})) - n$ (Indication : penser aux développements limités ou multiplier par le conjugué implicitement)</li>
+             </ul>
+        </li>
+        <li>Montrer que si $z_n \to L$, alors $|z_n| \to |L|$. La réciproque est-elle vraie ?</li>
+        <li>Soit $(z_n)$ une suite complexe telle que $z_n \neq 0$ pour tout $n$. Montrer que si $z_n \to L \neq 0$, alors $\frac{1}{z_n} \to \frac{1}{L}$.</li>
+    </ol>
+</div>
+
+
+<h2 id="suites-particulieres">i) Suites particulières</h2>
+
+<h3 id="suites-arith-geom">Suites arithmétiques, géométriques, arithmético-géométriques</h3>
+
+<div class="definition">
+    <strong>Suite arithmétique :</strong> Une suite $(u_n)_{n \ge n_0}$ est arithmétique de raison $r \in \mathbb{C}$ si $\forall n \ge n_0, u_{n+1} = u_n + r$.
+    <ul>
+        <li><strong>Terme général :</strong> $u_n = u_{n_0} + (n-n_0)r$. (Souvent $u_n = u_0 + nr$).</li>
+        <li><strong>Somme des termes :</strong> $S_n = \sum_{k=n_0}^{n} u_k = (n - n_0 + 1) \frac{u_{n_0} + u_n}{2}$. (Nombre de termes $\times$ moyenne du premier et du dernier terme).</li>
+        <li><strong>Limite (cas réel, $r \in \mathbb{R}$) :</strong>
+            - Si $r > 0$, $u_n \to +\infty$.
+            - Si $r < 0$, $u_n \to -\infty$.
+            - Si $r = 0$, $u_n = u_{n_0}$ (constante), $u_n \to u_{n_0}$.
+        </li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Suite géométrique :</strong> Une suite $(u_n)_{n \ge n_0}$ est géométrique de raison $q \in \mathbb{C}$ si $\forall n \ge n_0, u_{n+1} = q \cdot u_n$.
+    <ul>
+        <li><strong>Terme général :</strong> $u_n = u_{n_0} \cdot q^{n-n_0}$. (Souvent $u_n = u_0 \cdot q^n$).</li>
+        <li><strong>Somme des termes :</strong> Si $q \neq 1$, $S_n = \sum_{k=n_0}^{n} u_k = u_{n_0} \frac{1 - q^{n - n_0 + 1}}{1 - q}$. (Premier terme $\times \frac{1 - \text{raison}^{\text{nb termes}}}{1 - \text{raison}}$). Si $q = 1$, $S_n = (n - n_0 + 1) u_{n_0}$.</li>
+        <li><strong>Limite (cas complexe, $q \in \mathbb{C}$) :</strong>
+            - Si $|q| < 1$, $q^n \to 0$, donc $u_n \to 0$.
+            - Si $|q| > 1$, $|u_n| = |u_0| |q|^n \to +\infty$ (si $u_0 \neq 0$). La suite diverge (non bornée).
+            - Si $q = 1$, $u_n = u_0$ (constante), $u_n \to u_0$.
+            - Si $|q| = 1$ et $q \neq 1$, la suite $(q^n)$ diverge (elle tourne sur le cercle unité sans se stabiliser, sauf si $u_0=0$). Donc $(u_n)$ diverge (sauf si $u_0=0$).
+        </li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Suite arithmético-géométrique :</strong> Une suite $(u_n)_{n \in \mathbb{N}}$ est définie par une relation de récurrence de la forme $u_{n+1} = a u_n + b$, où $a, b \in \mathbb{C}$.
+    <ul>
+        <li>Si $a=1$, c'est une suite arithmétique de raison $b$.</li>
+        <li>Si $b=0$, c'est une suite géométrique de raison $a$.</li>
+        <li>Si $a \neq 1$ et $b \neq 0$:
+            <ol>
+                <li>Chercher le <strong>point fixe</strong> $\ell$ (solution constante) : $\ell = a \ell + b \implies \ell(1-a) = b \implies \ell = \frac{b}{1-a}$.</li>
+                <li>Considérer la suite auxiliaire $(v_n)$ définie par $v_n = u_n - \ell$.
+                   $v_{n+1} = u_{n+1} - \ell = (a u_n + b) - \ell = a u_n + (a \ell + b) - \ell - a\ell = a u_n - a \ell = a(u_n - \ell) = a v_n$.</li>
+                <li>La suite $(v_n)$ est géométrique de raison $a$. Donc $v_n = v_0 \cdot a^n = (u_0 - \ell) a^n$.</li>
+                <li>En déduire $u_n$: $u_n = v_n + \ell = (u_0 - \ell) a^n + \ell = (u_0 - \frac{b}{1-a}) a^n + \frac{b}{1-a}$.</li>
+                <li><strong>Limite :</strong>
+                    - Si $|a| < 1$, $a^n \to 0$, donc $u_n \to \ell = \frac{b}{1-a}$.
+                    - Si $|a| > 1$, $(u_n)$ diverge (sauf si $u_0 = \ell$).
+                    - Si $a=-1$, $u_n = (u_0 - \ell)(-1)^n + \ell$. Diverge sauf si $u_0=\ell$.
+                    - Si $|a|=1, a \ne 1$, diverge sauf si $u_0=\ell$.
+                </li>
+            </ol>
+        </li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> $u_0 = 1$, $u_{n+1} = \frac{1}{2} u_n + 3$.
+    Ici $a=1/2, b=3$. $a \ne 1$.
+    Point fixe : $\ell = \frac{1}{2}\ell + 3 \implies \frac{1}{2}\ell = 3 \implies \ell = 6$.
+    Suite auxiliaire $v_n = u_n - 6$. $v_{n+1} = u_{n+1} - 6 = (\frac{1}{2}u_n + 3) - 6 = \frac{1}{2}u_n - 3 = \frac{1}{2}(u_n - 6) = \frac{1}{2} v_n$.
+    $(v_n)$ est géométrique de raison $1/2$. $v_0 = u_0 - 6 = 1 - 6 = -5$.
+    Donc $v_n = v_0 (1/2)^n = -5 (\frac{1}{2})^n$.
+    $u_n = v_n + 6 = 6 - 5 (\frac{1}{2})^n$.
+    Limite : Comme $|1/2| < 1$, $(1/2)^n \to 0$, donc $u_n \to 6$.
+</div>
+
+
+<h3 id="suites-rec-lin">Suites récurrentes linéaires homogènes d'ordre 2</h3>
+
+<div class="definition">
+    <strong>Suite récurrente linéaire homogène d'ordre 2 à coefficients constants :</strong> Une suite $(u_n)_{n \in \mathbb{N}}$ est définie par une relation de la forme :
+    $$ \forall n \in \mathbb{N}, a u_{n+2} + b u_{n+1} + c u_n = 0 $$
+    où $a, b, c \in \mathbb{C}$ sont des constantes, avec $a \neq 0$. (Homogène car le second membre est 0). Les deux premiers termes $u_0, u_1$ sont donnés.
+</div>
+
+<div class="theorem">
+    <strong>Résolution :</strong> On associe à la récurrence l'<strong>équation caractéristique</strong> :
+    $$ a r^2 + b r + c = 0 $$
+    Soit $\Delta = b^2 - 4ac$ son discriminant.
+    <ul>
+        <li><strong>Cas 1 : $\Delta \neq 0$.</strong> L'équation a deux racines distinctes $r_1, r_2 \in \mathbb{C}$.
+            Alors le terme général $u_n$ est de la forme :
+            $$ u_n = \lambda r_1^n + \mu r_2^n $$
+            où $\lambda, \mu \in \mathbb{C}$ sont des constantes déterminées par les conditions initiales $u_0$ et $u_1$ (en résolvant le système $u_0 = \lambda + \mu$, $u_1 = \lambda r_1 + \mu r_2$).
+        </li>
+        <li><strong>Cas 2 : $\Delta = 0$.</strong> L'équation a une racine double $r \in \mathbb{C}$ ($r = -b/2a$).
+            Alors le terme général $u_n$ est de la forme :
+            $$ u_n = (\lambda + \mu n) r^n $$
+            où $\lambda, \mu \in \mathbb{C}$ sont des constantes déterminées par les conditions initiales $u_0$ et $u_1$ (en résolvant $u_0 = \lambda$, $u_1 = (\lambda + \mu)r$).
+        </li>
+    </ul>
+    (Note : Si les coefficients $a, b, c$ sont réels, les racines $r_1, r_2$ sont soit réelles, soit complexes conjuguées. Dans le cas complexe conjugué $r_{1,2} = \rho e^{\pm i \theta}$, on peut écrire la solution réelle sous la forme $u_n = \rho^n (A \cos(n\theta) + B \sin(n\theta))$).
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> L'ensemble des suites vérifiant la récurrence forme un espace vectoriel de dimension 2 sur $\mathbb{C}$. On cherche une base de cet espace. On essaie des solutions de la forme $u_n = r^n$. En injectant dans la récurrence, on obtient $a r^{n+2} + b r^{n+1} + c r^n = r^n (a r^2 + b r + c) = 0$. Pour avoir une solution non nulle, il faut $a r^2 + b r + c = 0$.
+    Si on a deux racines distinctes $r_1, r_2$, les suites $(r_1^n)$ et $(r_2^n)$ sont deux solutions linéairement indépendantes, elles forment une base. La solution générale est une combinaison linéaire.
+    Si on a une racine double $r$, alors $(r^n)$ est une solution. On montre (par exemple en cherchant une solution de la forme $n r^n$) que $(n r^n)$ est aussi une solution linéairement indépendante de $(r^n)$. Elles forment une base.
+</div>
+
+<div class="example">
+    <strong>Exemple : Suite de Fibonacci.</strong> $F_0 = 0, F_1 = 1$, $F_{n+2} = F_{n+1} + F_n$, soit $F_{n+2} - F_{n+1} - F_n = 0$.
+    Équation caractéristique : $r^2 - r - 1 = 0$.
+    $\Delta = (-1)^2 - 4(1)(-1) = 1 + 4 = 5$.
+    Racines : $r_1 = \frac{1 + \sqrt{5}}{2}$ (nombre d'or, $\phi$) et $r_2 = \frac{1 - \sqrt{5}}{2}$ ($1-\phi = -1/\phi$).
+    Forme générale : $F_n = \lambda r_1^n + \mu r_2^n$.
+    Conditions initiales :
+    $F_0 = 0 = \lambda + \mu \implies \mu = -\lambda$.
+    $F_1 = 1 = \lambda r_1 + \mu r_2 = \lambda r_1 - \lambda r_2 = \lambda(r_1 - r_2)$.
+    $r_1 - r_2 = \frac{1 + \sqrt{5}}{2} - \frac{1 - \sqrt{5}}{2} = \sqrt{5}$.
+    Donc $1 = \lambda \sqrt{5} \implies \lambda = \frac{1}{\sqrt{5}}$.
+    Et $\mu = -\frac{1}{\sqrt{5}}$.
+    Finalement : $F_n = \frac{1}{\sqrt{5}} \left( \left(\frac{1 + \sqrt{5}}{2}\right)^n - \left(\frac{1 - \sqrt{5}}{2}\right)^n \right)$ (Formule de Binet).
+</div>
+
+
+<h3 id="suites-rec-f-un">Suites récurrentes $u_{n+1} = f(u_n)$</h3>
+
+<div class="definition">
+    <strong>Suite définie par $u_{n+1} = f(u_n)$ :</strong> Soit $f: I \to \mathbb{R}$ une fonction définie sur un intervalle $I$ de $\mathbb{R}$, et $u_0 \in I$. Si $f(I) \subseteq I$ (on dit que $I$ est <strong>stable</strong> par $f$), alors on peut définir la suite $(u_n)$ par la relation de récurrence $u_{n+1} = f(u_n)$ pour tout $n \in \mathbb{N}$. Tous les termes $u_n$ resteront dans $I$.
+</div>
+
+<div class="method">
+    <strong>Étude de la convergence :</strong>
+    <ol>
+        <li><strong>Représentation graphique :</strong> Tracer la courbe $y=f(x)$ et la droite $y=x$. Placer $u_0$ sur l'axe des abscisses. Pour trouver $u_1 = f(u_0)$, monter verticalement jusqu'à la courbe $y=f(x)$. Pour reporter $u_1$ sur l'axe des abscisses, aller horizontalement jusqu'à la droite $y=x$, puis redescendre verticalement sur l'axe. Répéter le processus pour obtenir $u_2, u_3, \dots$ (construction en "escargot" ou "escalier"). Cela donne une idée de la monotonie et de la convergence éventuelle.</li>
+        <li><strong>Points fixes et limites possibles :</strong> Si la suite $(u_n)$ converge vers une limite $\ell \in I$, et si $f$ est continue en $\ell$, alors en passant à la limite dans $u_{n+1} = f(u_n)$, on obtient $\ell = f(\ell)$. Les limites possibles sont donc les <strong>points fixes</strong> de $f$ dans $I$. Il faut donc résoudre l'équation $f(x) = x$.</li>
+        <li><strong>Stabilité des intervalles :</strong> Vérifier si $I$ est stable par $f$. Si $u_0$ est dans un sous-intervalle $J \subseteq I$ qui est stable par $f$, alors toute la suite reste dans $J$. Ceci peut aider à montrer que la suite est bornée.</li>
+        <li><strong>Monotonie :</strong>
+            <ul>
+                <li><strong>Signe de $u_1 - u_0$ :</strong> Si $f$ est <strong>croissante</strong> sur $I$, alors la suite $(u_n)$ est monotone. Son sens de variation est donné par le signe de $u_1 - u_0$.
+                    <br><em>Preuve :</em> Si $u_1 \ge u_0$, montrons $u_{n+1} \ge u_n$ par récurrence. C'est vrai pour $n=0$. Supposons $u_k \ge u_{k-1}$. Comme $f$ est croissante, $f(u_k) \ge f(u_{k-1})$, soit $u_{k+1} \ge u_k$. Le cas $u_1 \le u_0$ est similaire.</li>
+                <li><strong>Signe de $f(x) - x$ :</strong> Étudier le signe de $g(x) = f(x) - x$.
+                    - Si $f(x) > x$ sur un intervalle $J$, alors si $u_n \in J$, on a $u_{n+1} = f(u_n) > u_n$. La suite est localement croissante.
+                    - Si $f(x) < x$ sur un intervalle $J$, alors si $u_n \in J$, on a $u_{n+1} = f(u_n) < u_n$. La suite est localement décroissante.
+                    - Si $f(x) = x$, $u_n$ est un point fixe, la suite est stationnaire à partir de ce rang.
+                    Cette méthode donne la monotonie même si $f$ n'est pas monotone.</li>
+            </ul>
+        </li>
+        <li><strong>Convergence :</strong> Si la suite $(u_n)$ est monotone (par l'une des méthodes ci-dessus) et bornée (souvent grâce à un intervalle stable), alors elle converge (d'après le théorème de la limite monotone). Sa limite est nécessairement un point fixe de $f$ dans l'intervalle où se trouve la suite.</li>
+    </ol>
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> $u_0 = 0$, $u_{n+1} = \sqrt{2 + u_n}$. (Déjà vu à l'exercice 5).
+    Ici $f(x) = \sqrt{2+x}$. $f$ est définie pour $x \ge -2$.
+    Prenons $I = [0, +\infty[$. $u_0 = 0 \in I$.
+    Si $x \ge 0$, alors $2+x \ge 2$, donc $\sqrt{2+x} \ge \sqrt{2} > 0$. Donc $f(I) \subset I$. $I$ est stable. Tous les $u_n \ge 0$.
+    Point fixe : $f(\ell) = \ell \implies \sqrt{2+\ell} = \ell$. Il faut $\ell \ge 0$. En élevant au carré : $2+\ell = \ell^2 \implies \ell^2 - \ell - 2 = 0$. $(\ell-2)(\ell+1) = 0$. Solutions $\ell=2$ et $\ell=-1$. Comme on cherche $\ell \ge 0$, la seule limite possible est $\ell=2$.
+    Stabilité de $J=[0, 2]$ : Si $x \in [0, 2]$, alors $2 \le 2+x \le 4$, donc $\sqrt{2} \le \sqrt{2+x} \le 2$. Donc $f([0, 2]) \subseteq [\sqrt{2}, 2] \subset [0, 2]$. $J$ est stable. Comme $u_0=0 \in J$, tous les $u_n \in [0, 2]$. La suite est bornée.
+    Monotonie : $f(x) = \sqrt{2+x}$ est strictement croissante sur $[-2, +\infty[$, donc sur $I=[0, \infty[$.
+    $u_1 = f(u_0) = \sqrt{2+0} = \sqrt{2}$. $u_1 = \sqrt{2} > u_0 = 0$.
+    Comme $f$ est croissante et $u_1 > u_0$, la suite $(u_n)$ est strictement croissante.
+    Conclusion : $(u_n)$ est croissante et majorée (par 2). Elle converge donc vers l'unique point fixe dans $[0, 2]$, qui est $\ell=2$.
+    Limite : $\lim u_n = 2$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice 9 :</strong>
+    <ol>
+        <li>Exprimer $u_n$ en fonction de $n$ pour les suites suivantes :
+            a) $u_0=5$, $u_{n+1} = u_n - 3$.
+            b) $u_0=2$, $u_{n+1} = 3 u_n$.
+            c) $u_0=1$, $u_{n+1} = 2 u_n + 1$.
+            d) $u_0=0, u_1=1$, $u_{n+2} = 5 u_{n+1} - 6 u_n$.</li>
+        <li>Étudier la convergence de la suite $(u_n)$ définie par $u_0 = 4$ et $u_{n+1} = \frac{1}{2} (u_n + \frac{3}{u_n})$. (Indication : montrer que $u_n \ge \sqrt{3}$ pour $n \ge 1$, puis étudier la monotonie).</li>
+        <li>Étudier la convergence de la suite $(u_n)$ définie par $u_0 = 0.1$ et $u_{n+1} = u_n(2 - u_n)$. (Indication : $f(x)=x(2-x)$. Chercher un intervalle stable, étudier la monotonie).</li>
+    </ol>
+</div>
+
+</body>
+</html>
