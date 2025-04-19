@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Optique Géométrique</title>
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        #app {
+            max-width: 900px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #42b983;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .qa-item {
+            display: flex;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: box-shadow 0.3s ease;
+        }
+        .qa-item:hover {
+             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .understanding-bar {
+            flex: 0 0 10px; /* Ne grandit pas, ne rétrécit pas, base de 10px */
+            margin-right: 15px;
+            border-radius: 5px;
+            background-color: #ccc; /* Gris par défaut si pas compris ou non évalué */
+            transition: background-color 0.3s ease;
+        }
+
+        .understanding-bar.easy { background-color: #4CAF50; } /* Vert */
+        .understanding-bar.medium { background-color: #ff9800; } /* Orange */
+        .understanding-bar.hard { background-color: #f44336; } /* Rouge */
+        .understanding-bar.not_understood { background-color: #607d8b; } /* Gris sombre */
+
+        .qa-content {
+            flex-grow: 1;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        .answer {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #42b983;
+            border-radius: 0 4px 4px 0;
+            transition: all 0.4s ease-out;
+            overflow: hidden;
+            /* max-height géré dynamiquement ou utiliser une approche différente si nécessaire */
+        }
+
+        .answer.hidden {
+             /* Styles pour l'état caché si une transition est souhaitée */
+             /* opacity: 0; */
+             /* max-height: 0; */
+             /* padding-top: 0; */
+             /* padding-bottom: 0; */
+             /* margin-top: 0; */
+             /* border-width: 0; */
+        }
+
+
+        button {
+            cursor: pointer;
+            padding: 8px 12px;
+            margin: 5px 5px 5px 0;
+            border: none;
+            border-radius: 4px;
+            background-color: #42b983;
+            color: white;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease;
+        }
+        button:hover {
+            background-color: #36a374;
+        }
+
+        .toggle-answer-btn {
+             background-color: #3498db;
+        }
+         .toggle-answer-btn:hover {
+             background-color: #2980b9;
+         }
+
+        .understanding-buttons button {
+            background-color: #eee;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+         .understanding-buttons button:hover {
+             background-color: #ddd;
+         }
+        .understanding-buttons button.active.easy { background-color: #4CAF50; color: white; border-color: #4CAF50;}
+        .understanding-buttons button.active.medium { background-color: #ff9800; color: white; border-color: #ff9800;}
+        .understanding-buttons button.active.hard { background-color: #f44336; color: white; border-color: #f44336;}
+        .understanding-buttons button.active.not_understood { background-color: #607d8b; color: white; border-color: #607d8b;}
+
+        .katex { font-size: 1.1em; } /* Ajuster si nécessaire */
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 5px; }
+
+        /* Classe utilitaire pour masquer */
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h1>Formation des Images - Questions</h1>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+
+        <div v-for="item in qaList" :key="item.id" class="qa-item">
+            <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn">
+                    {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse
+                </button>
+
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                 </div>
+
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, nextTick, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                const qaList = ref([
+                    {
+                        id: 'q1',
+                        question: "Qu'est-ce qu'une source ponctuelle monochromatique et qu'est-ce que le spectre d'une source lumineuse ?",
+                        answer: `Une <strong>Source Ponctuelle Monochromatique</strong> est un modèle idéalisé d'une source émettant une seule longueur d'onde $\\lambda$ depuis un point unique.<br>
+                                Le <strong>Spectre</strong> est la répartition de l'intensité lumineuse émise par une source en fonction de la longueur d'onde. Il caractérise la source (continu, de raies).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q2',
+                        question: "Qu'est-ce que l'optique géométrique et quelle est sa condition de validité ?",
+                        answer: `L'<strong>Optique Géométrique</strong> est un modèle où la propagation de la lumière est décrite par des <strong>rayons lumineux</strong>.<br>
+                                Ce modèle est valide lorsque les dimensions des objets et ouvertures sont <strong>grandes devant la longueur d'onde $\\lambda$</strong>.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q3',
+                        question: "Énoncez les deux lois de Snell-Descartes.",
+                        answer: `1. <strong>Réflexion :</strong> Le rayon réfléchi est dans le plan d'incidence. L'angle de réflexion $i_r$ est égal à l'angle d'incidence $i_1$ ($i_r = i_1$).<br>
+                                 2. <strong>Réfraction :</strong> Le rayon réfracté est dans le plan d'incidence. Les angles d'incidence $i_1$ (milieu 1, indice $n_1$) et de réfraction $i_2$ (milieu 2, indice $n_2$) sont liés par : $n_1 \\sin(i_1) = n_2 \\sin(i_2)$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q4',
+                        question: "Quelle est la condition pour observer une réflexion totale ? Donnez la formule de l'angle limite.",
+                        answer: `La réflexion totale se produit lorsque la lumière passe d'un milieu plus réfringent ($n_1$) à un milieu moins réfringent ($n_2 < n_1$).<br>
+                                 <strong>Condition :</strong> L'angle d'incidence $i_1$ doit être supérieur à l'angle limite $i_{lim}$.<br>
+                                 <strong>Angle limite :</strong> $i_{lim} = \\arcsin(\\frac{n_2}{n_1})$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q5',
+                        question: "Qu'est-ce que le stigmatisme rigoureux ? Dans quelles conditions un système optique centré est-il considéré comme stigmatique approché ?",
+                        answer: `Un système est <strong>stigmatique rigoureux</strong> pour A si tous les rayons issus de A convergent en un unique point image A'.<br>
+                                 Il est <strong>stigmatique approché</strong> dans les <strong>conditions de Gauss</strong> (rayons peu inclinés et proches de l'axe optique).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q6',
+                        question: "Comment construit-on l'image d'un point objet par un miroir plan ? Quelle est la nature de cette image ?",
+                        answer: `L'image A' d'un point objet A par un miroir plan est son <strong>symétrique</strong> par rapport au plan du miroir.<br>
+                                 L'image est <strong>virtuelle</strong> (les rayons réfléchis semblent provenir de A').`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q7',
+                        question: "Définir : centre optique, foyers principaux (objet F et image F'), et distance focale f' d'une lentille mince.",
+                        answer: `<ul>
+                                    <li><strong>Centre Optique (O) :</strong> Point de l'axe optique tel qu'un rayon passant par O n'est pas dévié.</li>
+                                    <li><strong>Foyers Principaux :</strong> Foyer image F' (image d'un objet à l'infini), Foyer objet F (objet dont l'image est à l'infini).</li>
+                                    <li><strong>Distance Focale (f') :</strong> Mesure algébrique $f' = \\overline{OF'}$. $f' > 0$ (convergente), $f' < 0$ (divergente). $f = \\overline{FO} = -f'$.</li>
+                                 </ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q8',
+                        question: "Quels sont les 3 rayons particuliers utilisés pour construire l'image d'un objet par une lentille mince ?",
+                        answer: `<ol>
+                                    <li>Rayon passant par le centre optique O : non dévié.</li>
+                                    <li>Rayon parallèle à l'axe optique : émerge en passant par le foyer image F' (ou semblant provenir de F').</li>
+                                    <li>Rayon passant par le foyer objet F (ou se dirigeant vers F) : émerge parallèle à l'axe optique.</li>
+                                 </ol>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q9',
+                        question: "Donnez la relation de conjugaison de Descartes et la formule du grandissement transversal (origine au centre O).",
+                        answer: `<ul>
+                                    <li><strong>Relation de Conjugaison (Descartes) :</strong> $\\frac{1}{\\overline{OA'}} - \\frac{1}{\\overline{OA}} = \\frac{1}{f'} = V$</li>
+                                    <li><strong>Grandissement Transversal ($\\gamma_t$) :</strong> $\\gamma_t = \\frac{\\overline{A'B'}}{\\overline{AB}} = \\frac{\\overline{OA'}}{\\overline{OA}}$</li>
+                                 </ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q10',
+                        question: "Comment modélise-t-on l'œil et comment fonctionne l'accommodation ? Définir Punctum Proximum et Remotum.",
+                        answer: `L'œil est modélisé comme une lentille convergente (cristallin + cornée) de <strong>vergence variable</strong> sur un capteur fixe (rétine). L'accommodation est cette variation de vergence.<br>
+                                 <strong>Punctum Proximum (PP) :</strong> point le plus proche vu net.<br>
+                                 <strong>Punctum Remotum (PR) :</strong> point le plus éloigné vu net (infini pour œil normal).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q11',
+                        question: "Qu'est-ce que la profondeur de champ (PdC) et comment varie-t-elle avec l'ouverture du diaphragme ?",
+                        answer: `La <strong>Profondeur de Champ (PdC)</strong> est la zone de l'espace objet pour laquelle l'image sur le capteur est perçue comme nette.<br>
+                                 La PdC <strong>augmente</strong> quand l'ouverture du diaphragme <strong>diminue</strong> (nombre d'ouverture grand).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q12',
+                        question: "Décrivez une fibre optique à saut d'indice et le principe de guidage de la lumière.",
+                        answer: `C'est un guide d'onde avec un <strong>cœur d'indice $n_1$</strong> entouré d'une <strong>gaine d'indice $n_2 < n_1$</strong>.<br>
+                                 La lumière est guidée par <strong>réflexions totales successives</strong> à l'interface cœur/gaine.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q13',
+                        question: "Qu'est-ce que l'Ouverture Numérique (ON) d'une fibre et à quoi correspond-elle physiquement ?",
+                        answer: `L'Ouverture Numérique est donnée par $ON = \\sqrt{n_1^2 - n_2^2}$.<br>
+                                Elle correspond au sinus de l'angle d'acceptance maximal $\\theta_{max}$ dans l'air ($n_0=1$) : $\\sin \\theta_{max} = ON$. C'est une mesure de la capacité de la fibre à collecter la lumière.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q14',
+                        question: "Qu'est-ce que la dispersion intermodale dans une fibre optique ?",
+                        answer: `C'est le phénomène où, dans une fibre multimode, les rayons lumineux (modes) empruntant des chemins de longueurs différentes à l'intérieur du cœur n'arrivent pas en même temps à la sortie, même s'ils sont émis simultanément. Cela provoque un <strong>élargissement temporel</strong> des impulsions.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    // --- Questions basées sur les exercices ---
+                    {
+                        id: 'q15_ex1.1',
+                        question: "Exercice 1.1 : Un rayon lumineux passe de l'air ($n=1$) dans l'eau ($n=1.33$) avec un angle d'incidence de 30°. Calculer l'angle de réfraction.",
+                        answer: `Loi de Snell-Descartes : $n_{air} \\sin(i_1) = n_{eau} \\sin(i_2)$.<br>
+                                 $1 \\times \\sin(30^\\circ) = 1.33 \\times \\sin(i_2)$.<br>
+                                 $\\sin(i_2) = \\frac{\\sin(30^\\circ)}{1.33} = \\frac{0.5}{1.33} \\approx 0.376$.<br>
+                                 $i_2 = \\arcsin(0.376) \\approx 22.1^\\circ$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q16_ex1.2',
+                        question: "Exercice 1.2 : Calculer l'angle limite pour la réflexion totale à l'interface verre ($n=1.5$) / air ($n=1$).",
+                        answer: `La lumière passe du milieu le plus réfringent (verre, $n_1=1.5$) au moins réfringent (air, $n_2=1$).<br>
+                                 $\\sin(i_{lim}) = \\frac{n_2}{n_1} = \\frac{1}{1.5} \\approx 0.667$.<br>
+                                 $i_{lim} = \\arcsin(0.667) \\approx 41.8^\\circ$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q17_ex1.3',
+                        question: "Exercice 1.3 : Un objet est placé à 5 cm devant un miroir plan. Où se trouve son image ? Est-elle réelle ou virtuelle ?",
+                        answer: `L'image A' est le symétrique de l'objet A par rapport au miroir.<br>
+                                 Elle se trouve donc <strong>5 cm derrière le miroir</strong>.<br>
+                                 Elle est <strong>virtuelle</strong>.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q18_ex1.5',
+                        question: "Exercice 1.5 : Un objet est placé 30 cm avant une lentille convergente de vergence $V=5 \\delta$. Calculer la position et le grandissement de l'image. Nature ?",
+                        answer: `Distance focale : $f' = 1/V = 1/5 = 0.2\\,m = 20\\,cm$.<br>
+                                 Position objet : $\\overline{OA} = -30\\,cm$.<br>
+                                 Relation de conjugaison : $\\frac{1}{\\overline{OA'}} - \\frac{1}{\\overline{OA}} = \\frac{1}{f'}$.<br>
+                                 $\\frac{1}{\\overline{OA'}} - \\frac{1}{-30} = \\frac{1}{20}$.<br>
+                                 $\\frac{1}{\\overline{OA'}} = \\frac{1}{20} - \\frac{1}{30} = \\frac{3-2}{60} = \\frac{1}{60}$.<br>
+                                 Position image : $\\overline{OA'} = 60\\,cm$.<br>
+                                 Grandissement : $\\gamma_t = \\frac{\\overline{OA'}}{\\overline{OA}} = \\frac{60}{-30} = -2$.<br>
+                                 Nature : L'image est <strong>réelle</strong> ($\\overline{OA'} > 0$) et <strong>renversée</strong> ($\\gamma_t < 0$).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q19_ex1.6',
+                        question: "Exercice 1.6 : L'œil d'un étudiant accommode entre l'infini et 25 cm. Quelle est la variation de vergence de son cristallin (en supposant la distance lentille-rétine constante) ?",
+                        answer: `Soit $D = \\overline{OA'}$ la distance (constante) lentille-rétine.<br>
+                                 Vision de loin (PR à $\\infty$) : objet à l'infini ($\\overline{OA} = -\\infty$). $V_{min} = \\frac{1}{\\overline{OA'}} - \\frac{1}{-\\infty} = \\frac{1}{D}$.<br>
+                                 Vision de près (PP à 25 cm) : objet à -25 cm ($\\overline{OA} = -0.25\\,m$). $V_{max} = \\frac{1}{\\overline{OA'}} - \\frac{1}{-0.25} = \\frac{1}{D} + \\frac{1}{0.25} = \\frac{1}{D} + 4\\delta$.<br>
+                                 Variation de vergence : $\\Delta V = V_{max} - V_{min} = (\\frac{1}{D} + 4) - \\frac{1}{D} = 4 \\delta$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q20_ex1.7',
+                        question: "Exercice 1.7 : Une fibre optique a un cœur d'indice $n_1=1.48$ et une gaine d'indice $n_2=1.46$. Calculer son ouverture numérique et l'angle d'acceptance maximal dans l'air.",
+                        answer: `Ouverture Numérique (ON) : $ON = \\sqrt{n_1^2 - n_2^2} = \\sqrt{1.48^2 - 1.46^2}$.<br>
+                                 $ON = \\sqrt{(1.48 - 1.46)(1.48 + 1.46)} = \\sqrt{0.02 \\times 2.94} = \\sqrt{0.0588}$.<br>
+                                 $ON \\approx 0.242$.<br>
+                                 Angle d'acceptance maximal $\\theta_{max}$ (dans l'air, $n_0=1$) :<br>
+                                 $\\sin \\theta_{max} = ON / n_0 = ON \\approx 0.242$.<br>
+                                 $\\theta_{max} = \\arcsin(0.242) \\approx 14.0^\\circ$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+
+                ]);
+
+                const loadUnderstanding = () => {
+                    qaList.value.forEach(item => {
+                        const savedLevel = localStorage.getItem(`qa_understanding_${item.id}`);
+                        if (savedLevel) {
+                            item.understanding = savedLevel;
+                        }
+                    });
+                };
+
+                const saveUnderstanding = (item) => {
+                     if (item.understanding) {
+                        localStorage.setItem(`qa_understanding_${item.id}`, item.understanding);
+                     } else {
+                         localStorage.removeItem(`qa_understanding_${item.id}`); // Optionnel: supprimer si remis à null
+                     }
+                };
+
+                const setUnderstanding = (item, level) => {
+                    item.understanding = level;
+                    saveUnderstanding(item);
+                };
+
+                const toggleAnswer = async (item) => {
+                    const wasHidden = !item.showAnswer;
+                    item.showAnswer = !item.showAnswer;
+
+                    if (item.showAnswer && wasHidden) {
+                        // Attendre que le DOM soit mis à jour AVANT de rendre KaTeX
+                        await nextTick();
+                        try {
+                            const element = document.getElementById(`answer-${item.id}`);
+                            if (element) {
+                                renderMathInElement(element, {
+                                    delimiters: [
+                                        {left: "$$", right: "$$", display: true},
+                                        {left: "$", right: "$", display: false},
+                                        {left: "\\(", right: "\\)", display: false},
+                                        {left: "\\[", right: "\\]", display: true}
+                                    ],
+                                    throwOnError : false
+                                });
+                            }
+                        } catch (error) {
+                            console.error("KaTeX rendering error:", error);
+                        }
+                    }
+                };
+
+                // Charger l'état initial au montage du composant
+                onMounted(() => {
+                    loadUnderstanding();
+                    // Le rendu KaTeX initial est déclenché par l'attribut onload du script auto-render
+                    // Mais on peut forcer un rendu si nécessaire, par ex. si du contenu est ajouté dynamiquement plus tard
+                    // ou si le onload ne fonctionne pas comme prévu.
+                    // renderMathInElement(document.body, { /* options */ });
+                });
+
+                return {
+                    qaList,
+                    toggleAnswer,
+                    setUnderstanding
+                };
+            }
+        }).mount('#app');
+
+         // Configuration globale pour KaTeX auto-render (peut aussi être mis dans l'appel direct)
+        document.addEventListener("DOMContentLoaded", function() {
+             renderMathInElement(document.body, {
+               delimiters: [
+                   {left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false},
+                   {left: "\\(", right: "\\)", display: false},
+                   {left: "\\[", right: "\\]", display: true}
+               ],
+               throwOnError : false
+             });
+         });
+
+    </script>
+
+</body>
+</html>
