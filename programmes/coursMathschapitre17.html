@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Probabilités</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Probabilités</h1>
+
+<h3 id="probabilites">Probabilités</h3>
+<p class="intro-text">
+    Cette section, qui a vocation à interagir avec l'ensemble du programme, a pour objectif de donner aux étudiants une bonne pratique des variables aléatoires dans le cadre fini.
+    <br>Pour enrichir la pratique de la modélisation probabiliste développée au lycée, on met en évidence qu'une situation probabiliste finie peut être décrite par un $n$-uplet de variables aléatoires, l'univers étant vu dans cette optique comme une source suffisante d'aléa. L'objectif de cette présentation est de pouvoir travailler le plus tôt possible avec des événements construits en termes de variables aléatoires. La construction d'un univers fini susceptible de porter un $n$-uplet de variables aléatoires peut être présentée, mais ne constitue pas un objectif du programme.
+    <br>Les exemples et activités proposés sont de nature plus conceptuelle qu'au lycée. On pourra faire travailler les étudiants sur des marches aléatoires ou des chaînes de Markov en temps fini, sur des permutations aléatoires (loi uniforme sur $S_n$), des graphes aléatoires, des inégalités de concentration...
+    <br>Le programme de probabilités de première année s'achève sur une approche non asymptotique de la loi faible des grands nombres qui justifie l'approche fréquentiste des probabilités.
+    <br>Dans toute cette section, l'univers $\Omega$ est supposé <strong>fini</strong> et non vide.
+</p>
+
+<h4>A - Probabilités sur un univers fini, variables aléatoires et lois</h4>
+
+<h5 id="univers-evenements-va">a) Univers, événements, variables aléatoires</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Lien entre vocabulaire ensembliste et vocabulaire des probabilités.</td>
+            <td>Univers $\Omega$ (ensemble des issues possibles), événement (partie de $\Omega$), événement élémentaire (singleton $\{\omega\}$), événement certain ($\Omega$), événement impossible ($\emptyset$), système complet d'événements (partition de $\Omega$), événements disjoints/incompatibles ($A \cap B = \emptyset$). Opérations : $A \cup B$ (A ou B), $A \cap B$ (A et B), $\overline{A}$ (événement contraire).</td>
+        </tr>
+        <tr>
+            <td>Une variable aléatoire $X$ est une application définie sur l'univers $\Omega$ à valeurs dans un ensemble $E$.</td>
+             <td>$E$ est l'ensemble des valeurs possibles pour $X$. Notations $\{X \in A\}$ pour $\{\omega \in \Omega \mid X(\omega) \in A\}$, et $(X \in A)$ pour l'événement correspondant. Souvent $E \subseteq \mathbb{R}$ (variable aléatoire réelle, VAR) ou $E \subseteq \mathbb{C}$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Expérience aléatoire, Univers, Événement :</strong>
+    <ul>
+        <li>Une <strong>expérience aléatoire</strong> est une expérience dont le résultat ne peut être prédit avec certitude.</li>
+        <li>L'<strong>univers</strong> $\Omega$ est l'ensemble de tous les résultats possibles (issues) de l'expérience. On suppose $\Omega$ fini et non vide.</li>
+        <li>Un <strong>événement</strong> est une partie (sous-ensemble) de $\Omega$.</li>
+        <li>Un <strong>événement élémentaire</strong> est un singleton $\{\omega\}$, où $\omega \in \Omega$.</li>
+    </ul>
+    <strong>Vocabulaire des événements :</strong>
+    <ul>
+        <li>$\Omega$ est l'<strong>événement certain</strong>.</li>
+        <li>$\emptyset$ est l'<strong>événement impossible</strong>.</li>
+        <li>Si $A \subseteq \Omega$, $\overline{A} = \Omega \setminus A$ est l'<strong>événement contraire</strong> de $A$.</li>
+        <li>Si $A, B \subseteq \Omega$, $A \cup B$ est l'événement "A <strong>ou</strong> B" (au moins l'un des deux).</li>
+        <li>Si $A, B \subseteq \Omega$, $A \cap B$ est l'événement "A <strong>et</strong> B".</li>
+        <li>Si $A \cap B = \emptyset$, les événements $A$ et $B$ sont dits <strong>incompatibles</strong> (ou disjoints).</li>
+        <li>Une famille d'événements $(A_i)_{i \in I}$ est un <strong>système complet d'événements</strong> (SCE) si les $A_i$ sont deux à deux incompatibles et si leur réunion est $\Omega$ (i.e., ils forment une partition de $\Omega$).</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Variable aléatoire (v.a.) :</strong> Une <strong>variable aléatoire</strong> $X$ définie sur l'univers $\Omega$ et à valeurs dans un ensemble $E$ est une application $X: \Omega \to E$.
+    <br>L'ensemble $X(\Omega) = \{ X(\omega) \mid \omega \in \Omega \} \subseteq E$ est l'ensemble des valeurs effectivement prises par $X$.
+    <br>Si $E \subseteq \mathbb{R}$, $X$ est une <strong>variable aléatoire réelle</strong> (VAR).
+    <br>Si $A \subseteq E$, l'événement "$X$ prend une valeur dans $A$" est noté $\{X \in A\}$ ou $(X \in A)$. C'est le sous-ensemble de $\Omega$ défini par :
+    $$ \{X \in A\} = \{ \omega \in \Omega \mid X(\omega) \in A \} = X^{-1}(A) $$
+    En particulier, $\{X=x\}$ désigne l'événement $\{\omega \in \Omega \mid X(\omega) = x\}$.
+    <br>La famille d'événements $(\{X=x\})_{x \in X(\Omega)}$ forme un système complet d'événements.
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> Lancer d'un dé équilibré à 6 faces.
+    <ul>
+        <li>$\Omega = \{1, 2, 3, 4, 5, 6\}$.</li>
+        <li>Événement élémentaire : $\{3\}$ (obtenir 3).</li>
+        <li>Événement : $A = \{2, 4, 6\}$ (obtenir un nombre pair). $\overline{A} = \{1, 3, 5\}$.</li>
+        <li>Variable aléatoire $X$: Le résultat du lancer. $X(\omega) = \omega$. $X(\Omega)=\{1, \dots, 6\}$. L'événement $\{X \in A\}$ est $A$. L'événement $\{X=3\}$ est $\{3\}$.</li>
+        <li>Variable aléatoire $Y$: Indicateur de parité. $Y(\omega)=1$ si $\omega$ est pair, $Y(\omega)=0$ si $\omega$ est impair. $Y(\Omega)=\{0, 1\}$. L'événement $\{Y=1\}$ est $A=\{2, 4, 6\}$.</li>
+    </ul>
+</div>
+
+<h5 id="espaces-probabilises-finis">b) Espaces probabilisés finis</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Probabilité sur un univers fini $\Omega$.</td>
+            <td>Une probabilité $P$ est une application $P: \mathcal{P}(\Omega) \to [0, 1]$ telle que $P(\Omega)=1$ et $P(A \cup B) = P(A)+P(B)$ si $A \cap B = \emptyset$ (additivité finie). Le triplet $(\Omega, \mathcal{P}(\Omega), P)$ est un espace probabilisé fini. Notations $P(X \in A)$, $P(X=x)$, $P(X \le x)$.</td>
+        </tr>
+        <tr>
+            <td>Une distribution de probabilités sur un ensemble fini $E$ est une famille $(p_x)_{x \in E}$ de réels positifs telle que $\sum_{x \in E} p_x = 1$.</td>
+            <td>Une probabilité $P$ sur $\Omega$ est entièrement déterminée par la distribution de probabilités sur les événements élémentaires $(P(\{\omega\}))_{\omega \in \Omega}$. Pour tout $A \subseteq \Omega$, $P(A) = \sum_{\omega \in A} P(\{\omega\})$.</td>
+        </tr>
+         <!-- <tr>
+            <td>Une distribution de probabilités sur un ensemble fini est une famille de réels positifs indexée par cet ensemble et de somme 1.</td>
+            <td>(Redondant avec ligne précédente)</td>
+        </tr> -->
+        <tr>
+            <td>Probabilité uniforme.</td>
+             <td>Si $|\Omega|=N$, la probabilité uniforme $P$ est définie par $P(A) = \frac{|A|}{N} = \frac{\text{nombre de cas favorables}}{\text{nombre de cas possibles}}$. Chaque événement élémentaire a la probabilité $1/N$.</td>
+        </tr>
+         <tr>
+            <td>Probabilité de la réunion ou de la différence de deux événements, de l'événement contraire. Croissance.</td>
+            <td>$P(\overline{A}) = 1 - P(A)$. $P(A \setminus B) = P(A) - P(A \cap B)$. $P(A \cup B) = P(A) + P(B) - P(A \cap B)$. Si $A \subseteq B$, alors $P(A) \le P(B)$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Probabilité sur un univers fini :</strong> Une <strong>probabilité</strong> $P$ sur un univers fini $\Omega$ est une application $P: \mathcal{P}(\Omega) \to \mathbb{R}$ vérifiant les axiomes :
+    <ol>
+        <li><strong>Positivité :</strong> $\forall A \in \mathcal{P}(\Omega), P(A) \ge 0$.</li>
+        <li><strong>Normalisation :</strong> $P(\Omega) = 1$.</li>
+        <li><strong>Additivité finie :</strong> Pour toute famille finie $(A_i)_{i \in I}$ d'événements deux à deux incompatibles ($A_i \cap A_j = \emptyset$ si $i \ne j$), on a $P(\bigcup_{i \in I} A_i) = \sum_{i \in I} P(A_i)$.</li>
+    </ol>
+    Le triplet $(\Omega, \mathcal{P}(\Omega), P)$ est appelé un <strong>espace probabilisé fini</strong>.
+</div>
+
+<div class="definition">
+    <strong>Distribution de probabilités :</strong>
+    <ul>
+        <li>Une <strong>distribution de probabilités</strong> sur l'univers fini $\Omega$ est la donnée des probabilités des événements élémentaires $(p_\omega)_{\omega \in \Omega}$ où $p_\omega = P(\{\omega\})$. On doit avoir $p_\omega \ge 0$ et $\sum_{\omega \in \Omega} p_\omega = P(\Omega) = 1$.</li>
+        <li>Réciproquement, toute famille $(p_\omega)_{\omega \in \Omega}$ de réels positifs de somme 1 définit une unique probabilité $P$ sur $\Omega$ par $P(A) = \sum_{\omega \in A} p_\omega$ pour tout $A \subseteq \Omega$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Probabilité uniforme :</strong> Si $\Omega$ est fini de cardinal $N > 0$, la <strong>probabilité uniforme</strong> sur $\Omega$ est la probabilité $P$ définie par :
+    $$ \forall \omega \in \Omega, P(\{\omega\}) = \frac{1}{N} $$
+    Pour tout événement $A \subseteq \Omega$, on a alors :
+    $$ P(A) = \frac{|A|}{N} = \frac{\text{nombre d'issues favorables à } A}{\text{nombre total d'issues}} $$
+</div>
+
+<div class="theorem">
+    <strong>Propriétés élémentaires des probabilités :</strong>
+    <ul>
+        <li>$P(\emptyset) = 0$.</li>
+        <li>$P(\overline{A}) = 1 - P(A)$.</li>
+        <li>Si $A \subseteq B$, alors $P(A) \le P(B)$ (Croissance).</li>
+        <li>$P(A \setminus B) = P(A) - P(A \cap B)$.</li>
+        <li>$P(A \cup B) = P(A) + P(B) - P(A \cap B)$.</li>
+        <li>Inégalité de Boole (sous-additivité) : $P(\cup_{i=1}^n A_i) \le \sum_{i=1}^n P(A_i)$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    La formule du crible de Poincaré pour $n \ge 3$ événements est hors programme.
+    On utilise les notations $P(X \in A) = P(\{X \in A\})$, $P(X=x) = P(\{X=x\})$, $P(X \le x) = P(\{X \in ]-\infty, x]\})$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.2 :</strong>
+    <ol>
+        <li>On lance deux dés équilibrés. Quelle est la probabilité que la somme fasse 7 ? Que le produit fasse 12 ?</li>
+        <li>Soit $P$ une probabilité sur $\Omega$. Montrer que $P(A \cup B) \le P(A)+P(B)$.</li>
+        <li>Dans une urne contenant 3 boules rouges et 2 boules bleues, on tire simultanément 2 boules. Modéliser l'expérience (quel univers $\Omega$ ? quelle probabilité ?). Quelle est la probabilité d'obtenir 2 boules rouges ?</li>
+    </ol>
+</div>
+
+
+<h5 id="probabilites-conditionnelles">c) Probabilités conditionnelles</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Si $P(B) > 0$, la probabilité conditionnelle de $A$ sachant $B$ est définie par la relation $P(A|B) = P_B(A) = \frac{P(A \cap B)}{P(B)}$.</td>
+             <td>Par convention, si $P(B) = 0$, on pose $P(A|B) = P(A)$ (ou 0, ou non défini selon le contexte, mais la formule $P(A \cap B) = P(A|B)P(B)$ est souvent utilisée et vaut 0 si $P(B)=0$).</td>
+        </tr>
+        <tr>
+            <td>L'application $P_B: A \mapsto P(A|B)$ est une probabilité sur $\Omega$.</td>
+            <td>C'est une nouvelle probabilité sur le même univers $\Omega$, où l'information "B est réalisé" a été prise en compte.</td>
+        </tr>
+        <tr>
+            <td>Formules des probabilités composées, des probabilités totales, de Bayes.</td>
+            <td>Utiles pour calculer des probabilités dans des expériences séquentielles ou avec des informations partielles.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Probabilité conditionnelle :</strong> Soit $(\Omega, P)$ un espace probabilisé fini et $B$ un événement tel que $P(B) > 0$. La <strong>probabilité conditionnelle</strong> de l'événement $A$ <strong>sachant $B$</strong> est définie par :
+    $$ P(A|B) = P_B(A) = \frac{P(A \cap B)}{P(B)} $$
+</div>
+
+<div class="theorem">
+    <strong>$P_B$ est une probabilité :</strong> Si $P(B)>0$, l'application $P_B: \mathcal{P}(\Omega) \to \mathbb{R}$ définie par $P_B(A) = P(A|B)$ est une probabilité sur $\Omega$.
+    <br>(Vérifie positivité, $P_B(\Omega)=1$, additivité finie).
+</div>
+
+<div class="theorem">
+    <strong>Formule des probabilités composées :</strong> Pour des événements $A_1, \dots, A_n$ tels que $P(A_1 \cap \dots \cap A_{n-1}) > 0$:
+    $$ P(A_1 \cap \dots \cap A_n) = P(A_1) P(A_2|A_1) P(A_3|A_1 \cap A_2) \dots P(A_n|A_1 \cap \dots \cap A_{n-1}) $$
+    Cas $n=2$: $P(A \cap B) = P(A) P(B|A)$ (si $P(A)>0$) $= P(B) P(A|B)$ (si $P(B)>0$).
+</div>
+
+<div class="theorem">
+    <strong>Formule des probabilités totales :</strong> Soit $(B_i)_{i \in I}$ un système complet d'événements tel que $P(B_i) > 0$ pour tout $i$. Pour tout événement $A$ :
+    $$ P(A) = \sum_{i \in I} P(A \cap B_i) = \sum_{i \in I} P(A|B_i) P(B_i) $$
+</div>
+
+<div class="theorem">
+    <strong>Formule de Bayes :</strong> Soit $A$ et $B$ deux événements avec $P(A)>0$ et $P(B)>0$.
+    $$ P(B|A) = \frac{P(A|B) P(B)}{P(A)} $$
+    Si $(B_i)_{i \in I}$ est un SCE avec $P(B_i)>0$, alors pour un $j \in I$ et $A$ tel que $P(A)>0$:
+    $$ P(B_j|A) = \frac{P(A|B_j) P(B_j)}{\sum_{i \in I} P(A|B_i) P(B_i)} $$
+</div>
+
+<div class="example">
+    <strong>Exemple : Test de dépistage</strong>
+    Une maladie touche 1% de la population ($P(M)=0.01$). Un test a une fiabilité de 95% (si malade, positif avec proba 0.95; si sain, négatif avec proba 0.95). $T$="test positif".
+    On a $P(T|M)=0.95$, $P(\overline{T}|\overline{M})=0.95$. Donc $P(\overline{T}|M)=0.05$, $P(T|\overline{M})=0.05$. $P(\overline{M})=0.99$.
+    Quelle est la probabilité d'être malade si le test est positif, $P(M|T)$ ?
+    Par Bayes : $P(M|T) = \frac{P(T|M)P(M)}{P(T)}$.
+    Calcul de $P(T)$ par probabilités totales (SCE: $M, \overline{M}$):
+    $P(T) = P(T|M)P(M) + P(T|\overline{M})P(\overline{M})$
+    $P(T) = (0.95 \times 0.01) + (0.05 \times 0.99) = 0.0095 + 0.0495 = 0.059$.
+    $P(M|T) = \frac{0.0095}{0.059} \approx 0.161$. (Environ 16%).
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.3 :</strong>
+    <ol>
+        <li>On tire successivement sans remise 2 cartes d'un jeu de 32 cartes. Quelle est la probabilité de tirer 2 Rois ?</li>
+        <li>Trois urnes U1, U2, U3 contiennent respectivement: U1 (1B, 2N), U2 (2B, 1N), U3 (3B). On choisit une urne au hasard (proba 1/3) et on tire une boule. La boule est blanche. Quelle est la probabilité qu'elle provienne de l'urne U1 ?</li>
+    </ol>
+</div>
+
+
+<h5 id="loi-variable-aleatoire">d) Loi d'une variable aléatoire</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Loi $P_X$ d'une variable aléatoire $X$ à valeurs dans $E$.</td>
+            <td>$P_X$ est une probabilité sur l'ensemble d'arrivée $E$. Elle est définie par $P_X(A) = P(X \in A)$ pour $A \subseteq E$. La probabilité $P_X$ est déterminée par la distribution de probabilités $(p_x)_{x \in X(\Omega)}$ où $p_x = P(X=x)$. $\sum_{x \in X(\Omega)} P(X=x) = 1$.</td>
+        </tr>
+        <tr>
+            <td>Variable aléatoire $f(X)$.</td>
+             <td>Si $X: \Omega \to E$ et $f: E \to F$, alors $Y=f(X)$ est une v.a. $Y: \Omega \to F$. Sa loi est donnée par $P(Y=y) = P(f(X)=y) = \sum_{x \in E, f(x)=y} P(X=x)$. On note $X \sim Y$ la relation $P_X = P_Y$ (mêmes lois). Si $X \sim Y$ alors $f(X) \sim f(Y)$.</td>
+        </tr>
+        <tr>
+            <td>Variable uniforme sur un ensemble fini non vide $E$.</td>
+            <td>Notation $X \sim \mathcal{U}(E)$. $P(X=x) = 1/|E|$ pour tout $x \in E$.</td>
+        </tr>
+        <tr>
+            <td>Variable de Bernoulli de paramètre $p \in [0, 1]$.</td>
+            <td>Notation $X \sim \mathcal{B}(p)$. $X(\Omega)=\{0, 1\}$. $P(X=1)=p$, $P(X=0)=1-p$. Interprétation comme succès (1) ou échec (0) d'une expérience.</td>
+        </tr>
+         <tr>
+            <td>Variable binomiale de paramètres $n \in \mathbb{N}^*$ et $p \in [0, 1]$.</td>
+            <td>Notation $X \sim \mathcal{B}(n, p)$. $X(\Omega)=\{0, 1, \dots, n\}$. $P(X=k) = \binom{n}{k} p^k (1-p)^{n-k}$. Interprétation : nombre de succès dans $n$ répétitions indépendantes d'une expérience de Bernoulli de paramètre $p$.</td>
+        </tr>
+        <tr>
+            <td>Loi conditionnelle d'une variable aléatoire $X$ sachant un événement $A$.</td>
+            <td>Si $P(A)>0$, la loi de $X$ sachant $A$ est définie par $P(X=x|A) = \frac{P(\{X=x\} \cap A)}{P(A)}$. C'est une distribution de probabilités sur $X(\Omega)$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Loi de probabilité d'une variable aléatoire :</strong> Soit $X: \Omega \to E$ une variable aléatoire. La <strong>loi de probabilité</strong> de $X$, notée $P_X$, est la mesure de probabilité définie sur l'ensemble d'arrivée $E$ (ou plus précisément sur $\mathcal{P}(E)$) par :
+    $$ \forall A \subseteq E, \quad P_X(A) = P(X \in A) = P(X^{-1}(A)) $$
+    La loi $P_X$ est entièrement caractérisée par la <strong>distribution de probabilités</strong> $(P(X=x))_{x \in X(\Omega)}$. C'est une famille $(p_x)_{x \in X(\Omega)}$ de réels positifs telle que $\sum_{x \in X(\Omega)} p_x = 1$.
+</div>
+
+<div class="definition">
+    <strong>Variables aléatoires de même loi :</strong> Deux variables aléatoires $X: \Omega \to E$ et $Y: \Omega' \to E$ (définies éventuellement sur des univers différents) sont dites <strong>de même loi</strong>, noté $X \sim Y$, si $P_X = P_Y$, c'est-à-dire si $P(X \in A) = P(Y \in A)$ pour tout $A \subseteq E$. Cela équivaut à $X(\Omega) = Y(\Omega)$ et $P(X=x) = P(Y=x)$ for all $x \in X(\Omega)$.
+</div>
+
+<div class="theorem">
+    <strong>Image d'une loi :</strong> Si $X: \Omega \to E$ a pour loi $P_X$, et si $f: E \to F$, alors la variable aléatoire $Y=f(X)$ a pour loi $P_Y$ donnée par :
+    $$ P(Y=y) = \sum_{x \in X(\Omega) \text{ t.q. } f(x)=y} P(X=x) $$
+    Si $X \sim Y$, alors $f(X) \sim f(Y)$.
+</div>
+
+<div class="definition">
+    <strong>Lois usuelles finies :</strong>
+    <ul>
+        <li><strong>Loi uniforme sur $E$</strong> ($E$ fini non vide, $|E|=N$): $X \sim \mathcal{U}(E)$. $X(\Omega)=E$. $P(X=x) = 1/N$ pour tout $x \in E$.</li>
+        <li><strong>Loi de Bernoulli :</strong> $X \sim \mathcal{B}(p)$ ($p \in [0, 1]$). $X(\Omega)=\{0, 1\}$. $P(X=1)=p, P(X=0)=1-p$.</li>
+        <li><strong>Loi Binomiale :</strong> $X \sim \mathcal{B}(n, p)$ ($n \in \mathbb{N}^*, p \in [0, 1]$). $X(\Omega)=\{0, 1, \dots, n\}$. $P(X=k) = \binom{n}{k} p^k (1-p)^{n-k}$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.4 :</strong>
+    <ol>
+        <li>On lance un dé équilibré. Soit $X$ le résultat. Quelle est la loi de $X$ ? Soit $Y=X^2$. Quelle est la loi de $Y$ ?</li>
+        <li>Une urne contient 5 boules numérotées de 1 à 5. On tire 3 boules avec remise. Soit $X$ le plus grand numéro tiré. Déterminer la loi de $X$.</li>
+        <li>Soit $X \sim \mathcal{B}(n,p)$. Quelle est la loi de $Y=n-X$ ?</li>
+    </ol>
+</div>
+
+
+<h5 id="couple-va">e) Couple de variables aléatoires</h5>
+<table class="content-table">
+     <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Couple de variables aléatoires. Loi conjointe, lois marginales.</td>
+            <td>Un couple $(X, Y)$ où $X:\Omega \to E$ et $Y:\Omega \to F$ est une v.a. à valeurs dans $E \times F$. Sa loi $P_{(X,Y)}$ est la loi conjointe. Elle est déterminée par la distribution $P(X=x, Y=y)$ pour $(x,y) \in E \times F$. Les lois $P_X$ et $P_Y$ sont les lois marginales. On les obtient par $P(X=x) = \sum_{y \in F} P(X=x, Y=y)$ et $P(Y=y) = \sum_{x \in E} P(X=x, Y=y)$. Extension aux $n$-uplets $(X_1, \dots, X_n)$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Couple de variables aléatoires :</strong> Soient $X: \Omega \to E$ et $Y: \Omega \to F$ deux variables aléatoires définies sur le même univers $\Omega$. Le <strong>couple</strong> $(X, Y)$ est l'application :
+    $$ (X, Y): \Omega \to E \times F, \quad \omega \mapsto (X(\omega), Y(\omega)) $$
+    C'est une variable aléatoire à valeurs dans le produit cartésien $E \times F$.
+    <ul>
+        <li>Sa loi, $P_{(X,Y)}$, est appelée <strong>loi conjointe</strong> du couple. Elle est caractérisée par la distribution $(P(X=x, Y=y))_{(x,y) \in E \times F}$.</li>
+        <li>Les lois $P_X$ et $P_Y$ sont appelées les <strong>lois marginales</strong>.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Lien loi conjointe / lois marginales :</strong>
+    $$ P(X=x) = \sum_{y \in Y(\Omega)} P(X=x, Y=y) $$
+    $$ P(Y=y) = \sum_{x \in X(\Omega)} P(X=x, Y=y) $$
+    Attention : Connaître les lois marginales $P_X$ et $P_Y$ ne suffit pas, en général, à déterminer la loi conjointe $P_{(X,Y)}$ (sauf si $X$ et $Y$ sont indépendantes).
+</div>
+
+<div class="comment">
+    <strong>Extension :</strong> On définit de même un $n$-uplet de variables aléatoires $(X_1, \dots, X_n)$ comme une variable aléatoire à valeurs dans $E_1 \times \dots \times E_n$. Sa loi est la loi conjointe, déterminée par $P(X_1=x_1, \dots, X_n=x_n)$. Les lois $P_{X_i}$ sont les lois marginales.
+</div>
+
+
+<h5 id="evenements-independants">f) Événements indépendants</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Les événements $A$ et $B$ sont indépendants si $P(A \cap B) = P(A)P(B)$.</td>
+            <td>Si $P(B) > 0$, l'indépendance de $A$ et $B$ s'écrit $P(A|B) = P(A)$ (la réalisation de B ne modifie pas la probabilité de A).</td>
+        </tr>
+        <tr>
+            <td>Famille finie d'événements indépendants.</td>
+            <td>$(A_i)_{i \in I}$ sont (mutuellement) indépendants si pour toute sous-partie $J \subseteq I$, $P(\cap_{j \in J} A_j) = \prod_{j \in J} P(A_j)$. L'indépendance deux à deux (pour $|J|=2$) n'implique pas l'indépendance mutuelle.</td>
+        </tr>
+        <tr>
+            <td>Si $A$ et $B$ sont indépendants, $\overline{A}$ et $B$ le sont aussi, $\overline{A}$ et $\overline{B}$ aussi, $A$ et $\overline{B}$ aussi.</td>
+            <td>Généralisation : si $(A_i)_{i \in I}$ sont indépendants, et si pour chaque $i$, on choisit $B_i = A_i$ ou $B_i = \overline{A_i}$, alors les $(B_i)_{i \in I}$ sont indépendants.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Indépendance de deux événements :</strong> Deux événements $A$ et $B$ sont dits <strong>indépendants</strong> si $P(A \cap B) = P(A) P(B)$.
+</div>
+
+<div class="comment">
+    Si $P(B)>0$, l'indépendance équivaut à $P(A|B) = P(A)$. Intuitivement, la connaissance de la réalisation de $B$ ne change pas la probabilité de $A$. Attention à ne pas confondre indépendance et incompatibilité ($A \cap B = \emptyset$). Deux événements incompatibles non impossibles ne sont jamais indépendants ($P(A \cap B)=0$ mais $P(A)P(B)>0$).
+</div>
+
+<div class="definition">
+    <strong>Indépendance mutuelle d'une famille finie :</strong> Une famille finie d'événements $(A_1, \dots, A_n)$ est dite <strong>mutuellement indépendante</strong> (ou simplement indépendante) si pour toute sous-famille d'indices $J \subseteq \{1, \dots, n\}$, on a :
+    $$ P\left( \bigcap_{j \in J} A_j \right) = \prod_{j \in J} P(A_j) $$
+    (Il faut vérifier cette condition pour toutes les sous-familles, pas seulement pour $J=\{1, \dots, n\}$).
+</div>
+
+<div class="comment">
+    L'indépendance deux à deux ($P(A_i \cap A_j) = P(A_i)P(A_j)$ pour $i \ne j$) n'entraîne pas l'indépendance mutuelle pour $n \ge 3$.
+</div>
+
+<div class="theorem">
+    <strong>Indépendance et passage au contraire :</strong> Si $A$ et $B$ sont indépendants, alors $\overline{A}$ et $B$ sont indépendants.
+    <br>Plus généralement, si $(A_1, \dots, A_n)$ sont mutuellement indépendants, et si pour chaque $i$, $B_i = A_i$ ou $B_i = \overline{A_i}$, alors la famille $(B_1, \dots, B_n)$ est mutuellement indépendante.
+</div>
+
+
+<h5 id="variables-aleatoires-independantes">g) Variables aléatoires indépendantes</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Les variables aléatoires $X:\Omega \to E$ et $Y:\Omega \to F$ sont indépendantes si pour tout $A \subseteq E$ et tout $B \subseteq F$, les événements $(X \in A)$ et $(Y \in B)$ sont indépendants.</td>
+            <td>Notation $X \perp\!\!\!\perp Y$. Cette condition équivaut au fait que la loi conjointe est le produit des lois marginales : $P(X=x, Y=y) = P(X=x)P(Y=y)$ pour tous $x \in E, y \in F$.</td>
+        </tr>
+        <tr>
+            <td>Extension aux $n$-uplets de variables aléatoires.</td>
+            <td>$(X_1, \dots, X_n)$ sont mutuellement indépendantes si pour tous $A_1 \subseteq E_1, \dots, A_n \subseteq E_n$, $P(X_1 \in A_1, \dots, X_n \in A_n) = \prod P(X_i \in A_i)$. Équivaut à $P(X_1=x_1, \dots, X_n=x_n) = \prod P(X_i=x_i)$. Modélisation de $n$ expériences aléatoires indépendantes par une suite $(X_i)_{1 \le i \le n}$ de v.a. indépendantes.</td>
+        </tr>
+        <tr>
+            <td>Si $X_1, \dots, X_n$ sont indépendantes de loi $\mathcal{B}(p)$, alors $S_n = X_1 + \dots + X_n$ suit la loi $\mathcal{B}(n, p)$.</td>
+            <td>Interprétation : $S_n$ est le nombre de succès lors de $n$ expériences de Bernoulli indépendantes.</td>
+        </tr>
+        <tr>
+            <td>Si les variables aléatoires $X$ et $Y$ sont indépendantes, alors pour toutes fonctions $f, g$, les variables aléatoires $f(X)$ et $g(Y)$ sont indépendantes.</td>
+             <td></td>
+        </tr>
+         <tr>
+            <td>Lemme des coalitions : si les variables aléatoires $X_1, \dots, X_n$ sont indépendantes, alors pour toute partition de $\{1, \dots, n\}$ en $k$ groupes $I_1, \dots, I_k$, et toutes fonctions $f_1, \dots, f_k$, les variables $Y_j = f_j((X_i)_{i \in I_j})$ sont indépendantes.</td>
+            <td>Cas simple : $f(X_1, \dots, X_m)$ et $g(X_{m+1}, \dots, X_n)$ sont indépendantes.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Indépendance de deux variables aléatoires :</strong> Deux variables aléatoires $X: \Omega \to E$ et $Y: \Omega \to F$ sont dites <strong>indépendantes</strong> si pour tout $A \subseteq E$ et tout $B \subseteq F$, les événements $\{X \in A\}$ et $\{Y \in B\}$ sont indépendants au sens des événements.
+    $$ P(X \in A \text{ et } Y \in B) = P(X \in A) P(Y \in B) $$
+    Notation : $X \perp\!\!\!\perp Y$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation de l'indépendance :</strong> $X$ et $Y$ sont indépendantes si et seulement si leur loi conjointe est le produit des lois marginales :
+    $$ \forall x \in E, \forall y \in F, \quad P(X=x, Y=y) = P(X=x) P(Y=y) $$
+</div>
+
+<div class="definition">
+    <strong>Indépendance mutuelle d'une famille finie :</strong> Les variables aléatoires $(X_1, \dots, X_n)$ sont <strong>mutuellement indépendantes</strong> si pour tous $A_1 \subseteq E_1, \dots, A_n \subseteq E_n$, les événements $\{X_1 \in A_1\}, \dots, \{X_n \in A_n\}$ sont mutuellement indépendants.
+    <br>Cela équivaut à :
+    $$ \forall x_1 \in E_1, \dots, \forall x_n \in E_n, \quad P(X_1=x_1, \dots, X_n=x_n) = \prod_{i=1}^n P(X_i=x_i) $$
+</div>
+
+<div class="comment">
+    L'indépendance est une notion clé pour modéliser des répétitions d'expériences ou des phénomènes sans influence mutuelle.
+</div>
+
+<div class="theorem">
+    <strong>Somme de Bernoulli indépendantes :</strong> Si $X_1, \dots, X_n$ sont des variables aléatoires indépendantes suivant toutes la loi de Bernoulli $\mathcal{B}(p)$, alors leur somme $S_n = X_1 + \dots + X_n$ suit la loi binomiale $\mathcal{B}(n, p)$.
+</div>
+
+<div class="theorem">
+    <strong>Transformées de v.a. indépendantes :</strong> Si $X \perp\!\!\!\perp Y$, et si $f: E \to E'$, $g: F \to F'$, alors les variables aléatoires $f(X)$ et $g(Y)$ sont indépendantes.
+</div>
+
+<div class="theorem">
+    <strong>Lemme des coalitions :</strong> Si $(X_1, \dots, X_n)$ est une famille de variables aléatoires mutuellement indépendantes, et si $I, J$ forment une partition de $\{1, \dots, n\}$, alors toute variable aléatoire fonction des $(X_i)_{i \in I}$ est indépendante de toute variable aléatoire fonction des $(X_j)_{j \in J}$.
+    <br>Exemple : $X_1+X_2$ est indépendante de $X_3 X_4$ si $X_1, X_2, X_3, X_4$ sont indépendantes.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.5 :</strong>
+    <ol>
+        <li>On lance deux dés équilibrés. Soit $X$ le résultat du premier dé, $Y$ celui du second. $X$ et $Y$ sont-elles indépendantes ? Soit $S=X+Y$ et $D=|X-Y|$. $S$ et $D$ sont-elles indépendantes ? (Calculer $P(S=2, D=0)$ et $P(S=2)P(D=0)$).</li>
+        <li>Soient $X \sim \mathcal{B}(n, p)$ et $Y \sim \mathcal{B}(m, p)$ indépendantes. Quelle est la loi de $X+Y$ ? (Intuitivement ? Par le calcul ?)</li>
+    </ol>
+</div>
+
+
+<h4>B - Espérance et variance</h4>
+
+<h5 id="esperance-va">a) Espérance d'une variable aléatoire réelle ou complexe</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Espérance $E(X) = \sum_{x \in X(\Omega)} x P(X=x)$ d'une variable aléatoire $X$ à valeurs dans $\mathbb{K}$ ($\mathbb{R}$ ou $\mathbb{C}$).</td>
+            <td>L'espérance est un indicateur de position (valeur moyenne pondérée par les probabilités). Formule de transfert "brute" $E(X) = \sum_{\omega \in \Omega} X(\omega) P(\{\omega\})$. Variable aléatoire centrée ($E(X)=0$).</td>
+        </tr>
+        <tr>
+            <td>Linéarité, positivité, croissance, inégalité triangulaire.</td>
+            <td>$E(aX+bY)=aE(X)+bE(Y)$. Si $X \ge 0$, $E(X) \ge 0$. Si $X \le Y$, $E(X) \le E(Y)$ (pour VAR). $|E(X)| \le E(|X|)$.</td>
+        </tr>
+        <tr>
+            <td>Espérance d'une variable constante, de Bernoulli, binomiale.</td>
+            <td>$E(c)=c$. $E(\mathcal{B}(p))=p$. $E(\mathcal{B}(n, p))=np$. Exemple : $E(\mathbf{1}_A) = P(A)$.</td>
+        </tr>
+        <tr>
+            <td>Formule de transfert : Si $Y=f(X)$ avec $X:\Omega \to E$ et $f:E \to \mathbb{K}$, alors $E(Y) = E(f(X)) = \sum_{x \in X(\Omega)} f(x) P(X=x)$.</td>
+            <td>Permet de calculer l'espérance de $f(X)$ sans connaître explicitement la loi de $f(X)$, juste celle de $X$. S'applique aussi aux couples/n-uplets : $E(f(X,Y)) = \sum_{x,y} f(x,y) P(X=x, Y=y)$.</td>
+        </tr>
+        <tr>
+            <td>Si $X$ et $Y$ sont indépendantes, alors $E(XY) = E(X)E(Y)$.</td>
+             <td>Attention, la réciproque est fausse. Extension au cas de $n$ variables aléatoires indépendantes $E(\prod X_i) = \prod E(X_i)$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Espérance :</strong> L'<strong>espérance</strong> d'une variable aléatoire $X: \Omega \to \mathbb{K}$ est la valeur moyenne de $X$ pondérée par les probabilités :
+    $$ E(X) = \sum_{x \in X(\Omega)} x P(X=x) $$
+    C'est aussi égal à la somme sur l'univers : $E(X) = \sum_{\omega \in \Omega} X(\omega) P(\{\omega\})$.
+    Une variable aléatoire est dite <strong>centrée</strong> si son espérance est nulle.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de l'espérance :</strong> Soient $X, Y$ des v.a. sur $\Omega$ à valeurs dans $\mathbb{K}$, et $a, b \in \mathbb{K}$.
+    <ul>
+        <li><strong>Linéarité :</strong> $E(aX+bY) = a E(X) + b E(Y)$.</li>
+        <li><strong>Positivité :</strong> Si $X$ est à valeurs dans $\mathbb{R}$ et $X \ge 0$ (i.e., $X(\omega) \ge 0$ pour tout $\omega$), alors $E(X) \ge 0$.</li>
+        <li><strong>Croissance :</strong> Si $X, Y$ sont réelles et $X \le Y$, alors $E(X) \le E(Y)$.</li>
+        <li><strong>Inégalité triangulaire :</strong> $|E(X)| \le E(|X|)$. (Pour $X$ à valeurs complexes, $|X|$ est le module).</li>
+        <li><strong>Espérance d'une constante :</strong> $E(c) = c$.</li>
+        <li><strong>Indicateur d'événement :</strong> $E(\mathbf{1}_A) = 1 \cdot P(\mathbf{1}_A=1) + 0 \cdot P(\mathbf{1}_A=0) = P(A)$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Espérances des lois usuelles :</strong>
+    <ul>
+        <li>Bernoulli $\mathcal{B}(p)$: $E(X) = 1 \cdot p + 0 \cdot (1-p) = p$.</li>
+        <li>Binomiale $\mathcal{B}(n, p)$: $E(X) = np$. (Peut se montrer par linéarité de l'espérance si $X=\sum_{i=1}^n X_i$ avec $X_i \sim \mathcal{B}(p)$ indépendantes, $E(X) = \sum E(X_i) = np$. Ou par calcul direct $\sum_{k=0}^n k \binom{n}{k} p^k (1-p)^{n-k}$).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Transfert :</strong> Soit $X: \Omega \to E$ une variable aléatoire, et $f: E \to \mathbb{K}$. L'espérance de la variable aléatoire $Y = f(X)$ est donnée par :
+    $$ E(Y) = E(f(X)) = \sum_{x \in X(\Omega)} f(x) P(X=x) $$
+    <strong>Extension :</strong> Si $Z=f(X,Y)$, $E(Z) = E(f(X,Y)) = \sum_{x \in X(\Omega)} \sum_{y \in Y(\Omega)} f(x,y) P(X=x, Y=y)$.
+</div>
+
+<div class="theorem">
+    <strong>Espérance d'un produit de v.a. indépendantes :</strong> Si $X$ et $Y$ sont deux variables aléatoires indépendantes à valeurs dans $\mathbb{K}$, alors $E(XY) = E(X) E(Y)$.
+    <br>Si $X_1, \dots, X_n$ sont mutuellement indépendantes, alors $E(\prod_{i=1}^n X_i) = \prod_{i=1}^n E(X_i)$.
+</div>
+
+<div class="proof">
+    <strong>Preuve (cas de 2 v.a.) :</strong>
+    $E(XY) = \sum_{z} z P(XY=z)$. C'est compliqué. Utilisons le transfert.
+    $E(XY) = \sum_{x \in X(\Omega)} \sum_{y \in Y(\Omega)} (xy) P(X=x, Y=y)$.
+    Comme $X \perp\!\!\!\perp Y$, $P(X=x, Y=y) = P(X=x) P(Y=y)$.
+    $E(XY) = \sum_{x} \sum_{y} xy P(X=x) P(Y=y)$
+    $E(XY) = \left( \sum_{x} x P(X=x) \right) \left( \sum_{y} y P(Y=y) \right) = E(X) E(Y)$.
+</div>
+
+<div class="comment">
+    Attention, $E(XY)=E(X)E(Y)$ n'implique pas que $X$ et $Y$ sont indépendantes.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Soit $X$ le résultat d'un lancer de dé équilibré. Calculer $E(X)$ et $E(X^2)$.</li>
+        <li>Soit $X \sim \mathcal{B}(n,p)$. Calculer $E(X(X-1))$.</li>
+        <li>Soit $X$ le nombre de points fixes d'une permutation $\sigma$ choisie au hasard dans $S_n$. Calculer $E(X)$. (Indication: écrire $X = \sum_{i=1}^n \mathbf{1}_{\sigma(i)=i}$).</li>
+    </ol>
+</div>
+
+
+<h5 id="variance-covariance">b) Variance d'une variable aléatoire réelle, écart type et covariance</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Variance $V(X) = E((X-E(X))^2)$ et écart type $\sigma(X) = \sqrt{V(X)}$ d'une variable aléatoire réelle $X$.</td>
+            <td>Variance et écart type sont des indicateurs de dispersion autour de l'espérance. $V(X) \ge 0$. $V(X)=0 \iff X$ est quasi certaine ($P(X=E(X))=1$). Variable aléatoire réduite : si $\sigma(X) > 0$, $X^* = \frac{X - E(X)}{\sigma(X)}$ est centrée ($E(X^*)=0$) et réduite ($V(X^*)=1$).</td>
+        </tr>
+        <tr>
+            <td>Relation $V(aX+b) = a^2 V(X)$ pour $a, b \in \mathbb{R}$.</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Formule de Koenig-Huygens : $V(X) = E(X^2) - (E(X))^2$.</td>
+            <td>$E(X^2)$ est le moment d'ordre 2.</td>
+        </tr>
+        <tr>
+            <td>Variance d'une variable de Bernoulli, d'une variable binomiale.</td>
+            <td>$V(\mathcal{B}(p))=p(1-p)$. $V(\mathcal{B}(n, p))=np(1-p)$.</td>
+        </tr>
+        <tr>
+            <td>Covariance de deux variables aléatoires réelles $X, Y$.</td>
+            <td>$\operatorname{Cov}(X, Y) = E((X-E(X))(Y-E(Y)))$. C'est une forme bilinéaire symétrique positive (sur l'espace des VAR de carré intégrable). Deux variables aléatoires dont la covariance est nulle ($\operatorname{Cov}(X, Y)=0$) sont dites décorrélées.</td>
+        </tr>
+        <tr>
+            <td>Relation $\operatorname{Cov}(X, Y) = E(XY) - E(X)E(Y)$. Cas de deux variables indépendantes.</td>
+             <td>Si $X \perp\!\!\!\perp Y$, alors $E(XY)=E(X)E(Y)$, donc $\operatorname{Cov}(X, Y)=0$. Variables indépendantes $\implies$ décorrélées. La réciproque est fausse.</td>
+        </tr>
+        <tr>
+            <td>Variance d'une somme $V(X+Y) = V(X) + V(Y) + 2\operatorname{Cov}(X, Y)$. Cas de variables décorrélées.</td>
+             <td>Si $X_1, \dots, X_n$ sont 2 à 2 décorrélées, $V(\sum X_i) = \sum V(X_i)$. On retrouve la variance d'une variable binomiale ($X = \sum X_i$, $X_i \sim \mathcal{B}(p)$ indép $\implies$ décorrélées).</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Variance et Écart type (VAR) :</strong> Soit $X$ une variable aléatoire réelle.
+    <ul>
+        <li>Sa <strong>variance</strong> est $V(X) = E\left( (X - E(X))^2 \right)$.</li>
+        <li>Son <strong>écart type</strong> est $\sigma(X) = \sqrt{V(X)}$.</li>
+    </ul>
+    Ces quantités mesurent la dispersion de la loi de $X$ autour de son espérance.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de la Variance :</strong> Soient $X$ une VAR, $a, b \in \mathbb{R}$.
+    <ul>
+        <li>$V(X) \ge 0$.</li>
+        <li>$V(X) = 0 \iff X$ est une variable aléatoire constante (quasi certaine).</li>
+        <li>$V(aX+b) = a^2 V(X)$. ($V(X+b)=V(X)$, $V(aX)=a^2V(X)$).</li>
+        <li><strong>Formule de Koenig-Huygens :</strong> $V(X) = E(X^2) - (E(X))^2$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Preuve (Koenig-Huygens) :</strong>
+    $V(X) = E((X-E(X))^2) = E(X^2 - 2E(X)X + (E(X))^2)$.
+    Par linéarité de $E$, $V(X) = E(X^2) - E(2E(X)X) + E((E(X))^2)$.
+    Comme $E(X)$ est une constante, $V(X) = E(X^2) - 2E(X)E(X) + (E(X))^2 = E(X^2) - (E(X))^2$.
+</div>
+
+<div class="theorem">
+    <strong>Variances des lois usuelles :</strong>
+    <ul>
+        <li>Bernoulli $\mathcal{B}(p)$: $E(X^2) = 1^2 \cdot p + 0^2 \cdot (1-p) = p$. $V(X) = E(X^2) - (E(X))^2 = p - p^2 = p(1-p)$.</li>
+        <li>Binomiale $\mathcal{B}(n, p)$: $V(X) = np(1-p)$. (Peut se montrer par $X=\sum X_i$ avec $X_i$ indép. $V(X) = \sum V(X_i) = \sum p(1-p) = np(1-p)$. Ou par calcul de $E(X(X-1))$).</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Covariance (VAR) :</strong> La <strong>covariance</strong> de deux VAR $X$ et $Y$ est :
+    $$ \operatorname{Cov}(X, Y) = E \left( (X - E(X))(Y - E(Y)) \right) $$
+    Si $\operatorname{Cov}(X, Y) = 0$, $X$ et $Y$ sont dites <strong>décorrélées</strong>.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de la Covariance :</strong>
+    <ul>
+        <li>$\operatorname{Cov}(X, Y) = E(XY) - E(X)E(Y)$.</li>
+        <li>$\operatorname{Cov}(X, Y) = \operatorname{Cov}(Y, X)$ (Symétrie).</li>
+        <li>$\operatorname{Cov}(X, X) = V(X)$.</li>
+        <li>$\operatorname{Cov}$ est bilinéaire : $\operatorname{Cov}(aX+bY, Z) = a\operatorname{Cov}(X, Z) + b\operatorname{Cov}(Y, Z)$.</li>
+        <li>Si $X \perp\!\!\!\perp Y$, alors $\operatorname{Cov}(X, Y) = 0$. (Indépendantes $\implies$ décorrélées).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Variance d'une somme :</strong> Pour deux VAR $X, Y$:
+    $$ V(X+Y) = V(X) + V(Y) + 2\operatorname{Cov}(X, Y) $$
+    Si $X$ et $Y$ sont décorrélées (en particulier, si elles sont indépendantes) :
+    $$ V(X+Y) = V(X) + V(Y) $$
+    Généralisation : Si $X_1, \dots, X_n$ sont deux à deux décorrélées :
+    $$ V\left( \sum_{i=1}^n X_i \right) = \sum_{i=1}^n V(X_i) $$
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.2 :</strong>
+    <ol>
+        <li>Calculer la variance du résultat d'un lancer de dé équilibré.</li>
+        <li>Soit $X \sim \mathcal{B}(n,p)$. Calculer $E(X^2)$ en utilisant $V(X)$.</li>
+        <li>Soient $X, Y$ deux VAR. Développer $V(X-Y)$.</li>
+        <li>Soit $X$ une VAR et $Y = -X$. Calculer $\operatorname{Cov}(X, Y)$. Sont-elles décorrélées ? Indépendantes (si $X$ n'est pas constante) ?</li>
+    </ol>
+</div>
+
+
+<h5 id="inegalites-probabilistes">c) Inégalités probabilistes</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Inégalité de Markov.</td>
+            <td>Pour $X$ VAR positive et $a>0$, $P(X \ge a) \le E(X)/a$. Application à l'obtention d'inégalités de concentration.</td>
+        </tr>
+        <tr>
+            <td>Inégalité de Bienaymé-Tchebychev.</td>
+            <td>Pour $X$ VAR et $\epsilon>0$, $P(|X - E(X)| \ge \epsilon) \le V(X)/\epsilon^2$. Application à une moyenne $M_n = \frac{S_n}{n}$ de variables indépendantes de même loi, interprétation fréquentiste (Loi Faible des Grands Nombres).</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="theorem">
+    <strong>Inégalité de Markov :</strong> Soit $X$ une variable aléatoire réelle positive ($X \ge 0$). Pour tout $a > 0$ :
+    $$ P(X \ge a) \le \frac{E(X)}{a} $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> $E(X) = \sum_{x \in X(\Omega)} x P(X=x)$. Comme $X \ge 0$, on ne garde que les termes positifs.
+    $E(X) = \sum_{x \ge a} x P(X=x) + \sum_{0 \le x < a} x P(X=x)$.
+    Comme le deuxième terme est $\ge 0$, $E(X) \ge \sum_{x \ge a} x P(X=x)$.
+    Dans la somme restante, $x \ge a$. Donc $E(X) \ge \sum_{x \ge a} a P(X=x) = a \sum_{x \ge a} P(X=x)$.
+    La somme $\sum_{x \ge a} P(X=x)$ est exactement $P(X \ge a)$.
+    Donc $E(X) \ge a P(X \ge a)$. Comme $a>0$, $P(X \ge a) \le E(X)/a$.
+</div>
+
+<div class="theorem">
+    <strong>Inégalité de Bienaymé-Tchebychev :</strong> Soit $X$ une variable aléatoire réelle admettant une variance $V(X)$. Pour tout $\epsilon > 0$ :
+    $$ P(|X - E(X)| \ge \epsilon) \le \frac{V(X)}{\epsilon^2} $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Appliquons l'inégalité de Markov à la variable aléatoire $Y = (X - E(X))^2$. $Y$ est positive. Son espérance est $E(Y) = E((X-E(X))^2) = V(X)$.
+    L'événement $\{ |X - E(X)| \ge \epsilon \}$ est le même que l'événement $\{ (X - E(X))^2 \ge \epsilon^2 \}$, c'est-à-dire $\{ Y \ge \epsilon^2 \}$.
+    En appliquant Markov à $Y$ avec $a = \epsilon^2 > 0$:
+    $P(Y \ge \epsilon^2) \le \frac{E(Y)}{\epsilon^2}$.
+    Donc $P(|X - E(X)| \ge \epsilon) \le \frac{V(X)}{\epsilon^2}$.
+</div>
+
+<div class="comment">
+    <strong>Interprétation - Loi faible des grands nombres :</strong>
+    Soient $X_1, \dots, X_n$ des variables aléatoires indépendantes, de même loi, admettant une espérance $\mu$ et une variance $\sigma^2$.
+    Soit $S_n = X_1 + \dots + X_n$ leur somme, et $M_n = S_n / n$ leur moyenne empirique.
+    Calculons l'espérance et la variance de $M_n$.
+    $E(M_n) = E(S_n / n) = \frac{1}{n} E(S_n) = \frac{1}{n} \sum E(X_i) = \frac{1}{n} (n\mu) = \mu$.
+    $V(M_n) = V(S_n / n) = \frac{1}{n^2} V(S_n)$. Comme les $X_i$ sont indépendantes, $V(S_n) = \sum V(X_i) = n\sigma^2$.
+    Donc $V(M_n) = \frac{1}{n^2} (n\sigma^2) = \frac{\sigma^2}{n}$.
+    Appliquons Bienaymé-Tchebychev à la variable $M_n$ (qui a pour espérance $\mu$ et variance $\sigma^2/n$) :
+    Pour tout $\epsilon > 0$, $P(|M_n - \mu| \ge \epsilon) \le \frac{V(M_n)}{\epsilon^2} = \frac{\sigma^2}{n \epsilon^2}$.
+    Lorsque $n \to +\infty$, $\frac{\sigma^2}{n \epsilon^2} \to 0$.
+    Donc $\lim_{n \to \infty} P(|M_n - \mu| \ge \epsilon) = 0$.
+    Cela signifie que la probabilité que la moyenne empirique $M_n$ s'écarte de l'espérance théorique $\mu$ d'une quantité $\epsilon$ fixée tend vers 0 quand $n$ augmente. La moyenne empirique converge en probabilité vers l'espérance.
+    Ceci justifie l'approche fréquentiste : la fréquence d'un événement (qui est une moyenne de variables de Bernoulli) tend vers sa probabilité théorique.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.3 :</strong>
+    <ol>
+        <li>Une machine produit des pièces dont la longueur $L$ suit une loi d'espérance 10cm et d'écart-type 0.1cm. Donner une majoration de la probabilité que la longueur d'une pièce soit en dehors de l'intervalle $[9.8, 10.2]$ cm.</li>
+        <li>On lance 1000 fois une pièce équilibrée ($p=0.5$). Soit $F_{1000}$ la fréquence de Piles obtenue. Majorer $P(|F_{1000} - 0.5| \ge 0.1)$.</li>
+    </ol>
+</div>
+
+</body>
+</html>
