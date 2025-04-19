@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Analyse Asymptotique</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Analyse Asymptotique</h1>
+
+ <h3 id="analyse-asymptotique">Analyse asymptotique</h3>
+     <p class="intro-text">
+       L'objectif de cette section est d'introduire les techniques asymptotiques fondamentales, dans les cadres continu et discret. Ces outils permettent de comparer le comportement local ou à l'infini de fonctions ou de suites, et de calculer des approximations précises. Les développements limités sont les principaux outils du calcul asymptotique.
+    </p>
+
+     <h4 id="relations-comparaison-fonctions">a) Relations de comparaison : cas des fonctions</h4>
+
+<div class="definition">
+    <strong>Relations de comparaison :</strong> Soient $f, g$ deux fonctions définies sur un voisinage $V$ de $a \in \overline{\mathbb{R}}$, à valeurs dans $\mathbb{R}$ ou $\mathbb{C}$. On suppose que $g$ ne s'annule pas sur $V \setminus \{a\}$ pour simplifier certaines définitions, mais les notations $o, O$ peuvent être définies plus généralement.
+    <ul>
+        <li><strong>Domination ($O$) :</strong> On dit que $f$ est <strong>dominée</strong> par $g$ au voisinage de $a$, et on note $f = O(g)$ ou $f(x) =_a O(g(x))$, s'il existe une fonction $B$ bornée au voisinage de $a$ telle que $f(x) = B(x) g(x)$ au voisinage de $a$.
+            <br>Si $g$ ne s'annule pas au voisinage de $a$ (sauf peut-être en $a$), cela équivaut à dire que le rapport $\frac{f(x)}{g(x)}$ est borné au voisinage de $a$.
+        </li>
+        <li><strong>Négligeabilité ($o$) :</strong> On dit que $f$ est <strong>négligeable</strong> devant $g$ au voisinage de $a$, et on note $f = o(g)$ ou $f(x) =_a o(g(x))$, s'il existe une fonction $\varepsilon$ telle que $f(x) = \varepsilon(x) g(x)$ au voisinage de $a$, avec $\lim_{x \to a} \varepsilon(x) = 0$.
+            <br>Si $g$ ne s'annule pas au voisinage de $a$ (sauf peut-être en $a$), cela équivaut à $\lim_{x \to a} \frac{f(x)}{g(x)} = 0$.</li>
+        <li><strong>Équivalence ($\sim$) :</strong> On dit que $f$ est <strong>équivalente</strong> à $g$ au voisinage de $a$, et on note $f \sim_a g$ ou $f(x) \sim_a g(x)$, si $f = g + o(g)$ au voisinage de $a$.
+            <br>Si $g$ ne s'annule pas au voisinage de $a$ (sauf peut-être en $a$), cela équivaut à $\lim_{x \to a} \frac{f(x)}{g(x)} = 1$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    <strong>Liens entre les relations :</strong>
+    <ul>
+        <li>$f = o(g) \implies f = O(g)$ (car une fonction tendant vers 0 est localement bornée).</li>
+        <li>$f \sim g \implies f = O(g)$ et $g = O(f)$ (car une fonction tendant vers 1 est localement bornée).</li>
+        <li>$f \sim g \iff f = g + o(g)$. Cette deuxième forme est très utile pour les calculs, notamment pour remplacer un terme dans une somme ou un produit sous certaines conditions.</li>
+        <li>La relation $\sim$ est une relation d'équivalence sur l'ensemble des fonctions ne s'annulant pas au voisinage de $a$.</li>
+    </ul>
+    <strong>Étude en $a \neq 0$ :</strong> Pour étudier le comportement de $f(x)$ au voisinage de $a \in \mathbb{R}^*$, on pose $x = a+h$ et on étudie le comportement de $g(h) = f(a+h)$ lorsque $h \to 0$.
+</div>
+
+<div class="theorem">
+    <strong>Règles de calcul (compatibilité) :</strong> Soit $a \in \overline{\mathbb{R}}$. Les opérations suivantes sont valides au voisinage de $a$.
+    <ul>
+        <li><strong>Pour $o$ et $O$ :</strong>
+            <ul>
+                <li>Somme : $o(g) + o(g) = o(g)$, $O(g) + O(g) = O(g)$. Si $f_1=o(g_1), f_2=o(g_2) \implies f_1+f_2 = o(\max(|g_1|, |g_2|))$ (peu pratique).</li>
+                <li>Produit par scalaire $\lambda \ne 0$: $\lambda o(g) = o(g)$, $\lambda O(g) = O(g)$.</li>
+                <li>Produit : $o(g_1)o(g_2) = o(g_1g_2)$, $O(g_1)O(g_2) = O(g_1g_2)$, $o(g_1)O(g_2) = o(g_1g_2)$.</li>
+                <li>Puissance : $f = o(g) \implies |f|^k = o(|g|^k)$ (si $k>0$).</li>
+                <li>Composition (à droite) : Si $f = o(g)$ au voisinage de $b$, et $\lim_{x \to a} u(x) = b$, alors $f(u(x)) = o(g(u(x)))$ au voisinage de $a$.</li>
+            </ul>
+        </li>
+        <li><strong>Pour $\sim$ :</strong> Si $f_1 \sim g_1$ et $f_2 \sim g_2$ (avec $g_1, g_2$ ne s'annulant pas):
+            <ul>
+                <li>Produit : $f_1 f_2 \sim g_1 g_2$.</li>
+                <li>Quotient : $f_1 / f_2 \sim g_1 / g_2$.</li>
+                <li>Puissance : $|f_1|^\alpha \sim |g_1|^\alpha$ (pour $\alpha \in \mathbb{R}$, sous réserve d'existence).</li>
+                <li>Composition (à droite) : NON compatible en général. $f_1(u(x)) \not\sim g_1(u(x))$ (Ex: $e^x \not\sim e^0$ en $0$).</li>
+                <li>Composition (à gauche) : Si $\lim g_1 = \ell \ne 0$, alors $h(f_1) \sim h(g_1)$ pour certaines fonctions $h$ (e.g., $\ln$ si $\ell > 0$). Attention!</li>
+                <li>Somme : NON compatible en général. $f_1+f_2 \not\sim g_1+g_2$. Il faut revenir à la forme $f=g+o(g)$.</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Croissances comparées (utilisation de $o$) :</strong> Pour $\alpha > 0, \beta > 0$:
+    <ul>
+        <li>En $+\infty$ : $(\ln x)^\beta = o(x^\alpha)$, $x^\alpha = o(e^{\beta x})$.</li>
+        <li>En $0^+$ : $|\ln x|^\beta = o(x^{-\alpha})$, $x^\alpha = o(1/|\ln x|^\beta)$ (reformulation).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Obtention d'un équivalent par encadrement :</strong> Soient $f, g, h$ des fonctions réelles définies au voisinage de $a$, telles que $f(x) \le g(x) \le h(x)$ au voisinage de $a$. Si $f(x) \sim_a h(x)$ et si $f, h$ sont de même signe (strictement positif, par exemple) au voisinage de $a$, alors $g(x) \sim_a f(x)$ (et $g(x) \sim_a h(x)$).
+</div>
+
+<div class="proof">
+    <strong>Preuve (cas $f,h > 0$) :</strong> On a $1 \le \frac{g(x)}{f(x)} \le \frac{h(x)}{f(x)}$. Comme $h(x) \sim_a f(x)$, on a $\lim_{x \to a} \frac{h(x)}{f(x)} = 1$. Par le théorème des gendarmes, $\lim_{x \to a} \frac{g(x)}{f(x)} = 1$. Donc $g(x) \sim_a f(x)$.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés conservées par équivalence :</strong> Soient $f \sim_a g$.
+    <ul>
+        <li>Si $g$ ne s'annule pas au voisinage de $a$ (sauf peut-être en $a$), alors $f$ et $g$ ont le même signe au voisinage de $a$.</li>
+        <li>Si $g$ admet une limite $L \in \overline{\mathbb{R}} \cup \{0\}$ en $a$, alors $f$ admet la même limite $L$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    L'équivalence est surtout utile pour déterminer la nature (limite, signe) d'une fonction compliquée en la remplaçant par une fonction plus simple dans des produits, quotients, ou en tant que terme prépondérant.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong>
+    <ol>
+        <li>Trouver des équivalents simples en $0$ et en $+\infty$ pour :
+            a) $f(x) = x^3 + 2x - 1$
+            b) $g(x) = \sqrt{1+x^2} - 1$ (en 0)
+            c) $h(x) = \frac{\sin(x) \ln(1+x)}{x \tan(x)}$ (en 0)
+        </li>
+        <li>Comparer les fonctions $x \ln x$ et $x^2$ au voisinage de $0^+$ et de $+\infty$.</li>
+        <li>Calculer $\lim_{x \to 0} \frac{e^x - 1 - x}{\cos x - 1}$ en utilisant des équivalents.</li>
+    </ol>
+</div>
+
+
+    <h4 id="developpements-limites">b) Développements limités</h4>
+
+<div class="definition">
+    <strong>Développement limité (DL) :</strong> Soit $f$ une fonction définie au voisinage de $a \in \mathbb{R}$, et $n \in \mathbb{N}$. On dit que $f$ admet un <strong>développement limité (DL) à l'ordre $n$ au voisinage de $a$</strong> s'il existe un polynôme $P_n \in \mathbb{R}[H]$ de degré au plus $n$ et une fonction $\varepsilon$ telle que $\lim_{h \to 0} \varepsilon(h) = 0$, vérifiant :
+    $$ f(a+h) = P_n(h) + h^n \varepsilon(h) \quad \text{pour } h \text{ au voisinage de } 0 $$
+    On écrit aussi $f(a+h) = P_n(h) + o(h^n)$ lorsque $h \to 0$.
+    Le polynôme $P_n$ est appelé la <strong>partie régulière</strong> (ou partie principale) du DL.
+</div>
+
+<div class="comment">
+    On se ramène presque toujours au cas $a=0$ en posant $h=x-a$. On écrira alors $f(x) = P_n(x) + o(x^n)$ au voisinage de 0.
+</div>
+
+<div class="theorem">
+    <strong>Unicité :</strong> Si $f$ admet un DL à l'ordre $n$ en $a$, la partie régulière $P_n$ est unique.
+    <br><strong>Troncature :</strong> Si $f$ admet un DL à l'ordre $n$ en $a$, $f(a+h) = \sum_{k=0}^n c_k h^k + o(h^n)$, alors pour tout $p \le n$, $f$ admet un DL à l'ordre $p$ en $a$, dont la partie régulière est $\sum_{k=0}^p c_k h^k$.
+</div>
+
+<div class="theorem">
+    <strong>Parité :</strong> Si $f$ est définie sur un voisinage symétrique de 0 et admet un DL à l'ordre $n$ en 0, $f(x) = P_n(x) + o(x^n)$.
+    <ul>
+        <li>Si $f$ est paire, $P_n$ ne contient que des monômes de degré pair.</li>
+        <li>Si $f$ est impaire, $P_n$ ne contient que des monômes de degré impair.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>DL et Dérivabilité :</strong>
+    <ul>
+        <li>$f$ admet un DL d'ordre 0 en $a \iff f$ est continue en $a$. Le DL est $f(x) = f(a) + o(1)$.</li>
+        <li>$f$ admet un DL d'ordre 1 en $a \iff f$ est dérivable en $a$. Le DL est $f(a+h) = f(a) + f'(a)h + o(h)$. La tangente $y=f(a)+f'(a)(x-a)$ est la meilleure approximation affine de $f$ en $a$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Opérations sur les DL en 0 (à l'ordre $n$) :</strong> Soient $f(x) = P_n(x) + o(x^n)$ et $g(x) = Q_n(x) + o(x^n)$.
+    <ul>
+        <li><strong>Combinaison linéaire :</strong> $\lambda f(x) + \mu g(x) = (\lambda P_n(x) + \mu Q_n(x)) + o(x^n)$.</li>
+        <li><strong>Produit :</strong> $f(x) g(x) = R_n(x) + o(x^n)$, où $R_n(x)$ est le polynôme $P_n(x) Q_n(x)$ tronqué à l'ordre $n$ (on ne garde que les termes de degré $\le n$).</li>
+        <li><strong>Quotient :</strong> Si $g(0) \neq 0$, alors $f(x)/g(x)$ admet un DL à l'ordre $n$. On peut l'obtenir par division suivant les puissances croissantes de $P_n$ par $Q_n$ jusqu'à l'ordre $n$, ou en composant $f(x)$ avec le DL de $1/g(x)$ (obtenu via DL de $1/(1+u)$).</li>
+        <li><strong>Composition :</strong> Si $f(x) = P_n(x) + o(x^n)$ et $g(y) = Q_n(y) + o(y^n)$, et si $\lim_{x \to 0} f(x) = 0$, alors $g(f(x))$ admet un DL à l'ordre $n$. On l'obtient en calculant $Q_n(P_n(x))$ et en ne gardant que les termes de degré $\le n$.
+            <br><em>Commentaire :</em> Le calcul pratique de la composition peut être fastidieux. On substitue le DL de $f$ (sans le $o(x^n)$) dans le DL de $g$, et on tronque.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    Pour les produits, quotients, compositions, il est souvent judicieux de factoriser par le terme prépondérant pour déterminer l'ordre auquel développer chaque partie.
+</div>
+
+<div class="theorem">
+    <strong>Intégration d'un DL :</strong> Si $f'$ admet un DL à l'ordre $n$ en 0 : $f'(x) = \sum_{k=0}^n a_k x^k + o(x^n)$, alors $f$ admet un DL à l'ordre $n+1$ en 0, obtenu par intégration terme à terme :
+    $$ f(x) = f(0) + \sum_{k=0}^n a_k \frac{x^{k+1}}{k+1} + o(x^{n+1}) $$
+</div>
+
+<div class="theorem">
+    <strong>Formule de Taylor-Young :</strong> Si $f$ est de classe $\mathcal{C}^n$ au voisinage de $a$, alors $f$ admet un DL à l'ordre $n$ en $a$ donné par :
+    $$ f(a+h) = \sum_{k=0}^n \frac{f^{(k)}(a)}{k!} h^k + o(h^n) $$
+</div>
+
+<div class="theorem">
+    <strong>Développements limités usuels en 0 :</strong> (Valables à tout ordre $n$)
+    \begin{align*} e^x &= 1 + x + \frac{x^2}{2!} + \dots + \frac{x^n}{n!} + o(x^n) \\ \cos x &= 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \dots + (-1)^p \frac{x^{2p}}{(2p)!} + o(x^{2p+1}) \quad (n=2p \text{ ou } 2p+1) \\ \sin x &= x - \frac{x^3}{3!} + \frac{x^5}{5!} - \dots + (-1)^p \frac{x^{2p+1}}{(2p+1)!} + o(x^{2p+2}) \quad (n=2p+1 \text{ ou } 2p+2) \\ \cosh x &= 1 + \frac{x^2}{2!} + \frac{x^4}{4!} + \dots + \frac{x^{2p}}{(2p)!} + o(x^{2p+1}) \quad (n=2p \text{ ou } 2p+1) \\ \sinh x &= x + \frac{x^3}{3!} + \frac{x^5}{5!} + \dots + \frac{x^{2p+1}}{(2p+1)!} + o(x^{2p+2}) \quad (n=2p+1 \text{ ou } 2p+2) \\ \frac{1}{1-x} &= 1 + x + x^2 + \dots + x^n + o(x^n) \\ \frac{1}{1+x} &= 1 - x + x^2 - \dots + (-1)^n x^n + o(x^n) \\ \ln(1+x) &= x - \frac{x^2}{2} + \frac{x^3}{3} - \dots + (-1)^{n-1} \frac{x^n}{n} + o(x^n) \\ (1+x)^\alpha &= 1 + \alpha x + \frac{\alpha(\alpha-1)}{2!} x^2 + \dots + \frac{\alpha(\alpha-1)\dots(\alpha-n+1)}{n!} x^n + o(x^n) \quad (\alpha \in \mathbb{R}) \\ \arctan x &= x - \frac{x^3}{3} + \frac{x^5}{5} - \dots + (-1)^p \frac{x^{2p+1}}{2p+1} + o(x^{2p+2}) \quad (n=2p+1 \text{ ou } 2p+2) \\ \tan x &= x + \frac{x^3}{3} + o(x^4) \quad (\text{DL à l'ordre 3}) \end{align*}
+</div>
+
+<div class="method">
+    <strong>Applications des DL :</strong>
+    <ul>
+        <li><strong>Calcul de limites :</strong> Trouver le premier terme non nul du DL du numérateur et du dénominateur pour obtenir un équivalent.</li>
+        <li><strong>Calcul d'équivalents :</strong> Le premier terme non nul $c_k x^k$ du DL de $f(x)$ en 0 est un équivalent de $f(x)$ en 0. $f(x) \sim_0 c_k x^k$.</li>
+        <li><strong>Position relative courbe/tangente :</strong> La tangente en $a$ est $y = f(a) + f'(a)(x-a)$. On étudie le signe de $f(x) - (f(a) + f'(a)(x-a))$. En posant $x=a+h$, $f(a+h) - (f(a) + f'(a)h)$. On calcule le DL de cette quantité en $h=0$. Le premier terme non nul $\approx c_k h^k$ donne le signe local. Si $k$ est impair, la courbe traverse la tangente (point d'inflexion si $k \ge 3$). Si $k$ est pair, la courbe reste du même côté de la tangente (au dessus si $c_k > 0$, en dessous si $c_k < 0$).</li>
+        <li><strong>Asymptotes :</strong> Si $\lim_{x \to \infty} f(x)/x = a$ et $\lim_{x \to \infty} (f(x) - ax) = b$, alors $y=ax+b$ est asymptote oblique. On utilise souvent un DL en $1/x$ pour $x \to \infty$. Si $f(x) = ax+b + \frac{c}{x^k} + o(\frac{1}{x^k})$ en $\infty$, le signe de $c$ donne la position par rapport à l'asymptote.</li>
+        <li><strong>Extremum local :</strong> Condition nécessaire $f'(a)=0$. Condition suffisante à l'ordre 2: Si $f'(a)=0$ et $f''(a) \ne 0$, alors $f$ a un extremum local strict en $a$ (min si $f''(a)>0$, max si $f''(a)<0$). Ceci vient du DL d'ordre 2: $f(a+h) = f(a) + \frac{f''(a)}{2} h^2 + o(h^2)$. Le signe de $f(a+h)-f(a)$ est localement celui de $\frac{f''(a)}{2} h^2$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Calculer le DL à l'ordre 3 en 0 de $f(x) = e^x \cos(x)$.</li>
+        <li>Calculer le DL à l'ordre 2 en 0 de $g(x) = \frac{\ln(1+x)}{\sin x}$. En déduire $\lim_{x \to 0} g(x)$.</li>
+        <li>Calculer $\lim_{x \to 0} \frac{x - \arctan x}{x^3}$.</li>
+        <li>Étudier la position de la courbe $y = \ln(1+x)$ par rapport à sa tangente en 0.</li>
+        <li>Trouver l'équation de l'asymptote à $y = \sqrt{x^2+x+1}$ en $+\infty$ et la position relative.</li>
+    </ol>
+</div>
+
+
+     <h4 id="relations-comparaison-suites">c) Relations de comparaison : cas des suites</h4>
+
+<div class="definition">
+    <strong>Relations de comparaison pour les suites :</strong> Soient $(u_n)$ et $(v_n)$ deux suites à valeurs réelles ou complexes. On suppose que $v_n \ne 0$ à partir d'un certain rang.
+    <ul>
+        <li><strong>Domination ($O$) :</strong> $u_n = O(v_n)$ si la suite $(u_n/v_n)$ est bornée. (Équivalent: $\exists C \ge 0, \exists N, \forall n \ge N, |u_n| \le C |v_n|$).</li>
+        <li><strong>Négligeabilité ($o$) :</strong> $u_n = o(v_n)$ si $\lim_{n \to \infty} \frac{u_n}{v_n} = 0$.</li>
+        <li><strong>Équivalence ($\sim$) :</strong> $u_n \sim v_n$ si $\lim_{n \to \infty} \frac{u_n}{v_n} = 1$, ou de manière équivalente $u_n = v_n + o(v_n)$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    Les règles de calcul et les propriétés (compatibilité produit, quotient, puissance pour $\sim$; non compatibilité somme; conservation limite/signe) sont analogues au cas des fonctions lorsque $a = +\infty$.
+    <br><strong>Exemples importants d'équivalents de suites usuelles :</strong>
+    <ul>
+        <li>Si $\lim u_n = \ell \in \mathbb{R}^*$, alors $u_n \sim \ell$.</li>
+        <li>Polynômes : $\sum_{k=0}^p a_k n^k \sim a_p n^p$ (si $a_p \ne 0$).</li>
+        <li>Si $u_n \to 0$, alors $\sin(u_n) \sim u_n$, $\tan(u_n) \sim u_n$, $\ln(1+u_n) \sim u_n$, $e^{u_n}-1 \sim u_n$, $(1+u_n)^\alpha - 1 \sim \alpha u_n$.</li>
+        <li>Équivalents de Riemann : $\sum_{k=1}^n k^\alpha \sim \frac{n^{\alpha+1}}{\alpha+1}$ si $\alpha > -1$. $\sum_{k=1}^n \frac{1}{k} \sim \ln n$.</li>
+        <li>Formule de Stirling : $n! \sim \sqrt{2\pi n} (\frac{n}{e})^n$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.1 :</strong>
+    <ol>
+        <li>Trouver un équivalent simple de $u_n = \frac{n^2 + \ln n}{e^n - n}$.</li>
+        <li>Soit $u_n = \sin(1/n)$. Donner un équivalent de $u_n$. Comparer $u_n$ et $v_n = 1/n + 1/n^2$.</li>
+        <li>Calculer $\lim_{n \to \infty} n( \sqrt[n]{a} - 1)$ pour $a>0$.</li>
+    </ol>
+</div>
+
+
+     <h4 id="problemes-analyse-asymptotique">d) Problèmes d'analyse asymptotique</h4>
+
+<div class="comment">
+    Cette partie vise à illustrer l'utilisation des outils précédents (équivalents, DL) sur des problèmes plus complexes. La notion d'échelle de comparaison est hors programme.
+</div>
+
+<div class="example">
+    <strong>Exemples de développements asymptotiques :</strong>
+    <ul>
+        <li><strong>Fonctions réciproques :</strong> Si $f(x) = x + x^2 + o(x^2)$ en 0, on cherche $f^{-1}(y) = ay + by^2 + o(y^2)$. On écrit $y = f(f^{-1}(y))$, on substitue le DL de $f^{-1}$ dans celui de $f$, et on identifie les coefficients. $y = (ay+by^2) + (ay)^2 + o(y^2) = ay + (b+a^2)y^2 + o(y^2)$. Par unicité, $a=1$ et $b+a^2=0 \implies b=-1$. Donc $f^{-1}(y) = y - y^2 + o(y^2)$.</li>
+        <li><strong>Équations à paramètre :</strong> Étude de la solution $x_n$ de $\tan x = x$ dans $]n\pi - \pi/2, n\pi + \pi/2[$ pour $n \to \infty$. On voit que $x_n \approx n\pi$. On pose $x_n = n\pi + \epsilon_n$ avec $\epsilon_n \to 0$. $\tan(n\pi+\epsilon_n) = \tan(\epsilon_n) = n\pi + \epsilon_n$. Comme $\tan(\epsilon_n) \sim \epsilon_n$, on a $\epsilon_n \approx n\pi$, ce qui contredit $\epsilon_n \to 0$. Erreur : c'est $x_n \approx n\pi + \pi/2$. Posons $x_n = n\pi + \pi/2 - \epsilon_n$ avec $\epsilon_n \to 0^+$. $\tan(x_n) = \tan(\pi/2 - \epsilon_n) = \cot(\epsilon_n) \sim 1/\epsilon_n$. Donc $1/\epsilon_n \approx n\pi + \pi/2$. $\epsilon_n \approx \frac{1}{n\pi + \pi/2} \sim \frac{1}{n\pi}$. Donc $x_n = n\pi + \pi/2 - \frac{1}{n\pi} + o(1/n)$.</li>
+        <li><strong>Suites récurrentes $u_{n+1} = f(u_n)$ :</strong> Si $u_n \to \ell$ avec $f(\ell)=\ell$, on étudie le comportement de $u_{n+1}-\ell = f(u_n) - f(\ell)$. On utilise un DL de $f$ en $\ell$. Par exemple, si $f(x) = x - cx^k + o(x^k)$ en 0 ($\ell=0$), alors $u_{n+1} = u_n - c u_n^k + o(u_n^k)$. On peut chercher un équivalent de $u_n$ sous la forme $C n^\alpha$.</li>
+        <li><strong>Suites d'intégrales :</strong> Intégrales de Wallis $W_n = \int_0^{\pi/2} \sin^n x \, dx$. On montre $W_n \sim \sqrt{\frac{\pi}{2n}}$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Formule de Stirling :</strong> Lorsque $n \to +\infty$:
+    $$ n! \sim \sqrt{2\pi n} \left( \frac{n}{e} \right)^n $$
+    Cela se traduit par le développement asymptotique suivant pour $\ln(n!)$:
+    $$ \ln(n!) = \left( n + \frac{1}{2} \right) \ln n - n + \frac{1}{2} \ln(2\pi) + o(1) $$
+    (ou $\ln(n!) = n \ln n - n + \frac{1}{2} \ln n + \frac{1}{2} \ln(2\pi) + o(1)$).
+</div>
+
+<div class="comment">
+    La démonstration n'est pas exigible. Elle repose souvent sur la comparaison série-intégrale pour $\ln(n!) = \sum \ln k$ ou sur les intégrales de Wallis.
+</div>
+
+<div class="exercise">
+    <strong>Exercice D.1 :</strong>
+    <ol>
+        <li>Donner un équivalent de la solution $x_n$ de l'équation $x + \ln x = n$ quand $n \to +\infty$. (Observer que $x_n \approx n$).</li>
+        <li>Donner un équivalent de $u_n = \frac{1}{n+1} + \frac{1}{n+2} + \dots + \frac{1}{2n}$. (Reconnaître une somme de Riemann ou encadrer par des intégrales).</li>
+        <li>Utiliser la formule de Stirling pour trouver un équivalent de $\binom{2n}{n}$.</li>
+    </ol>
+</div>
+
+</body>
+</html>
