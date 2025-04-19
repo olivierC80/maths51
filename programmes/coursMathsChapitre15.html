@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Intégration</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Intégration</h1>
+
+<h3 id="integration">Intégration</h3>
+<p class="intro-text">
+    Cette section a pour principal objectif de définir l'intégrale d'une fonction continue par morceaux sur un segment et d'en établir les propriétés principales. Elle offre l'occasion de revenir sur les techniques de calcul intégral, mais aussi de traiter des exercices d'esprit plus théorique.
+    <br>Les méthodes de calcul approché d'intégrales donnent l'occasion de revenir sur la problématique de l'approximation. On pourra ainsi comparer les performances de la méthode des rectangles et de celle des trapèzes.
+    <br>La notion de continuité uniforme est introduite uniquement en vue de la construction de l'intégrale. L'étude systématique des fonctions uniformément continues n'est pas un attendu du programme.
+    <br>Le corps $\mathbb{K}$ est pris égal à $\mathbb{R}$ ou $\mathbb{C}$. Le professeur peut soit se placer d'emblée dans le cadre des fonctions à valeurs complexes, soit traiter en premier lieu le cas réel avant de procéder à une brève extension.
+</p>
+
+<h4 id="continuite-uniforme">a) Continuité uniforme</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Continuité uniforme.</td>
+            <td>Exemple des fonctions lipschitziennes.</td>
+        </tr>
+        <tr>
+            <td>Théorème de Heine.</td>
+            <td>La démonstration n'est pas exigible.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Continuité uniforme :</strong> Soit $I$ un intervalle de $\mathbb{R}$ et $f: I \to \mathbb{K}$ ($\mathbb{R}$ ou $\mathbb{C}$). La fonction $f$ est dite <strong>uniformément continue</strong> sur $I$ si :
+    $$ \forall \epsilon > 0, \exists \delta > 0, \forall x, y \in I, (|x-y| \le \delta \implies |f(x) - f(y)| \le \epsilon) $$
+    La différence avec la continuité simple est que le $\delta$ trouvé ne dépend que de $\epsilon$, et est valable pour <strong>tous</strong> les couples $(x,y)$ de $I$.
+</div>
+
+<div class="comment">
+    Une fonction uniformément continue sur $I$ est continue sur $I$. La réciproque est fausse en général (ex: $x \mapsto x^2$ sur $\mathbb{R}$, $x \mapsto 1/x$ sur $]0, 1]$ ne sont pas uniformément continues), mais vraie sur un segment (Théorème de Heine).
+</div>
+
+<div class="example">
+    <strong>Exemple : Fonctions Lipschitziennes</strong>
+    Si $f: I \to \mathbb{K}$ est $K$-lipschitzienne, i.e., $\exists K \ge 0, \forall x, y \in I, |f(x)-f(y)| \le K|x-y|$, alors $f$ est uniformément continue sur $I$.
+    <br><em>Preuve :</em> Soit $\epsilon > 0$. Choisissons $\delta = \epsilon / (K+1)$ (pour éviter $K=0$). Si $|x-y| \le \delta$, alors $|f(x)-f(y)| \le K |x-y| \le K \delta = K \frac{\epsilon}{K+1} \le \epsilon$. Le $\delta$ ne dépend que de $\epsilon$ (et $K$).
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Heine :</strong> Toute fonction continue sur un segment $[a, b]$ à valeurs dans $\mathbb{K}$ est uniformément continue sur $[a, b]$.
+</div>
+
+<div class="comment">
+    La démonstration (qui utilise souvent la compacité du segment ou une preuve par l'absurde avec Bolzano-Weierstrass) n'est pas exigible. Ce théorème est crucial pour montrer que les fonctions continues sont intégrables au sens de Riemann (ou pour construire l'intégrale via les fonctions en escalier).
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong>
+    <ol>
+        <li>La fonction $f(x) = \sqrt{x}$ est-elle uniformément continue sur $[0, 1]$ ? Sur $[1, +\infty)$ ? Sur $[0, +\infty)$ ?</li>
+        <li>Montrer qu'une fonction périodique et continue sur $\mathbb{R}$ est uniformément continue sur $\mathbb{R}$.</li>
+    </ol>
+</div>
+
+
+<h4 id="fonctions-continues-par-morceaux">b) Fonctions continues par morceaux</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Subdivision d'un segment, pas d'une subdivision.</td>
+            <td>Une subdivision $\sigma = (x_0, x_1, \dots, x_n)$ d'un segment $[a, b]$ est une suite finie telle que $a = x_0 < x_1 < \dots < x_n = b$. Le pas est $\max(x_{i+1}-x_i)$.</td>
+        </tr>
+        <tr>
+            <td>Fonction en escalier, fonction continue par morceaux.</td>
+            <td>Les fonctions sont définies sur un segment $[a,b]$ et à valeurs dans $\mathbb{K}$. Structure de sous-espace vectoriel et de sous-anneau de l'ensemble des fonctions continues par morceaux sur un segment à valeurs dans $\mathbb{K}$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Subdivision d'un segment :</strong> Une <strong>subdivision</strong> du segment $[a, b]$ est une suite finie $\sigma = (x_0, x_1, \dots, x_n)$ telle que $a = x_0 < x_1 < \dots < x_n = b$.
+    Les intervalles $]x_i, x_{i+1}[$ sont les intervalles ouverts de la subdivision.
+    Le <strong>pas</strong> de la subdivision $\sigma$ est $h(\sigma) = \max_{0 \le i \le n-1} (x_{i+1} - x_i)$.
+</div>
+
+<div class="definition">
+    <strong>Fonction en escalier :</strong> Une fonction $f: [a, b] \to \mathbb{K}$ est dite <strong>en escalier</strong> s'il existe une subdivision $\sigma = (x_0, \dots, x_n)$ de $[a, b]$ telle que $f$ soit constante sur chaque intervalle ouvert $]x_i, x_{i+1}[$.
+    (Les valeurs aux points $x_i$ peuvent être quelconques).
+</div>
+
+<div class="definition">
+    <strong>Fonction continue par morceaux :</strong> Une fonction $f: [a, b] \to \mathbb{K}$ est dite <strong>continue par morceaux</strong> sur $[a, b]$ s'il existe une subdivision $\sigma = (x_0, \dots, x_n)$ de $[a, b]$ telle que pour chaque $i \in \{0, \dots, n-1\}$, la restriction de $f$ à l'intervalle ouvert $]x_i, x_{i+1}[$ soit continue et admette une limite finie à droite en $x_i$ et une limite finie à gauche en $x_{i+1}$.
+    <br>(Autrement dit, $f$ est continue sauf en un nombre fini de points où elle admet des limites finies à droite et à gauche).
+</div>
+
+<div class="comment">
+    L'ensemble $\mathcal{E}([a,b], \mathbb{K})$ des fonctions en escalier et l'ensemble $\mathcal{CM}([a,b], \mathbb{K})$ des fonctions continues par morceaux sur $[a,b]$ à valeurs dans $\mathbb{K}$ sont des $\mathbb{K}$-espaces vectoriels.
+    $\mathcal{CM}([a,b], \mathbb{K})$ est également stable par produit, c'est une sous-algèbre de $\mathcal{F}([a,b], \mathbb{K})$.
+    Toute fonction continue sur $[a,b]$ est continue par morceaux. Toute fonction en escalier est continue par morceaux.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>La fonction $f(x) = \lfloor x \rfloor$ (partie entière) est-elle en escalier sur $[0, 3]$ ? Continue par morceaux ?</li>
+        <li>La fonction $g(x) = x - \lfloor x \rfloor$ est-elle continue par morceaux sur $[0, 3]$ ?</li>
+        <li>La fonction $h(x) = \begin{cases} \sin(1/x) & \text{si } x \in ]0, 1] \\ 0 & \text{si } x=0 \end{cases}$ est-elle continue par morceaux sur $[0, 1]$ ?</li>
+    </ol>
+</div>
+
+
+<h4 id="integrale-fonction-continue-morceaux">c) Intégrale d'une fonction continue par morceaux sur un segment</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Intégrale d'une fonction continue par morceaux sur un segment à valeurs dans $\mathbb{K}$.</td>
+            <td>Le programme n'impose pas de construction particulière (e.g., via fonctions en escalier, ou via primitives pour les fonctions continues étendues par additivité). Interprétation géométrique de l'intégrale (aire algébrique sous la courbe pour $f$ réelle). Notations $\int_{[a,b]} f$, $\int_a^b f$, $\int_a^b f(t) dt$.</td>
+        </tr>
+        <tr>
+            <td>Linéarité, positivité et croissance de l'intégrale.</td>
+             <td>Si $f \ge 0$, $\int_a^b f \ge 0$ (si $a \le b$). Si $f \le g$, $\int_a^b f \le \int_a^b g$ (si $a \le b$).</td>
+        </tr>
+        <tr>
+            <td>Inégalité triangulaire intégrale : $|\int_{[a,b]} f| \le \int_{[a,b]} |f|$.</td>
+             <td>Pour $f: [a,b] \to \mathbb{C}$, $|\int_a^b f(t) dt| \le \int_a^b |f(t)| dt$ (si $a \le b$). Si $\exists M, |f(t)| \le M$, alors $|\int_a^b f(t) dt| \le M |b-a|$.</td>
+        </tr>
+        <tr>
+            <td>Relation de Chasles.</td>
+            <td>$\int_a^c f = \int_a^b f + \int_b^c f$. Extension de la notation $\int_a^b f(t) dt$ au cas où $b \le a$ ($\int_a^a f = 0$, $\int_b^a f = -\int_a^b f$). Propriétés correspondantes.</td>
+        </tr>
+         <tr>
+            <td>Si $f$ est continue, à valeurs dans $\mathbb{R}^+$ et si $\int_{[a,b]} f = 0$, alors $f=0$.</td>
+            <td>C'est faux si $f$ est seulement continue par morceaux (peut être nulle sauf en un nombre fini de points).</td>
+        </tr>
+        <tr>
+            <td>Intégrale d'une fonction paire ou impaire sur un segment centré en 0. Intégrale d'une fonction périodique sur un intervalle de période.</td>
+             <td>Si $f$ paire, $\int_{-a}^a f = 2\int_0^a f$. Si $f$ impaire, $\int_{-a}^a f = 0$. Si $f$ est $T$-périodique, $\int_a^{a+T} f = \int_0^T f$. Valeur moyenne d'une fonction continue par morceaux sur un segment $[a,b]$ ($a \ne b$): $\mu = \frac{1}{b-a} \int_a^b f(t) dt$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Intégrale d'une fonction en escalier :</strong> Soit $f: [a, b] \to \mathbb{K}$ une fonction en escalier, constante égale à $c_i$ sur $]x_i, x_{i+1}[$ pour une subdivision $\sigma = (x_0, \dots, x_n)$. L'<strong>intégrale</strong> de $f$ sur $[a, b]$ est :
+    $$ \int_a^b f(t) dt = \sum_{i=0}^{n-1} c_i (x_{i+1} - x_i) $$
+    Cette valeur est indépendante du choix de la subdivision adaptée à $f$.
+</div>
+
+<div class="comment">
+    <strong>Construction de l'intégrale d'une fonction continue par morceaux (idée) :</strong>
+    On peut montrer que toute fonction continue par morceaux $f$ sur $[a, b]$ peut être approchée (uniformément) par des fonctions en escalier $\phi_n$. On définit alors $\int_a^b f$ comme la limite (qui existe et est unique) des $\int_a^b \phi_n$.
+    Une autre approche (plus courante en première année) est de définir l'intégrale pour les fonctions continues via les primitives (voir section e), puis d'étendre aux fonctions continues par morceaux en découpant le segment selon une subdivision adaptée et en sommant les intégrales sur chaque sous-intervalle (où la fonction coïncide avec une fonction continue prolongeable).
+    Le programme n'impose pas de construction, on admet l'existence et l'unicité de l'intégrale pour $f \in \mathcal{CM}([a,b], \mathbb{K})$.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de l'intégrale :</strong> Soient $f, g \in \mathcal{CM}([a,b], \mathbb{K})$ et $\lambda, \mu \in \mathbb{K}$. ($a \le b$).
+    <ul>
+        <li><strong>Linéarité :</strong> $\int_a^b (\lambda f + \mu g)(t) dt = \lambda \int_a^b f(t) dt + \mu \int_a^b g(t) dt$.</li>
+        <li><strong>Positivité :</strong> Si $f$ est à valeurs dans $\mathbb{R}$ et $f(t) \ge 0$ pour tout $t \in [a,b]$, alors $\int_a^b f(t) dt \ge 0$.</li>
+        <li><strong>Croissance :</strong> Si $f, g$ sont à valeurs réelles et $f(t) \le g(t)$ pour tout $t \in [a,b]$, alors $\int_a^b f(t) dt \le \int_a^b g(t) dt$.</li>
+        <li><strong>Inégalité triangulaire :</strong> $|\int_a^b f(t) dt| \le \int_a^b |f(t)| dt$.</li>
+        <li><strong>Majoration standard :</strong> Si $|f(t)| \le M$ pour tout $t \in [a,b]$, alors $|\int_a^b f(t) dt| \le M (b-a)$.</li>
+        <li><strong>Relation de Chasles :</strong> Pour tout $c \in [a,b]$, $\int_a^b f(t) dt = \int_a^c f(t) dt + \int_c^b f(t) dt$.</li>
+    </ul>
+    <strong>Conventions :</strong> $\int_a^a f = 0$. Si $b < a$, $\int_a^b f = - \int_b^a f$. La relation de Chasles reste valable pour $a, b, c$ dans un ordre quelconque.
+</div>
+
+<div class="theorem">
+    <strong>Nullité de l'intégrale d'une fonction continue positive :</strong> Soit $f: [a, b] \to \mathbb{R}$ une fonction <strong>continue</strong> et positive ($f(t) \ge 0$).
+    Si $\int_a^b f(t) dt = 0$, alors $f$ est la fonction nulle sur $[a, b]$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Supposons par l'absurde que $f$ n'est pas nulle. Il existe $c \in [a, b]$ tel que $f(c) > 0$. Par continuité de $f$ en $c$, pour $\epsilon = f(c)/2 > 0$, il existe $\delta > 0$ tel que pour $t \in [a, b] \cap [c-\delta, c+\delta]$, on a $f(t) \ge f(c) - \epsilon = f(c)/2$.
+    Soit $[\alpha, \beta]$ un segment non trivial inclus dans $[a, b] \cap [c-\delta, c+\delta]$ (d'une longueur $\beta-\alpha > 0$).
+    Alors $\int_a^b f(t) dt = \int_a^\alpha f + \int_\alpha^\beta f + \int_\beta^b f$.
+    Comme $f \ge 0$, $\int_a^\alpha f \ge 0$ et $\int_\beta^b f \ge 0$.
+    Sur $[\alpha, \beta]$, $f(t) \ge f(c)/2$. Par croissance, $\int_\alpha^\beta f(t) dt \ge \int_\alpha^\beta \frac{f(c)}{2} dt = \frac{f(c)}{2} (\beta - \alpha) > 0$.
+    Donc $\int_a^b f(t) dt \ge \frac{f(c)}{2} (\beta - \alpha) > 0$. Ceci contredit l'hypothèse $\int_a^b f = 0$.
+    Donc $f$ doit être la fonction nulle.
+</div>
+
+<div class="definition">
+    <strong>Valeur moyenne :</strong> La <strong>valeur moyenne</strong> d'une fonction $f \in \mathcal{CM}([a,b], \mathbb{K})$ ($a \ne b$) est $\mu = \frac{1}{b-a} \int_a^b f(t) dt$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.1 :</strong>
+    <ol>
+        <li>Calculer $\int_0^1 (x^2 + 2e^x) dx$.</li>
+        <li>Montrer que $0 \le \int_1^2 \frac{1}{t^2+1} dt \le 1/2$.</li>
+        <li>Sans calculer l'intégrale, montrer que $\int_0^{\pi/2} \sin^n(x) dx > 0$ pour tout $n \in \mathbb{N}$.</li>
+        <li>Calculer $\int_{-1}^1 \frac{x}{x^2+1} dx$.</li>
+        <li>Calculer la valeur moyenne de $f(x)=\cos(x)$ sur $[0, \pi/2]$.</li>
+    </ol>
+</div>
+
+
+<h4 id="sommes-riemann">d) Sommes de Riemann</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Pour $f$ continue par morceaux sur le segment $[a, b]$, $\frac{b-a}{n} \sum_{k=0}^{n-1} f(a + k \frac{b-a}{n}) \to_{n \to +\infty} \int_a^b f(t) dt$.</td>
+            <td>Interprétation géométrique (aire de rectangles). Démonstration exigible pour $f$ lipschitzienne. D'autres variantes existent (point à droite, point milieu...).</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="theorem">
+    <strong>Convergence des sommes de Riemann (à gauche) :</strong> Soit $f: [a, b] \to \mathbb{K}$ une fonction continue par morceaux. Alors la suite $(S_n)$ définie par :
+    $$ S_n = \frac{b-a}{n} \sum_{k=0}^{n-1} f\left(a + k \frac{b-a}{n}\right) $$
+    converge vers $\int_a^b f(t) dt$ lorsque $n \to +\infty$.
+</div>
+
+<div class="comment">
+    <strong>Interprétation géométrique (cas $f \ge 0, a \le b$) :</strong> $S_n$ est la somme des aires des $n$ rectangles de base $[x_k, x_{k+1}]$ (où $x_k = a+k(b-a)/n$, largeur $(b-a)/n$) et de hauteur $f(x_k)$ (valeur au point gauche). Quand $n \to \infty$, ces aires approximent l'aire sous la courbe.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (cas $f$ lipschitzienne sur $[a,b]$) :</strong>
+    Soit $K$ la constante de Lipschitz. On compare $S_n$ à l'intégrale.
+    $S_n = \sum_{k=0}^{n-1} (x_{k+1}-x_k) f(x_k)$. L'intégrale $\int_a^b f = \sum_{k=0}^{n-1} \int_{x_k}^{x_{k+1}} f(t) dt$.
+    $|S_n - \int_a^b f| = |\sum_{k=0}^{n-1} ( \int_{x_k}^{x_{k+1}} f(x_k) dt - \int_{x_k}^{x_{k+1}} f(t) dt )|$
+    $= |\sum_{k=0}^{n-1} \int_{x_k}^{x_{k+1}} (f(x_k) - f(t)) dt |$
+    $\le \sum_{k=0}^{n-1} \int_{x_k}^{x_{k+1}} |f(x_k) - f(t)| dt$.
+    Comme $t \in [x_k, x_{k+1}]$, on a $|t - x_k| \le x_{k+1} - x_k = (b-a)/n$.
+    Comme $f$ est $K$-lipschitzienne, $|f(x_k) - f(t)| \le K |x_k - t| \le K (b-a)/n$.
+    Donc $|S_n - \int_a^b f| \le \sum_{k=0}^{n-1} \int_{x_k}^{x_{k+1}} K \frac{b-a}{n} dt = \sum_{k=0}^{n-1} K \frac{b-a}{n} (x_{k+1}-x_k)$
+    $= \sum_{k=0}^{n-1} K \frac{b-a}{n} \frac{b-a}{n} = n \times K \frac{(b-a)^2}{n^2} = K \frac{(b-a)^2}{n}$.
+    Cette quantité tend vers 0 quand $n \to \infty$. Donc $S_n \to \int_a^b f$.
+    (La preuve pour $f$ continue utilise l'uniforme continuité via Heine. Pour $f$ CPM, on approxime par des fonctions continues).
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> Limite de $u_n = \sum_{k=1}^n \frac{n}{n^2+k^2}$.
+    $u_n = \sum_{k=1}^n \frac{n}{n^2(1+(k/n)^2)} = \frac{1}{n} \sum_{k=1}^n \frac{1}{1+(k/n)^2}$.
+    C'est presque une somme de Riemann pour $f(x) = 1/(1+x^2)$ sur $[0, 1]$ ($a=0, b=1$).
+    Ici, $x_k = k/n$. La somme de Riemann (points à droite) est $\frac{1-0}{n} \sum_{k=1}^n f(0+k\frac{1-0}{n}) = \frac{1}{n} \sum_{k=1}^n f(k/n) = u_n$.
+    Donc $\lim_{n \to \infty} u_n = \int_0^1 \frac{1}{1+x^2} dx = [\arctan x]_0^1 = \arctan(1) - \arctan(0) = \pi/4$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice D.1 :</strong> Calculer les limites des suites suivantes :
+    <ol>
+        <li>$u_n = \frac{1}{n} \sum_{k=0}^{n-1} \cos(\frac{k\pi}{n})$</li>
+        <li>$v_n = \sum_{k=1}^n \frac{k}{n^2+k^2}$</li>
+        <li>$w_n = \left( \frac{(2n)!}{n^n n!} \right)^{1/n}$ (Indication : passer au log)</li>
+    </ol>
+</div>
+
+
+<h4 id="lien-integrale-primitive">e) Lien entre intégrale et primitive</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Dérivation de $x \mapsto \int_a^x f(t) dt$ pour $f$ continue.</td>
+             <td>Théorème fondamental de l'analyse (partie 1).</td>
+        </tr>
+        <tr>
+            <td>Toute fonction continue sur un intervalle possède des primitives.</td>
+            <td>Si $F$ est une primitive de $f$ continue sur $[a,b]$, alors $\int_a^b f(t) dt = F(b) - F(a)$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="theorem">
+    <strong>Théorème Fondamental de l'Analyse (Partie 1) :</strong> Soit $f: I \to \mathbb{K}$ une fonction <strong>continue</strong> sur un intervalle $I$. Soit $a \in I$. La fonction $F: I \to \mathbb{K}$ définie par $F(x) = \int_a^x f(t) dt$ est l'unique primitive de $f$ qui s'annule en $a$. Elle est de classe $\mathcal{C}^1$ sur $I$ et $F'(x) = f(x)$ pour tout $x \in I$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Calculons le taux d'accroissement de $F$ en $x \in I$.
+    $\frac{F(x+h) - F(x)}{h} = \frac{1}{h} \left( \int_a^{x+h} f(t) dt - \int_a^x f(t) dt \right) = \frac{1}{h} \int_x^{x+h} f(t) dt$.
+    On veut montrer que ceci tend vers $f(x)$ quand $h \to 0$.
+    $\frac{1}{h} \int_x^{x+h} f(t) dt - f(x) = \frac{1}{h} \int_x^{x+h} f(t) dt - \frac{1}{h} \int_x^{x+h} f(x) dt = \frac{1}{h} \int_x^{x+h} (f(t) - f(x)) dt$.
+    Soit $\epsilon > 0$. Comme $f$ est continue en $x$, il existe $\delta > 0$ tel que $|t-x| \le \delta \implies |f(t)-f(x)| \le \epsilon$.
+    Pour $|h| \le \delta$, si $t$ est entre $x$ et $x+h$, alors $|t-x| \le |h| \le \delta$, donc $|f(t)-f(x)| \le \epsilon$.
+    $|\frac{F(x+h) - F(x)}{h} - f(x)| = |\frac{1}{h} \int_x^{x+h} (f(t) - f(x)) dt|$
+    $\le \frac{1}{|h|} |\int_x^{x+h} |f(t) - f(x)| dt|$ (par inégalité triangulaire, attention si $h<0$)
+    $\le \frac{1}{|h|} |\int_x^{x+h} \epsilon dt| = \frac{1}{|h|} \epsilon |h| = \epsilon$.
+    Donc $\lim_{h \to 0} \frac{F(x+h) - F(x)}{h} = f(x)$. $F$ est dérivable et $F'=f$.
+</div>
+
+<div class="theorem">
+    <strong>Existence de primitives :</strong> Toute fonction continue sur un intervalle $I$ admet des primitives sur $I$.
+    <br>Si $f$ est continue sur $I$ et si $F$ est une primitive quelconque de $f$ sur $I$, alors pour tous $a, b \in I$:
+    $$ \int_a^b f(t) dt = F(b) - F(a) = [F(t)]_a^b $$
+</div>
+
+<div class="comment">
+    Ce théorème justifie le calcul d'intégrales via la recherche de primitives pour les fonctions continues. Pour les fonctions continues par morceaux, on utilise la relation de Chasles pour se ramener à intégrer des fonctions continues sur des sous-intervalles.
+</div>
+
+<div class="exercise">
+    <strong>Exercice E.1 :</strong>
+    <ol>
+        <li>Trouver la dérivée de $F(x) = \int_1^{x^2} \frac{\sin t}{t} dt$ pour $x>0$.</li>
+        <li>Calculer $\int_0^{\pi} x \sin(x) dx$ en utilisant une intégration par parties (qui repose sur l'existence de primitives).</li>
+        <li>Montrer que si $f$ est continue sur $[a,b]$ et $\int_a^b f(t) dt = 0$, alors il existe $c \in ]a,b[$ tel que $f(c)=0$. (Contre-exemple si $f$ n'est pas de signe constant ?)</li>
+    </ol>
+</div>
+
+
+<h4 id="formules-taylor-globales">f) Formules de Taylor globales</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Formule de Taylor avec reste intégral et inégalité de Taylor-Lagrange.</td>
+            <td>L'égalité de Taylor-Lagrange (avec $f^{(n+1)}(c)$) est hors programme. On souligne la différence de nature entre la formule de Taylor-Young (locale, donne un DL) et les formules de Taylor globales (égalités exactes valables sur un intervalle).</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="theorem">
+    <strong>Formule de Taylor avec reste intégral :</strong> Soit $f: I \to \mathbb{K}$ une fonction de classe $\mathcal{C}^{n+1}$ sur un intervalle $I$. Pour tous $a, x \in I$ :
+    $$ f(x) = \sum_{k=0}^n \frac{f^{(k)}(a)}{k!} (x-a)^k + R_n(x) $$
+    où le reste intégral est donné par :
+    $$ R_n(x) = \int_a^x \frac{(x-t)^n}{n!} f^{(n+1)}(t) dt $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Par récurrence sur $n$, en utilisant une intégration par parties sur le reste.
+    Base $n=0$: $f(x) = f(a) + R_0(x)$ avec $R_0(x) = \int_a^x \frac{(x-t)^0}{0!} f^{(1)}(t) dt = \int_a^x f'(t) dt = f(x)-f(a)$ (par Th. Fondamental). C'est vrai.
+    Hérédité : Supposons la formule vraie au rang $n-1$. On intègre par parties le reste $R_{n-1}(x) = \int_a^x \frac{(x-t)^{n-1}}{(n-1)!} f^{(n)}(t) dt$.
+    Posons $u'(t) = \frac{(x-t)^{n-1}}{(n-1)!}$ et $v(t) = f^{(n)}(t)$.
+    On choisit $u(t) = -\frac{(x-t)^n}{n!}$. $v'(t) = f^{(n+1)}(t)$.
+    $R_{n-1}(x) = [u(t)v(t)]_a^x - \int_a^x u(t)v'(t) dt$
+    $= \left[ -\frac{(x-t)^n}{n!} f^{(n)}(t) \right]_a^x - \int_a^x \left(-\frac{(x-t)^n}{n!}\right) f^{(n+1)}(t) dt$
+    $= (0 - (-\frac{(x-a)^n}{n!} f^{(n)}(a))) + \int_a^x \frac{(x-t)^n}{n!} f^{(n+1)}(t) dt$
+    $= \frac{f^{(n)}(a)}{n!} (x-a)^n + R_n(x)$.
+    En reportant dans $f(x) = \sum_{k=0}^{n-1} \frac{f^{(k)}(a)}{k!} (x-a)^k + R_{n-1}(x)$, on obtient la formule au rang $n$.
+</div>
+
+<div class="theorem">
+    <strong>Inégalité de Taylor-Lagrange :</strong> Soit $f: I \to \mathbb{K}$ une fonction de classe $\mathcal{C}^{n+1}$ sur un intervalle $I$. S'il existe $M \ge 0$ tel que $|f^{(n+1)}(t)| \le M$ pour tout $t$ compris entre $a$ et $x$, alors :
+    $$ \left| f(x) - \sum_{k=0}^n \frac{f^{(k)}(a)}{k!} (x-a)^k \right| = |R_n(x)| \le M \frac{|x-a|^{n+1}}{(n+1)!} $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> On majore le reste intégral. Supposons $a \le x$.
+    $|R_n(x)| = |\int_a^x \frac{(x-t)^n}{n!} f^{(n+1)}(t) dt|$
+    $\le \int_a^x |\frac{(x-t)^n}{n!} f^{(n+1)}(t)| dt$
+    $\le \int_a^x \frac{(x-t)^n}{n!} M dt$ (car $x-t \ge 0$)
+    $= \frac{M}{n!} \left[ -\frac{(x-t)^{n+1}}{n+1} \right]_a^x$
+    $= \frac{M}{n!} \left( 0 - (-\frac{(x-a)^{n+1}}{n+1}) \right) = M \frac{(x-a)^{n+1}}{(n+1)!}$.
+    Le cas $x \le a$ donne le même résultat avec $|x-a|^{n+1}$.
+</div>
+
+<div class="comment">
+    L'inégalité de Taylor-Lagrange est très utile pour majorer l'erreur commise lorsqu'on approxime une fonction par son polynôme de Taylor. Elle permet de prouver la convergence de séries de Taylor (comme pour $e^x, \cos x, \sin x$).
+</div>
+
+<div class="exercise">
+    <strong>Exercice F.1 :</strong>
+    <ol>
+        <li>Appliquer la formule de Taylor avec reste intégral à l'ordre 2 pour $f(x)=e^x$ entre $a=0$ et $x$.</li>
+        <li>Utiliser l'inégalité de Taylor-Lagrange pour montrer que $|\sin(x) - (x - x^3/6)| \le |x|^5/120$ pour tout $x \in \mathbb{R}$.</li>
+        <li>Montrer que pour tout $x \in [0, 1]$, $e^x = \lim_{n\to\infty} \sum_{k=0}^n \frac{x^k}{k!}$.</li>
+    </ol>
+</div>
+
+</body>
+</html>
