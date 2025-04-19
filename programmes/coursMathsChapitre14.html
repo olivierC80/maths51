@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Groupe Symétrique et Déterminants</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Groupe Symétrique et Déterminants</h1>
+
+<h3 id="groupe-symetrique-determinants">Groupe symétrique et déterminants</h3>
+
+<h4>A - Groupe symétrique</h4>
+<p class="intro-text">
+    Le groupe symétrique est introduit en vue de l'étude des déterminants, mais aussi pour son intérêt propre et ses interventions possibles dans diverses questions d'algèbre et de probabilités.
+    <br>On fixe $n \in \mathbb{N}^*$ et on note $I_n = \{1, 2, \dots, n\}$.
+</p>
+
+<h5 id="groupe-symetrique-generalites">a) Généralités</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Groupe des permutations de l'ensemble $\{1, \dots, n\}$.</td>
+            <td>Notation $S_n$. C'est l'ensemble des bijections de $I_n$ dans $I_n$, muni de la composition $\circ$. C'est un groupe fini de cardinal (ordre) $n!$. Non abélien si $n \ge 3$.</td>
+        </tr>
+        <tr>
+            <td>Cycle, transposition.</td>
+            <td>Notation $(a_1 \ a_2 \ \dots \ a_p)$ pour un cycle. Une transposition est un cycle de longueur 2, $(a \ b)$.</td>
+        </tr>
+        <tr>
+            <td>Décomposition d'une permutation en produit de cycles à supports disjoints : existence, unicité, commutativité.</td>
+            <td>La démonstration n'est pas exigible, mais les étudiants doivent savoir décomposer une permutation. Le support d'un cycle $(a_1 \dots a_p)$ est $\{a_1, \dots, a_p\}$. Deux cycles sont à supports disjoints si leurs supports sont disjoints. De tels cycles commutent.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Permutation de $I_n$ :</strong> Une <strong>permutation</strong> de $I_n = \{1, 2, \dots, n\}$ est une bijection $\sigma: I_n \to I_n$.
+    L'ensemble des permutations de $I_n$, muni de la loi de composition $\circ$, forme un groupe appelé <strong>groupe symétrique d'ordre $n$</strong>, noté $(S_n, \circ)$. Son cardinal est $|S_n| = n!$.
+</div>
+
+<div class="definition">
+    <strong>Cycle :</strong> Soient $a_1, \dots, a_p$ des éléments distincts de $I_n$ ($p \ge 2$). Le <strong>cycle</strong> de longueur $p$ (ou $p$-cycle) noté $c = (a_1 \ a_2 \ \dots \ a_p)$ est la permutation $\sigma \in S_n$ définie par :
+    <ul>
+        <li>$\sigma(a_i) = a_{i+1}$ pour $1 \le i < p$.</li>
+        <li>$\sigma(a_p) = a_1$.</li>
+        <li>$\sigma(x) = x$ pour tout $x \notin \{a_1, \dots, a_p\}$.</li>
+    </ul>
+    L'ensemble $\{a_1, \dots, a_p\}$ est appelé le <strong>support</strong> du cycle.
+    <br>Une <strong>transposition</strong> est un cycle de longueur 2, noté $(a \ b)$. Elle échange $a$ et $b$ et laisse les autres éléments invariants.
+</div>
+
+<div class="theorem">
+    <strong>Décomposition en cycles à supports disjoints :</strong> Toute permutation $\sigma \in S_n$ (différente de l'identité) se décompose de manière unique (à l'ordre près des facteurs) en un produit de cycles à supports disjoints.
+    $$ \sigma = c_1 \circ c_2 \circ \dots \circ c_k $$
+    De plus, des cycles à supports disjoints commutent : $c_i \circ c_j = c_j \circ c_i$.
+</div>
+
+<div class="comment">
+    La démonstration de l'existence et de l'unicité n'est pas exigible.
+    <br><strong>Méthode pratique de décomposition :</strong>
+    1. Choisir un élément $a_1 \in I_n$ qui n'est pas un point fixe ($\sigma(a_1) \ne a_1$).
+    2. Calculer ses images successives : $a_2 = \sigma(a_1), a_3 = \sigma(a_2), \dots$. On finit par retomber sur $a_1$ (car $I_n$ est fini), ce qui forme un premier cycle $c_1 = (a_1 \ a_2 \ \dots \ a_p)$.
+    3. Choisir un élément $b_1$ dans $I_n$ qui n'appartient pas au support de $c_1$ et qui n'est pas un point fixe.
+    4. Construire le cycle $c_2 = (b_1 \ \sigma(b_1) \ \dots)$ comme précédemment.
+    5. Continuer jusqu'à ce que tous les éléments non fixes aient été placés dans un cycle.
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> $n=8$. $\sigma = \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ 3 & 5 & 1 & 8 & 2 & 6 & 4 & 7 \end{pmatrix}$.
+    <ul>
+        <li>$1 \mapsto 3 \mapsto 1$. Cycle $c_1=(1 \ 3)$.</li>
+        <li>$2 \mapsto 5 \mapsto 2$. Cycle $c_2=(2 \ 5)$.</li>
+        <li>$4 \mapsto 8 \mapsto 7 \mapsto 4$. Cycle $c_3=(4 \ 8 \ 7)$.</li>
+        <li>6 est un point fixe ($\sigma(6)=6$).</li>
+    </ul>
+    Décomposition : $\sigma = (1 \ 3) \circ (2 \ 5) \circ (4 \ 8 \ 7)$. On peut écrire les facteurs dans n'importe quel ordre : $\sigma = (4 \ 8 \ 7) \circ (1 \ 3) \circ (2 \ 5)$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong>
+    <ol>
+        <li>Écrire la décomposition en produit de cycles à supports disjoints des permutations de $S_5$ :
+            a) $\sigma = \begin{pmatrix} 1 & 2 & 3 & 4 & 5 \\ 4 & 5 & 1 & 3 & 2 \end{pmatrix}$
+            b) $\tau = (1 \ 2 \ 3) \circ (3 \ 4 \ 5)$</li>
+        <li>Calculer l'inverse de $\sigma = (1 \ 3 \ 5 \ 2) \in S_6$.</li>
+        <li>Quel est l'ordre (au sens de la théorie des groupes) du cycle $(1 \ 2 \dots \ p)$ ? Quel est l'ordre d'une permutation décomposée en cycles $c_1 \dots c_k$ de longueurs $l_1 \dots l_k$ ? (L'ordre est le PPCM des longueurs).</li>
+    </ol>
+</div>
+
+
+<h5 id="signature-permutation">b) Signature d'une permutation</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Décomposition d'une permutation en produit de transpositions.</td>
+            <td>Cette décomposition n'est pas unique, ni en nombre ni en facteurs. Tout cycle $(a_1 \ \dots \ a_p)$ peut s'écrire $(a_1 \ a_p) \circ \dots \circ (a_1 \ a_3) \circ (a_1 \ a_2)$.</td>
+        </tr>
+        <tr>
+            <td>Signature : il existe un unique morphisme de groupes $\varepsilon: (S_n, \circ) \to (\{-1, 1\}, \times)$ tel que $\varepsilon(\tau) = -1$ pour toute transposition $\tau$.</td>
+            <td>La démonstration n'est pas exigible. $\varepsilon(\sigma)$ est la signature de $\sigma$. Si $\varepsilon(\sigma)=1$, $\sigma$ est paire. Si $\varepsilon(\sigma)=-1$, $\sigma$ est impaire. $\varepsilon(\sigma \circ \tau) = \varepsilon(\sigma)\varepsilon(\tau)$. $\varepsilon(\sigma^{-1}) = \varepsilon(\sigma)$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="theorem">
+    <strong>Décomposition en transpositions :</strong> Toute permutation $\sigma \in S_n$ ($n \ge 2$) peut s'écrire comme un produit (une composée) de transpositions.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Il suffit de savoir décomposer un cycle en produit de transpositions. Une décomposition possible (parmi d'autres) pour un $p$-cycle est :
+    $$ (a_1 \ a_2 \ \dots \ a_p) = (a_1 \ a_p) \circ (a_1 \ a_{p-1}) \circ \dots \circ (a_1 \ a_2) $$
+    (Composée de $p-1$ transpositions). Comme toute permutation est produit de cycles disjoints, elle est produit de transpositions.
+</div>
+
+<div class="comment">
+    Cette décomposition n'est pas unique. Par exemple, $(1 \ 2 \ 3) = (1 \ 3) \circ (1 \ 2) = (1 \ 2) \circ (2 \ 3)$. Mais on peut montrer que la <strong>parité</strong> du nombre de transpositions dans n'importe quelle décomposition d'une permutation donnée $\sigma$ est toujours la même.
+</div>
+
+<div class="theorem">
+    <strong>Signature d'une permutation :</strong> Il existe une unique application $\varepsilon: S_n \to \{-1, 1\}$, appelée <strong>signature</strong>, telle que :
+    <ol>
+        <li>$\varepsilon$ est un morphisme de groupes : $\forall \sigma, \tau \in S_n, \varepsilon(\sigma \circ \tau) = \varepsilon(\sigma) \varepsilon(\tau)$.</li>
+        <li>Pour toute transposition $\tau$, $\varepsilon(\tau) = -1$.</li>
+    </ol>
+    On note $\varepsilon(\sigma)$ ou $\operatorname{sgn}(\sigma)$. Une permutation $\sigma$ est dite <strong>paire</strong> si $\varepsilon(\sigma) = 1$ et <strong>impaire</strong> si $\varepsilon(\sigma) = -1$.
+</div>
+
+<div class="comment">
+    La démonstration de l'existence et de l'unicité est admise.
+    <br><strong>Calcul pratique de la signature :</strong>
+    <ul>
+        <li>Si $\sigma = \tau_1 \circ \dots \circ \tau_k$ est une décomposition en $k$ transpositions, alors $\varepsilon(\sigma) = (-1)^k$.</li>
+        <li>Signature d'un cycle : Un cycle de longueur $p$ se décompose en $p-1$ transpositions, donc sa signature est $(-1)^{p-1}$.</li>
+        <li>Si $\sigma = c_1 \circ \dots \circ c_m$ est la décomposition en cycles disjoints de longueurs $l_1, \dots, l_m$, alors $\varepsilon(\sigma) = \varepsilon(c_1) \dots \varepsilon(c_m) = (-1)^{l_1-1} \dots (-1)^{l_m-1} = (-1)^{\sum (l_i-1)} = (-1)^{n - m}$ où $n$ est la somme des longueurs des cycles et $m$ est le nombre de cycles (en incluant les points fixes comme cycles de longueur 1 si besoin). Plus simplement : $\varepsilon(\sigma) = (-1)^{n - \text{nombre d'orbites}}$.</li>
+        <li>Nombre d'inversions : $\varepsilon(\sigma) = (-1)^{I(\sigma)}$ où $I(\sigma)$ est le nombre de paires $(i, j)$ telles que $1 \le i < j \le n$ et $\sigma(i) > \sigma(j)$. (Définition alternative parfois utilisée).</li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> $\sigma = (1 \ 3) \circ (2 \ 5) \circ (4 \ 8 \ 7) \in S_8$.
+    $c_1 = (1 \ 3)$ est de longueur 2, signature $(-1)^{2-1}=-1$.
+    $c_2 = (2 \ 5)$ est de longueur 2, signature $(-1)^{2-1}=-1$.
+    $c_3 = (4 \ 8 \ 7)$ est de longueur 3, signature $(-1)^{3-1}=1$.
+    $\varepsilon(\sigma) = \varepsilon(c_1) \varepsilon(c_2) \varepsilon(c_3) = (-1) \times (-1) \times 1 = 1$. $\sigma$ est paire.
+    Autre méthode : $n=8$. Nombre de cycles (en incluant le point fixe (6)) est $m=4$. $\varepsilon(\sigma)=(-1)^{8-4}=(-1)^4=1$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.2 :</strong>
+    <ol>
+        <li>Calculer la signature des permutations de l'exercice A.1.</li>
+        <li>Montrer que l'ensemble $\mathcal{A}_n = \{ \sigma \in S_n \mid \varepsilon(\sigma)=1 \}$ (permutations paires) est un sous-groupe de $S_n$, appelé groupe alterné. Quel est son cardinal ?</li>
+    </ol>
+</div>
+
+
+<h4>B - Déterminants</h4>
+<p class="intro-text">
+    Les objectifs de cette partie sont les suivants :
+    <ul>
+        <li>introduire la notion de déterminant d'une famille de vecteurs, en motivant sa construction par la géométrie;</li>
+        <li>établir les principales propriétés des déterminants des matrices carrées et des endomorphismes;</li>
+        <li>indiquer quelques méthodes simples de calcul de déterminants.</li>
+    </ul>
+    On se place dans un $\mathbb{K}$-espace vectoriel $E$ de dimension finie $n$.
+</p>
+
+<h5 id="formes-n-lineaires-alternees">a) Formes n-linéaires alternées</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Forme $n$-linéaire alternée sur un $\mathbb{K}$-espace vectoriel de dimension $n$.</td>
+            <td>La définition est motivée par les notions intuitives d'aire et de volume algébriques, en s'appuyant sur des figures. Une forme $f: E^n \to \mathbb{K}$ est $n$-linéaire si elle est linéaire par rapport à chaque variable (les autres étant fixées). Elle est alternée si $f(x_1, \dots, x_n) = 0$ dès que deux vecteurs sont égaux ($x_i = x_j$ pour $i \ne j$).</td>
+        </tr>
+        <tr>
+            <td>Antisymétrie, effet d'une permutation.</td>
+             <td>Alternée $\implies$ Antisymétrique : $f(\dots, x_i, \dots, x_j, \dots) = - f(\dots, x_j, \dots, x_i, \dots)$. Effet d'une permutation $\sigma$: $f(x_{\sigma(1)}, \dots, x_{\sigma(n)}) = \varepsilon(\sigma) f(x_1, \dots, x_n)$. Si $f$ est une forme $n$-linéaire alternée et si $(x_1, \dots, x_n)$ est une famille liée, alors $f(x_1, \dots, x_n) = 0$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Forme $n$-linéaire :</strong> Une application $f: E^n \to \mathbb{K}$ est $n$-linéaire si elle est linéaire par rapport à chacune de ses $n$ variables, i.e., pour tout $j \in \{1, \dots, n\}$, pour tous $x_1, \dots, x_n \in E$, l'application partielle
+    $x \mapsto f(x_1, \dots, x_{j-1}, x, x_{j+1}, \dots, x_n)$ est linéaire de $E$ dans $\mathbb{K}$.
+</div>
+
+<div class="definition">
+    <strong>Forme alternée :</strong> Une forme $n$-linéaire $f: E^n \to \mathbb{K}$ est <strong>alternée</strong> si elle s'annule dès que deux de ses arguments sont égaux :
+    $$ \forall i \neq j, \forall x_1, \dots, x_n \in E, \quad (x_i = x_j \implies f(x_1, \dots, x_n) = 0) $$
+</div>
+
+<div class="comment">
+    <strong>Motivation géométrique :</strong> En dimension 2, l'aire (signée) du parallélogramme formé par $\vec{u}=(u_1, u_2)$ et $\vec{v}=(v_1, v_2)$ est $u_1v_2 - u_2v_1$. Cette application $f(\vec{u}, \vec{v}) = u_1v_2 - u_2v_1$ est bilinéaire et alternée (si $\vec{u}=\vec{v}$, l'aire est nulle). En dimension 3, le volume (signé) du parallélépipède formé par $\vec{u}, \vec{v}, \vec{w}$ est une forme trilinéaire alternée.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés des formes alternées :</strong> Soit $f$ une forme $n$-linéaire alternée sur $E$.
+    <ul>
+        <li><strong>Antisymétrie :</strong> Échanger deux vecteurs change le signe :
+            $$ f(x_1, \dots, x_i, \dots, x_j, \dots, x_n) = - f(x_1, \dots, x_j, \dots, x_i, \dots, x_n) $$</li>
+        <li><strong>Effet d'une permutation :</strong> Pour toute permutation $\sigma \in S_n$,
+            $$ f(x_{\sigma(1)}, \dots, x_{\sigma(n)}) = \varepsilon(\sigma) f(x_1, \dots, x_n) $$</li>
+        <li><strong>Annulation si liée :</strong> Si la famille $(x_1, \dots, x_n)$ est liée, alors $f(x_1, \dots, x_n) = 0$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (Alternée $\implies$ Antisymétrique) :</strong>
+    $0 = f(\dots, x_i+x_j, \dots, x_i+x_j, \dots)$
+    $= f(\dots, x_i, \dots, x_i, \dots) + f(\dots, x_i, \dots, x_j, \dots) + f(\dots, x_j, \dots, x_i, \dots) + f(\dots, x_j, \dots, x_j, \dots)$ (par bilinéarité partielle)
+    $= 0 + f(\dots, x_i, \dots, x_j, \dots) + f(\dots, x_j, \dots, x_i, \dots) + 0$.
+    Donc $f(\dots, x_j, \dots, x_i, \dots) = - f(\dots, x_i, \dots, x_j, \dots)$.
+    <strong>Idée de preuve (Annulation si liée) :</strong> Si $(x_1, \dots, x_n)$ est liée, un vecteur $x_k$ est combinaison linéaire des autres: $x_k = \sum_{j \ne k} \lambda_j x_j$. Par $n$-linéarité, $f(x_1, \dots, x_n) = \sum_{j \ne k} \lambda_j f(x_1, \dots, x_{k-1}, x_j, x_{k+1}, \dots, x_n)$. Chacun de ces termes a deux vecteurs égaux ($x_j$ en position $k$ et en position $j$), donc est nul car $f$ est alternée.
+</div>
+
+
+<h5 id="determinant-famille-vecteurs-base">b) Déterminant d'une famille de vecteurs dans une base</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Si $e = (e_1, \dots, e_n)$ est une base de $E$, il existe une unique forme $n$-linéaire alternée $f$ sur $E$ telle que $f(e_1, \dots, e_n) = 1$. Cette forme est appelée <strong>déterminant dans la base $e$</strong>.</td>
+            <td>Notation $\det_e$. La démonstration de l'existence (souvent via une formule explicite ou par récurrence) n'est pas exigible. L'ensemble des formes $n$-linéaires alternées sur $E$ est un $\mathbb{K}$-espace vectoriel de dimension 1, dont $\det_e$ forme une base. Toute forme $n$-linéaire alternée $g$ est proportionnelle à $\det_e$ : $g = g(e) \det_e$.</td>
+        </tr>
+        <tr>
+            <td>Expression du déterminant dans une base en fonction des coordonnées.</td>
+            <td>Si $x_j = \sum_{i=1}^n X_{i,j} e_i$, alors $\det_e(x_1, \dots, x_n) = \sum_{\sigma \in S_n} \varepsilon(\sigma) X_{\sigma(1), 1} X_{\sigma(2), 2} \dots X_{\sigma(n), n}$. (Cette formule est surtout théorique).</td>
+        </tr>
+        <tr>
+            <td>Comparaison, si $e$ et $e'$ sont deux bases, de $\det_e$ et $\det_{e'}$.</td>
+            <td>$\det_{e'} = \det_{e'}(e) \det_e$. Le scalaire $\det_{e'}(e)$ est aussi $\det_e(e')$.</td>
+        </tr>
+        <tr>
+            <td>La famille $(x_1, \dots, x_n)$ est une base si et seulement si $\det_e(x_1, \dots, x_n) \neq 0$.</td>
+            <td>Dans $\mathbb{R}^2$ (resp. $\mathbb{R}^3$), interprétation du déterminant dans la base canonique comme aire orientée (resp. volume orienté) d'un parallélogramme (resp. parallélépipède). La condition $\det \ne 0$ signifie que la figure n'est pas "aplatie".</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="theorem">
+    <strong>Espace des formes $n$-linéaires alternées :</strong> L'ensemble $\mathcal{A}_n(E)$ des formes $n$-linéaires alternées sur un $\mathbb{K}$-ev $E$ de dimension $n$ est un $\mathbb{K}$-espace vectoriel de dimension 1.
+    <br>Si $\mathcal{B}=(e_1, \dots, e_n)$ est une base de $E$, il existe une unique forme $n$-linéaire alternée, notée $\det_{\mathcal{B}}$, telle que $\det_{\mathcal{B}}(e_1, \dots, e_n) = 1$. Toute forme $f \in \mathcal{A}_n(E)$ est de la forme $f = \lambda \det_{\mathcal{B}}$ avec $\lambda = f(e_1, \dots, e_n) \in \mathbb{K}$.
+</div>
+
+<div class="definition">
+    <strong>Déterminant d'une famille de vecteurs :</strong> Soit $\mathcal{B}$ une base de $E$. Le <strong>déterminant</strong> de la famille de vecteurs $(x_1, \dots, x_n)$ dans la base $\mathcal{B}$ est le scalaire $\det_{\mathcal{B}}(x_1, \dots, x_n)$.
+</div>
+
+<div class="theorem">
+    <strong>Expression en coordonnées :</strong> Soit $\mathcal{B}=(e_1, \dots, e_n)$ une base de $E$. Soit $(x_1, \dots, x_n)$ une famille de vecteurs, avec $x_j = \sum_{i=1}^n X_{i,j} e_i$. Alors :
+    $$ \det_{\mathcal{B}}(x_1, \dots, x_n) = \sum_{\sigma \in S_n} \varepsilon(\sigma) X_{\sigma(1), 1} X_{\sigma(2), 2} \dots X_{\sigma(n), n} $$
+</div>
+
+<div class="theorem">
+    <strong>Changement de base pour le déterminant :</strong> Soient $\mathcal{B}$ et $\mathcal{B}'$ deux bases de $E$. Alors pour toute famille $(x_1, \dots, x_n)$, on a :
+    $$ \det_{\mathcal{B}'}(x_1, \dots, x_n) = \det_{\mathcal{B}'}(\mathcal{B}) \times \det_{\mathcal{B}}(x_1, \dots, x_n) $$
+    où $\det_{\mathcal{B}'}(\mathcal{B}) = \det_{\mathcal{B}'}(e_1, \dots, e_n)$ est le déterminant de l'ancienne base dans la nouvelle base.
+    On a aussi $\det_{\mathcal{B}'}(\mathcal{B}) \times \det_{\mathcal{B}}(\mathcal{B}') = 1$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation des bases :</strong> Une famille $(x_1, \dots, x_n)$ de $n$ vecteurs dans un espace $E$ de dimension $n$ est une base si et seulement si son déterminant dans une base quelconque $\mathcal{B}$ est non nul : $\det_{\mathcal{B}}(x_1, \dots, x_n) \neq 0$.
+</div>
+
+
+<h5 id="determinant-endomorphisme">c) Déterminant d'un endomorphisme</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Déterminant d'un endomorphisme.</td>
+            <td>Soit $u \in \mathcal{L}(E)$ et $\mathcal{B}$ une base de $E$. $\det(u) = \det_{\mathcal{B}}(u(e_1), \dots, u(e_n))$. Cette valeur est indépendante du choix de la base $\mathcal{B}$.</td>
+        </tr>
+        <tr>
+            <td>Caractérisation des automorphismes.</td>
+            <td>$u \in GL(E) \iff \det(u) \neq 0$.</td>
+        </tr>
+        <tr>
+            <td>Déterminant d'une composée.</td>
+            <td>$\det(v \circ u) = \det(v) \det(u)$. Si $u$ est inversible, $\det(u^{-1}) = 1 / \det(u)$. $\det(\lambda u) = \lambda^n \det(u)$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Déterminant d'un endomorphisme :</strong> Soit $E$ un $\mathbb{K}$-ev de dimension $n$, $u \in \mathcal{L}(E)$ un endomorphisme, et $\mathcal{B}=(e_1, \dots, e_n)$ une base de $E$.
+    Le <strong>déterminant</strong> de $u$, noté $\det(u)$, est le déterminant de la famille image de la base $\mathcal{B}$ par $u$, calculé dans cette même base $\mathcal{B}$ :
+    $$ \det(u) = \det_{\mathcal{B}}(u(e_1), \dots, u(e_n)) $$
+    Ce scalaire est indépendant du choix de la base $\mathcal{B}$.
+</div>
+
+<div class="proof">
+    <strong>Indépendance du choix de la base :</strong> Soit $\mathcal{B}'$ une autre base.
+    $\det_{\mathcal{B}'}(u(e'_1), \dots, u(e'_n)) = \det_{\mathcal{B}'}(\mathcal{B}) \det_{\mathcal{B}}(u(e'_1), \dots, u(e'_n))$.
+    Or, l'application $f(x_1, \dots, x_n) = \det_{\mathcal{B}}(u(x_1), \dots, u(x_n))$ est $n$-linéaire alternée. Donc $f = f(\mathcal{B}) \det_{\mathcal{B}} = \det_{\mathcal{B}}(u(e_1), \dots, u(e_n)) \det_{\mathcal{B}}$.
+    Ainsi $\det_{\mathcal{B}}(u(e'_1), \dots, u(e'_n)) = \det_{\mathcal{B}}(u(\mathcal{B})) \det_{\mathcal{B}}(e'_1, \dots, e'_n) = \det(u) \det_{\mathcal{B}}(\mathcal{B}')$.
+    Donc $\det_{\mathcal{B}'}(u(\mathcal{B}')) = \det_{\mathcal{B}'}(\mathcal{B}) \det(u) \det_{\mathcal{B}}(\mathcal{B}')$.
+    Comme $\det_{\mathcal{B}'}(\mathcal{B}) \det_{\mathcal{B}}(\mathcal{B}') = 1$, on obtient $\det_{\mathcal{B}'}(u(\mathcal{B}')) = \det(u)$.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés du déterminant d'un endomorphisme :</strong> Soient $u, v \in \mathcal{L}(E)$.
+    <ul>
+        <li>$u$ est un automorphisme ($u \in GL(E)$) $\iff \det(u) \neq 0$.</li>
+        <li>$\det(v \circ u) = \det(v) \det(u)$.</li>
+        <li>$\det(\operatorname{id}_E) = 1$.</li>
+        <li>Si $u \in GL(E)$, $\det(u^{-1}) = (\det(u))^{-1}$.</li>
+        <li>$\det(\lambda u) = \lambda^n \det(u)$ (où $n=\dim E$).</li>
+    </ul>
+</div>
+
+
+<h5 id="determinant-matrice-carree">d) Déterminant d'une matrice carrée</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Déterminant d'une matrice carrée.</td>
+            <td>$\det(A) = \det_{\mathcal{B}_c}(C_1, \dots, C_n)$, où $\mathcal{B}_c$ est la base canonique de $\mathbb{K}^n$ et $C_j$ sont les colonnes de $A$. $\det(A) = \det(u_A)$ où $u_A$ est l'endomorphisme canoniquement associé. $\det(A) = \det(\operatorname{Mat}_{\mathcal{B}}(u))$ pour tout endomorphisme $u$ et toute base $\mathcal{B}$.</td>
+        </tr>
+        <tr>
+            <td>Caractère $n$-linéaire alterné du déterminant par rapport aux colonnes.</td>
+            <td>Le déterminant est nul si deux colonnes sont égales, ou si une colonne est combinaison linéaire des autres (colonnes liées).</td>
+        </tr>
+        <tr>
+            <td>Déterminant d'un produit.</td>
+            <td>$\det(AB) = \det(A) \det(B)$.</td>
+        </tr>
+        <tr>
+            <td>Relation $\det(\lambda A) = \lambda^n \det(A)$.</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Caractérisation des matrices inversibles.</td>
+            <td>$A \in GL_n(\mathbb{K}) \iff \det(A) \neq 0$.</td>
+        </tr>
+        <tr>
+            <td>L'application $\det$ induit un morphisme de groupes de $(GL_n(\mathbb{K}), \times)$ sur $(\mathbb{K}^*, \times)$.</td>
+             <td>Le noyau est $SL_n(\mathbb{K}) = \{ A \in GL_n(\mathbb{K}) \mid \det(A)=1 \}$, le groupe spécial linéaire.</td>
+        </tr>
+         <tr>
+            <td>Déterminant d'une transposée.</td>
+            <td>$\det(A^T) = \det(A)$.</td>
+        </tr>
+        <tr>
+            <td>Caractère $n$-linéaire alterné du déterminant par rapport aux lignes.</td>
+            <td>Conséquence de $\det(A^T) = \det(A)$ et de la propriété sur les colonnes.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Déterminant d'une matrice carrée :</strong> Soit $A \in \mathcal{M}_n(\mathbb{K})$. Le <strong>déterminant</strong> de $A$, noté $\det(A)$ ou $|A|$, est défini comme le déterminant de la famille de ses vecteurs colonnes $(C_1, \dots, C_n)$ dans la base canonique $\mathcal{B}_c$ de $\mathbb{K}^n$.
+    $$ \det(A) = \det_{\mathcal{B}_c}(C_1, \dots, C_n) $$
+    C'est aussi le déterminant de l'endomorphisme $u_A$ canoniquement associé.
+    La formule explicite est :
+    $$ \det(A) = \sum_{\sigma \in S_n} \varepsilon(\sigma) a_{\sigma(1), 1} a_{\sigma(2), 2} \dots a_{\sigma(n), n} $$
+</div>
+
+<div class="theorem">
+    <strong>Propriétés fondamentales du déterminant matriciel :</strong> Soient $A, B \in \mathcal{M}_n(\mathbb{K})$.
+    <ul>
+        <li>$\det$ est une forme $n$-linéaire alternée par rapport aux colonnes de la matrice.</li>
+        <li>$\det(AB) = \det(A) \det(B)$.</li>
+        <li>$\det(I_n) = 1$.</li>
+        <li>$A$ est inversible $\iff \det(A) \neq 0$. Dans ce cas, $\det(A^{-1}) = 1 / \det(A)$.</li>
+        <li>$\det(A^T) = \det(A)$.</li>
+        <li>$\det$ est une forme $n$-linéaire alternée par rapport aux lignes de la matrice.</li>
+        <li>$\det(\lambda A) = \lambda^n \det(A)$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Calculer le déterminant de $A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$ et $B = \begin{pmatrix} 0 & -1 \\ 1 & 1 \end{pmatrix}$. Vérifier $\det(AB)=\det(A)\det(B)$.</li>
+        <li>Soit $A \in \mathcal{M}_n(\mathbb{K})$ antisymétrique ($A^T=-A$). Montrer que si $n$ est impair, alors $\det(A)=0$.</li>
+        <li>Si $A, B$ sont semblables, ont-elles le même déterminant ?</li>
+    </ol>
+</div>
+
+
+<h5 id="calcul-determinants">e) Calcul des déterminants</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Effet des opérations élémentaires sur les lignes et les colonnes.</td>
+            <td>$L_i \leftrightarrow L_j$ ou $C_i \leftrightarrow C_j$ multiplie $\det$ par $-1$. $L_i \leftarrow \lambda L_i$ ou $C_i \leftarrow \lambda C_i$ multiplie $\det$ par $\lambda$. $L_i \leftarrow L_i + \lambda L_j$ ou $C_i \leftarrow C_i + \lambda C_j$ (avec $i \ne j$) ne change pas $\det$.</td>
+        </tr>
+        <tr>
+            <td>Cofacteur. Développement par rapport à une ligne ou une colonne.</td>
+            <td>Le cofacteur $(i,j)$ est $C_{i,j} = (-1)^{i+j} \det(A_{i,j})$ où $A_{i,j}$ est la matrice obtenue en supprimant la ligne $i$ et la colonne $j$. Développement selon ligne $i$: $\det(A) = \sum_{j=1}^n a_{i,j} C_{i,j}$. Développement selon colonne $j$: $\det(A) = \sum_{i=1}^n a_{i,j} C_{i,j}$.</td>
+        </tr>
+        <tr>
+            <td>Déterminant d'une matrice triangulaire.</td>
+            <td>Le déterminant d'une matrice triangulaire est le produit de ses éléments diagonaux.</td>
+        </tr>
+        <tr>
+            <td>Déterminant de Vandermonde.</td>
+            <td>$V(x_1, \dots, x_n) = \det \begin{pmatrix} 1 & 1 & \dots & 1 \\ x_1 & x_2 & \dots & x_n \\ \vdots & \vdots & \ddots & \vdots \\ x_1^{n-1} & x_2^{n-1} & \dots & x_n^{n-1} \end{pmatrix} = \prod_{1 \le i < j \le n} (x_j - x_i)$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="method">
+    <strong>Méthodes de calcul de déterminants :</strong>
+    <ol>
+        <li><strong>Cas $n=2, n=3$ :</strong>
+            $\begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad-bc$.
+            Règle de Sarrus pour $n=3$.</li>
+        <li><strong>Opérations élémentaires (Pivot de Gauss) :</strong> Utiliser les OEL et/ou OEC pour transformer la matrice en une matrice triangulaire (plus simple). Noter comment chaque opération modifie le déterminant. Le déterminant final est le produit des éléments diagonaux de la matrice triangulaire, ajusté par les facteurs multiplicatifs des opérations.</li>
+        <li><strong>Développement par cofacteurs :</strong> Choisir une ligne ou une colonne contenant beaucoup de zéros. $\det(A) = \sum_{j} a_{i,j} (-1)^{i+j} \det(A_{i,j})$ (développement ligne $i$). Très coûteux si pas de zéros.</li>
+        <li><strong>Propriétés :</strong> Linéarité par rapport à une ligne/colonne, nullité si lignes/colonnes liées, etc.</li>
+    </ol>
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.2 :</strong>
+    <ol>
+        <li>Calculer $\begin{vmatrix} 1 & 2 & 3 \\ 0 & 4 & 5 \\ 1 & 0 & 6 \end{vmatrix}$ par Sarrus et par développement selon la 2ème ligne.</li>
+        <li>Calculer $\begin{vmatrix} 1 & 1 & 1 \\ a & b & c \\ a^2 & b^2 & c^2 \end{vmatrix}$ (Vandermonde $n=3$).</li>
+        <li>Calculer $\det(A)$ où $A = \begin{pmatrix} 1 & n & \dots & n \\ n & 2 & \dots & n \\ \vdots & \vdots & \ddots & \vdots \\ n & n & \dots & n \end{pmatrix}$ (1 sur la diagonale, $n$ ailleurs). (Utiliser $L_i \leftarrow L_i - L_1$).</li>
+    </ol>
+</div>
+
+
+<h5 id="comatrice">f) Comatrice</h5>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Comatrice.</td>
+            <td>Notation $\operatorname{Com}(A)$. C'est la matrice des cofacteurs : $(\operatorname{Com}(A))_{i,j} = C_{i,j} = (-1)^{i+j} \det(A_{i,j})$.</td>
+        </tr>
+        <tr>
+            <td>Relation $A \operatorname{Com}(A)^T = \operatorname{Com}(A)^T A = \det(A) I_n$.</td>
+            <td>$\operatorname{Com}(A)^T$ est parfois appelée matrice adjointe (adjugate matrix). Attention, ne pas confondre avec l'adjointe hermitienne.</td>
+        </tr>
+        <tr>
+            <td>Expression de l'inverse d'une matrice inversible.</td>
+            <td>Si $\det(A) \neq 0$, alors $A^{-1} = \frac{1}{\det(A)} \operatorname{Com}(A)^T$. Utile surtout en théorie ou pour $n=2$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Comatrice :</strong> Soit $A \in \mathcal{M}_n(\mathbb{K})$. La <strong>comatrice</strong> de $A$, notée $\operatorname{Com}(A)$, est la matrice de taille $n \times n$ dont le coefficient $(i, j)$ est le cofacteur $C_{i,j} = (-1)^{i+j} \det(A_{i,j})$.
+</div>
+
+<div class="theorem">
+    <strong>Formule de la comatrice :</strong> Pour toute matrice $A \in \mathcal{M}_n(\mathbb{K})$ :
+    $$ A \times (\operatorname{Com}(A))^T = (\operatorname{Com}(A))^T \times A = \det(A) I_n $$
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Le coefficient $(i, k)$ du produit $A \times (\operatorname{Com}(A))^T$ est $\sum_{j=1}^n a_{i,j} (\operatorname{Com}(A)^T)_{j,k} = \sum_{j=1}^n a_{i,j} (\operatorname{Com}(A))_{k,j} = \sum_{j=1}^n a_{i,j} C_{k,j}$.
+    *   Si $k=i$, $\sum_{j=1}^n a_{i,j} C_{i,j}$ est le développement de $\det(A)$ selon la ligne $i$.
+    *   Si $k \ne i$, $\sum_{j=1}^n a_{i,j} C_{k,j}$ est le développement selon la ligne $k$ du déterminant d'une matrice obtenue en remplaçant la ligne $k$ de $A$ par la ligne $i$. Cette matrice a deux lignes identiques (la ligne $i$), son déterminant est donc nul.
+    Donc le produit $A (\operatorname{Com}(A))^T$ est $\det(A) I_n$. L'autre égalité se montre de même en développant par colonnes.
+</div>
+
+<div class="theorem">
+    <strong>Inverse et comatrice :</strong> Si $A \in GL_n(\mathbb{K})$ (i.e., $\det(A) \neq 0$), alors :
+    $$ A^{-1} = \frac{1}{\det(A)} (\operatorname{Com}(A))^T $$
+</div>
+
+<div class="example">
+    <strong>Cas $n=2$ :</strong> $A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$.
+    $C_{1,1} = d$, $C_{1,2} = -c$, $C_{2,1} = -b$, $C_{2,2} = a$.
+    $\operatorname{Com}(A) = \begin{pmatrix} d & -c \\ -b & a \end{pmatrix}$.
+    $(\operatorname{Com}(A))^T = \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$.
+    $\det(A) = ad-bc$.
+    Si $ad-bc \ne 0$, $A^{-1} = \frac{1}{ad-bc} \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.3 :</strong>
+    <ol>
+        <li>Calculer la comatrice de $A = \begin{pmatrix} 1 & 0 & 1 \\ 2 & 1 & 0 \\ 0 & 1 & 1 \end{pmatrix}$.</li>
+        <li>Calculer $\det(A)$ et en déduire $A^{-1}$ en utilisant la comatrice.</li>
+    </ol>
+</div>
+
+</body>
+</html>
