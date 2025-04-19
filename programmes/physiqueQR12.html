@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Physique - Constitution et transformations de la matière (2)</title>
+    <!-- Vue.js 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --color-facile: #4CAF50; /* Vert */
+            --color-moyen: #FF9800; /* Orange */
+            --color-difficile: #F44336; /* Rouge */
+            --color-pas-compris: #616161; /* Gris sombre */
+            --color-default: #e0e0e0; /* Gris clair */
+            --border-color: #ccc;
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        #app {
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        .qa-item {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden; /* Pour contenir l'indicateur */
+            transition: box-shadow 0.3s ease;
+            background-color: #fff;
+        }
+        .qa-item:hover {
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        .comprehension-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 10px;
+            background-color: var(--color-default);
+            transition: background-color 0.3s ease;
+        }
+        .comprehension-indicator.facile { background-color: var(--color-facile); }
+        .comprehension-indicator.moyen { background-color: var(--color-moyen); }
+        .comprehension-indicator.difficile { background-color: var(--color-difficile); }
+        .comprehension-indicator.pas_compris { background-color: var(--color-pas-compris); }
+
+        .qa-content {
+            margin-left: 20px; /* Espace pour l'indicateur */
+        }
+
+        .section-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .answer {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 3px solid var(--border-color);
+        }
+
+        /* Style KaTeX */
+        .katex { font-size: 1.1em; }
+
+        /* Boutons */
+        button {
+            padding: 8px 12px;
+            margin-right: 5px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-size: 0.9em;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        button:active {
+             transform: scale(0.98);
+        }
+        .btn-toggle-answer {
+            background-color: #007bff;
+            color: white;
+        }
+         .btn-toggle-answer:hover {
+            background-color: #0056b3;
+        }
+
+        .comprehension-buttons {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        .comprehension-buttons button {
+            color: white;
+            min-width: 100px;
+        }
+        .btn-facile { background-color: var(--color-facile); }
+        .btn-moyen { background-color: var(--color-moyen); }
+        .btn-difficile { background-color: var(--color-difficile); }
+        .btn-pas-compris { background-color: var(--color-pas-compris); }
+
+        .comprehension-buttons button.active {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+
+        /* Capacités style from original HTML */
+        .capacite {
+            font-weight: bold;
+            color: #800080; /* Pourpre */
+        }
+        .definition, .resultat, .methode {
+            margin-bottom: 1em;
+            padding: 0.5em;
+            border-left: 3px solid #ddd;
+        }
+         .definition { border-left-color: #4CAF50; }
+         .resultat { border-left-color: #2196F3; }
+         .methode { border-left-color: #FFC107; }
+
+         /* Style for schema placeholders */
+         .schema {
+             font-style: italic;
+             color: #777;
+             border: 1px dashed #ccc;
+             padding: 5px;
+             margin-top: 5px;
+             text-align: center;
+         }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h1>Physique : Constitution et transformations de la matière (2) - (Thème 4 S2) - Q&A</h1>
+        <p>Cliquez sur "Afficher la réponse" pour voir la correction. Indiquez votre niveau de compréhension pour chaque question.</p>
+        <hr>
+
+        <div v-for="item in questions" :key="item.id" class="qa-item">
+            <div class="comprehension-indicator" :class="item.comprehension"></div>
+            <div class="qa-content">
+                <div class="section-title">{{ item.section }}</div>
+                <div class="question" v-html="renderContent(item.question)"></div>
+
+                <button @click="toggleAnswer(item)" class="btn-toggle-answer">
+                    {{ item.showAnswer ? 'Cacher la réponse' : 'Afficher la réponse' }}
+                </button>
+
+                <div v-if="item.showAnswer" class="answer" v-html="renderContent(item.answer)"></div>
+
+                <div class="comprehension-buttons">
+                    <button @click="setComprehension(item, 'facile')" class="btn-facile" :class="{ active: item.comprehension === 'facile' }">Facile</button>
+                    <button @click="setComprehension(item, 'moyen')" class="btn-moyen" :class="{ active: item.comprehension === 'moyen' }">Moyen</button>
+                    <button @click="setComprehension(item, 'difficile')" class="btn-difficile" :class="{ active: item.comprehension === 'difficile' }">Difficile</button>
+                    <button @click="setComprehension(item, 'pas_compris')" class="btn-pas-compris" :class="{ active: item.comprehension === 'pas_compris' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, reactive, onMounted, nextTick } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    questions: [
+                        // === 4.3 Structure et propriétés physiques des solides ===
+                        {
+                            id: 'q4_3_1',
+                            section: '4.3 Structure des solides',
+                            question: 'Distinguer les solides cristallins, amorphes et semi-cristallins. Qu\'est-ce qu\'une variété allotropique ? Comment les conditions de solidification influencent-elles la structure ?',
+                            answer: `<div class="definition"><p><strong>États de la Matière Condensée :</strong>
+                               <ul>
+                                    <li><strong>Solide Cristallin :</strong> Possède un arrangement <strong>ordonné et périodique</strong> des atomes, ions ou molécules à <strong>longue portée</strong>. Forme un réseau tridimensionnel bien défini. Ex: Sel (NaCl), métaux (Cu, Fe), sucre cristallisé, quartz ($SiO_2$).</li>
+                                    <li><strong>Solide Amorphe (ou Vitreux) :</strong> Arrangement <strong>désordonné</strong> des constituants, similaire à un liquide figé. Il n'y a pas de périodicité à longue distance, seulement un <strong>ordre local</strong> à courte portée. C'est un état métastable (hors équilibre thermodynamique). Ex: Verre de silice, plupart des plastiques (PMMA, polystyrène).</li>
+                                    <li><strong>Solide Semi-Cristallin :</strong> Structure hétérogène comportant des <strong>domaines cristallins</strong> (cristallites) dispersés au sein d'une <strong>matrice amorphe</strong>. Ex: Polyéthylène (PE), PET.</li>
+                               </ul></p>
+                               <p><strong>Variétés Allotropiques :</strong> Ce sont différentes formes structurales (cristallines ou moléculaires) que peut prendre un même corps pur élémentaire dans le même état physique. Elles diffèrent par leurs propriétés physiques. Ex: Carbone existe sous forme Diamant (très dur, isolant) et Graphite (tendre, conducteur); Soufre existe en variétés $\alpha$ (rhombique) et $\beta$ (monoclinique).</p>
+                               <p><strong>Influence des Conditions :</strong> La structure obtenue lors de la solidification d'un liquide dépend fortement des conditions opératoires, notamment de la <strong>vitesse de refroidissement</strong> :
+                                   <ul><li>Un <strong>refroidissement lent</strong> laisse le temps aux atomes/molécules de s'organiser et favorise la formation d'un <strong>solide cristallin</strong> (état le plus stable thermodynamiquement).</li>
+                                   <li>Un <strong>refroidissement rapide</strong> (trempe) peut "figer" le désordre du liquide avant que la cristallisation ait pu se produire, menant à un <strong>solide amorphe</strong>.</li></ul>
+                               La pression influence aussi les structures cristallines stables (ex: diagramme P,T du carbone). <strong class="capacite">Illustrer l'influence des conditions.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_3_2',
+                            section: '4.3 Structure des solides',
+                            question: 'Définir la maille élémentaire, le réseau de Bravais et le motif dans le modèle du cristal parfait.',
+                            answer: `<div class="definition"><p><strong>Modèle du Cristal Parfait :</strong> Idéalisation d'un solide cristallin où l'arrangement atomique est parfaitement périodique et s'étend à l'infini, sans aucun défaut.</p>
+                                <p><strong>Maille Élémentaire :</strong> C'est le plus petit volume (généralement un parallélépipède) qui, par répétition périodique par translations dans les trois directions de l'espace, permet de reconstituer l'ensemble du cristal. Elle est définie par trois vecteurs de base $\\vec{a}, \\vec{b}, \\vec{c}$ non coplanaires et les angles entre eux ($\alpha, \beta, \gamma$). Les longueurs $a, b, c$ et les angles $\alpha, \beta, \gamma$ sont les <strong>paramètres de maille</strong>.</p>
+                                <p><strong>Réseau de Bravais :</strong> C'est un arrangement infini et périodique de points appelés <strong>nœuds</strong>. Chaque nœud est équivalent aux autres par une translation de la forme $\\vec{T} = n_1\\vec{a} + n_2\\vec{b} + n_3\\vec{c}$, où $n_1, n_2, n_3$ sont des entiers relatifs. Le réseau représente la périodicité de la structure mais pas son contenu.</p>
+                                <p><strong>Motif (ou Base) :</strong> C'est l'entité chimique (atome, ion, molécule ou groupe d'atomes/ions/molécules) qui est associée à chaque nœud du réseau de Bravais (ou positionnée de manière spécifique à l'intérieur de la maille élémentaire) pour former la structure cristalline réelle.
+                                <br>Structure Cristalline = Réseau de Bravais + Motif.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_3_3',
+                            section: '4.3 Structure des solides',
+                            question: 'Définir la population (Z), la coordinence, la compacité (C) et la masse volumique ($\rho$) calculées à partir de la maille élémentaire.',
+                            answer: `<div class="definition"><p><strong>Description Quantitative d'une Maille Élémentaire :</strong> <strong class="capacite">Décrire comme un assemblage de mailles.</strong>
+                               <ul>
+                                    <li><strong>Population (Z) ou Multiplicité :</strong> C'est le nombre total d'atomes (ou de motifs) appartenant <strong>en propre</strong> à la maille élémentaire. Pour le calculer, on additionne les contributions de chaque atome/motif présent dans la maille :
+                                        <ul><li>Un motif situé à l'intérieur de la maille compte pour 1.</li>
+                                            <li>Un motif situé sur une face compte pour 1/2 (partagé entre 2 mailles).</li>
+                                            <li>Un motif situé sur une arête compte pour 1/4 (partagé entre 4 mailles).</li>
+                                            <li>Un motif situé à un sommet compte pour 1/8 (partagé entre 8 mailles).</li></ul></li>
+                                    <li><strong>Coordinence (ou Indice de Coordination) :</strong> C'est le nombre de plus proches voisins d'un atome (ou motif) donné dans la structure cristalline. Elle reflète l'environnement local et est liée au type d'empilement et de liaison.</li>
+                                    <li><strong>Compacité (C) :</strong> C'est la fraction du volume total de la maille qui est effectivement occupée par les atomes/motifs (généralement modélisés comme des sphères dures de rayon R).
+                                    <br>$C = \\frac{\\text{Volume occupé par les motifs dans la maille}}{\\text{Volume total de la maille}} = \\frac{Z \\times V_{motif}}{V_{maille}}$.
+                                    <br>Pour des motifs sphériques, $V_{motif} = (4/3)\pi R^3$. La compacité est sans dimension et $C \le 1$. Pour un empilement compact de sphères, $C_{max} \approx 0.74$.</li>
+                                    <li><strong>Masse Volumique Théorique ($\rho$) :</strong> C'est la masse contenue dans la maille divisée par le volume de la maille.
+                                    <br>$\\rho = \\frac{\\text{Masse de la maille}}{V_{maille}} = \\frac{Z \\times m_{motif}}{V_{maille}}$.
+                                    <br>Où $m_{motif}$ est la masse d'un motif. Si $M_{motif}$ est la masse molaire du motif (en kg/mol), alors $m_{motif} = M_{motif} / N_A$, où $N_A$ est le nombre d'Avogadro.
+                                    <br>$\\rho = \\frac{Z \times M_{motif}}{N_A \times V_{maille}}$.</li>
+                               </ul>
+                               <strong class="capacite">Déterminer Z, coordinence, C, $\rho$ pour une structure donnée (paramètres fournis).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_3_4',
+                            section: '4.3 Structure des solides',
+                            question: 'Citer les différents types de rayons atomiques/ioniques et expliquer comment ils sont définis ou utilisés en cristallographie.',
+                            answer: `<div class="definition"><p><strong>Rayons Atomiques/Ioniques :</strong> La notion de "rayon" pour un atome ou un ion n'est pas définie de manière unique car le nuage électronique n'a pas de frontière nette. On définit différents types de rayons basés sur les distances interatomiques mesurées dans différentes situations :
+                               <ul>
+                                    <li><strong>Rayon Covalent ($r_{cov}$) :</strong> Défini comme la moitié de la distance entre les noyaux de deux atomes identiques liés par une liaison covalente simple (ex: dans $Cl_2$, $d(Cl-Cl)=198$ pm, $r_{cov}(Cl)=99$ pm). Utile pour estimer les longueurs de liaisons covalentes.</li>
+                                    <li><strong>Rayon Métallique ($r_{met}$) :</strong> Défini comme la moitié de la distance entre les noyaux de deux atomes voisins les plus proches dans un cristal métallique. Il dépend de la structure cristalline (donc de la coordinence).</li>
+                                    <li><strong>Rayon de Van der Waals ($r_{VdW}$) :</strong> Défini comme la moitié de la distance minimale d'approche entre les noyaux de deux atomes identiques appartenant à des molécules voisines non liées chimiquement (ex: dans $Cl_2$ solide). Il représente l'"encombrement" de l'atome. $r_{VdW} > r_{cov}$.</li>
+                                    <li><strong>Rayon Ionique ($r_{ion}$) :</strong> Rayon attribué à un cation ($r_+$) ou à un anion ($r_-$) dans un cristal ionique. On suppose souvent $d(cation-anion) = r_+ + r_-$ (modèle des sphères dures tangentes). Les rayons ioniques dépendent fortement de la charge de l'ion (cations plus petits que l'atome neutre, anions plus grands) et de sa coordinence dans le cristal. Ils sont déterminés de manière à être cohérents pour un grand nombre de composés.</li>
+                               </ul>
+                            En cristallographie, on utilise ces rayons (en particulier métalliques et ioniques) pour :
+                            <ul><li>Relier les paramètres de maille (ex: $a$) aux rayons des constituants (ex: dans un CFC, $a\sqrt{2}=4r_{met}$ si contact sur la diagonale de face).</li>
+                            <li>Prévoir les types de structures possibles en fonction des rapports de rayons (notamment pour les solides ioniques, $r_+/r_-$ conditionne la coordinence).</li>
+                            <li>Calculer la compacité $C$.</li></ul>
+                            <strong class="capacite">Relier le type de rayon aux paramètres de maille et aux conditions de contact entre motifs.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_3_5',
+                            section: '4.3 Structure des solides',
+                            question: 'Décrire les deux types d\'empilements compacts de sphères identiques (CFC et HC) : mode d\'empilement, maille conventionnelle, population Z, coordinence et compacité C. Donner des exemples.',
+                            answer: `<div class="definition"><p><strong>Empilements Compacts de Sphères Identiques :</strong> Ce sont les arrangements les plus denses possibles pour des sphères de même taille. Ils atteignent la compacité maximale théorique $C = \pi / (3\sqrt{2}) \approx 0.74$. Ils sont construits par superposition de <strong>plans compacts</strong> (plans où chaque sphère est entourée de 6 voisines tangents, formant un arrangement hexagonal). La différence entre CFC et HC réside dans la manière dont ces plans s'empilent. Soit A, B, C les trois positions possibles pour les centres des sphères dans des plans successifs.
+                               <ul>
+                                    <li><strong>Empilement Cubique à Faces Centrées (CFC) :</strong>
+                                        <ul><li>Séquence d'empilement : <strong>ABCABC...</strong> Chaque plan est décalé par rapport aux deux précédents.</li>
+                                        <li>Maille conventionnelle : C'est un <strong>cube</strong> avec des sphères (motifs) aux <strong>8 sommets</strong> et aux <strong>centres des 6 faces</strong>.</li>
+                                        <li>Population (Multiplicité) Z : $Z = (8 \times 1/8) + (6 \times 1/2) = 1 + 3 = 4$ motifs par maille.</li>
+                                        <li>Coordinence : Chaque sphère a 12 plus proches voisins (6 dans son plan, 3 dans le plan au-dessus, 3 dans le plan en-dessous). Coordinence = 12.</li>
+                                        <li>Compacité C : $C = 0.74$.</li>
+                                        <li>Relation rayon R et paramètre $a$: Les sphères sont tangentes le long de la diagonale d'une face. $a\sqrt{2} = 4R$.</li>
+                                        <li>Exemples de métaux : Cu, Al, Au, Ag, Ni, Pb, Pt, $\gamma$-Fe.</li></ul>
+                                        <strong class="capacite">Connaissance exigible de la maille CFC.</strong></li>
+                                    <li><strong>Empilement Hexagonal Compact (HC) :</strong>
+                                        <ul><li>Séquence d'empilement : <strong>ABABAB...</strong> Chaque plan est superposé directement au plan situé deux niveaux plus bas.</li>
+                                        <li>Maille conventionnelle : Prisme droit à <strong>base hexagonale</strong>. Il contient des atomes aux sommets, au centre des bases hexagonales, et 3 atomes à l'intérieur à mi-hauteur.</li>
+                                        <li>Population Z (maille conventionnelle) : $Z = (12 \times 1/6)_{\text{sommets}} + (2 \times 1/2)_{\text{centres bases}} + (3 \times 1)_{\text{intérieur}} = 2 + 1 + 3 = 6$ (Attention, la maille primitive contient Z=2).</li>
+                                        <li>Coordinence : Chaque sphère a aussi 12 plus proches voisins. Coordinence = 12.</li>
+                                        <li>Compacité C : $C = 0.74$.</li>
+                                        <li>Relation rayon R et paramètres $a, c$: Les sphères sont tangentes dans le plan de base ($a=2R$). Idéalement, $c/a = \sqrt{8/3} \approx 1.633$.</li>
+                                        <li>Exemples de métaux : Mg, Zn, Ti, Co, Cd, Be.</li></ul></li>
+                               </ul></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_3_6',
+                            section: '4.3 Structure des solides',
+                            question: 'Que sont les sites interstitiels tétraédriques (T) et octaédriques (O) dans un empilement ? Les localiser et les dénombrer dans la maille CFC. Quelle est leur taille maximale ?',
+                            answer: `<div class="definition"><p><strong>Sites Interstitiels :</strong> Ce sont les espaces vides (interstices) laissés entre les sphères (atomes/ions) dans un empilement cristallin. Des atomes plus petits (impuretés, éléments d'alliage, H, C, N, O...) peuvent venir s'y loger. Les deux principaux types de sites dans les empilements compacts sont :
+                               <ul>
+                                    <li><strong>Sites Tétraédriques (T) :</strong> Un site T est un trou entouré par <strong>4 sphères</strong> dont les centres forment un <strong>tétraèdre</strong> régulier.</li>
+                                    <li><strong>Sites Octaédriques (O) :</strong> Un site O est un trou entouré par <strong>6 sphères</strong> dont les centres forment un <strong>octaèdre</strong> régulier.</li>
+                               </ul>
+                            Dans un empilement compact (CFC ou HC) constitué de N sphères principales, il y a toujours :
+                               <ul><li>N sites Octaédriques (O).</li>
+                               <li>2N sites Tétraédriques (T).</li></ul></p>
+                            <p><strong>Sites dans la Structure CFC (Maille cubique, Z=4 atomes) :</strong>
+                               <ul>
+                                    <li><strong>Sites Octaédriques (O) :</strong> Il y a Z=4 sites O par maille. Ils sont situés :
+                                        <ul><li>Au <strong>centre du cube</strong> (coordonnées réduites : 1/2, 1/2, 1/2). Ce site compte pour 1.</li>
+                                        <li>Aux <strong>milieux des 12 arêtes</strong> du cube (ex: 1/2, 0, 0). Chaque site sur une arête compte pour 1/4 (partagé entre 4 mailles). Total : $12 \times 1/4 = 3$.</li></ul>
+                                        Nombre total de sites O par maille = $1 + 3 = 4 (= Z)$.
+                                        Le rayon maximal $r_{site O}$ d'une sphère pouvant s'insérer dans un site O sans déformer le réseau de sphères de rayon R est $r_{site O} = (\sqrt{2}-1)R \approx 0.414 R$.</li>
+                                    <li><strong>Sites Tétraédriques (T) :</strong> Il y a 2Z=8 sites T par maille. Ils sont situés :
+                                        <ul><li>Aux <strong>centres des 8 petits cubes</strong> (octants) dans lesquels on peut diviser la maille CFC. (Coordonnées réduites : 1/4, 1/4, 1/4 ; 3/4, 1/4, 1/4 ; etc.). Chaque site est entièrement à l'intérieur de la maille.</li></ul>
+                                        Nombre total de sites T par maille = $8 \times 1 = 8 (= 2Z)$.
+                                        Le rayon maximal $r_{site T}$ d'une sphère pouvant s'insérer dans un site T sans déformer le réseau est $r_{site T} = (\frac{\sqrt{6}}{2}-1)R = (\sqrt{3/2}-1)R \approx 0.225 R$. (Note: le rayon est $d(\text{centre site T} - \text{sommet}) - R = (\sqrt{3}a/4) - R$. Avec $a\sqrt{2}=4R$, $a=2\sqrt{2}R$. $d=\sqrt{3}(2\sqrt{2}R)/4 = (\sqrt{6}/2)R$. $r_{site T} = (\sqrt{6}/2)R - R$).</li>
+                               </ul>
+                            <strong class="capacite">Utiliser un logiciel/modèle pour visualiser. Localiser et dénombrer les sites O et T dans CFC. Déterminer leur habitabilité (taille max de l'atome insérable sans déformer).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q4_3_7',
+                            section: '4.3 Structure des solides',
+                            question: 'Quelles sont les principales caractéristiques de la liaison métallique et comment expliquent-elles les propriétés des métaux ?',
+                            answer: `<div class="definition"><p><strong>Métaux :</strong> Éléments électropositifs (faible électronégativité), typiquement situés à gauche et au centre du tableau périodique. <strong class="capacite">Positionner/Reconnaître les métaux.</strong></p>
+                                <p><strong>Liaison Métallique :</strong> C'est le type de liaison chimique qui assure la cohésion des atomes dans un cristal métallique. Modèle simplifié (modèle de Drude-Lorentz ou gaz d'électrons) :
+                                   <ul><li>Les atomes métalliques perdent facilement leurs électrons de valence (1, 2 ou 3 en général).</li>
+                                   <li>Ces électrons de valence sont <strong>délocalisés</strong> et forment une sorte de "mer" ou "gaz" d'électrons libres qui peuvent se déplacer dans tout le volume du cristal.</li>
+                                   <li>Les atomes métalliques deviennent des ions positifs (cœurs ioniques) qui sont maintenus ensemble par l'attraction électrostatique avec cette "mer" d'électrons négatifs environnante.</li></ul>
+                                <strong>Caractéristiques de la liaison métallique :</strong>
+                                   <ul><li><strong>Forte :</strong> L'attraction électrostatique globale est importante, ce qui conduit à des énergies de cohésion élevées (typiquement 100-800 kJ/mol) et donc à des points de fusion et d'ébullition généralement élevés.</li>
+                                   <li><strong>Non directionnelle :</strong> L'attraction électrostatique n'est pas limitée à des directions spécifiques comme dans la liaison covalente. Les atomes peuvent "glisser" les uns par rapport aux autres sans rompre la cohésion.</li>
+                                   <li><strong>Implique des électrons libres :</strong> La présence d'électrons très mobiles est caractéristique.</li></ul>
+                                <strong>Relation avec les propriétés macroscopiques :</strong>
+                                   <ul><li><strong>Bonne conductivité électrique et thermique :</strong> Due à la grande mobilité des électrons libres qui peuvent transporter la charge électrique et l'énergie thermique (agitation).</li>
+                                   <li><strong>Malléabilité et ductilité :</strong> La nature non directionnelle de la liaison permet aux plans atomiques de glisser les uns sur les autres sous l'effet d'une contrainte mécanique, sans rupture. Le métal peut être déformé plastiquement (martelé en feuilles, étiré en fils). Ceci est facilité par les défauts (dislocations).</li>
+                                   <li><strong>Éclat métallique :</strong> Les électrons libres interagissent fortement avec la lumière incidente, la réfléchissant sur une large gamme de longueurs d'onde, ce qui donne l'aspect brillant et opaque caractéristique.</li>
+                                   <li><strong>Compacité :</strong> La liaison non directionnelle favorise les arrangements atomiques denses (souvent CFC, HC, CC) pour maximiser la cohésion.</li></ul>
+                                <strong class="capacite">Relier caractéristiques liaison et propriétés macro.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_3_8',
+                            section: '4.3 Structure des solides',
+                            question: 'Comparer les solides covalents, moléculaires et ioniques en termes de nature des constituants, type de liaisons/interactions assurant la cohésion, et propriétés macroscopiques typiques (dureté, Tfus, conductivité).',
+                            answer: `<div class="definition"><p>Comparaison des principaux types de solides non métalliques :</p>
+                                <table border="1" style="border-collapse: collapse; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Type de Solide</th>
+                                            <th>Constituants du Réseau</th>
+                                            <th>Cohésion Principale</th>
+                                            <th>Caractéristiques de la Cohésion</th>
+                                            <th>Propriétés Macro. Typiques</th>
+                                            <th>Exemples</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Covalent</strong></td>
+                                            <td>Atomes</td>
+                                            <td>Liaisons Covalentes</td>
+                                            <td>Forte, Très Directionnelle</td>
+                                            <td>Très durs, Tfusion très élevée, Isolants ou Semi-conducteurs</td>
+                                            <td>Diamant (C), Graphite (C, lamellaire), Silicium (Si), Quartz ($SiO_2$)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Moléculaire</strong></td>
+                                            <td>Molécules Neutres</td>
+                                            <td>Interactions Intermoléculaires (Van der Waals, parfois Liaison Hydrogène)</td>
+                                            <td>Faible, Non directionnelle (VdW) ou Directionnelle (H)</td>
+                                            <td>Mous, Tfusion/sublimation basse, Isolants électriques</td>
+                                            <td>Diiode ($I_2$), Glace ($H_2O$), Neige carbonique ($CO_2$), Sucre, Naphtalène</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Ionique</strong></td>
+                                            <td>Ions (Cations et Anions)</td>
+                                            <td>Interaction Électrostatique (Liaison Ionique)</td>
+                                            <td>Forte, Non Directionnelle</td>
+                                            <td>Durs mais Cassants (fragiles), Tfusion élevée, Isolants à l'état solide, Conducteurs si fondus ou dissous dans l'eau</td>
+                                            <td>Sel (NaCl), Fluorine ($CaF_2$), Oxyde de magnésium (MgO), Sulfure de zinc (ZnS)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br><strong class="capacite">Relier type de liaison/interaction (covalente forte/directionnelle vs VdW/H faible vs ionique forte/non dir.) et propriétés macro (dureté, Tfusion, conductivité, fragilité).</strong></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex4_1',
+                            section: '4.3 Structure des solides - Exercice 4.1',
+                            question: 'Le Cuivre (Cu) cristallise dans une structure Cubique à Faces Centrées (CFC) avec un paramètre de maille $a=361$ pm. Calculer sa masse volumique $\rho$. Données : $M(Cu)=63.5$ g/mol, $N_A = 6.022 \times 10^{23}$ mol⁻¹.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 4.1 :</strong>
+                                <br>1. <strong>Population de la maille CFC :</strong> La structure CFC contient $Z=4$ atomes par maille conventionnelle.
+                                <br>2. <strong>Volume de la maille :</strong> $V_{maille} = a^3$. Il faut convertir $a$ en mètres. $a = 361 \text{ pm} = 361 \times 10^{-12}$ m.
+                                <br>$V_{maille} = (361 \times 10^{-12})^3 = 361^3 \times 10^{-36} \approx 47.04 \times 10^6 \times 10^{-36} = 4.704 \times 10^{-29}$ m³.
+                                <br>3. <strong>Masse de la maille :</strong> La maille contient Z atomes de Cu. La masse d'un atome de Cu est $m_{Cu} = M(Cu) / N_A$. La masse de la maille est $Masse_{maille} = Z \times m_{Cu} = Z \times M(Cu) / N_A$.
+                                <br>Il faut convertir $M(Cu)$ en kg/mol : $M(Cu) = 63.5 \text{ g/mol} = 63.5 \times 10^{-3}$ kg/mol.
+                                <br>$Masse_{maille} = \frac{4 \times (63.5 \times 10^{-3} \text{ kg/mol})}{6.022 \times 10^{23} \text{ mol}^{-1}} = \frac{254 \times 10^{-3}}{6.022 \times 10^{23}} \approx 42.18 \times 10^{-26}$ kg.
+                                <br>4. <strong>Masse volumique $\rho$ :</strong> $\rho = \frac{Masse_{maille}}{V_{maille}}$.
+                                <br>$\\rho = \frac{42.18 \times 10^{-26} \text{ kg}}{4.704 \times 10^{-29} \text{ m}^3} \approx 8.967 \times 10^{3}$ kg/m³.
+                                <br>Soit $\rho \approx 8970$ kg/m³ (ou 8.97 g/cm³). (La valeur expérimentale est d'environ 8960 kg/m³, l'accord est excellent).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex4_2',
+                            section: '4.3 Structure des solides - Exercice 4.2',
+                            question: 'Calculer la compacité C de la structure Cubique à Faces Centrées (CFC), en supposant des sphères tangentes.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 4.2 :</strong>
+                            <br>La compacité C est le rapport du volume occupé par les atomes dans la maille sur le volume total de la maille : $C = (Z \times V_{atome}) / V_{maille}$.
+                            <br>Pour la structure CFC :
+                            <ul><li>Population $Z = 4$ atomes par maille.</li>
+                            <li>Volume d'un atome (sphère de rayon R) : $V_{atome} = (4/3)\pi R^3$.</li>
+                            <li>Volume de la maille (cube de côté $a$) : $V_{maille} = a^3$.</li></ul>
+                            <br>Il faut trouver la relation entre $a$ et $R$. Dans la structure CFC, les atomes sont tangents le long de la diagonale d'une face du cube. La longueur de cette diagonale est $a\sqrt{2}$. Elle est égale à 4 rayons atomiques (Rayon de l'atome au coin + Diamètre de l'atome au centre de la face + Rayon de l'atome à l'autre coin = R + 2R + R = 4R).
+                            <br>Donc, $a\sqrt{2} = 4R$, ce qui donne $a = \frac{4R}{\sqrt{2}} = 2\sqrt{2} R$.
+                            <br>Calculons la compacité :
+                            <br>$C = \frac{Z \times (4/3)\pi R^3}{a^3} = \frac{4 \times (4/3)\pi R^3}{(2\sqrt{2} R)^3}$
+                            <br>$C = \frac{(16/3)\pi R^3}{(2^3 (\sqrt{2})^3) R^3} = \frac{(16/3)\pi}{8 \times 2\sqrt{2}}$
+                            <br>$C = \frac{(16/3)\pi}{16\sqrt{2}} = \frac{\pi}{3\sqrt{2}}$.
+                            <br>$C = \frac{\pi \sqrt{2}}{3 \times 2} = \frac{\pi \sqrt{2}}{6}$.
+                            <br>Valeur numérique : $C \approx \frac{3.14159 \times 1.4142}{6} \approx \frac{4.4428}{6} \approx 0.7405$.
+                            <br>La compacité de la structure CFC est d'environ 74%.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 4.4.1 Réactions acide-base et précipitation ===
+                        {
+                            id: 'q4_4_1_1',
+                            section: '4.4.1 Acide-Base / Précipitation',
+                            question: 'Définir un couple acide/base selon Brönsted. Donner la définition de la constante d\'acidité $K_a$ et du $pK_a$. Comment la valeur de $K_a$ (ou $pK_a$) renseigne-t-elle sur la force de l\'acide et de sa base conjuguée ?',
+                            answer: `<div class="definition"><p><strong>Réaction Acide-Base (selon Brönsted-Lowry) :</strong> C'est une réaction chimique impliquant un transfert de proton $H^+$.
+                            <ul><li>Un <strong>acide</strong> est une espèce chimique capable de <strong>céder</strong> un ou plusieurs protons $H^+$.</li>
+                            <li>Une <strong>base</strong> est une espèce chimique capable de <strong>capter</strong> un ou plusieurs protons $H^+$.</li></ul></p>
+                            <p><strong>Couple Acide/Base (noté A/B) :</strong> Il est constitué d'un acide A et de sa base conjuguée B, liés par la demi-équation protonique :
+                            <br>$A \rightleftharpoons B + H^+$.
+                            <br>Exemples : $CH_3COOH / CH_3COO^-$, $NH_4^+ / NH_3$, $H_3O^+ / H_2O$, $H_2O / OH^-$. L'eau est un ampholyte (ou amphotère) : elle peut jouer le rôle d'acide ou de base.</p>
+                            <p><strong>Constante d'Acidité ($K_a$) :</strong> Pour un couple A/B, la constante d'acidité $K_a$ est la constante d'équilibre thermodynamique associée à la réaction de dissociation de l'acide A dans l'eau :
+                            <br>$A(aq) + H_2O(l) \rightleftharpoons B(aq) + H_3O^+(aq)$.
+                            <br>$K_a = \\frac{a_{B} \cdot a_{H_3O^+}}{a_{A} \cdot a_{H_2O}}$.
+                            <br>En solution aqueuse diluée, l'activité de l'eau $a_{H_2O} \approx 1$, et les activités des solutés $a_i$ sont approximées par leur concentration molaire $[i]/c^\circ$ (où $c^\circ=1$ mol/L). On écrit souvent (en omettant $c^\circ$ pour alléger) :
+                            <br>$K_a \approx \\frac{[B][H_3O^+]}{[A]}$. $K_a$ est sans dimension mais dépend de la température.</p>
+                            <p><strong>$pK_a$ :</strong> Pour manipuler des valeurs plus simples, on utilise le $pK_a$ :
+                            <br>$pK_a = -\log_{10}(K_a)$.</p>
+                            <p><strong>Force des Acides/Bases :</strong>
+                                <ul><li>Plus l'acide A est <strong>fort</strong>, plus il cède facilement son proton $H^+$, plus l'équilibre de dissociation dans l'eau est déplacé vers la droite, donc plus $K_a$ est <strong>grand</strong> et $pK_a$ est <strong>petit</strong>.</li>
+                                <li>Plus la base B est <strong>forte</strong>, plus elle capte facilement un proton $H^+$, moins son acide conjugué A est dissocié, donc plus $K_a$ (du couple A/B) est <strong>petit</strong> et $pK_a$ est <strong>grand</strong>.</li></ul>
+                            Un acide est dit <strong>fort</strong> dans l'eau s'il réagit totalement avec l'eau ($K_a \gg 1$, $pK_a < 0$). Sa base conjuguée est alors indifférente (plus faible base que $H_2O$).
+                            <br>Une base est dite <strong>forte</strong> dans l'eau si elle réagit totalement avec l'eau ($K_b \gg 1$, $pK_b < 0$). Son acide conjugué est alors indifférent (plus faible acide que $H_2O$). (Rappel : $K_a \times K_b = K_e = 10^{-14}$ à 25°C).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_1_2',
+                            section: '4.4.1 Acide-Base / Précipitation',
+                            question: 'Construire et interpréter un diagramme de prédominance et un diagramme de distribution pour un couple acide/base A/B de $pK_a$ donné.',
+                            answer: `<div class="methode"><p><strong>Diagrammes Acide-Base pour un couple A/B :</strong>
+                               <ul>
+                                    <li><strong>Diagramme de Prédominance :</strong> Il représente, sur un axe gradué en pH, le domaine de pH où l'espèce acide A est majoritaire et celui où l'espèce basique B est majoritaire.
+                                        <ul><li>La relation $K_a = [B][H_3O^+]/[A]$ peut s'écrire $\log(K_a) = \log([B]/[A]) + \log([H_3O^+])$, soit $-pK_a = \log([B]/[A]) - pH$.</li>
+                                        <li>Donc $pH = pK_a + \log([B]/[A])$.</li>
+                                        <li>Si $pH < pK_a$, alors $\log([B]/[A]) < 0 \implies [B] < [A]$ : l'espèce <strong>acide A prédomine</strong>.</li>
+                                        <li>Si $pH > pK_a$, alors $\log([B]/[A]) > 0 \implies [B] > [A]$ : l'espèce <strong>basique B prédomine</strong>.</li>
+                                        <li>Si $pH = pK_a$, alors $\log([B]/[A]) = 0 \implies [A] = [B]$. C'est la frontière entre les domaines de prédominance.</li></ul>
+                                        <div class="schema">Schéma : Diagramme de Prédominance A/B (axe pH avec pKa)</div></li>
+                                    <li><strong>Diagramme de Distribution :</strong> Il représente les fractions molaires de l'acide ($\alpha_A$) et de la base ($\alpha_B$) en fonction du pH.
+                                        <ul><li>$\alpha_A = \frac{[A]}{C_{tot}} = \frac{[A]}{[A]+[B]}$ et $\alpha_B = \frac{[B]}{C_{tot}} = \frac{[B]}{[A]+[B]}$. On a toujours $\alpha_A + \alpha_B = 1$.</li>
+                                        <li>En utilisant $K_a=[B][H_3O^+]/[A]$ (soit $[B]=K_a[A]/[H_3O^+]$) ou $[A]=[B][H_3O^+]/K_a$:
+                                        <br>$\alpha_A = \frac{[A]}{[A] + K_a[A]/[H_3O^+]} = \frac{1}{1 + K_a/[H_3O^+]} = \frac{[H_3O^+]}{[H_3O^+] + K_a} = \frac{10^{-pH}}{10^{-pH} + 10^{-pK_a}}$.
+                                        <br>$\alpha_B = \frac{[B]}{[B][H_3O^+]/K_a + [B]} = \frac{1}{[H_3O^+]/K_a + 1} = \frac{K_a}{[H_3O^+] + K_a} = \frac{10^{-pK_a}}{10^{-pH} + 10^{-pK_a}}$.</li>
+                                        <li>Allure : $\alpha_A$ part de 1 (à pH bas) et tend vers 0 (à pH élevé). $\alpha_B$ part de 0 et tend vers 1. Les deux courbes se croisent à $pH = pK_a$, où $\alpha_A = \alpha_B = 0.5$.</li></ul>
+                                        <div class="schema">Schéma : Diagramme de Distribution (alpha A, alpha B vs pH)</div></li>
+                               </ul>
+                            <strong class="capacite">Construire/Utiliser ces diagrammes.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_1_3',
+                            section: '4.4.1 Acide-Base / Précipitation',
+                            question: 'Comment prévoir le sens favorisé d\'une réaction acide-base $A_1 + B_2 \rightleftharpoons B_1 + A_2$ à partir des $pK_a$ ? Calculer la constante d\'équilibre $K^\circ$.',
+                            answer: `<div class="resultat"><p><strong>Réaction Acide-Base entre deux couples $A_1/B_1$ ($K_{a1}, pK_{a1}$) et $A_2/B_2$ ($K_{a2}, pK_{a2}$) :</strong>
+                            <br>L'équation de la réaction est : $A_1 + B_2 \rightleftharpoons B_1 + A_2$.
+                            <br>La constante d'équilibre thermodynamique $K^\circ$ associée à cette réaction est :
+                            <br>$K^\circ = \\frac{a_{B_1} \cdot a_{A_2}}{a_{A_1} \cdot a_{B_2}}$.
+                            <br>On peut faire apparaître les constantes d'acidité $K_{a1} = \frac{a_{B_1} a_{H_3O^+}}{a_{A_1}}$ et $K_{a2} = \frac{a_{B_2} a_{H_3O^+}}{a_{A_2}}$ :
+                            <br>$K^\circ = \frac{a_{B_1}}{a_{A_1}} \times \frac{a_{A_2}}{a_{B_2}} = \left( \frac{K_{a1}}{a_{H_3O^+}} \right) \times \left( \frac{a_{H_3O^+}}{K_{a2}} \right)$.
+                            <br>Donc : $K^\circ = \\frac{K_{a1}}{K_{a2}}$.
+                            <br>En utilisant les $pK_a$: $\log_{10}(K^\circ) = \log_{10}(K_{a1}) - \log_{10}(K_{a2}) = -pK_{a1} - (-pK_{a2}) = pK_{a2} - pK_{a1}$.
+                            <br>$K^\circ = 10^{pK_{a2} - pK_{a1}}$.
+                            <br><strong>Prévision du sens favorisé :</strong>
+                               <ul><li>La réaction est thermodynamiquement favorisée dans le sens direct (sens 1 : $A_1 + B_2 \to B_1 + A_2$) si $K^\circ > 1$.
+                                    <br>Cela correspond à $K_{a1} > K_{a2}$, ou $pK_{a1} < pK_{a2}$.</li>
+                               <li>La réaction est thermodynamiquement favorisée dans le sens inverse (sens 2 : $B_1 + A_2 \to A_1 + B_2$) si $K^\circ < 1$.
+                                    <br>Cela correspond à $K_{a1} < K_{a2}$, ou $pK_{a1} > pK_{a2}$.</li></ul>
+                            La règle est donc : <strong>L'acide le plus fort ($pK_a$ le plus petit) réagit avec la base la plus forte ($pK_a$ de son acide conjugué le plus grand)</strong> pour donner l'acide le plus faible et la base la plus faible.
+                            <strong class="capacite">Déterminer $K^\circ$ et prévoir le sens.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_1_4',
+                            section: '4.4.1 Acide-Base / Précipitation',
+                            question: 'Définir le produit de solubilité $K_s$ pour un solide ionique $M_x A_y (s)$.',
+                            answer: `<div class="definition"><p><strong>Réaction de Précipitation / Dissolution :</strong> Concerne l'équilibre hétérogène entre un solide ionique $M_x A_y (s)$ (supposé peu soluble) et ses ions constitutifs $M^{y+}(aq)$ et $A^{x-}(aq)$ en solution aqueuse.
+                            <br>L'équation de la dissolution s'écrit :
+                            <br>$M_x A_y (s) \rightleftharpoons x M^{y+} (aq) + y A^{x-} (aq)$.
+                            <br>(Les coefficients stœchiométriques $x$ et $y$ assurent la conservation de la matière et la neutralité électrique du solide $x \times (+y) + y \times (-x) = 0$).</p>
+                            <p><strong>Produit de Solubilité ($K_s$) :</strong> C'est la <strong>constante d'équilibre thermodynamique</strong> associée à la réaction de dissolution écrite ci-dessus.
+                            <br>$K_s = K^\circ(T) = \frac{(a_{M^{y+}})^x \cdot (a_{A^{x-}})^y}{a_{M_x A_y (s)}}$.
+                            <br>L'activité d'un solide pur $a_{M_x A_y (s)}$ est par convention égale à 1.
+                            <br>Pour des solutions diluées, l'activité d'un ion en solution $a_i$ est assimilée à sa concentration molaire $[i]$ (ou plus rigoureusement $[i]/c^\circ$ avec $c^\circ=1$ mol/L).
+                            <br>L'expression usuelle du produit de solubilité est donc :
+                            <br>$K_s = [M^{y+}]^x [A^{x-}]^y$.
+                            <br>$K_s$ est une constante à température donnée, sans dimension (mais numériquement dépendante du choix de $c^\circ$).</p>
+                            <p>On utilise aussi le $pK_s = -\log_{10}(K_s)$.
+                            <br><strong>Signification :</strong> Plus $K_s$ est <strong>petit</strong> (ou $pK_s$ grand), moins le solide ionique est soluble dans l'eau.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q4_4_1_5',
+                            section: '4.4.1 Acide-Base / Précipitation',
+                            question: 'Quelle est la condition de précipitation d\'un solide $M_x A_y$? Comment calculer la solubilité $s$ à partir de $K_s$ dans l\'eau pure ?',
+                            answer: `<div class="definition"><p><strong>Condition de Précipitation :</strong> Pour une solution contenant les ions $M^{y+}$ et $A^{x-}$ à des concentrations données, on compare le <strong>quotient réactionnel</strong> $Q_r = [M^{y+}]^x [A^{x-}]^y$ au produit de solubilité $K_s$.
+                               <ul>
+                                    <li>Si $Q_r < K_s$ : La solution est <strong>non saturée</strong>. Pas de précipité $M_x A_y (s)$. Si du solide est présent, il se dissout jusqu'à atteindre $Q_r = K_s$ ou épuisement du solide.</li>
+                                    <li>Si $Q_r = K_s$ : La solution est <strong>saturée</strong>. Elle est en équilibre avec le solide $M_x A_y (s)$ s'il est présent. C'est la limite de solubilité.</li>
+                                    <li>Si $Q_r > K_s$ : La solution est <strong>sursaturée</strong> (état hors équilibre). Il y a <strong>précipitation</strong> de $M_x A_y (s)$ jusqu'à ce que $Q_r$ redescende à la valeur $K_s$.</li>
+                               </ul>
+                            La précipitation commence donc dès que $Q_r$ dépasse $K_s$. <strong class="capacite">Prévoir la précipitation.</strong></p>
+                            <p><strong>Solubilité (s) dans l'eau pure :</strong> La solubilité $s$ d'un composé ionique $M_x A_y$ est définie comme la concentration molaire de $M_x A_y$ qui s'est dissoute lorsque la solution est saturée (en équilibre avec le solide).
+                            <br>D'après la stœchiométrie de la dissolution $M_x A_y (s) \rightleftharpoons x M^{y+} (aq) + y A^{x-} (aq)$ :
+                               <ul><li>Si $s$ moles de $M_x A_y$ se dissolvent par litre, cela produit $x \times s$ moles/L de $M^{y+}$ et $y \times s$ moles/L de $A^{x-}$.</li>
+                               <li>À l'équilibre (solution saturée), les concentrations sont donc $[M^{y+}]_{eq} = xs$ et $[A^{x-}]_{eq} = ys$.</li></ul>
+                            Comme la solution est saturée, $K_s = [M^{y+}]_{eq}^x [A^{x-}]_{eq}^y$.
+                            <br>En remplaçant par les expressions en fonction de $s$:
+                            <br>$K_s = (xs)^x (ys)^y = x^x y^y s^{x+y}$.
+                            <br>Cette équation permet de calculer la solubilité $s$ si $K_s$ est connu :
+                            <br>$s = \left( \frac{K_s}{x^x y^y} \right)^{\frac{1}{x+y}}$.
+                            <br>Exemple pour AgCl ($x=1, y=1$): $K_s = s^2 \implies s=\sqrt{K_s}$.
+                            <br>Exemple pour $CaF_2$ ($x=1, y=2$): $K_s = (s)(2s)^2 = 4s^3 \implies s=(K_s/4)^{1/3}$.
+                            <strong class="capacite">Calculer s.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_1_6',
+                            section: '4.4.1 Acide-Base / Précipitation',
+                            question: 'Citer et expliquer qualitativement trois facteurs qui peuvent influencer la solubilité d\'un précipité.',
+                            answer: `<div class="definition"><p><strong>Facteurs influençant la solubilité :</strong> La solubilité d'un solide ionique $M_x A_y$ peut être modifiée par la présence d'autres espèces en solution qui interagissent avec les ions $M^{y+}$ ou $A^{x-}$ issus de la dissolution. Ces interactions déplacent l'équilibre $M_x A_y (s) \rightleftharpoons x M^{y+} (aq) + y A^{x-} (aq)$ selon le principe de Le Chatelier.
+                               <ul>
+                                    <li><strong>Effet d'ion commun :</strong> Si on ajoute à la solution saturée un sel soluble contenant l'un des ions du précipité (par exemple, ajouter $M^{y+}$ ou $A^{x-}$ provenant d'une autre source), la concentration de cet ion augmente. Pour maintenir le produit $Q_r = [M^{y+}]^x [A^{x-}]^y$ égal à $K_s$, l'équilibre doit se déplacer dans le sens <strong>inverse</strong> (vers la gauche), provoquant la reprécipitation d'une partie du solide. L'ajout d'un ion commun <strong>diminue</strong> donc la solubilité du précipité.</li>
+                                    <li><strong>Influence du pH (si l'un des ions a des propriétés acido-basiques) :</strong>
+                                        <ul><li>Si l'anion $A^{x-}$ est la base conjuguée d'un acide faible HA (ex: $CO_3^{2-}$, $S^{2-}$, $F^-$, $PO_4^{3-}$), sa concentration dépend du pH. Si on <strong>acidifie</strong> la solution (diminution du pH), l'anion $A^{x-}$ va réagir avec $H_3O^+$ pour former son acide conjugué HA. La concentration de $A^{x-}$ libre diminue, donc $Q_r$ devient inférieur à $K_s$. L'équilibre de dissolution se déplace vers la <strong>droite</strong> pour compenser : la solubilité <strong>augmente</strong> en milieu acide.</li>
+                                        <li>Si le cation $M^{y+}$ est l'acide conjugué d'une base faible M(OH) (ex: $Mg^{2+}$ peut réagir avec $OH^-$), ou forme des hydroxydes peu solubles, sa concentration libre peut dépendre du pH en milieu basique.</li></ul></li>
+                                    <li><strong>Formation de complexes :</strong> Si l'un des ions ($M^{y+}$ ou $A^{x-}$) peut réagir avec une autre espèce en solution (un <strong>ligand</strong>, L) pour former un <strong>complexe soluble</strong> (ex: $[M L_p]^{q+}$), la concentration de l'ion libre ($M^{y+}$ par exemple) diminue fortement. Pour maintenir $Q_r = K_s$, l'équilibre de dissolution est déplacé vers la <strong>droite</strong> : la solubilité <strong>augmente</strong> en présence du ligand complexant. Ex: AgCl se dissout dans l'ammoniac car $Ag^+$ forme le complexe stable $[Ag(NH_3)_2]^+$.</li>
+                               </ul>
+                            <strong class="capacite">Exploiter des courbes s=f(paramètre).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex4_7',
+                            section: '4.4.1 Acide-Base / Précipitation - Exercice 4.7',
+                            question: 'Le produit de solubilité de l\'hydroxyde de magnésium $Mg(OH)_2(s)$ est $K_s=1.8 \times 10^{-11}$. À quelle valeur de pH commence à précipiter $Mg(OH)_2(s)$ si la concentration initiale en ions $Mg^{2+}$ est $[Mg^{2+}]=0.1$ mol/L ? On rappelle $K_e = [H_3O^+][OH^-]=10^{-14}$ à 25°C.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 4.7 :</strong>
+                                <br>L'équilibre de dissolution est $Mg(OH)_2(s) \rightleftharpoons Mg^{2+}(aq) + 2OH^-(aq)$.
+                                <br>Le produit de solubilité est $K_s = [Mg^{2+}][OH^-]^2 = 1.8 \times 10^{-11}$.
+                                <br>La précipitation de $Mg(OH)_2(s)$ commence lorsque le quotient réactionnel $Q_r = [Mg^{2+}][OH^-]^2$ atteint la valeur de $K_s$. On cherche donc la concentration minimale en $[OH^-]$ qui déclenche la précipitation pour une concentration donnée de $[Mg^{2+}]$.
+                                <br>Condition de début de précipitation : $[Mg^{2+}][OH^-]_{seuil}^2 = K_s$.
+                                <br>On a $[Mg^{2+}]=0.1$ mol/L.
+                                <br>$[OH^-]_{seuil}^2 = \frac{K_s}{[Mg^{2+}]} = \frac{1.8 \times 10^{-11}}{0.1} = 1.8 \times 10^{-10}$.
+                                <br>$[OH^-]_{seuil} = \sqrt{1.8 \times 10^{-10}} = \sqrt{1.8} \times 10^{-5} \approx 1.34 \times 10^{-5}$ mol/L.
+                                <br>Il faut maintenant trouver le pH correspondant à cette concentration en ions hydroxyde. On peut calculer le pOH :
+                                <br>$pOH_{seuil} = -\log_{10}([OH^-]_{seuil}) = -\log_{10}(1.34 \times 10^{-5}) \approx 4.87$.
+                                <br>On utilise la relation $pH + pOH = pK_e = 14$ (à 25°C).
+                                <br>$pH_{seuil} = 14 - pOH_{seuil} = 14 - 4.87 = 9.13$.
+                                <br>La précipitation de $Mg(OH)_2(s)$ commence donc dès que le pH de la solution dépasse 9.13 (pour $[Mg^{2+}]=0.1$ M).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 4.4.2 Réactions d'oxydo-réduction ===
+                        {
+                            id: 'q4_4_2_1',
+                            section: '4.4.2 Oxydo-réduction',
+                            question: 'Définir oxydation, réduction, oxydant, réducteur et couple Ox/Red.',
+                            answer: `<div class="definition"><p><strong>Oxydo-Réduction (ou Redox) :</strong> Type de réaction chimique caractérisée par un <strong>transfert d'électrons</strong> ($e^-$) entre les espèces réagissantes.
+                               <ul>
+                                    <li><strong>Oxydation :</strong> C'est la <strong>perte</strong> d'un ou plusieurs électrons par une espèce chimique.</li>
+                                    <li><strong>Réduction :</strong> C'est le <strong>gain</strong> d'un ou plusieurs électrons par une espèce chimique.</li>
+                               </ul>
+                            Ces deux processus sont toujours couplés dans une réaction redox globale : si une espèce est oxydée, une autre doit être réduite simultanément.</p>
+                            <p><strong>Oxydant (Ox) :</strong> C'est une espèce chimique capable de <strong>capter (gagner)</strong> des électrons. En réagissant, un oxydant est réduit.
+                            <br><strong>Réducteur (Red) :</strong> C'est une espèce chimique capable de <strong>céder (perdre)</strong> des électrons. En réagissant, un réducteur est oxydé.</p>
+                            <p><strong>Couple Oxydant/Réducteur (ou Couple Redox, noté Ox/Red) :</strong> Il est constitué des formes oxydée (Ox) et réduite (Red) d'une même espèce chimique (ou d'un même élément à différents degrés d'oxydation), qui peuvent être transformées l'une en l'autre par gain ou perte d'électrons. On le représente par la <strong>demi-équation électronique</strong> (équilibrée en matière et en charge) :
+                            <br>$Ox + n e^- \rightleftharpoons Red$.
+                            <br>où $n$ est le nombre d'électrons échangés entre les deux formes.
+                            <br>Exemples : $Fe^{3+} / Fe^{2+}$ ($Fe^{3+} + e^- \rightleftharpoons Fe^{2+}$); $MnO_4^- / Mn^{2+}$ ($MnO_4^- + 8H^+ + 5e^- \rightleftharpoons Mn^{2+} + 4H_2O$).</p>
+                            <p>Une <strong>réaction d'oxydo-réduction</strong> globale est la combinaison de deux demi-équations électroniques, où le réducteur d'un couple ($Red_1$) cède ses électrons à l'oxydant d'un autre couple ($Ox_2$) :
+                            <br>Ex: $a (Ox_1 + n_1 e^- \rightleftharpoons Red_1)$
+                            <br>$b (Red_2 \rightleftharpoons Ox_2 + n_2 e^-)$
+                            <br>Bilan ($n_1 a = n_2 b$) : $a Ox_1 + b Red_2 \rightleftharpoons c Red_1 + d Ox_2$.
+                            <strong class="capacite">Identifier Ox et Red d'un couple.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_2_2',
+                            section: '4.4.2 Oxydo-réduction',
+                            question: 'Définir le nombre d\'oxydation (n.o.). Comment varie-t-il lors d\'une oxydation ou d\'une réduction ? Donner les règles usuelles pour le calculer.',
+                            answer: `<div class="definition"><p><strong>Nombre d'Oxydation (n.o.) (ou Degré d'Oxydation) :</strong> C'est un nombre entier (positif, négatif ou nul), attribué à chaque atome au sein d'une espèce chimique (molécule ou ion). Il représente la <strong>charge fictive</strong> que porterait cet atome si toutes les liaisons chimiques dans lesquelles il est engagé étaient considérées comme purement ioniques, avec les électrons de liaison attribués conventionnellement à l'atome le plus électronégatif.</p>
+                            <p><strong>Utilité et Variation :</strong> Le n.o. est un outil formel très utile pour :
+                               <ul><li>Suivre les transferts d'électrons dans les réactions redox :
+                                   <ul><li>Une <strong>oxydation</strong> correspond à une <strong>augmentation</strong> du n.o. de l'élément oxydé.</li>
+                                   <li>Une <strong>réduction</strong> correspond à une <strong>diminution</strong> du n.o. de l'élément réduit.</li></ul></li>
+                               <li>Équilibrer les équations redox complexes.</li>
+                               <li>Nomenclature des composés.</li></ul></p>
+                            <p><strong>Règles usuelles pour déterminer les n.o. :</strong> (par ordre de priorité décroissante si conflit)
+                               <ol>
+                                    <li>Le n.o. d'un atome dans un <strong>corps simple</strong> (ex: $Fe(s), O_2(g), S_8(s)$) est toujours <strong>0</strong>.</li>
+                                    <li>La <strong>somme</strong> des n.o. de tous les atomes dans une <strong>molécule neutre</strong> est <strong>0</strong>.</li>
+                                    <li>La <strong>somme</strong> des n.o. de tous les atomes dans un <strong>ion polyatomique</strong> est égale à la <strong>charge de l'ion</strong>.</li>
+                                    <li>Le n.o. d'un <strong>ion monoatomique</strong> est égal à sa <strong>charge</strong> (ex: $n.o.(Fe^{3+}) = +III$; $n.o.(Cl^-) = -I$).</li>
+                                    <li>Dans la plupart de ses composés, le n.o. de l'<strong>Hydrogène (H)</strong> est <strong>+I</strong> (sauf dans les hydrures métalliques comme NaH où il est -I).</li>
+                                    <li>Dans la plupart de ses composés, le n.o. de l'<strong>Oxygène (O)</strong> est <strong>-II</strong> (sauf dans les peroxydes comme $H_2O_2$ où il est -I, et dans $OF_2$ où il est +II car F est plus électronégatif).</li>
+                                    <li>Les <strong>alcalins</strong> (Groupe 1) ont n.o. = <strong>+I</strong> dans leurs composés.</li>
+                                    <li>Les <strong>alcalino-terreux</strong> (Groupe 2) ont n.o. = <strong>+II</strong> dans leurs composés.</li>
+                                    <li>Les <strong>halogènes</strong> (Groupe 17) ont souvent n.o. = <strong>-I</strong> dans leurs composés binaires avec des éléments moins électronégatifs (ex: NaCl), mais peuvent avoir des n.o. positifs avec l'oxygène (ex: dans $ClO_4^-$).</li>
+                               </ol>
+                            <strong class="capacite">Prévoir les n.o. extrêmes (min/max) d'un élément d'après sa position (tableau).</strong> Ex: Soufre (Gr 16, $ns^2np^4$) : n.o. min = -II (gagne 2e⁻, $S^{2-}$), n.o. max = +VI (perd 6e⁻ de valence, $SO_4^{2-}$).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_2_3',
+                            section: '4.4.2 Oxydo-réduction',
+                            question: 'Qu\'est-ce que le potentiel d\'électrode E ? Donner la formule de Nernst qui le relie au potentiel standard $E^\circ$ et aux activités des espèces Ox et Red.',
+                            answer: `<div class="definition"><p><strong>Potentiel d'Électrode (E) (ou Potentiel Redox) :</strong> C'est une grandeur thermodynamique (grandeur intensive, en Volts) associée à un couple Ox/Red en solution ($Ox + n e^- \rightleftharpoons Red$). Il mesure quantitativement la <strong>tendance</strong> de ce couple à céder ou à capter des électrons lorsqu'il est mis en présence d'une électrode conductrice (interface où le transfert d'électrons peut avoir lieu).
+                            <br>Plus le potentiel E est <strong>élevé</strong>, plus l'oxydant Ox du couple est <strong>fort</strong> (a tendance à capter des électrons) et plus le réducteur Red est faible.
+                            <br>Plus le potentiel E est <strong>bas</strong>, plus le réducteur Red du couple est <strong>fort</strong> (a tendance à céder des électrons) et plus l'oxydant Ox est faible.</p>
+                            <p><strong>Formule de Nernst (admise en MPSI) :</strong> Cette formule fondamentale relie le potentiel d'équilibre $E_{Ox/Red}$ d'une électrode (où le couple Ox/Red est présent) aux concentrations (ou plus rigoureusement aux activités $a_i$) des espèces Ox et Red en solution, ainsi qu'au potentiel standard $E^\circ_{Ox/Red}$ du couple. Pour la demi-réaction $Ox + n e^- \rightleftharpoons Red$, la formule de Nernst s'écrit :
+                            <br>$E_{Ox/Red} = E^\circ_{Ox/Red} + \\frac{RT}{nF} \\ln \\frac{a_{Ox}}{a_{Red}}$
+                            <br>où :
+                               <ul>
+                                    <li>$E^\circ_{Ox/Red}$ est le <strong>Potentiel Standard</strong> du couple (en Volts, V). C'est la valeur du potentiel lorsque toutes les espèces participant à la demi-réaction sont dans leur état standard (activité égale à 1 pour les solutés et solides/liquides purs, pression partielle égale à $P^\circ=1$ bar pour les gaz). Les potentiels standards sont tabulés (souvent à 25°C) par rapport à l'Électrode Standard à Hydrogène (ESH) dont le potentiel est fixé à 0V par convention.</li>
+                                    <li>R est la constante des gaz parfaits ($R \approx 8.314$ J·K⁻¹·mol⁻¹).</li>
+                                    <li>T est la température absolue (en Kelvin, K).</li>
+                                    <li>n est le nombre d'électrons échangés dans la demi-équation.</li>
+                                    <li>F est la constante de Faraday (charge d'une mole d'électrons, $F = N_A \times e \approx 96485$ C·mol⁻¹).</li>
+                                    <li>$a_{Ox}$ et $a_{Red}$ sont les activités des formes oxydée et réduite. Pour des solutés dilués, $a_i \approx [i]/c^\circ$. Pour des solides ou liquides purs, $a_i=1$. Pour des gaz, $a_i=P_i/P^\circ$.</li>
+                               </ul>
+                            <strong>Forme pratique à 25°C (298 K) :</strong> Le terme $\frac{RT}{F} \ln(x) = \frac{2.303 RT}{F} \log_{10}(x)$. À 298K, $\frac{2.303 RT}{F} \approx 0.0592$ V. La formule devient :
+                            <br>$E_{Ox/Red} = E^\circ_{Ox/Red} + \\frac{0.0592}{n} \log_{10} \\frac{a_{Ox}}{a_{Red}}$.
+                            <br>(On utilise souvent l'approximation 0.06 V au lieu de 0.0592 V).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_2_4',
+                            section: '4.4.2 Oxydo-réduction',
+                            question: 'Qu\'est-ce qu\'une pile électrochimique ? Comment déterminer sa tension à vide (f.e.m.) et identifier l'anode et la cathode à partir des potentiels d\'électrode ?',
+                            answer: `<div class="definition"><p><strong>Pile Électrochimique (ou Cellule galvanique) :</strong> C'est un dispositif qui convertit l'énergie libérée par une réaction d'oxydo-réduction <strong>spontanée</strong> en énergie électrique.
+                            <br>Elle est constituée de deux <strong>demi-piles</strong> séparées, chacune composée d'une <strong>électrode</strong> (conducteur électronique, ex: métal ou graphite) plongeant dans une <strong>solution électrolytique</strong> contenant un couple Ox/Red. Les deux demi-piles sont reliées par :
+                               <ul><li>Un <strong>circuit extérieur</strong> (fil conducteur) permettant le passage des électrons de l'électrode où a lieu l'oxydation vers celle où a lieu la réduction.</li>
+                               <li>Une <strong>jonction électrolytique</strong> (ex: pont salin, paroi poreuse) permettant le passage des ions entre les deux solutions pour assurer la neutralité électrique globale, fermant ainsi le circuit.</li></ul></p>
+                            <p><strong>Fonctionnement et Terminologie :</strong>
+                               <ul><li>La réaction redox globale spontanée se produit ($K^\circ > 1$). Elle résulte de la différence de potentiel entre les deux couples.</li>
+                               <li>L'électrode où a lieu l'<strong>Oxydation</strong> (libération d'e⁻) est appelée l'<strong>Anode</strong>. C'est le pôle <strong>négatif</strong> de la pile (source d'électrons pour le circuit extérieur). $Red_1 \to Ox_1 + n_1 e^-$.</li>
+                               <li>L'électrode où a lieu la <strong>Réduction</strong> (consommation d'e⁻) est appelée la <strong>Cathode</strong>. C'est le pôle <strong>positif</strong> de la pile (où les électrons arrivent du circuit extérieur). $Ox_2 + n_2 e^- \to Red_2$.</li>
+                               <li>Identification : L'oxydation a lieu au couple qui a le potentiel d'électrode <strong>le plus bas</strong>. La réduction a lieu au couple qui a le potentiel d'électrode <strong>le plus élevé</strong>.
+                               <br>Donc : <strong>Anode = Pôle (-) = Potentiel le plus bas ($E_{(-)}$) = Oxydation.</strong>
+                               <br><strong>Cathode = Pôle (+) = Potentiel le plus élevé ($E_{(+)}$) = Réduction.</strong></li></ul></p>
+                            <p><strong>Tension à Vide (Force Électromotrice $f.e.m.$ ou $e$) :</strong> C'est la différence de potentiel mesurée entre les bornes de la pile lorsqu'elle ne débite aucun courant (circuit extérieur ouvert). Elle est égale à la différence entre le potentiel de la cathode (pôle +) et le potentiel de l'anode (pôle -) :
+                            <br>$e = E_{cathode} - E_{anode} = E_{(+)} - E_{(-)}$.
+                            <br>Comme $E_{(+)} > E_{(-)}$ pour une réaction spontanée, la f.e.m. $e$ est toujours <strong>positive</strong> pour une pile fonctionnant spontanément. Les potentiels $E_{(+)}$ et $E_{(-)}$ sont les potentiels d'équilibre des couples respectifs, donnés par la formule de Nernst.
+                            <strong class="capacite">Décrire le fonctionnement (polarités, réactions aux électrodes) à partir des potentiels ou d'une mesure de $e$.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_2_5',
+                            section: '4.4.2 Oxydo-réduction',
+                            question: 'Comment utiliser un diagramme de prédominance en potentiel (axe des E°) ou la règle du gamma pour prévoir qualitativement la réaction spontanée entre deux couples Ox/Red ?',
+                            answer: `<div class="methode"><p><strong>Prévision Qualitative des Réactions Redox :</strong> On peut utiliser l'échelle des potentiels standards $E^\circ$ (ou des potentiels de Nernst E si les conditions ne sont pas standard) pour prévoir si une réaction redox entre deux couples sera spontanée.
+                               <ul>
+                                    <li><strong>Axe des Potentiels :</strong> On place les couples Ox/Red sur un axe vertical gradué en potentiel E. Par convention, on écrit Ox à gauche et Red à droite de l'axe pour chaque couple. Plus on monte sur l'axe (E élevé), plus l'oxydant est fort et le réducteur est faible. Plus on descend (E bas), plus le réducteur est fort et l'oxydant est faible.</li>
+                                    <li><strong>Règle du Gamma ($\gamma$) :</strong> Une réaction redox spontanée se produit entre l'<strong>oxydant</strong> du couple ayant le potentiel <strong>le plus élevé</strong> et le <strong>réducteur</strong> du couple ayant le potentiel <strong>le plus bas</strong>.
+                                    <br>Si on relie ces deux réactifs sur l'axe des potentiels par une flèche diagonale, et les produits formés par une autre flèche diagonale, on forme une figure qui ressemble à la lettre grecque gamma ($\gamma$). La réaction se produit spontanément dans le sens indiqué par le "gamma".
+                                    <div class="schema">Schéma : Règle du gamma sur un axe de potentiel</div>
+                                    Exemple : Si $E^\circ_1 (Ox_1/Red_1) > E^\circ_2 (Ox_2/Red_2)$.
+                                    <br>   $E^\circ_1 \uparrow$  Ox1 | Red1
+                                    <br>                | $\searrow$ |
+                                    <br>                |      $\gamma$
+                                    <br>                | $\nearrow$ |
+                                    <br>   $E^\circ_2 \downarrow$  Ox2 | Red2
+                                    <br>La réaction spontanée est $Ox_1 + Red_2 \to Red_1 + Ox_2$.</li>
+                               </ul>
+                            <strong class="capacite">Utiliser ces diagrammes pour prévoir espèces majoritaires ou incompatibles.</strong> (Deux espèces sont incompatibles si elles peuvent réagir spontanément selon la règle du gamma).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q4_4_2_6',
+                            section: '4.4.2 Oxydo-réduction',
+                            question: 'Quelle est la relation entre l\'enthalpie libre standard de réaction $\Delta_r G^\circ$, la constante d\'équilibre $K^\circ$ et la différence des potentiels standards $\Delta E^\circ$ pour une réaction redox ? Comment l\'utiliser pour prévoir si une réaction est favorisée ?',
+                            answer: `<div class="resultat"><p><strong>Aspect Thermodynamique des Réactions Redox :</strong> Considérons la réaction redox globale (équilibrée) :
+                            <br>$a Ox_1 + b Red_2 \rightleftharpoons c Red_1 + d Ox_2$.
+                            <br>Soit $n$ le nombre total d'électrons échangés dans cette réaction équilibrée (n = PPCM du nb d'e⁻ dans chaque demi-équation).
+                            <br>Soient $E^\circ_1 = E^\circ(Ox_1/Red_1)$ et $E^\circ_2 = E^\circ(Ox_2/Red_2)$ les potentiels standards des deux couples.
+                            <br>Il existe une relation directe entre l'enthalpie libre standard de réaction $\Delta_r G^\circ$ et la différence des potentiels standards :
+                            <br>$\\Delta_r G^\circ = -n F (E^\circ_1 - E^\circ_2)$.
+                            <br>où F est la constante de Faraday. (Cette relation vient du fait que $\Delta_r G$ est lié au travail électrique maximal récupérable).
+                            <br>On sait aussi que l'enthalpie libre standard est liée à la constante d'équilibre thermodynamique $K^\circ$ par :
+                            <br>$\\Delta_r G^\circ = -RT \ln K^\circ$.
+                            <br>En combinant ces deux relations, on obtient le lien entre la constante d'équilibre et les potentiels standards :
+                            <br>$-RT \ln K^\circ = -n F (E^\circ_1 - E^\circ_2)$
+                            <br>$\\implies \ln K^\circ = \\frac{nF}{RT}(E^\circ_1 - E^\circ_2)$.
+                            <br>Ou en logarithme décimal (à 25°C, $RT/F \ln(10) \approx 0.0592$ V) :
+                            <br>$\\log_{10} K^\circ = \\frac{n}{0.0592}(E^\circ_1 - E^\circ_2)$.
+                            <br><strong>Prévision du Caractère Favorisé/Défavorisé :</strong>
+                               <ul><li>La réaction est thermodynamiquement <strong>favorisée</strong> dans le sens direct si $K^\circ > 1$ (ou $\ln K^\circ > 0$, ou $\Delta_r G^\circ < 0$).
+                                    <br>D'après les relations ci-dessus, cela est équivalent à :
+                                    <br>$E^\circ_1 - E^\circ_2 > 0 \implies E^\circ_1 > E^\circ_2$.
+                                    <br>Ceci confirme la règle du gamma : la réaction spontanée se produit entre l'oxydant du couple de potentiel le plus élevé ($Ox_1$) et le réducteur du couple de potentiel le plus bas ($Red_2$).</li>
+                               <li>La réaction est <strong>défavorisée</strong> ($K^\circ < 1$, $\Delta_r G^\circ > 0$) si $E^\circ_1 < E^\circ_2$.</li>
+                               <li>Elle est à l'<strong>équilibre</strong> dans les conditions standard ($K^\circ = 1$, $\Delta_r G^\circ = 0$) si $E^\circ_1 = E^\circ_2$.</li></ul>
+                            <strong class="capacite">Prévoir le caractère favorisé/défavorisé à partir des $E^\circ$.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_2_7',
+                            section: '4.4.2 Oxydo-réduction',
+                            question: 'Définir la dismutation et la médiamutation (comproportionation). Donner la condition sur les potentiels standards pour qu\'une dismutation soit favorisée.',
+                            answer: `<div class="resultat"><p><strong>Dismutation et Médiamutation :</strong> Ces termes désignent des réactions d'oxydo-réduction particulières impliquant trois degrés d'oxydation différents ($Ox, Intermed, Red$) d'un même élément chimique.
+                               <ul>
+                                    <li><strong>Dismutation :</strong> C'est une réaction où une espèce chimique ayant un degré d'oxydation <strong>intermédiaire</strong> réagit sur elle-même pour donner deux autres espèces du même élément, l'une à un degré d'oxydation <strong>supérieur</strong> (oxydation) et l'autre à un degré d'oxydation <strong>inférieur</strong> (réduction).
+                                    <br>Schéma : $2 \times E_{intermed} \rightleftharpoons E_{sup} + E_{inf}$.
+                                    <br>Exemple : $2 Cu^+(aq) \rightleftharpoons Cu^{2+}(aq) + Cu(s)$. (n.o. : +I $\to$ +II et 0).</li>
+                                    <li><strong>Médiamutation (ou Comproportionation) :</strong> C'est la réaction <strong>inverse</strong> de la dismutation. Deux espèces du même élément à des degrés d'oxydation différents (l'un supérieur, l'un inférieur) réagissent pour donner une espèce à un degré d'oxydation intermédiaire.
+                                    <br>Schéma : $E_{sup} + E_{inf} \rightleftharpoons 2 \times E_{intermed}$.
+                                    <br>Exemple : $Ag^{2+}(aq) + Ag(s) \rightleftharpoons 2 Ag^+(aq)$. (n.o. : +II et 0 $\to$ +I).</li>
+                               </ul>
+                            <strong>Condition Thermodynamique pour la Dismutation :</strong> Considérons les deux couples redox impliquant l'espèce intermédiaire :
+                               <ul><li>Couple 1: $Ox_{sup} / Red_{intermed}$, potentiel standard $E^\circ_1 = E^\circ(Ox_{sup}/Red_{intermed})$.</li>
+                               <li>Couple 2: $Ox_{intermed} / Red_{inf}$, potentiel standard $E^\circ_2 = E^\circ(Ox_{intermed}/Red_{inf})$.</li></ul>
+                            La réaction de dismutation $2 E_{intermed} \rightleftharpoons E_{sup} + E_{inf}$ correspond à la réduction de $E_{intermed}$ en $E_{inf}$ (couple 2) et à l'oxydation de $E_{intermed}$ en $E_{sup}$ (réaction inverse du couple 1).
+                            <br>La réaction est spontanée (favorisée) si l'oxydant du couple réducteur ($Ox_{intermed}$ du couple 2) peut oxyder le réducteur du couple oxydant ($Red_{intermed}$ du couple 1). D'après la règle du gamma, cela se produit si le potentiel du couple "oxydant" ($Ox_{intermed}/Red_{inf}$) est supérieur au potentiel du couple "réducteur" ($Ox_{sup}/Red_{intermed}$).
+                            <br>Condition de dismutation spontanée : $E^\circ_2 > E^\circ_1$, soit :
+                            <br>$E^\circ(Ox_{intermed}/Red_{inf}) > E^\circ(Ox_{sup}/Red_{intermed})$.
+                            <br>(Inversement, la médiamutation est favorisée si $E^\circ(Ox_{intermed}/Red_{inf}) < E^\circ(Ox_{sup}/Red_{intermed})$).
+                            <strong class="capacite">Prévoir ces réactions.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q4_4_2_8',
+                            section: '4.4.2 Oxydo-réduction',
+                            question: 'Qu\'est-ce qu\'un diagramme Potentiel-pH (Pourbaix) ? Quels types de frontières y trouve-t-on et que représentent-elles ? À quoi sert le diagramme E-pH de l\'eau ?',
+                            answer: `<div class="methode"><p><strong>Diagrammes Potentiel-pH (ou Diagrammes de Pourbaix) :</strong> Ce sont des diagrammes bidimensionnels qui représentent les domaines de <strong>stabilité thermodynamique</strong> (prédominance ou existence) des différentes espèces chimiques d'un élément donné en solution aqueuse, en fonction du <strong>potentiel d'électrode E</strong> (axe vertical) et du <strong>pH</strong> de la solution (axe horizontal). Ils sont généralement construits à une température donnée (souvent 25°C) et pour une concentration totale fixée des espèces dissoutes (ou des activités/pressions partielles unitaires pour les frontières standard).</p>
+                            <p><strong>Types de Frontières et Signification :</strong> Les lignes (frontières) sur le diagramme séparent les domaines où différentes espèces sont majoritaires à l'équilibre. Elles correspondent aux conditions où deux espèces sont en équilibre (activités/concentrations égales pour les espèces dissoutes, ou équilibre avec un solide/gaz).
+                               <ul>
+                                    <li><strong>Frontières Verticales (indépendantes de E) :</strong> Elles correspondent à des équilibres <strong>acido-basiques</strong>, qui ne dépendent que du pH (et pas du potentiel redox). La frontière entre un acide HA et sa base conjuguée A⁻ est une droite verticale à $pH = pK_a(HA/A^-)$.</li>
+                                    <li><strong>Frontières Horizontales (indépendantes du pH) :</strong> Elles correspondent à des équilibres <strong>d'oxydo-réduction</strong> qui n'impliquent <strong>pas</strong> d'ions $H^+$ (ou $OH^-$). La frontière entre Ox et Red ($Ox + ne^- \rightleftharpoons Red$) est une droite horizontale à $E = E^\circ_{Ox/Red} + \frac{0.059}{n} \log(a_{Ox}/a_{Red})$. Si on trace la frontière pour $a_{Ox}=a_{Red}$, elle est à $E = E^\circ_{Ox/Red}$.</li>
+                                    <li><strong>Frontières Obliques (dépendantes de E et du pH) :</strong> Elles correspondent à des équilibres <strong>d'oxydo-réduction</strong> qui impliquent des ions $H^+$ (ou $OH^-$). Pour $a Ox + m H^+ + n e^- \rightleftharpoons b Red + q H_2O$, la formule de Nernst donne $E = E^\circ + \frac{0.059}{n} \log \frac{(a_{Ox})^a [H^+]^m}{(a_{Red})^b}$. En remplaçant $[H^+] = 10^{-pH}$, on obtient $E = E' - \frac{0.059 \times m}{n} pH$. La frontière est une droite de pente négative $-\frac{0.059 m}{n}$ V/unité pH.</li>
+                               </ul></p>
+                            <p><strong>Diagramme E-pH de l'Eau :</strong> Il montre les domaines de stabilité de $H_2O(l)$ par rapport à son oxydation en $O_2(g)$ et sa réduction en $H_2(g)$.
+                               <ul><li>Oxydation : $2H_2O \rightleftharpoons O_2(g) + 4H^+ + 4e^-$. $E = E^\circ(O_2/H_2O) - 0.059 pH$. Avec $E^\circ=1.23$V, $E = 1.23 - 0.059 pH$ (pour $P(O_2)=1$ bar).</li>
+                               <li>Réduction : $2H_2O + 2e^- \rightleftharpoons H_2(g) + 2OH^-$ ou $2H^+ + 2e^- \rightleftharpoons H_2(g)$. $E = E^\circ(H^+/H_2) - 0.059 pH$. Avec $E^\circ=0$V, $E = 0.00 - 0.059 pH$ (pour $P(H_2)=1$ bar).</li></ul>
+                            Ces deux droites délimitent le domaine de stabilité thermodynamique de l'eau liquide. Les espèces situées au-dessus de la droite supérieure peuvent oxyder l'eau en $O_2$. Les espèces situées en-dessous de la droite inférieure peuvent réduire l'eau en $H_2$.
+                            <br><strong>Utilisations des diagrammes E-pH :</strong> Prévoir la stabilité des espèces dans l'eau, prédire les réactions redox possibles en fonction du pH, comprendre la corrosion, l'électrolyse, etc.
+                            <strong class="capacite">Identifier les domaines. Justifier pentes/positions des frontières. Prévoir réactions par superposition de diagrammes. Prévoir dismutation/médiamutation en fonction du pH. Confronter aux données cinétiques. Mettre en œuvre des réactions redox en s'aidant des diagrammes.</strong></p>
+                            <div class="schema">Schéma : Diagramme E-pH simplifié (ex: Fer) et de l'eau</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex4_12',
+                            section: '4.4.2 Oxydo-réduction - Exercice 4.12',
+                            question: 'Peut-on avoir dismutation de l\'ion $Cu^+$ en $Cu^{2+}$ et $Cu(s)$ en solution aqueuse ? Données : $E^\circ(Cu^{2+}/Cu^+)=0.16$ V, $E^\circ(Cu^+/Cu)=0.52$ V.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 4.12 :</strong>
+                            <br>La réaction de dismutation de $Cu^+$ est : $2 Cu^+ \rightleftharpoons Cu^{2+} + Cu(s)$.
+                            <br>Cette réaction implique les deux couples redox où $Cu^+$ (degré d'oxydation +I) est l'espèce intermédiaire :
+                            <ul><li>Couple 1 (Oxydation de $Cu^+$) : $Cu^{2+} / Cu^+$, $E^\circ_1 = 0.16$ V. (Demi-réaction: $Cu^{2+} + e^- \rightleftharpoons Cu^+$)</li>
+                            <li>Couple 2 (Réduction de $Cu^+$) : $Cu^+ / Cu$, $E^\circ_2 = 0.52$ V. (Demi-réaction: $Cu^+ + e^- \rightleftharpoons Cu(s)$)</li></ul>
+                            <br>La dismutation se produit si l'espèce intermédiaire peut à la fois s'oxyder et se réduire spontanément. Cela arrive si l'oxydant du couple "réducteur" ($Ox_{intermed} = Cu^+$ du couple 2) est plus fort que l'oxydant du couple "oxydant" ($Ox_{sup} = Cu^{2+}$ du couple 1) n'est capable de réoxyder le produit réduit ($Red_{inf} = Cu(s)$). La condition thermodynamique est que le potentiel du couple impliquant la réduction de l'intermédiaire soit supérieur au potentiel du couple impliquant l'oxydation de l'intermédiaire.
+                            <br>Condition pour la dismutation de $E_{intermed}$ : $E^\circ(Ox_{intermed}/Red_{inf}) > E^\circ(Ox_{sup}/Red_{intermed})$.
+                            <br>Ici, on doit comparer $E^\circ(Cu^+/Cu)$ et $E^\circ(Cu^{2+}/Cu^+)$.
+                            <br>On a $E^\circ_2 = 0.52$ V et $E^\circ_1 = 0.16$ V.
+                            <br>Puisque $E^\circ(Cu^+/Cu) = 0.52 \text{ V} > E^\circ(Cu^{2+}/Cu^+) = 0.16 \text{ V}$, la condition est <strong>vérifiée</strong>.
+                            <br>Conclusion : L'ion $Cu^+$ est thermodynamiquement instable en solution aqueuse vis-à-vis de la dismutation en $Cu^{2+}$ et $Cu(s)$. Spontanément, il devrait se transformer. (En pratique, la cinétique peut jouer un rôle, ou la stabilisation par complexation).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                    ] // Fin du tableau questions
+                }
+            },
+            methods: {
+                toggleAnswer(item) {
+                    item.showAnswer = !item.showAnswer;
+                    if (item.showAnswer) {
+                        this.$nextTick(() => {
+                            this.renderMath();
+                        });
+                    }
+                },
+                setComprehension(item, level) {
+                    item.comprehension = level;
+                    this.saveComprehensionState();
+                     this.$nextTick(() => {
+                        // Optional: Re-render math if layout changes subtly
+                        // this.renderMath();
+                    });
+                },
+                saveComprehensionState() {
+                    const stateToSave = this.questions.reduce((acc, q) => {
+                        if (q.comprehension) {
+                            acc[q.id] = q.comprehension;
+                        }
+                        return acc;
+                    }, {});
+                    try {
+                        // Use a unique key for this theme
+                        localStorage.setItem('vueQnAComprehension_Theme4_S2', JSON.stringify(stateToSave));
+                    } catch (e) {
+                        console.error("Erreur lors de l'enregistrement dans localStorage:", e);
+                    }
+                },
+                loadComprehensionState() {
+                    try {
+                         // Use the key specific to this theme
+                        const savedState = localStorage.getItem('vueQnAComprehension_Theme4_S2');
+                        if (savedState) {
+                            const parsedState = JSON.parse(savedState);
+                            this.questions.forEach(q => {
+                                if (parsedState[q.id]) {
+                                    q.comprehension = parsedState[q.id];
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Erreur lors du chargement depuis localStorage:", e);
+                    }
+                },
+                renderMath() {
+                    // Defer rendering until KaTeX is likely loaded
+                    if (window.renderMathInElement) {
+                         try {
+                            renderMathInElement(this.$el, {
+                                delimiters: [
+                                    {left: '$$', right: '$$', display: true},
+                                    {left: '$', right: '$', display: false},
+                                    {left: '\\(', right: '\\)', display: false},
+                                    {left: '\\[', right: '\\]', display: true}
+                                ],
+                                throwOnError: false // Don't stop rendering on error
+                            });
+                        } catch (error) {
+                            console.error("KaTeX rendering error:", error);
+                        }
+                    } else {
+                        // Retry mechanism or warning if KaTeX isn't loaded
+                        // console.warn("KaTeX auto-render not ready, retrying in 500ms...");
+                        // setTimeout(() => this.renderMath(), 500);
+                    }
+                },
+                renderContent(htmlContent) {
+                    // Pass through HTML, KaTeX rendering handled by renderMath
+                    return htmlContent;
+                }
+            },
+            mounted() {
+                this.loadComprehensionState();
+                // Initial KaTeX rendering after component is mounted and data loaded
+                this.$nextTick(() => {
+                    // Wait a brief moment for KaTeX script to potentially load via CDN
+                    setTimeout(() => this.renderMath(), 100);
+                });
+            }
+        }).mount('#app');
+
+    </script>
+
+</body>
+</html>
