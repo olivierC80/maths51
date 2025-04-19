@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Arithmétique dans $\mathbb{Z}$</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Arithmétique dans $\mathbb{Z}$</h1>
+
+<h3 id="arithmetique-entiers">Arithmétique dans l'ensemble des entiers relatifs</h3>
+<p class="intro-text">
+    L'objectif de cette section est d'étudier les propriétés de la divisibilité des entiers et des congruences. L'approche préconisée reste élémentaire en ce qu'elle ne fait pas appel au langage des structures algébriques.
+</p>
+
+<h4 id="divisibilite-division-euclidienne">a) Divisibilité et division euclidienne</h4>
+
+<div class="definition">
+    <strong>Divisibilité dans $\mathbb{Z}$ :</strong> Soient $a, b \in \mathbb{Z}$. On dit que $a$ <strong>divise</strong> $b$, et on note $a | b$, s'il existe un entier $k \in \mathbb{Z}$ tel que $b = ak$.
+    <br>Si $a|b$, on dit aussi que $a$ est un <strong>diviseur</strong> de $b$, ou que $b$ est un <strong>multiple</strong> de $a$.
+    <br><strong>Propriétés immédiates :</strong>
+    <ul>
+        <li>$\forall a \in \mathbb{Z}, a | 0$.</li>
+        <li>$0 | b \iff b = 0$.</li>
+        <li>$\forall a \in \mathbb{Z}, 1 | a$ et $-1 | a$.</li>
+        <li>$\forall a \in \mathbb{Z}, a | a$.</li>
+        <li>Si $a | b$ et $b | c$, alors $a | c$ (Transitivité).</li>
+        <li>Si $a | b$ et $a | c$, alors $a | (bu + cv)$ pour tous $u, v \in \mathbb{Z}$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    <strong>Entiers associés :</strong> Deux entiers $a, b \in \mathbb{Z}$ sont dits <strong>associés</strong> si $a | b$ et $b | a$.
+    <br><strong>Caractérisation :</strong> $a$ et $b$ sont associés si et seulement si $b = a$ ou $b = -a$ (i.e., $|b|=|a|$).
+    <br><em>Preuve :</em> Si $b=\pm a$, clairement $a|b$ et $b|a$. Réciproquement, si $a|b$ et $b|a$, alors $b=ka$ et $a=jb$ avec $k,j \in \mathbb{Z}$. Si $a=0$, alors $b=0$. Si $a \ne 0$, $a = j(ka) = (jk)a$. Comme $a \ne 0$, on a $jk=1$. Puisque $j, k$ sont entiers, les seules possibilités sont $(j=1, k=1)$ ou $(j=-1, k=-1)$. Donc $b=a$ ou $b=-a$.
+    <br>Beaucoup de propriétés de divisibilité (PGCD, PPCM, primalité) ne dépendent que de la valeur absolue. On travaille souvent dans $\mathbb{N}$ puis on étend à $\mathbb{Z}$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de la Division Euclidienne :</strong>
+    <ol>
+        <li><strong>Dans $\mathbb{N}$ :</strong> Pour tout $a \in \mathbb{N}$ et tout $b \in \mathbb{N}^*$, il existe un unique couple $(q, r) \in \mathbb{N} \times \mathbb{N}$ tel que :
+        $$ a = bq + r \quad \text{et} \quad 0 \le r < b $$
+        $q$ est le <strong>quotient</strong> et $r$ est le <strong>reste</strong> de la division euclidienne de $a$ par $b$.</li>
+        <li><strong>Dans $\mathbb{Z}$ :</strong> Pour tout $a \in \mathbb{Z}$ et tout $b \in \mathbb{Z}^*$, il existe un unique couple $(q, r) \in \mathbb{Z} \times \mathbb{N}$ tel que :
+        $$ a = bq + r \quad \text{et} \quad 0 \le r < |b| $$</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (Existence dans $\mathbb{N}$) :</strong> Soit $E = \{ a - bk \mid k \in \mathbb{Z} \text{ et } a - bk \ge 0 \}$. $E$ est une partie de $\mathbb{N}$.
+    *   $E$ est non vide : Si $a \ge 0$, $a - b \times 0 = a \in E$. Si $a < 0$, comme $b \ge 1$, on peut choisir $k$ assez négatif (e.g., $k=a$) pour que $a-bk = a(1-b) \ge 0$ (car $a \le 0, 1-b \le 0$), donc $a-bk \in E$.
+    *   $E$ étant une partie non vide de $\mathbb{N}$, elle admet un plus petit élément $r = \min E$. Par définition de $E$, $r \ge 0$ et $r = a - bq$ pour un certain $q \in \mathbb{Z}$.
+    *   Montrons $r < b$. Supposons par l'absurde $r \ge b$. Alors $r - b \ge 0$. Mais $r - b = (a - bq) - b = a - b(q+1)$. C'est un élément de $E$ qui est strictement plus petit que $r$ (car $b \ge 1$), ce qui contredit la minimalité de $r$. Donc $r < b$.
+    *   Il reste à montrer que $q \in \mathbb{N}$ si $a \in \mathbb{N}$. Comme $a \ge 0$, $bq = a-r$. Si $q<0$, alors $q \le -1$. $bq \le -b$. $a = bq+r \le -b+r < -b+b = 0$, ce qui contredit $a \ge 0$. Donc $q \ge 0$.
+    <strong>Unicité :</strong> Supposons $a = bq_1 + r_1 = bq_2 + r_2$ avec $0 \le r_1, r_2 < b$. Alors $b(q_1 - q_2) = r_2 - r_1$. Donc $|b||q_1 - q_2| = |r_2 - r_1|$. Comme $0 \le r_1, r_2 < b$, on a $-b < r_2 - r_1 < b$, soit $|r_2 - r_1| < b$. L'égalité $|b||q_1 - q_2| = |r_2 - r_1|$ implique $|b||q_1 - q_2| < b$. Comme $b \ge 1$, ceci n'est possible que si $|q_1 - q_2| = 0$, i.e., $q_1 = q_2$. Alors $r_2 - r_1 = 0$, donc $r_1 = r_2$.
+    <strong>Extension à $\mathbb{Z}$ :</strong> Se ramener à $|a| = |b|q' + r$ avec $0 \le r < |b|$, puis ajuster le signe de $q$.
+</div>
+
+<div class="example">
+    <strong>Exemples :</strong>
+    <ul>
+        <li>$a=25, b=7$: $25 = 7 \times 3 + 4$. ($q=3, r=4$).</li>
+        <li>$a=-25, b=7$: $-25 = 7 \times (-4) + 3$. ($q=-4, r=3$). ($7 \times (-3) - 4$ ne marche pas car $-4$ n'est pas dans $[0, 7[$).</li>
+        <li>$a=25, b=-7$: $|b|=7$. $25 = (-7) \times (-3) + 4$. ($q=-3, r=4$).</li>
+        <li>$a=-25, b=-7$: $|b|=7$. $-25 = (-7) \times 4 + 3$. ($q=4, r=3$).</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong>
+    <ol>
+        <li>Montrer que si $d | a$ et $d | b$, alors $d^2 | ab$. La réciproque est-elle vraie ?</li>
+        <li>Trouver le quotient et le reste de la division euclidienne de $a$ par $b$ dans les cas suivants :
+            a) $a = 133, b = 21$
+            b) $a = -50, b = 8$
+            c) $a = 100, b = -9$
+        </li>
+        <li>Soit $n \in \mathbb{N}$. Quel est le reste de la division euclidienne de $n^2$ par 4 ? (Discuter selon la parité de $n$).</li>
+    </ol>
+</div>
+
+
+<h4 id="pgcd-algorithme-euclide">b) PGCD et algorithme d'Euclide</h4>
+
+<div class="definition">
+    <strong>PGCD : Plus Grand Commun Diviseur</strong>
+    Soient $a, b \in \mathbb{N}$, non tous deux nuls.
+    L'ensemble des diviseurs communs positifs à $a$ et $b$, noté $D(a, b)^+ = \{d \in \mathbb{N}^* \mid d|a \text{ et } d|b \}$, est non vide (il contient 1) et fini (majoré par $\min(|a|,|b|)$ si $a,b \ne 0$, ou par $\max(|a|,|b|)$ si l'un est nul).
+    Le <strong>Plus Grand Commun Diviseur</strong> de $a$ et $b$, noté $PGCD(a, b)$ ou $a \wedge b$, est le plus grand élément de $D(a, b)^+$.
+    $$ a \wedge b = \max \{d \in \mathbb{N}^* \mid d|a \text{ et } d|b \} $$
+    Par convention, si $a \ne 0$, $a \wedge 0 = a$. $(0 \wedge 0$ n'est pas défini).
+</div>
+
+<div class="theorem">
+    <strong>Propriété fondamentale du PGCD :</strong> Soient $a, b \in \mathbb{N}$ non tous deux nuls. L'ensemble des diviseurs communs à $a$ et $b$ est exactement l'ensemble des diviseurs de $a \wedge b$.
+    $$ \{d \in \mathbb{Z} \mid d|a \text{ et } d|b \} = \{d \in \mathbb{Z} \mid d | (a \wedge b) \} $$
+    En particulier, $a \wedge b$ est le plus grand élément (au sens de la divisibilité dans $\mathbb{N}$) de l'ensemble des diviseurs communs positifs.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Notons $d = a \wedge b$. Si $k | d$, alors $k$ divise $a$ et $b$ (car $d|a$ et $d|b$). Réciproquement, on montrera avec Bézout que $d = au+bv$. Si $k|a$ et $k|b$, alors $k | (au+bv)=d$.
+</div>
+
+<div class="theorem">
+    <strong>Lemme d'Euclide :</strong> Soient $a \in \mathbb{N}, b \in \mathbb{N}^*$. Si $a = bq + r$ est la division euclidienne de $a$ par $b$ ($0 \le r < b$), alors :
+    $$ a \wedge b = b \wedge r $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Montrons que $D(a, b) = D(b, r)$.
+    *   Soit $d$ un diviseur commun à $a$ et $b$. Alors $d|a$ et $d|b$. Comme $r = a - bq$, $d$ divise $a - bq$, donc $d|r$. Ainsi $d$ est un diviseur commun à $b$ et $r$. $D(a, b) \subseteq D(b, r)$.
+    *   Soit $d'$ un diviseur commun à $b$ et $r$. Alors $d'|b$ et $d'|r$. Comme $a = bq + r$, $d'$ divise $bq + r$, donc $d'|a$. Ainsi $d'$ est un diviseur commun à $a$ et $b$. $D(b, r) \subseteq D(a, b)$.
+    Les ensembles des diviseurs communs étant égaux, leurs plus grands éléments (les PGCD) sont égaux.
+</div>
+
+<div class="method">
+    <strong>Algorithme d'Euclide :</strong> Pour calculer $d = a \wedge b$ (avec $a \ge b > 0$).
+    On effectue les divisions euclidiennes successives :
+    \begin{align*} a &= b q_1 + r_1 & 0 \le r_1 < b \\ b &= r_1 q_2 + r_2 & 0 \le r_2 < r_1 \\ r_1 &= r_2 q_3 + r_3 & 0 \le r_3 < r_2 \\ &\vdots & \\ r_{k-2} &= r_{k-1} q_k + r_k & 0 \le r_k < r_{k-1} \\ r_{k-1} &= r_k q_{k+1} + 0 \end{align*}
+    La suite des restes $(r_i)$ est une suite d'entiers naturels strictement décroissante, donc elle atteint $0$ en un nombre fini d'étapes.
+    Le dernier reste non nul, $r_k$, est le PGCD de $a$ et $b$.
+    En effet: $a \wedge b = b \wedge r_1 = r_1 \wedge r_2 = \dots = r_{k-1} \wedge r_k = r_k \wedge 0 = r_k$.
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> Calcul de $126 \wedge 30$.
+    \begin{align*} 126 &= 30 \times 4 + 6 \\ 30 &= 6 \times 5 + 0 \end{align*}
+    Le dernier reste non nul est 6. Donc $126 \wedge 30 = 6$.
+</div>
+
+<div class="theorem">
+    <strong>Propriété d'homogénéité :</strong> Pour $a, b \in \mathbb{N}$ non tous nuls et $k \in \mathbb{N}^*$,
+    $$ (ka) \wedge (kb) = k (a \wedge b) $$
+</div>
+
+<div class="definition">
+    <strong>Extension du PGCD à $\mathbb{Z}$ :</strong> Pour $a, b \in \mathbb{Z}$, non tous deux nuls, on définit
+    $$ a \wedge b = |a| \wedge |b| $$
+    C'est le plus grand diviseur commun *positif*.
+</div>
+
+<div class="theorem">
+    <strong>Identité de Bézout :</strong> Soient $a, b \in \mathbb{Z}$, non tous deux nuls. Il existe des entiers $u, v \in \mathbb{Z}$ tels que :
+    $$ au + bv = a \wedge b $$
+    Le couple $(u, v)$ est appelé <strong>couple de Bézout</strong> pour $(a, b)$. Il n'est pas unique.
+    <br><strong>Caractérisation de $a \wedge b$ :</strong> $a \wedge b$ est le plus petit élément strictement positif de l'ensemble $\{ ax + by \mid x, y \in \mathbb{Z} \}$. Cet ensemble est d'ailleurs égal à $(a \wedge b) \mathbb{Z} = \{ k(a \wedge b) \mid k \in \mathbb{Z} \}$.
+</div>
+
+<div class="method">
+    <strong>Algorithme d'Euclide étendu (Remontée) :</strong> Permet de trouver un couple de Bézout $(u, v)$ tel que $au + bv = a \wedge b$.
+    On part de l'avant-dernière ligne de l'algorithme d'Euclide, qui exprime le PGCD ($r_k$) en fonction des deux restes précédents, puis on remplace successivement les restes en utilisant les lignes précédentes.
+    <br><strong>Exemple :</strong> $126 \wedge 30 = 6$.
+    La seule ligne utile est $126 = 30 \times 4 + 6$.
+    On isole le reste : $6 = 126 - 30 \times 4$.
+    Donc $6 = 1 \times 126 + (-4) \times 30$. Un couple de Bézout est $(u, v) = (1, -4)$.
+    <br><strong>Exemple 2 :</strong> $252 \wedge 198$.
+    \begin{align*} 252 &= 198 \times 1 + 54 \\ 198 &= 54 \times 3 + 36 \\ 54 &= 36 \times 1 + 18 \\ 36 &= 18 \times 2 + 0 \end{align*}
+    PGCD = 18.
+    Remontée :
+    $18 = 54 - 36 \times 1$ (ligne 3)
+    $18 = 54 - (198 - 54 \times 3) \times 1 = 54 - 198 + 54 \times 3 = 4 \times 54 - 1 \times 198$ (ligne 2)
+    $18 = 4 \times (252 - 198 \times 1) - 1 \times 198 = 4 \times 252 - 4 \times 198 - 1 \times 198$ (ligne 1)
+    $18 = 4 \times 252 - 5 \times 198$.
+    Un couple de Bézout est $(u, v) = (4, -5)$.
+</div>
+
+<div class="definition">
+    <strong>PPCM : Plus Petit Commun Multiple</strong>
+    Soient $a, b \in \mathbb{Z}^*$. L'ensemble des multiples communs positifs à $a$ et $b$, $M(a, b)^+ = \{m \in \mathbb{N}^* \mid a|m \text{ et } b|m \}$, est non vide (il contient $|ab|$).
+    Le <strong>Plus Petit Commun Multiple</strong> de $a$ et $b$, noté $PPCM(a, b)$ ou $a \vee b$, est le plus petit élément de $M(a, b)^+$.
+    $$ a \vee b = \min \{m \in \mathbb{N}^* \mid a|m \text{ et } b|m \} $$
+</div>
+
+<div class="theorem">
+    <strong>Relation PGCD-PPCM :</strong> Pour tous $a, b \in \mathbb{Z}^*$,
+    $$ (a \wedge b) (a \vee b) = |ab| $$
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Calculer $414 \wedge 662$ par l'algorithme d'Euclide.</li>
+        <li>Trouver un couple de Bézout $(u, v)$ pour $a=56$ et $b=15$.</li>
+        <li>Calculer $56 \vee 15$.</li>
+        <li>Soit $d = a \wedge b$. Montrer que $(a/d) \wedge (b/d) = 1$.</li>
+    </ol>
+</div>
+
+
+<h4 id="entiers-premiers-entre-eux">c) Entiers premiers entre eux</h4>
+
+<div class="definition">
+    <strong>Entiers premiers entre eux (Coprimes) :</strong> Deux entiers $a, b \in \mathbb{Z}$ sont dits <strong>premiers entre eux</strong> (ou coprimes) si $a \wedge b = 1$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Bézout :</strong> Deux entiers $a, b \in \mathbb{Z}$, non tous deux nuls, sont premiers entre eux si et seulement s'il existe $(u, v) \in \mathbb{Z}^2$ tel que $au + bv = 1$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong>
+    ($\implies$) Si $a \wedge b = 1$, l'identité de Bézout donne directement l'existence de $(u, v)$ tel que $au + bv = 1$.
+    ($\impliedby$) Supposons qu'il existe $(u, v) \in \mathbb{Z}^2$ tel que $au + bv = 1$. Soit $d = a \wedge b$. Alors $d|a$ et $d|b$. Donc $d$ divise toute combinaison linéaire de $a$ et $b$, en particulier $d | (au+bv)$. Donc $d|1$. Puisque $d$ est un PGCD, il est positif, donc $d=1$.
+</div>
+
+<div class="theorem">
+    <strong>Lemme de Gauss :</strong> Soient $a, b, c \in \mathbb{Z}$. Si $a | bc$ et $a \wedge b = 1$, alors $a | c$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Comme $a \wedge b = 1$, d'après le théorème de Bézout, il existe $(u, v) \in \mathbb{Z}^2$ tel que $au + bv = 1$.
+    Multiplions par $c$: $acu + bcv = c$.
+    On sait que $a | acu$.
+    Par hypothèse, $a | bc$, donc $a | bcv$.
+    Puisque $a$ divise les deux termes de la somme, $a$ divise la somme : $a | (acu + bcv)$, c'est-à-dire $a | c$.
+</div>
+
+<div class="comment">
+    <strong>Forme irréductible d'un rationnel :</strong> Tout nombre rationnel $x \in \mathbb{Q}$ peut s'écrire de manière unique (à signe près pour $p$ et $q$) sous la forme $x = \frac{p}{q}$ avec $p \in \mathbb{Z}$, $q \in \mathbb{N}^*$ et $p \wedge q = 1$. Cette écriture est appelée la forme irréductible de $x$.
+    <br><em>Existence :</em> Écrire $x = a/b$ avec $b>0$. Soit $d=a \wedge b$. Poser $p=a/d$ et $q=b/d$. Alors $p, q \in \mathbb{Z}$, $q > 0$, $x=p/q$ et $p \wedge q = (a/d) \wedge (b/d) = (a \wedge b)/d = d/d = 1$.
+    <br><em>Unicité :</em> Si $p/q = p'/q'$ avec $p \wedge q = 1$ et $p' \wedge q' = 1$, $q, q' > 0$. Alors $pq' = p'q$. Comme $q | p'q$ et $q \wedge p = 1$, par Gauss, $q | p'$. Comme $q' | pq'$ et $q' \wedge p' = 1$, par Gauss, $q' | p$. (Erreur: pas $q|p'$ mais $q|p'q$). Correction: $q|p'q$. On a $p \wedge q = 1$. $q|p'q$ et $p' \wedge q' = 1$? Non. $pq'=p'q$. $q|p'q$, $q \wedge p = 1$? Non plus. Ok : $p q' = p' q$. Donc $q | p q'$. Comme $q \wedge p = 1$, par Gauss, $q | q'$. De même $q' | p' q$. Comme $q' \wedge p' = 1$, par Gauss, $q' | q$. Puisque $q, q'$ sont positifs et se divisent mutuellement, $q=q'$. Alors $pq = p'q$, et comme $q \ne 0$, $p=p'$.
+</div>
+
+<div class="theorem">
+    <strong>Produit et divisibilité (coprimes) :</strong>
+    <ul>
+        <li>Si $a | n$ et $b | n$, et si $a \wedge b = 1$, alors $ab | n$.</li>
+        <li>Si $a \wedge n = 1$ et $b \wedge n = 1$, alors $(ab) \wedge n = 1$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Idées de preuve :</strong>
+    *   $a|n \implies n=ka$. $b|ka$. Comme $b \wedge a = 1$, par Gauss, $b|k$. Donc $k=jb$. $n=ka = (jb)a = (ab)j$. Donc $ab|n$.
+    *   $a \wedge n = 1 \implies au_1 + nv_1 = 1$. $b \wedge n = 1 \implies bu_2 + nv_2 = 1$. Multiplions les deux égalités : $(au_1+nv_1)(bu_2+nv_2) = 1$. En développant : $ab(u_1u_2) + n(av_2u_1 + bv_1u_2 + n v_1v_2) = 1$. C'est une relation de Bézout entre $ab$ et $n$, donc $(ab) \wedge n = 1$.
+</div>
+
+<div class="definition">
+    <strong>PGCD et primalité pour plusieurs entiers :</strong> Soient $a_1, \dots, a_n \in \mathbb{Z}$, non tous nuls.
+    <ul>
+        <li>Le PGCD $a_1 \wedge \dots \wedge a_n$ est le plus grand diviseur commun positif.</li>
+        <li>Identité de Bézout généralisée : $\exists (u_1, \dots, u_n) \in \mathbb{Z}^n, \sum_{i=1}^n a_i u_i = a_1 \wedge \dots \wedge a_n$.</li>
+        <li>Les entiers $a_1, \dots, a_n$ sont <strong>premiers entre eux dans leur ensemble</strong> si $a_1 \wedge \dots \wedge a_n = 1$. (Équivaut à $\exists (u_i), \sum a_i u_i = 1$).</li>
+        <li>Les entiers $a_1, \dots, a_n$ sont <strong>premiers entre eux deux à deux</strong> si $a_i \wedge a_j = 1$ pour tous $i \neq j$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    Premiers entre eux deux à deux $\implies$ Premiers entre eux dans leur ensemble.
+    La réciproque est fausse (Ex: $6, 10, 15$ sont premiers entre eux dans leur ensemble (PGCD=1) mais ne sont pas premiers entre eux deux à deux).
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.1 :</strong>
+    <ol>
+        <li>Résoudre dans $\mathbb{Z}^2$ l'équation $5x - 3y = 1$. (Trouver une solution particulière avec Bézout, puis la solution générale).</li>
+        <li>Montrer que pour tout $n \in \mathbb{N}$, $(n+1) \wedge (2n+1) = 1$.</li>
+        <li>Soit $a, b \in \mathbb{Z}$. Montrer que $a \wedge b = 1 \iff a \wedge (a+b) = 1$.</li>
+    </ol>
+</div>
+
+
+<h4 id="nombres-premiers">d) Nombres premiers</h4>
+
+<div class="definition">
+    <strong>Nombre premier :</strong> Un entier naturel $p$ est dit <strong>premier</strong> s'il est supérieur ou égal à 2 ($p \ge 2$) et si ses seuls diviseurs positifs sont 1 et $p$.
+    <br>Un entier naturel $n \ge 2$ qui n'est pas premier est dit <strong>composé</strong>.
+    <br>(1 n'est ni premier, ni composé).
+    <br>Exemples : 2, 3, 5, 7, 11, 13, 17, 19, ...
+</div>
+
+<div class="theorem">
+    <strong>Infinitude des nombres premiers :</strong> L'ensemble des nombres premiers est infini.
+</div>
+
+<div class="proof">
+    <strong>Preuve d'Euclide :</strong> Supposons par l'absurde qu'il n'existe qu'un nombre fini de nombres premiers, notés $p_1, p_2, \dots, p_k$.
+    Considérons l'entier $N = (p_1 p_2 \dots p_k) + 1$.
+    $N \ge 2$, donc $N$ admet au moins un diviseur premier $p$ (soit $N$ est premier, soit il est composé et divisible par un premier plus petit).
+    Ce diviseur premier $p$ doit appartenir à la liste $\{p_1, \dots, p_k\}$.
+    Donc $p$ divise le produit $P = p_1 p_2 \dots p_k$.
+    Comme $p$ divise aussi $N$, il doit diviser leur différence $N - P = 1$.
+    Or, aucun nombre premier ne divise 1. C'est une contradiction.
+    L'hypothèse initiale est donc fausse : il existe une infinité de nombres premiers.
+</div>
+
+<div class="method">
+    <strong>Crible d'Ératosthène :</strong> Méthode pour trouver les nombres premiers jusqu'à un certain entier $N$.
+    <ol>
+        <li>Écrire la liste des entiers de 2 à $N$.</li>
+        <li>Le premier nombre non rayé est 2. Il est premier. Rayer tous ses multiples (4, 6, 8, ...).</li>
+        <li>Le premier nombre suivant non rayé est 3. Il est premier. Rayer tous ses multiples (6, 9, 12, ...).</li>
+        <li>Le premier nombre suivant non rayé est 5. Il est premier. Rayer tous ses multiples (10, 15, 20, ...).</li>
+        <li>Continuer ainsi. Lorsqu'on considère un nombre premier $p$, on raye ses multiples $p^2, p(p+1), \dots$ jusqu'à $N$.</li>
+        <li>On peut s'arrêter lorsque le premier $p$ considéré vérifie $p^2 > N$. Tous les nombres restants non rayés sont premiers.</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Théorème Fondamental de l'Arithmétique :</strong> Tout entier naturel $n \ge 2$ se décompose de manière unique (à l'ordre près des facteurs) en un produit de nombres premiers.
+    $$ n = p_1^{\alpha_1} p_2^{\alpha_2} \dots p_k^{\alpha_k} $$
+    où $p_1 < p_2 < \dots < p_k$ sont des nombres premiers et $\alpha_1, \dots, \alpha_k \in \mathbb{N}^*$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong>
+    *   <strong>Existence :</strong> Par récurrence forte sur $n \ge 2$.
+        Base : $n=2$ est premier, la décomposition est $2^1$.
+        Hérédité : Supposons la propriété vraie pour tout $k$ tel que $2 \le k < n$.
+        Si $n$ est premier, c'est fini ($n=n^1$).
+        Si $n$ est composé, il s'écrit $n = ab$ avec $1 < a < n$ and $1 < b < n$. Par hypothèse de récurrence, $a$ et $b$ ont des décompositions en produit de premiers. Le produit de ces décompositions donne une décomposition pour $n$.
+    *   <strong>Unicité :</strong> Supposons $n = p_1^{\alpha_1} \dots p_k^{\alpha_k} = q_1^{\beta_1} \dots q_m^{\beta_m}$.
+        $p_1$ divise le premier produit. Il doit donc diviser le second produit. Comme $p_1$ est premier, il doit diviser l'un des facteurs $q_j$ (par applications successives du lemme d'Euclide ou d'une propriété des nombres premiers). Comme $q_j$ est premier, on a nécessairement $p_1 = q_j$.
+        En simplifiant par $p_1$ des deux côtés et en répétant l'argument (ou par récurrence), on montre que les ensembles de facteurs premiers $\{p_1, \dots, p_k\}$ et $\{q_1, \dots, q_m\}$ sont les mêmes, et que les exposants correspondants $\alpha_i$ et $\beta_j$ sont égaux.
+</div>
+
+<div class="definition">
+    <strong>Valuation $p$-adique :</strong> Soit $p$ un nombre premier et $n \in \mathbb{Z}^*$. La <strong>valuation $p$-adique</strong> de $n$, notée $v_p(n)$, est l'exposant de $p$ dans la décomposition en facteurs premiers de $|n|$.
+    <br>Si $n = \pm p_1^{\alpha_1} \dots p_k^{\alpha_k}$, alors $v_{p_i}(n) = \alpha_i$ et $v_q(n) = 0$ si $q$ est un premier différent de $p_1, \dots, p_k$.
+    <br>Par convention, $v_p(0) = +\infty$. On étend parfois à $\mathbb{Q}^*$ par $v_p(a/b) = v_p(a) - v_p(b)$.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés des valuations $p$-adiques :</strong> Soient $a, b \in \mathbb{Z}^*$ et $p$ un nombre premier.
+    <ul>
+        <li>$v_p(ab) = v_p(a) + v_p(b)$</li>
+        <li>$a | b \iff \forall p \text{ premier}, v_p(a) \le v_p(b)$</li>
+        <li>$v_p(a \wedge b) = \min(v_p(a), v_p(b))$</li>
+        <li>$v_p(a \vee b) = \max(v_p(a), v_p(b))$</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Se déduit directement de l'unicité de la décomposition en facteurs premiers. Par exemple, si $a = \prod p_i^{\alpha_i}$ et $b = \prod p_i^{\beta_i}$ (en utilisant les mêmes premiers $p_i$ avec exposants éventuellement nuls), alors $ab = \prod p_i^{\alpha_i + \beta_i}$. Donc $v_{p_i}(ab) = \alpha_i + \beta_i = v_{p_i}(a) + v_{p_i}(b)$.
+    Pour $a|b$, $\exists k \in \mathbb{Z}, b=ak$. Alors $v_p(b) = v_p(a) + v_p(k)$. Comme $v_p(k) \ge 0$, on a $v_p(a) \le v_p(b)$. La réciproque est vraie aussi.
+    Le PGCD contient chaque premier $p$ avec le plus petit exposant possible qui divise à la fois $a$ et $b$, d'où le min. Idem pour le PPCM avec le max.
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> $a = 12 = 2^2 \cdot 3^1$, $b = 90 = 2^1 \cdot 3^2 \cdot 5^1$.
+    $v_2(a)=2, v_3(a)=1, v_5(a)=0$.
+    $v_2(b)=1, v_3(b)=2, v_5(b)=1$.
+    $a \wedge b$: $v_2(a \wedge b) = \min(2, 1) = 1$. $v_3(a \wedge b) = \min(1, 2) = 1$. $v_5(a \wedge b) = \min(0, 1) = 0$. Donc $a \wedge b = 2^1 \cdot 3^1 \cdot 5^0 = 6$.
+    $a \vee b$: $v_2(a \vee b) = \max(2, 1) = 2$. $v_3(a \vee b) = \max(1, 2) = 2$. $v_5(a \vee b) = \max(0, 1) = 1$. Donc $a \vee b = 2^2 \cdot 3^2 \cdot 5^1 = 4 \times 9 \times 5 = 180$.
+    Vérification : $(a \wedge b)(a \vee b) = 6 \times 180 = 1080$. $|ab| = 12 \times 90 = 1080$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice D.1 :</strong>
+    <ol>
+        <li>Décomposer 594 et 420 en produits de facteurs premiers.</li>
+        <li>En déduire $594 \wedge 420$ et $594 \vee 420$.</li>
+        <li>Montrer que si $n$ est un entier tel que $n \ge 1$, alors $n(n+1)(n+2)$ est divisible par 6.</li>
+        <li>Soit $p$ un nombre premier. Montrer que $\sqrt{p}$ est irrationnel.</li>
+    </ol>
+</div>
+
+
+<h4 id="congruences">e) Congruences</h4>
+
+<div class="definition">
+    <strong>Congruence modulo $n$ :</strong> Soit $n \in \mathbb{N}^*$. Deux entiers $a, b \in \mathbb{Z}$ sont dits <strong>congrus modulo $n$</strong>, noté $a \equiv b \pmod{n}$ ou $a \equiv b \ [n]$, si $n$ divise la différence $a - b$.
+    $$ a \equiv b \pmod{n} \iff n | (a - b) $$
+    Ceci est équivalent à dire que $a$ et $b$ ont le même reste dans la division euclidienne par $n$.
+    <br>La relation de congruence modulo $n$ est une <strong>relation d'équivalence</strong> sur $\mathbb{Z}$ (réflexive, symétrique, transitive).
+</div>
+
+<div class="theorem">
+    <strong>Compatibilité des opérations :</strong> La relation de congruence modulo $n$ est compatible avec l'addition et la multiplication :
+    Si $a \equiv b \pmod{n}$ et $c \equiv d \pmod{n}$, alors :
+    <ul>
+        <li>$a + c \equiv b + d \pmod{n}$</li>
+        <li>$a c \equiv b d \pmod{n}$</li>
+    </ul>
+    En particulier, si $a \equiv b \pmod n$, alors $a^k \equiv b^k \pmod n$ pour tout $k \in \mathbb{N}$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong>
+    $a \equiv b \pmod n \implies a = b + kn$ pour $k \in \mathbb{Z}$.
+    $c \equiv d \pmod n \implies c = d + jn$ pour $j \in \mathbb{Z}$.
+    *   $a+c = (b+kn) + (d+jn) = (b+d) + (k+j)n$. Donc $n | ((a+c)-(b+d))$. $a+c \equiv b+d \pmod n$.
+    *   $ac = (b+kn)(d+jn) = bd + bjn + kdn + kj n^2 = bd + n(bj + kd + kjn)$. Donc $n | (ac - bd)$. $ac \equiv bd \pmod n$.
+</div>
+
+<div class="comment">
+    <strong>Anneaux $\mathbb{Z}/n\mathbb{Z}$ :</strong> L'ensemble des classes d'équivalence pour la congruence modulo $n$, noté $\mathbb{Z}/n\mathbb{Z} = \{\bar{0}, \bar{1}, \dots, \overline{n-1}\}$, peut être muni d'une structure d'anneau avec les opérations induites $\bar{a} + \bar{c} = \overline{a+c}$ et $\bar{a} \times \bar{c} = \overline{ac}$. Ces structures sont hors programme.
+</div>
+
+<div class="theorem">
+    <strong>Inverse modulaire :</strong> Soit $a \in \mathbb{Z}$ et $n \in \mathbb{N}^*$. Il existe un entier $u \in \mathbb{Z}$ tel que $au \equiv 1 \pmod{n}$ (on dit que $u$ est un <strong>inverse</strong> de $a$ modulo $n$) si et seulement si $a \wedge n = 1$.
+    <br>Si un tel inverse existe, il est unique modulo $n$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong>
+    $au \equiv 1 \pmod n \iff \exists v \in \mathbb{Z}, au - 1 = vn \iff au - vn = 1$.
+    D'après le théorème de Bézout, une telle équation admet une solution $(u, -v)$ si et seulement si $a \wedge n = 1$.
+    Si $a \wedge n = 1$, l'algorithme d'Euclide étendu permet de trouver un couple $(u_0, v_0)$ tel que $au_0 + nv_0 = 1$. Alors $au_0 \equiv 1 \pmod n$, et $u_0$ est un inverse de $a$ modulo $n$.
+    Si $u$ et $u'$ sont deux inverses de $a$ modulo $n$, $au \equiv 1$ et $au' \equiv 1$. Alors $a(u-u') \equiv 0 \pmod n$. Comme $a \wedge n = 1$, on peut "simplifier" par $a$ (en utilisant le lemme de Gauss : $n | a(u-u')$ et $n \wedge a = 1 \implies n | (u-u')$), donc $u \equiv u' \pmod n$. L'inverse est unique modulo $n$.
+</div>
+
+<div class="method">
+    <strong>Résoudre $ax \equiv c \pmod n$ :</strong>
+    <ol>
+        <li>Vérifier si une solution existe : calculer $d = a \wedge n$. L'équation a des solutions si et seulement si $d | c$.</li>
+        <li>Si $d | c$, on peut diviser toute la congruence (y compris le module !) par $d$: $a'x \equiv c' \pmod{n'}$ où $a'=a/d, c'=c/d, n'=n/d$. Maintenant $a' \wedge n' = 1$.</li>
+        <li>Trouver $u$, l'inverse de $a'$ modulo $n'$. (Utiliser Euclide étendu sur $a'$ et $n'$ pour avoir $a'u + n'v = 1$, donc $u$ est l'inverse).</li>
+        <li>Multiplier la congruence $a'x \equiv c' \pmod{n'}$ par $u$: $u a' x \equiv u c' \pmod{n'}$. Comme $ua' \equiv 1 \pmod{n'}$, on obtient $x \equiv u c' \pmod{n'}$.</li>
+        <li>La solution est l'ensemble des $x = u c' + k n'$ pour $k \in \mathbb{Z}$. (Il y a $d$ solutions distinctes modulo $n$).</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Petit Théorème de Fermat :</strong> Soit $p$ un nombre premier.
+    <ul>
+        <li>Pour tout entier $a$ non divisible par $p$ ($p \nmid a$), on a $a^{p-1} \equiv 1 \pmod{p}$.</li>
+        <li>Pour tout entier $a \in \mathbb{Z}$, on a $a^p \equiv a \pmod{p}$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (pour $a^{p-1} \equiv 1 \pmod p$ avec $p \nmid a$) :</strong>
+    Considérons l'ensemble $A = \{1, 2, \dots, p-1\}$.
+    Soit $f: A \to A$ l'application définie par $f(x) = (ax \pmod p)$.
+    *   L'application est bien à valeurs dans $A$ : si $x \in A$, alors $p \nmid x$. Comme $p \nmid a$, on a $p \nmid ax$. Donc $ax \not\equiv 0 \pmod p$. $ax \pmod p \in \{1, \dots, p-1\} = A$.
+    *   L'application est injective : si $f(x) = f(y)$, alors $ax \equiv ay \pmod p$. Donc $a(x-y) \equiv 0 \pmod p$. Comme $p \nmid a$ et $p$ est premier, on a $p | (x-y)$. Puisque $x, y \in \{1, \dots, p-1\}$, on a $-(p-2) \le x-y \le p-2$. Le seul multiple de $p$ dans cet intervalle est 0. Donc $x-y=0$, soit $x=y$.
+    *   $f$ est une injection d'un ensemble fini $A$ dans lui-même, c'est donc une bijection (une permutation de $A$).
+    *   L'ensemble des images $\{f(1), \dots, f(p-1)\} = \{a \times 1 \pmod p, \dots, a \times (p-1) \pmod p\}$ est donc égal à l'ensemble $A = \{1, \dots, p-1\}$.
+    *   Faisons le produit des éléments dans ces deux ensembles (modulo $p$) :
+        $(a \times 1) \times (a \times 2) \times \dots \times (a \times (p-1)) \equiv 1 \times 2 \times \dots \times (p-1) \pmod p$
+        $a^{p-1} (1 \times 2 \times \dots \times (p-1)) \equiv (p-1)! \pmod p$
+        $a^{p-1} (p-1)! \equiv (p-1)! \pmod p$.
+    *   Soit $K = (p-1)!$. On a $a^{p-1} K \equiv K \pmod p$.
+    *   Comme $p$ est premier, les entiers $1, 2, \dots, p-1$ sont tous premiers avec $p$. Leur produit $K=(p-1)!$ est donc aussi premier avec $p$ (d'après Th C). Donc $K$ admet un inverse modulo $p$.
+    *   En multipliant par l'inverse de $K$ modulo $p$, on obtient $a^{p-1} \equiv 1 \pmod p$.
+    La deuxième forme $a^p \equiv a \pmod p$ s'obtient en multipliant par $a$. Elle est aussi vraie si $p|a$ (car alors $0 \equiv 0 \pmod p$).
+</div>
+
+<div class="exercise">
+    <strong>Exercice E.1 :</strong>
+    <ol>
+        <li>Calculer le reste de la division euclidienne de $3^{100}$ par 7.</li>
+        <li>Trouver l'inverse de 5 modulo 26.</li>
+        <li>Résoudre l'équation $7x \equiv 4 \pmod{12}$.</li>
+        <li>Montrer que pour tout $n \in \mathbb{Z}$, $n^7 \equiv n \pmod{42}$. (Indication : $42 = 2 \times 3 \times 7$).</li>
+    </ol>
+</div>
+
+</body>
+</html>
