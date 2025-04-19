@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Calcul Matriciel et Systèmes Linéaires</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+        .matrix p { margin: 0; display: flex; justify-content: center; }
+        .matrix span { padding: 0 5px; }
+    </style>
+</head>
+<body>
+
+<h1>Calcul Matriciel et Systèmes Linéaires</h1>
+
+<h3 id="calcul-matriciel-systemes">Calcul matriciel et systèmes linéaires</h3>
+<p class="intro-text">
+    Le but de cette section est de présenter une initiation au calcul matriciel. Ainsi, on prépare l'étude géométrique de l'algèbre linéaire menée au second semestre, on revient sur l'étude des systèmes linéaires et on obtient des exemples fondamentaux d'anneaux.
+    <br>Dans toute cette section, $\mathbb{K}$ désigne un corps commutatif, typiquement $\mathbb{Q}$, $\mathbb{R}$ ou $\mathbb{C}$. $n, p, q$ sont des entiers naturels non nuls.
+</p>
+
+<h4 id="operations-matrices">a) Opérations sur les matrices</h4>
+
+<div class="definition">
+    <strong>Matrices :</strong> Une <strong>matrice</strong> $A$ à $n$ lignes et $p$ colonnes à coefficients dans $\mathbb{K}$ est un tableau rectangulaire d'éléments de $\mathbb{K}$, noté $A = (a_{i,j})_{\substack{1 \le i \le n \\ 1 \le j \le p}}$, où $a_{i,j}$ est le coefficient situé à la $i$-ème ligne et $j$-ème colonne.
+    <br>L'ensemble de ces matrices est noté $\mathcal{M}_{n,p}(\mathbb{K})$.
+    <ul>
+        <li>Si $n=p$, la matrice est dite <strong>carrée</strong> d'ordre $n$. L'ensemble est noté $\mathcal{M}_n(\mathbb{K})$.</li>
+        <li>Si $p=1$, la matrice est une <strong>matrice colonne</strong>. $\mathcal{M}_{n,1}(\mathbb{K})$.</li>
+        <li>Si $n=1$, la matrice est une <strong>matrice ligne</strong>. $\mathcal{M}_{1,p}(\mathbb{K})$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Opérations de base :</strong> Soient $A = (a_{i,j})$ et $B = (b_{i,j})$ dans $\mathcal{M}_{n,p}(\mathbb{K})$, et $\lambda \in \mathbb{K}$.
+    <ul>
+        <li><strong>Addition :</strong> $A+B = (a_{i,j} + b_{i,j})_{\substack{1 \le i \le n \\ 1 \le j \le p}} \in \mathcal{M}_{n,p}(\mathbb{K})$.</li>
+        <li><strong>Multiplication par un scalaire :</strong> $\lambda A = (\lambda a_{i,j})_{\substack{1 \le i \le n \\ 1 \le j \le p}} \in \mathcal{M}_{n,p}(\mathbb{K})$.</li>
+        <li><strong>Combinaison linéaire :</strong> $\lambda A + \mu B$.</li>
+    </ul>
+    $(\mathcal{M}_{n,p}(\mathbb{K}), +, \cdot)$ est un $\mathbb{K}$-espace vectoriel. La matrice nulle (tous coefficients nuls) est l'élément neutre pour $+$.
+</div>
+
+<div class="definition">
+    <strong>Matrices élémentaires :</strong> Pour $1 \le k \le n$ et $1 \le l \le p$, la <strong>matrice élémentaire</strong> $E_{k,l}$ de $\mathcal{M}_{n,p}(\mathbb{K})$ est la matrice dont tous les coefficients sont nuls, sauf celui à la position $(k, l)$ qui vaut 1.
+    $$ (E_{k,l})_{i,j} = \delta_{i,k} \delta_{j,l} $$
+    où $\delta_{a,b}$ est le <strong>symbole de Kronecker</strong> ($\delta_{a,b} = 1$ si $a=b$, $0$ sinon).
+</div>
+
+<div class="theorem">
+    <strong>Base canonique :</strong> L'ensemble $\{ E_{k,l} \mid 1 \le k \le n, 1 \le l \le p \}$ forme une base de l'espace vectoriel $\mathcal{M}_{n,p}(\mathbb{K})$, appelée base canonique. Toute matrice $A=(a_{i,j})$ s'écrit de manière unique comme combinaison linéaire des matrices élémentaires :
+    $$ A = \sum_{k=1}^n \sum_{l=1}^p a_{k,l} E_{k,l} $$
+    La dimension de $\mathcal{M}_{n,p}(\mathbb{K})$ est $n \times p$.
+</div>
+
+<div class="definition">
+    <strong>Produit matriciel :</strong> Soit $A = (a_{i,k}) \in \mathcal{M}_{n,p}(\mathbb{K})$ et $B = (b_{k,j}) \in \mathcal{M}_{p,q}(\mathbb{K})$. Le <strong>produit matriciel</strong> de $A$ par $B$ est la matrice $C = AB \in \mathcal{M}_{n,q}(\mathbb{K})$ définie par :
+    $$ c_{i,j} = (AB)_{i,j} = \sum_{k=1}^p a_{i,k} b_{k,j} \quad \text{pour } 1 \le i \le n, 1 \le j \le q $$
+</div>
+
+<div class="theorem">
+    <strong>Propriétés du produit matriciel :</strong>
+    <ul>
+        <li><strong>Associativité :</strong> Si $A \in \mathcal{M}_{n,p}, B \in \mathcal{M}_{p,q}, C \in \mathcal{M}_{q,r}$, alors $(AB)C = A(BC) \in \mathcal{M}_{n,r}$.</li>
+        <li><strong>Bilinéarité :</strong>
+            <ul>
+                <li>Distributivité à gauche : $A(B+C) = AB + AC$ (si les tailles sont compatibles).</li>
+                <li>Distributivité à droite : $(A+B)C = AC + BC$ (si les tailles sont compatibles).</li>
+                <li>Compatibilité avec scalaires : $(\lambda A)B = A(\lambda B) = \lambda(AB)$.</li>
+            </ul>
+        </li>
+        <li><strong>Non-commutativité :</strong> En général, $AB \neq BA$, même si les deux produits sont définis (matrices carrées).</li>
+    </ul>
+</div>
+
+<div class="comment">
+    <strong>Interprétation du produit $AX$ :</strong> Si $A \in \mathcal{M}_{n,p}(\mathbb{K})$ et $X \in \mathcal{M}_{p,1}(\mathbb{K})$ (matrice colonne), alors $Y = AX \in \mathcal{M}_{n,1}(\mathbb{K})$ est une matrice colonne.
+    Si $C_1, \dots, C_p$ sont les colonnes de $A$ et $X = \begin{pmatrix} x_1 \\ \vdots \\ x_p \end{pmatrix}$, alors :
+    $$ Y = AX = x_1 C_1 + x_2 C_2 + \dots + x_p C_p $$
+    Le produit $AX$ est la combinaison linéaire des colonnes de $A$ avec les coefficients de $X$.
+</div>
+
+<div class="theorem">
+    <strong>Produit de matrices élémentaires :</strong> Soit $E_{i,j} \in \mathcal{M}_{n,p}(\mathbb{K})$ et $E_{k,l} \in \mathcal{M}_{p,q}(\mathbb{K})$.
+    $$ E_{i,j} E_{k,l} = \delta_{j,k} E_{i,l} \in \mathcal{M}_{n,q}(\mathbb{K}) $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Calculons le coefficient $(r, s)$ du produit $P = E_{i,j} E_{k,l}$.
+    $P_{r,s} = \sum_{m=1}^p (E_{i,j})_{r,m} (E_{k,l})_{m,s} = \sum_{m=1}^p (\delta_{r,i} \delta_{m,j}) (\delta_{m,k} \delta_{s,l})$
+    La somme n'est non nulle que si $r=i$ et $s=l$. Dans ce cas, $P_{i,l} = \sum_{m=1}^p \delta_{m,j} \delta_{m,k}$.
+    Cette dernière somme vaut 1 si $j=k$ (seul le terme $m=j=k$ est $1 \times 1 = 1$) et 0 si $j \neq k$.
+    Donc $P_{r,s} = \delta_{r,i} \delta_{s,l} \delta_{j,k}$.
+    Ceci correspond exactement aux coefficients de la matrice $\delta_{j,k} E_{i,l}$.
+</div>
+
+<div class="definition">
+    <strong>Transposée d'une matrice :</strong> La <strong>transposée</strong> de $A = (a_{i,j}) \in \mathcal{M}_{n,p}(\mathbb{K})$ est la matrice $A^T = (a'_{j,i}) \in \mathcal{M}_{p,n}(\mathbb{K})$ définie par $a'_{j,i} = a_{i,j}$.
+    (Les lignes de $A^T$ sont les colonnes de $A$, et vice versa).
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de la transposition :</strong> Soient $A, B \in \mathcal{M}_{n,p}(\mathbb{K})$ et $\lambda \in \mathbb{K}$.
+    <ul>
+        <li>$(A^T)^T = A$.</li>
+        <li>$(A+B)^T = A^T + B^T$.</li>
+        <li>$(\lambda A)^T = \lambda A^T$.</li>
+        <li>Si $A \in \mathcal{M}_{n,p}(\mathbb{K})$ et $B \in \mathcal{M}_{p,q}(\mathbb{K})$, alors $(AB)^T = B^T A^T \in \mathcal{M}_{q,n}(\mathbb{K})$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong>
+    <ol>
+        <li>Soient $A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$ et $B = \begin{pmatrix} 0 & -1 \\ 1 & 1 \end{pmatrix}$. Calculer $A+B$, $3A$, $AB$, $BA$, $A^T$, $B^T$, $(AB)^T$. Vérifier que $(AB)^T = B^T A^T$.</li>
+        <li>Soient $E_{1,2} \in \mathcal{M}_2(\mathbb{R})$ et $E_{2,1} \in \mathcal{M}_2(\mathbb{R})$. Calculer $E_{1,2} E_{2,1}$ et $E_{2,1} E_{1,2}$.</li>
+        <li>Soit $A = \begin{pmatrix} 1 & 0 \\ 2 & 1 \end{pmatrix}$ et $X = \begin{pmatrix} x \\ y \end{pmatrix}$. Calculer $AX$ et l'exprimer comme combinaison linéaire des colonnes de $A$.</li>
+    </ol>
+</div>
+
+
+<h4 id="operations-elementaires-matrices">b) Opérations élémentaires</h4>
+
+<div class="definition">
+    <strong>Opérations élémentaires sur les lignes (OEL) :</strong>
+    <ol>
+        <li>Échange de deux lignes $L_i \leftrightarrow L_j$.</li>
+        <li>Multiplication d'une ligne par un scalaire non nul $L_i \leftarrow \lambda L_i$ ($\lambda \in \mathbb{K}^*$).</li>
+        <li>Ajout à une ligne d'un multiple d'une autre ligne $L_i \leftarrow L_i + \lambda L_j$ ($i \neq j, \lambda \in \mathbb{K}$).</li>
+    </ol>
+    Définitions analogues pour les <strong>opérations élémentaires sur les colonnes (OEC)</strong> $C_i \leftrightarrow C_j$, $C_i \leftarrow \lambda C_i$, $C_i \leftarrow C_i + \lambda C_j$.
+</div>
+
+<div class="definition">
+    <strong>Matrices élémentaires (associées aux OEL) :</strong>
+    <ul>
+        <li>$P_{i,j}$: Matrice identité où les lignes $i$ et $j$ sont échangées ($i \ne j$).</li>
+        <li>$D_i(\lambda)$: Matrice identité où le coefficient $(i,i)$ est remplacé par $\lambda \in \mathbb{K}^*$.</li>
+        <li>$T_{i,j}(\lambda)$: Matrice identité avec un $\lambda \in \mathbb{K}$ supplémentaire en position $(i,j)$ ($i \ne j$).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Interprétation matricielle des opérations élémentaires :</strong> Soit $A \in \mathcal{M}_{n,p}(\mathbb{K})$.
+    <ul>
+        <li>Effectuer une OEL sur $A$ revient à multiplier $A$ <strong>à gauche</strong> par la matrice élémentaire correspondante (de taille $n \times n$).
+            <ul>
+                <li>$L_i \leftrightarrow L_j$ sur $A \iff P_{i,j} A$.</li>
+                <li>$L_i \leftarrow \lambda L_i$ sur $A \iff D_i(\lambda) A$.</li>
+                <li>$L_i \leftarrow L_i + \lambda L_j$ sur $A \iff T_{i,j}(\lambda) A$.</li>
+            </ul>
+        </li>
+        <li>Effectuer une OEC sur $A$ revient à multiplier $A$ <strong>à droite</strong> par la matrice élémentaire correspondante (de taille $p \times p$).
+            <ul>
+                <li>$C_i \leftrightarrow C_j$ sur $A \iff A P_{i,j}$.</li>
+                <li>$C_i \leftarrow \lambda C_i$ sur $A \iff A D_i(\lambda)$.</li>
+                <li>$C_i \leftarrow C_i + \lambda C_j$ sur $A \iff A T_{j,i}(\lambda)$ (Attention à l'inversion des indices pour la transvection colonne).</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="comment">
+    Les matrices élémentaires $P_{i,j}, D_i(\lambda), T_{i,j}(\lambda)$ sont toutes inversibles (elles correspondent à des opérations réversibles). Leurs inverses sont respectivement $P_{i,j}$, $D_i(1/\lambda)$, $T_{i,j}(-\lambda)$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Écrire les matrices élémentaires $P_{1,2}$, $D_2(3)$, $T_{1,2}(-2)$ dans $\mathcal{M}_2(\mathbb{R})$.</li>
+        <li>Soit $A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$. Calculer $P_{1,2} A$, $D_2(3) A$, $T_{1,2}(-2) A$. Vérifier que cela correspond aux OEL.</li>
+        <li>Calculer $A P_{1,2}$, $A D_2(3)$, $A T_{2,1}(-2)$. Vérifier que cela correspond aux OEC.</li>
+    </ol>
+</div>
+
+
+<h4 id="systemes-lineaires-matriciel">c) Systèmes linéaires</h4>
+
+<div class="definition">
+    <strong>Système linéaire et écriture matricielle :</strong> Un système de $n$ équations linéaires à $p$ inconnues $x_1, \dots, x_p$ s'écrit :
+    $$ (S) \quad \begin{cases} a_{1,1} x_1 + a_{1,2} x_2 + \dots + a_{1,p} x_p = b_1 \\ a_{2,1} x_1 + a_{2,2} x_2 + \dots + a_{2,p} x_p = b_2 \\ \vdots \\ a_{n,1} x_1 + a_{n,2} x_2 + \dots + a_{n,p} x_p = b_n \end{cases} $$
+    Ce système peut s'écrire sous forme matricielle $AX = B$, où :
+    <ul>
+        <li>$A = (a_{i,j}) \in \mathcal{M}_{n,p}(\mathbb{K})$ est la matrice des coefficients.</li>
+        <li>$X = \begin{pmatrix} x_1 \\ \vdots \\ x_p \end{pmatrix} \in \mathcal{M}_{p,1}(\mathbb{K})$ est la matrice colonne des inconnues.</li>
+        <li>$B = \begin{pmatrix} b_1 \\ \vdots \\ b_n \end{pmatrix} \in \mathcal{M}_{n,1}(\mathbb{K})$ est la matrice colonne du second membre.</li>
+    </ul>
+    Le <strong>système homogène associé</strong> est $AX = 0$.
+</div>
+
+<div class="definition">
+    <strong>Système compatible :</strong> Le système $AX = B$ est dit <strong>compatible</strong> s'il admet au moins une solution.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation de la compatibilité :</strong> Le système $AX = B$ est compatible si et seulement si $B$ est combinaison linéaire des colonnes de $A$.
+    <br>(i.e., $B \in \operatorname{Vect}(C_1, \dots, C_p)$, où $C_j$ sont les colonnes de $A$).
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Dire que $X = \begin{pmatrix} x_1 \\ \vdots \\ x_p \end{pmatrix}$ est une solution signifie $AX=B$. D'après l'interprétation du produit matriciel, $AX = x_1 C_1 + \dots + x_p C_p$. Donc $AX=B$ a une solution si et seulement si $B$ peut s'écrire comme combinaison linéaire des colonnes $C_j$.
+</div>
+
+<div class="theorem">
+    <strong>Structure de l'ensemble des solutions :</strong> Soit $(S)$ le système $AX = B$.
+    <ul>
+        <li>L'ensemble $S_H = \{ Y \in \mathcal{M}_{p,1}(\mathbb{K}) \mid AY = 0 \}$ des solutions du système homogène associé est un sous-espace vectoriel de $\mathcal{M}_{p,1}(\mathbb{K})$.</li>
+        <li>Si $(S)$ est compatible et si $X_0$ est une solution particulière de $(S)$ (i.e., $AX_0 = B$), alors l'ensemble $S$ des solutions de $(S)$ est :
+        $$ S = X_0 + S_H = \{ X_0 + Y \mid Y \in S_H \} $$
+        </li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong>
+    *   $S_H$ est un sous-espace vectoriel car $A0=0$, $A(Y_1+Y_2) = AY_1+AY_2=0+0=0$, $A(\lambda Y) = \lambda(AY) = \lambda 0 = 0$.
+    *   Si $X \in S$, alors $A(X-X_0) = AX - AX_0 = B - B = 0$. Donc $Y = X-X_0 \in S_H$, et $X = X_0 + Y$.
+    *   Réciproquement, si $X = X_0 + Y$ avec $Y \in S_H$, alors $AX = A(X_0+Y) = AX_0 + AY = B + 0 = B$. Donc $X \in S$.
+</div>
+
+<div class="method">
+    <strong>Algorithme du Pivot de Gauss :</strong> Pour résoudre $AX=B$, on applique des opérations élémentaires sur les lignes (OEL) à la <strong>matrice augmentée</strong> $[A | B]$ jusqu'à obtenir une matrice $[A' | B']$ où $A'$ est <strong>échelonnée (réduite)</strong>.
+    $$ [A | B] \xrightarrow{\text{OEL}} [A' | B'] $$
+    Les systèmes $AX=B$ et $A'X=B'$ ont le même ensemble de solutions (car les OEL correspondent à des combinaisons linéaires d'équations ou à des échanges).
+    Le système $A'X=B'$ est facile à résoudre (remontée ou lecture directe si échelonnée réduite).
+    <br><strong>Commentaire :</strong> La mise en œuvre détaillée et l'analyse de tous les cas (infinies solutions, pas de solution) relèvent davantage de l'algèbre linéaire, mais le principe repose sur les OEL. Toute technicité excessive est exclue à ce stade.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.1 :</strong>
+    <ol>
+        <li>Écrire le système suivant sous forme matricielle $AX=B$ :
+        $$ \begin{cases} x + 2y - z = 1 \\ 3x - y + z = 4 \end{cases} $$</li>
+        <li>Montrer que $X_0 = \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}$ est une solution particulière.</li>
+        <li>Trouver l'ensemble $S_H$ des solutions du système homogène associé.</li>
+        <li>En déduire l'ensemble $S$ de toutes les solutions du système initial.</li>
+        <li>Le système est-il compatible si le second membre est $B = \begin{pmatrix} 0 \\ 0 \end{pmatrix}$ ? Et si $B = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$ ?</li>
+    </ol>
+</div>
+
+
+<h4 id="anneau-matrices-carrees">e) Anneau des matrices carrées</h4>
+
+<div class="theorem">
+    <strong>Anneau $\mathcal{M}_n(\mathbb{K})$ :</strong> L'ensemble $\mathcal{M}_n(\mathbb{K})$ des matrices carrées d'ordre $n$ à coefficients dans $\mathbb{K}$, muni de l'addition matricielle et du produit matriciel, est un <strong>anneau unitaire</strong>.
+    <ul>
+        <li>$(\mathcal{M}_n(\mathbb{K}), +)$ est un groupe abélien (espace vectoriel).</li>
+        <li>Le produit $\times$ est associatif.</li>
+        <li>Le produit $\times$ est distributif par rapport à $+$.</li>
+        <li>L'élément neutre pour $\times$ est la <strong>matrice identité</strong> $I_n = (\delta_{i,j})$, qui a des 1 sur la diagonale et des 0 ailleurs.</li>
+    </ul>
+    Si $n \ge 2$, l'anneau $\mathcal{M}_n(\mathbb{K})$ n'est <strong>pas commutatif</strong>.
+</div>
+
+<div class="comment">
+    <strong>Propriétés spécifiques :</strong>
+    <ul>
+        <li><strong>Diviseurs de zéro :</strong> Il existe des matrices $A, B$ non nulles telles que $AB=0$. (Ex: $A=E_{1,2}, B=E_{2,2} \implies AB=0$). Donc $\mathcal{M}_n(\mathbb{K})$ n'est pas intègre si $n \ge 2$.</li>
+        <li><strong>Éléments nilpotents :</strong> Il existe des matrices $A \ne 0$ telles qu'une puissance $A^k = 0$. (Ex: $A=E_{1,2}$, $A^2 = 0$).</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Matrices particulières :</strong>
+    <ul>
+        <li><strong>Matrice scalaire :</strong> Matrice de la forme $\lambda I_n$ avec $\lambda \in \mathbb{K}$. Elles commutent avec toutes les matrices : $(\lambda I_n) A = A (\lambda I_n) = \lambda A$.</li>
+        <li><strong>Matrice diagonale :</strong> Matrice carrée dont tous les coefficients hors de la diagonale sont nuls ($a_{i,j}=0$ si $i \ne j$).</li>
+        <li><strong>Matrice triangulaire supérieure :</strong> Matrice carrée dont tous les coefficients sous la diagonale sont nuls ($a_{i,j}=0$ si $i > j$).</li>
+        <li><strong>Matrice triangulaire inférieure :</strong> Matrice carrée dont tous les coefficients au-dessus de la diagonale sont nuls ($a_{i,j}=0$ si $i < j$).</li>
+        <li><strong>Matrice symétrique :</strong> Matrice carrée $A$ telle que $A^T = A$. L'ensemble est noté $\mathcal{S}_n(\mathbb{K})$.</li>
+        <li><strong>Matrice antisymétrique :</strong> Matrice carrée $A$ telle que $A^T = -A$. L'ensemble est noté $\mathcal{A}_n(\mathbb{K})$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Formule du binôme :</strong> Si $A, B \in \mathcal{M}_n(\mathbb{K})$ commutent ($AB=BA$), alors pour tout $k \in \mathbb{N}$:
+    $$ (A+B)^k = \sum_{i=0}^k \binom{k}{i} A^i B^{k-i} $$
+    <strong>Application :</strong> Utile pour calculer $M^k$ si $M$ se décompose en $A+B$ avec $A, B$ qui commutent et dont les puissances sont simples (e.g., $B$ nilpotente, $A$ scalaire ou diagonale).
+</div>
+
+<div class="theorem">
+    <strong>Produit de matrices particulières :</strong>
+    <ul>
+        <li>Le produit de deux matrices diagonales est une matrice diagonale.</li>
+        <li>Le produit de deux matrices triangulaires supérieures (resp. inférieures) est une matrice triangulaire supérieure (resp. inférieure). Les coefficients diagonaux du produit sont les produits des coefficients diagonaux correspondants.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Matrice inversible :</strong> Une matrice carrée $A \in \mathcal{M}_n(\mathbb{K})$ est dite <strong>inversible</strong> (ou régulière) s'il existe une matrice $B \in \mathcal{M}_n(\mathbb{K})$ telle que $AB = BA = I_n$.
+    <br>Si elle existe, cette matrice $B$ est unique et est appelée l'<strong>inverse</strong> de $A$, notée $A^{-1}$.
+    <br>L'ensemble des matrices inversibles d'ordre $n$ est noté $GL_n(\mathbb{K})$ (Groupe Linéaire d'ordre $n$ sur $\mathbb{K}$).
+    <br>$(GL_n(\mathbb{K}), \times)$ est un groupe (non abélien si $n \ge 2$).
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de l'inverse :</strong>
+    <ul>
+        <li>Si $A$ est inversible, $A^{-1}$ est inversible et $(A^{-1})^{-1} = A$.</li>
+        <li>Si $A, B \in GL_n(\mathbb{K})$, alors $AB \in GL_n(\mathbb{K})$ et $(AB)^{-1} = B^{-1} A^{-1}$.</li>
+        <li>Si $A \in GL_n(\mathbb{K})$, alors $A^T$ est inversible et $(A^T)^{-1} = (A^{-1})^T$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Inversibilité et opérations élémentaires :</strong>
+    <ul>
+        <li>Les matrices élémentaires $P_{i,j}, D_i(\lambda) (\lambda \ne 0), T_{i,j}(\lambda)$ sont inversibles.</li>
+        <li>Une matrice $A \in \mathcal{M}_n(\mathbb{K})$ est inversible si et seulement si elle est le produit de matrices élémentaires.</li>
+        <li>Une matrice $A \in \mathcal{M}_n(\mathbb{K})$ est inversible si et seulement si on peut la transformer en $I_n$ par une suite d'OEL.</li>
+    </ul>
+</div>
+
+<div class="method">
+    <strong>Calcul de l'inverse $A^{-1}$ :</strong>
+    <ol>
+        <li><strong>Méthode du pivot (Gauss-Jordan) :</strong>
+            On forme la matrice augmentée $[A | I_n]$. On applique des OEL à cette matrice augmentée jusqu'à obtenir une matrice de la forme $[I_n | B]$. Alors $B = A^{-1}$. Si on ne peut pas obtenir $I_n$ à gauche (apparition d'une ligne de zéros), c'est que $A$ n'est pas inversible.
+        </li>
+        <li><strong>Résolution de $AX = Y$ :</strong>
+            On considère le système $AX = Y$, où $Y = \begin{pmatrix} y_1 \\ \vdots \\ y_n \end{pmatrix}$ est une colonne quelconque et $X = \begin{pmatrix} x_1 \\ \vdots \\ x_n \end{pmatrix}$ est la colonne des inconnues. On résout ce système pour exprimer $x_1, \dots, x_n$ en fonction de $y_1, \dots, y_n$. Si la solution est unique pour tout $Y$, alors $A$ est inversible. L'écriture $X = BY$ donne $B = A^{-1}$.
+        </li>
+    </ol>
+    <strong>Commentaire :</strong> Ces méthodes peuvent être calculatoires. L'inversibilité est souvent liée au déterminant (vu plus tard). Toute technicité excessive est exclue ici.
+</div>
+
+<div class="theorem">
+    <strong>Inversibilité des matrices triangulaires :</strong> Une matrice triangulaire (supérieure ou inférieure) $A \in \mathcal{M}_n(\mathbb{K})$ est inversible si et seulement si tous ses coefficients diagonaux sont non nuls.
+    <br>Dans ce cas, son inverse $A^{-1}$ est aussi une matrice triangulaire de même type (supérieure ou inférieure) et ses coefficients diagonaux sont les inverses des coefficients diagonaux de $A$.
+    <br><strong>Cas particulier :</strong> Une matrice diagonale $D = \operatorname{diag}(d_1, \dots, d_n)$ est inversible si et seulement si tous les $d_i \neq 0$. Dans ce cas, $D^{-1} = \operatorname{diag}(1/d_1, \dots, 1/d_n)$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice E.1 :</strong>
+    <ol>
+        <li>Soit $A = \begin{pmatrix} 1 & 2 \\ 0 & 3 \end{pmatrix}$ et $B = \begin{pmatrix} 1 & 1 \\ 1 & 1 \end{pmatrix}$. Calculer $AB$ et $BA$. Commutent-elles ? Calculer $(A+B)^2$ et $A^2+2AB+B^2$. Que remarque-t-on ?</li>
+        <li>Soit $N = \begin{pmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{pmatrix}$. Calculer $N^2, N^3$. En déduire $(I_3 - N)^{-1}$ en utilisant la formule $1+x+x^2 = (1-x^3)/(1-x)$.</li>
+        <li>Calculer l'inverse de $A = \begin{pmatrix} 1 & 1 \\ 1 & 2 \end{pmatrix}$ par la méthode du pivot.</li>
+        <li>La matrice $T = \begin{pmatrix} 1 & 2 & 3 \\ 0 & 0 & 4 \\ 0 & 0 & 5 \end{pmatrix}$ est-elle inversible ?</li>
+        <li>Montrer que si $A$ est inversible et symétrique, alors $A^{-1}$ est symétrique.</li>
+    </ol>
+</div>
+
+</body>
+</html>
