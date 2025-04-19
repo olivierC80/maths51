@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Physique - Ondes et Signaux (2)</title>
+    <!-- Vue.js 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --color-facile: #4CAF50; /* Vert */
+            --color-moyen: #FF9800; /* Orange */
+            --color-difficile: #F44336; /* Rouge */
+            --color-pas-compris: #616161; /* Gris sombre */
+            --color-default: #e0e0e0; /* Gris clair */
+            --border-color: #ccc;
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        #app {
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        .qa-item {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden; /* Pour contenir l'indicateur */
+            transition: box-shadow 0.3s ease;
+            background-color: #fff;
+        }
+        .qa-item:hover {
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        .comprehension-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 10px;
+            background-color: var(--color-default);
+            transition: background-color 0.3s ease;
+        }
+        .comprehension-indicator.facile { background-color: var(--color-facile); }
+        .comprehension-indicator.moyen { background-color: var(--color-moyen); }
+        .comprehension-indicator.difficile { background-color: var(--color-difficile); }
+        .comprehension-indicator.pas_compris { background-color: var(--color-pas-compris); }
+
+        .qa-content {
+            margin-left: 20px; /* Espace pour l'indicateur */
+        }
+
+        .section-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .answer {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 3px solid var(--border-color);
+        }
+
+        /* Style KaTeX */
+        .katex { font-size: 1.1em; }
+
+        /* Boutons */
+        button {
+            padding: 8px 12px;
+            margin-right: 5px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-size: 0.9em;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        button:active {
+             transform: scale(0.98);
+        }
+        .btn-toggle-answer {
+            background-color: #007bff;
+            color: white;
+        }
+         .btn-toggle-answer:hover {
+            background-color: #0056b3;
+        }
+
+        .comprehension-buttons {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        .comprehension-buttons button {
+            color: white;
+            min-width: 100px;
+        }
+        .btn-facile { background-color: var(--color-facile); }
+        .btn-moyen { background-color: var(--color-moyen); }
+        .btn-difficile { background-color: var(--color-difficile); }
+        .btn-pas-compris { background-color: var(--color-pas-compris); }
+
+        .comprehension-buttons button.active {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+
+        /* Capacités style from original HTML */
+        .capacite {
+            font-weight: bold;
+            color: #800080; /* Pourpre */
+        }
+        .definition, .resultat, .methode {
+            margin-bottom: 1em;
+            padding: 0.5em;
+            border-left: 3px solid #ddd;
+        }
+         .definition { border-left-color: #4CAF50; }
+         .resultat { border-left-color: #2196F3; }
+         .methode { border-left-color: #FFC107; }
+
+         /* Style for schema placeholders */
+         .schema {
+             font-style: italic;
+             color: #777;
+             border: 1px dashed #ccc;
+             padding: 5px;
+             margin-top: 5px;
+             text-align: center;
+         }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h1>Physique : Ondes et Signaux (2) - (Thème 1 S2) - Q&A</h1>
+        <p>Cliquez sur "Afficher la réponse" pour voir la correction. Indiquez votre niveau de compréhension pour chaque question.</p>
+        <hr>
+
+        <div v-for="item in questions" :key="item.id" class="qa-item">
+            <div class="comprehension-indicator" :class="item.comprehension"></div>
+            <div class="qa-content">
+                <div class="section-title">{{ item.section }}</div>
+                <div class="question" v-html="renderContent(item.question)"></div>
+
+                <button @click="toggleAnswer(item)" class="btn-toggle-answer">
+                    {{ item.showAnswer ? 'Cacher la réponse' : 'Afficher la réponse' }}
+                </button>
+
+                <div v-if="item.showAnswer" class="answer" v-html="renderContent(item.answer)"></div>
+
+                <div class="comprehension-buttons">
+                    <button @click="setComprehension(item, 'facile')" class="btn-facile" :class="{ active: item.comprehension === 'facile' }">Facile</button>
+                    <button @click="setComprehension(item, 'moyen')" class="btn-moyen" :class="{ active: item.comprehension === 'moyen' }">Moyen</button>
+                    <button @click="setComprehension(item, 'difficile')" class="btn-difficile" :class="{ active: item.comprehension === 'difficile' }">Difficile</button>
+                    <button @click="setComprehension(item, 'pas_compris')" class="btn-pas-compris" :class="{ active: item.comprehension === 'pas_compris' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, reactive, onMounted, nextTick } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    questions: [
+                        // === 1.7.1 Champ magnétique ===
+                        {
+                            id: 'q1_7_1_1',
+                            section: '1.7.1 Champ magnétique',
+                            question: 'Qu\'est-ce que le champ magnétique $\\vec{B}$ et quelles sont ses principales sources ?',
+                            answer: `<div class="definition"><p><strong>Champ Magnétique ($\\vec{B}$) :</strong> C'est un champ vectoriel qui décrit l'influence magnétique créée par des sources (courants, aimants) en tout point de l'espace. Il détermine les forces magnétiques exercées sur des charges en mouvement ou des dipôles magnétiques. Son unité est le Tesla (T).</p>
+                                <p><strong>Sources de Champ Magnétique :</strong>
+                                   <ul>
+                                        <li><strong>Courants électriques :</strong> Tout déplacement de charges électriques (courant) crée un champ magnétique dans son voisinage (démontré par l'Expérience d'Oersted où une boussole dévie près d'un fil parcouru par un courant).</li>
+                                        <li><strong>Aimants permanents :</strong> Certains matériaux (dits ferromagnétiques) possèdent une aimantation intrinsèque (même sans courant extérieur) qui génère un champ magnétique. Au niveau microscopique, cela peut être modélisé par l'alignement de moments magnétiques atomiques ou de boucles de courant ampériennes.</li>
+                                   </ul>
+                                </p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_1_2',
+                            section: '1.7.1 Champ magnétique',
+                            question: 'Que sont les lignes de champ magnétique ? Quelle est leur propriété fondamentale ?',
+                            answer: `<div class="definition"><p><strong>Lignes de Champ Magnétique :</strong> Ce sont des courbes imaginaires utilisées pour visualiser le champ $\\vec{B}$.
+                                <ul><li>En chaque point d'une ligne de champ, le vecteur $\\vec{B}$ est tangent à la courbe.</li>
+                                <li>Elles sont orientées par le sens du vecteur $\\vec{B}$.</li>
+                                <li>Leur densité est proportionnelle à l'intensité du champ (plus elles sont resserrées, plus B est fort).</li>
+                                <li><strong>Propriété fondamentale :</strong> Les lignes de champ magnétique sont toujours <strong>fermées</strong>. Elles sortent du pôle Nord d'un aimant et rentrent par le pôle Sud à l'extérieur, mais elles se referment à l'intérieur de l'aimant (ou de la source de courant). Mathématiquement, cela traduit le fait que le flux de $\\vec{B}$ à travers toute surface fermée est nul ($\vec{\nabla} \cdot \vec{B} = 0$, équation de Maxwell-flux, signifie qu'il n'existe pas de monopôle magnétique isolé).</li></ul></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_1_3',
+                            section: '1.7.1 Champ magnétique',
+                            question: 'Décrire qualitativement les lignes de champ pour un aimant droit, une spire circulaire, et un solénoïde long.',
+                            answer: `<div class="definition"><p><strong>Carte de Champ - Exemples :</strong>
+                                <ul>
+                                    <li><strong>Aimant Droit :</strong> Les lignes de champ sortent du pôle Nord (N) et rentrent au pôle Sud (S) à l'extérieur de l'aimant, formant des boucles qui se referment à l'intérieur de l'aimant (allant de S vers N). Le champ est plus intense près des pôles.</li>
+                                    <li><strong>Spire Circulaire (courant I) :</strong> Les lignes de champ sont des courbes fermées qui "enlacent" le fil. Au centre de la spire, les lignes sont approximativement perpendiculaires au plan de la spire. Le sens de $\\vec{B}$ sur l'axe est donné par la règle de la main droite (pouce dans le sens de B si les doigts s'enroulent dans le sens de I).</li>
+                                    <li><strong>Bobine Longue (Solénoïde, $n$ spires/m, courant I) :</strong> Si le solénoïde est très long par rapport à son diamètre, le champ magnétique $\\vec{B}$ à l'intérieur est pratiquement <strong>uniforme</strong> (même direction, même sens, même norme partout) et <strong>axial</strong> (dirigé selon l'axe du solénoïde). Sa norme est $B \approx \mu_0 n I$. Le champ à l'extérieur est très faible (presque nul). <strong class="capacite">Décrire un solénoïde pour créer $\vec{B}$ uniforme.</strong></li>
+                                </ul>
+                               <strong class="capacite">Tracer l'allure de ces cartes. Exploiter une carte pour identifier zones de champ fort/faible/uniforme, sources.</strong></p>
+                                <div class="schema">Schémas : Lignes de champ aimant, spire, solénoïde</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_1_4',
+                            section: '1.7.1 Champ magnétique',
+                            question: 'Citer les ordres de grandeur typiques du champ magnétique terrestre, d\'un aimant usuel, d\'une IRM et d\'un électroaimant puissant.',
+                            answer: `<div class="definition"><p><strong>Ordres de grandeur du champ magnétique B :</strong>
+                                <ul><li>Champ magnétique terrestre (à la surface) : $\approx 25 \text{ à } 65 \times 10^{-6}$ T = 25 à 65 $\mu$T (typiquement $\approx 5 \times 10^{-5}$ T).</li>
+                                <li>Aimant permanent usuel (ex: sur un réfrigérateur, aimant néodyme) : $\approx 0.1 - 1$ T.</li>
+                                <li>Imagerie par Résonance Magnétique (IRM) médicale : $\approx 1 - 3$ T (peut aller jusqu'à 7T ou plus pour la recherche).</li>
+                                <li>Électroaimant puissant (supraconducteur, recherche) : $\approx 10$ T et plus.</li></ul>
+                                <strong class="capacite">Citer ces ordres de grandeur.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_1_5',
+                            section: '1.7.1 Champ magnétique',
+                            question: 'Comment utiliser les symétries et invariances (Principe de Curie) pour déterminer la direction et les dépendances de $\\vec{B}$ ? Donner l\'exemple d\'un fil infini.',
+                            answer: `<div class="methode"><p><strong>Symétries et Invariances (Principe de Curie) :</strong> Les symétries de la distribution des sources (courants) se répercutent sur les symétries du champ $\\vec{B}$ résultant.
+                               <ul>
+                                    <li><strong>Plan de symétrie ($\mathcal{P}_S$) pour les courants :</strong> Si la distribution des courants est symétrique par rapport à un plan $\mathcal{P}_S$, alors en tout point M de ce plan, le champ magnétique $\\vec{B}(M)$ est <strong>contenu dans ce plan</strong> ($\vec{B}(M) \in \mathcal{P}_S$).</li>
+                                    <li><strong>Plan d'antisymétrie ($\mathcal{P}_A$) pour les courants :</strong> Si la distribution des courants est antisymétrique par rapport à un plan $\mathcal{P}_A$ (le courant change de sens par réflexion), alors en tout point M de ce plan, le champ magnétique $\\vec{B}(M)$ est <strong>orthogonal à ce plan</strong> ($\vec{B}(M) \perp \mathcal{P}_A$).</li>
+                                    <li><strong>Invariance par translation/rotation :</strong> Si la distribution des courants est invariante par translation selon un axe (ex: Oz) ou par rotation autour d'un axe (ex: Oz), alors le champ $\\vec{B}$ ne dépendra pas de la coordonnée correspondante (z ou l'angle $\phi$ en cylindriques/polaires).</li>
+                               </ul>
+                            <strong class="capacite">Utiliser ces règles pour prévoir la direction et les dépendances de $\\vec{B}$.</strong>
+                            <br><strong>Exemple : Fil rectiligne infini parcouru par I (selon Oz) :</strong>
+                                <ul><li>Invariance par translation selon Oz $\implies \vec{B}$ ne dépend pas de z.</li>
+                                <li>Invariance par rotation autour de Oz $\implies B$ ne dépend que de la distance à l'axe $\rho$.</li>
+                                <li>Tout plan contenant l'axe Oz est un plan d'antisymétrie (le courant est entrant d'un côté, sortant de l'autre par réflexion) $\implies \vec{B}$ est perpendiculaire à ce plan. Donc $\vec{B}$ n'a pas de composante radiale ($\vec{B} \perp \vec{u}_\rho$).</li>
+                                <li>Tout plan perpendiculaire à l'axe Oz est un plan de symétrie $\implies \vec{B}$ est contenu dans ce plan. Donc $\vec{B}$ n'a pas de composante axiale ($\vec{B} \perp \vec{u}_z$).</li></ul>
+                            Conclusion : $\vec{B}$ est purement orthoradial : $\vec{B}(M) = B(\rho) \vec{u}_\phi$. (Le sens est donné par la règle de la main droite).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_1_6',
+                            section: '1.7.1 Champ magnétique',
+                            question: 'Quel est l\'ordre de grandeur de B créé par un courant I à une distance d ?',
+                            answer: `<div class="methode"><p><strong>Ordre de grandeur de $\vec{B}$ créé par un courant :</strong> La loi de Biot et Savart (qui permet de calculer $\vec{B}$ à partir des courants, mais n'est pas exigible en MPSI pour le calcul intégral) indique que la contribution $d\vec{B}$ d'un élément de courant $I d\vec{l}$ à une distance $r$ est proportionnelle à $\mu_0 I dl / r^2$.
+                            <br>Pour un fil long, l'intégration mène à une dépendance en $1/d$ (distance au fil). Un ordre de grandeur raisonnable pour le champ $B$ créé par un courant $I$ à une distance $d$ d'un fil est donné par :
+                            <br>$B \approx \frac{\mu_0 I}{2\pi d}$
+                            <br>où $\mu_0 = 4\pi \times 10^{-7}$ H/m est la perméabilité du vide.
+                            <br>Exemple: Pour I=1A, d=1cm=0.01m, $B \approx \frac{4\pi \times 10^{-7} \times 1}{2\pi \times 0.01} = 2 \times 10^{-5}$ T.
+                            <strong class="capacite">Évaluer cet ordre de grandeur (expression fournie si nécessaire).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_1_7',
+                            section: '1.7.1 Champ magnétique',
+                            question: 'Définir le moment dipolaire magnétique $\\vec{m}$ pour une boucle de courant plane et pour un aimant. Quelle est son unité et son ordre de grandeur pour un aimant usuel ?',
+                            answer: `<div class="definition"><p><strong>Moment Dipolaire Magnétique ($\\vec{m}$) :</strong> C'est un vecteur qui caractérise la source magnétique (boucle de courant ou aimant) et détermine son interaction avec un champ magnétique extérieur (couple subi, champ créé à grande distance).
+                               <ul>
+                                    <li><strong>Boucle de Courant Plane :</strong> Pour une boucle plane de surface géométrique $S$, parcourue par un courant d'intensité $I$, le moment dipolaire magnétique est :
+                                    <br>$\\vec{m} = I S \\vec{n}$
+                                    <br>où $\\vec{n}$ est le vecteur unitaire normal à la surface $S$. Le sens de $\\vec{n}$ est lié au sens de parcours du courant $I$ par la règle de la main droite (ou du tire-bouchon : si les doigts tournent dans le sens de I, le pouce indique $\\vec{n}$).</li>
+                                    <li><strong>Aimant Droit :</strong> Un aimant peut être modélisé comme un dipôle magnétique. On lui associe un moment magnétique $\\vec{m}$ qui est dirigé conventionnellement de son pôle Sud (S) vers son pôle Nord (N).</li>
+                               </ul>
+                            Unité : Ampère mètre carré (A.m²).
+                            <br><strong class="capacite">Définir $\\vec{m}$ pour une boucle. Associer $\\vec{m}$ à un aimant. Citer ordre de grandeur pour aimant usuel $\\approx 1$ A.m².</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex1_1',
+                            section: '1.7.1 Champ magnétique - Exercice 1.1',
+                            question: 'Un solénoïde de $n=1000$ spires par mètre est parcouru par $I=5$A. Quel est l\'ordre de grandeur du champ B à l\'intérieur ?',
+                            answer: `<div class="corrige"><p><strong>Corrigé 1.1 :</strong> Pour un solénoïde long, le champ magnétique à l'intérieur est approximativement uniforme et axial, donné par la formule $B \approx \mu_0 n I$.
+                            <br>Données : $n = 1000$ spires/m, $I = 5$ A, $\mu_0 = 4\pi \times 10^{-7}$ H/m (ou T.m/A).
+                            <br>$B \approx (4\pi \times 10^{-7} \text{ T.m/A}) \times (1000 \text{ m}^{-1}) \times (5 \text{ A})$
+                            <br>$B \approx 4\pi \times 10^{-7} \times 5000$ T
+                            <br>$B \approx 20000\pi \times 10^{-7}$ T $= 2\pi \times 10^{-3}$ T.
+                            <br>$B \approx 6.28 \times 10^{-3}$ T = 6.28 mT.
+                            <br>L'ordre de grandeur est de quelques milliTesla.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 1.7.2 Actions B ===
+                        {
+                            id: 'q1_7_2_1',
+                            section: '1.7.2 Actions d\'un champ magnétique',
+                            question: 'Définir la force de Laplace élémentaire $d\\vec{F}_L$ exercée par un champ $\\vec{B}_{ext}$ sur un élément de courant $I d\\vec{l}$. Quelle est la différence avec le champ propre ?',
+                            answer: `<div class="definition"><p><strong>Force de Laplace Élémentaire ($d\\vec{F}_L$) :</strong> C'est la force magnétique exercée par un champ magnétique $\\vec{B}_{ext}$ (créé par des sources extérieures au circuit considéré) sur un petit élément de longueur $d\\vec{l}$ d'un circuit filiforme parcouru par un courant d'intensité $I$. L'élément $d\\vec{l}$ est un vecteur orienté dans le sens conventionnel du courant $I$.
+                            <br>La force est donnée par :
+                            <br>$d\\vec{F}_L = I (d\\vec{l} \\times \\vec{B}_{ext})$.
+                            <br><strong>Différence Champ Externe vs Propre :</strong> Il est crucial de distinguer $\\vec{B}_{ext}$, qui est le champ subi par l'élément de circuit et créé par d'autres sources (aimants, autres circuits), du champ $\\vec{B}_{propre}$, qui est le champ créé par le circuit lui-même. La force de Laplace est due uniquement au champ $\\vec{B}_{ext}$. Un élément de circuit ne subit pas de force nette de son propre champ (en vertu de la 3ème loi de Newton appliquée aux interactions internes). <strong class="capacite">Différencier $\\vec{B}_{ext}$ subi du champ $\\vec{B}_{propre}$ créé par le circuit lui-même.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_2_2',
+                            section: '1.7.2 Actions d\'un champ magnétique',
+                            question: 'Donner l\'expression de la force de Laplace $\\vec{F}_L$ sur une barre conductrice rectiligne de vecteur longueur $\\vec{L}$, parcourue par $I$, dans un champ $\\vec{B}_{ext}$ uniforme.',
+                            answer: `<div class="definition"><p><strong>Force de Laplace sur une Barre Conductrice Rectiligne :</strong>
+                            <br>Considérons une barre conductrice rectiligne, représentée par le vecteur $\\vec{L}$ allant du point d'entrée du courant au point de sortie. Elle est parcourue par un courant d'intensité $I$ et est placée dans un champ magnétique extérieur $\\vec{B}_{ext}$ supposé uniforme sur toute la longueur de la barre.
+                            <br>La force de Laplace résultante sur la barre est obtenue en intégrant la force élémentaire $d\\vec{F}_L = I (d\\vec{l} \\times \\vec{B}_{ext})$ le long de la barre :
+                            <br>$\\vec{F}_L = \\int_{barre} I (d\\vec{l} \\times \\vec{B}_{ext})$.
+                            <br>Comme $I$ et $\\vec{B}_{ext}$ sont uniformes, on peut les sortir de l'intégrale :
+                            <br>$\\vec{F}_L = I (\\int_{barre} d\\vec{l}) \\times \\vec{B}_{ext}$.
+                            <br>L'intégrale $\\int_{barre} d\\vec{l}$ est simplement le vecteur $\\vec{L}$ joignant les extrémités de la barre dans le sens du courant.
+                            <br>Donc : $\\vec{F}_L = I (\\vec{L} \\times \\vec{B}_{ext})$.
+                            <br><strong class="capacite">Établir et citer cette expression.</strong></p>
+                            <div class="schema">Schéma : Force de Laplace sur une barre</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_2_3',
+                            section: '1.7.2 Actions d\'un champ magnétique',
+                            question: 'Exprimer le moment $\\vec{\\mathcal{M}}_O$ subi par une boucle de courant (moment magnétique $\\vec{m}$) dans un champ $\\vec{B}_{ext}$ uniforme.',
+                            answer: `<div class="methode"><p><strong>Couple subi par une Boucle de Courant (ou Aimant) dans $\\vec{B}_{ext}$ uniforme :</strong>
+                            <br>Une boucle de courant plane, caractérisée par son moment dipolaire magnétique $\\vec{m} = I S \\vec{n}$, lorsqu'elle est placée dans un champ magnétique extérieur $\\vec{B}_{ext}$ uniforme, subit un couple (mais une force résultante nulle si $\\vec{B}_{ext}$ est uniforme).
+                            <br>Le moment de ce couple (calculé par rapport à un point O quelconque, souvent le centre de la boucle) est donné par le produit vectoriel :
+                            <br>$\\vec{\\mathcal{M}}_O = \\vec{m} \\times \\vec{B}_{ext}$.
+                            <br>Ce couple tend à faire tourner la boucle pour aligner son moment magnétique $\\vec{m}$ avec le champ extérieur $\\vec{B}_{ext}$. L'orientation $\\vec{m} // \\vec{B}_{ext}$ correspond à un équilibre stable (moment nul).
+                            <br>La norme du couple est $||\vec{\mathcal{M}}_O|| = ||\vec{m}|| \cdot ||\vec{B}_{ext}|| \sin\theta$, où $\theta$ est l'angle entre $\\vec{m}$ et $\\vec{B}_{ext}$.
+                            <br>Le même résultat s'applique à un aimant (boussole) de moment magnétique $\\vec{m}$.
+                            <strong class="capacite">Établir et exploiter $\\vec{\\mathcal{M}}_O = \\vec{m} \\times \\vec{B}_{ext}$.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q1_7_2_4',
+                            section: '1.7.2 Actions d\'un champ magnétique',
+                            question: 'Comment peut-on créer un champ magnétique tournant et quel est son effet sur une aiguille aimantée ?',
+                            answer: `<div class="methode"><p><strong>Champ Magnétique Tournant :</strong> On peut créer un champ magnétique dont la direction tourne dans un plan au cours du temps en superposant les champs créés par plusieurs bobines fixes (typiquement 2 ou 3 paires) dont les axes sont décalés spatialement (ex: perpendiculaires pour 2 paires, à 120° pour 3 paires) et qui sont alimentées par des courants alternatifs déphasés entre eux (ex: courants diphasés $I_1 = I_0 \cos(\Omega t), I_2 = I_0 \sin(\Omega t)$ ou triphasés décalés de $2\pi/3$).
+                            <br>Par exemple, avec deux paires de bobines de Helmholtz perpendiculaires, alimentées en diphasé, créant $B_x = B_0 \cos(\Omega t)$ et $B_y = B_0 \sin(\Omega t)$, le champ résultant est $\\vec{B}_{res} = B_0 (\cos(\Omega t) \vec{u}_x + \sin(\Omega t) \vec{u}_y)$. C'est un vecteur de norme $B_0$ constante, dont la direction fait un angle $\alpha = \Omega t$ avec l'axe Ox : il tourne à la vitesse angulaire constante $\Omega$.
+                            <strong class="capacite">Créer un champ tournant.</strong>
+                            <br><strong>Effet Moteur (Synchrone) :</strong> Si on place une aiguille aimantée (moment magnétique $\\vec{m}$) libre de tourner autour d'un axe perpendiculaire au plan de rotation du champ, elle subit le couple $\\vec{\\mathcal{M}} = \\vec{m} \\times \\vec{B}_{res}$. Ce couple tend à aligner $\\vec{m}$ sur $\\vec{B}_{res}$. Comme $\\vec{B}_{res}$ tourne, l'aiguille va être entraînée et se mettre à tourner à la même vitesse angulaire $\Omega$ que le champ, en gardant un décalage angulaire constant (si le couple résistant n'est pas trop grand). C'est le principe simplifié du moteur synchrone.
+                            <strong class="capacite">Mettre une aiguille en rotation.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex1_4',
+                            section: '1.7.2 Actions d\'un champ magnétique - Exercice 1.4',
+                            question: 'Une barre de cuivre de $L=10$ cm est parcourue par $I=5$ A. Elle est plongée dans $B=0.5$ T perpendiculaire à la barre. Calculer la norme de la force de Laplace $\\vec{F}_L$.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 1.4 :</strong> La force de Laplace sur une barre rectiligne de vecteur longueur $\\vec{L}$ (orienté dans le sens du courant) parcourue par $I$ dans un champ $\\vec{B}_{ext}$ uniforme est $\\vec{F}_L = I (\\vec{L} \\times \\vec{B}_{ext})$.
+                            <br>Ici, $L = 0.1$ m, $I = 5$ A, $B = 0.5$ T.
+                            <br>Le champ $\\vec{B}$ est perpendiculaire à la barre, donc l'angle entre $\\vec{L}$ et $\\vec{B}$ est $\theta = 90^\circ$.
+                            <br>La norme de la force est donc :
+                            <br>$||\vec{F}_L|| = I ||\vec{L}|| ||\vec{B}_{ext}|| \sin(\theta)$
+                            <br>$||\vec{F}_L|| = I L B \sin(90^\circ)$
+                            <br>$||\vec{F}_L|| = 5 \text{ A} \times 0.1 \text{ m} \times 0.5 \text{ T} \times 1$
+                            <br>$||\vec{F}_L|| = 0.25$ N.
+                            <br>La direction de la force est donnée par la règle de la main droite appliquée à $\\vec{L}$ et $\\vec{B}$. Elle est perpendiculaire à la fois à la barre et au champ magnétique.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 1.7.3 Lois induction ===
+                        {
+                            id: 'q1_7_3_1',
+                            section: '1.7.3 Lois de l\'induction',
+                            question: 'Définir le flux magnétique $\Phi$ à travers une surface S orientée. Donner l\'expression pour une surface plane S dans un champ $\\vec{B}$ uniforme.',
+                            answer: `<div class="definition"><p><strong>Flux Magnétique ($\Phi$) :</strong> C'est une grandeur scalaire qui mesure "combien de lignes de champ magnétique" traversent une surface donnée S. Il est défini par l'intégrale de surface du champ magnétique $\\vec{B}$ sur la surface S :
+                            <br>$\\Phi = \\iint_S \\vec{B} \cdot d\\vec{S}$.
+                            <br>Ici, $d\\vec{S}$ est un vecteur élément de surface, de norme $dS$ (l'aire infinitésimale) et de direction perpendiculaire à la surface au point considéré. Le sens de $d\\vec{S}$ doit être choisi de manière cohérente sur toute la surface (ex: sortant si S est fermée, ou lié à un sens de parcours du contour C de S par la règle de la main droite si S est ouverte).
+                            <br>L'unité du flux magnétique est le Weber (Wb), avec $1 \text{ Wb} = 1 \text{ T} \cdot \text{m}^2$.</p>
+                            <p><strong>Cas Particulier : Surface Plane S dans $\\vec{B}$ uniforme :</strong>
+                            <br>Si la surface S est plane (aire totale S) et si le champ magnétique $\\vec{B}$ est uniforme sur toute la surface, le flux se simplifie. On peut définir un vecteur surface total $\\vec{S} = S \\vec{n}$, où $\\vec{n}$ est le vecteur unitaire normal à la surface. L'intégrale devient alors un simple produit scalaire :
+                            <br>$\\Phi = \\vec{B} \cdot \\vec{S} = ||\\vec{B}|| \cdot ||\\vec{S}|| \cos\alpha = B S \cos\alpha$.
+                            <br>où $\alpha$ est l'angle entre la direction du champ $\\vec{B}$ et la direction de la normale $\\vec{n}$ à la surface.
+                            <strong class="capacite">Évaluer $\Phi$ dans ce cas.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_3_2',
+                            section: '1.7.3 Lois de l\'induction',
+                            question: 'Énoncer la loi de Faraday pour la f.e.m. induite $e$.',
+                            answer: `<div class="definition"><p><strong>Loi de Faraday (Force Électromotrice Induite $e$) :</strong> Cette loi fondamentale de l'induction électromagnétique stipule que la force électromotrice (f.e.m.) induite $e$ dans un circuit conducteur fermé (orienté par un sens de parcours arbitraire) est égale à l'<strong>opposé</strong> de la dérivée par rapport au temps du flux magnétique $\Phi$ qui traverse n'importe quelle surface S s'appuyant sur ce circuit.
+                            <br>$e = - \\frac{d\Phi}{dt}$.
+                            <br><strong>Convention de signe :</strong> L'orientation du circuit (sens positif pour $e$ et le courant $i$) et le sens de la normale $d\\vec{S}$ (utilisé pour calculer $\Phi$) doivent être liés par la règle de la main droite (ou du tire-bouchon). Si le sens de parcours du circuit est choisi, le sens de $d\\vec{S}$ est fixé. Le signe '-' dans la loi de Faraday assure alors la cohérence avec la loi de Lenz (modération).
+                            <br>La f.e.m. $e$ est une tension, exprimée en Volts (V). Elle est la cause du courant induit $i = e/R$ (si le circuit a une résistance R).
+                            <strong class="capacite">Utiliser Faraday en précisant les conventions.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_3_3',
+                            section: '1.7.3 Lois de l\'induction',
+                            question: 'Énoncer et expliquer la loi de Lenz.',
+                            answer: `<div class="definition"><p><strong>Loi de Lenz (Modération) :</strong> Cette loi qualitative précise le sens des phénomènes d'induction (le signe '-' dans la loi de Faraday). Elle énonce que :
+                            <br><em>Les effets du courant induit (champ magnétique propre créé, forces de Laplace subies) s'opposent toujours aux causes qui lui ont donné naissance (la variation du flux magnétique extérieur).</em>
+                            <br><strong>Explication / Application :</strong>
+                               <ul>
+                                    <li><strong>Opposition à la variation de flux :</strong> Si le flux $\Phi$ à travers le circuit augmente ($d\Phi/dt > 0$), le courant induit $i$ doit créer un flux magnétique propre $\Phi_{propre}$ qui s'oppose à cette augmentation, donc $\Phi_{propre}$ est de sens opposé à $\Phi$. Si $\Phi$ diminue ($d\Phi/dt < 0$), $i$ doit créer un $\Phi_{propre}$ qui s'oppose à cette diminution, donc $\Phi_{propre}$ est de même sens que $\Phi$. Le sens de $i$ est alors déterminé par la règle de la main droite pour créer $\Phi_{propre}$.</li>
+                                    <li><strong>Opposition au mouvement (si applicable) :</strong> Si la variation de flux est due au mouvement d'un aimant ou d'une partie du circuit, les forces de Laplace exercées sur le circuit induit (ou sur l'aimant par le circuit induit) s'opposent à ce mouvement (effet de freinage).</li>
+                               </ul>
+                            La loi de Lenz est une manifestation de la conservation de l'énergie : si le courant induit renforçait la cause, on créerait de l'énergie indéfiniment.
+                            <strong class="capacite">Utiliser Lenz pour prédire le sens du courant induit.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex1_8',
+                            section: '1.7.3 Lois de l\'induction - Exercice 1.8',
+                            question: 'Une spire carrée (surface S) tourne autour d\'un axe dans son plan, à la vitesse angulaire $\omega$ constante, dans un champ $\\vec{B}$ uniforme perpendiculaire à l\'axe de rotation. L\'angle entre $\\vec{B}$ et la normale $\\vec{n}$ à la spire est $\alpha(t)=\omega t$. Calculer le flux $\Phi(t)$ et la f.e.m. induite $e(t)$.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 1.8 :</strong>
+                            <br>Le flux magnétique à travers la spire plane de surface S dans le champ uniforme B est donné par $\Phi(t) = \\vec{B} \cdot \\vec{S}(t) = B S \cos(\alpha(t))$.
+                            <br>L'angle entre $\\vec{B}$ et la normale $\\vec{n}$ (qui tourne avec la spire) est $\alpha(t) = \omega t$.
+                            <br>Donc, le flux magnétique à travers la spire est :
+                            <br>$\\Phi(t) = B S \cos(\omega t)$.
+                            <br>La force électromotrice (f.e.m.) induite $e(t)$ est donnée par la loi de Faraday :
+                            <br>$e(t) = - \\frac{d\Phi}{dt}$.
+                            <br>$e(t) = - \\frac{d}{dt} [B S \cos(\omega t)]$.
+                            <br>Comme B et S sont constants, on dérive le cosinus :
+                            <br>$e(t) = - B S [-\sin(\omega t) \times \omega]$.
+                            <br>$e(t) = B S \omega \sin(\omega t)$.
+                            <br>La f.e.m. induite est une tension sinusoïdale d'amplitude $E_m = B S \omega$ et de pulsation $\omega$. C'est le principe de base d'un alternateur.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 1.7.4 Circuit fixe dans B variable ===
+                        {
+                            id: 'q1_7_4_1',
+                            section: '1.7.4 Circuit fixe dans B variable',
+                            question: 'Définir l\'auto-induction, le flux propre $\Phi_{propre}$, et l\'inductance propre L d\'un circuit.',
+                            answer: `<div class="definition"><p><strong>Auto-Induction :</strong> C'est le phénomène d'induction électromagnétique qui se produit dans un circuit lorsque le courant $I(t)$ qui le parcourt varie lui-même au cours du temps. Cette variation de $I(t)$ entraîne une variation du champ magnétique $\\vec{B}_{propre}(t)$ créé par le circuit, et donc une variation du flux $\Phi_{propre}(t)$ de ce champ à travers le circuit lui-même. Cette variation de flux propre induit une f.e.m. $e_{auto}$ dans le circuit.</p>
+                                <p><strong>Flux Propre ($\Phi_{propre}$) :</strong> C'est le flux magnétique total créé par le courant $I$ circulant dans le circuit, à travers la surface délimitée par ce même circuit. En l'absence de matériaux magnétiques non-linéaires (comme le fer saturé), le champ $\\vec{B}_{propre}$ est proportionnel à $I$, et donc le flux propre est aussi proportionnel à $I$ :
+                                <br>$\\Phi_{propre} = L I$. <strong class="capacite">Différencier flux propre et flux extérieur.</strong></p>
+                                <p><strong>Inductance Propre (L) :</strong> C'est le coefficient de proportionnalité $L$ dans la relation $\Phi_{propre} = L I$. Elle représente la capacité du circuit à générer un flux propre pour un courant donné, ou de manière équivalente, sa tendance à s'opposer aux variations de courant via la f.e.m. d'auto-induction. L'inductance $L$ dépend uniquement de la géométrie du circuit (forme, taille, nombre de tours pour une bobine) et de la perméabilité magnétique $\mu$ du milieu environnant. Son unité est le Henry (H). $1 H = 1 Wb/A$.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_4_2',
+                            section: '1.7.4 Circuit fixe dans B variable',
+                            question: 'Donner l\'expression de l\'inductance L d\'un solénoïde long et citer l\'ordre de grandeur typique.',
+                            answer: `<div class="definition"><p><strong>Inductance Propre (L) d'un Solénoïde Long :</strong>
+                            <br>Considérons un solénoïde idéal, très long par rapport à son rayon, comportant $N$ spires réparties uniformément sur une longueur $l$, avec une section droite d'aire $S$. Le milieu intérieur est supposé être le vide (perméabilité $\mu_0$).
+                            <br>Le champ magnétique à l'intérieur est $B \approx \mu_0 n I$, où $n=N/l$ est le nombre de spires par unité de longueur. Ce champ est axial et uniforme.
+                            <br>Le flux $\phi_1$ à travers une seule spire est $\phi_1 = B S = \mu_0 (N/l) I S$.
+                            <br>Le flux total $\Phi_{propre}$ à travers les $N$ spires est $\Phi_{propre} = N \phi_1 = N \times [\mu_0 (N/l) I S] = \mu_0 N^2 S I / l$.
+                            <br>L'inductance propre L est définie par $\Phi_{propre} = L I$. On a donc :
+                            <br>$L = \\frac{\mu_0 N^2 S}{l}$.
+                            <br>Si le milieu intérieur a une perméabilité relative $\mu_r$, alors $L = \mu_0 \mu_r N^2 S / l$.
+                            <br><strong class="capacite">Ordre de grandeur :</strong> Pour des bobines usuelles en électronique ou électrotechnique, L varie typiquement de quelques microhenrys ($\mu$H) ou millihenrys (mH) à quelques henrys (H) pour les grosses inductances de puissance ou avec noyau magnétique. <strong class="capacite">Évaluer et citer ordre de grandeur pour une bobine longue. Mesurer L (ex: pont RLC).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_4_3',
+                            section: '1.7.4 Circuit fixe dans B variable',
+                            question: 'Quelle est l\'expression de la f.e.m. d\'auto-induction $e_{auto}$ ? Quelle relation donne la tension $u_L$ aux bornes d\'une inductance idéale ?',
+                            answer: `<div class="definition"><p><strong>F.e.m. d'Auto-Induction ($e_{auto}$) :</strong> Elle est obtenue en appliquant la loi de Faraday au flux propre $\Phi_{propre} = L I$. En supposant que l'inductance $L$ est constante (pas de déformation du circuit, pas de noyau magnétique saturable), on a :
+                            <br>$e_{auto} = - \\frac{d\Phi_{propre}}{dt} = - \\frac{d(LI)}{dt} = - L \\frac{dI}{dt}$.
+                            <br>Cette f.e.m. s'oppose à la variation $dI/dt$ du courant (Loi de Lenz) : si $I$ augmente ($dI/dt > 0$), $e_{auto} < 0$ (s'oppose à $I$); si $I$ diminue ($dI/dt < 0$), $e_{auto} > 0$ (tend à maintenir $I$).</p>
+                            <p><strong>Tension aux bornes d'une inductance idéale (Bobine Parfaite) :</strong> Dans la convention récepteur (courant $I$ entrant par la borne +, tension $u_L$ positive dans ce cas), la tension aux bornes de l'inductance est l'opposé de la f.e.m. interne : $u_L = - e_{auto}$.
+                            <br>Donc, la relation tension-courant pour une inductance idéale est :
+                            <br>$u_L(t) = L \\frac{dI(t)}{dt}$.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_4_4',
+                            section: '1.7.4 Circuit fixe dans B variable',
+                            question: 'Exprimer l\'énergie magnétique $E_L$ stockée dans une inductance L parcourue par un courant I.',
+                            answer: `<div class="methode"><p><strong>Énergie Magnétique Stockée dans une Inductance ($E_L$) :</strong>
+                            <br>Considérons la puissance instantanée $P_L(t)$ reçue par une inductance idéale L lorsqu'elle est traversée par un courant $I(t)$ sous une tension $u_L(t) = L dI/dt$.
+                            <br>$P_L(t) = u_L(t) \times I(t) = (L \\frac{dI}{dt}) \times I = L I \\frac{dI}{dt}$.
+                            <br>On reconnaît que $I \\frac{dI}{dt} = \\frac{d}{dt} (\\frac{1}{2} I^2)$.
+                            <br>Donc, $P_L(t) = L \\frac{d}{dt} (\\frac{1}{2} I^2) = \\frac{d}{dt} (\\frac{1}{2} L I^2)$.
+                            <br>La puissance reçue par l'inductance est égale à la dérivée temporelle d'une quantité $\frac{1}{2} L I^2$. Cette quantité représente l'<strong>énergie magnétique $E_L$</strong> stockée dans l'inductance :
+                            <br>$E_L = \\frac{1}{2} L I^2$.
+                            <br>Cette énergie est stockée dans le champ magnétique créé par le courant dans le volume de l'inductance. Elle peut être restituée au circuit lorsque le courant diminue.
+                            <strong class="capacite">Réaliser un bilan de puissance et d'énergie, en utilisant le schéma équivalent d'une bobine réelle (L en série avec résistance r).</strong></p>
+                            <div class="schema">Schéma équivalent bobine réelle (L + r)</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_4_5',
+                            section: '1.7.4 Circuit fixe dans B variable',
+                            question: 'Définir l\'induction mutuelle M entre deux circuits. Quelle est la relation entre $M_{12}$ et $M_{21}$ ?',
+                            answer: `<div class="definition"><p><strong>Induction Mutuelle (M) :</strong> C'est le phénomène d'induction électromagnétique qui se produit entre deux circuits distincts (circuit 1 et circuit 2) suffisamment proches pour que le champ magnétique créé par l'un traverse l'autre.
+                            <br>Plus précisément :
+                            <ul><li>Le courant $I_1$ dans le circuit 1 crée un champ $\\vec{B}_1$. Ce champ produit un flux $\Phi_{2 \leftarrow 1}$ à travers le circuit 2. On montre que ce flux est proportionnel à $I_1$ : $\Phi_{2 \leftarrow 1} = M_{21} I_1$. Le coefficient $M_{21}$ est le coefficient d'induction mutuelle du circuit 1 sur le circuit 2. Si $I_1$ varie, une f.e.m. $e_{2 \leftarrow 1} = -d\Phi_{2 \leftarrow 1}/dt = -M_{21} (dI_1/dt)$ est induite dans le circuit 2.</li>
+                            <li>De même, le courant $I_2$ dans le circuit 2 crée un champ $\\vec{B}_2$ qui produit un flux $\Phi_{1 \leftarrow 2}$ à travers le circuit 1 : $\Phi_{1 \leftarrow 2} = M_{12} I_2$. Le coefficient $M_{12}$ est le coefficient d'induction mutuelle du circuit 2 sur le circuit 1. Si $I_2$ varie, une f.e.m. $e_{1 \leftarrow 2} = -d\Phi_{1 \leftarrow 2}/dt = -M_{12} (dI_2/dt)$ est induite dans le circuit 1.</li></ul>
+                            <br><strong>Théorème de Neumann :</strong> Un résultat fondamental (admis) est que ces deux coefficients sont toujours égaux : $M_{12} = M_{21}$. On note alors simplement $M$ l'<strong>inductance mutuelle</strong> entre les deux circuits.
+                            <br>$M_{12} = M_{21} = M$.
+                            <br>L'inductance mutuelle M (exprimée en Henrys, H) caractérise l'intensité du couplage magnétique entre les deux circuits. Elle dépend de leurs géométries (tailles, formes, nombre de tours) et de leur position relative (distance, orientation). On a toujours $|M| \le \sqrt{L_1 L_2}$, où $L_1$ et $L_2$ sont les inductances propres des circuits.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_4_6',
+                            section: '1.7.4 Circuit fixe dans B variable',
+                            question: 'Établir les équations électriques pour deux circuits couplés par mutuelle M en régime quelconque, puis en régime sinusoïdal forcé.',
+                            answer: `<div class="methode"><p><strong>Circuits Couplés par Mutuelle Induction :</strong>
+                            <br>Considérons deux circuits :
+                            <ul><li>Circuit 1 : résistance $R_1$, inductance propre $L_1$, soumis à une f.e.m. $e_1(t)$ (source), parcouru par $I_1(t)$.</li>
+                            <li>Circuit 2 : résistance $R_2$, inductance propre $L_2$, soumis à une f.e.m. $e_2(t)$ (source), parcouru par $I_2(t)$.</li></ul>
+                            Ils sont couplés par une inductance mutuelle M.
+                            <br>La loi des mailles appliquée à chaque circuit doit inclure la tension aux bornes de la résistance ($RI$), la tension aux bornes de l'inductance propre ($L dI/dt$) et la f.e.m. induite par l'autre circuit ($-M dI_{autre}/dt$).
+                            <br>Convention : on choisit un sens positif pour $I_1, I_2, e_1, e_2$ sur chaque maille. La f.e.m. mutuelle $e_{1 \leftarrow 2} = -M dI_2/dt$ agit dans le sens positif de la maille 1, et $e_{2 \leftarrow 1} = -M dI_1/dt$ agit dans le sens positif de la maille 2 (le signe dépend en réalité des enroulements relatifs, mais est souvent pris ainsi).
+                            <br><strong>Équations en régime quelconque :</strong>
+                            <br>Maille 1 : $e_1(t) = R_1 I_1(t) + L_1 \\frac{dI_1(t)}{dt} - M \\frac{dI_2(t)}{dt}$ (ou $+M$ selon la convention précise du signe de M).
+                            <br>Maille 2 : $e_2(t) = R_2 I_2(t) + L_2 \\frac{dI_2(t)}{dt} - M \\frac{dI_1(t)}{dt}$ (ou $+M$).
+                            <br><strong>Équations en régime sinusoïdal forcé (RSF) :</strong> On passe en notation complexe. Les tensions et courants deviennent des phaseurs ($\underline{e}_1, \underline{I}_1$, etc.), et la dérivation $d/dt$ est remplacée par la multiplication par $j\omega$ (où $\omega$ est la pulsation du régime forcé).
+                            <br>Maille 1 : $\underline{e}_1 = R_1 \underline{I}_1 + jL_1\omega \underline{I}_1 - jM\omega \underline{I}_2 = (R_1 + jL_1\omega)\underline{I}_1 - jM\omega \underline{I}_2$.
+                            <br>Maille 2 : $\underline{e}_2 = R_2 \underline{I}_2 + jL_2\omega \underline{I}_2 - jM\omega \underline{I}_1 = (R_2 + jL_2\omega)\underline{I}_2 - jM\omega \underline{I}_1$.
+                            <br>C'est un système linéaire de deux équations à deux inconnues ($\underline{I}_1, \underline{I}_2$) qui peut être résolu.
+                            <strong class="capacite">Établir ce système d'équations.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex1_10',
+                            section: '1.7.4 Circuit fixe dans B variable - Exercice 1.10',
+                            question: 'Un solénoïde de N=500 spires, l=20cm de long, S=4cm² de section, est parcouru par $I(t) = 2\cos(100\pi t)$ A. Calculer son inductance L et la f.e.m. $e_{auto}(t)$. On prendra $\mu_0 = 4\pi \times 10^{-7}$ SI.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 1.10 :</strong>
+                            <br>1. <strong>Calcul de l'inductance L :</strong> Pour un solénoïde long, $L = \\frac{\mu_0 N^2 S}{l}$.
+                            <br>Données : $N = 500$, $l = 20 \text{ cm} = 0.2$ m, $S = 4 \text{ cm}^2 = 4 \times 10^{-4}$ m².
+                            <br>$L = \\frac{(4\pi \times 10^{-7}) \times (500)^2 \times (4 \times 10^{-4})}{0.2}$
+                            <br>$L = \\frac{(4\pi \times 10^{-7}) \times (250000) \times (4 \times 10^{-4})}{0.2}$
+                            <br>$L = \\frac{4\pi \times 25 \times 4 \times 10^{-7+4-4}}{0.2} = \\frac{400\pi \times 10^{-7}}{0.2}$
+                            <br>$L = 2000\pi \times 10^{-7} = 2\pi \times 10^{-4}$ H.
+                            <br>$L \approx 6.28 \times 10^{-4}$ H = 0.628 mH.
+                            <br><i>Note : Vérifions l'hypothèse "solénoïde long". Rayon $r = \sqrt{S/\pi} = \sqrt{(4\times 10^{-4})/\pi} \approx 1.13$ cm. $l/r \approx 0.2 / 0.0113 \approx 18$. L'approximation est raisonnable.</i>
+                            <br>2. <strong>Calcul de la f.e.m. $e_{auto}(t)$ :</strong> $e_{auto} = - L \\frac{dI}{dt}$.
+                            <br>$I(t) = 2\cos(100\pi t)$.
+                            <br>$\\frac{dI}{dt} = 2 \times [-\sin(100\pi t) \times (100\pi)] = -200\pi \sin(100\pi t)$.
+                            <br>$e_{auto}(t) = - (2\pi \times 10^{-4}) \times (-200\pi \sin(100\pi t))$
+                            <br>$e_{auto}(t) = 400\pi^2 \times 10^{-4} \sin(100\pi t) = 0.04 \pi^2 \sin(100\pi t)$.
+                            <br>Sachant $\pi^2 \approx 9.87$, $e_{auto}(t) \approx 0.04 \times 9.87 \sin(100\pi t) \approx 0.395 \sin(100\pi t)$ V.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                         // === 1.7.5 Circuit mobile dans B stationnaire ===
+                        {
+                            id: 'q1_7_5_1',
+                            section: '1.7.5 Circuit mobile dans B stationnaire',
+                            question: 'Expliquer le phénomène d\'induction de mouvement (Lorentz). Comment relier la f.e.m. induite à la force magnétique sur les porteurs ?',
+                            answer: `<div class="definition"><p><strong>Induction de Mouvement (Lorentz) :</strong> Ce phénomène se produit lorsqu'un conducteur (ou une partie d'un circuit) se déplace avec une vitesse $\\vec{v}_e$ (vitesse d'entraînement) dans une région où règne un champ magnétique $\\vec{B}$ stationnaire (indépendant du temps).
+                            <br>Les porteurs de charge $q$ présents dans le conducteur mobile possèdent, en plus de leur éventuelle vitesse propre $\\vec{v}_p$ due au courant, la vitesse d'entraînement $\\vec{v}_e$ du conducteur. Ils subissent donc une force magnétique de Lorentz due à ce mouvement d'ensemble : $\\vec{F}_m = q (\\vec{v}_e \\times \\vec{B})$.
+                            <br>Cette force magnétique tend à séparer les charges positives et négatives ou à les mettre en mouvement le long du conducteur. On peut lui associer un <strong>champ électromoteur</strong> (d'origine magnétique) $\\vec{E}_m = \\vec{F}_m / q = \\vec{v}_e \\times \\vec{B}$.
+                            <br>La circulation de ce champ électromoteur le long d'un circuit (ou d'une portion de circuit) mobile définit la force électromotrice (f.e.m.) induite par mouvement :
+                            <br>$e = \\oint_C \\vec{E}_m \cdot d\\vec{l} = \\oint_C (\\vec{v}_e \\times \\vec{B}) \cdot d\\vec{l}$.
+                            <br>On peut montrer (Théorème de Faraday généralisé) que cette f.e.m. est aussi égale à $-d\Phi/dt$, où la variation du flux $\Phi$ est due au déplacement du circuit dans le champ $\\vec{B}$ stationnaire.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_5_2',
+                            section: '1.7.5 Circuit mobile dans B stationnaire',
+                            question: 'Décrire l\'expérience des rails de Laplace et établir l\'expression de la f.e.m. induite $e$ et de la force de Laplace $F_L$ sur la barre mobile.',
+                            answer: `<div class="methode"><p><strong>Expérience : Rails de Laplace :</strong> Une barre conductrice MN, de longueur $l$, peut glisser sans frottement sur deux rails conducteurs parallèles. La barre et les rails ferment un circuit électrique de résistance totale R. L'ensemble est plongé dans un champ magnétique $\\vec{B}$ uniforme et stationnaire, perpendiculaire au plan des rails (par exemple $\\vec{B} = B \\vec{u}_z$). On déplace la barre avec une vitesse $\\vec{v} = v \\vec{u}_x$.
+                            <div class="schema">Schéma : Rails de Laplace (vue de dessus, B sortant, v vers la droite)</div>
+                            <br><strong>Calcul de la f.e.m. induite $e$ :</strong>
+                               <ul>
+                                    <li><strong>Méthode 1 (Faraday) :</strong> On oriente le circuit, par exemple dans le sens M $\to$ N $\to$ Rail $\to$ M (sens horaire). La normale associée est $\vec{n}=-\vec{u}_z$. La surface du circuit est $S(t) = l \times x(t)$, où $x(t)$ est la position de la barre. Le flux est $\Phi(t) = \\vec{B} \cdot (S(t) \vec{n}) = (B\vec{u}_z) \cdot (l x(t) (-\vec{u}_z)) = -B l x(t)$.
+                                    <br>$e = -d\Phi/dt = - (-Bl \frac{dx}{dt}) = + B l v$.</li>
+                                    <li><strong>Méthode 2 (Lorentz) :</strong> Champ électromoteur dans la barre $\\vec{E}_m = \\vec{v} \times \\vec{B} = (v\vec{u}_x) \times (B\vec{u}_z) = vB (\vec{u}_x \times \vec{u}_z) = -vB \vec{u}_y$.
+                                    <br>f.e.m. $e = \\int_M^N \\vec{E}_m \cdot d\\vec{l}$. Le chemin MN est selon $+\vec{u}_y$, $d\vec{l} = dy \vec{u}_y$.
+                                    <br>$e = \\int_0^l (-vB \vec{u}_y) \cdot (dy \vec{u}_y) = \\int_0^l -vB dy = -vBl$.
+                                    <br>(Le signe dépend de l'orientation choisie pour e; $e=-Blv$ correspond à une f.e.m. orientée de N vers M).</li>
+                               </ul>
+                            Prenons $e=-Blv$ (orientée de N vers M).
+                            <br><strong>Courant induit $i$ :</strong> Loi d'Ohm $e=Ri$ (si on oriente $i$ de N vers M). $i = e/R = -Blv/R$. Le courant circule effectivement de N vers M (sens horaire).
+                            <br><strong>Force de Laplace subie par la barre $\vec{F}_L$ :</strong> La barre est parcourue par $i$ (de N vers M, donc $\\vec{L} = -l\vec{u}_y$) dans le champ $\\vec{B}=B\vec{u}_z$.
+                            <br>$\\vec{F}_L = i (\\vec{L} \\times \\vec{B}) = i (-l\vec{u}_y \times B\vec{u}_z) = -i l B (\vec{u}_y \times \vec{u}_z) = -i l B \vec{u}_x$.
+                            <br>En remplaçant $i = -Blv/R$:
+                            <br>$\\vec{F}_L = -(\\frac{-Blv}{R}) l B \vec{u}_x = +\\frac{B^2 l^2 v}{R} \vec{u}_x$.
+                            <br><i>Attention aux signes et conventions !</i> Si v>0, la force $F_L$ est dirigée selon $+u_x$. Si on tire la barre vers la droite (v>0), elle subit une force de Laplace vers la droite ? Non, Lenz dit qu'elle doit s'opposer. Revoyons.
+                            <br>Avec $e=+Blv$ (orientée M vers N, anti-horaire) : $i=e/R = Blv/R$. $\vec{L}=l\vec{u}_y$ (M vers N). $\vec{F}_L = i(\vec{L}\times\vec{B}) = (\frac{Blv}{R}) (l\vec{u}_y \times B\vec{u}_z) = \frac{B^2 l^2 v}{R} (\vec{u}_y \times \vec{u}_z) = \frac{B^2 l^2 v}{R} \vec{u}_x$. Toujours vers la droite. C'est une force <strong>motrice</strong> dans ce cas.
+
+                            <br>Refaisons avec $\vec{B}$ entrant ($B\vec{u}_z \to -B\vec{u}_z$) et $v>0$ vers la droite ($\vec{v}=v\vec{u}_x$).
+                            <br> $\vec{E}_m = \vec{v} \times \vec{B} = (v\vec{u}_x) \times (-B\vec{u}_z) = -vB (\vec{u}_x \times \vec{u}_z) = +vB \vec{u}_y$.
+                            <br> $e = \int_M^N \vec{E}_m \cdot d\vec{l} = \int_0^l (vB\vec{u}_y) \cdot (dy\vec{u}_y) = +vBl$. (f.e.m orientée de M vers N).
+                            <br> Courant $i = e/R = Blv/R$ (circule de M vers N, anti-horaire).
+                            <br> Force $\vec{F}_L = i(\vec{L}\times\vec{B})$. $\vec{L}=l\vec{u}_y$ (M vers N). $\vec{B}=-B\vec{u}_z$.
+                            <br> $\vec{F}_L = (\frac{Blv}{R}) [ (l\vec{u}_y) \times (-B\vec{u}_z) ] = - \frac{B^2 l^2 v}{R} (\vec{u}_y \times \vec{u}_z) = - \frac{B^2 l^2 v}{R} \vec{u}_x$.
+                            <br>Cette fois, la force est bien opposée à $\vec{v}$ : c'est une <strong>force de freinage</strong>.
+                            <br>Conclusion : $e = \pm Blv$ et $F_L = \mp \frac{B^2 l^2 v}{R}$. Le signe dépend des orientations relatives de v, B et du circuit. Mais la force s'oppose toujours à la cause (variation de flux ou mouvement).
+                            <strong class="capacite">Interpréter qualitativement. Écrire les équations électrique et mécanique.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_7_5_3',
+                            section: '1.7.5 Circuit mobile dans B stationnaire',
+                            question: 'Réaliser le bilan énergétique pour les rails de Laplace en régime permanent (vitesse constante). Que devient l\'énergie mécanique fournie ?',
+                            answer: `<div class="methode"><p><strong>Bilan Énergétique (Rails de Laplace en régime permanent $v=cste$) :</strong>
+                            <br>On suppose le cas où la force de Laplace est une force de freinage $\vec{F}_L = - \\frac{B^2 l^2 v}{R} \vec{u}_x$ (avec B entrant, v vers la droite).
+                            <br>Pour maintenir la vitesse constante $v$, un opérateur extérieur doit appliquer une force $\vec{F}_{op}$ qui compense exactement la force de freinage : $\vec{F}_{op} = -\vec{F}_L = + \\frac{B^2 l^2 v}{R} \vec{u}_x$.
+                            <br><strong>Puissance fournie par l'opérateur :</strong> C'est la puissance mécanique nécessaire pour maintenir le mouvement.
+                            <br>$P_{op} = \vec{F}_{op} \cdot \vec{v} = (\\frac{B^2 l^2 v}{R} \vec{u}_x) \cdot (v \vec{u}_x) = \\frac{B^2 l^2 v^2}{R}$.
+                            <br><strong>Puissance dissipée par effet Joule dans la résistance R :</strong> Le circuit est parcouru par le courant induit $i = Blv/R$ (en norme).
+                            <br>$P_J = R i^2 = R (\\frac{Blv}{R})^2 = R \\frac{B^2 l^2 v^2}{R^2} = \\frac{B^2 l^2 v^2}{R}$.
+                            <br><strong>Bilan :</strong> On constate que $P_{op} = P_J$.
+                            <br>La puissance mécanique fournie par l'opérateur extérieur pour maintenir le mouvement de la barre est intégralement convertie en chaleur par effet Joule dans la résistance du circuit. Il s'agit d'une <strong>conversion d'énergie électromécanique</strong>.
+                            <br>Si on lâche la barre, la force de freinage $F_L$ va la ralentir, l'énergie cinétique de la barre étant convertie en chaleur.
+                            <br><strong>Applications :</strong>
+                            <ul><li><strong>Générateur électrique simple :</strong> Si on force le mouvement, on produit un courant (énergie électrique) à partir d'énergie mécanique.</li>
+                            <li><strong>Freinage électromagnétique :</strong> Si on laisse le circuit se déplacer et se fermer sur une résistance, le mouvement est freiné par dissipation Joule.</li></ul>
+                            <strong class="capacite">Effectuer le bilan énergétique. Citer des applications (générateur, freinage).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q1_7_5_4',
+                            section: '1.7.5 Circuit mobile dans B stationnaire',
+                            question: 'Que sont les courants de Foucault ? Citer deux effets principaux et des applications ou inconvénients associés.',
+                            answer: `<div class="definition"><p><strong>Courants de Foucault :</strong> Ce sont des courants électriques induits qui apparaissent et circulent en <strong>boucles fermées</strong> à l'intérieur d'une <strong>masse conductrice</strong> (et non juste un circuit filiforme) lorsque celle-ci est soumise à une variation de flux magnétique. Cette variation peut être due :
+                                <ul><li>Au déplacement de la masse conductrice dans un champ magnétique stationnaire mais non uniforme.</li>
+                                <li>À la variation temporelle d'un champ magnétique extérieur traversant la masse conductrice fixe.</li></ul>
+                             Les courants de Foucault sont une conséquence directe de la loi de Faraday appliquée à des chemins conducteurs virtuels à l'intérieur du matériau.</p>
+                            <br><strong>Effets (dus à la loi de Lenz) :</strong>
+                               <ol>
+                                    <li><strong>Force de Freinage (Effet dynamique) :</strong> Les courants de Foucault induits dans un conducteur mobile interagissent avec le champ magnétique extérieur via la force de Laplace. Conformément à la loi de Lenz, ces forces s'opposent au mouvement relatif qui a créé les courants. Il en résulte un effet de <strong>freinage électromagnétique</strong> proportionnel à la vitesse (pour les faibles vitesses) et à la conductivité du matériau.
+                                        <ul><li><em>Applications :</em> Freins électromagnétiques (camions, trains), amortissement dans certains appareils de mesure (balances, galvanomètres), ralentissement des compteurs électriques anciens.</li>
+                                        <li><em>Inconvénients :</em> Freinage non désiré dans les moteurs ou générateurs.</li></ul></li>
+                                    <li><strong>Échauffement par Effet Joule (Effet thermique) :</strong> Les courants de Foucault circulent dans un matériau qui a une résistance électrique non nulle. Ils dissipent donc de l'énergie sous forme de chaleur par effet Joule ($P_J = \int \rho j^2 dV$, où $j$ est la densité de courant de Foucault et $\rho$ la résistivité).
+                                        <ul><li><em>Applications :</em> Chauffage par induction (plaques de cuisson à induction, fours industriels). La pièce métallique à chauffer est placée dans un champ B variable qui induit des courants de Foucault intenses, la chauffant par effet Joule.</li>
+                                        <li><em>Inconvénients :</em> Pertes d'énergie par échauffement dans les noyaux magnétiques des transformateurs, moteurs, alternateurs (appelées "pertes fer"). Pour les réduire, on utilise des <strong>noyaux feuilletés</strong> : le noyau est constitué de tôles minces isolées électriquement les unes des autres, ce qui limite la taille des boucles de courant de Foucault et augmente la résistance rencontrée, réduisant ainsi les pertes.</li></ul></li>
+                               </ol>
+                            <strong class="capacite">Expliquer l'origine. Citer des exemples. Mettre en évidence qualitativement (ex: freinage d'un pendule métallique dans un champ B).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'ex1_13',
+                            section: '1.7.5 Circuit mobile dans B stationnaire - Exercice 1.13',
+                            question: 'Dans l\'expérience des rails de Laplace (avec $R=0.1\,\Omega$, $l=10$ cm, $B=0.5$ T, $\vec{B}$ entrant), on tire la barre à une vitesse constante $v=2$ m/s. Calculer la f.e.m. induite $e$, le courant $i$, la force de Laplace $F_L$ et la puissance Joule $P_J$.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 1.13 :</strong>
+                            <br>On reprend les résultats établis pour le cas $\vec{B}$ entrant et $\vec{v}$ vers la droite (force de freinage).
+                            <br>Données : $R=0.1\,\Omega$, $l=0.1$ m, $B=0.5$ T, $v=2$ m/s.
+                            <br>1. <strong>F.e.m. induite $e$ :</strong> L'amplitude est $|e| = Blv$. Le sens (ex: M vers N) est tel qu'il tend à créer un courant s'opposant à l'augmentation de surface (si $\vec{B}$ est entrant, flux négatif qui augmente en module, donc $e$ crée un courant anti-horaire pour un flux propre sortant).
+                            <br>$|e| = (0.5 \text{ T}) \times (0.1 \text{ m}) \times (2 \text{ m/s}) = 0.1$ V.
+                            <br>Si on oriente la f.e.m. de M vers N, $e = +0.1$ V.
+                            <br>2. <strong>Courant induit $i$ :</strong> $i = e/R$ (dans le sens M vers N).
+                            <br>$i = 0.1 \text{ V} / 0.1\,\Omega = 1$ A. (Courant circule dans le sens anti-horaire).
+                            <br>3. <strong>Force de Laplace $\vec{F}_L$ :</strong> $\vec{L}=l\vec{u}_y$ (M vers N), $\vec{B}=-B\vec{u}_z$.
+                            <br>$\vec{F}_L = i(\vec{L}\times\vec{B}) = (1 \text{ A}) [ (0.1\vec{u}_y) \times (-0.5\vec{u}_z) ]$
+                            <br>$\vec{F}_L = 1 \times (-0.05) (\vec{u}_y \times \vec{u}_z) = -0.05 \vec{u}_x$ N.
+                            <br>La force est bien opposée au mouvement ($\vec{v}=2\vec{u}_x$), c'est une force de freinage de norme $F_L = 0.05$ N.
+                            <br>4. <strong>Puissance Joule $P_J$ :</strong>
+                            <br>$P_J = R i^2 = (0.1\,\Omega) \times (1 \text{ A})^2 = 0.1$ W.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 1.8 Intro physique quantique ===
+                        {
+                            id: 'q1_8_1',
+                            section: '1.8 Introduction à la physique quantique',
+                            question: 'Qu\'est-ce que la quantification de l\'énergie en physique quantique ? Qu\'est-ce qu\'un photon et quelle est son énergie ?',
+                            answer: `<div class="definition"><p><strong>Quantification de l'Énergie :</strong> C'est un concept fondamental de la physique quantique qui stipule que l'énergie des systèmes liés à l'échelle microscopique (comme les électrons dans les atomes, les oscillateurs moléculaires) ne peut pas prendre n'importe quelle valeur continue, mais est restreinte à un ensemble discret de <strong>niveaux d'énergie</strong> permis. Les échanges d'énergie entre ces systèmes et leur environnement (par exemple, par absorption ou émission de rayonnement électromagnétique) se font également par quantités discrètes, appelées <strong>quanta</strong> d'énergie.</p>
+                                <p><strong>Photon :</strong> C'est le quantum d'énergie associé au champ électromagnétique (lumière, rayons X, ondes radio...). La lumière, bien que se comportant comme une onde dans de nombreux phénomènes (diffraction, interférences), interagit avec la matière comme si elle était composée de particules sans masse appelées photons.
+                                   <ul>
+                                        <li><strong>Énergie d'un photon :</strong> L'énergie $E$ d'un photon est directement proportionnelle à la fréquence $\nu$ de l'onde électromagnétique associée :
+                                        <br>$E = h \nu$.
+                                        <br>où $h$ est la constante de Planck ($h \approx 6.626 \times 10^{-34}$ J·s).
+                                        <br>En utilisant la relation $\nu = c/\lambda$ (où $c$ est la vitesse de la lumière et $\lambda$ la longueur d'onde), on peut aussi écrire :
+                                        <br>$E = \\frac{hc}{\lambda}$.</li>
+                                   </ul>
+                                L'effet photoélectrique est une expérience clé qui met en évidence la nature corpusculaire de la lumière (photons). <strong class="capacite">Expérience illustrant le photon : Effet photoélectrique.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_8_2',
+                            section: '1.8 Introduction à la physique quantique',
+                            question: 'Expliquer la dualité onde-particule et donner la relation de De Broglie pour la longueur d\'onde associée à une particule.',
+                            answer: `<div class="definition"><p><strong>Dualité Onde-Particule :</strong> C'est un concept central de la physique quantique qui affirme que les objets quantiques (comme la lumière ou les particules de matière) présentent à la fois des propriétés ondulatoires et des propriétés corpusculaires, selon le type d'expérience réalisée.
+                               <ul>
+                                    <li>La <strong>lumière</strong>, classiquement décrite comme une onde électromagnétique (interférences, diffraction), se comporte aussi comme un flux de particules (photons) lors de ses interactions avec la matière (effet photoélectrique, effet Compton).</li>
+                                    <li>Les <strong>particules de matière</strong> (électrons, protons, atomes...), classiquement décrites comme des corpuscules localisés avec une masse et une quantité de mouvement, présentent aussi des propriétés ondulatoires (diffraction, interférences).</li>
+                               </ul>
+                            Cette dualité signifie qu'une description complète d'un objet quantique nécessite de considérer ces deux aspects complémentaires.</p>
+                            <p><strong>Onde de Matière (Hypothèse de Louis de Broglie, 1924) :</strong> De Broglie a postulé que toute particule de matière ayant une quantité de mouvement $\vec{p}$ (norme $p = ||\vec{p}||$) se comporte comme une onde, dont la longueur d'onde $\lambda$ (appelée longueur d'onde de De Broglie) est donnée par la relation :
+                            <br>$\\lambda = \\frac{h}{p}$.
+                            <br>où $h$ est la constante de Planck. Cette relation est analogue à celle pour le photon ($p=h/\lambda$).
+                            <br>Cette hypothèse a été confirmée expérimentalement par la mise en évidence de la <strong>diffraction d'électrons</strong> par des cristaux (expérience de Davisson et Germer, 1927), qui se comportent comme des réseaux de diffraction pour ces ondes de matière. <strong class="capacite">Expérience illustrant l'onde de matière : Diffraction d'électrons. Évaluer $\lambda_{DeBroglie}$ pour un électron/balle...</strong> ($p=mv$ pour une particule non relativiste).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q1_8_3',
+                            section: '1.8 Introduction à la physique quantique',
+                            question: 'Qu\'est-ce que la fonction d\'onde $\Psi(x,t)$ en mécanique quantique et quelle est son interprétation probabiliste ? Comment cela explique-t-il les interférences particule par particule ?',
+                            answer: `<div class="definition"><p><strong>Fonction d'Onde ($\\Psi(x, t)$) :</strong> En mécanique quantique, l'état d'une particule (ou d'un système) à un instant $t$ n'est plus décrit par sa position et sa vitesse précises, mais par une fonction mathématique complexe appelée fonction d'onde, notée $\Psi(x, t)$ (ou $\Psi(\vec{r}, t)$ en 3D). Cette fonction contient toute l'information accessible sur l'état quantique de la particule.</p>
+                                <p><strong>Interprétation Probabiliste (Max Born) :</strong> La fonction d'onde $\Psi$ elle-même n'a pas de signification physique directe simple. Cependant, le <strong>carré de son module</strong>, $|\Psi(x, t)|^2$, représente la <strong>densité de probabilité de présence</strong> de la particule. C'est-à-dire que :
+                                <br>$|\Psi(x, t)|^2 dV$ est la probabilité de trouver la particule dans le volume infinitésimal $dV$ autour de la position $x$ (ou $\vec{r}$) à l'instant $t$.
+                                <br>La description de la position (et aussi de la vitesse) est donc fondamentalement <strong>probabiliste</strong>. Avant une mesure, on ne peut prédire que la probabilité des différents résultats possibles.</p>
+                                <p><strong>Interprétation des Interférences "Particule par Particule" (ex: Fentes d'Young) :</strong>
+                                <br>Lorsqu'on réalise l'expérience des fentes d'Young avec une source si faible que les particules (photons ou électrons) arrivent sur l'écran une par une, on observe des impacts localisés (aspect corpusculaire). Cependant, après avoir accumulé un grand nombre d'impacts, la distribution spatiale de ces impacts révèle les franges d'interférence caractéristiques d'une onde.
+                                <br>L'interprétation quantique est la suivante :
+                                <ul><li>Chaque particule individuelle est décrite par sa fonction d'onde $\Psi$.</li>
+                                <li>Lorsque la particule passe par les deux fentes, sa fonction d'onde se propage à travers les deux chemins possibles, comme une onde classique. Les fonctions d'onde issues de chaque fente ($\Psi_1$ et $\Psi_2$) se superposent et interfèrent sur l'écran ($\Psi_{total} = \Psi_1 + \Psi_2$).</li>
+                                <li>La probabilité d'impact en un point de l'écran est donnée par $|\Psi_{total}|^2 = |\Psi_1 + \Psi_2|^2$, qui contient des termes d'interférence et reproduit la figure observée.</li>
+                                <li>Même une seule particule "interfère avec elle-même" car sa fonction d'onde explore tous les chemins possibles. La localisation de l'impact lors de la détection est un aspect de la mesure quantique (réduction du paquet d'onde).</li></ul>
+                                <strong class="capacite">Interpréter cette expérience.</strong></p>
+                                <div class="schema">Schéma : Interférences particule par particule</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q1_8_4',
+                            section: '1.8 Introduction à la physique quantique',
+                            question: 'Énoncer l\'inégalité de Heisenberg spatiale ($\Delta x \cdot \Delta p_x$) et donner son interprétation.',
+                            answer: `<div class="resultat"><p><strong>Inégalité de Heisenberg Spatiale (Principe d'Indétermination ou d'Incertitude) :</strong> Ce principe fondamental de la mécanique quantique, formulé par Werner Heisenberg en 1927, énonce qu'il existe une limite intrinsèque à la précision avec laquelle on peut connaître simultanément certaines paires de grandeurs physiques dites "conjuguées". Pour la position $x$ et la quantité de mouvement $p_x$ selon un même axe, l'inégalité s'écrit :
+                            <br>$\\Delta x \cdot \\Delta p_x \ge \frac{\hbar}{2}$
+                            <br>où :
+                                <ul><li>$\Delta x$ est l'incertitude (typiquement l'écart-type) sur la mesure de la position $x$.</li>
+                                <li>$\Delta p_x$ est l'incertitude (écart-type) sur la mesure simultanée de la quantité de mouvement $p_x$.</li>
+                                <li>$\\hbar = h/(2\pi)$ est la constante de Planck réduite ($\hbar \approx 1.054 \times 10^{-34}$ J·s).</li></ul>
+                            Souvent, on utilise l'ordre de grandeur $\Delta x \cdot \Delta p_x \approx \hbar$.
+                            <br><strong>Interprétation :</strong> Il est impossible de connaître avec une précision infinie à la fois la position et la quantité de mouvement d'une particule quantique. Plus on détermine précisément la position ($\Delta x$ petit), plus l'incertitude sur sa quantité de mouvement ($\Delta p_x$) devient grande, et vice-versa. Cette limitation n'est pas due aux imperfections des instruments de mesure, mais est une propriété fondamentale de la nature quantique des objets, liée à leur dualité onde-particule. <strong class="capacite">Établir par analogie (diffraction).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q1_8_5',
+                            section: '1.8 Introduction à la physique quantique',
+                            question: 'Quelles sont les hypothèses clés du modèle de Bohr pour l\'atome d\'hydrogène et quelle est la condition de quantification du moment cinétique ?',
+                            answer: `<div class="definition"><p><strong>Modèle de Bohr pour l'Atome d'Hydrogène (1913) :</strong> Pour résoudre les problèmes de la stabilité de l'atome et des spectres de raies discrets (inexpliqués par le modèle planétaire classique de Rutherford où l'électron en orbite devrait rayonner et tomber sur le noyau), Niels Bohr a proposé un modèle semi-classique, semi-quantique basé sur les postulats suivants :
+                               <ol>
+                                    <li><strong>Existence d'orbites stationnaires :</strong> L'électron ne peut se trouver que sur certaines orbites circulaires permises autour du proton, sans émettre de rayonnement électromagnétique (contrairement à l'électromagnétisme classique). Ces états sont dits stationnaires.</li>
+                                    <li><strong>Condition de Quantification du Moment Cinétique :</strong> Parmi toutes les orbites classiquement possibles, seules sont permises celles pour lesquelles le moment cinétique orbital de l'électron $L = ||\vec{L}|| = ||\vec{r} \times \vec{p}|| = m_e v r$ est un multiple entier de la constante de Planck réduite $\hbar$:
+                                    <br>$L = m_e v r = n \hbar$
+                                    <br>où $n = 1, 2, 3, ...$ est un entier appelé <strong>nombre quantique principal</strong>.</li>
+                                    <li><strong>Absorption/Émission de Photons :</strong> L'atome ne peut échanger de l'énergie avec le rayonnement électromagnétique que lors d'une transition de l'électron d'une orbite permise (énergie $E_n$) à une autre orbite permise (énergie $E_p$). L'énergie du photon émis ou absorbé est alors égale à la différence d'énergie entre les deux niveaux :
+                                    <br>$h\nu = |E_n - E_p|$.</li>
+                               </ol>
+                            Ce modèle, bien que présentant des limites et remplacé depuis par la mécanique quantique complète, a été une étape cruciale en introduisant l'idée de quantification dans l'atome. <strong class="capacite">Exploiter la condition de quantification $L=n\hbar$ pour retrouver les rayons et les niveaux d'énergie de l'atome H.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex1_17',
+                            section: '1.8 Introduction à la physique quantique - Exercice 1.17',
+                            question: 'Calculer la longueur d\'onde de De Broglie $\lambda$ d\'un électron de masse $m_e \approx 9.1 \times 10^{-31}$ kg, initialement au repos, après avoir été accéléré sous une différence de potentiel $U=100$ V.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 1.17 :</strong>
+                            <br>1. <strong>Calcul de l'énergie cinétique $E_c$ de l'électron :</strong> Lorsqu'un électron de charge $-e$ ($e \approx 1.6 \times 10^{-19}$ C) est accéléré par une différence de potentiel $U$, son énergie potentielle électrique diminue de $eU$, et cette énergie est convertie en énergie cinétique (en partant du repos).
+                            <br>$E_c = e U = (1.6 \times 10^{-19} \text{ C}) \times (100 \text{ V}) = 1.6 \times 10^{-17}$ J.
+                            <br>(Ceci correspond à une énergie de 100 eV).
+                            <br>2. <strong>Calcul de la quantité de mouvement $p$ de l'électron :</strong> L'énergie cinétique non relativiste est $E_c = \frac{1}{2} m_e v^2 = \frac{(m_e v)^2}{2m_e} = \frac{p^2}{2m_e}$.
+                            <br>Donc, $p = \sqrt{2 m_e E_c}$.
+                            <br>$p = \sqrt{2 \times (9.1 \times 10^{-31} \text{ kg}) \times (1.6 \times 10^{-17} \text{ J})}$
+                            <br>$p = \sqrt{29.12 \times 10^{-48}} \text{ kg.m/s} \approx 5.396 \times 10^{-24}$ kg.m/s.
+                            <br>3. <strong>Calcul de la longueur d'onde de De Broglie $\lambda$ :</strong>
+                            <br>$\lambda = \frac{h}{p}$, avec $h \approx 6.626 \times 10^{-34}$ J·s.
+                            <br>$\lambda = \frac{6.626 \times 10^{-34}}{5.396 \times 10^{-24}} \approx 1.228 \times 10^{-10}$ m.
+                            <br>$\lambda \approx 0.123$ nm ou 1.23 Å (Angströms).
+                            <br>Cette longueur d'onde est de l'ordre de grandeur des distances interatomiques dans les solides, ce qui explique pourquoi les électrons de cette énergie peuvent être diffractés par les cristaux.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                    ] // Fin du tableau questions
+                }
+            },
+            methods: {
+                toggleAnswer(item) {
+                    item.showAnswer = !item.showAnswer;
+                    if (item.showAnswer) {
+                        this.$nextTick(() => {
+                            this.renderMath();
+                        });
+                    }
+                },
+                setComprehension(item, level) {
+                    item.comprehension = level;
+                    this.saveComprehensionState();
+                     this.$nextTick(() => {
+                        // Optional: Re-render math if layout changes subtly
+                        // this.renderMath();
+                    });
+                },
+                saveComprehensionState() {
+                    const stateToSave = this.questions.reduce((acc, q) => {
+                        if (q.comprehension) {
+                            acc[q.id] = q.comprehension;
+                        }
+                        return acc;
+                    }, {});
+                    try {
+                        // Use a key specific to this theme
+                        localStorage.setItem('vueQnAComprehension_Theme1_S2', JSON.stringify(stateToSave));
+                    } catch (e) {
+                        console.error("Erreur lors de l'enregistrement dans localStorage:", e);
+                    }
+                },
+                loadComprehensionState() {
+                    try {
+                         // Use the key specific to this theme
+                        const savedState = localStorage.getItem('vueQnAComprehension_Theme1_S2');
+                        if (savedState) {
+                            const parsedState = JSON.parse(savedState);
+                            this.questions.forEach(q => {
+                                if (parsedState[q.id]) {
+                                    q.comprehension = parsedState[q.id];
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Erreur lors du chargement depuis localStorage:", e);
+                    }
+                },
+                renderMath() {
+                    // Defer rendering until KaTeX is likely loaded
+                    if (window.renderMathInElement) {
+                         try {
+                            renderMathInElement(this.$el, {
+                                delimiters: [
+                                    {left: '$$', right: '$$', display: true},
+                                    {left: '$', right: '$', display: false},
+                                    {left: '\\(', right: '\\)', display: false},
+                                    {left: '\\[', right: '\\]', display: true}
+                                ],
+                                throwOnError: false // Don't stop rendering on error
+                            });
+                        } catch (error) {
+                            console.error("KaTeX rendering error:", error);
+                        }
+                    } else {
+                        // Retry mechanism or warning if KaTeX isn't loaded
+                        // console.warn("KaTeX auto-render not ready, retrying in 500ms...");
+                        // setTimeout(() => this.renderMath(), 500);
+                    }
+                },
+                renderContent(htmlContent) {
+                    // Pass through HTML, KaTeX rendering handled by renderMath
+                    return htmlContent;
+                }
+            },
+            mounted() {
+                this.loadComprehensionState();
+                // Initial KaTeX rendering after component is mounted and data loaded
+                this.$nextTick(() => {
+                    // Wait a brief moment for KaTeX script to potentially load via CDN
+                    setTimeout(() => this.renderMath(), 100);
+                });
+            }
+        }).mount('#app');
+
+    </script>
+
+</body>
+</html>
