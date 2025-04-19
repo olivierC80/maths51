@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Espaces Vectoriels et Applications Linéaires</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Espaces Vectoriels et Applications Linéaires</h1>
+
+<h3 id="espaces-vectoriels-app-lineaires">Espaces vectoriels et applications linéaires</h3>
+<p class="intro-text">
+    Les objectifs de cette section sont les suivants :
+    <ul>
+        <li>acquérir les notions de base relatives aux espaces vectoriels et à l'indépendance linéaire;</li>
+        <li>reconnaître les problèmes linéaires et les traduire à l'aide des notions d'espace vectoriel et d'application linéaire;</li>
+        <li>définir la notion de dimension, qui décrit le nombre de degrés de liberté d'un problème linéaire; on insistera sur les méthodes de calcul de dimension et on fera apparaître que ces méthodes reposent sur deux types de représentation : paramétrisation linéaire d'un sous-espace, description d'un sous-espace par équations linéaires;</li>
+        <li>présenter quelques notions de géométrie affine, afin d'interpréter géométriquement certaines situations.</li>
+    </ul>
+    En petite dimension, l'intuition géométrique permet d'interpréter les notions de l'algèbre linéaire, ce qui facilite leur extension au cas général; on en tirera parti par de nombreuses figures.
+    <br>Le corps $\mathbb{K}$ est égal à $\mathbb{R}$ ou $\mathbb{C}$. Tout développement théorique sur les espaces de dimension infinie est hors programme.
+</p>
+
+<h4>A - Espaces vectoriels</h4>
+
+<h5 id="ev-def">a) Espaces vectoriels</h5>
+
+<div class="definition">
+    <strong>$\mathbb{K}$-Espace Vectoriel :</strong> Un ensemble non vide $E$ est un <strong>espace vectoriel</strong> sur le corps $\mathbb{K}$ (ou $\mathbb{K}$-ev) s'il est muni de deux lois :
+    <ol>
+        <li>Une loi de composition interne (addition de vecteurs) notée $+ : E \times E \to E$, telle que $(E, +)$ soit un groupe abélien (associativité, commutativité, élément neutre $0_E$, existence d'un opposé $-x$ pour tout $x \in E$).</li>
+        <li>Une loi de composition externe (multiplication par un scalaire) notée $\cdot : \mathbb{K} \times E \to E$, $(\lambda, x) \mapsto \lambda \cdot x$ (ou $\lambda x$), vérifiant pour tous $\lambda, \mu \in \mathbb{K}$ et tous $x, y \in E$ :
+            <ul>
+                <li>$1_{\mathbb{K}} \cdot x = x$ (Neutralité du scalaire 1).</li>
+                <li>$\lambda \cdot (\mu \cdot x) = (\lambda \mu) \cdot x$ (Associativité mixte).</li>
+                <li>$(\lambda + \mu) \cdot x = (\lambda \cdot x) + (\mu \cdot x)$ (Distributivité / scalaires).</li>
+                <li>$\lambda \cdot (x + y) = (\lambda \cdot x) + (\lambda \cdot y)$ (Distributivité / vecteurs).</li>
+            </ul>
+        </li>
+    </ol>
+    Les éléments de $E$ sont appelés <strong>vecteurs</strong>, ceux de $\mathbb{K}$ sont appelés <strong>scalaires</strong>.
+</div>
+
+<div class="example">
+    <strong>Exemples fondamentaux :</strong>
+    <ul>
+        <li>L'espace nul $\{0_E\}$.</li>
+        <li>$\mathbb{K}^n = \{ (x_1, \dots, x_n) \mid x_i \in \mathbb{K} \}$ avec les opérations usuelles composante par composante.</li>
+        <li>$\mathcal{M}_{n,p}(\mathbb{K})$, l'ensemble des matrices $n \times p$ à coefficients dans $\mathbb{K}$, avec l'addition matricielle et la multiplication par un scalaire.</li>
+        <li>$\mathbb{K}[X]$, l'ensemble des polynômes à coefficients dans $\mathbb{K}$, avec l'addition et la multiplication par un scalaire usuelles.</li>
+        <li>$\mathbb{K}^\mathbb{N}$, l'ensemble des suites à valeurs dans $\mathbb{K}$.</li>
+        <li>$\mathcal{F}(I, E)$, l'ensemble des fonctions d'un ensemble $I$ dans un $\mathbb{K}$-ev $E$. Si $f, g \in \mathcal{F}(I, E)$ et $\lambda \in \mathbb{K}$, $(f+g)(x) = f(x)+g(x)$ et $(\lambda f)(x) = \lambda f(x)$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Produit d'espaces vectoriels :</strong> Si $E_1, \dots, E_k$ sont des $\mathbb{K}$-ev, l'ensemble produit $E = E_1 \times \dots \times E_k$ est un $\mathbb{K}$-ev pour les opérations définies composante par composante :
+    $$ (x_1, \dots, x_k) + (y_1, \dots, y_k) = (x_1+y_1, \dots, x_k+y_k) $$
+    $$ \lambda \cdot (x_1, \dots, x_k) = (\lambda x_1, \dots, \lambda x_k) $$
+</div>
+
+<div class="definition">
+    <strong>Combinaison linéaire :</strong> Soit $(x_i)_{i \in I}$ une famille de vecteurs de $E$.
+    <ul>
+        <li>Une <strong>combinaison linéaire finie</strong> des vecteurs de cette famille est un vecteur de la forme $v = \sum_{j \in J} \lambda_j x_j$, où $J$ est une partie <strong>finie</strong> de $I$ et les $\lambda_j \in \mathbb{K}$.</li>
+        <li>Une famille de scalaires $(\lambda_i)_{i \in I}$ est dite <strong>presque nulle</strong> (ou à support fini) si l'ensemble $\{ i \in I \mid \lambda_i \neq 0 \}$ est fini.</li>
+        <li>Si $(\lambda_i)_{i \in I}$ est une famille presque nulle de scalaires, on peut définir la combinaison linéaire $v = \sum_{i \in I} \lambda_i x_i$ (la somme n'a qu'un nombre fini de termes non nuls).</li>
+    </ul>
+    Dans ce cours, on se limite essentiellement aux familles finies ou aux espaces de dimension finie, où les combinaisons linéaires sont toujours finies.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong>
+    <ol>
+        <li>Vérifier que $\mathbb{R}^2$ muni des opérations usuelles est bien un $\mathbb{R}$-espace vectoriel.</li>
+        <li>L'ensemble $\mathbb{C}$ peut-il être vu comme un $\mathbb{R}$-espace vectoriel ? Comme un $\mathbb{C}$-espace vectoriel ?</li>
+        <li>Dans $E=\mathbb{R}^3$, écrire $v=(1, 2, 3)$ comme combinaison linéaire de $e_1=(1,0,0), e_2=(0,1,0), e_3=(0,0,1)$.</li>
+    </ol>
+</div>
+
+
+<h5 id="sev-def">b) Sous-espaces vectoriels</h5>
+
+<div class="definition">
+    <strong>Sous-espace vectoriel (SEV) :</strong> Soit $E$ un $\mathbb{K}$-ev et $F$ une partie de $E$ ($F \subseteq E$). $F$ est un <strong>sous-espace vectoriel</strong> de $E$ si :
+    <ol>
+        <li>$F$ est non vide (ou, de manière équivalente et préférable, $0_E \in F$).</li>
+        <li>$F$ est stable par addition : $\forall x, y \in F, x+y \in F$.</li>
+        <li>$F$ est stable par multiplication par un scalaire : $\forall \lambda \in \mathbb{K}, \forall x \in F, \lambda x \in F$.</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation d'un SEV :</strong> Soit $E$ un $\mathbb{K}$-ev et $F \subseteq E$. $F$ est un SEV de $E$ si et seulement si :
+    <ol>
+        <li>$F \neq \emptyset$ (ou $0_E \in F$).</li>
+        <li>$\forall \lambda, \mu \in \mathbb{K}, \forall x, y \in F, \lambda x + \mu y \in F$. (Stabilité par combinaison linéaire)</li>
+        <li>(Variante fréquente) $0_E \in F$ et $\forall \lambda \in \mathbb{K}, \forall x, y \in F, x + \lambda y \in F$.</li>
+    </ol>
+    Si $F$ est un SEV de $E$, alors $F$ muni des lois induites est lui-même un $\mathbb{K}$-ev.
+</div>
+
+<div class="example">
+    <strong>Exemples de SEV :</strong>
+    <ul>
+        <li>$\{0_E\}$ (le sous-espace nul) et $E$ lui-même sont des SEV de $E$.</li>
+        <li><strong>Droite vectorielle :</strong> Engendrée par un vecteur non nul $u$: $\operatorname{Vect}(u) = \{ \lambda u \mid \lambda \in \mathbb{K} \}$.</li>
+        <li><strong>Plan vectoriel :</strong> Engendré par deux vecteurs non colinéaires $u, v$: $\operatorname{Vect}(u, v) = \{ \lambda u + \mu v \mid \lambda, \mu \in \mathbb{K} \}$. Dans $\mathbb{R}^3$, ce sont les plans passant par l'origine.</li>
+        <li>$\mathbb{K}_n[X]$ est un SEV de $\mathbb{K}[X]$.</li>
+        <li>L'ensemble des solutions d'un système linéaire homogène $AX=0$ (où $X \in \mathcal{M}_{p,1}(\mathbb{K})$) est un SEV de $\mathcal{M}_{p,1}(\mathbb{K})$.</li>
+        <li>L'ensemble des fonctions continues $\mathcal{C}(I, \mathbb{R})$ est un SEV de $\mathcal{F}(I, \mathbb{R})$.</li>
+        <li>L'ensemble des suites convergentes est un SEV de $\mathbb{K}^\mathbb{N}$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Intersection de SEV :</strong> L'intersection d'une famille (quelconque, finie ou infinie) de sous-espaces vectoriels de $E$ est un sous-espace vectoriel de $E$.
+</div>
+
+<div class="comment">
+    Attention : La réunion de deux SEV n'est en général pas un SEV (sauf si l'un est inclus dans l'autre).
+</div>
+
+<div class="definition">
+    <strong>Sous-espace vectoriel engendré par une partie :</strong> Soit $A$ une partie (non vide) de $E$. Le <strong>sous-espace vectoriel engendré</strong> par $A$, noté $\operatorname{Vect}(A)$, est le plus petit (au sens de l'inclusion) SEV de $E$ contenant $A$.
+    <br>C'est aussi l'ensemble de toutes les combinaisons linéaires finies d'éléments de $A$:
+    $$ \operatorname{Vect}(A) = \left\{ \sum_{i=1}^k \lambda_i a_i \mid k \in \mathbb{N}^*, \lambda_i \in \mathbb{K}, a_i \in A \right\} $$
+    Si $A = \{x_1, \dots, x_n\}$, on note $\operatorname{Vect}(x_1, \dots, x_n)$.
+</div>
+
+<div class="theorem">
+    <strong>Propriété fondamentale de $\operatorname{Vect}(A)$ :</strong> $\operatorname{Vect}(A)$ est l'intersection de tous les SEV de $E$ qui contiennent $A$. Tout SEV contenant $A$ contient $\operatorname{Vect}(A)$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.2 :</strong>
+    <ol>
+        <li>Les ensembles suivants sont-ils des SEV de $\mathbb{R}^3$ ?
+            a) $F_1 = \{ (x, y, z) \in \mathbb{R}^3 \mid x+y+z=0 \}$
+            b) $F_2 = \{ (x, y, z) \in \mathbb{R}^3 \mid xy=0 \}$
+            c) $F_3 = \{ (x, y, z) \in \mathbb{R}^3 \mid x=2y \text{ et } z=0 \}$</li>
+        <li>Montrer que l'ensemble des polynômes pairs est un SEV de $\mathbb{R}[X]$. Même question pour les polynômes de degré exactement $n$.</li>
+        <li>Dans $\mathbb{R}^3$, décrire $\operatorname{Vect}((1,0,0), (0,1,0))$ et $\operatorname{Vect}((1,1,1))$.</li>
+    </ol>
+</div>
+
+
+<h5 id="familles-vecteurs">c) Familles de vecteurs</h5>
+
+<div class="definition">
+    <strong>Famille génératrice :</strong> Une famille de vecteurs $(x_i)_{i \in I}$ de $E$ est dite <strong>génératrice</strong> de $E$ (ou engendre $E$) si $E = \operatorname{Vect}((x_i)_{i \in I})$.
+    <br>Autrement dit, tout vecteur de $E$ peut s'écrire comme combinaison linéaire (finie) d'éléments de la famille.
+</div>
+
+<div class="definition">
+    <strong>Famille libre, Famille liée :</strong> Soit $(x_i)_{i \in I}$ une famille de vecteurs de $E$.
+    <ul>
+        <li>La famille est <strong>libre</strong> si toute combinaison linéaire finie nulle a nécessairement tous ses coefficients nuls :
+            $$ \forall J \subseteq I, J \text{ fini}, \left( \sum_{j \in J} \lambda_j x_j = 0_E \implies \forall j \in J, \lambda_j = 0 \right) $$
+        </li>
+        <li>La famille est <strong>liée</strong> si elle n'est pas libre. Cela signifie qu'il existe une combinaison linéaire finie nulle dont au moins un coefficient est non nul. De manière équivalente (si la famille n'est pas réduite au vecteur nul), un des vecteurs de la famille est combinaison linéaire des autres.</li>
+    </ul>
+    Une partie $A \subseteq E$ est dite libre (resp. liée) si la famille $(x)_{x \in A}$ l'est.
+</div>
+
+<div class="comment">
+    <strong>Cas particuliers et propriétés :</strong>
+    <ul>
+        <li>Une famille contenant le vecteur nul $0_E$ est liée (si elle a au moins deux éléments ou si c'est la famille $(0_E)$).</li>
+        <li>Une famille contenant deux vecteurs égaux ou proportionnels (colinéaires) est liée.</li>
+        <li>Une famille d'un seul vecteur $(x)$ est libre si et seulement si $x \neq 0_E$.</li>
+        <li>Toute sous-famille d'une famille libre est libre.</li>
+        <li>Toute sur-famille d'une famille liée est liée.</li>
+        <li>Si on ajoute à une famille libre $(x_1, ..., x_n)$ un vecteur $y$ tel que $y \notin \operatorname{Vect}(x_1, ..., x_n)$, alors la nouvelle famille $(x_1, ..., x_n, y)$ est libre.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Liberté de polynômes à degrés échelonnés :</strong> Une famille de polynômes $(P_0, P_1, \dots, P_n)$ de $\mathbb{K}[X]$ telle que $\deg(P_k) = k$ pour tout $k=0, \dots, n$ est une famille libre.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Soit $\sum_{k=0}^n \lambda_k P_k = 0$. Supposons par l'absurde que les $\lambda_k$ ne sont pas tous nuls. Soit $m = \max \{ k \mid \lambda_k \neq 0 \}$. Alors $\sum_{k=0}^m \lambda_k P_k = 0$.
+    Le degré de cette somme est $\deg(\lambda_m P_m)$ car $\deg(P_m)=m$ et $\deg(P_k)=k < m$ pour $k<m$. Donc $\deg(\sum_{k=0}^m \lambda_k P_k) = m$.
+    Or, la somme est le polynôme nul, dont le degré est $-\infty$. Contradiction. Donc tous les $\lambda_k$ sont nuls.
+</div>
+
+<div class="definition">
+    <strong>Base :</strong> Une famille $(e_i)_{i \in I}$ de vecteurs de $E$ est une <strong>base</strong> de $E$ si elle est à la fois libre et génératrice de $E$.
+    <br><strong>Coordonnées :</strong> Si $\mathcal{B} = (e_1, \dots, e_n)$ est une base (finie et ordonnée) de $E$, alors tout vecteur $x \in E$ s'écrit de manière <strong>unique</strong> comme combinaison linéaire des vecteurs de $\mathcal{B}$ :
+    $$ x = \sum_{i=1}^n \lambda_i e_i $$
+    Les scalaires $(\lambda_1, \dots, \lambda_n)$ sont appelés les <strong>coordonnées</strong> (ou composantes) de $x$ dans la base $\mathcal{B}$.
+</div>
+
+<div class="example">
+    <strong>Bases Canoniques :</strong>
+    <ul>
+        <li>Dans $\mathbb{K}^n$: $\mathcal{B}_c = (e_1, \dots, e_n)$ où $e_i = (0, \dots, 1, \dots, 0)$ (1 en $i$-ème position). Si $x=(x_1, \dots, x_n)$, alors $x = \sum x_i e_i$.</li>
+        <li>Dans $\mathcal{M}_{n,p}(\mathbb{K})$: $\mathcal{B}_c = (E_{i,j})_{\substack{1 \le i \le n \\ 1 \le j \le p}}$. Si $A=(a_{i,j})$, $A = \sum a_{i,j} E_{i,j}$.</li>
+        <li>Dans $\mathbb{K}_n[X]$: $\mathcal{B}_c = (1, X, X^2, \dots, X^n)$. Si $P(X)=\sum a_k X^k$, $P = \sum a_k (X^k)$.</li>
+        <li>Dans $\mathbb{K}[X]$: $\mathcal{B}_c = (1, X, X^2, \dots, X^k, \dots)$. C'est une base infinie.</li>
+    </ul>
+    <strong>Base de polynômes à degrés échelonnés :</strong> Toute famille $(P_0, \dots, P_n)$ avec $\deg(P_k)=k$ est une base de $\mathbb{K}_n[X]$. (Libre et a $n+1$ éléments, le bon nombre).
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.3 :</strong>
+    <ol>
+        <li>La famille $((1,1,0), (1,0,1), (0,1,1))$ est-elle libre dans $\mathbb{R}^3$ ? Est-elle génératrice ? Est-ce une base ?</li>
+        <li>Montrer que la famille $(1, X-1, (X-1)(X-2))$ est une base de $\mathbb{R}_2[X]$. Trouver les coordonnées de $P(X)=X^2$ dans cette base.</li>
+        <li>La famille $(\sin, \cos)$ est-elle libre dans l'espace $\mathcal{F}(\mathbb{R}, \mathbb{R})$ ?</li>
+    </ol>
+</div>
+
+
+<h5 id="somme-sev">d) Somme de deux sous-espaces</h5>
+
+<div class="definition">
+    <strong>Somme de deux SEV :</strong> Soient $F$ et $G$ deux SEV de $E$. Leur <strong>somme</strong> est l'ensemble :
+    $$ F+G = \{ f+g \mid f \in F, g \in G \} $$
+    $F+G$ est un sous-espace vectoriel de $E$. C'est le plus petit SEV contenant $F \cup G$. ($F+G = \operatorname{Vect}(F \cup G)$).
+</div>
+
+<div class="definition">
+    <strong>Somme directe :</strong> La somme $F+G$ est dite <strong>directe</strong> si tout élément $x \in F+G$ s'écrit de manière <strong>unique</strong> comme $x = f+g$ avec $f \in F, g \in G$. On note alors la somme $F \oplus G$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation de la somme directe :</strong> Soient $F, G$ deux SEV de $E$. Les propositions suivantes sont équivalentes :
+    <ol>
+        <li>La somme $F+G$ est directe ($F \oplus G$).</li>
+        <li>$F \cap G = \{0_E\}$.</li>
+        <li>Pour tout $f \in F, g \in G$, si $f+g = 0_E$, alors $f=0_E$ et $g=0_E$.</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong>
+    (1 $\implies$ 2) Soit $x \in F \cap G$. On peut écrire $x$ de deux manières comme élément de $F+G$: $x = x + 0_E$ (avec $x \in F, 0_E \in G$) et $x = 0_E + x$ (avec $0_E \in F, x \in G$). Par unicité de la décomposition, on doit avoir $x=0_E$. Donc $F \cap G = \{0_E\}$.
+    (2 $\implies$ 3) Si $f+g=0_E$ avec $f \in F, g \in G$. Alors $f = -g$. Comme $g \in G$ et $G$ est un SEV, $-g \in G$. Donc $f \in G$. Ainsi $f \in F \cap G$. Par hypothèse, $f=0_E$. Alors $g=-f=0_E$.
+    (3 $\implies$ 1) Supposons $x = f_1 + g_1 = f_2 + g_2$ avec $f_1, f_2 \in F$ et $g_1, g_2 \in G$. Alors $(f_1 - f_2) + (g_1 - g_2) = 0_E$. Posons $f = f_1 - f_2 \in F$ et $g = g_1 - g_2 \in G$. On a $f+g=0_E$. Par hypothèse, $f=0_E$ et $g=0_E$. Donc $f_1=f_2$ et $g_1=g_2$. L'écriture est unique.
+</div>
+
+<div class="definition">
+    <strong>Sous-espaces supplémentaires :</strong> Deux SEV $F$ et $G$ de $E$ sont dits <strong>supplémentaires</strong> dans $E$ si $E = F \oplus G$. (C'est-à-dire $E = F+G$ et $F \cap G = \{0_E\}$).
+</div>
+
+<div class="comment">
+    <strong>Représentation géométrique :</strong>
+    <ul>
+        <li>Dans $\mathbb{R}^2$, deux droites vectorielles distinctes sont supplémentaires.</li>
+        <li>Dans $\mathbb{R}^3$, une droite vectorielle $D$ et un plan vectoriel $P$ sont supplémentaires si et seulement si $D \not\subset P$. Deux plans vectoriels distincts ne sont jamais supplémentaires (leur intersection est une droite).</li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Exemples :</strong>
+    <ul>
+        <li>Dans $\mathbb{R}^2$, $F = \operatorname{Vect}((1,0))$ et $G = \operatorname{Vect}((0,1))$ sont supplémentaires.</li>
+        <li>Dans $\mathcal{F}(\mathbb{R}, \mathbb{R})$, l'ensemble $P$ des fonctions paires et l'ensemble $I$ des fonctions impaires sont supplémentaires. ($f(x) = \frac{f(x)+f(-x)}{2} + \frac{f(x)-f(-x)}{2}$).</li>
+        <li>Dans $\mathcal{M}_n(\mathbb{K})$, l'espace $\mathcal{S}_n(\mathbb{K})$ des matrices symétriques et $\mathcal{A}_n(\mathbb{K})$ des matrices antisymétriques sont supplémentaires (si $\mathbb{K}$ n'est pas de caractéristique 2). ($A = \frac{A+A^T}{2} + \frac{A-A^T}{2}$).</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.4 :</strong>
+    <ol>
+        <li>Soient $F = \operatorname{Vect}((1,1,0), (0,1,1))$ et $G = \operatorname{Vect}((1,0,-1))$ dans $\mathbb{R}^3$. Montrer que $F$ et $G$ sont supplémentaires.</li>
+        <li>Soient $P = \{ P \in \mathbb{R}[X] \mid P(0)=0 \}$ et $C = \{ P \in \mathbb{R}[X] \mid P \text{ est constant} \}$. Montrer que $P$ et $C$ sont des SEV supplémentaires dans $\mathbb{R}[X]$.</li>
+    </ol>
+</div>
+
+
+<h4>B - Espaces de dimension finie</h4>
+
+<h5 id="existence-bases">a) Existence de bases</h5>
+
+<div class="definition">
+    <strong>Espace de dimension finie :</strong> Un $\mathbb{K}$-espace vectoriel $E$ est dit de <strong>dimension finie</strong> s'il admet une famille génératrice finie. Sinon, il est dit de dimension infinie.
+</div>
+
+<div class="theorem">
+    <strong>Existence de bases :</strong> Tout $\mathbb{K}$-espace vectoriel $E \neq \{0_E\}$ de dimension finie admet (au moins) une base.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (Théorème de la base extraite) :</strong> $E$ admet une famille génératrice finie $G = (g_1, \dots, g_p)$. Si $G$ est libre, c'est une base. Sinon, un vecteur $g_k$ est combinaison linéaire des autres. On montre que $G' = G \setminus \{g_k\}$ est encore génératrice. On répète ce processus. Comme $G$ est finie, le processus s'arrête lorsqu'on obtient une sous-famille génératrice et libre, donc une base.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de la base incomplète :</strong> Soit $E$ un $\mathbb{K}$-ev de dimension finie. Soit $L = (x_1, \dots, x_p)$ une famille libre de $E$, et $G = (y_1, \dots, y_q)$ une famille génératrice de $E$.
+    Alors on peut compléter la famille $L$ avec des vecteurs de $G$ pour former une base de $E$.
+    <br><strong>Corollaire :</strong> Dans un espace vectoriel de dimension finie, toute famille libre peut être complétée en une base de l'espace.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Considérer la famille $L \cup G = (x_1, \dots, x_p, y_1, \dots, y_q)$. C'est une famille génératrice (car $G$ l'est). On peut en extraire une base $B$ contenant la famille libre $L$ (en appliquant l'algorithme d'extraction de base, on ne retire jamais les vecteurs de $L$ car ils ne sont pas combinaison linéaire des précédents).
+</div>
+
+
+<h5 id="dimension-ev-fini">b) Dimension d'un espace de dimension finie</h5>
+
+<div class="theorem">
+    <strong>Lemme fondamental (Lemme de Steinitz - admis) :</strong> Dans un espace vectoriel $E$ engendré par $n$ vecteurs, toute famille contenant (strictement) plus de $n$ vecteurs est liée.
+    <br><strong>Conséquence :</strong> Si $E$ admet une base de $n$ vecteurs, toutes les bases de $E$ ont $n$ vecteurs.
+</div>
+
+<div class="definition">
+    <strong>Dimension :</strong> Si $E$ est un $\mathbb{K}$-ev de dimension finie non nul, le nombre $n$ d'éléments dans n'importe quelle base de $E$ est appelé la <strong>dimension</strong> de $E$, notée $\dim(E)$ ou $\dim_{\mathbb{K}}(E)$.
+    Par convention, $\dim(\{0_E\}) = 0$.
+</div>
+
+<div class="example">
+    <strong>Dimensions usuelles :</strong>
+    <ul>
+        <li>$\dim(\mathbb{K}^n) = n$.</li>
+        <li>$\dim(\mathcal{M}_{n,p}(\mathbb{K})) = np$.</li>
+        <li>$\dim(\mathbb{K}_n[X]) = n+1$.</li>
+        <li>$\mathbb{K}[X]$ est de dimension infinie.</li>
+        <li>Dim solution $y'+ay=0$: 1. Dim solution $ay''+by'+cy=0$: 2. Dim suites récurrentes linéaires d'ordre 2: 2.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation des bases en dimension finie :</strong> Soit $E$ un $\mathbb{K}$-ev de dimension $n$. Soit $\mathcal{B} = (x_1, \dots, x_n)$ une famille de $n$ vecteurs de $E$. Les propositions suivantes sont équivalentes :
+    <ol>
+        <li>$\mathcal{B}$ est une base de $E$.</li>
+        <li>$\mathcal{B}$ est libre.</li>
+        <li>$\mathcal{B}$ est génératrice de $E$.</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> (1 $\implies$ 2) et (1 $\implies$ 3) par définition.
+    (2 $\implies$ 1) Si $\mathcal{B}$ est libre, on peut la compléter en une base. Mais toute base a $n$ éléments, donc $\mathcal{B}$ est déjà une base.
+    (3 $\implies$ 1) Si $\mathcal{B}$ est génératrice, on peut en extraire une base. Mais toute base a $n$ éléments, donc l'extraction ne retire aucun vecteur, $\mathcal{B}$ est une base.
+</div>
+
+<div class="theorem">
+    <strong>Dimension d'un produit :</strong> Si $E_1, \dots, E_k$ sont des $\mathbb{K}$-ev de dimension finie, alors $E = E_1 \times \dots \times E_k$ est de dimension finie et
+    $$ \dim(E) = \sum_{i=1}^k \dim(E_i) $$
+</div>
+
+<div class="definition">
+    <strong>Rang d'une famille finie :</strong> Le <strong>rang</strong> d'une famille finie de vecteurs $(x_1, \dots, x_p)$ est la dimension du sous-espace vectoriel qu'elle engendre :
+    $$ \operatorname{rg}(x_1, \dots, x_p) = \dim(\operatorname{Vect}(x_1, \dots, x_p)) $$
+    C'est aussi le nombre maximal de vecteurs que l'on peut extraire de la famille pour former une famille libre.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Quelle est la dimension de $\mathbb{C}$ vu comme $\mathbb{R}$-espace vectoriel ? Comme $\mathbb{C}$-espace vectoriel ?</li>
+        <li>Soient $P_1=X^2+1, P_2=X-1, P_3=2X^2-X+3$. La famille $(P_1, P_2, P_3)$ est-elle une base de $\mathbb{R}_2[X]$ ?</li>
+        <li>Calculer le rang de la famille $v_1=(1,1,0), v_2=(1,0,1), v_3=(0,1,-1)$ dans $\mathbb{R}^3$.</li>
+    </ol>
+</div>
+
+
+<h5 id="sev-dimension">c) Sous-espaces et dimension</h5>
+
+<div class="theorem">
+    <strong>Dimension d'un SEV :</strong> Soit $E$ un $\mathbb{K}$-ev de dimension finie $n$, et $F$ un SEV de $E$.
+    Alors $F$ est de dimension finie et $\dim(F) \le n$.
+    De plus, $\dim(F) = n \iff F = E$.
+</div>
+
+<div class="theorem">
+    <strong>Formule de Grassmann :</strong> Soient $F$ et $G$ deux SEV d'un $\mathbb{K}$-ev $E$ de dimension finie. Alors :
+    $$ \dim(F+G) = \dim(F) + \dim(G) - \dim(F \cap G) $$
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Soit $\mathcal{B}_0 = (e_1, \dots, e_k)$ une base de $F \cap G$ ($\dim=k$).
+    On complète $\mathcal{B}_0$ en une base $\mathcal{B}_F = (e_1, \dots, e_k, f_1, \dots, f_p)$ de $F$ ($\dim F = k+p$).
+    On complète $\mathcal{B}_0$ en une base $\mathcal{B}_G = (e_1, \dots, e_k, g_1, \dots, g_q)$ de $G$ ($\dim G = k+q$).
+    On montre que la famille $\mathcal{B} = (e_1, \dots, e_k, f_1, \dots, f_p, g_1, \dots, g_q)$ est une base de $F+G$.
+    Elle est génératrice car tout $x = f+g$ se décompose sur $\mathcal{B}_F \cup \mathcal{B}_G = \mathcal{B}$.
+    Elle est libre : si $\sum \lambda_i e_i + \sum \mu_j f_j + \sum \nu_l g_l = 0$, on écrit $\sum \nu_l g_l = -(\sum \lambda_i e_i + \sum \mu_j f_j)$. Le membre de droite est dans $F$, celui de gauche dans $G$. Il est donc dans $F \cap G$ et s'écrit $\sum \delta_i e_i$. Donc $\sum \nu_l g_l = \sum \delta_i e_i \implies \sum \nu_l g_l - \sum \delta_i e_i = 0$. Comme $\mathcal{B}_G$ est libre, tous les $\nu_l$ et $\delta_i$ sont nuls. L'équation initiale devient $\sum \lambda_i e_i + \sum \mu_j f_j = 0$. Comme $\mathcal{B}_F$ est libre, tous les $\lambda_i$ et $\mu_j$ sont nuls.
+    Donc $\mathcal{B}$ est libre.
+    $\dim(F+G) = |\mathcal{B}| = k+p+q = (k+p) + (k+q) - k = \dim F + \dim G - \dim(F \cap G)$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation des supplémentaires en dimension finie :</strong> Soit $E$ un $\mathbb{K}$-ev de dimension finie $n$, et $F, G$ deux SEV de $E$. Les propositions suivantes sont équivalentes :
+    <ol>
+        <li>$F$ et $G$ sont supplémentaires dans $E$ ($E = F \oplus G$).</li>
+        <li>$E = F+G$ et $F \cap G = \{0_E\}$. (Définition)</li>
+        <li>$F \cap G = \{0_E\}$ et $\dim(F) + \dim(G) = n$.</li>
+        <li>$E = F+G$ et $\dim(F) + \dim(G) = n$.</li>
+        <li>Il existe une base $\mathcal{B}_F$ de $F$ et une base $\mathcal{B}_G$ de $G$ telles que $\mathcal{B} = \mathcal{B}_F \cup \mathcal{B}_G$ (concaténation) soit une base de $E$.</li>
+    </ol>
+    <strong>Corollaire :</strong> Tout sous-espace $F$ d'un espace de dimension finie $E$ admet (au moins) un supplémentaire.
+</div>
+
+<div class="definition">
+    <strong>Base adaptée :</strong>
+    <ul>
+        <li>Une base $\mathcal{B}=(e_1, \dots, e_n)$ de $E$ est <strong>adaptée</strong> à un SEV $F$ si $(e_1, \dots, e_k)$ est une base de $F$, où $k=\dim(F)$.</li>
+        <li>Une base $\mathcal{B}=(e_1, \dots, e_n)$ de $E$ est <strong>adaptée</strong> à une décomposition en somme directe $E=F \oplus G$ si $(e_1, \dots, e_k)$ est une base de $F$ et $(e_{k+1}, \dots, e_n)$ est une base de $G$, où $k=\dim(F)$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.2 :</strong>
+    <ol>
+        <li>Soient dans $\mathbb{R}^4$, $F = \operatorname{Vect}( (1,0,1,0), (0,1,0,1) )$ et $G = \operatorname{Vect}( (1,1,1,1), (0,0,1,1) )$. Calculer $\dim(F)$, $\dim(G)$, $\dim(F \cap G)$, $\dim(F+G)$. F et G sont-ils supplémentaires ?</li>
+        <li>Montrer que tout hyperplan d'un espace $E$ de dimension $n$ a pour dimension $n-1$.</li>
+        <li>Soit $F$ l'ensemble des polynômes pairs de $\mathbb{R}_3[X]$ et $G$ l'ensemble des polynômes impairs de $\mathbb{R}_3[X]$. Montrer que $F$ et $G$ sont supplémentaires et donner une base adaptée.</li>
+    </ol>
+</div>
+
+
+<h4>C - Applications linéaires</h4>
+
+<h5 id="app-lineaires-generalites">a) Généralités</h5>
+
+<div class="definition">
+    <strong>Application linéaire :</strong> Soient $E, F$ deux $\mathbb{K}$-ev. Une application $u: E \to F$ est <strong>linéaire</strong> si :
+    $$ \forall x, y \in E, \forall \lambda, \mu \in \mathbb{K}, \quad u(\lambda x + \mu y) = \lambda u(x) + \mu u(y) $$
+    Cela équivaut à $u(x+y)=u(x)+u(y)$ et $u(\lambda x) = \lambda u(x)$.
+    L'ensemble des applications linéaires de $E$ dans $F$ est noté $\mathcal{L}(E, F)$.
+    <br> $(\mathcal{L}(E, F), +, \cdot)$ est un $\mathbb{K}$-espace vectoriel.
+</div>
+
+<div class="definition">
+    <strong>Opérations sur les applications linéaires :</strong>
+    <ul>
+        <li><strong>Combinaison linéaire :</strong> Si $u, v \in \mathcal{L}(E,F)$, $\lambda, \mu \in \mathbb{K}$, alors $\lambda u + \mu v \in \mathcal{L}(E,F)$ est définie par $(\lambda u + \mu v)(x) = \lambda u(x) + \mu v(x)$.</li>
+        <li><strong>Composition :</strong> Si $u \in \mathcal{L}(E,F)$ et $v \in \mathcal{L}(F,G)$, alors la composée $v \circ u \in \mathcal{L}(E,G)$. La composition est bilinéaire par rapport aux arguments.</li>
+        <li><strong>Isomorphisme :</strong> Une application linéaire $u \in \mathcal{L}(E, F)$ est un isomorphisme si elle est bijective. Son application réciproque $u^{-1}: F \to E$ est alors aussi linéaire.</li>
+        <li><strong>Endomorphisme :</strong> $\mathcal{L}(E, E)$, noté $\mathcal{L}(E)$.</li>
+        <li><strong>Automorphisme :</strong> Isomorphisme de $E$ dans $E$. L'ensemble des automorphismes est $GL(E)$, le groupe linéaire.</li>
+        <li><strong>Forme linéaire :</strong> $\mathcal{L}(E, \mathbb{K})$, noté $E^*$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Image directe et réciproque de SEV :</strong> Soit $u \in \mathcal{L}(E, F)$.
+    <ul>
+        <li>Si $E'$ est un SEV de $E$, alors $u(E') = \{ u(x) \mid x \in E' \}$ est un SEV de $F$.</li>
+        <li>Si $F'$ est un SEV de $F$, alors $u^{-1}(F') = \{ x \in E \mid u(x) \in F' \}$ est un SEV de $E$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Image et Noyau :</strong> Soit $u \in \mathcal{L}(E, F)$.
+    <ul>
+        <li>L'<strong>image</strong> de $u$ est $\operatorname{Im}(u) = u(E)$. C'est un SEV de $F$.</li>
+        <li>Le <strong>noyau</strong> de $u$ est $\operatorname{Ker}(u) = u^{-1}(\{0_F\}) = \{ x \in E \mid u(x) = 0_F \}$. C'est un SEV de $E$.</li>
+    </ul>
+    <strong>Caractérisation de l'injectivité :</strong> $u$ est injective $\iff \operatorname{Ker}(u) = \{0_E\}$.
+</div>
+
+<div class="theorem">
+    <strong>Image d'une famille génératrice :</strong> Si $(x_i)_{i \in I}$ est une famille génératrice de $E$ et si $u \in \mathcal{L}(E, F)$, alors $(u(x_i))_{i \in I}$ est une famille génératrice de $\operatorname{Im}(u)$.
+    $$ \operatorname{Im}(u) = \operatorname{Vect}(u(x_i))_{i \in I} $$
+</div>
+
+<div class="definition">
+    <strong>Rang d'une application linéaire :</strong> Si $\operatorname{Im}(u)$ est de dimension finie, on appelle <strong>rang</strong> de $u$, noté $\operatorname{rg}(u)$, la dimension de son image :
+    $$ \operatorname{rg}(u) = \dim(\operatorname{Im}(u)) $$
+    Si $E$ est de dimension finie, alors $\operatorname{Im}(u)$ est de dimension finie et $\operatorname{rg}(u) \le \min(\dim E, \dim F)$.
+</div>
+
+<div class="theorem">
+    <strong>Rang et composition :</strong> Soient $u \in \mathcal{L}(E, F)$ et $v \in \mathcal{L}(F, G)$.
+    <ul>
+        <li>$\operatorname{rg}(v \circ u) \le \min(\operatorname{rg}(u), \operatorname{rg}(v))$.</li>
+        <li>Si $u$ est un isomorphisme, $\operatorname{rg}(v \circ u) = \operatorname{rg}(v)$.</li>
+        <li>Si $v$ est un isomorphisme, $\operatorname{rg}(v \circ u) = \operatorname{rg}(u)$.</li>
+    </ul>
+    Le rang est invariant par composition (à gauche ou à droite) par un isomorphisme.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.1 :</strong>
+    <ol>
+        <li>Soit $u: \mathbb{R}^3 \to \mathbb{R}^2$ définie par $u(x,y,z) = (x+y, y-z)$. Montrer que $u$ est linéaire. Déterminer $\operatorname{Ker}(u)$ et $\operatorname{Im}(u)$. Donner leur dimension.</li>
+        <li>Soit $D: \mathbb{K}[X] \to \mathbb{K}[X]$ l'application de dérivation $P \mapsto P'$. Montrer que $D$ est linéaire. Quel est son noyau ? Son image ? Est-elle injective ? Surjective ?</li>
+        <li>Soit $u \in \mathcal{L}(E)$. Montrer que $\operatorname{Ker}(u) \subseteq \operatorname{Ker}(u^2)$ et $\operatorname{Im}(u^2) \subseteq \operatorname{Im}(u)$.</li>
+    </ol>
+</div>
+
+
+<h5 id="endomorphismes">b) Endomorphismes</h5>
+
+<div class="definition">
+    <strong>Endomorphisme :</strong> Application linéaire de $E$ dans $E$. $\mathcal{L}(E) = \mathcal{L}(E, E)$.
+    <ul>
+        <li><strong>Identité :</strong> $\operatorname{id}_E: x \mapsto x$. C'est l'élément neutre pour la composition $\circ$.</li>
+        <li><strong>Homothétie :</strong> $h_\lambda: x \mapsto \lambda x$ pour $\lambda \in \mathbb{K}$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Anneau $\mathcal{L}(E)$ :</strong> $(\mathcal{L}(E), +, \circ)$ est un anneau unitaire (non commutatif en général si $\dim E \ge 2$). Le neutre multiplicatif est $\operatorname{id}_E$. On note souvent $vu$ pour $v \circ u$.
+    <br><strong>Puissances :</strong> $u^0 = \operatorname{id}_E$, $u^{k+1} = u \circ u^k$.
+</div>
+
+<div class="definition">
+    <strong>Projecteur :</strong> Soit $E = F \oplus G$. La <strong>projection</strong> sur $F$ parallèlement à $G$ est l'endomorphisme $p$ tel que pour tout $x=f+g$ (décomposition unique), $p(x) = f$.
+    <br><strong>Symétrie :</strong> La <strong>symétrie</strong> par rapport à $F$ parallèlement à $G$ est l'endomorphisme $s$ tel que pour tout $x=f+g$, $s(x) = f-g$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation des projecteurs et symétries :</strong> Soit $u \in \mathcal{L}(E)$.
+    <ul>
+        <li>$u$ est un projecteur si et seulement si $u \circ u = u$ ($u^2=u$). Dans ce cas, $E = \operatorname{Im}(u) \oplus \operatorname{Ker}(u)$, et $u$ est la projection sur $\operatorname{Im}(u)$ parallèlement à $\operatorname{Ker}(u)$.</li>
+        <li>$u$ est une symétrie si et seulement si $u \circ u = \operatorname{id}_E$ ($u^2=\operatorname{id}$). Dans ce cas, si $\mathbb{K}$ n'est pas de caractéristique 2, $E = \operatorname{Ker}(u-\operatorname{id}) \oplus \operatorname{Ker}(u+\operatorname{id})$, et $u$ est la symétrie par rapport à $\operatorname{Ker}(u-\operatorname{id})$ parallèlement à $\operatorname{Ker}(u+\operatorname{id})$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Automorphisme - Groupe Linéaire $GL(E)$ :</strong> Un endomorphisme $u \in \mathcal{L}(E)$ est un <strong>automorphisme</strong> s'il est bijectif (isomorphisme de $E$ dans $E$). L'ensemble des automorphismes de $E$, noté $GL(E)$, muni de la composition $\circ$, est un groupe appelé <strong>groupe linéaire</strong> de $E$.
+    <br>Si $u \in GL(E)$, on peut définir $u^k$ pour $k \in \mathbb{Z}$ ($u^{-k} = (u^{-1})^k$).
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.2 :</strong>
+    <ol>
+        <li>Soit $p$ un projecteur de $E$. Montrer que $\operatorname{id}_E - p$ est aussi un projecteur. Déterminer son image et son noyau.</li>
+        <li>Dans $\mathbb{R}^2$, soit $u(x,y) = (x, -y)$. Montrer que $u$ est une symétrie. Déterminer ses éléments caractéristiques (axe et direction).</li>
+        <li>Soit $u \in \mathcal{L}(E)$ tel que $u^2 - 3u + 2\operatorname{id}_E = 0$. Montrer que $u$ est inversible et exprimer $u^{-1}$ en fonction de $u$ et $\operatorname{id}_E$.</li>
+    </ol>
+</div>
+
+
+<h5 id="determination-app-lineaire">c) Détermination d'une application linéaire</h5>
+
+<div class="theorem">
+    <strong>Détermination par l'image d'une base :</strong> Soit $E$ un $\mathbb{K}$-ev admettant une base $\mathcal{B} = (e_i)_{i \in I}$. Soit $F$ un $\mathbb{K}$-ev et $(f_i)_{i \in I}$ une famille quelconque de vecteurs de $F$.
+    Il existe une <strong>unique</strong> application linéaire $u \in \mathcal{L}(E, F)$ telle que $u(e_i) = f_i$ pour tout $i \in I$.
+    <br>De plus, si $x = \sum \lambda_i e_i$, alors $u(x) = \sum \lambda_i f_i$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation des isomorphismes par la dimension :</strong> Deux $\mathbb{K}$-espaces vectoriels de dimension finie $E$ et $F$ sont isomorphes si et seulement s'ils ont la même dimension.
+    $$ E \simeq F \iff \dim(E) = \dim(F) $$
+</div>
+
+<div class="theorem">
+    <strong>Injectivité / Surjectivité / Bijectivité en dimension finie :</strong> Soit $u \in \mathcal{L}(E, F)$ avec $E, F$ de dimension finie et $\dim(E) = \dim(F) = n$. Les propositions suivantes sont équivalentes :
+    <ol>
+        <li>$u$ est injective ($\operatorname{Ker}(u) = \{0_E\}$).</li>
+        <li>$u$ est surjective ($\operatorname{Im}(u) = F$).</li>
+        <li>$u$ est bijective (est un isomorphisme).</li>
+        <li>$u$ transforme une base de $E$ en une base de $F$.</li>
+        <li>$\operatorname{rg}(u) = n$.</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Inversibilité à gauche/droite (Endomorphismes) :</strong> Soit $E$ de dimension finie et $u \in \mathcal{L}(E)$.
+    Si il existe $v \in \mathcal{L}(E)$ tel que $v \circ u = \operatorname{id}_E$ (inverse à gauche), alors $u$ est inversible (et $v=u^{-1}$, donc $u \circ v = \operatorname{id}_E$).
+    De même, si il existe $w \in \mathcal{L}(E)$ tel que $u \circ w = \operatorname{id}_E$ (inverse à droite), alors $u$ est inversible (et $w=u^{-1}$, donc $w \circ u = \operatorname{id}_E$).
+</div>
+
+<div class="theorem">
+    <strong>Dimension de $\mathcal{L}(E, F)$ :</strong> Si $E$ et $F$ sont de dimension finie, alors $\mathcal{L}(E, F)$ est de dimension finie et :
+    $$ \dim(\mathcal{L}(E, F)) = \dim(E) \times \dim(F) $$
+</div>
+
+<div class="theorem">
+    <strong>Application linéaire sur une somme directe :</strong> Soient $E_1, E_2$ deux SEV de $E$ tels que $E = E_1 \oplus E_2$. Soient $u_1 \in \mathcal{L}(E_1, F)$ et $u_2 \in \mathcal{L}(E_2, F)$.
+    Il existe une unique application linéaire $u \in \mathcal{L}(E, F)$ telle que $u|_{E_1} = u_1$ et $u|_{E_2} = u_2$.
+    Pour tout $x = x_1 + x_2$ (décomposition unique), $u(x) = u_1(x_1) + u_2(x_2)$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.3 :</strong>
+    <ol>
+        <li>Existe-t-il une application linéaire $u: \mathbb{R}^2 \to \mathbb{R}^2$ telle que $u(1,1)=(1,0)$ et $u(2,2)=(0,1)$ ? Et si $u(1,1)=(1,0)$ et $u(1,-1)=(0,1)$ ? Si oui, déterminer $u(x,y)$.</li>
+        <li>Soit $u \in \mathcal{L}(\mathbb{R}^3)$ telle que $u(e_1)=e_2, u(e_2)=e_3, u(e_3)=e_1$. Montrer que $u$ est un isomorphisme. Calculer $u^3$.</li>
+        <li>Soit $E$ de dimension $n$. Soit $u \in \mathcal{L}(E)$ nilpotent (i.e., $\exists k, u^k=0$). Montrer que $\operatorname{id}_E - u$ est inversible.</li>
+    </ol>
+</div>
+
+
+<h5 id="theoreme-du-rang">d) Théorème du rang</h5>
+
+<div class="theorem">
+    <strong>Forme géométrique du théorème du rang :</strong> Soit $u \in \mathcal{L}(E, F)$. Si $S$ est un supplémentaire de $\operatorname{Ker}(u)$ dans $E$ ($E = \operatorname{Ker}(u) \oplus S$), alors l'application $u|_S : S \to \operatorname{Im}(u)$ (restriction de $u$ à $S$) est un isomorphisme d'espaces vectoriels.
+    <br>En particulier, $\dim(S) = \dim(\operatorname{Im}(u))$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème du rang :</strong> Soit $u \in \mathcal{L}(E, F)$ avec $E$ de dimension finie. Alors :
+    $$ \dim(E) = \dim(\operatorname{Ker}(u)) + \dim(\operatorname{Im}(u)) = \dim(\operatorname{Ker}(u)) + \operatorname{rg}(u) $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Soit $S$ un supplémentaire de $\operatorname{Ker}(u)$ dans $E$. On a $\dim(E) = \dim(\operatorname{Ker}(u)) + \dim(S)$. D'après la forme géométrique, $\dim(S) = \dim(\operatorname{Im}(u))$. En substituant, on obtient $\dim(E) = \dim(\operatorname{Ker}(u)) + \dim(\operatorname{Im}(u))$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.4 :</strong>
+    <ol>
+        <li>Reprendre $u(x,y,z) = (x+y, y-z)$ de $\mathbb{R}^3$ dans $\mathbb{R}^2$. Vérifier le théorème du rang.</li>
+        <li>Soit $u \in \mathcal{L}(E)$ avec $E$ de dimension finie. Montrer l'équivalence : $\operatorname{Ker}(u) = \operatorname{Ker}(u^2) \iff \operatorname{Im}(u) = \operatorname{Im}(u^2)$.</li>
+        <li>Montrer que $\operatorname{rg}(u+v) \le \operatorname{rg}(u) + \operatorname{rg}(v)$.</li>
+    </ol>
+</div>
+
+
+<h5 id="formes-lineaires-hyperplans">e) Formes linéaires et hyperplans</h5>
+
+<div class="definition">
+    <strong>Forme linéaire :</strong> Une <strong>forme linéaire</strong> sur un $\mathbb{K}$-ev $E$ est une application linéaire de $E$ dans $\mathbb{K}$ (le corps des scalaires). $f \in \mathcal{L}(E, \mathbb{K}) = E^*$.
+    <br><strong>Formes coordonnées :</strong> Si $\mathcal{B}=(e_1, \dots, e_n)$ est une base de $E$, pour chaque $j \in \{1, \dots, n\}$, la $j$-ème forme coordonnée $e_j^*: E \to \mathbb{K}$ est l'application linéaire qui à $x = \sum x_i e_i$ associe sa $j$-ème coordonnée $x_j$.
+    $(e_1^*, \dots, e_n^*)$ forme une base de $E^*$, appelée base duale.
+</div>
+
+<div class="definition">
+    <strong>Hyperplan :</strong> Un <strong>hyperplan</strong> de $E$ est le noyau d'une forme linéaire non nulle $f \in E^* \setminus \{0\}$.
+    $$ H = \operatorname{Ker}(f) = \{ x \in E \mid f(x) = 0 \} $$
+</div>
+
+<div class="theorem">
+    <strong>Équation d'un hyperplan :</strong> Soit $E$ de dimension finie $n$ et $\mathcal{B}=(e_1, \dots, e_n)$ une base.
+    $H$ est un hyperplan de $E$ si et seulement s'il existe $(\lambda_1, \dots, \lambda_n) \in \mathbb{K}^n$, non tous nuls, tels que :
+    $$ H = \left\{ x = \sum_{i=1}^n x_i e_i \in E \mid \sum_{i=1}^n \lambda_i x_i = 0 \right\} $$
+    L'équation $\sum \lambda_i x_i = 0$ est une <strong>équation</strong> de l'hyperplan $H$ dans la base $\mathcal{B}$.
+</div>
+
+<div class="theorem">
+    <strong>Dimension d'un hyperplan :</strong> Si $E$ est de dimension finie $n \ge 1$, les hyperplans de $E$ sont exactement les sous-espaces vectoriels de dimension $n-1$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Soit $H = \operatorname{Ker}(f)$ avec $f \in E^*, f \neq 0$. Comme $f$ est non nulle, son image $\operatorname{Im}(f)$ est un SEV non nul de $\mathbb{K}$. Le seul SEV non nul de $\mathbb{K}$ est $\mathbb{K}$ lui-même, donc $\dim(\operatorname{Im}(f))=1$. Par le théorème du rang, $\dim(E) = \dim(\operatorname{Ker}(f)) + \dim(\operatorname{Im}(f))$, soit $n = \dim(H) + 1$, d'où $\dim(H) = n-1$.
+    Réciproquement, si $\dim(H)=n-1$, on peut compléter une base de $H$ en une base $(e_1, \dots, e_{n-1}, e_n)$ de $E$. La forme linéaire $e_n^*$ (n-ième coordonnée) est non nulle et son noyau contient $e_1, \dots, e_{n-1}$, donc $\operatorname{Ker}(e_n^*) = H$.
+</div>
+
+<div class="theorem">
+    <strong>Hyperplan et droite :</strong> Soit $H$ un hyperplan de $E$ et $D = \operatorname{Vect}(u)$ une droite vectorielle ($u \ne 0_E$).
+    <ul>
+        <li>Si $u \in H$ (i.e., $D \subset H$), alors $H+D = H$.</li>
+        <li>Si $u \notin H$, alors $E = H \oplus D$.</li>
+    </ul>
+    Réciproquement, tout supplémentaire d'une droite vectorielle dans un espace de dimension finie est un hyperplan.
+</div>
+
+<div class="theorem">
+    <strong>Unicité de l'équation :</strong> Deux formes linéaires non nulles $f, g \in E^*$ définissent le même hyperplan ($\operatorname{Ker} f = \operatorname{Ker} g$) si et seulement si elles sont proportionnelles ($\exists \lambda \in \mathbb{K}^*, g = \lambda f$).
+    <br>Deux équations $\sum \lambda_i x_i = 0$ et $\sum \mu_i x_i = 0$ définissent le même hyperplan si et seulement si les coefficients $(\lambda_i)$ et $(\mu_i)$ sont proportionnels.
+</div>
+
+<div class="theorem">
+    <strong>Intersection d'hyperplans :</strong> Soit $E$ de dimension finie $n$.
+    <ul>
+        <li>Si $H_1, \dots, H_m$ sont $m$ hyperplans de $E$, alors $\dim(H_1 \cap \dots \cap H_m) \ge n-m$.</li>
+        <li>Réciproquement, tout sous-espace vectoriel $F$ de dimension $k = n-m$ est l'intersection d'exactement $m$ hyperplans (indépendants).</li>
+    </ul>
+</div>
+
+<div class="comment">
+    <strong>Système d'équations :</strong> Un SEV $F$ de dimension $k$ dans $E$ de dimension $n$ peut être défini comme l'ensemble des solutions d'un système de $m=n-k$ équations linéaires homogènes indépendantes.
+    Exemples : Une droite dans $\mathbb{R}^3$ (dim 1) est l'intersection de 2 plans (dim 2). Un plan dans $\mathbb{R}^3$ (dim 2) est défini par 1 équation.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.5 :</strong>
+    <ol>
+        <li>Dans $\mathbb{R}^3$, donner une équation du plan $H = \operatorname{Vect}((1,1,0), (0,1,1))$.</li>
+        <li>Soit $E=\mathbb{R}_2[X]$. Montrer que $f(P) = P(1)$ est une forme linéaire. Quel est son noyau (un hyperplan) ?</li>
+        <li>Soit $H_1: x+y+z=0$ et $H_2: x-y=0$ deux hyperplans de $\mathbb{R}^3$. Quelle est la dimension de $H_1 \cap H_2$ ? Donner une base de cette intersection.</li>
+    </ol>
+</div>
+
+
+<h4>D - Sous-espaces affines d'un espace vectoriel</h4>
+<p class="intro-text">
+    Le but de cette partie, qu'il convient d'illustrer par de nombreuses figures, est double :
+    <ul>
+        <li>montrer comment l'algèbre linéaire permet d'étendre les notions de géométrie affine étudiées au collège et au lycée et d'utiliser l'intuition géométrique dans un cadre élargi.</li>
+        <li>modéliser un problème affine par une équation $u(x) = a$ où $u$ est une application linéaire, et unifier plusieurs situations de ce type déjà rencontrées.</li>
+    </ul>
+</p>
+
+<div class="comment">
+    <strong>Présentation informelle : Points et Vecteurs</strong>
+    Dans un $\mathbb{K}$-ev $E$, on peut voir les éléments de deux manières :
+    <ul>
+        <li>Comme des <strong>vecteurs</strong> (éléments de l'espace vectoriel, avec addition et multiplication scalaire). On les note $\vec{u}, \vec{v}, \dots$ ou simplement $u, v, \dots$.</li>
+        <li>Comme des <strong>points</strong> (éléments d'un "espace affine" sous-jacent). On les note $A, B, M, \dots$.</li>
+    </ul>
+    Le lien est fait par la notion de <strong>vecteur entre deux points</strong> : $\vec{AB} = B - A$ (où $B-A$ est la différence au sens vectoriel).
+    On a la <strong>relation de Chasles</strong> : $\vec{AC} = \vec{AB} + \vec{BC}$ car $(B-A)+(C-B) = C-A$.
+    <br>Une <strong>translation</strong> de vecteur $\vec{u}$ est l'application $T_{\vec{u}}: E \to E$ définie par $T_{\vec{u}}(M) = M + \vec{u}$. L'image de $A$ par $T_{\vec{u}}$ est le point $B$ tel que $\vec{AB} = \vec{u}$.
+</div>
+
+<div class="definition">
+    <strong>Sous-espace affine (SEA) :</strong> Soit $E$ un $\mathbb{K}$-ev. Une partie $\mathcal{F}$ de $E$ est un <strong>sous-espace affine</strong> de $E$ s'il existe un point $A_0 \in E$ et un sous-espace vectoriel $F$ de $E$ tels que :
+    $$ \mathcal{F} = A_0 + F = \{ A_0 + \vec{v} \mid \vec{v} \in F \} $$
+    Le SEV $F$ est appelé la <strong>direction</strong> de $\mathcal{F}$, noté $\vec{\mathcal{F}}$. La <strong>dimension</strong> de $\mathcal{F}$ est la dimension de sa direction $F$.
+    <br>Un <strong>hyperplan affine</strong> est un SEA dont la direction est un hyperplan vectoriel.
+</div>
+
+<div class="comment">
+    <strong>Exemples :</strong>
+    <ul>
+        <li>Les SEV de $E$ sont des SEA passant par l'origine ($A_0 = 0_E$).</li>
+        <li>Dans $\mathbb{R}^2$ et $\mathbb{R}^3$, les SEA sont les points, les droites, les plans, et l'espace entier.</li>
+    </ul>
+    La direction $F$ est unique : $F = \{ \vec{MN} = N-M \mid M, N \in \mathcal{F} \}$. Le point $A_0$ n'est pas unique, n'importe quel point de $\mathcal{F}$ peut servir de point de référence.
+</div>
+
+<div class="theorem">
+    <strong>Intersection de sous-espaces affines :</strong> L'intersection d'une famille de sous-espaces affines de $E$ est soit vide, soit un sous-espace affine.
+    Si elle n'est pas vide, sa direction est l'intersection des directions.
+</div>
+
+<div class="theorem">
+    <strong>Équation linéaire et structure affine des solutions :</strong> Soit $u \in \mathcal{L}(E, F)$ une application linéaire et $a \in F$. On considère l'équation $u(x) = a$.
+    Soit $S = \{ x \in E \mid u(x) = a \}$ l'ensemble des solutions.
+    <ul>
+        <li>Si $a \notin \operatorname{Im}(u)$, alors $S = \emptyset$.</li>
+        <li>Si $a \in \operatorname{Im}(u)$ (i.e., l'équation est compatible), soit $x_0$ une solution particulière ($u(x_0)=a$). Alors l'ensemble des solutions $S$ est le sous-espace affine passant par $x_0$ et dirigé par le noyau de $u$ :
+        $$ S = x_0 + \operatorname{Ker}(u) = \{ x_0 + k \mid k \in \operatorname{Ker}(u) \} $$
+        </li>
+    </ul>
+</div>
+
+<div class="comment">
+    <strong>Unification :</strong> Cette structure $S = x_0 + S_H$ (solution particulière + solution générale homogène) se retrouve dans :
+    <ul>
+        <li>Systèmes linéaires : $AX=B$. $S_H = \operatorname{Ker}(A)$.</li>
+        <li>Équations différentielles linéaires $y' + p(t)y = q(t)$. $S_H$ = solutions de $y'+py=0$.</li>
+        <li>Équations différentielles linéaires d'ordre 2 : $ay''+by'+cy=d(t)$. $S_H$ = solutions de $ay''+by'+cy=0$.</li>
+        <li>Suites arithmético-géométriques : $u_{n+1} = au_n + b$. Solution particulière constante $\ell$, $S_H$ = solutions de $v_{n+1}=av_n$.</li>
+        <li>Problème d'interpolation de Lagrange : Trouver $Q$ tel que $Q(x_i)=y_i$. Solution particulière $P$ (Lagrange), $S_H = \{ M(X) \prod(X-x_i) \mid M \in \mathbb{K}[X] \}$. Ici $S_H$ est le noyau de l'application $Q \mapsto (Q(x_0), \dots, Q(x_n))$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice D.1 :</strong>
+    <ol>
+        <li>Dans $\mathbb{R}^3$, donner une représentation paramétrique (forme $A_0 + \operatorname{Vect}(\dots)$) de la droite $D$ définie par le système $\begin{cases} x+y+z=1 \\ x-y=0 \end{cases}$. Quelle est sa direction ?</li>
+        <li>Trouver l'ensemble des solutions de l'équation différentielle $y' + y = \cos(t)$. Quelle est sa structure ?</li>
+        <li>L'ensemble $\mathcal{F} = \{ (t, t+1, 2t) \mid t \in \mathbb{R} \}$ est-il un sous-espace affine de $\mathbb{R}^3$? Si oui, donner un point et sa direction.</li>
+    </ol>
+</div>
+
+</body>
+</html>
