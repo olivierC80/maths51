@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Physique - Énergie : Conversions et Transferts</title>
+    <!-- Vue.js 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --color-facile: #4CAF50; /* Vert */
+            --color-moyen: #FF9800; /* Orange */
+            --color-difficile: #F44336; /* Rouge */
+            --color-pas-compris: #616161; /* Gris sombre */
+            --color-default: #e0e0e0; /* Gris clair */
+            --border-color: #ccc;
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        #app {
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        .qa-item {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden; /* Pour contenir l'indicateur */
+            transition: box-shadow 0.3s ease;
+            background-color: #fff;
+        }
+        .qa-item:hover {
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        .comprehension-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 10px;
+            background-color: var(--color-default);
+            transition: background-color 0.3s ease;
+        }
+        .comprehension-indicator.facile { background-color: var(--color-facile); }
+        .comprehension-indicator.moyen { background-color: var(--color-moyen); }
+        .comprehension-indicator.difficile { background-color: var(--color-difficile); }
+        .comprehension-indicator.pas_compris { background-color: var(--color-pas-compris); }
+
+        .qa-content {
+            margin-left: 20px; /* Espace pour l'indicateur */
+        }
+
+        .section-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .answer {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 3px solid var(--border-color);
+        }
+
+        /* Style KaTeX */
+        .katex { font-size: 1.1em; }
+
+        /* Boutons */
+        button {
+            padding: 8px 12px;
+            margin-right: 5px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-size: 0.9em;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        button:active {
+             transform: scale(0.98);
+        }
+        .btn-toggle-answer {
+            background-color: #007bff;
+            color: white;
+        }
+         .btn-toggle-answer:hover {
+            background-color: #0056b3;
+        }
+
+        .comprehension-buttons {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        .comprehension-buttons button {
+            color: white;
+            min-width: 100px;
+        }
+        .btn-facile { background-color: var(--color-facile); }
+        .btn-moyen { background-color: var(--color-moyen); }
+        .btn-difficile { background-color: var(--color-difficile); }
+        .btn-pas-compris { background-color: var(--color-pas-compris); }
+
+        .comprehension-buttons button.active {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+
+        /* Capacités style from original HTML */
+        .capacite {
+            font-weight: bold;
+            color: #800080; /* Pourpre */
+        }
+        .definition, .resultat, .methode {
+            margin-bottom: 1em;
+            padding: 0.5em;
+            border-left: 3px solid #ddd;
+        }
+         .definition { border-left-color: #4CAF50; }
+         .resultat { border-left-color: #2196F3; }
+         .methode { border-left-color: #FFC107; }
+
+         /* Style for schema placeholders */
+         .schema {
+             font-style: italic;
+             color: #777;
+             border: 1px dashed #ccc;
+             padding: 5px;
+             margin-top: 5px;
+             text-align: center;
+         }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h1>Physique : Énergie - Conversions et Transferts (Thème 3) - Q&A</h1>
+        <p>Cliquez sur "Afficher la réponse" pour voir la correction. Indiquez votre niveau de compréhension pour chaque question.</p>
+        <hr>
+
+        <div v-for="item in questions" :key="item.id" class="qa-item">
+            <div class="comprehension-indicator" :class="item.comprehension"></div>
+            <div class="qa-content">
+                <div class="section-title">{{ item.section }}</div>
+                <div class="question" v-html="renderContent(item.question)"></div>
+
+                <button @click="toggleAnswer(item)" class="btn-toggle-answer">
+                    {{ item.showAnswer ? 'Cacher la réponse' : 'Afficher la réponse' }}
+                </button>
+
+                <div v-if="item.showAnswer" class="answer" v-html="renderContent(item.answer)"></div>
+
+                <div class="comprehension-buttons">
+                    <button @click="setComprehension(item, 'facile')" class="btn-facile" :class="{ active: item.comprehension === 'facile' }">Facile</button>
+                    <button @click="setComprehension(item, 'moyen')" class="btn-moyen" :class="{ active: item.comprehension === 'moyen' }">Moyen</button>
+                    <button @click="setComprehension(item, 'difficile')" class="btn-difficile" :class="{ active: item.comprehension === 'difficile' }">Difficile</button>
+                    <button @click="setComprehension(item, 'pas_compris')" class="btn-pas-compris" :class="{ active: item.comprehension === 'pas_compris' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, reactive, onMounted, nextTick } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    questions: [
+                        // === 3.1 Descriptions micro et macro ===
+                        {
+                            id: 'q3_1_1',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Quelles sont les trois échelles de description utilisées en thermodynamique et qu\'est-ce qui les caractérise ? Expliquer la nécessité de l\'échelle mésoscopique.',
+                            answer: `<div class="definition">
+                                <p><strong>Échelles de Description :</strong>
+                                   <ul>
+                                        <li><strong>Microscopique :</strong> Échelle des atomes et molécules (~$10^{-10}$ m). Description par position et vitesse de chaque particule (état microscopique). Très grand nombre de variables.</li>
+                                        <li><strong>Macroscopique :</strong> Échelle humaine (~$10^{-3}$ m et plus). Description par quelques variables d'état (P, V, T, n...). Moyenne sur un grand nombre de particules.</li>
+                                        <li><strong>Mésoscopique :</strong> Échelle intermédiaire (~$10^{-6}$ m).
+                                        <br><strong>Nécessité :</strong> À cette échelle, les fluctuations autour des valeurs moyennes macroscopiques deviennent notables et mesurables. Elle est nécessaire pour comprendre des phénomènes comme le mouvement brownien (agitation visible de particules en suspension due aux chocs des molécules du fluide environnant) ou la diffusion (mouvement des particules sous l'effet de gradients de concentration), qui sont la manifestation directe de la nature discrète et agitée de la matière. <strong class="capacite">Définir et expliquer la nécessité de cette échelle.</strong></li>
+                                   </ul>
+                                </p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_1_2',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Qu\'est-ce que le libre parcours moyen ($\ell$) ? Donner les ordres de grandeur typiques pour un gaz (conditions usuelles) et pour un liquide/solide.',
+                            answer: `<div class="definition"><p><strong>Libre Parcours Moyen ($\ell$) :</strong> C'est la distance moyenne parcourue par une particule (atome, molécule) entre deux collisions successives avec d'autres particules du système. <strong class="capacite">Ordres de grandeur :</strong>
+                                <ul><li>Gaz (conditions usuelles T amb, P amb) : $\ell \approx 10^{-7}$ m (beaucoup plus grand que la taille des molécules).</li>
+                                <li>Liquide/Solide : $\ell \approx 10^{-10}$ m, de l'ordre de la distance interparticulaire. Les particules sont constamment en interaction avec leurs voisines.</li></ul></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_1_3',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Quelle est la relation entre un état macroscopique et les états microscopiques possibles ? Illustrer avec un exemple.',
+                            answer: `<div class="definition"><p><strong>État Microscopique vs Macroscopique :</strong> Un unique état macroscopique, défini par des variables mesurables comme la pression P, le volume V et la température T, correspond à un nombre immense $\Omega$ d'états microscopiques différents. Un état microscopique est défini par la position et la vitesse de *chaque* particule du système.
+                            <br><strong>Exemple :</strong> Considérons un gaz dans une boîte (état macro défini par P, V, T). Il y a d'innombrables façons de répartir les positions et les vitesses des $N$ molécules du gaz qui sont compatibles avec ces valeurs macroscopiques P, V, T. Changer la position ou la vitesse d'une seule molécule change l'état microscopique, mais pas (ou très peu) l'état macroscopique. $\Omega$ est le nombre de ces configurations microscopiques possibles. <strong class="capacite">Préciser les paramètres de description sur un exemple.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_1_4',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Quelles sont les hypothèses du modèle cinétique des gaz parfaits ? Définir la vitesse quadratique moyenne ($v_q$) et donner son ordre de grandeur pour l\'air ambiant.',
+                            answer: `<div class="definition"><p><strong>Modèle Cinétique des Gaz Parfaits :</strong>
+                                <ul><li>Les molécules sont assimilées à des points matériels (volume propre négligeable devant le volume total).</li>
+                                <li>Il n'y a pas d'interactions à distance entre les molécules (pas de forces intermoléculaires).</li>
+                                <li>Les molécules sont en mouvement incessant, aléatoire et désordonné (agitation thermique).</li>
+                                <li>Les seules interactions sont des collisions élastiques (conservation de l'énergie cinétique et de la quantité de mouvement) entre molécules ou avec les parois.</li></ul>
+                                <p><strong>Vitesse Quadratique Moyenne ($v_q$) :</strong> C'est la racine carrée de la moyenne du carré des vitesses des molécules : $v_q = \\sqrt{\\langle v^2 \\rangle}$. Elle caractérise l'intensité de l'agitation thermique.
+                                <br><strong class="capacite">Ordre de grandeur pour l'air à T amb. $\\approx$ 500 m/s.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_1_5',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Comment la température cinétique est-elle reliée à l\'agitation thermique moyenne ? Donner la relation pour un gaz parfait monoatomique.',
+                            answer: `<div class="definition"><p><strong>Température Cinétique :</strong> La température (absolue, en Kelvin) est une mesure macroscopique de l'énergie cinétique moyenne d'agitation des particules microscopiques.
+                            <br>Pour un gaz parfait monoatomique (qui n'a que 3 degrés de liberté de translation), l'énergie cinétique de translation moyenne par molécule est directement proportionnelle à la température absolue T :
+                            <br>$\\langle E_{c, micro} \\rangle = \\frac{1}{2} m \\langle v^2 \\rangle = \\frac{1}{2} m v_q^2 = \\frac{3}{2} k_B T$.
+                            <br>Où $m$ est la masse d'une molécule, $v_q$ la vitesse quadratique moyenne, $k_B$ la constante de Boltzmann ($k_B = R/N_A \\approx 1.38 \\times 10^{-23}$ J/K), et T la température absolue. <strong class="capacite">Calculer $v_q$ pour un gaz donné à T donnée.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_1_6',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Définir les types de systèmes thermodynamiques (ouvert, fermé, isolé).',
+                            answer: `<div class="definition"><p><strong>Système Thermodynamique :</strong> Partie de l'univers étudiée, délimitée par une frontière.
+                               <ul>
+                                    <li><strong>Ouvert :</strong> Peut échanger de la matière et de l'énergie (travail, chaleur) avec l'extérieur. Ex: une casserole d'eau qui chauffe sans couvercle.</li>
+                                    <li><strong>Fermé :</strong> Peut échanger de l'énergie (travail, chaleur) mais pas de matière avec l'extérieur. Ex: une casserole d'eau qui chauffe avec un couvercle étanche.</li>
+                                    <li><strong>Isolé :</strong> N'échange ni matière ni énergie avec l'extérieur. Ex: un thermos parfait (idéalisation).</li>
+                               </ul>
+                               <strong class="capacite">Identifier le type de système.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_1_7',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Qu\'est-ce qu\'un état d\'équilibre thermodynamique ? Quelles sont les conditions d\'équilibre mécanique et thermique ?',
+                            answer: `<div class="definition"><p><strong>État d'Équilibre Thermodynamique :</strong> C'est un état macroscopique d'un système où toutes les variables d'état intensives (comme P, T, concentration) sont uniformes dans tout le système et ne varient pas au cours du temps. Le système n'évolue plus spontanément.
+                            <br>Pour un système simple soumis à une pression $P_{ext}$ et une température $T_{ext}$ extérieures :
+                               <ul>
+                                    <li><strong>Équilibre Mécanique :</strong> La pression interne $P_{int}$ est égale à la pression externe $P_{ext}$. (Absence de forces résultantes non nulles). <strong class="capacite">Calculer P à partir de cette condition.</strong></li>
+                                    <li><strong>Équilibre Thermique :</strong> La température interne $T_{int}$ est égale à la température externe $T_{ext}$. (Absence de flux de chaleur net). <strong class="capacite">Déduire T à partir de cette condition.</strong></li>
+                               </ul></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_1_8',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Citer l\'équation d\'état du gaz parfait et les caractéristiques d\'une phase condensée incompressible et indilatable. Donner les ordres de grandeur des volumes molaires.',
+                            answer: `<div class="definition"><p><strong>Équation d'État :</strong> Relation liant P, V, T, n à l'équilibre.
+                               <ul>
+                                    <li><strong>Gaz Parfait (GP) :</strong> $PV = nRT$. Où P est la pression (Pa), V le volume (m³), n la quantité de matière (mol), T la température absolue (K), et R la constante des gaz parfaits ($R \\approx 8.314$ J.K⁻¹.mol⁻¹). <strong class="capacite">Citer et utiliser l'équation d'état du GP.</strong></li>
+                                    <li><strong>Phase Condensée (liquide/solide) Incompressible et Indilatable :</strong> Modèle simplifié où le volume $V$ (et donc la masse volumique $\\rho = m/V$) est considéré comme indépendant de la pression P et de la température T. Le volume molaire $V_m = M/\\rho$ (où M est la masse molaire) est constant.</li>
+                               </ul>
+                            <p><strong>Ordres de grandeur (à T amb $\approx$ 300K, P amb $\approx$ 1 bar) :</strong>
+                                <ul><li>$V_{m,gaz} = RT/P \approx (8.314 \times 300) / 10^5 \approx 0.0249$ m³/mol $\approx 25$ L/mol.</li>
+                                <li>$V_{m,liquide/solide} \approx 10-100$ cm³/mol (ex: eau $V_m = 18$ cm³/mol). Beaucoup plus petit que pour les gaz.</li></ul>
+                            </p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_1_9',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Définir l\'énergie interne U. De quoi dépend-elle pour un gaz parfait et pour une phase condensée incompressible/indilatable (Lois de Joule) ?',
+                            answer: `<div class="definition"><p><strong>Énergie Interne (U) :</strong> C'est l'énergie totale contenue à l'intérieur du système thermodynamique. Elle inclut :
+                                <ul><li>L'énergie cinétique microscopique de toutes les particules (translation, rotation, vibration) liée à l'agitation thermique.</li>
+                                <li>L'énergie potentielle d'interaction microscopique entre les particules (forces intermoléculaires, liaisons chimiques...).</li></ul>
+                            C'est une <strong>fonction d'état</strong> extensive, exprimée en Joules (J).
+                               <ul>
+                                    <li><strong>Gaz Parfait :</strong> Par définition, les interactions intermoléculaires sont négligées. L'énergie interne $U$ ne dépend donc que de l'énergie cinétique d'agitation, qui elle-même ne dépend que de la température T. $U = U(T)$ (<strong>1ère Loi de Joule</strong>). L'énergie interne molaire $U_m = U/n = U_m(T)$. Pour un GP monoatomique: $U_m = \\frac{3}{2} RT$. <strong class="capacite">Exprimer $U_m$ pour GP mono. Exploiter $U_m=U_m(T)$ pour tout GP.</strong></li>
+                                    <li><strong>Phase Condensée Incompressible/Indilatable :</strong> Le volume est (quasi) constant, donc les distances moyennes entre particules varient peu. L'énergie potentielle d'interaction change donc peu avec T ou P. L'énergie interne $U$ dépend principalement de l'énergie cinétique d'agitation, donc essentiellement de la température T. $U \\approx U(T)$ (<strong>2ème Loi de Joule</strong>). <strong class="capacite">Exploiter $U_m \\approx U_m(T)$.</strong></li>
+                               </ul></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_1_10',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Définir la capacité thermique à volume constant $C_V$. Quelle est sa valeur molaire pour un gaz parfait monoatomique ?',
+                            answer: `<div class="definition"><p><strong>Capacité Thermique à Volume Constant ($C_V$) :</strong> C'est la quantité de chaleur qu'il faut fournir à un système à volume constant pour élever sa température de 1 Kelvin (ou 1 °C). Mathématiquement, elle est définie comme la dérivée partielle de l'énergie interne U par rapport à la température T, à volume V constant :
+                            <br>$C_V = (\\frac{\\partial U}{\\partial T})_V$.
+                            <br>Si $U$ ne dépend que de T (cas du GP ou approx. phase condensée), alors $dU = C_V dT$.
+                            <br>$C_V$ est une grandeur extensive (J/K). On utilise aussi la capacité thermique molaire $C_{V,m}$ (J.K⁻¹.mol⁻¹) ou massique $c_V$ (J.K⁻¹.kg⁻¹).
+                            <br>Pour un Gaz Parfait monoatomique, $U_m = \\frac{3}{2} RT$. Donc $C_{V,m} = \\frac{dU_m}{dT} = \\frac{3}{2} R$.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_1_11',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Comparer qualitativement le comportement d\'un gaz réel et d\'un gaz parfait sur un diagramme d\'Amagat (PV vs P) et un diagramme de Clapeyron (P vs V).',
+                            answer: `<div class="methode"><p><strong>Gaz Réel vs Gaz Parfait :</strong> Les écarts au modèle GP apparaissent surtout à haute pression et/ou basse température.
+                                <br><strong>Diagramme d'Amagat (PV en fonction de P, à T cste) :</strong>
+                                   <ul><li>GP: $PV=nRT$. Si T=cste, $PV/nRT = 1$. $PV$ est constant (pour n fixé). La courbe est une droite horizontale.</li>
+                                   <li>Gaz réel: La courbe $PV=f(P)$ n'est pas horizontale.
+                                       <ul><li>À faible P, $PV$ diminue souvent d'abord (prédominance des forces attractives intermoléculaires, le gaz se comprime plus facilement que prévu).</li>
+                                       <li>À forte P, $PV$ augmente (prédominance du volume propre des molécules, le gaz devient difficilement compressible).</li>
+                                       <li>La courbe présente un minimum (sauf à haute T). Plus T est élevée, plus la courbe se rapproche de celle du GP.</li></ul>
+                                   </ul>
+                                <br><strong>Diagramme de Clapeyron (P en fonction de V ou v=V/n, à T cste) :</strong>
+                                   <ul><li>GP: $P = nRT/V$. Les isothermes sont des hyperboles ($P \propto 1/V$).</li>
+                                   <li>Gaz réel (Isothermes d'Andrews):
+                                       <ul><li>À T > $T_c$ (température critique) : Allure similaire à une hyperbole de GP, mais avec des déviations.</li>
+                                       <li>À T < $T_c$ : En partant de grand V (gaz), P augmente quand V diminue. On atteint la pression de vapeur saturante $P_{sat}(T)$. Ensuite, P reste constante pendant que V diminue fortement : c'est le <strong>palier de liquéfaction</strong> où coexistent liquide et vapeur. Une fois tout le gaz liquéfié (petit V), P augmente très rapidement car le liquide est peu compressible.</li>
+                                       <li>À T = $T_c$ : L'isotherme critique présente un point d'inflexion horizontal au point critique (fin du palier de liquéfaction).</li></ul>
+                                   </ul>
+                                <strong class="capacite">Comparer qualitativement les comportements sur ces diagrammes.</strong></p>
+                                <div class="schema">Schéma : Isothermes d'Andrews et Diagramme d'Amagat</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_1_12',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Qu\'est-ce qu\'un diagramme (P, T) d\'un corps pur ? Quels sont ses éléments principaux (phases, courbes, points) ?',
+                            answer: `<div class="definition"><p><strong>Diagramme (P, T) d'un Corps Pur :</strong> C'est une représentation graphique montrant les domaines de pression (P) et de température (T) où les différentes phases (solide, liquide, gaz/vapeur) d'un corps pur sont thermodynamiquement stables à l'équilibre.
+                               <br><strong>Éléments Principaux :</strong>
+                               <ul>
+                                    <li><strong>Domaines (Aires) :</strong> Régions où une seule phase est stable (domaine solide, domaine liquide, domaine gaz).</li>
+                                    <li><strong>Courbes d'Équilibre :</strong> Lignes séparant les domaines, où deux phases coexistent à l'équilibre :
+                                        <ul><li>Courbe de fusion (solide $\rightleftharpoons$ liquide)</li>
+                                            <li>Courbe de vaporisation (liquide $\rightleftharpoons$ gaz)</li>
+                                            <li>Courbe de sublimation (solide $\rightleftharpoons$ gaz)</li></ul></li>
+                                    <li><strong>Point Triple (T) :</strong> Point unique où les trois courbes d'équilibre se rencontrent. Les trois phases (solide, liquide, gaz) coexistent à l'équilibre à cette température et pression précises ($P_T, T_T$).</li>
+                                    <li><strong>Point Critique (C) :</strong> Point situé à l'extrémité de la courbe de vaporisation ($P_c, T_c$). Au-delà de ce point (températures et pressions supercritiques), il n'y a plus de distinction physique nette entre la phase liquide et la phase gazeuse; on parle de fluide supercritique.</li>
+                               </ul>
+                            <strong class="capacite">Analyser un diagramme (P,T).</strong></p>
+                            <div class="schema">Schéma : Diagramme (P,T) d'un corps pur</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_1_13',
+                            section: '3.1 Descriptions micro/macro',
+                            question: 'Décrire l\'équilibre liquide-vapeur. Qu\'est-ce que la pression de vapeur saturante ? Qu\'est-ce que le titre en vapeur $x_v$ et comment le déterminer graphiquement ?',
+                            answer: `<div class="definition"><p><strong>Équilibre Liquide-Vapeur :</strong> État où une phase liquide et une phase vapeur (gaz) d'un corps pur coexistent en équilibre thermodynamique.
+                               <ul>
+                                    <li>À une température T donnée (inférieure à la température critique $T_c$), cet équilibre ne peut s'établir qu'à une pression bien définie, appelée <strong>Pression de Vapeur Saturante $P_{sat}(T)$</strong>. $P_{sat}$ est une fonction croissante de T. Inversement, à une pression P donnée (inférieure à $P_c$), l'équilibre ne peut s'établir qu'à la température d'ébullition $T_{eb}(P)$.</li>
+                                    <li>Dans le diagramme (P, v), cet équilibre correspond au palier de liquéfaction/vaporisation sur une isotherme T < Tc. Sur ce palier, le système est diphasé (mélange liquide + vapeur).</li>
+                                    <li><strong>Titre en vapeur ($x_v$) :</strong> C'est la fraction massique (ou molaire) de la phase vapeur dans le mélange diphasé. $x_v = \\frac{m_{vapeur}}{m_{totale}} = \\frac{m_{vapeur}}{m_{liquide} + m_{vapeur}}$. $x_v$ varie de 0 (liquide saturant, début du palier) à 1 (vapeur saturante, fin du palier).</li>
+                                    <li><strong>Règle des moments (ou des leviers) :</strong> Sur le diagramme (P, v) ou (T, v), pour un point M représentant le mélange diphasé (volume massique v), situé sur le palier entre le point L (liquide saturant, volume massique $v_l$) et le point V (vapeur saturante, volume massique $v_v$), le titre en vapeur est donné par le rapport des longueurs des segments :
+                                    <br>$x_v = \\frac{\\text{distance LM}}{\\text{distance LV}} = \\frac{v - v_l}{v_v - v_l}$. <strong class="capacite">Déterminer la composition via le titre. Positionner les phases sur (P,T) et (P,v).</strong></li>
+                               </ul>
+                            <strong class="capacite">Proposer un jeu de variables suffisant pour décrire un état (ex: T et P pour monophasé, T seule ou P seule pour diphasé sous Pression).</strong></p>
+                            <div class="schema">Schéma : Diagramme (P,v) avec palier et règle des moments</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex3_1',
+                            section: '3.1 Descriptions micro/macro - Exercice 3.1',
+                            question: 'Calculer la vitesse quadratique moyenne $v_q$ des molécules de dioxygène ($M=32$ g/mol) à 27°C.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 3.1 :</strong> Température absolue $T = 27 + 273.15 = 300.15$ K.
+                                <br>Masse molaire $M = 32$ g/mol $= 0.032$ kg/mol.
+                                <br>L'énergie cinétique moyenne de translation d'une molécule est $\\langle E_{c, micro} \\rangle = \\frac{1}{2} m v_q^2 = \\frac{3}{2} k_B T$.
+                                <br>La masse d'une molécule $m = M/N_A$. La constante de Boltzmann $k_B = R/N_A$.
+                                <br>Donc $\\frac{1}{2} \\frac{M}{N_A} v_q^2 = \\frac{3}{2} \\frac{R}{N_A} T$.
+                                <br>On simplifie $N_A$ et on obtient $v_q^2 = \\frac{3RT}{M}$.
+                                <br>$v_q = \\sqrt{\\frac{3RT}{M}} = \\sqrt{\\frac{3 \\times 8.314 \\text{ J.K}^{-1}\\text{.mol}^{-1} \\times 300.15 \\text{ K}}{0.032 \\text{ kg/mol}}}$.
+                                <br>$v_q = \\sqrt{\\frac{7486.5}{0.032}} = \\sqrt{233953} \\approx 483.7$ m/s.
+                                <br>Soit $v_q \approx 484$ m/s.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'ex3_5',
+                            section: '3.1 Descriptions micro/macro - Exercice 3.5',
+                            question: 'Dans le diagramme (P,v) de l\'eau à 100°C, $v_l = 1.04 \\times 10^{-3}$ m³/kg (volume massique du liquide saturant) et $v_v = 1.67$ m³/kg (volume massique de la vapeur saturante). On a un mélange de $m_{tot}=1$ kg dont le volume total est $V=0.5$ m³. Calculer le titre en vapeur $x_v$.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 3.5 :</strong>
+                                <br>1. Calculer le volume massique $v$ du mélange :
+                                <br>$v = V / m_{tot} = (0.5 \\text{ m}^3) / (1 \\text{ kg}) = 0.5$ m³/kg.
+                                <br>2. Vérifier si le système est diphasé :
+                                <br>On compare $v$ avec $v_l$ et $v_v$ à la température donnée (100°C).
+                                <br>$v_l = 1.04 \\times 10^{-3}$ m³/kg $\approx 0.001$ m³/kg.
+                                <br>$v_v = 1.67$ m³/kg.
+                                <br>On constate que $v_l < v < v_v$ ($0.001 < 0.5 < 1.67$). Le système est donc bien un mélange liquide-vapeur à 100°C.
+                                <br>3. Appliquer la règle des moments pour trouver le titre en vapeur $x_v$:
+                                <br>$x_v = \\frac{v - v_l}{v_v - v_l}$.
+                                <br>$x_v = \\frac{0.5 - 1.04 \\times 10^{-3}}{1.67 - 1.04 \\times 10^{-3}} = \\frac{0.5 - 0.00104}{1.67 - 0.00104} = \\frac{0.49896}{1.66896}$.
+                                <br>$x_v \\approx 0.2989$.
+                                <br>Le titre en vapeur est d'environ $x_v = 0.30$ ou 30%. Cela signifie que 30% de la masse totale (soit 0.3 kg) est sous forme de vapeur, et 70% (soit 0.7 kg) est sous forme liquide.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 3.2 Énergie échangée ===
+                        {
+                            id: 'q3_2_1',
+                            section: '3.2 Énergie échangée',
+                            question: 'Définir les transformations isochore, isobare, isotherme, monotherme, monobare et adiabatique.',
+                            answer: `<div class="definition"><p><strong>Types de Transformations (Idéalisées) :</strong>
+                               <ul>
+                                    <li><strong>Isochore :</strong> Volume constant ($V=cste \implies dV=0$).</li>
+                                    <li><strong>Isobare :</strong> Pression du système constante ($P=cste \implies dP=0$). Nécessite un équilibre mécanique permanent avec l'extérieur si $P_{ext}$ varie.</li>
+                                    <li><strong>Isotherme :</strong> Température du système constante ($T=cste \implies dT=0$). Nécessite un contact thermique parfait avec un thermostat.</li>
+                                    <li><strong>Monotherme :</strong> Transformation pendant laquelle le système est en contact thermique avec une <strong>unique source de chaleur</strong> (thermostat) à température $T_{ext}$ constante. La température du système peut varier pendant la transformation, mais tend vers $T_{ext}$ à l'état final si l'équilibre thermique est atteint.</li>
+                                    <li><strong>Monobare :</strong> Transformation pendant laquelle la <strong>pression extérieure $P_{ext}$</strong> est constante. La pression du système peut varier pendant la transformation (si irréversible), mais tend vers $P_{ext}$ à l'état final si l'équilibre mécanique est atteint.</li>
+                                    <li><strong>Adiabatique :</strong> Transformation sans échange de chaleur avec le milieu extérieur ($Q=0$). Peut être réalisée avec une paroi calorifugée ou si la transformation est très rapide.</li>
+                               </ul>
+                            <strong class="capacite">Définir un système adapté. Exploiter les conditions imposées (type de transformation) pour déterminer l'état final.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_2_2',
+                            section: '3.2 Énergie échangée',
+                            question: 'Comment calcule-t-on le travail des forces de pression $W$ reçu par un système lors d\'une transformation $A \to B$ ? Donner les expressions pour les cas isochore, monobare et isobare réversible.',
+                            answer: `<div class="definition"><p><strong>Travail des Forces de Pression ($W$) :</strong> C'est le travail reçu par le système dû aux forces exercées par le milieu extérieur sur sa frontière.
+                                <br>Pour une transformation infinitésimale, le travail élémentaire reçu est $dW = -P_{ext} dV$, où $P_{ext}$ est la pression extérieure et $dV$ est la variation de volume du système.
+                                <br>Le travail total sur une transformation finie (A $\to$ B) est l'intégrale : $W_{A \\to B} = - \\int_A^B P_{ext} dV$.
+                                <br><strong>Cas Particuliers :</strong>
+                                   <ul>
+                                        <li><strong>Transformation Isochore ($V=cste$) :</strong> $dV=0 \implies W=0$.</li>
+                                        <li><strong>Transformation Monobare ($P_{ext}=cste$) :</strong> $W = -P_{ext} \\int_{V_A}^{V_B} dV = -P_{ext}(V_B - V_A)$. Ceci est valable que la transformation soit réversible ou irréversible. Si l'état final B est un état d'équilibre mécanique, alors $P_B = P_{ext}$, et $W = -P_B (V_B - V_A)$.</li>
+                                        <li><strong>Transformation Isobare Réversible ($P_{int}=P_{ext}=P=cste$) :</strong> $W = - \\int_A^B P dV = -P \\int_{V_A}^{V_B} dV = -P (V_B - V_A)$.</li>
+                                   </ul>
+                                <strong class="capacite">Évaluer W par intégration (si $P_{ext}(V)$ connue) ou via les cas particuliers.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_2_3',
+                            section: '3.2 Énergie échangée',
+                            question: 'Quelle est l\'interprétation graphique du travail des forces de pression sur un diagramme (P, V) pour une transformation réversible ?',
+                            answer: `<div class="definition"><p><strong>Interprétation Graphique (Diagramme P, V - Clapeyron) :</strong> Pour une transformation <strong>réversible</strong> (où $P_{int} = P_{ext} = P$), le travail élémentaire reçu est $dW = -P dV$. Le travail total $W_{A \\to B} = - \\int_A^B P dV$.
+                            <br>Graphiquement, $\\int_A^B P dV$ représente l'aire sous la courbe $P(V)$ entre les volumes $V_A$ et $V_B$.
+                            <br>Par conséquent, le travail reçu par le système $W_{A \\to B}$ est égal à l'<strong>opposé</strong> de l'aire sous la courbe dans le diagramme (P, V).
+                            <br>Attention au signe :
+                                <ul><li>Si $V_B > V_A$ (détente), l'aire est positive, donc $W < 0$ (travail fourni par le système).</li>
+                                <li>Si $V_B < V_A$ (compression), $dV < 0$, l'aire $\int P dV$ est négative (calculée de $V_A$ à $V_B$), donc $W = - (\text{aire négative}) > 0$ (travail reçu par le système).</li></ul>
+                            <strong class="capacite">Interpréter géométriquement W.</strong></p>
+                            <div class="schema">Schéma : Travail sur Diagramme de Clapeyron (aire sous la courbe)</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_2_4',
+                            section: '3.2 Énergie échangée',
+                            question: 'Définir le transfert thermique (Chaleur, Q) et citer les trois modes de transfert.',
+                            answer: `<div class="definition"><p><strong>Transfert Thermique (Chaleur, Q) :</strong> C'est l'énergie échangée entre un système et son environnement due exclusivement à une différence de température entre eux. Ce transfert se fait sans déplacement macroscopique de matière à travers la frontière (pour un système fermé). L'unité est le Joule (J).
+                                <br><strong>Convention de signe :</strong>
+                                <ul><li>$Q > 0$ : Chaleur reçue par le système (transfert endothermique).</li>
+                                <li>$Q < 0$ : Chaleur cédée par le système (transfert exothermique).</li></ul>
+                                <br><strong>Modes de Transferts Thermiques :</strong>
+                                   <ul>
+                                        <li><strong>Conduction :</strong> Transfert d'énergie par contact direct, via la transmission de l'agitation thermique de proche en proche au niveau microscopique. Prédominant dans les solides et les fluides immobiles.</li>
+                                        <li><strong>Convection :</strong> Transfert d'énergie par le déplacement macroscopique de matière chaude. Se produit dans les fluides (liquides ou gaz) en mouvement. Peut être naturelle (due aux différences de densité) ou forcée (par une pompe, un ventilateur).</li>
+                                        <li><strong>Rayonnement :</strong> Transfert d'énergie par émission et absorption d'ondes électromagnétiques (principalement infrarouges pour les T usuelles). Seul mode de transfert possible dans le vide. Tout corps à T > 0K rayonne.</li>
+                                   </ul>
+                                <strong class="capacite">Distinguer qualitativement ces modes.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex3_6',
+                            section: '3.2 Énergie échangée - Exercice 3.6',
+                            question: 'Un gaz parfait subit une détente isotherme réversible de $(P_1, V_1)$ à $(P_2, V_2)$ à la température T constante. Calculer le travail W reçu par le gaz.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 3.6 :</strong>
+                                <br>Transformation isotherme ($T=cste$) et réversible ($P_{int}=P_{ext}=P$).
+                                <br>Le travail reçu est $W = - \\int_{V_1}^{V_2} P dV$.
+                                <br>Pour un gaz parfait, $P = \\frac{nRT}{V}$.
+                                <br>Comme T est constante, on peut sortir $nRT$ de l'intégrale :
+                                <br>$W = - nRT \\int_{V_1}^{V_2} \\frac{1}{V} dV$.
+                                <br>L'intégrale de $1/V$ est $\\ln|V|$.
+                                <br>$W = - nRT [\\ln V]_{V_1}^{V_2} = - nRT (\\ln V_2 - \\ln V_1)$.
+                                <br>En utilisant les propriétés du logarithme :
+                                <br>$W = -nRT \\ln\\left(\\frac{V_2}{V_1}\\right)$.
+                                <br>Comme la transformation est isotherme, $P_1 V_1 = nRT$ et $P_2 V_2 = nRT$, donc $P_1 V_1 = P_2 V_2$, ce qui implique $\\frac{V_2}{V_1} = \\frac{P_1}{P_2}$.
+                                <br>On peut aussi écrire : $W = -nRT \\ln\\left(\\frac{P_1}{P_2}\\right) = nRT \\ln\\left(\\frac{P_2}{P_1}\\right)$.
+                                <br>Pour une détente, $V_2 > V_1$ et $P_2 < P_1$. Le logarithme est positif, donc $W < 0$, ce qui est cohérent (le gaz fournit du travail).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 3.3 Premier principe ===
+                        {
+                            id: 'q3_3_1',
+                            section: '3.3 Premier principe',
+                            question: 'Énoncer le premier principe de la thermodynamique pour un système fermé. Quelle est la différence fondamentale entre U, W et Q ?',
+                            answer: `<div class="resultat"><p><strong>Premier Principe de la Thermodynamique (pour un système fermé) :</strong>
+                            <br>Au cours d'une transformation quelconque faisant passer un système fermé d'un état d'équilibre initial A à un état d'équilibre final B, la variation de son énergie interne $\Delta U = U_B - U_A$ est égale à la somme de l'énergie reçue par travail $W$ et de l'énergie reçue par transfert thermique $Q$ :
+                            <br>$\\Delta U = W + Q$.
+                            <br>Forme infinitésimale pour une transformation élémentaire : $dU = dW + dQ$.
+                            <br><strong>Différence Fondamentale :</strong>
+                               <ul>
+                                    <li>$U$ (Énergie interne) est une <strong>fonction d'état</strong>. Sa variation $\Delta U$ ne dépend que de l'état initial A et de l'état final B, elle est indépendante du chemin suivi pour aller de A à B. Mathématiquement, $dU$ est une différentielle totale exacte.</li>
+                                    <li>$W$ (Travail) et $Q$ (Chaleur) <strong>ne sont pas</strong> des fonctions d'état. Leurs valeurs dépendent du chemin suivi (de la manière dont la transformation est effectuée) entre les états A et B. Ce sont des modes de transfert d'énergie à travers la frontière du système. Mathématiquement, $dW$ et $dQ$ ne sont pas des différentielles totales exactes (parfois notées $\delta W$ et $\delta Q$).</li>
+                               </ul>
+                            <strong class="capacite">Établir ce bilan pour un système fermé. Exploiter l'extensivité de U. Distinguer fonction d'état ($\Delta U$) et transferts ($W, Q$). Calculer Q connaissant $\Delta U$ et W.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_3_2',
+                            section: '3.3 Premier principe',
+                            question: 'Définir l\'enthalpie H. Quelle est son interprétation physique lors d\'une transformation monobare avec équilibre mécanique ?',
+                            answer: `<div class="definition"><p><strong>Enthalpie (H) :</strong> C'est une fonction d'état définie mathématiquement par :
+                            <br>$H = U + PV$.
+                            <br>Où U est l'énergie interne, P la pression et V le volume du système. H est une grandeur extensive, exprimée en Joules (J).</p></div>
+                            <div class="resultat"><p><strong>Interprétation de $\Delta H$ (Transformation Monobare avec Équilibre Mécanique) :</strong>
+                            <br>Considérons une transformation à pression extérieure $P_{ext}$ constante (monobare). Supposons de plus que le système reste en équilibre mécanique avec l'extérieur tout au long de la transformation (ou au moins aux états initial et final), de sorte que $P_{int} = P_{ext} = P = cste$. Supposons enfin que le seul travail échangé est celui des forces de pression ($W = -P(V_B - V_A)$).
+                            <br>Le premier principe s'écrit : $\Delta U = U_B - U_A = W + Q = -P(V_B - V_A) + Q$.
+                            <br>Calculons la variation d'enthalpie :
+                            <br>$\Delta H = H_B - H_A = (U_B + P_B V_B) - (U_A + P_A V_A)$.
+                            <br>Comme $P_A = P_B = P$,
+                            <br>$\Delta H = (U_B - U_A) + P(V_B - V_A) = \Delta U + P \Delta V$.
+                            <br>En substituant $\Delta U$ par son expression du premier principe :
+                            <br>$\Delta H = [-P(V_B - V_A) + Q] + P(V_B - V_A) = Q$.
+                            <br><strong>Conclusion :</strong> Pour une transformation effectuée à <strong>pression constante $P=P_{ext}$</strong> (monobare + équilibre mécanique), la variation d'enthalpie $\Delta H$ du système est égale au transfert thermique $Q$ reçu par le système. On note souvent ce transfert $Q_P$.
+                            <br>$\\Delta H = Q_P$.
+                            <br>L'enthalpie est donc particulièrement utile pour étudier les transferts thermiques lors des transformations isobares (très fréquentes en chimie, biologie, ou dans les écoulements). <strong class="capacite">Exprimer le 1er principe sous forme de bilan d'enthalpie dans ce cas précis.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_3_3',
+                            section: '3.3 Premier principe',
+                            question: 'Définir la capacité thermique à pression constante $C_P$. Quelle est la relation de Mayer pour un gaz parfait ? Quelle est la valeur de $C_{P,m}$ pour un GP monoatomique ?',
+                            answer: `<div class="definition"><p><strong>Capacité Thermique à Pression Constante ($C_P$) :</strong> C'est la quantité de chaleur qu'il faut fournir à un système à pression constante pour élever sa température de 1 Kelvin (ou 1 °C). Mathématiquement :
+                            <br>$C_P = (\\frac{\\partial H}{\\partial T})_P$.
+                            <br>Pour une transformation isobare ($dP=0$), si $H$ peut être exprimée en fonction de T et P, $dH = C_P dT$. Si $H=H(T)$ seulement (cas GP), $dH = C_P dT$ même si P varie.
+                            <br>$C_P$ est extensive (J/K). On utilise $C_{P,m}$ (molaire) ou $c_P$ (massique).
+                               <ul>
+                                    <li><strong>Gaz Parfait :</strong> On a $H = U + PV = U(T) + nRT$. Comme U ne dépend que de T, H ne dépend aussi que de T pour un GP : $H = H(T)$. Donc $dH = C_P dT$.
+                                    <br>On a $dH = dU + d(nRT) = C_V dT + nR dT = (C_V + nR) dT$.
+                                    <br>En comparant les deux expressions de $dH$, on obtient la <strong>Relation de Mayer</strong> : $C_P = C_V + nR$, ou en molaire : $C_{P,m} = C_{V,m} + R$.
+                                    <br>Pour un GP monoatomique, $C_{V,m} = \\frac{3}{2}R$. Donc $C_{P,m} = \\frac{3}{2}R + R = \\frac{5}{2}R$.
+                                    <br>L'indice adiabatique (ou rapport des capacités thermiques) est $\\gamma = C_P/C_V = C_{P,m}/C_{V,m} = (5R/2) / (3R/2) = 5/3$. <strong class="capacite">Exprimer $H_m(T)$ à partir de $U_m(T)$.</strong></li>
+                               </ul></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_3_4',
+                            section: '3.3 Premier principe',
+                            question: 'Comment se simplifient $H(T, P)$ et $C_P$ pour une phase condensée incompressible et indilatable ? Donner l\'ordre de grandeur de $c_{eau}$.',
+                            answer: `<div class="definition"><p><strong>Phase Condensée Incompressible/Indilatable :</strong>
+                            <ul><li>Modèle : $V \approx cste$, donc $\rho \approx cste$.</li>
+                            <li>Énergie interne : $U \approx U(T)$ (2ème Loi de Joule).</li>
+                            <li>Enthalpie : $H = U + PV$. Le terme $PV$ est généralement très petit comparé à $U$ pour une phase condensée, et comme $V \approx cste$, il varie peu avec T ou P (sauf à très haute P). On approxime donc souvent $H \approx U(T)$. Donc $H$ ne dépend pratiquement que de T : $H \approx H(T)$.</li>
+                            <li>Capacités thermiques :
+                                <ul><li>$C_V = (\frac{\partial U}{\partial T})_V \approx \frac{dU}{dT}$.</li>
+                                <li>$C_P = (\frac{\partial H}{\partial T})_P \approx \frac{dH}{dT}$.</li></ul>
+                            Comme $H \approx U$, on a $dH \approx dU$, et donc $C_P \approx C_V$. On note souvent la capacité thermique simplement $C$ (ou $C_m$ ou $c$) sans indice V ou P. $dH \approx dU \approx C dT$.</li></ul>
+                            <strong class="capacite">Justifier $H_m \\approx H_m(T)$ et $C_P \\approx C_V$.</strong>
+                            <br><strong>Ordre de grandeur pour l'eau liquide :</strong> La capacité thermique massique est $c_{eau} \\approx 4180$ J.K⁻¹.kg⁻¹ (soit 4.18 J.K⁻¹.g⁻¹ ou 1 cal.K⁻¹.g⁻¹). C'est une valeur relativement élevée comparée à beaucoup d'autres substances. <strong class="capacite">Citer $c_{eau} \\approx 4180$ J.K⁻¹.kg⁻¹.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_3_5',
+                            section: '3.3 Premier principe',
+                            question: 'Qu\'est-ce que l\'enthalpie de changement d\'état ? Quel est son signe pour la fusion, la vaporisation et leurs inverses ? Qu\'est-ce que la Loi de Hess ?',
+                            answer: `<div class="definition"><p><strong>Enthalpie de Changement d'État ($\Delta_{chgt} H$) :</strong> C'est la variation d'enthalpie $\Delta H$ qui accompagne la transformation complète d'une quantité donnée de substance d'une phase à une autre, à température T et pression P constantes.
+                            <br>Comme la transformation se fait à P constante, $\Delta H = Q_P$. L'enthalpie de changement d'état représente donc la chaleur échangée avec l'extérieur à pression constante lors de ce changement d'état. On l'appelle aussi <strong>chaleur latente</strong> de changement d'état (souvent notée L).
+                            <br>C'est une grandeur extensive (J). On utilise couramment l'enthalpie molaire $\Delta_{chgt} H_m$ (J/mol) ou massique $l = \Delta_{chgt} H / m$ (J/kg).
+                               <ul>
+                                    <li>Fusion (Solide $\to$ Liquide) : Nécessite de l'énergie pour rompre/affaiblir les liaisons du solide $\implies \Delta_{fus} H > 0$ (endothermique).</li>
+                                    <li>Vaporisation (Liquide $\to$ Gaz) : Nécessite de l'énergie pour vaincre les forces intermoléculaires du liquide $\implies \Delta_{vap} H > 0$ (endothermique).</li>
+                                    <li>Sublimation (Solide $\to$ Gaz) : $\Delta_{sub} H > 0$ (endothermique).</li>
+                                    <li>Transformations inverses (Solidification, Liquéfaction, Condensation) : Libèrent de l'énergie $\implies \Delta H < 0$ (exothermiques). Ex: $\Delta_{solid} H = - \Delta_{fus} H$.</li>
+                               </ul>
+                            <strong>Loi de Hess (appliquée aux changements d'état) :</strong> Puisque H est une fonction d'état, la variation d'enthalpie pour passer de l'état solide à l'état gaz ne dépend pas du chemin (direct par sublimation, ou via le liquide par fusion puis vaporisation). Donc, à T et P données :
+                            <br>$\Delta_{sub} H = \Delta_{fus} H + \Delta_{vap} H$.
+                            <strong class="capacite">Exploiter l'extensivité de H. Réaliser des bilans incluant les changements d'état.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_3_6',
+                            section: '3.3 Premier principe',
+                            question: 'Décrire le principe d\'une mesure calorimétrique pour déterminer la capacité thermique $c_s$ d\'un solide.',
+                            answer: `<div class="methode"><p><strong>Calorimétrie pour Mesurer $c_{solide}$ :</strong>
+                            <br>1. <strong>Principe :</strong> On utilise un calorimètre, qui est une enceinte supposée adiabatique (pas d'échange de chaleur avec l'extérieur). On provoque un échange de chaleur contrôlé à l'intérieur entre le solide inconnu et une substance connue (souvent de l'eau), et on mesure la variation de température qui en résulte.
+                            <br>2. <strong>Protocole type (Méthode des mélanges) :</strong>
+                                <ul><li>Mesurer la masse $m_s$ du solide. Le chauffer à une température initiale $T_s$ connue et stable (ex: dans un bain-marie bouillant).</li>
+                                <li>Mesurer la masse $m_e$ d'eau froide et la placer dans le calorimètre. Mesurer la température initiale $T_e$ de l'eau et du calorimètre (supposés en équilibre thermique).</li>
+                                <li>Introduire rapidement le solide chaud dans l'eau du calorimètre. Fermer le calorimètre et agiter doucement pour homogénéiser la température.</li>
+                                <li>Mesurer la température finale d'équilibre $T_f$ atteinte par le système {solide + eau + calorimètre intérieur}.</li></ul>
+                            <br>3. <strong>Bilan énergétique :</strong> Le système global {solide + eau + calorimètre} est isolé, donc le transfert thermique total échangé est nul : $Q_{tot} = Q_{solide} + Q_{eau} + Q_{calorim} = 0$.
+                                <ul><li>$Q_{solide} = m_s c_s (T_f - T_s)$ (chaleur cédée par le solide, $Q_{solide} < 0$).</li>
+                                <li>$Q_{eau} = m_e c_e (T_f - T_e)$ (chaleur reçue par l'eau, $Q_{eau} > 0$). $c_e$ est la capacité thermique massique de l'eau (connue, $\approx 4180$ J.K⁻¹.kg⁻¹).</li>
+                                <li>$Q_{calorim} = C_{calo} (T_f - T_e)$ (chaleur reçue par le calorimètre, $Q_{calorim} > 0$). $C_{calo}$ est la capacité thermique du calorimètre (accessoires inclus : vase intérieur, agitateur, thermomètre). Elle doit être déterminée préalablement par une expérience d'étalonnage (parfois donnée en "valeur en eau" $\mu = C_{calo}/c_e$).</li></ul>
+                            <br>4. <strong>Calcul de $c_s$ :</strong> L'équation du bilan $m_s c_s (T_f - T_s) + m_e c_e (T_f - T_e) + C_{calo} (T_f - T_e) = 0$ permet d'isoler l'inconnue $c_s$ :
+                            <br>$c_s = - \\frac{(m_e c_e + C_{calo})(T_f - T_e)}{m_s (T_f - T_s)}$. (Le signe '-' compense le fait que $T_f - T_s$ est négatif).
+                            <strong class="capacite">Mettre en œuvre un protocole de calorimétrie.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex3_12',
+                            section: '3.3 Premier principe - Exercice 3.12',
+                            question: '1 mole de Gaz Parfait monoatomique subit une détente isobare réversible de $T_1=400$ K à $T_2=300$ K. Calculer W, Q, $\Delta U$ et $\Delta H$.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 3.12 :</strong>
+                                <br>GP monoatomique: $n=1$ mol, $C_{V,m} = 3R/2$, $C_{P,m} = 5R/2$.
+                                <br>Transformation isobare ($P=cste$) et réversible.
+                                <br><strong>1. Calcul de $\Delta U$ :</strong> U dépend que de T pour un GP.
+                                <br>$\Delta U = n C_{V,m} (T_2 - T_1) = 1 \times (\\frac{3}{2}R) \times (300 - 400) = -150 \times \\frac{3}{2} R = -1.5 \times 8.314 \times 100 \\approx -1247$ J.
+                                <br><strong>2. Calcul de $\Delta H$ :</strong> H dépend que de T pour un GP.
+                                <br>$\Delta H = n C_{P,m} (T_2 - T_1) = 1 \times (\\frac{5}{2}R) \times (300 - 400) = -100 \times \\frac{5}{2} R = -2.5 \times 8.314 \times 100 \\approx -2078.5$ J.
+                                <br><strong>3. Calcul de Q :</strong> Pour une transformation isobare (réversible ou non, si équilibre mécanique initial et final), $Q = Q_P = \Delta H$.
+                                <br>$Q = \Delta H \approx -2078.5$ J. (Le système cède de la chaleur).
+                                <br><strong>4. Calcul de W :</strong> On utilise le premier principe $\Delta U = W + Q$.
+                                <br>$W = \Delta U - Q = (-1247) - (-2078.5) = -1247 + 2078.5 = +831.5$ J.
+                                <br><i>Autre méthode pour W :</i> Transformation isobare réversible $W = -P(V_2 - V_1)$. Pour un GP, $PV = nRT$, donc $W = - (nRT_2 - nRT_1) = -nR(T_2 - T_1) = -1 \times 8.314 \times (300 - 400) = -8.314 \times (-100) = +831.4$ J. (Cohérent).
+                                <br>Le travail est positif : comme $T$ diminue à $P$ cste, le volume diminue ($V=nRT/P$), c'est une compression isobare, le système reçoit du travail.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 3.4 Deuxième principe ===
+                        {
+                            id: 'q3_4_1',
+                            section: '3.4 Deuxième principe',
+                            question: 'Définir l\'entropie S et donner son interprétation statistique (formule de Boltzmann).',
+                            answer: `<div class="definition"><p><strong>Entropie (S) :</strong> C'est une <strong>fonction d'état</strong> thermodynamique, extensive, exprimée en J/K. Elle a été introduite par Clausius pour caractériser l'irréversibilité des transformations.
+                            <br><strong>Interprétation Statistique (Ludwig Boltzmann) :</strong> L'entropie d'un état macroscopique est liée au nombre $\Omega$ de micro-états (configurations microscopiques distinctes des positions et vitesses des particules) qui correspondent à cet état macroscopique. La formule de Boltzmann est :
+                            <br>$S = k_B \\ln \\Omega$
+                            <br>où $k_B$ est la constante de Boltzmann ($k_B \approx 1.38 \times 10^{-23}$ J/K) et $\Omega$ est le nombre de micro-états accessibles (parfois appelé "nombre de complexions" ou "poids statistique").
+                            <br>Un état macroscopique plus "désordonné" ou plus "probable" est un état qui peut être réalisé par un plus grand nombre $\Omega$ de configurations microscopiques. L'entropie S est donc une mesure quantitative du "désordre" microscopique associé à un état macroscopique. <strong class="capacite">Interpréter qualitativement S en termes de désordre.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_4_2',
+                            section: '3.4 Deuxième principe',
+                            question: 'Énoncer le deuxième principe de la thermodynamique pour un système fermé, en introduisant l\'entropie échangée $S_{echange}$ et l\'entropie créée $S_{créée}$. Quelle est la propriété fondamentale de $S_{créée}$ ?',
+                            answer: `<div class="resultat"><p><strong>Deuxième Principe de la Thermodynamique (pour un système fermé) :</strong>
+                            <br>Au cours d'une transformation quelconque faisant passer un système fermé d'un état initial A à un état final B, la variation de son entropie $\Delta S = S_B - S_A$ peut s'écrire comme la somme de deux termes :
+                            <br>$\\Delta S = S_{echange} + S_{créée}$
+                               <ul>
+                                    <li>$S_{echange}$ : <strong>Terme d'échange d'entropie</strong> avec le milieu extérieur. Il est lié aux transferts thermiques $dQ$ à travers la frontière du système, à la température $T_{frontiere}$ de cette frontière :
+                                    <br>$S_{echange} = \\int_A^B \\frac{dQ}{T_{frontiere}}$.
+                                    <br>Si le système échange de la chaleur $Q_i$ avec plusieurs sources externes (thermostats) à des températures $T_i$ bien définies, alors $S_{echange} = \\sum_i \\frac{Q_i}{T_i}$.</li>
+                                    <li>$S_{créée}$ : <strong>Terme de création (ou production) d'entropie</strong>. Ce terme est dû aux phénomènes irréversibles qui se produisent <strong>à l'intérieur</strong> du système (ex: réactions chimiques spontanées, diffusion de matière ou de chaleur avec des gradients finis, frottements visqueux, déformations plastiques...).</li>
+                               </ul>
+                            Le deuxième principe postule la propriété fondamentale suivante pour l'entropie créée :
+                            <br><strong>L'entropie créée est toujours positive ou nulle : $S_{créée} \\ge 0$</strong>.
+                               <ul>
+                                    <li>$S_{créée} = 0$ si et seulement si la transformation est <strong>réversible</strong>.</li>
+                                    <li>$S_{créée} > 0$ si et seulement si la transformation est <strong>irréversible</strong>.</li>
+                               </ul>
+                            <strong class="capacite">Établir un bilan entropique. Relier $S_{créée}$ à l'irréversibilité.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_4_3',
+                            section: '3.4 Deuxième principe',
+                            question: 'Comment évolue l\'entropie d\'un système isolé ? Et lors d\'une transformation adiabatique réversible ?',
+                            answer: `<div class="resultat"><p><strong>Cas Particulier d'un Système Isolé :</strong> Un système isolé n'échange ni matière ni énergie ($W=0, Q=0$) avec l'extérieur.
+                            <br>Puisqu'il n'y a pas d'échange de chaleur ($Q=0$), le terme d'échange d'entropie est nul : $S_{echange} = \\int dQ/T_{frontiere} = 0$.
+                            <br>Le bilan entropique $\Delta S = S_{echange} + S_{créée}$ se réduit à $\Delta S = S_{créée}$.
+                            <br>Comme $S_{créée} \\ge 0$ d'après le second principe, on a :
+                            <br>$\\Delta S_{isolé} \\ge 0$.
+                            <br>L'entropie d'un système isolé ne peut qu'augmenter au cours d'une transformation spontanée (irréversible) ou rester constante si la transformation est réversible (ce qui correspond à l'équilibre). L'état d'équilibre final d'un système isolé est celui qui maximise son entropie, compte tenu des contraintes internes.</p>
+                            <p><strong>Cas Particulier d'une Transformation Adiabatique Réversible :</strong>
+                            <br>Adiabatique signifie $Q=0$. S'il n'y a pas d'échange de chaleur, $S_{echange} = 0$.
+                            <br>Réversible signifie $S_{créée} = 0$.
+                            <br>Le bilan entropique donne donc $\Delta S = S_{echange} + S_{créée} = 0 + 0 = 0$.
+                            <br>Une transformation adiabatique et réversible est donc <strong>isentropique</strong> (l'entropie du système reste constante). <strong class="capacite">Analyser ce cas.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_4_4',
+                            section: '3.4 Deuxième principe',
+                            question: 'Comment calculer la variation d\'entropie $\Delta S$ d\'un système entre deux états A et B ? Donner les expressions pour un chauffage isochore, isobare, et une détente isotherme réversible d\'un GP.',
+                            answer: `<div class="methode"><p><strong>Calcul de $\Delta S = S_B - S_A$ :</strong> Puisque S est une fonction d'état, $\Delta S$ ne dépend que des états initial A et final B. Pour la calculer, on peut imaginer n'importe quel chemin <strong>réversible</strong> allant de A à B et calculer l'intégrale de $dQ_{rev}/T$ le long de ce chemin. Sur un chemin réversible, $S_{créée}=0$, donc $\Delta S = S_{echange, rev} = \\int_{A \\to B, rev} \\frac{dQ_{rev}}{T}$.
+                            <br><strong>Exemples (pour n moles, capacités molaires $C_{V,m}, C_{P,m}$ supposées cstes):</strong>
+                               <ul>
+                                    <li><strong>Chauffage/Refroidissement Isochore Réversible ($V=cste$) de $T_A$ à $T_B$:</strong>
+                                    <br>Chemin réversible à V=cste. Premier principe : $dU = dQ_{rev} + dW_{rev}$. Comme $V=cste$, $dW_{rev} = -PdV = 0$. Donc $dQ_{rev} = dU = nC_{V,m}dT$.
+                                    <br>$\\Delta S = \\int_{T_A}^{T_B} \\frac{nC_{V,m}dT}{T} = nC_{V,m} [\\ln T]_{T_A}^{T_B} = nC_{V,m} \\ln\\left(\\frac{T_B}{T_A}\\right)$.</li>
+
+                                    <li><strong>Chauffage/Refroidissement Isobare Réversible ($P=cste$) de $T_A$ à $T_B$:</strong>
+                                    <br>Chemin réversible à P=cste. On utilise l'enthalpie : $dH = dQ_{rev} + VdP$. Comme $P=cste$, $dP=0$. Donc $dQ_{rev} = dH = nC_{P,m}dT$.
+                                    <br>$\\Delta S = \\int_{T_A}^{T_B} \\frac{nC_{P,m}dT}{T} = nC_{P,m} [\\ln T]_{T_A}^{T_B} = nC_{P,m} \\ln\\left(\\frac{T_B}{T_A}\\right)$.</li>
+
+                                    <li><strong>Détente Isotherme Réversible d'un GP ($T=cste$) de $V_A$ à $V_B$:</strong>
+                                    <br>Chemin réversible à T=cste. Pour un GP, $U=U(T)$, donc si $T=cste$, $\Delta U = 0$.
+                                    <br>Le premier principe $dU = dQ_{rev} + dW_{rev}$ donne $0 = dQ_{rev} + (-PdV)$, soit $dQ_{rev} = P dV$.
+                                    <br>$\\Delta S = \\int_{A}^{B} \\frac{dQ_{rev}}{T} = \\int_{V_A}^{V_B} \\frac{P dV}{T}$. Comme $P = nRT/V$ et T est constant :
+                                    <br>$\\Delta S = \\int_{V_A}^{V_B} \\frac{(nRT/V) dV}{T} = nR \\int_{V_A}^{V_B} \\frac{dV}{V} = nR [\\ln V]_{V_A}^{V_B} = nR \\ln\\left(\\frac{V_B}{V_A}\\right)$.
+                                    <br>(On peut aussi écrire $\Delta S = nR \ln(P_A/P_B)$).</li>
+                               </ul>
+                            <strong class="capacite">Utiliser l'expression fournie de S ou calculer $\Delta S$ sur un chemin réversible. Exploiter l'extensivité de S.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_4_5',
+                            section: '3.4 Deuxième principe',
+                            question: 'Quelles sont les lois de Laplace pour une transformation adiabatique réversible d\'un gaz parfait ?',
+                            answer: `<div class="resultat"><p><strong>Loi de Laplace (Transformation Adiabatique Réversible d'un Gaz Parfait) :</strong>
+                            <br>Pour une telle transformation, on a simultanément :
+                            <ul><li>Adiabatique : $dQ = 0$.</li>
+                            <li>Réversible : $S_{créée} = 0$.</li>
+                            <li>Gaz Parfait : $PV=nRT$, $dU=nC_{V,m}dT$, $C_{P,m}-C_{V,m}=R$.</li></ul>
+                            <br>Comme vu précédemment, une transformation adiabatique réversible est isentropique ($\Delta S = 0$).
+                            <br>On peut montrer (voir Q3.4.4) que $dQ_{rev} = nC_{V,m}dT + P dV$.
+                            <br>Pour un chemin isentropique réversible, $dQ_{rev}=0$, donc $nC_{V,m}dT + P dV = 0$.
+                            <br>En remplaçant $P=nRT/V$, on obtient $nC_{V,m}dT + \\frac{nRT}{V}dV = 0$.
+                            <br>On divise par $nRT$: $\\frac{C_{V,m}}{R} \\frac{dT}{T} + \\frac{dV}{V} = 0$.
+                            <br>Sachant que $R/C_{V,m} = (C_{P,m}-C_{V,m})/C_{V,m} = \\gamma - 1$ (où $\\gamma = C_{P,m}/C_{V,m}$ est l'indice adiabatique), on a $C_{V,m}/R = 1/(\\gamma-1)$.
+                            <br>$\\frac{1}{\\gamma-1} \\frac{dT}{T} + \\frac{dV}{V} = 0$.
+                            <br>En intégrant (supposant $\gamma$ constant) : $\\frac{1}{\\gamma-1} \ln T + \ln V = cste$.
+                            <br>$\ln(T^{1/(\\gamma-1)} V) = cste \implies T V^{\\gamma-1} = \\text{Constante}$.
+                            <br>En utilisant $T = PV/(nR)$, on obtient $(PV/nR) V^{\\gamma-1} = cste \implies P V^{\\gamma} = \\text{Constante}'$.
+                            <br>En utilisant $V = nRT/P$, on obtient $T (nRT/P)^{\\gamma-1} = cste \implies T^{\\gamma} P^{1-\\gamma} = \\text{Constante}''$.
+                            <br><strong>Les lois de Laplace sont donc :</strong>
+                               <ul>
+                                    <li>$T V^{\\gamma-1} = cste$</li>
+                                    <li>$P V^{\\gamma} = cste$</li>
+                                    <li>$T^{\\gamma} P^{1-\\gamma} = cste$ (ou $T P^{(1-\\gamma)/\\gamma} = cste$)</li>
+                               </ul>
+                            <strong class="capacite">Citer et utiliser ces lois et leurs conditions.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_4_6',
+                            section: '3.4 Deuxième principe',
+                            question: 'Quelle est la relation entre l\'entropie de changement d\'état $\Delta S_{1\to 2}$ et l\'enthalpie de changement d\'état $\Delta H_{1\to 2}$ à température T ?',
+                            answer: `<div class="resultat"><p><strong>Entropie de Changement d'État :</strong>
+                            <br>Un changement d'état d'un corps pur (phase 1 $\to$ phase 2) à température T et pression P constantes est une transformation réversible (car les deux phases sont en équilibre).
+                            <br>Le transfert thermique mis en jeu à pression constante est $Q_P = \Delta H_{1 \to 2}$.
+                            <br>La transformation étant réversible, $S_{créée} = 0$.
+                            <br>L'échange d'entropie se fait avec l'extérieur qui fournit (ou reçoit) la chaleur $Q_P$ à la température constante $T_{frontiere} = T$.
+                            <br>$S_{echange} = \\frac{Q_P}{T} = \\frac{\Delta H_{1 \to 2}}{T}$.
+                            <br>Le bilan entropique $\Delta S_{1 \to 2} = S_{echange} + S_{créée}$ donne :
+                            <br>$\\Delta S_{1 \to 2} = \\frac{\Delta H_{1 \to 2}}{T}$.
+                            <br>En grandeurs molaires ou massiques :
+                            <br>$\\Delta s_{12}(T) = \\frac{\Delta h_{12}(T)}{T}$.
+                            <strong class="capacite">Citer et utiliser cette relation.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'ex3_16',
+                            section: '3.4 Deuxième principe - Exercice 3.16',
+                            question: 'Une source chaude à $T_1=500$ K cède $Q_1=1000$ J à une source froide à $T_2=300$ K via une barre conductrice en régime stationnaire. Le système global {Source Chaude + Barre + Source Froide} est isolé. Calculer la variation d'entropie de chaque élément et l'entropie créée totale.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 3.16 :</strong>
+                            <br>Considérons les variations d'entropie pour chaque partie du système isolé global.
+                            <br><strong>1. Source Chaude (SC) :</strong> Elle cède $Q_1=1000$ J de manière réversible (thermostat) à $T_1=500$ K.
+                            <br>Chaleur reçue par SC : $Q_{SC} = -Q_1 = -1000$ J.
+                            <br>$\Delta S_{SC} = Q_{SC}/T_1 = -1000 / 500 = -2.0$ J/K. (Son entropie diminue car elle cède de la chaleur).
+                            <br><strong>2. Source Froide (SF) :</strong> Elle reçoit $Q_1=1000$ J de manière réversible (thermostat) à $T_2=300$ K.
+                            <br>Chaleur reçue par SF : $Q_{SF} = +Q_1 = +1000$ J.
+                            <br>$\Delta S_{SF} = Q_{SF}/T_2 = +1000 / 300 = +3.33$ J/K. (Son entropie augmente).
+                            <br><strong>3. Barre Conductrice :</strong> Elle est en régime stationnaire, son état macroscopique (et donc son entropie S) ne varie pas.
+                            <br>$\Delta S_{barre} = 0$.
+                            <br><strong>4. Bilan entropique global :</strong> Le système global {SC + Barre + SF} est isolé. Sa variation d'entropie est égale à l'entropie créée lors du processus de transfert thermique irréversible à travers la barre (qui a un gradient de température).
+                            <br>$\Delta S_{global} = \Delta S_{SC} + \Delta S_{barre} + \Delta S_{SF} = S_{créée, totale}$.
+                            <br>$S_{créée, totale} = (-2.0) + 0 + (+3.33) = +1.33$ J/K.
+                            <br>L'entropie créée est bien positive, ce qui confirme l'irréversibilité du transfert thermique spontané du chaud vers le froid via une différence de température finie.
+                            <br><i>Note :</i> Si on prend la barre seule comme système (non isolé), elle échange $Q_{recu,1}=+1000$J à $T_1=500$K et $Q_{recu,2}=-1000$J à $T_2=300$K (pour être stationnaire). L'entropie échangée par la barre est $S_{ech, barre} = Q_{recu,1}/T_1 + Q_{recu,2}/T_2 = 1000/500 + (-1000)/300 = 2 - 3.33 = -1.33$ J/K. Le bilan pour la barre est $\Delta S_{barre} = S_{ech, barre} + S_{créée, barre}$. Comme $\Delta S_{barre}=0$, on a $S_{créée, barre} = -S_{ech, barre} = +1.33$ J/K. L'entropie est créée dans la barre à cause du transfert irréversible.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 3.5 Machines thermiques ===
+                        {
+                            id: 'q3_5_1',
+                            section: '3.5 Machines thermiques',
+                            question: 'Qu\'est-ce qu\'une machine thermique cyclique ditherme ? Distinguer moteur et récepteur (réfrigérateur/PAC) par le sens des échanges d\'énergie.',
+                            answer: `<div class="definition"><p><strong>Machine Thermique Cyclique Ditherme :</strong> C'est un dispositif thermodynamique dans lequel un fluide (le système) décrit un <strong>cycle</strong> de transformations (retour à l'état initial) tout en échangeant de l'énergie avec <strong>deux sources de chaleur</strong> (thermostats) à températures constantes : une source chaude ($T_C$) et une source froide ($T_F < T_C$). La machine échange également du travail $W$ avec l'extérieur au cours du cycle.
+                               <ul>
+                                    <li><strong>Moteur Thermique :</strong>
+                                        <ul><li>Objectif : Convertir de la chaleur en travail.</li>
+                                        <li>Fonctionnement : Reçoit de la chaleur $Q_C > 0$ de la source chaude, rejette de la chaleur $Q_F < 0$ vers la source froide, et <strong>fournit</strong> du travail $W < 0$ à l'extérieur.</li>
+                                        <li>Exemples : Moteur à combustion interne, centrale thermique.</li></ul></li>
+                                    <li><strong>Récepteur Thermique (Réfrigérateur ou Pompe à Chaleur - PAC) :</strong>
+                                        <ul><li>Objectif : Transférer de la chaleur du froid vers le chaud.</li>
+                                        <li>Fonctionnement : <strong>Reçoit</strong> du travail $W > 0$ de l'extérieur, extrait de la chaleur $Q_F > 0$ de la source froide, et rejette de la chaleur $Q_C < 0$ vers la source chaude.</li>
+                                        <li>Distinction :
+                                            <ul><li><strong>Réfrigérateur :</strong> L'effet utile est l'extraction de chaleur de la source froide ($Q_F$).</li>
+                                            <li><strong>Pompe à Chaleur (PAC) :</strong> L'effet utile est la chaleur rejetée vers la source chaude ($|Q_C|$).</li></ul></li>
+                                        <li>Exemples : Réfrigérateur domestique, climatiseur réversible.</li></ul>
+                               </ul>
+                            <strong class="capacite">Donner le sens des échanges. Modéliser un dispositif réel par une machine ditherme.</strong></p>
+                            <div class="schema">Schéma : Machine ditherme (Moteur et Récepteur)</div></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_5_2',
+                            section: '3.5 Machines thermiques',
+                            question: 'Appliquer le premier et le deuxième principe (Inégalité de Clausius) à un cycle ditherme.',
+                            answer: `<div class="resultat"><p><strong>Application des Principes au Cycle Ditherme :</strong> Le système (fluide) décrit un cycle, donc son état final est identique à son état initial. Pour toute fonction d'état (U, S...), sa variation sur un cycle est nulle.
+                               <ul>
+                                    <li><strong>1er Principe ($\Delta U_{cycle} = 0$) :</strong>
+                                    <br>La variation d'énergie interne sur un cycle est nulle : $\Delta U_{cycle} = W + Q_C + Q_F = 0$.
+                                    <br>Ceci impose une relation entre le travail et les chaleurs échangées : $W = -(Q_C + Q_F)$.
+                                    <br>Ou $|W| = |Q_C + Q_F|$. Pour un moteur ($W<0, Q_C>0, Q_F<0$), $|W| = Q_C - |Q_F|$. Pour un récepteur ($W>0, Q_C<0, Q_F>0$), $W = |Q_C| - Q_F$.</li>
+
+                                    <li><strong>2ème Principe ($\Delta S_{cycle} = 0$) :</strong>
+                                    <br>La variation d'entropie du système sur un cycle est nulle : $\Delta S_{cycle} = S_{ech} + S_{créée} = 0$.
+                                    <br>L'entropie échangée se fait avec les deux thermostats : $S_{ech} = \\frac{Q_C}{T_C} + \\frac{Q_F}{T_F}$.
+                                    <br>Le bilan devient : $\\frac{Q_C}{T_C} + \\frac{Q_F}{T_F} + S_{créée} = 0$.
+                                    <br>Comme le second principe impose $S_{créée} \\ge 0$, on en déduit l'<strong>Inégalité de Clausius</strong> pour un cycle ditherme :
+                                    <br>$\\frac{Q_C}{T_C} + \\frac{Q_F}{T_F} \\le 0$.
+                                    <br>L'égalité $\\frac{Q_C}{T_C} + \\frac{Q_F}{T_F} = 0$ n'est atteinte que si le cycle est parfaitement <strong>réversible</strong> ($S_{créée}=0$).</li>
+                               </ul></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q3_5_3',
+                            section: '3.5 Machines thermiques',
+                            question: 'Définir le rendement $\eta$ d\'un moteur, l\'efficacité $\epsilon$ d\'un réfrigérateur et l\'efficacité $e$ d\'une pompe à chaleur. Quelle relation lie $e$ et $\epsilon$ ?',
+                            answer: `<div class="definition"><p><strong>Performance des Machines Dithermes :</strong> La performance est définie comme le rapport entre l'énergie utile obtenue et l'énergie coûteuse dépensée.
+                               <ul>
+                                    <li><strong>Moteur : Rendement ($\eta$)</strong>
+                                    <br>Utile : Travail fourni $|W|$. Coûteux : Chaleur reçue de la source chaude $Q_C$.
+                                    <br>$\\eta = \\frac{\\text{Utile}}{\\text{Coûteux}} = \\frac{|W|}{Q_C}$.
+                                    <br>En utilisant $W = -(Q_C+Q_F)$, on a $|W| = Q_C + Q_F$ (car $W<0, Q_C>0, Q_F<0$, donc $Q_C+Q_F$ est négatif, et $-(Q_C+Q_F)$ est positif).
+                                    <br>$\eta = \\frac{-(Q_C+Q_F)}{Q_C} = 1 + \\frac{Q_F}{Q_C}$. (Comme $Q_F < 0$, $\eta < 1$).</li>
+
+                                    <li><strong>Réfrigérateur : Efficacité ($\epsilon$ ou COP_froid)</strong>
+                                    <br>Utile : Chaleur extraite de la source froide $Q_F$. Coûteux : Travail reçu $W$.
+                                    <br>$\\epsilon = \\frac{\\text{Utile}}{\\text{Coûteux}} = \\frac{Q_F}{W}$.
+                                    <br>$\epsilon = \\frac{Q_F}{-(Q_C+Q_F)}$. (Comme $W>0, Q_F>0$, $\epsilon > 0$).</li>
+
+                                    <li><strong>Pompe à Chaleur (PAC) : Efficacité ($e$ ou COP_chaud)</strong>
+                                    <br>Utile : Chaleur fournie à la source chaude $|Q_C|$. Coûteux : Travail reçu $W$.
+                                    <br>$e = \\frac{\\text{Utile}}{\\text{Coûteux}} = \\frac{|Q_C|}{W}$.
+                                    <br>Comme $Q_C < 0$, $|Q_C| = -Q_C$.
+                                    <br>$e = \\frac{-Q_C}{W} = \\frac{-Q_C}{-(Q_C+Q_F)} = \\frac{Q_C}{Q_C+Q_F}$. (Comme $W>0, |Q_C|>0$, $e > 0$).</li>
+                               </ul>
+                               <strong>Relation entre $e$ et $\epsilon$ :</strong>
+                               <br>$e = \\frac{|Q_C|}{W}$ et $\epsilon = \\frac{Q_F}{W}$.
+                               <br>D'après le 1er principe, $W = |Q_C| - Q_F$ (pour un récepteur).
+                               <br>$e = \\frac{|Q_C|}{|Q_C| - Q_F}$ et $\epsilon = \\frac{Q_F}{|Q_C| - Q_F}$.
+                               <br>$e - \epsilon = \\frac{|Q_C| - Q_F}{|Q_C| - Q_F} = 1$.
+                               <br>Donc : $e = 1 + \epsilon$. L'efficacité d'une PAC est toujours supérieure de 1 à celle du même appareil fonctionnant en réfrigérateur.
+                               <strong class="capacite">Définir rendement/efficacité et les relier aux transferts d'énergie.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_5_4',
+                            section: '3.5 Machines thermiques',
+                            question: 'Énoncer le théorème de Carnot pour le rendement maximal d\'un moteur et les efficacités maximales d\'un réfrigérateur et d\'une PAC. Donner les expressions de Carnot.',
+                            answer: `<div class="resultat"><p><strong>Théorème de Carnot :</strong> Ce théorème fixe les limites théoriques de performance pour toute machine thermique ditherme fonctionnant entre deux sources de chaleur à températures $T_C$ et $T_F$ (en Kelvin). Ces limites sont atteintes uniquement par un cycle <strong>réversible</strong> fonctionnant entre ces deux températures (Cycle de Carnot).
+                               <ul>
+                                    <li><strong>Moteur :</strong> Le rendement $\eta$ de tout moteur ditherme fonctionnant entre $T_C$ et $T_F$ est inférieur ou égal au rendement de Carnot $\eta_C$:
+                                    <br>$\\eta \\le \eta_C = 1 - \\frac{T_F}{T_C}$.</li>
+
+                                    <li><strong>Réfrigérateur :</strong> L'efficacité $\epsilon$ de tout réfrigérateur ditherme fonctionnant entre $T_C$ et $T_F$ est inférieure ou égale à l'efficacité de Carnot $\epsilon_C$:
+                                    <br>$\\epsilon \\le \epsilon_C = \\frac{T_F}{T_C - T_F}$.</li>
+
+                                    <li><strong>Pompe à Chaleur (PAC) :</strong> L'efficacité $e$ de toute PAC ditherme fonctionnant entre $T_C$ et $T_F$ est inférieure ou égale à l'efficacité de Carnot $e_C$:
+                                    <br>$e \\le e_C = \\frac{T_C}{T_C - T_F}$.</li>
+                               </ul>
+                            <strong>Justification (esquisse) :</strong> L'inégalité de Clausius $\frac{Q_C}{T_C} + \frac{Q_F}{T_F} \\le 0$ peut s'écrire $\frac{Q_F}{Q_C} \\le -\\frac{T_F}{T_C}$.
+                            <br>Pour un moteur, $\eta = 1 + Q_F/Q_C$. Donc $\eta \\le 1 - T_F/T_C$.
+                            <br>Pour un réfrigérateur, $\epsilon = \frac{Q_F}{-(Q_C+Q_F)} = \frac{1}{-(Q_C/Q_F + 1)}$. De $\frac{Q_C}{Q_F} \le - \frac{T_C}{T_F}$, on tire $\epsilon \le \frac{1}{T_C/T_F - 1} = \frac{T_F}{T_C - T_F}$.
+                            <br>Pour une PAC, $e = 1+\epsilon \le 1 + \frac{T_F}{T_C - T_F} = \frac{T_C - T_F + T_F}{T_C - T_F} = \frac{T_C}{T_C - T_F}$.
+                            <br>L'égalité dans tous les cas est obtenue lorsque $S_{créée}=0$, c'est-à-dire pour un cycle réversible.
+                            <strong class="capacite">Justifier ces inégalités à partir de l'inégalité de Clausius. Utiliser le théorème de Carnot.</strong>
+                            <br><strong>Ordres de grandeur réels :</strong> $\eta_{moteur} \approx 30-40\%$. $e_{PAC} \approx 3-5$. $\epsilon_{frigo} \approx 2-4$. Ces valeurs sont inférieures aux limites de Carnot. <strong class="capacite">Citer des ordres de grandeur.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q3_5_5',
+                            section: '3.5 Machines thermiques',
+                            question: 'Expliquer le principe de la cogénération.',
+                            answer: `<div class="definition"><p><strong>Cogénération :</strong> C'est la production <strong>simultanée</strong> de deux formes d'énergie utile à partir d'une seule source d'énergie primaire (combustible : gaz, biomasse, fioul...). Les deux énergies utiles sont généralement :
+                                <ul><li>De l'énergie mécanique (souvent convertie en électricité via un alternateur).</li>
+                                <li>De l'énergie thermique (chaleur).</li></ul>
+                            <strong>Principe :</strong> On utilise une machine thermique (moteur à combustion, turbine à gaz...) pour produire de l'électricité. Au lieu de rejeter toute la chaleur "fatale" $Q_F$ produite par le moteur vers l'environnement (comme dans une centrale électrique classique), on récupère une partie significative de cette chaleur à température suffisamment élevée pour l'utiliser pour des besoins de chauffage (chauffage de locaux, eau chaude sanitaire, procédés industriels...).
+                            <br><strong>Avantage :</strong> En valorisant la chaleur qui serait autrement perdue, la cogénération permet d'atteindre un rendement énergétique global (énergie utile totale / énergie primaire consommée) beaucoup plus élevé qu'en produisant séparément l'électricité et la chaleur. Cela conduit à des économies d'énergie primaire et à une réduction des émissions de gaz à effet de serre.
+                            <strong class="capacite">Expliquer le principe.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex3_20',
+                            section: '3.5 Machines thermiques - Exercice 3.20',
+                            question: 'Quel est le rendement maximal théorique (rendement de Carnot $\eta_C$) pour un moteur fonctionnant entre une source chaude à $T_C=600$ K et une source froide à $T_F=300$ K ?',
+                            answer: `<div class="corrige"><p><strong>Corrigé 3.20 :</strong>
+                            <br>Le rendement maximal théorique pour un moteur thermique fonctionnant entre deux sources de chaleur à températures absolues $T_C$ et $T_F$ est donné par le rendement de Carnot $\eta_C$.
+                            <br>La formule est : $\eta_C = 1 - \\frac{T_F}{T_C}$.
+                            <br>Il est essentiel d'utiliser les températures en Kelvin. Les températures données sont déjà en Kelvin.
+                            <br>$T_C = 600$ K
+                            <br>$T_F = 300$ K
+                            <br>Application numérique :
+                            <br>$\\eta_C = 1 - \\frac{300 \\text{ K}}{600 \\text{ K}} = 1 - 0.5 = 0.5$.
+                            <br>Le rendement maximal théorique est $\eta_C = 0.5$ ou 50%.
+                            <br>Aucun moteur réel fonctionnant entre ces deux températures ne peut avoir un rendement supérieur à 50%. Tout cycle réversible fonctionnant entre ces températures aurait exactement ce rendement.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex3_22',
+                            section: '3.5 Machines thermiques - Exercice 3.22',
+                            question: 'Quelle est l\'efficacité maximale théorique ($\epsilon_C$) d\'un réfrigérateur fonctionnant entre une source froide à $T_F=-10^\circ$C et une source chaude à $T_C=25^\circ$C ?',
+                            answer: `<div class="corrige"><p><strong>Corrigé 3.22 :</strong>
+                            <br>L'efficacité maximale théorique pour un réfrigérateur fonctionnant entre deux sources de chaleur à températures absolues $T_C$ et $T_F$ est donnée par l'efficacité de Carnot pour un réfrigérateur, $\epsilon_C$.
+                            <br>La formule est : $\\epsilon_C = \\frac{T_F}{T_C - T_F}$.
+                            <br>Il faut d'abord convertir les températures en Kelvin :
+                            <br>$T_F = -10 + 273.15 = 263.15$ K.
+                            <br>$T_C = 25 + 273.15 = 298.15$ K.
+                            <br>Calcul de la différence de température :
+                            <br>$T_C - T_F = 298.15 - 263.15 = 35.0$ K.
+                            <br>Application numérique :
+                            <br>$\\epsilon_C = \\frac{263.15 \\text{ K}}{35.0 \\text{ K}} \\approx 7.518$.
+                            <br>L'efficacité maximale théorique de ce réfrigérateur est $\epsilon_C \approx 7.52$.
+                            <br>Cela signifie qu'un réfrigérateur idéal fonctionnant entre -10°C et +25°C pourrait extraire 7.52 Joules de chaleur de la source froide pour chaque Joule de travail consommé.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                    ] // Fin du tableau questions
+                }
+            },
+            methods: {
+                toggleAnswer(item) {
+                    item.showAnswer = !item.showAnswer;
+                    if (item.showAnswer) {
+                        this.$nextTick(() => {
+                            this.renderMath();
+                        });
+                    }
+                },
+                setComprehension(item, level) {
+                    item.comprehension = level;
+                    this.saveComprehensionState();
+                     this.$nextTick(() => {
+                        // Optional: Re-render math if layout changes subtly
+                        // this.renderMath();
+                    });
+                },
+                saveComprehensionState() {
+                    const stateToSave = this.questions.reduce((acc, q) => {
+                        if (q.comprehension) {
+                            acc[q.id] = q.comprehension;
+                        }
+                        return acc;
+                    }, {});
+                    try {
+                        // Use a different key for this theme
+                        localStorage.setItem('vueQnAComprehension_Theme3', JSON.stringify(stateToSave));
+                    } catch (e) {
+                        console.error("Erreur lors de l'enregistrement dans localStorage:", e);
+                    }
+                },
+                loadComprehensionState() {
+                    try {
+                         // Use the key specific to this theme
+                        const savedState = localStorage.getItem('vueQnAComprehension_Theme3');
+                        if (savedState) {
+                            const parsedState = JSON.parse(savedState);
+                            this.questions.forEach(q => {
+                                if (parsedState[q.id]) {
+                                    q.comprehension = parsedState[q.id];
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Erreur lors du chargement depuis localStorage:", e);
+                    }
+                },
+                renderMath() {
+                    // Defer rendering until KaTeX is likely loaded
+                    if (window.renderMathInElement) {
+                         try {
+                            renderMathInElement(this.$el, {
+                                delimiters: [
+                                    {left: '$$', right: '$$', display: true},
+                                    {left: '$', right: '$', display: false},
+                                    {left: '\\(', right: '\\)', display: false},
+                                    {left: '\\[', right: '\\]', display: true}
+                                ],
+                                throwOnError: false // Don't stop rendering on error
+                            });
+                        } catch (error) {
+                            console.error("KaTeX rendering error:", error);
+                        }
+                    } else {
+                        // Retry mechanism or warning if KaTeX isn't loaded
+                        console.warn("KaTeX auto-render not ready, retrying in 500ms...");
+                        setTimeout(() => this.renderMath(), 500);
+                    }
+                },
+                renderContent(htmlContent) {
+                    // Pass through HTML, KaTeX rendering handled by renderMath
+                    return htmlContent;
+                }
+            },
+            mounted() {
+                this.loadComprehensionState();
+                // Initial KaTeX rendering after component is mounted and data loaded
+                this.$nextTick(() => {
+                    // Wait a brief moment for KaTeX script to potentially load via CDN
+                    setTimeout(() => this.renderMath(), 100);
+                });
+            }
+        }).mount('#app');
+
+    </script>
+
+</body>
+</html>
