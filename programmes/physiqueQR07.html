@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Mouvements et Interactions (1)</title>
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        #app {
+            max-width: 900px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #42b983;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            margin-top: 40px; /* Ajout espace avant les titres de section */
+        }
+        h1:first-of-type, h2:first-of-type {
+             margin-top: 0;
+        }
+        h3 {
+            border-bottom-width: 1px;
+            border-bottom-color: #ccc;
+            font-size: 1.4em;
+             margin-top: 30px;
+        }
+
+        .qa-item {
+            display: flex;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: box-shadow 0.3s ease;
+        }
+        .qa-item:hover {
+             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .understanding-bar {
+            flex: 0 0 10px; /* Ne grandit pas, ne rétrécit pas, base de 10px */
+            margin-right: 15px;
+            border-radius: 5px;
+            background-color: #ccc; /* Gris par défaut si pas compris ou non évalué */
+            transition: background-color 0.3s ease;
+        }
+
+        .understanding-bar.easy { background-color: #4CAF50; } /* Vert */
+        .understanding-bar.medium { background-color: #ff9800; } /* Orange */
+        .understanding-bar.hard { background-color: #f44336; } /* Rouge */
+        .understanding-bar.not_understood { background-color: #607d8b; } /* Gris sombre */
+
+        .qa-content {
+            flex-grow: 1;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        .answer {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #42b983;
+            border-radius: 0 4px 4px 0;
+            transition: all 0.4s ease-out;
+            overflow: hidden;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 8px 12px;
+            margin: 5px 5px 5px 0;
+            border: none;
+            border-radius: 4px;
+            background-color: #42b983;
+            color: white;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease;
+        }
+        button:hover {
+            background-color: #36a374;
+        }
+
+        .toggle-answer-btn {
+             background-color: #3498db;
+        }
+         .toggle-answer-btn:hover {
+             background-color: #2980b9;
+         }
+
+        .understanding-buttons button {
+            background-color: #eee;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+         .understanding-buttons button:hover {
+             background-color: #ddd;
+         }
+        .understanding-buttons button.active.easy { background-color: #4CAF50; color: white; border-color: #4CAF50;}
+        .understanding-buttons button.active.medium { background-color: #ff9800; color: white; border-color: #ff9800;}
+        .understanding-buttons button.active.hard { background-color: #f44336; color: white; border-color: #f44336;}
+        .understanding-buttons button.active.not_understood { background-color: #607d8b; color: white; border-color: #607d8b;}
+
+        .katex { font-size: 1.1em; } /* Ajuster si nécessaire */
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 5px; }
+
+        /* Classe utilitaire pour masquer via v-show */
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h2 id="theme2-s1">Thème 2: mouvements et interactions (1)</h2>
+
+        <!-- ==================== 2.1 Description et paramétrage du mouvement d'un point ==================== -->
+        <h3 id="t2-1-description-mvt-point">2.1 Description et paramétrage du mouvement d'un point</h3>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+         <div v-for="item in qaListDescription" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 2.2 Lois de Newton ==================== -->
+        <h3 id="t2-2-lois-newton">2.2 Lois de Newton</h3>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+         <div v-for="item in qaListNewton" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 2.3 Approche énergétique du mouvement d'un point matériel ==================== -->
+        <h3 id="t2-3-approche-energetique-point">2.3 Approche énergétique du mouvement d'un point matériel</h3>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+         <div v-for="item in qaListEnergie" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 2.4 Mouvement de particules chargées dans des champs E et B ==================== -->
+        <h3 id="t2-4-particules-chargees-champs">2.4 Mouvement de particules chargées dans des champs $\vec{E}$ et $\vec{B}$ uniformes et stationnaires</h3>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+         <div v-for="item in qaListParticulesChargees" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, nextTick, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                // --- Questions Section 2.1 : Description Mouvement ---
+                const qaListDescription = ref([
+                    {
+                        id: 'q_desc_1',
+                        question: "Définir un référentiel et le concept de relativité du mouvement. Dans quel cas la physique classique n'est-elle plus valide ?",
+                        answer: `Un <strong>Référentiel</strong> ($\mathcal{R}$) est un système de référence (solide + horloge) par rapport auquel on décrit le mouvement.<br>
+                                 La <strong>Relativité du Mouvement</strong> signifie que la description (trajectoire, vitesse, accélération) dépend du référentiel choisi.<br>
+                                 La <strong>Physique Classique</strong> (distances et durées absolues) n'est plus valide pour des vitesses proches de celle de la lumière $c$ (relativité restreinte) ou en présence de champs gravitationnels intenses (relativité générale).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_desc_2',
+                        question: "Définir les vecteurs position $\\vec{r}$, vitesse $\\vec{v}$ et accélération $\\vec{a}$ d'un point M.",
+                        answer: `<ul>
+                                 <li>Vecteur Position : $\\vec{r}(t) = \\vec{OM}(t)$, vecteur reliant l'origine O du référentiel au point M à l'instant $t$.</li>
+                                 <li>Vecteur Vitesse : $\\vec{v}(t) = \\frac{d\\vec{OM}}{dt}$. C'est la dérivée du vecteur position par rapport au temps.</li>
+                                 <li>Vecteur Accélération : $\\vec{a}(t) = \\frac{d\\vec{v}}{dt} = \\frac{d^2\\vec{OM}}{dt^2}$. C'est la dérivée du vecteur vitesse par rapport au temps.</li>
+                                 </ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_desc_3',
+                        question: "Donner les expressions de $\\vec{v}$ et $\\vec{a}$ en coordonnées cartésiennes ($x, y, z$).",
+                        answer: `Base cartésienne $(\\vec{u}_x, \\vec{u}_y, \\vec{u}_z)$ fixe.<br>
+                                 $\\vec{OM} = x\\vec{u}_x + y\\vec{u}_y + z\\vec{u}_z$.<br>
+                                 Vitesse : $\\vec{v} = \\dot{x}\\vec{u}_x + \\dot{y}\\vec{u}_y + \\dot{z}\\vec{u}_z$. (Notation point = dérivée temporelle).<br>
+                                 Accélération : $\\vec{a} = \\ddot{x}\\vec{u}_x + \\ddot{y}\\vec{u}_y + \\ddot{z}\\vec{u}_z$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_desc_4',
+                        question: "Donner les expressions de $\\vec{v}$ et $\\vec{a}$ en coordonnées polaires planes ($\rho, \phi$) dans la base locale $(\\vec{u}_\rho, \\vec{u}_\phi)$.",
+                        answer: `Base polaire mobile $(\\vec{u}_\rho, \\vec{u}_\phi)$. $\\vec{OM} = \\rho\\vec{u}_\rho$.<br>
+                                 Il faut dériver les vecteurs de base : $\\frac{d\\vec{u}_\rho}{dt} = \\dot{\phi}\\vec{u}_\phi$ et $\\frac{d\\vec{u}_\phi}{dt} = -\\dot{\phi}\\vec{u}_\rho$.<br>
+                                 Vitesse : $\\vec{v} = \\frac{d}{dt}(\\rho\\vec{u}_\rho) = \\dot{\rho}\\vec{u}_\rho + \\rho\\frac{d\\vec{u}_\rho}{dt} = \\dot{\rho}\\vec{u}_\rho + \\rho\\dot{\phi}\\vec{u}_\phi$.<br>
+                                 Accélération : $\\vec{a} = \\frac{d\\vec{v}}{dt} = \\frac{d}{dt}(\\dot{\rho}\\vec{u}_\rho) + \\frac{d}{dt}(\\rho\\dot{\phi}\\vec{u}_\phi)$<br>
+                                 $\\vec{a} = (\\ddot{\rho}\\vec{u}_\rho + \\dot{\rho}\\dot{\phi}\\vec{u}_\phi) + (\\dot{\rho}\\dot{\phi}\\vec{u}_\phi + \\rho\\ddot{\phi}\\vec{u}_\phi + \\rho\\dot{\phi}(-\\dot{\phi}\\vec{u}_\rho))$<br>
+                                 $\\vec{a} = (\\ddot{\rho} - \\rho\\dot{\phi}^2)\\vec{u}_\rho + (2\\dot{\rho}\\dot{\phi} + \\rho\\ddot{\phi})\\vec{u}_\phi$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_desc_5',
+                        question: "Pour un mouvement à accélération constante $\\vec{a}_0$, exprimer $\\vec{v}(t)$ et $\\vec{OM}(t)$ en fonction de $\\vec{v}_0 = \\vec{v}(0)$ et $\\vec{OM}_0 = \\vec{OM}(0)$. Quelle est la nature générale de la trajectoire dans le plan ?",
+                        answer: `Intégration de $\\vec{a}(t) = \\vec{a}_0 = \text{cste}$ :<br>
+                                 $\\vec{v}(t) = \\int \\vec{a}_0 dt = \\vec{a}_0 t + \\vec{C}_1$. Avec $\\vec{v}(0)=\\vec{v}_0$, on a $\\vec{C}_1=\\vec{v}_0$. Donc $\\vec{v}(t) = \\vec{a}_0 t + \\vec{v}_0$.<br>
+                                 $\\vec{OM}(t) = \\int \\vec{v}(t) dt = \\int (\\vec{a}_0 t + \\vec{v}_0) dt = \\frac{1}{2}\\vec{a}_0 t^2 + \\vec{v}_0 t + \\vec{C}_2$. Avec $\\vec{OM}(0)=\\vec{OM}_0$, on a $\\vec{C}_2=\\vec{OM}_0$. Donc $\\vec{OM}(t) = \\frac{1}{2}\\vec{a}_0 t^2 + \\vec{v}_0 t + \\vec{OM}_0$.<br>
+                                 Dans le plan, en éliminant $t$ entre $x(t)$ et $y(t)$, on obtient une équation du second degré en $x$ et $y$, qui est l'équation d'une <strong>parabole</strong> (sauf cas particulier où le mouvement est rectiligne).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_desc_6',
+                        question: "Pour un mouvement circulaire ($\rho=R$), exprimer $\\vec{v}$ et $\\vec{a}$ en coordonnées polaires. Identifier les composantes radiale et tangentielle de $\\vec{a}$. Cas particulier du mouvement circulaire uniforme.",
+                        answer: `En polaire, $\rho=R=\text{cste} \implies \dot{\rho}=0, \ddot{\rho}=0$.<br>
+                                 Vitesse : $\\vec{v} = \\dot{\rho}\\vec{u}_\rho + \\rho\\dot{\phi}\\vec{u}_\phi = R\\dot{\phi}\\vec{u}_\phi$. La vitesse est purement tangentielle (orthoradiale). Sa norme est $v = |R\\dot{\phi}|$.<br>
+                                 Accélération : $\\vec{a} = (\\ddot{\rho} - \\rho\\dot{\phi}^2)\\vec{u}_\rho + (2\\dot{\rho}\\dot{\phi} + \\rho\\ddot{\phi})\\vec{u}_\phi = -R\\dot{\phi}^2\\vec{u}_\rho + R\\ddot{\phi}\\vec{u}_\phi$.<br>
+                                 Composante radiale : $a_\rho = -R\\dot{\phi}^2 = -v^2/R$ (normale, centripète).<br>
+                                 Composante tangentielle (orthoradiale) : $a_\phi = R\\ddot{\phi} = \frac{d(R\dot{\phi})}{dt}$ si $R\dot{\phi} > 0$ (tangentielle). $a_\phi = \dot{v}$ si $v=R\dot{\phi}$.<br>
+                                 <strong>Mouvement circulaire uniforme :</strong> $\dot{\phi} = \omega = \text{cste} \implies \ddot{\phi}=0$. Alors $\\vec{v} = R\omega\\vec{u}_\phi$ et $\\vec{a} = -R\omega^2\\vec{u}_\rho$. L'accélération est purement radiale centripète.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_desc_7',
+                        question: "Définir la base de Frenet $(\\vec{t}, \\vec{n})$ pour une trajectoire plane. Donner l'expression de l'accélération dans cette base.",
+                        answer: `La base de Frenet est une base locale mobile liée au point M sur sa trajectoire :<br>
+                                 <ul><li>$\\vec{t}$ : Vecteur unitaire <strong>tangent</strong> à la trajectoire, orienté dans le <strong>sens du mouvement</strong>. $\\vec{v} = v \\vec{t}$ où $v = ||\\vec{v}|| \ge 0$.</li><li>$\\vec{n}$ : Vecteur unitaire <strong>normal</strong> à la trajectoire ($\vec{n} \perp \vec{t}$), orienté vers l'<strong>intérieur de la courbure</strong>.</li></ul>
+                                 Accélération : $\\vec{a} = a_t \\vec{t} + a_n \\vec{n}$ avec :<br>
+                                 <ul><li>$a_t = \\frac{dv}{dt}$ : accélération tangentielle (variation de la norme de $\vec{v}$).</li><li>$a_n = \\frac{v^2}{R_c}$ : accélération normale (variation de la direction de $\vec{v}$). $R_c$ est le rayon de courbure local de la trajectoire.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_desc_8_ex2.2',
+                        question: "Exercice 2.2 : $x(t)=2t$, $y(t)=4t^2-1$, $z(t)=0$. Exprimer $\\vec{v}(t)$ et $\\vec{a}(t)$.",
+                        answer: `Vitesse $\\vec{v}(t) = \\dot{x}\\vec{u}_x + \\dot{y}\\vec{u}_y + \\dot{z}\\vec{u}_z$.<br>
+                                 $\\dot{x} = d(2t)/dt = 2$.<br>
+                                 $\\dot{y} = d(4t^2-1)/dt = 8t$.<br>
+                                 $\\dot{z} = d(0)/dt = 0$.<br>
+                                 $\\vec{v}(t) = 2\\vec{u}_x + 8t\\vec{u}_y$.<br>
+                                 Accélération $\\vec{a}(t) = \\ddot{x}\\vec{u}_x + \\ddot{y}\\vec{u}_y + \\ddot{z}\\vec{u}_z$.<br>
+                                 $\\ddot{x} = d(2)/dt = 0$.<br>
+                                 $\\ddot{y} = d(8t)/dt = 8$.<br>
+                                 $\\ddot{z} = d(0)/dt = 0$.<br>
+                                 $\\vec{a}(t) = 8\\vec{u}_y$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_desc_9_ex2.4',
+                        question: "Exercice 2.4 : $\\vec{OM}(t) = (t^2+1)\\vec{u}_x + (2t)\\vec{u}_y$. Équation de la trajectoire $y(x)$ ?",
+                        answer: `Coordonnées cartésiennes : $x(t) = t^2+1$ et $y(t) = 2t$.<br>
+                                 On exprime $t$ en fonction de $y$ : $t = y/2$.<br>
+                                 On substitue $t$ dans l'expression de $x$ : $x = (y/2)^2 + 1 = \\frac{y^2}{4} + 1$.<br>
+                                 L'équation de la trajectoire est $x = y^2/4 + 1$. C'est une parabole d'axe horizontal Ox.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_desc_10_ex2.5',
+                        question: "Exercice 2.5 : Voiture, virage circulaire R=50m, $v=72$ km/h constante. Calculer l'accélération.",
+                        answer: `$v = 72 \\text{ km/h} = 72 \\times \\frac{1000 \\text{ m}}{3600 \\text{ s}} = 20$ m/s.<br>
+                                 Le mouvement est circulaire et uniforme (vitesse constante).<br>
+                                 L'accélération tangentielle $a_t = dv/dt = 0$.<br>
+                                 L'accélération normale $a_n = v^2/R_c = v^2/R$ (car $R_c=R$ pour un cercle).<br>
+                                 $a_n = (20 \\text{ m/s})^2 / (50 \\text{ m}) = 400 / 50 = 8$ m/s².<br>
+                                 L'accélération est $\\vec{a} = a_n \\vec{n}$, de norme 8 m/s², dirigée vers le centre du virage.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                // --- Questions Section 2.2 : Lois de Newton ---
+                const qaListNewton = ref([
+                    {
+                        id: 'q_newt_1',
+                        question: "Définir la quantité de mouvement $\\vec{p}$ d'un point matériel et d'un système de points. Quelle est la relation avec le centre de masse G ?",
+                        answer: `<ul><li>Point matériel (masse m, vitesse $\\vec{v}$) : $\\vec{p} = m\\vec{v}$.</li>
+                                 <li>Système de N points ($m_i, \\vec{v}_i$) : $\\vec{p}_{sys} = \\sum_{i=1}^N \\vec{p}_i = \\sum_{i=1}^N m_i \\vec{v}_i$.</li></ul>
+                                 Relation avec le centre de masse G (masse totale $M = \\sum m_i$, vitesse $\\vec{v}_G$) : $\\vec{p}_{sys} = M \\vec{v}_G$. La quantité de mouvement totale du système est égale à celle d'un point matériel fictif de masse M situé en G et ayant la vitesse de G.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_newt_2',
+                        question: "Qu'est-ce qu'un référentiel galiléen ? Énoncer la première loi de Newton (Principe d'inertie).",
+                        answer: `Un <strong>Référentiel Galiléen</strong> (ou inertiel) est un référentiel dans lequel le principe d'inertie est vérifié.<br>
+                                 <strong>Première Loi de Newton (Principe d'Inertie) :</strong> Dans un référentiel galiléen, tout corps persévère dans son état de repos ou de mouvement rectiligne uniforme si les forces qui s'exercent sur lui se compensent ($\\sum \\vec{F}_{ext} = \\vec{0}$). C'est-à-dire $\\vec{v} = \text{cste}$ si $\\sum \\vec{F}_{ext} = \\vec{0}$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_newt_3',
+                        question: "Énoncer la troisième loi de Newton (Principe des actions réciproques).",
+                        answer: `<strong>Troisième Loi de Newton :</strong> Si un corps A exerce une force $\\vec{F}_{A \\to B}$ sur un corps B, alors le corps B exerce simultanément sur le corps A une force $\\vec{F}_{B \\to A}$ telle que $\\vec{F}_{B \\to A} = - \\vec{F}_{A \\to B}$. Les forces d'action et de réaction sont opposées, ont même droite d'action et s'appliquent sur des corps différents.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_newt_4',
+                        question: "Énoncer la deuxième loi de Newton (Principe Fondamental de la Dynamique - PFD) pour un point matériel et pour le centre de masse d'un système.",
+                        answer: `Dans un référentiel galiléen $\mathcal{R}$ :<br>
+                                 <ul><li>Pour un point matériel M (masse m, accélération $\\vec{a}_{\mathcal{R}}(M)$) : $\\sum \\vec{F}_{ext} = m \\vec{a}_{\mathcal{R}}(M) = \\frac{d\\vec{p}}{dt}$.</li>
+                                 <li>Pour le centre de masse G d'un système (masse totale M constante, accélération $\\vec{a}_{\mathcal{R}}(G)$) : $\\sum \\vec{F}_{ext} = M \\vec{a}_{\mathcal{R}}(G) = \\frac{d\\vec{p}_{sys}}{dt}$.</li></ul>
+                                 Où $\\sum \\vec{F}_{ext}$ est la somme vectorielle de toutes les forces <strong>extérieures</strong> s'exerçant sur le système.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_newt_5',
+                        question: "Quelle est l'expression de la force de gravitation entre deux masses $m_A$ et $m_B$ ? Qu'est-ce que le poids et le champ de pesanteur $\\vec{g}$ ?",
+                        answer: `Force de gravitation exercée par A sur B : $\\vec{F}_{A \\to B} = - G \\frac{m_A m_B}{r_{AB}^2} \\vec{u}_{AB}$, où $r_{AB}$ est la distance AB, $\\vec{u}_{AB}$ est le vecteur unitaire de A vers B, et G est la constante gravitationnelle.<br>
+                                 Le <strong>Poids</strong> $\\vec{P}$ d'un objet de masse m est la force gravitationnelle exercée par la Terre sur cet objet. $\\vec{P} = m\\vec{g}$.<br>
+                                 Le <strong>Champ de Pesanteur</strong> $\\vec{g}$ est, au voisinage de la Terre, approximativement un champ vectoriel uniforme, dirigé vers le bas (centre de la Terre), de norme $g \\approx 9.81$ m/s². C'est l'accélération subie par un corps en chute libre (sans autres forces).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_newt_6',
+                        question: "Donner deux modèles courants pour la force de frottement fluide.",
+                        answer: `La force de frottement fluide $\\vec{f}$ s'oppose généralement à la vitesse $\\vec{v}$ de l'objet par rapport au fluide.<br>
+                                 Modèles courants :<ul>
+                                 <li>Frottement <strong>visqueux</strong> (linéaire, faibles vitesses) : $\\vec{f} = - h \\vec{v}$, où $h$ est un coefficient positif dépendant de la forme de l'objet et de la viscosité du fluide.</li>
+                                 <li>Frottement <strong>quadratique</strong> (vitesses plus élevées) : La norme de la force est proportionnelle au carré de la vitesse, $||\vec{f}|| = k v^2$. La force est opposée à $\\vec{v}$ : $\\vec{f} = -k v \\vec{v} = -k ||\\vec{v}|| \\vec{v}$.</li>
+                                 </ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_newt_7',
+                        question: "Comment déterminer la vitesse limite $v_{lim}$ lors d'une chute verticale avec frottement fluide ?",
+                        answer: `La vitesse limite est la vitesse constante atteinte en régime permanent, lorsque l'accélération devient nulle ($\vec{a} = \vec{0}$).<br>
+                                 D'après le PFD, $\\sum \\vec{F}_{ext} = m\vec{a} = \vec{0}$ à la vitesse limite.<br>
+                                 Pour une chute verticale, les forces sont le poids $\vec{P}$ (vers le bas) et la force de frottement $\\vec{f}$ (vers le haut).<br>
+                                 En projection sur un axe vertical descendant : $P - f(v_{lim}) = 0$.<br>
+                                 Donc $mg = f(v_{lim})$. On résout cette équation pour trouver $v_{lim}$. Par exemple, si $f=hv$, alors $mg=hv_{lim} \implies v_{lim}=mg/h$. Si $f=kv^2$, alors $mg=kv_{lim}^2 \implies v_{lim}=\sqrt{mg/k}$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_newt_8',
+                        question: "Établir l'équation différentielle du mouvement pour un pendule simple (masse m, longueur l) pour l'angle $\\theta$ avec la verticale. Quelle est l'approximation pour les petites oscillations ?",
+                        answer: `Système : masse m. Réf. terrestre galiléen. Forces : Poids $\\vec{P}=m\\vec{g}$, Tension $\\vec{T}$.<br>
+                                 PFD : $m\\vec{a} = \\vec{P} + \\vec{T}$.<br>
+                                 On utilise la base polaire $(\\vec{u}_r, \\vec{u}_\theta)$, où $\\vec{u}_r$ est le long du fil et $\\theta$ est l'angle avec la verticale descendante.<br>
+                                 $\\vec{a} = a_r \\vec{u}_r + a_\theta \\vec{u}_\theta = (-l\\dot{\theta}^2)\\vec{u}_r + (l\\ddot{\theta})\\vec{u}_\theta$.<br>
+                                 Projection des forces : $\\vec{P} = mg\cos\theta \\vec{u}_r - mg\sin\theta \\vec{u}_\theta$. $\\vec{T} = -T\\vec{u}_r$.<br>
+                                 Projection du PFD sur $\\vec{u}_\theta$ : $m(l\\ddot{\theta}) = -mg\sin\theta$.<br>
+                                 Équation différentielle : $l\\ddot{\theta} + g\sin\theta = 0$, ou $\\ddot{\theta} + \\frac{g}{l}\\sin\theta = 0$.<br>
+                                 <strong>Approximation des petites oscillations ($\theta \ll 1$ rad) :</strong> On utilise $\sin\theta \approx \\theta$. L'équation devient $\\ddot{\theta} + \\frac{g}{l}\\theta = 0$. C'est l'équation d'un oscillateur harmonique de pulsation propre $\\omega_0 = \\sqrt{g/l}$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_newt_9_ex2.7',
+                        question: "Exercice 2.7 : Voiture 1000 kg, $v=90$ km/h constante, route rectiligne. Force résultante ?",
+                        answer: `$v = 90 \\text{ km/h} = 25$ m/s.<br>
+                                 Le mouvement est rectiligne uniforme, donc le vecteur vitesse $\\vec{v}$ est constant.<br>
+                                 L'accélération $\\vec{a} = d\\vec{v}/dt = \\vec{0}$.<br>
+                                 D'après le PFD, $\\sum \\vec{F}_{ext} = m\\vec{a}$.<br>
+                                 Donc, $\\sum \\vec{F}_{ext} = 1000 \\text{ kg} \\times \\vec{0} \\text{ m/s²} = \\vec{0}$ N.<br>
+                                 La force résultante est nulle.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_newt_10_ex2.8',
+                        question: "Exercice 2.8 : Objet $m=5$ kg lâché, $f = 0.1 v^2$. Vitesse limite ?",
+                        answer: `La vitesse limite $v_{lim}$ est atteinte lorsque l'accélération est nulle, soit $\\sum \\vec{F}_{ext} = \\vec{0}$.<br>
+                                 Forces : Poids $P=mg$ (vers le bas), Frottement $f=0.1v^2$ (vers le haut).<br>
+                                 Projection sur axe vertical descendant : $P - f(v_{lim}) = 0$.<br>
+                                 $mg - 0.1 v_{lim}^2 = 0$.<br>
+                                 $v_{lim}^2 = \\frac{mg}{0.1} = \\frac{5 \\text{ kg} \\times 9.81 \\text{ m/s²}}{0.1} = \\frac{49.05}{0.1} = 490.5$ (m/s)². <br>
+                                 $v_{lim} = \\sqrt{490.5} \\approx 22.15$ m/s.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                // --- Questions Section 2.3 : Approche Énergétique ---
+                const qaListEnergie = ref([
+                    {
+                        id: 'q_ener_1',
+                        question: "Définir le travail élémentaire $dW$ et la puissance instantanée $P$ d'une force $\\vec{F}$ dont le point d'application se déplace de $d\\vec{l}$ à la vitesse $\\vec{v}$.",
+                        answer: `Travail élémentaire : $dW = \\vec{F} \\cdot d\\vec{l}$. C'est l'énergie transférée par la force lors du déplacement infinitésimal $d\\vec{l}$. Unité : Joule (J).<br>
+                                 Puissance instantanée : $P(t) = \\frac{dW}{dt} = \\vec{F} \\cdot \\frac{d\\vec{l}}{dt} = \\vec{F} \\cdot \\vec{v}$. C'est le taux instantané de transfert d'énergie par la force. Unité : Watt (W).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_ener_2',
+                        question: "Énoncer le théorème de la puissance cinétique (TPC) et le théorème de l'énergie cinétique (TEC) pour un point matériel dans un référentiel galiléen.",
+                        answer: `Soit $E_c = \\frac{1}{2} m v^2$ l'énergie cinétique du point matériel.<br>
+                                 <strong>Théorème de la Puissance Cinétique (TPC) :</strong> $\\frac{dE_c}{dt} = \\sum P(\\vec{F}_{ext})$. La dérivée temporelle de l'énergie cinétique est égale à la somme des puissances de toutes les forces extérieures appliquées.<br>
+                                 <strong>Théorème de l'Énergie Cinétique (TEC) :</strong> Sur un trajet A $\to$ B, $\\Delta E_c = E_c(B) - E_c(A) = \\sum W_{A \\to B}(\\vec{F}_{ext})$. La variation d'énergie cinétique entre A et B est égale à la somme des travaux de toutes les forces extérieures appliquées sur ce trajet.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_ener_3',
+                        question: "Qu'est-ce qu'une force conservative ? Comment est-elle reliée à une énergie potentielle $E_p$ ?",
+                        answer: `Une force $\\vec{F}_{cons}$ est dite <strong>conservative</strong> si son travail entre deux points A et B ne dépend pas du chemin suivi. De manière équivalente, son travail sur un chemin fermé est nul ($\oint \\vec{F}_{cons} \\cdot d\\vec{l} = 0$).<br>
+                                 Une force conservative dérive d'une fonction scalaire appelée <strong>énergie potentielle</strong> $E_p$ par la relation $\\vec{F}_{cons} = - \\vec{\\nabla} E_p$ (où $\\vec{\\nabla}$ est l'opérateur gradient).<br>
+                                 La variation d'énergie potentielle est l'opposé du travail de la force conservative : $dE_p = -dW(\\vec{F}_{cons}) = -\\vec{F}_{cons} \\cdot d\\vec{l}$. Et $W_{A \\to B}(\\vec{F}_{cons}) = E_p(A) - E_p(B) = -\\Delta E_p$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_ener_4',
+                        question: "Donner les expressions usuelles (à une constante près) de l'énergie potentielle de pesanteur $E_{p,poids}$, de gravitation $E_{p,grav}$ et élastique $E_{p,elast}$.",
+                        answer: `L'énergie potentielle est définie à une constante additive près, qui dépend du choix de la référence où $E_p=0$.<br>
+                                 <ul><li>Pesanteur (axe z vertical ascendant, $E_p=0$ en $z=0$) : $E_{p,poids}(z) = mgz$.</li>
+                                 <li>Gravitation (force exercée par une masse M en O sur une masse m à distance r, $E_p=0$ à $r=\infty$) : $E_{p,grav}(r) = - G \\frac{Mm}{r}$.</li>
+                                 <li>Élastique (ressort de raideur k, axe x, à vide en $x=0$, $E_p=0$ en $x=0$) : $E_{p,elast}(x) = \\frac{1}{2} k x^2$.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_ener_5',
+                        question: "Définir l'énergie mécanique $E_m$. Énoncer le théorème de l'énergie mécanique. Quand l'énergie mécanique est-elle conservée ?",
+                        answer: `<strong>Énergie Mécanique :</strong> $E_m = E_c + E_p$, où $E_c$ est l'énergie cinétique et $E_p$ est l'énergie potentielle associée à l'ensemble des forces conservatives.<br>
+                                 <strong>Théorème de l'Énergie Mécanique :</strong> Dans un référentiel galiléen, $\\frac{dE_m}{dt} = \\sum P(\\vec{F}_{non-cons})$. La dérivée temporelle de l'énergie mécanique est égale à la somme des puissances de toutes les forces <strong>non conservatives</strong> appliquées.<br>
+                                 <strong>Conservation de l'Énergie Mécanique :</strong> $E_m$ est conservée ($dE_m/dt = 0 \implies E_m = \text{cste}$) si la somme des puissances des forces non conservatives est nulle. C'est le cas si :
+                                 <ul><li>Il n'y a pas de forces non conservatives (ex: chute libre sans frottement).</li><li>Les forces non conservatives ne travaillent pas (ex: réaction normale d'un support sans frottement lors d'un glissement, car $\vec{R}_N \perp \vec{v} \implies P(\vec{R}_N)=0$).</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_ener_6',
+                        question: "Comment l'analyse d'un graphe $E_p(x)$ et de la valeur de $E_m$ permet-elle de déterminer les zones de mouvement possible (murs de potentiel) pour un mouvement 1D conservatif ?",
+                        answer: `Pour un mouvement 1D conservatif, $E_m = E_c + E_p(x) = \text{cste}$.<br>
+                                 Comme l'énergie cinétique $E_c = \\frac{1}{2}mv_x^2$ doit être positive ou nulle ($E_c \ge 0$), le mouvement n'est possible que dans les régions de l'espace où $E_m - E_p(x) \ge 0$, c'est-à-dire où $E_p(x) \le E_m$.<br>
+                                 Sur le graphe $E_p(x)$, on trace une droite horizontale à l'ordonnée $E=E_m$. Le mouvement est confiné aux zones où la courbe $E_p(x)$ est <strong>en dessous</strong> de cette droite horizontale.<br>
+                                 Les points où $E_p(x) = E_m$ sont appelés <strong>murs de potentiel</strong> : la vitesse $v_x$ s'y annule et la particule rebrousse chemin.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_ener_7',
+                        question: "Comment identifier les positions d'équilibre stable et instable sur un graphe $E_p(x)$ ?",
+                        answer: `Les positions d'équilibre $x_{eq}$ correspondent aux points où la force $F_x = -dE_p/dx$ est nulle, c'est-à-dire aux <strong>extrema</strong> (pente nulle) de la courbe $E_p(x)$.<br>
+                                 <ul><li>Un <strong>minimum</strong> local de $E_p(x)$ ($d^2E_p/dx^2 > 0$) correspond à un <strong>équilibre stable</strong>.</li><li>Un <strong>maximum</strong> local de $E_p(x)$ ($d^2E_p/dx^2 < 0$) correspond à un <strong>équilibre instable</strong>.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_ener_8_ex2.13',
+                        question: "Exercice 2.13 : $E_p(x) = x^4 - 2x^2$. Trouver les positions d'équilibre et leur stabilité.",
+                        answer: `Positions d'équilibre : $dE_p/dx = 0$.<br> $dE_p/dx = 4x^3 - 4x = 4x(x^2 - 1) = 4x(x-1)(x+1)$.<br> Les positions d'équilibre sont $x_{eq}=0$, $x_{eq}=1$ et $x_{eq}=-1$.<br>
+                                 Stabilité : signe de $d^2E_p/dx^2 = 12x^2 - 4$.<br>
+                                 En $x=0$: $d^2E_p/dx^2 = -4 < 0 \implies$ Équilibre <strong>instable</strong>.<br>
+                                 En $x=1$: $d^2E_p/dx^2 = 12(1)^2 - 4 = 8 > 0 \implies$ Équilibre <strong>stable</strong>.<br>
+                                 En $x=-1$: $d^2E_p/dx^2 = 12(-1)^2 - 4 = 8 > 0 \implies$ Équilibre <strong>stable</strong>.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_ener_9_ex2.15',
+                        question: "Exercice 2.15 : Pour $E_p(x) = x^4 - 2x^2$ et $m=1$ kg, pulsation des petites oscillations autour de $x=1$ ?",
+                        answer: `L'équilibre en $x_{eq}=1$ est stable. Pour les petites oscillations autour de cet équilibre, on approxime $E_p(x)$ par une parabole : $E_p(x) \\approx E_p(x_{eq}) + \\frac{1}{2} k_{eff} (x-x_{eq})^2$, où $k_{eff} = E_p''(x_{eq})$.<br>
+                                 On a calculé $E_p''(x) = 12x^2 - 4$.<br>
+                                 $k_{eff} = E_p''(1) = 12(1)^2 - 4 = 8$ N/m.<br>
+                                 La pulsation des petites oscillations est $\\omega_0 = \\sqrt{k_{eff}/m}$.<br>
+                                 $\\omega_0 = \\sqrt{8 / 1} = \\sqrt{8} = 2\\sqrt{2} \\approx 2.83$ rad/s.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                // --- Questions Section 2.4 : Particules Chargées ---
+                const qaListParticulesChargees = ref([
+                    {
+                        id: 'q_part_1',
+                        question: "Donner l'expression de la force de Lorentz $\\vec{F}_{Lorentz}$ sur une particule de charge $q$ et vitesse $\\vec{v}$ dans des champs $\\vec{E}$ et $\\vec{B}$. Identifier les composantes électrique et magnétique.",
+                        answer: `Force de Lorentz : $\\vec{F}_{Lorentz} = q(\\vec{E} + \\vec{v} \\times \\vec{B})$.<br>
+                                 <ul><li>Force électrique : $\\vec{F}_e = q\\vec{E}$.</li><li>Force magnétique : $\\vec{F}_m = q(\\vec{v} \\times \\vec{B})$.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_part_2',
+                        question: "Quelle est la puissance développée par la force magnétique $\\vec{F}_m = q(\\vec{v} \\times \\vec{B})$ ? Quelle conséquence cela a-t-il sur l'énergie cinétique de la particule ?",
+                        answer: `Puissance de la force magnétique : $P(\\vec{F}_m) = \\vec{F}_m \\cdot \\vec{v} = q(\\vec{v} \\times \\vec{B}) \\cdot \\vec{v}$.<br>
+                                 Le produit mixte $(\\vec{v} \\times \\vec{B}) \\cdot \\vec{v}$ est nul car le vecteur $\\vec{v} \\times \\vec{B}$ est orthogonal à $\\vec{v}$.<br>
+                                 Donc $P(\\vec{F}_m) = 0$. La force magnétique <strong>ne travaille jamais</strong>.<br>
+                                 Conséquence : D'après le théorème de la puissance cinétique ($dE_c/dt = P(\\vec{F}_e) + P(\\vec{F}_m)$), la force magnétique seule ne peut pas modifier l'énergie cinétique de la particule ($dE_c/dt = P(\\vec{F}_e)$). Elle ne change que la direction de la vitesse, pas sa norme.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_part_3',
+                        question: "Décrire le mouvement d'une particule chargée $q$ entrant avec une vitesse $\\vec{v}_0$ dans un champ électrique uniforme $\\vec{E}$ (avec $\\vec{B}=\\vec{0}$).",
+                        answer: `PFD : $m\\vec{a} = q\\vec{E}$. Comme $\\vec{E}=\text{cste}$, l'accélération $\\vec{a} = \\frac{q}{m}\\vec{E}$ est constante.<br>
+                                 Le mouvement est donc à <strong>accélération constante</strong>. La trajectoire est une <strong>parabole</strong> (sauf si $\\vec{v}_0$ est colinéaire à $\\vec{E}$, auquel cas le mouvement est rectiligne uniformément varié).<br>
+                                 Les équations horaires sont $\\vec{v}(t) = \\vec{a} t + \\vec{v}_0$ et $\\vec{OM}(t) = \\frac{1}{2}\\vec{a} t^2 + \\vec{v}_0 t + \\vec{OM}_0$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_part_4',
+                        question: "Une particule (charge q, masse m) entre avec une vitesse $\\vec{v}_0$ perpendiculaire à un champ magnétique uniforme $\\vec{B}$ ($\vec{E}=\vec{0}$). Montrer que le mouvement est circulaire uniforme et donner le rayon R.",
+                        answer: `PFD : $m\\vec{a} = q(\\vec{v} \\times \\vec{B})$.<br>
+                                 1. <strong>Norme de la vitesse :</strong> La force magnétique $\vec{F}_m$ ne travaille pas, donc $dE_c/dt=0$, $E_c=\text{cste}$. La norme de la vitesse $v = ||\\vec{v}|| = v_0$ est constante.<br>
+                                 2. <strong>Plan du mouvement :</strong> $\\vec{a} = \\frac{q}{m}(\\vec{v} \\times \\vec{B})$ est orthogonal à $\\vec{B}$. Si $\\vec{v}_0 \perp \\vec{B}$, alors $\vec{a}$ n'a pas de composante selon $\\vec{B}$. Comme $v_z(0)=0$ (si on choisit $\\vec{B}$ selon Oz), $v_z(t)$ reste nulle. Le mouvement est plan, dans le plan perpendiculaire à $\\vec{B}$ contenant $\\vec{v}_0$.<br>
+                                 3. <strong>Nature du mouvement :</strong> Puisque $v=v_0=\text{cste}$, l'accélération tangentielle $a_t=dv/dt=0$. L'accélération est purement normale : $\\vec{a} = a_n \\vec{n} = \\frac{v_0^2}{R_c}\\vec{n}$.<br>
+                                 La norme du PFD donne $m ||\\vec{a}|| = ||q(\\vec{v} \times \\vec{B})||$. $m a_n = |q| v B \sin(\\theta)$ où $\theta$ est l'angle entre $\vec{v}$ et $\vec{B}$. Ici $\theta=\pi/2$, donc $\sin(\theta)=1$.<br>
+                                 $m \\frac{v_0^2}{R_c} = |q| v_0 B$.<br>
+                                 On en tire le rayon de courbure $R_c = \\frac{m v_0}{|q| B}$. Comme $m, v_0, |q|, B$ sont constants, $R_c$ est constant. Un mouvement plan dont le rayon de courbure est constant est un <strong>cercle</strong> de rayon $R = R_c$. La vitesse étant constante, le mouvement est <strong>circulaire uniforme</strong>.<br>
+                                 Rayon : $R = \\frac{mv_0}{|q|B}$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_part_5_ex2.17',
+                        question: "Exercice 2.17 : Proton ($q=+e, m_p$) accéléré depuis le repos par $U=10$ kV. Calculer $v_f$.",
+                        answer: `Théorème de l'énergie cinétique entre le point initial (i) et final (f) :<br> $\\Delta E_c = W_{i\\to f}(\\vec{F}_e)$.<br>
+                                 $E_{c,f} - E_{c,i} = q (V_i - V_f)$.<br> $E_{c,i} = 0$ (départ du repos). La différence de potentiel subie est $U_{fi} = V_f - V_i = -U = -10$ kV (si U est la ddp accélératrice $V_i-V_f$).<br>
+                                 $\frac{1}{2} m_p v_f^2 - 0 = e (V_i - V_f) = eU$.<br>
+                                 $v_f = \\sqrt{\\frac{2eU}{m_p}} = \\sqrt{\\frac{2 \\times (1.6 \\times 10^{-19} \\text{ C}) \\times (10 \\times 10^3 \\text{ V})}{1.67 \\times 10^{-27} \\text{ kg}}}$.<br>
+                                 $v_f = \\sqrt{\\frac{3.2 \\times 10^{-15}}{1.67 \\times 10^{-27}}} = \\sqrt{1.916 \\times 10^{12}} \\approx 1.38 \\times 10^6$ m/s.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_part_6_ex2.18',
+                        question: "Exercice 2.18 : Électron $v=10^6$ m/s, $\\perp$ à $\\vec{B}=0.1$ T. Rayon R ?",
+                        answer: `Le mouvement est circulaire uniforme. Le rayon est donné par $R = \\frac{m_e v}{|q| B}$.<br>
+                                 $m_e = 9.1 \\times 10^{-31}$ kg.<br>
+                                 $v = 10^6$ m/s.<br>
+                                 $|q| = e = 1.6 \\times 10^{-19}$ C.<br>
+                                 $B = 0.1$ T.<br>
+                                 $R = \\frac{(9.1 \\times 10^{-31}) \\times 10^6}{(1.6 \\times 10^{-19}) \\times 0.1} = \\frac{9.1 \\times 10^{-25}}{1.6 \\times 10^{-20}} = \\frac{9.1}{1.6} \\times 10^{-5} \\approx 5.69 \\times 10^{-5}$ m.<br>
+                                 $R \\approx 57$ µm.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+
+                // --- Fonctions communes ---
+                const loadUnderstanding = () => {
+                    // Combine all lists relevant to this file
+                    const allItems = [
+                        ...qaListDescription.value,
+                        ...qaListNewton.value,
+                        ...qaListEnergie.value,
+                        ...qaListParticulesChargees.value
+                        ];
+                    allItems.forEach(item => {
+                        const savedLevel = localStorage.getItem(`qa_understanding_${item.id}`);
+                        if (savedLevel) {
+                            item.understanding = savedLevel;
+                        }
+                    });
+                };
+
+                const saveUnderstanding = (item) => {
+                     if (item.understanding) {
+                        localStorage.setItem(`qa_understanding_${item.id}`, item.understanding);
+                     } else {
+                         localStorage.removeItem(`qa_understanding_${item.id}`);
+                     }
+                };
+
+                const setUnderstanding = (item, level) => {
+                    // Toggle off if clicking the same button
+                    if (item.understanding === level) {
+                        item.understanding = null;
+                    } else {
+                        item.understanding = level;
+                    }
+                    saveUnderstanding(item);
+                };
+
+                const toggleAnswer = async (item) => {
+                    const wasHidden = !item.showAnswer;
+                    item.showAnswer = !item.showAnswer;
+
+                    if (item.showAnswer && wasHidden) {
+                        await nextTick(); // Wait for DOM update
+                        try {
+                            const element = document.getElementById(`answer-${item.id}`);
+                            if (element && typeof renderMathInElement === 'function') {
+                                renderMathInElement(element, {
+                                    delimiters: [
+                                        {left: "$$", right: "$$", display: true},
+                                        {left: "$", right: "$", display: false},
+                                        {left: "\\(", right: "\\)", display: false},
+                                        {left: "\\[", right: "\\]", display: true}
+                                    ],
+                                    throwOnError : false
+                                });
+                            } else if (typeof renderMathInElement !== 'function') {
+                                console.warn("KaTeX auto-render function not found. Math might not render correctly after toggle.");
+                            }
+                        } catch (error) {
+                            console.error("KaTeX rendering error:", error);
+                        }
+                    }
+                };
+
+                // Load initial state on mount
+                onMounted(() => {
+                    loadUnderstanding();
+                    // Initial global render is handled by the `onload` attribute of the auto-render script.
+                });
+
+                return {
+                    qaListDescription,
+                    qaListNewton,
+                    qaListEnergie,
+                    qaListParticulesChargees,
+                    toggleAnswer,
+                    setUnderstanding
+                };
+            }
+        }).mount('#app');
+
+         // Optional: Ensure renderMathInElement is called after DOM load if `onload` fails
+         /*
+         document.addEventListener("DOMContentLoaded", function() {
+             if (typeof renderMathInElement === 'function') {
+                 renderMathInElement(document.body, { /* options * / });
+             }
+         });
+         */
+
+    </script>
+
+</body>
+</html>
