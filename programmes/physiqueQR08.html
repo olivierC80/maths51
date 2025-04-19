@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Transformations Matière & Structure</title>
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        #app {
+            max-width: 900px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+            border-bottom: 2px solid #42b983;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            margin-top: 40px; /* Ajout espace avant les titres de section */
+        }
+        h1:first-of-type, h2:first-of-type {
+             margin-top: 0;
+        }
+         h3 {
+            border-bottom-width: 1px;
+            border-bottom-color: #777;
+            font-size: 1.4em;
+             margin-top: 35px;
+        }
+         h4 {
+            border-bottom-width: 1px;
+            border-bottom-style: dashed;
+            border-bottom-color: #ccc;
+            font-size: 1.2em;
+             margin-top: 30px;
+             color: #34495e;
+        }
+
+
+        .qa-item {
+            display: flex;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: box-shadow 0.3s ease;
+        }
+        .qa-item:hover {
+             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .understanding-bar {
+            flex: 0 0 10px; /* Ne grandit pas, ne rétrécit pas, base de 10px */
+            margin-right: 15px;
+            border-radius: 5px;
+            background-color: #ccc; /* Gris par défaut si pas compris ou non évalué */
+            transition: background-color 0.3s ease;
+        }
+
+        .understanding-bar.easy { background-color: #4CAF50; } /* Vert */
+        .understanding-bar.medium { background-color: #ff9800; } /* Orange */
+        .understanding-bar.hard { background-color: #f44336; } /* Rouge */
+        .understanding-bar.not_understood { background-color: #607d8b; } /* Gris sombre */
+
+        .qa-content {
+            flex-grow: 1;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        .answer {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #42b983;
+            border-radius: 0 4px 4px 0;
+            transition: all 0.4s ease-out;
+            overflow: hidden;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 8px 12px;
+            margin: 5px 5px 5px 0;
+            border: none;
+            border-radius: 4px;
+            background-color: #42b983;
+            color: white;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease;
+        }
+        button:hover {
+            background-color: #36a374;
+        }
+
+        .toggle-answer-btn {
+             background-color: #3498db;
+        }
+         .toggle-answer-btn:hover {
+             background-color: #2980b9;
+         }
+
+        .understanding-buttons button {
+            background-color: #eee;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+         .understanding-buttons button:hover {
+             background-color: #ddd;
+         }
+        .understanding-buttons button.active.easy { background-color: #4CAF50; color: white; border-color: #4CAF50;}
+        .understanding-buttons button.active.medium { background-color: #ff9800; color: white; border-color: #ff9800;}
+        .understanding-buttons button.active.hard { background-color: #f44336; color: white; border-color: #f44336;}
+        .understanding-buttons button.active.not_understood { background-color: #607d8b; color: white; border-color: #607d8b;}
+
+        .katex { font-size: 1.1em; } /* Ajuster si nécessaire */
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 5px; }
+
+        /* Classe utilitaire pour masquer via v-show */
+        .hidden {
+            display: none;
+        }
+
+        /* Styles spécifiques aux exercices/corrigés si besoin */
+        .exercices-section, .corriges-section { display: none; } /* Caché par défaut, sera intégré aux Q&A */
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h2 id="theme4-s1">Thème 4: constitution et transformations de la matière (1)</h2>
+
+        <!-- ==================== 4.1 Transformations de la matière ==================== -->
+        <h3 id="t4-1-transformations-matiere">4.1 Transformations de la matière</h3>
+
+        <!-- ==================== 4.1.1 Description d'un système et évolution vers l'état final ==================== -->
+        <h4 id="t4-1-1-description-systeme-etat-final">4.1.1 Description d'un système et son évolution vers un état final</h4>
+        <p>Comment décrire quantitativement un système chimique et prévoir sa composition une fois qu'il a atteint son état final.</p>
+         <div v-for="item in qaListDescEtatFinal" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 4.1.2 Évolution temporelle d'un système chimique ==================== -->
+        <h4 id="t4-1-2-evolution-temporelle-systeme">4.1.2 Évolution temporelle d'un système chimique</h4>
+        <p>Comment évolue la composition du système au cours du temps : introduction à la cinétique chimique.</p>
+         <div v-for="item in qaListEvolTemporelle" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 4.2 Relations structure-propriétés ==================== -->
+        <h3 id="t4-2-relations-structure-proprietes">4.2 Relations entre structure et propriétés macroscopiques</h3>
+
+        <!-- ==================== 4.2.1 Structure des entités chimiques ==================== -->
+        <h4 id="t4-2-1-structure-entites-chimiques">4.2.1 Structure des entités chimiques</h4>
+        <p>Modélisation de la liaison chimique et de la géométrie des molécules simples.</p>
+         <div v-for="item in qaListStructureEntites" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 4.2.2 Relations structure - propriétés macro ==================== -->
+        <h4 id="t4-2-2-relations-structure-proprietes-macro">4.2.2 Relations structure des entités - propriétés physiques macroscopiques</h4>
+        <p>Influence des interactions intermoléculaires sur les propriétés macroscopiques.</p>
+         <div v-for="item in qaListStructurePropMacro" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        const { createApp, ref, nextTick, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                // --- Section 4.1.1 : Description Système & État Final ---
+                const qaListDescEtatFinal = ref([
+                    {
+                        id: 'q_descEF_1',
+                        question: "Comment décrit-on la composition d'un système chimique ? Citer 3 grandeurs et leurs unités.",
+                        answer: `La composition décrit les espèces présentes et leurs quantités. Grandeurs usuelles :
+                                 <ul><li><strong>Concentration Molaire (C) :</strong> $C = n/V$ (mol/L).</li>
+                                     <li><strong>Fraction Molaire ($x_i$) :</strong> $x_i = n_i / n_{tot}$ (sans dimension).</li>
+                                     <li><strong>Pression Partielle ($P_i$) :</strong> $P_i = x_i P_{tot}$ (Pa ou bar), pour les gaz.</li></ul>
+                                 On peut aussi utiliser la concentration massique, la molalité, etc.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_descEF_2',
+                        question: "Quelle est la différence entre une variable d'état extensive et intensive ? Donner un exemple de chaque.",
+                        answer: `<ul><li><strong>Extensive :</strong> Proportionnelle à la quantité de matière du système. Ex: Masse (m), Volume (V), Quantité de matière (n).</li>
+                                     <li><strong>Intensive :</strong> Indépendante de la quantité de matière. Ex: Température (T), Pression (P), Concentration (C), Masse volumique ($\\rho$).</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_descEF_3',
+                        question: "Définir l'avancement $\\xi$ d'une réaction. Comment relie-t-il la quantité $n_k(t)$ d'une espèce k à sa quantité initiale $n_k(0)$ ?",
+                        answer: `L'<strong>Avancement ($\\xi$)</strong> est une grandeur, exprimée en moles, qui mesure le degré de progression d'une réaction chimique.<br>
+                                 Pour une espèce k avec un coefficient stœchiométrique $\\nu_k$ (négatif pour réactif, positif pour produit), sa quantité de matière à l'instant t est :<br>
+                                 $n_k(t) = n_k(0) + \\nu_k \\xi(t)$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_descEF_4',
+                        question: "Qu'est-ce que l'activité chimique $a_k$ d'une espèce k ? Donner son expression pour un soluté en solution diluée et pour un gaz parfait.",
+                        answer: `L'<strong>Activité Chimique ($a_k$)</strong> est une grandeur sans dimension qui représente la concentration ou la pression "efficace" de l'espèce k dans la réaction. Elle dépend d'un état standard choisi ($C^0=1$ mol/L, $P^0=1$ bar).<br>
+                                 Expressions usuelles :<ul>
+                                 <li>Soluté i en solution aqueuse diluée : $a_i = C_i / C^0$.</li>
+                                 <li>Gaz parfait i dans un mélange : $a_i = P_i / P^0$.</li>
+                                 <li>Corps pur (solide ou liquide) ou solvant : $a \\approx 1$.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_descEF_5',
+                        question: "Définir le quotient réactionnel $Q_r$ et la constante d'équilibre $K^\\circ(T)$.",
+                        answer: `Pour une réaction $\\sum \\nu_k E_k = 0$ :<br>
+                                 <strong>Quotient Réactionnel ($Q_r$) :</strong> Valeur calculée à partir des activités $a_k$ des espèces à un instant donné (hors équilibre ou à l'équilibre) : $Q_r = \\prod_k (a_k)^{\\nu_k}$.<br>
+                                 <strong>Constante d'Équilibre ($K^\\circ(T)$) :</strong> Valeur <strong>particulière</strong> du quotient réactionnel lorsque le système a atteint l'<strong>équilibre chimique</strong> à la température T. $K^\\circ(T) = (Q_r)_{eq}$. Elle ne dépend que de la température.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_descEF_6',
+                        question: "Comment le critère d'évolution ($Q_r$ vs $K^\\circ$) permet-il de prévoir le sens d'évolution spontanée d'un système ?",
+                        answer: `Un système hors équilibre évolue spontanément pour que son quotient réactionnel $Q_r$ tende vers la constante d'équilibre $K^\\circ(T)$.<ul>
+                                 <li>Si $Q_r < K^\\circ(T)$ : Le système évolue dans le <strong>sens direct</strong> (consommation des réactifs, formation des produits) pour faire augmenter $Q_r$.</li>
+                                 <li>Si $Q_r > K^\\circ(T)$ : Le système évolue dans le <strong>sens inverse</strong> (consommation des produits, formation des réactifs) pour faire diminuer $Q_r$.</li>
+                                 <li>Si $Q_r = K^\\circ(T)$ : Le système est à l'<strong>équilibre</strong>, il n'évolue plus macroscopiquement.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_descEF_7',
+                        question: "Quelle est la différence entre une transformation totale et un équilibre chimique en termes d'état final et de comparaison $Q_r$/$K^\\circ$ ?",
+                        answer: `<ul><li><strong>Équilibre Chimique :</strong> L'état final est atteint lorsque $Q_r = K^\\circ(T)$. Réactifs et produits coexistent. L'avancement final est $\\xi_{eq}$.</li>
+                                     <li><strong>Transformation Totale :</strong> La réaction est considérée comme complète dans un sens car $K^\\circ$ est très grande ($> 10^4$, sens direct) ou très petite ($< 10^{-4}$, sens inverse). L'état final est atteint lorsque le réactif limitant est totalement consommé. L'avancement final est $\\xi_{max}$. Le système n'atteint jamais formellement l'équilibre ($Q_r$ tend vers $K^\\circ$ mais un des réactifs disparaît avant).</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_descEF_8_ex4.1',
+                        question: "Exercice 4.1 : Air (80% N$_2$, 20% O$_2$ vol.), P=1 bar. Fractions molaires et pressions partielles ?",
+                        answer: `Pour un mélange de gaz parfaits, les fractions volumiques sont égales aux fractions molaires.<br>
+                                 $x_{N_2} = 0.80$. $x_{O_2} = 0.20$. (Vérification $x_{N_2}+x_{O_2}=1$).<br>
+                                 Loi de Dalton : $P_i = x_i P_{tot}$.<br>
+                                 $P_{N_2} = 0.80 \times 1 \\text{ bar} = 0.80$ bar.<br>
+                                 $P_{O_2} = 0.20 \times 1 \\text{ bar} = 0.20$ bar.<br>
+                                 (Vérification $P_{N_2}+P_{O_2}=1$ bar).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_descEF_9_ex4.3',
+                        question: "Exercice 4.3 : $N_2(g) + 3H_2(g) \\rightleftharpoons 2NH_3(g)$. Initial: 1 mol N$_2$, 3 mol H$_2$, $P_{tot}=10$ bar. $Q_r$ initial ?",
+                        answer: `État initial : $n_{N_2}=1$, $n_{H_2}=3$, $n_{NH_3}=0$. Quantité totale de gaz $n_{tot} = 1+3+0 = 4$ mol.<br>
+                                 Fractions molaires initiales : $x_{N_2}=1/4$, $x_{H_2}=3/4$, $x_{NH_3}=0$.<br>
+                                 Pressions partielles initiales : $P_{N_2}=x_{N_2}P_{tot}=(1/4)\times 10 = 2.5$ bar. $P_{H_2}=x_{H_2}P_{tot}=(3/4)\times 10 = 7.5$ bar. $P_{NH_3}=0$.<br>
+                                 Activités initiales (avec $P^0=1$ bar) : $a_{N_2}=P_{N_2}/P^0=2.5$. $a_{H_2}=P_{H_2}/P^0=7.5$. $a_{NH_3}=0$.<br>
+                                 Quotient réactionnel $Q_r = \\frac{(a_{NH_3})^2}{(a_{N_2})(a_{H_2})^3}$.<br>
+                                 $Q_{r,initial} = \\frac{0^2}{2.5 \\times (7.5)^3} = 0$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_descEF_10_ex4.5',
+                        question: "Exercice 4.5 : 0.1 mol $Ag^+$ + 0.2 mol $Cl^-$ dans 1L. $Ag^+ + Cl^- \\rightleftharpoons AgCl(s)$, $K^\\circ \\approx 5.6 \\times 10^9$. Composition finale ?",
+                        answer: `$K^\\circ$ est très grande ($> 10^4$), la réaction est considérée comme <strong>totale</strong> dans le sens direct (précipitation).<br>
+                                 Tableau d'avancement (en mol) :
+                                 <table border="1" style="border-collapse: collapse; padding: 5px;">
+                                   <tr><th>État</th><th>$Ag^+$</th><th>$Cl^-$</th><th>$AgCl(s)$</th><th>$\\xi$</th></tr>
+                                   <tr><td>Initial (t=0)</td><td>0.1</td><td>0.2</td><td>0</td><td>0</td></tr>
+                                   <tr><td>Final ($\\xi=\\xi_{max}$)</td><td>$0.1-\\xi_{max}$</td><td>$0.2-\\xi_{max}$</td><td>$\xi_{max}$</td><td>$\\xi_{max}$</td></tr>
+                                 </table>
+                                 On cherche le réactif limitant :<br>
+                                 Si $Ag^+$ limitant : $0.1 - \\xi_{max} = 0 \implies \\xi_{max} = 0.1$ mol.<br>
+                                 Si $Cl^-$ limitant : $0.2 - \\xi_{max} = 0 \implies \\xi_{max} = 0.2$ mol.<br>
+                                 La plus petite valeur est $\\xi_{max}=0.1$ mol. Le réactif limitant est $Ag^+$.<br>
+                                 Composition finale :<br>
+                                 $n(Ag^+)_f = 0.1 - 0.1 = 0$ mol (en réalité, une trace infime due à l'équilibre inverse).<br>
+                                 $n(Cl^-)_f = 0.2 - 0.1 = 0.1$ mol.<br>
+                                 $n(AgCl(s))_f = \\xi_{max} = 0.1$ mol.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                // --- Section 4.1.2 : Évolution Temporelle ---
+                const qaListEvolTemporelle = ref([
+                    {
+                        id: 'q_evolT_1',
+                        question: "Définir la vitesse volumique de réaction $v$ pour une réaction $\\sum \\nu_k E_k = 0$ en fonction de la concentration $[k]$ d'une espèce k.",
+                        answer: `En supposant le volume V constant, la vitesse volumique de réaction $v$ est définie par :<br>
+                                 $v = \\frac{1}{\\nu_k} \\frac{d[k]}{dt}$ pour n'importe quelle espèce k (réactif ou produit).<br>
+                                 $\nu_k$ est le coefficient stœchiométrique algébrique de l'espèce k.<br>
+                                 La vitesse $v$ est toujours positive et a pour unité mol.L⁻¹.s⁻¹. Elle est indépendante de l'espèce k choisie pour la calculer.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_evolT_2',
+                        question: "Qu'est-ce qu'une loi de vitesse ? Définir l'ordre partiel $\\alpha_i$, l'ordre global $\\alpha$ et la constante de vitesse $k(T)$.",
+                        answer: `Une <strong>Loi de Vitesse</strong> est une relation déterminée expérimentalement qui exprime la vitesse de réaction $v$ en fonction des concentrations des espèces présentes (réactifs, catalyseurs...) et de la température.<br>
+                                 Si la loi de vitesse admet un ordre, elle a la forme : $v = k(T) \\prod_i [React_i]^{\\alpha_i} \\prod_j [Cat_j]^{\\beta_j}...$<br>
+                                 <ul><li>$k(T)$ : <strong>Constante de vitesse</strong>, dépend de la température T.</li>
+                                     <li>$\\alpha_i$ : <strong>Ordre partiel</strong> de la réaction par rapport au réactif i (nombre réel, souvent entier 0, 1 ou 2).</li>
+                                     <li>$\\alpha = \\sum \\alpha_i$ : <strong>Ordre global</strong> de la réaction (somme des ordres par rapport aux réactifs).</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_evolT_3',
+                        question: "Comment évolue la concentration $[A]$ en fonction du temps pour une réaction d'ordre 1 par rapport à A ($v=k[A]$, $A \to ...$) ?",
+                        answer: `Pour la réaction $A \to ...$ d'ordre 1, $v = k[A]$.<br>
+                                 La vitesse est aussi $v = \\frac{1}{\\nu_A}\\frac{d[A]}{dt}$. Ici $\\nu_A=-1$, donc $v = -\\frac{d[A]}{dt}$.<br>
+                                 On a l'équation différentielle : $-\\frac{d[A]}{dt} = k[A]$, soit $\\frac{d[A]}{[A]} = -k dt$.<br>
+                                 Intégration entre $t=0$ ($[A]=[A]_0$) et $t$ ($[A]=[A](t)$) :<br>
+                                 $\\int_{[A]_0}^{[A]} \\frac{d[A]}{[A]} = \\int_0^t -k dt$.<br>
+                                 $[\\ln[A]]_{[A]_0}^{[A]} = [-kt]_0^t$.<br>
+                                 $\\ln[A](t) - \\ln[A]_0 = -kt$.<br>
+                                 $\\ln(\\frac{[A](t)}{[A]_0}) = -kt$.<br>
+                                 Soit $[A](t) = [A]_0 e^{-kt}$. La concentration décroît exponentiellement.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_evolT_4',
+                        question: "Comment le temps de demi-vie $t_{1/2}$ d'un réactif A dépend-il de sa concentration initiale $[A]_0$ pour des ordres 0, 1 et 2 ($v=k[A]^\alpha$) ?",
+                        answer: `Le temps de demi-vie $t_{1/2}$ est le temps nécessaire pour que $[A]$ atteigne $[A]_0/2$. Pour une réaction $A \to ...$ avec $v=k[A]^\alpha$ et $\nu_A=-1$ :<br>
+                                 <ul><li><strong>Ordre 0 :</strong> $[A] = [A]_0 - kt$. $t_{1/2}$ tel que $[A]_0/2 = [A]_0 - kt_{1/2} \implies kt_{1/2}=[A]_0/2$. $t_{1/2} = \\frac{[A]_0}{2k}$. <strong>($t_{1/2} \propto [A]_0$)</strong>.</li>
+                                     <li><strong>Ordre 1 :</strong> $[A] = [A]_0 e^{-kt}$. $t_{1/2}$ tel que $[A]_0/2 = [A]_0 e^{-kt_{1/2}} \implies 1/2 = e^{-kt_{1/2}} \implies \ln(1/2) = -kt_{1/2} \implies -\ln(2) = -kt_{1/2}$. $t_{1/2} = \\frac{\ln(2)}{k}$. <strong>($t_{1/2}$ indépendant de $[A]_0$)</strong>.</li>
+                                     <li><strong>Ordre 2 :</strong> $1/[A] - 1/[A]_0 = kt$. $t_{1/2}$ tel que $1/([A]_0/2) - 1/[A]_0 = kt_{1/2} \implies 2/[A]_0 - 1/[A]_0 = kt_{1/2} \implies 1/[A]_0 = kt_{1/2}$. $t_{1/2} = \\frac{1}{k[A]_0}$. <strong>($t_{1/2} \propto 1/[A]_0$)</strong>.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_evolT_5',
+                        question: "Qu'est-ce que la loi d'Arrhenius ? Que représente l'énergie d'activation $E_a$ ?",
+                        answer: `La <strong>Loi d'Arrhenius</strong> décrit la dépendance de la constante de vitesse $k$ avec la température absolue $T$ (en Kelvin) :<br>
+                                 $k(T) = A e^{-E_a / (RT)}$<br>
+                                 <ul><li>$A$ est le facteur pré-exponentiel (facteur de fréquence).</li>
+                                     <li>$R$ est la constante des gaz parfaits (8.314 J.K⁻¹.mol⁻¹).</li>
+                                     <li>$E_a$ est l'<strong>Énergie d'Activation</strong> (en J/mol). C'est l'énergie minimale que les molécules réactives doivent posséder (sous forme d'énergie cinétique lors des collisions) pour que la réaction puisse se produire. C'est une barrière énergétique à franchir. Plus $E_a$ est élevée, plus la réaction est lente à une température donnée.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_evolT_6_ex4.8',
+                        question: "Exercice 4.8 : $A \to Produits$. Données $[A]_0$ vs $t_{1/2}$. Ordre et k ?",
+                        answer: `Données :
+                                  <br>($[A]_0=0.1$, $t_{1/2}=100$) $\implies [A]_0 \times t_{1/2} = 0.1 \times 100 = 10$.
+                                  <br>($[A]_0=0.05$, $t_{1/2}=200$) $\implies [A]_0 \times t_{1/2} = 0.05 \times 200 = 10$.
+                                  <br>($[A]_0=0.025$, $t_{1/2}=400$) $\implies [A]_0 \times t_{1/2} = 0.025 \times 400 = 10$.
+                                  <br>Le produit $[A]_0 \times t_{1/2}$ est constant. Cela signifie que $t_{1/2}$ est inversement proportionnel à $[A]_0$. Ceci est caractéristique d'une réaction d'<strong>ordre 2</strong>.<br>
+                                  Pour un ordre 2 et $\nu_A=-1$, on a $t_{1/2} = \\frac{1}{k[A]_0}$, donc $k = \\frac{1}{t_{1/2}[A]_0}$.<br>
+                                  $k = \\frac{1}{10}$ L.mol⁻¹.s⁻¹ = 0.1 L.mol⁻¹.s⁻¹.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_evolT_7_ex4.9',
+                        question: "Exercice 4.9 : $k$ double quand T passe de 25°C à 35°C. Calculer $E_a$.",
+                        answer: `$T_1 = 25+273.15 = 298.15$ K. $T_2 = 35+273.15 = 308.15$ K. $k_2 = 2k_1$.<br>
+                                 On utilise la forme intégrée de la loi d'Arrhenius ou le rapport :
+                                 $\\ln(k_2/k_1) = \\ln(k_2) - \\ln(k_1) = [\\ln A - E_a/(RT_2)] - [\\ln A - E_a/(RT_1)] = \\frac{E_a}{R} (\\frac{1}{T_1} - \\frac{1}{T_2})$.<br>
+                                 $\\ln(2) = \\frac{E_a}{R} \\frac{T_2-T_1}{T_1 T_2}$.<br>
+                                 $E_a = R \\ln(2) \\frac{T_1 T_2}{T_2-T_1}$.<br>
+                                 $E_a = (8.314 \\text{ J.K⁻¹mol⁻¹}) \\times \\ln(2) \\times \\frac{(298.15 \\text{ K}) \\times (308.15 \\text{ K})}{308.15 \\text{ K} - 298.15 \\text{ K}}$.<br>
+                                 $E_a = 8.314 \\times 0.6931 \\times \\frac{91870}{10} \\approx 52900$ J/mol.<br>
+                                 $E_a \\approx 52.9$ kJ/mol.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                 // --- Section 4.2.1 : Structure des Entités ---
+                const qaListStructureEntites = ref([
+                     {
+                        id: 'q_structE_1',
+                        question: "Qu'est-ce qu'un schéma de Lewis ? Quelle règle guide souvent son établissement pour les éléments de la 2ème période ?",
+                        answer: `Un <strong>Schéma de Lewis</strong> est une représentation plane d'une molécule ou d'un ion polyatomique qui montre :<br> - Les symboles des atomes.<br> - Les doublets d'électrons liants (mis en commun entre deux atomes) représentés par des traits.<br> - Les doublets d'électrons non liants (appartenant à un seul atome) représentés par des paires de points ou des traits.<br>
+                                 Pour les éléments de la 2ème période (Li à Ne), on utilise la <strong>Règle de l'Octet</strong> : chaque atome tend à s'entourer de 8 électrons de valence (4 doublets, liants ou non liants) pour atteindre la configuration électronique stable du gaz noble le plus proche (sauf H, Li, Be : règle du duet).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_structE_2',
+                        question: "Quelle est la méthode VSEPR et quel est son principe pour prédire la géométrie d'une molécule ?",
+                        answer: `La méthode <strong>VSEPR</strong> (Valence Shell Electron Pair Repulsion) permet de prédire la géométrie tridimensionnelle autour d'un atome central A dans une molécule de type $AX_nE_m$ (n atomes liés X, m doublets non liants E).<br>
+                                 Son principe est que les <strong>paires d'électrons</strong> (doublets liants et non liants) de la couche de valence de l'atome central se repoussent mutuellement (répulsion électrostatique) et s'arrangent dans l'espace de manière à <strong>minimiser ces répulsions</strong>.<br>
+                                 L'arrangement spatial des doublets (figure de répulsion) détermine la géométrie moléculaire (position des atomes).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_structE_3',
+                        question: "Qu'est-ce que l'électronégativité ? Comment varie-t-elle globalement dans le tableau périodique ?",
+                        answer: `L'<strong>Électronégativité</strong> ($\\chi$) d'un élément chimique mesure sa tendance à attirer vers lui les électrons lorsqu'il est engagé dans une liaison chimique.<br>
+                                 Globalement, dans le tableau périodique (hors gaz nobles) :<br> - Elle <strong>augmente</strong> de gauche à droite le long d'une période.<br> - Elle <strong>diminue</strong> de haut en bas le long d'une colonne.<br> Le Fluor (F) est l'élément le plus électronégatif.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_structE_4',
+                        question: "Quand une liaison covalente est-elle dite polarisée ? Qu'est-ce que le moment dipolaire moléculaire $\\vec{\\mu}_{mol}$ et quand une molécule est-elle dite polaire ?",
+                        answer: `Une liaison covalente entre deux atomes A et B est <strong>polarisée</strong> si les atomes ont des électronégativités différentes ($\\Delta \\chi \\neq 0$). Le doublet liant est statistiquement plus proche de l'atome le plus électronégatif, créant des charges partielles $\\delta-$ sur celui-ci et $\\delta+$ sur l'autre.<br>
+                                 Le <strong>Moment Dipolaire Moléculaire</strong> ($\\vec{\\mu}_{mol}$) est la somme vectorielle des moments dipolaires de toutes les liaisons de la molécule : $\\vec{\\mu}_{mol} = \\sum \\vec{\\mu}_{liaison}$.<br>
+                                 Une molécule est dite <strong>polaire</strong> si son moment dipolaire moléculaire total est <strong>non nul</strong> ($\\vec{\\mu}_{mol} \\neq \\vec{0}$). Cela dépend de la polarité des liaisons ET de la géométrie de la molécule (une molécule peut avoir des liaisons polarisées mais être apolaire si les moments dipolaires de liaison s'annulent par symétrie).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_structE_5_ex4.11',
+                        question: "Exercice 4.11 : Schémas de Lewis de $NH_3$, $H_2O$, $CCl_4$.",
+                        answer: `e⁻ val : N(5), O(6), Cl(7), H(1), C(4).<br>
+                                 <strong>$NH_3$ :</strong> N central. Total e⁻ = 5+3(1)=8e⁻ = 4 doublets. 3 liaisons N-H. Reste 1 doublet non liant sur N. Octet pour N. Duet pour H. Schéma : H-N(̈)-H lié à H.<br>
+                                 <strong>$H_2O$ :</strong> O central. Total e⁻ = 6+2(1)=8e⁻ = 4 doublets. 2 liaisons O-H. Reste 2 doublets non liants sur O. Octet pour O. Duet pour H. Schéma : H-O(̈̈)-H.<br>
+                                 <strong>$CCl_4$ :</strong> C central. Total e⁻ = 4+4(7)=32e⁻ = 16 doublets. 4 liaisons C-Cl. Reste 12 doublets. Mettre 3 doublets non liants sur chaque Cl (3x4=12). Octet pour C et pour chaque Cl. Schéma : Cl-(̈̈)C(Cl(̈̈))-(Cl(̈̈)) lié à Cl(̈̈). (Les doublets non liants sont sur les Cl).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_structE_6_ex4.12',
+                        question: "Exercice 4.12 : Géométrie VSEPR de $NH_3$ et $H_2O$.",
+                        answer: `<strong>$NH_3$ :</strong> Atome central N. Formule $AX_3E_1$ (3 liaisons, 1 doublet non liant). Nombre total de doublets = 3+1=4. Figure de répulsion = Tétraèdre. Géométrie moléculaire (position des atomes) = <strong>Pyramide à base trigonale</strong>.<br>
+                                 <strong>$H_2O$ :</strong> Atome central O. Formule $AX_2E_2$ (2 liaisons, 2 doublets non liants). Nombre total de doublets = 2+2=4. Figure de répulsion = Tétraèdre. Géométrie moléculaire = <strong>Coudée</strong> (ou en V).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_structE_7_ex4.14',
+                        question: "Exercice 4.14 : $BF_3$ (triangle plan). Liaisons B-F polarisées ? Molécule polaire ?",
+                        answer: `Électronégativités : $\\chi(B) \\approx 2.04$, $\\chi(F) = 3.98$. La différence $\\Delta \\chi = 3.98 - 2.04 = 1.94$ est importante. Les liaisons B-F sont donc <strong>polarisées</strong> (F est $\delta-$, B est $\delta+$).<br>
+                                 Géométrie : Triangle plan équilatéral. Les 3 vecteurs moments dipolaires $\\vec{\\mu}_{B-F}$ forment des angles de 120° entre eux. Leur somme vectorielle est nulle par symétrie : $\\vec{\\mu}_{mol} = \\vec{0}$.<br>
+                                 La molécule $BF_3$ est <strong>apolaire</strong> malgré ses liaisons polarisées.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                // --- Section 4.2.2 : Relations Structure-Propriétés Macro ---
+                const qaListStructurePropMacro = ref([
+                    {
+                        id: 'q_structP_1',
+                        question: "Citer les trois types d'interactions de Van der Waals (VdW). Quelle est celle qui existe toujours ? De quoi dépend principalement son intensité ?",
+                        answer: `Interactions de Van der Waals :
+                                 <ul><li><strong>Keesom :</strong> entre dipôles permanents.</li>
+                                     <li><strong>Debye :</strong> entre dipôle permanent et dipôle induit.</li>
+                                     <li><strong>London (dispersion) :</strong> entre dipôles instantanés (dus aux fluctuations électroniques).</li></ul>
+                                 Les forces de <strong>London</strong> existent toujours, même entre molécules apolaires. Leur intensité dépend principalement du <strong>nombre total d'électrons</strong> dans la molécule (et donc de sa taille/masse molaire) et de sa <strong>polarisabilité</strong> (facilité à déformer le nuage électronique).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_structP_2',
+                        question: "Qu'est-ce qu'une liaison hydrogène (ou pont hydrogène) ? Donner un ordre de grandeur de son énergie comparée aux liaisons VdW et covalentes.",
+                        answer: `La <strong>Liaison Hydrogène</strong> est une interaction attractive directionnelle forte qui s'établit entre un atome d'hydrogène (porteur d'une charge partielle $\delta+$) lié à un atome très électronégatif (O, N, ou F), et un doublet non liant d'un autre atome très électronégatif (O, N, ou F). Notée X-H...:Y.<br>
+                                 Ordres de grandeur des énergies :<ul>
+                                 <li>Interactions VdW : 0.1 - 10 kJ/mol.</li>
+                                 <li><strong>Liaison Hydrogène : 10 - 40 kJ/mol.</strong></li>
+                                 <li>Liaison Covalente : 150 - 1000 kJ/mol.</li></ul>
+                                 La liaison H est significativement plus forte que les interactions VdW, mais beaucoup plus faible qu'une liaison covalente.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_structP_3',
+                        question: "Comment les interactions intermoléculaires (VdW, liaison H) influencent-elles les températures de changement d'état ($T_f, T_{eb}$) ?",
+                        answer: `Les températures de changement d'état ($T_f$ pour fusion, $T_{eb}$ pour ébullition) correspondent à l'énergie (thermique) nécessaire pour vaincre les forces de cohésion intermoléculaires et permettre aux molécules de bouger plus librement (liquide) ou de s'échapper (gaz).<br>
+                                 Plus les interactions intermoléculaires sont <strong>fortes</strong>, plus il faut fournir d'énergie, et donc plus les températures $T_f$ et $T_{eb}$ sont <strong>élevées</strong>.<br>
+                                 La présence de liaisons H augmente considérablement $T_f$ et $T_{eb}$ par rapport à des molécules de taille similaire n'en formant pas. Pour des molécules similaires sans liaison H, l'augmentation des forces de VdW (surtout London avec la taille) fait augmenter $T_f$ et $T_{eb}$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_structP_4',
+                        question: "Qu'est-ce qu'un solvant polaire/apolaire et protique/aprotique ?",
+                        answer: `<ul><li><strong>Polaire / Apolaire :</strong> Fait référence au moment dipolaire moléculaire $\\vec{\\mu}_{mol}$. Un solvant est <strong>polaire</strong> si $\\vec{\\mu}_{mol} \neq \\vec{0}$ (ex: eau, éthanol, acétone). Il est <strong>apolaire</strong> si $\\vec{\\mu}_{mol} = \\vec{0}$ (ex: hexane, tétrachlorométhane, benzène).</li>
+                                     <li><strong>Protique / Aprotique :</strong> Fait référence à la capacité du solvant à donner des liaisons hydrogène. Un solvant est <strong>protique</strong> s'il possède au moins un atome d'hydrogène lié à un atome très électronégatif (O ou N principalement), et peut donc former des liaisons H comme donneur (ex: eau, méthanol, acide acétique). Il est <strong>aprotique</strong> s'il ne possède pas de tel hydrogène (ex: acétone, éther diéthylique, dichlorométhane, hexane).</li></ul>
+                                     Un solvant peut être polaire aprotique (ex: acétone). Un solvant protique est généralement polaire.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_structP_5',
+                        question: "Énoncer la règle qualitative permettant de prévoir la miscibilité de deux liquides ou la solubilité d'un soluté dans un solvant.",
+                        answer: `La règle est : <strong>"Qui se ressemble s'assemble"</strong>.<br>
+                                 Cela signifie que :<ul>
+                                 <li>Deux liquides ayant des <strong>polarités</strong> et des capacités à former des <strong>liaisons H similaires</strong> ont de fortes chances d'être miscibles.</li>
+                                 <li>Un soluté se dissout préférentiellement dans un solvant qui a des <strong>interactions intermoléculaires de nature similaire</strong> :
+                                     <ul><li>Solutés <strong>polaires ou ioniques</strong> $\rightarrow$ Solvants <strong>polaires</strong> (surtout protiques pour les ions).</li>
+                                         <li>Solutés <strong>apolaires</strong> $\rightarrow$ Solvants <strong>apolaires</strong>.</li></ul>
+                                 La dissolution est favorisée si les interactions soluté-solvant qui se créent sont d'intensité comparable (ou supérieure) aux interactions soluté-soluté et solvant-solvant qu'il faut rompre.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_structP_6_ex4.16',
+                        question: "Exercice 4.16 : Pourquoi $T_{eb}(H_2O) = 100^\circ$C >> $T_{eb}(H_2S) = -60^\circ$C ?",
+                        answer: `L'eau ($H_2O$) est capable de former un réseau étendu et fort de <strong>liaisons hydrogène</strong> intermoléculaires grâce à la forte électronégativité de l'oxygène et à la présence de deux doublets non liants et de deux H labiles.<br>
+                                 Le sulfure d'hydrogène ($H_2S$), bien que polaire (géométrie coudée), a une différence d'électronégativité S-H plus faible, et le soufre est moins électronégatif que l'oxygène. Les liaisons hydrogène H-S...:S sont donc <strong>très faibles voire inexistantes</strong>.<br>
+                                 Les interactions prédominantes dans $H_2S$ sont les forces de Van der Waals (dipôle-dipôle et London).<br>
+                                 Les liaisons H dans l'eau étant beaucoup plus fortes que les forces VdW dans $H_2S$, il faut fournir beaucoup plus d'énergie pour vaporiser l'eau, d'où sa température d'ébullition très élevée.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_structP_7_ex4.19',
+                        question: "Exercice 4.19 : $I_2$ (apolaire) plus soluble dans eau (polaire) ou cyclohexane (apolaire) ?",
+                        answer: `$I_2$ est une molécule apolaire. Les seules interactions entre molécules $I_2$ sont les forces de London.<br>
+                                 L'eau est un solvant polaire et fortement lié par liaisons hydrogène.<br>
+                                 Le cyclohexane ($C_6H_{12}$) est un solvant apolaire (interactions de London).<br>
+                                 Selon la règle "qui se ressemble s'assemble", $I_2$ sera beaucoup plus soluble dans le <strong>cyclohexane</strong>, car les interactions $I_2$-cyclohexane (London) sont de même nature que les interactions cyclohexane-cyclohexane et $I_2$-$I_2$.<br>
+                                 La dissolution dans l'eau nécessiterait de rompre les fortes liaisons H de l'eau pour les remplacer par des interactions $I_2$-eau (principalement Debye/London) beaucoup plus faibles, ce qui est énergétiquement défavorable.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+
+                // --- Fonctions communes ---
+                const loadUnderstanding = () => {
+                    // Combine all lists relevant to this file
+                    const allItems = [
+                        ...qaListDescEtatFinal.value,
+                        ...qaListEvolTemporelle.value,
+                        ...qaListStructureEntites.value,
+                        ...qaListStructurePropMacro.value
+                        ];
+                    allItems.forEach(item => {
+                        const savedLevel = localStorage.getItem(`qa_understanding_${item.id}`);
+                        if (savedLevel) {
+                            item.understanding = savedLevel;
+                        }
+                    });
+                };
+
+                const saveUnderstanding = (item) => {
+                     if (item.understanding) {
+                        localStorage.setItem(`qa_understanding_${item.id}`, item.understanding);
+                     } else {
+                         localStorage.removeItem(`qa_understanding_${item.id}`);
+                     }
+                };
+
+                const setUnderstanding = (item, level) => {
+                    // Toggle off if clicking the same button
+                    if (item.understanding === level) {
+                        item.understanding = null;
+                    } else {
+                        item.understanding = level;
+                    }
+                    saveUnderstanding(item);
+                };
+
+                const toggleAnswer = async (item) => {
+                    const wasHidden = !item.showAnswer;
+                    item.showAnswer = !item.showAnswer;
+
+                    if (item.showAnswer && wasHidden) {
+                        await nextTick(); // Wait for DOM update
+                        try {
+                            const element = document.getElementById(`answer-${item.id}`);
+                            if (element && typeof renderMathInElement === 'function') {
+                                renderMathInElement(element, {
+                                    delimiters: [
+                                        {left: "$$", right: "$$", display: true},
+                                        {left: "$", right: "$", display: false},
+                                        {left: "\\(", right: "\\)", display: false},
+                                        {left: "\\[", right: "\\]", display: true}
+                                    ],
+                                    throwOnError : false
+                                });
+                            } else if (typeof renderMathInElement !== 'function') {
+                                console.warn("KaTeX auto-render function not found. Math might not render correctly after toggle.");
+                            }
+                        } catch (error) {
+                            console.error("KaTeX rendering error:", error);
+                        }
+                    }
+                };
+
+                // Load initial state on mount
+                onMounted(() => {
+                    loadUnderstanding();
+                    // Initial global render is handled by the `onload` attribute of the auto-render script.
+                });
+
+                return {
+                    qaListDescEtatFinal,
+                    qaListEvolTemporelle,
+                    qaListStructureEntites,
+                    qaListStructurePropMacro,
+                    toggleAnswer,
+                    setUnderstanding
+                };
+            }
+        }).mount('#app');
+
+         // Optional: Ensure renderMathInElement is called after DOM load if `onload` fails
+         /*
+         document.addEventListener("DOMContentLoaded", function() {
+             if (typeof renderMathInElement === 'function') {
+                 renderMathInElement(document.body, { /* options * / });
+             }
+         });
+         */
+
+    </script>
+
+</body>
+</html>
