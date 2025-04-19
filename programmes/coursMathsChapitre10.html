@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Polynômes et Fractions Rationnelles</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Polynômes et Fractions Rationnelles</h1>
+
+ <h3 id="polynomes-fractions">Polynômes et fractions rationnelles</h3>
+     <p class="intro-text">
+        L'objectif de cette section est d'étudier les propriétés de base des polynômes et fractions rationnelles. Il s'agit d'objets particulièrement riches, dont l'étude interagit avec beaucoup de thèmes abordés pendant le semestre. Par exemple : l'étude des équations algébriques enrichit le calcul algébrique et suggère des problèmes de localisation des racines, mettant en jeu des techniques analytiques dans le cas réel, plus géométriques dans le cas complexe; l'interpolation de Lagrange permet de reconstituer un polynôme en fonction de ses valeurs en suffisamment de points et donne lieu à des problèmes issus de la théorie de l'approximation (majoration de l'erreur d'interpolation). L'arithmétique de $\mathbb{K}[X]$ est développée selon le plan déjà utilisé pour l'arithmétique de $\mathbb{Z}$, ce qui autorise un exposé allégé. Le programme se limite au cas où le corps de base $\mathbb{K}$ est égal à $\mathbb{R}$ ou $\mathbb{C}$.
+    </p>
+
+    <h4 id="polynomes-anneau">a) Anneau des polynômes à une indéterminée</h4>
+
+<div class="definition">
+    <strong>Polynôme :</strong> Un <strong>polynôme</strong> à une indéterminée $X$ et à coefficients dans le corps $\mathbb{K}$ ($\mathbb{R}$ ou $\mathbb{C}$) est une expression formelle de la forme :
+    $$ P(X) = a_n X^n + a_{n-1} X^{n-1} + \dots + a_1 X + a_0 = \sum_{k=0}^n a_k X^k $$
+    où $n \in \mathbb{N}$ et les coefficients $a_k$ sont dans $\mathbb{K}$.
+    L'ensemble des polynômes est noté $\mathbb{K}[X]$.
+    <br><strong>Polynôme nul :</strong> Si tous les $a_k$ sont nuls, $P=0$.
+    <br><strong>Égalité :</strong> Deux polynômes sont égaux si et seulement si leurs coefficients correspondants sont égaux.
+</div>
+
+<div class="comment">
+    La construction formelle de $\mathbb{K}[X]$ (par exemple, comme l'ensemble des suites de $\mathbb{K}$ nulles à partir d'un certain rang) est hors programme. On travaille avec les polynômes de manière intuitive.
+</div>
+
+<div class="definition">
+    <strong>Degré :</strong> Si $P = \sum a_k X^k$ est un polynôme non nul, son <strong>degré</strong>, noté $\deg(P)$, est le plus grand entier $n$ tel que $a_n \neq 0$. Le coefficient $a_n$ est appelé <strong>coefficient dominant</strong> de $P$.
+    <br>Si le coefficient dominant est 1, le polynôme est dit <strong>unitaire</strong>.
+    <br>Par convention, le degré du polynôme nul est $\deg(0) = -\infty$.
+</div>
+
+<div class="definition">
+    <strong>Opérations :</strong> Soient $P(X) = \sum_{k=0}^n a_k X^k$ et $Q(X) = \sum_{k=0}^m b_k X^k$.
+    <ul>
+        <li><strong>Addition :</strong> $P(X) + Q(X) = \sum_{k=0}^{\max(n,m)} (a_k + b_k) X^k$ (avec $a_k=0$ si $k>n$, $b_k=0$ si $k>m$).</li>
+        <li><strong>Multiplication par scalaire ($\lambda \in \mathbb{K}$):</strong> $\lambda P(X) = \sum_{k=0}^n (\lambda a_k) X^k$.</li>
+        <li><strong>Produit :</strong> $P(X) Q(X) = \sum_{k=0}^{n+m} c_k X^k$, où $c_k = \sum_{i=0}^k a_i b_{k-i}$ (convention $a_i=0$ si $i>n$, $b_j=0$ si $j>m$).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Degré d'une somme et d'un produit :</strong> Soient $P, Q \in \mathbb{K}[X]$.
+    <ul>
+        <li>$\deg(P+Q) \le \max(\deg(P), \deg(Q))$. Égalité si $\deg(P) \neq \deg(Q)$.</li>
+        <li>$\deg(PQ) = \deg(P) + \deg(Q)$ (avec conventions $-\infty+n=-\infty$, $-\infty+(-\infty)=-\infty$).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Anneau $\mathbb{K}[X]$ :</strong> $(\mathbb{K}[X], +, \times)$ est un anneau commutatif unitaire.
+    L'élément neutre additif est le polynôme nul $0$. L'élément neutre multiplicatif est le polynôme constant $1$.
+    <br>Cet anneau est <strong>intègre</strong> : si $PQ=0$, alors $P=0$ ou $Q=0$. (Car si $P, Q \ne 0$, $\deg(PQ) = \deg(P) + \deg(Q) \ge 0$, donc $PQ \ne 0$).
+</div>
+
+<div class="definition">
+    <strong>Ensemble $\mathbb{K}_n[X]$ :</strong> Pour $n \in \mathbb{N}$, $\mathbb{K}_n[X]$ est l'ensemble des polynômes de $\mathbb{K}[X]$ de degré au plus $n$.
+    <br>$(\mathbb{K}_n[X], +, \cdot)$ est un $\mathbb{K}$-espace vectoriel de dimension $n+1$. Une base usuelle est $(1, X, X^2, \dots, X^n)$.
+    <br>Attention : $\mathbb{K}_n[X]$ n'est pas un sous-anneau de $\mathbb{K}[X]$ (sauf si $n=0$) car il n'est pas stable par produit ($\deg(X^n \cdot X^n) = 2n > n$ si $n \ge 1$).
+</div>
+
+<div class="definition">
+    <strong>Composition :</strong> Soient $P(X) = \sum a_k X^k$ et $Q(X)$ deux polynômes. Le <strong>composé</strong> $P \circ Q$, noté aussi $P(Q(X))$, est le polynôme obtenu en substituant $X$ par $Q(X)$ dans l'expression de $P$ :
+    $$ (P \circ Q)(X) = P(Q(X)) = \sum_{k=0}^{\deg(P)} a_k (Q(X))^k $$
+    On a $\deg(P \circ Q) = \deg(P) \times \deg(Q)$ (si $P, Q$ non nuls).
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong>
+    <ol>
+        <li>Soit $P(X) = 2X^3 - X + 1$ et $Q(X) = X^2 + 3$. Calculer $P+Q$, $PQ$, $\deg(P+Q)$, $\deg(PQ)$.</li>
+        <li>Calculer le degré de $(X^2+1)^n - (X^2-1)^n$.</li>
+        <li>Soit $P(X) = X^2+1$ et $Q(X)=X-1$. Calculer $P \circ Q$ et $Q \circ P$.</li>
+        <li>Montrer que les seuls polynômes inversibles dans l'anneau $\mathbb{K}[X]$ sont les polynômes constants non nuls.</li>
+    </ol>
+</div>
+
+
+    <h4 id="polynomes-divisibilite">b) Divisibilité et division euclidienne</h4>
+
+<div class="definition">
+    <strong>Divisibilité dans $\mathbb{K}[X]$ :</strong> Soient $A, B \in \mathbb{K}[X]$. On dit que $A$ <strong>divise</strong> $B$, noté $A | B$, s'il existe un polynôme $Q \in \mathbb{K}[X]$ tel que $B = AQ$.
+    <br>Si $A | B$, $A$ est un <strong>diviseur</strong> de $B$, $B$ est un <strong>multiple</strong> de $A$.
+    <br><strong>Polynômes associés :</strong> $A$ et $B$ sont associés si $A|B$ et $B|A$. Cela équivaut à dire qu'il existe $\lambda \in \mathbb{K}^*$ tel que $B = \lambda A$.
+    <br>Tout polynôme non nul est associé à un unique polynôme unitaire.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de la Division Euclidienne :</strong> Pour tout couple $(A, B)$ de polynômes de $\mathbb{K}[X]$ avec $B \neq 0$, il existe un unique couple $(Q, R)$ de polynômes de $\mathbb{K}[X]$ tel que :
+    $$ A = BQ + R \quad \text{et} \quad \deg(R) < \deg(B) $$
+    $Q$ est le <strong>quotient</strong> et $R$ est le <strong>reste</strong> de la division euclidienne de $A$ par $B$.
+</div>
+
+<div class="method">
+    <strong>Algorithme de la division euclidienne :</strong> Similaire à la division posée pour les entiers. On "élimine" le terme de plus haut degré de $A$ en utilisant un multiple approprié de $B$.
+    <br><strong>Exemple :</strong> Diviser $A(X) = 2X^4 - X^3 + X^2 + 3X - 1$ par $B(X) = X^2 + X + 1$.
+    ```
+        2X^4 -  X^3 +  X^2 + 3X - 1 | X^2 + X + 1
+    -(2X^4 + 2X^3 + 2X^2)          |------------------
+    ---------------------          | 2X^2 - 3X + 2  (Quotient Q)
+          - 3X^3 -  X^2 + 3X - 1
+        -(-3X^3 - 3X^2 - 3X)
+        --------------------
+                 2X^2 + 6X - 1
+               -(2X^2 + 2X + 2)
+               ----------------
+                      4X - 3       (Reste R)
+    ```
+    Donc $A = B \times (2X^2 - 3X + 2) + (4X - 3)$.
+    Vérification : $\deg(R) = 1 < \deg(B) = 2$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Effectuer la division euclidienne de $A(X) = X^5 + X + 1$ par $B(X) = X^2 - 1$.</li>
+        <li>Soit $n \ge 1$. Quel est le reste de la division euclidienne de $X^n + X + 1$ par $(X-1)^2$ ? (Indication : poser $A = Q(X-1)^2 + aX+b$, évaluer en 1, dériver et évaluer en 1).</li>
+        <li>Montrer que $X^2+X+1$ divise $X^{3k+2} + X^{3j+1} + X^{3m}$ si et seulement si $k+j+m$ est divisible par 3. (Indication : racines cubiques de l'unité).</li>
+    </ol>
+</div>
+
+
+     <h4 id="polynomes-fonctions-racines">c) Fonctions polynomiales et racines</h4>
+
+<div class="definition">
+    <strong>Fonction polynomiale :</strong> À tout polynôme $P(X) = \sum a_k X^k \in \mathbb{K}[X]$, on associe la <strong>fonction polynomiale</strong> $\tilde{P}: \mathbb{K} \to \mathbb{K}$ définie par $\tilde{P}(x) = \sum a_k x^k$.
+    <br><strong>Racine (ou zéro) :</strong> Un élément $\alpha \in \mathbb{K}$ est une <strong>racine</strong> de $P$ si $\tilde{P}(\alpha) = 0$. On écrit souvent $P(\alpha)=0$ par abus de notation.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation des racines :</strong> $\alpha \in \mathbb{K}$ est une racine de $P \in \mathbb{K}[X]$ si et seulement si $(X-\alpha)$ divise $P$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Effectuons la division euclidienne de $P(X)$ par $B(X) = X-\alpha$. $P(X) = (X-\alpha) Q(X) + R(X)$, avec $\deg(R) < \deg(X-\alpha) = 1$. Donc $R(X)$ est un polynôme constant, $R(X)=c \in \mathbb{K}$.
+    En évaluant en $\alpha$ : $P(\alpha) = (\alpha-\alpha) Q(\alpha) + c = 0 \times Q(\alpha) + c = c$.
+    Donc $P(\alpha) = 0 \iff c = 0 \iff R(X) = 0 \iff (X-\alpha)$ divise $P(X)$.
+</div>
+
+<div class="method">
+    <strong>Schéma de Horner :</strong> Méthode efficace pour évaluer $P(\alpha)$ et obtenir le quotient $Q(X)$ tel que $P(X)=(X-\alpha)Q(X) + P(\alpha)$.
+    Si $P(X) = a_n X^n + \dots + a_0$. On calcule les coefficients $b_{n-1}, \dots, b_0$ de $Q(X)$ et le reste $r=P(\alpha)$ par récurrence descendante :
+    $b_{n-1} = a_n$
+    $b_{k-1} = a_k + \alpha b_k$ pour $k = n-1, \dots, 1$.
+    $r = a_0 + \alpha b_0$.
+    <br><strong>Présentation en tableau :</strong>
+    ```
+          | a_n | a_{n-1} | ... | a_1 | a_0
+      alpha |-----|---------|-----|-----|----
+          |     | alpha*b_{n-1} | ... | alpha*b_1 | alpha*b_0
+          |------------------------------------------
+          | b_{n-1} | b_{n-2} | ... | b_0 | r (= P(alpha))
+    ```
+</div>
+
+<div class="theorem">
+    <strong>Nombre de racines :</strong> Un polynôme $P \in \mathbb{K}[X]$ non nul de degré $n$ admet au plus $n$ racines distinctes dans $\mathbb{K}$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Par récurrence sur $n = \deg(P)$.
+    Base $n=0$: $P$ est une constante non nulle, il n'a aucune racine. $0 \le 0$. Vrai.
+    Hérédité : Supposons le résultat vrai pour tout polynôme de degré $n-1$ ($n \ge 1$). Soit $P$ de degré $n$.
+    Si $P$ n'a pas de racine, c'est fini (nombre de racines $0 \le n$).
+    Si $P$ a au moins une racine $\alpha$. Alors $P(X) = (X-\alpha) Q(X)$ avec $\deg(Q) = n-1$.
+    Toute autre racine $\beta \neq \alpha$ de $P$ vérifie $P(\beta) = (\beta-\alpha)Q(\beta) = 0$. Comme $\beta-\alpha \ne 0$, on doit avoir $Q(\beta)=0$. Les racines de $P$ distinctes de $\alpha$ sont les racines de $Q$.
+    Par hypothèse de récurrence, $Q$ a au plus $n-1$ racines distinctes.
+    Donc $P$ a au plus $1 + (n-1) = n$ racines distinctes.
+</div>
+
+<div class="theorem">
+    <strong>Identification Polynôme / Fonction Polynomiale :</strong> Si $\mathbb{K}$ est infini ($\mathbb{R}$ ou $\mathbb{C}$), l'application $P \mapsto \tilde{P}$ est injective. Autrement dit, si la fonction polynomiale associée à $P$ est nulle ($\tilde{P}(x)=0$ pour tout $x \in \mathbb{K}$), alors le polynôme $P$ est nul.
+    <br><strong>Conséquence :</strong> On peut identifier le polynôme $P$ et sa fonction associée $\tilde{P}$ lorsque $\mathbb{K}=\mathbb{R}$ ou $\mathbb{C}$.
+</div>
+
+<div class="definition">
+    <strong>Multiplicité d'une racine :</strong> Soit $P \in \mathbb{K}[X]$ non nul et $\alpha \in \mathbb{K}$ une racine de $P$. La <strong>multiplicité</strong> de $\alpha$ comme racine de $P$ est le plus grand entier $m \in \mathbb{N}^*$ tel que $(X-\alpha)^m$ divise $P$.
+    <br>Si $m=1$, $\alpha$ est une racine <strong>simple</strong>. Si $m \ge 2$, $\alpha$ est une racine <strong>multiple</strong>.
+</div>
+
+<div class="definition">
+    <strong>Polynôme scindé :</strong> Un polynôme $P \in \mathbb{K}[X]$ est dit <strong>scindé</strong> sur $\mathbb{K}$ s'il peut s'écrire comme produit de polynômes de degré 1 (à coefficients dans $\mathbb{K}$) :
+    $$ P(X) = c \prod_{i=1}^n (X - \alpha_i) $$
+    où $c$ est le coefficient dominant, $n=\deg(P)$, et $\alpha_1, \dots, \alpha_n \in \mathbb{K}$ sont les racines de $P$ (comptées avec multiplicité).
+</div>
+
+<div class="theorem">
+    <strong>Relations coefficients-racines (Formules de Viète) :</strong> Soit $P(X) = a_n X^n + a_{n-1} X^{n-1} + \dots + a_0$ ($a_n \ne 0$) un polynôme scindé sur $\mathbb{K}$, avec racines $\alpha_1, \dots, \alpha_n$ (distinctes ou non).
+    $$ P(X) = a_n (X-\alpha_1) \dots (X-\alpha_n) $$
+    Alors les <strong>sommes symétriques élémentaires</strong> des racines $\sigma_k$ sont liées aux coefficients $a_i$ par :
+    \begin{align*} \sigma_1 &= \sum_{i=1}^n \alpha_i = -\frac{a_{n-1}}{a_n} \\ \sigma_2 &= \sum_{1 \le i < j \le n} \alpha_i \alpha_j = +\frac{a_{n-2}}{a_n} \\ &\vdots \\ \sigma_k &= \sum_{1 \le i_1 < \dots < i_k \le n} \alpha_{i_1} \dots \alpha_{i_k} = (-1)^k \frac{a_{n-k}}{a_n} \\ &\vdots \\ \sigma_n &= \alpha_1 \alpha_2 \dots \alpha_n = (-1)^n \frac{a_0}{a_n} \end{align*}
+</div>
+
+<div class="comment">
+    Les formules pour la somme $\sigma_1$ et le produit $\sigma_n$ doivent être connues. Les autres peuvent être retrouvées en développant le produit $a_n \prod (X-\alpha_i)$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.1 :</strong>
+    <ol>
+        <li>Soit $P(X) = X^3 - 6X^2 + 11X - 6$. Sachant que 1 et 2 sont des racines, trouver la troisième racine en utilisant la somme ou le produit des racines. Factoriser $P$.</li>
+        <li>Soit $P(X) = X^3 + pX + q$. Si $\alpha, \beta, \gamma$ sont les racines (dans $\mathbb{C}$), calculer $\alpha+\beta+\gamma$, $\alpha\beta+\beta\gamma+\gamma\alpha$, $\alpha\beta\gamma$.</li>
+        <li>Trouver un polynôme de degré 3 dont les racines sont $1, -1, 2$.</li>
+        <li>Le polynôme $P(X) = X^4 + 1$ a-t-il des racines dans $\mathbb{R}$ ? Dans $\mathbb{C}$ ?</li>
+    </ol>
+</div>
+
+
+     <h4 id="polynomes-derivation">d) Dérivation</h4>
+
+<div class="definition">
+    <strong>Dérivée formelle :</strong> Soit $P(X) = \sum_{k=0}^n a_k X^k \in \mathbb{K}[X]$. Le <strong>polynôme dérivé</strong> de $P$, noté $P'(X)$ ou $\frac{dP}{dX}$, est défini par :
+    $$ P'(X) = \sum_{k=1}^n k a_k X^{k-1} $$
+    (La dérivée du polynôme nul est le polynôme nul).
+    On définit les dérivées successives par récurrence : $P^{(0)} = P$ et $P^{(k+1)} = (P^{(k)})'$.
+</div>
+
+<div class="comment">
+    Si $\mathbb{K}=\mathbb{R}$ ou $\mathbb{C}$, la fonction polynomiale associée à $P'$ est bien la dérivée (au sens de l'analyse) de la fonction polynomiale associée à $P$. La définition formelle ne nécessite pas de notion de limite.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de la dérivation formelle :</strong>
+    <ul>
+        <li><strong>Linéarité :</strong> $(\lambda P + \mu Q)' = \lambda P' + \mu Q'$.</li>
+        <li><strong>Dérivée d'un produit :</strong> $(PQ)' = P'Q + PQ'$.</li>
+        <li><strong>Formule de Leibniz :</strong> $(PQ)^{(n)} = \sum_{k=0}^n \binom{n}{k} P^{(k)} Q^{(n-k)}$.</li>
+        <li><strong>Degré :</strong> Si $P$ non constant, $\deg(P') = \deg(P) - 1$. Si $P$ est constant, $\deg(P') = -\infty$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Formule de Taylor pour les polynômes :</strong> Soit $P \in \mathbb{K}[X]$ de degré $n$, et $a \in \mathbb{K}$. Alors :
+    $$ P(X) = \sum_{k=0}^n \frac{P^{(k)}(a)}{k!} (X-a)^k $$
+    où $P^{(k)}(a)$ est la valeur de la dérivée $k$-ième de $P$ évaluée en $a$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> On sait que $(1, (X-a), \dots, (X-a)^n)$ forme une base de $\mathbb{K}_n[X]$. Donc $P(X)$ peut s'écrire de manière unique $P(X) = \sum_{k=0}^n c_k (X-a)^k$.
+    En évaluant en $a$, on trouve $P(a) = c_0$.
+    En dérivant $P(X)$, on a $P'(X) = \sum_{k=1}^n k c_k (X-a)^{k-1}$. En évaluant en $a$, $P'(a) = 1 c_1$. Donc $c_1 = P'(a)/1!$.
+    En dérivant encore, $P''(X) = \sum_{k=2}^n k(k-1) c_k (X-a)^{k-2}$. En évaluant en $a$, $P''(a) = 2(1) c_2$. Donc $c_2 = P''(a)/2!$.
+    Par récurrence, on montre que $P^{(j)}(a) = j! c_j$, d'où $c_j = P^{(j)}(a)/j!$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation de la multiplicité d'une racine :</strong> Soit $P \in \mathbb{K}[X]$ non nul, $\alpha \in \mathbb{K}$, et $m \in \mathbb{N}^*$.
+    $\alpha$ est une racine de $P$ de multiplicité $m$ si et seulement si :
+    $$ P(\alpha) = P'(\alpha) = \dots = P^{(m-1)}(\alpha) = 0 \quad \text{et} \quad P^{(m)}(\alpha) \neq 0 $$
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong>
+    ($\implies$) Si $\alpha$ est racine de multiplicité $m$, $P(X) = (X-\alpha)^m Q(X)$ avec $Q(\alpha) \neq 0$. On utilise la formule de Leibniz pour calculer les dérivées successives de $P$ en $a$. $P^{(k)}(X) = \sum_{j=0}^k \binom{k}{j} ((X-\alpha)^m)^{(j)} Q^{(k-j)}(X)$. Le terme $((X-\alpha)^m)^{(j)}$ contient un facteur $(X-\alpha)^{m-j}$. Si $k < m$, alors $m-j \ge m-k \ge 1$. Donc tous les termes de la somme s'annulent en $\alpha$. $P^{(k)}(\alpha)=0$ pour $k=0, \dots, m-1$. Pour $k=m$, le seul terme non nul en $\alpha$ est pour $j=m$, $\binom{m}{m} ((X-\alpha)^m)^{(m)} Q^{(0)}(\alpha) = 1 \times m! \times Q(\alpha)$. Comme $Q(\alpha) \ne 0$, $P^{(m)}(\alpha) \ne 0$.
+    ($\impliedby$) On utilise la formule de Taylor en $\alpha$. $P(X) = \sum_{k=0}^n \frac{P^{(k)}(\alpha)}{k!} (X-\alpha)^k$. Si $P(\alpha) = \dots = P^{(m-1)}(\alpha)=0$ et $P^{(m)}(\alpha) \ne 0$, alors $P(X) = \sum_{k=m}^n \frac{P^{(k)}(\alpha)}{k!} (X-\alpha)^k = (X-\alpha)^m \sum_{k=m}^n \frac{P^{(k)}(\alpha)}{k!} (X-\alpha)^{k-m}$. Soit $Q(X) = \sum_{j=0}^{n-m} \frac{P^{(m+j)}(\alpha)}{(m+j)!} (X-\alpha)^{j}$. Alors $P(X)=(X-\alpha)^m Q(X)$ et $Q(\alpha) = \frac{P^{(m)}(\alpha)}{m!} \neq 0$. Donc $\alpha$ est racine de multiplicité $m$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice D.1 :</strong>
+    <ol>
+        <li>Calculer les dérivées successives de $P(X) = X^n$.</li>
+        <li>Écrire la formule de Taylor pour $P(X) = X^3 - 2X + 1$ au point $a=1$.</li>
+        <li>Montrer que 1 est racine double de $P(X) = X^4 - 2X^3 + 2X - 1$. Quelle est la multiplicité de la racine 1 ?</li>
+        <li>Soit $P(X)$ un polynôme scindé à racines simples sur $\mathbb{K}$. Montrer que $P$ et $P'$ n'ont pas de racine commune. Que peut-on dire si $P$ a des racines multiples ?</li>
+    </ol>
+</div>
+
+
+    <h4 id="polynomes-arithmetique">e) Arithmétique dans $\mathbb{K}[X]$</h4>
+
+<div class="comment">
+    L'arithmétique dans l'anneau $\mathbb{K}[X]$ est très similaire à celle dans l'anneau $\mathbb{Z}$. Les notions de PGCD, PPCM, algorithme d'Euclide, identité de Bézout, lemme de Gauss s'adaptent directement, en remplaçant la valeur absolue par le degré pour les comparaisons.
+</div>
+
+<div class="definition">
+    <strong>PGCD de polynômes :</strong> Soient $A, B \in \mathbb{K}[X]$, non tous deux nuls.
+    Un polynôme $D$ est un <strong>PGCD</strong> de $A$ et $B$ si :
+    <ol>
+        <li>$D | A$ et $D | B$ (diviseur commun).</li>
+        <li>Si $D'$ est un autre diviseur commun de $A$ et $B$, alors $D' | D$. (le plus grand pour la divisibilité).</li>
+    </ol>
+    L'ensemble des diviseurs communs $D(A, B)$ est égal à l'ensemble des diviseurs $D(D)$ d'un PGCD $D$.
+    <br>Un PGCD de $A$ et $B$ est un diviseur commun de degré maximal.
+    <br>Tous les PGCD de $A$ et $B$ sont associés. Il existe un unique PGCD qui soit <strong>unitaire</strong> (ou nul si $A=B=0$), noté $A \wedge B$.
+</div>
+
+<div class="method">
+    <strong>Algorithme d'Euclide pour les polynômes :</strong> Pour calculer $D = A \wedge B$ (avec $B \neq 0$). On effectue les divisions euclidiennes successives :
+    \begin{align*} A &= B Q_1 + R_1 & \deg(R_1) < \deg(B) \\ B &= R_1 Q_2 + R_2 & \deg(R_2) < \deg(R_1) \\ &\vdots & \\ R_{k-2} &= R_{k-1} Q_k + R_k & \deg(R_k) < \deg(R_{k-1}) \\ R_{k-1} &= R_k Q_{k+1} + 0 \end{align*}
+    Le dernier reste non nul $R_k$ est un PGCD de $A$ et $B$. Le PGCD unitaire $A \wedge B$ est obtenu en divisant $R_k$ par son coefficient dominant.
+</div>
+
+<div class="theorem">
+    <strong>Identité de Bézout :</strong> Soient $A, B \in \mathbb{K}[X]$, non tous deux nuls. Il existe $U, V \in \mathbb{K}[X]$ tels que :
+    $$ AU + BV = A \wedge B $$
+</div>
+
+<div class="method">
+    <strong>Algorithme d'Euclide étendu :</strong> Comme pour les entiers, on remonte les étapes de l'algorithme d'Euclide pour exprimer le dernier reste non nul $R_k$ (un PGCD) comme combinaison linéaire de $A$ et $B$. On divise ensuite par le coefficient dominant de $R_k$ si on veut $A \wedge B$ (le PGCD unitaire).
+</div>
+
+<div class="definition">
+    <strong>PPCM de polynômes :</strong> Soient $A, B \in \mathbb{K}[X]$ non nuls. Un polynôme $M$ est un PPCM de $A$ et $B$ s'il est un multiple commun de degré minimal. L'unique PPCM unitaire est noté $A \vee B$.
+    <br>Relation : $(A \wedge B) (A \vee B)$ est associé à $AB$. Si $A, B$ sont unitaires, $(A \wedge B) (A \vee B) = AB$.
+</div>
+
+<div class="definition">
+    <strong>Polynômes premiers entre eux (Coprimes) :</strong> $A, B \in \mathbb{K}[X]$ sont premiers entre eux si $A \wedge B = 1$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Bézout :</strong> $A, B \in \mathbb{K}[X]$ (non tous nuls) sont premiers entre eux si et seulement s'il existe $U, V \in \mathbb{K}[X]$ tels que $AU + BV = 1$.
+</div>
+
+<div class="theorem">
+    <strong>Lemme de Gauss :</strong> Si $A | BC$ et $A \wedge B = 1$, alors $A | C$.
+</div>
+
+<div class="definition">
+    <strong>PGCD et primalité pour plusieurs polynômes :</strong> Notions analogues à $\mathbb{Z}$ (PGCD $A_1 \wedge \dots \wedge A_n$, relation de Bézout généralisée $\sum A_i U_i = A_1 \wedge \dots \wedge A_n$, premiers entre eux dans leur ensemble, premiers entre eux deux à deux).
+</div>
+
+<div class="exercise">
+    <strong>Exercice E.1 :</strong>
+    <ol>
+        <li>Calculer $A \wedge B$ pour $A(X) = X^4 - 1$ et $B(X) = X^3 - 1$.</li>
+        <li>Trouver $U, V \in \mathbb{R}[X]$ tels que $(X^2+1)U(X) + (X-1)V(X) = 1$.</li>
+        <li>Montrer que $X-a$ et $X-b$ sont premiers entre eux si et seulement si $a \neq b$.</li>
+        <li>Soit $P \in \mathbb{K}[X]$. Montrer que $P(X)$ et $P(X)+1$ sont premiers entre eux.</li>
+    </ol>
+</div>
+
+
+     <h4 id="polynomes-irreductibles">f) Polynômes irréductibles de $\mathbb{C}[X]$ et $\mathbb{R}[X]$</h4>
+
+<div class="definition">
+    <strong>Polynôme irréductible :</strong> Un polynôme $P \in \mathbb{K}[X]$ est dit <strong>irréductible</strong> sur $\mathbb{K}$ s'il est non constant et si ses seuls diviseurs unitaires dans $\mathbb{K}[X]$ sont 1 et $P$ (à une constante multiplicative près).
+    <br>Autrement dit, si $P = AB$, alors $A$ ou $B$ doit être un polynôme constant (associé à 1).
+</div>
+
+<div class="theorem">
+    <strong>Théorème de d'Alembert-Gauss (Fondamental de l'Algèbre) :</strong> Tout polynôme non constant de $\mathbb{C}[X]$ admet au moins une racine dans $\mathbb{C}$.
+    <br><strong>Corollaire :</strong> Tout polynôme non constant $P \in \mathbb{C}[X]$ est scindé sur $\mathbb{C}$.
+</div>
+
+<div class="comment">
+    La démonstration du théorème de d'Alembert-Gauss est difficile et hors programme.
+</div>
+
+<div class="theorem">
+    <strong>Polynômes irréductibles de $\mathbb{C}[X]$ :</strong> Les polynômes irréductibles de $\mathbb{C}[X]$ sont exactement les polynômes de degré 1.
+</div>
+
+<div class="theorem">
+    <strong>Décomposition en facteurs irréductibles dans $\mathbb{C}[X]$ :</strong> Tout polynôme $P \in \mathbb{C}[X]$ non constant, de coefficient dominant $c$ et de degré $n \ge 1$, s'écrit de manière unique (à l'ordre près des facteurs) :
+    $$ P(X) = c (X - \alpha_1)^{m_1} \dots (X - \alpha_k)^{m_k} $$
+    où $\alpha_1, \dots, \alpha_k$ sont les racines distinctes de $P$ dans $\mathbb{C}$, et $m_1, \dots, m_k$ sont leurs multiplicités respectives ($m_i \ge 1$ et $\sum m_i = n$).
+</div>
+
+<div class="comment">
+    <strong>Conséquences :</strong>
+    <ul>
+        <li><strong>Divisibilité :</strong> $A|B$ dans $\mathbb{C}[X] \iff$ pour toute racine $\alpha$ de $A$, $\alpha$ est aussi racine de $B$ avec une multiplicité au moins aussi grande.</li>
+        <li><strong>PGCD :</strong> $A \wedge B = \prod (X-\alpha)^{\min(m_\alpha(A), m_\alpha(B))}$ (produit sur toutes les racines $\alpha$ de $A$ ou $B$, $m_\alpha(P)$ = multiplicité de $\alpha$ dans $P$).</li>
+        <li><strong>PPCM :</strong> $A \vee B = \prod (X-\alpha)^{\max(m_\alpha(A), m_\alpha(B))}$.</li>
+        <li><strong>Premiers entre eux :</strong> $A \wedge B = 1 \iff A$ et $B$ n'ont aucune racine commune dans $\mathbb{C}$.</li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Factorisation de $X^n - 1$ dans $\mathbb{C}[X]$ :</strong> Les racines sont les $n$ racines $n$-ièmes de l'unité $\omega_k = e^{2ik\pi/n}$ pour $k=0, \dots, n-1$. Elles sont toutes distinctes (simples).
+    $$ X^n - 1 = \prod_{k=0}^{n-1} (X - e^{2ik\pi/n}) $$
+</div>
+
+<div class="theorem">
+    <strong>Racines conjuguées :</strong> Si $P \in \mathbb{R}[X]$ et si $\alpha \in \mathbb{C}$ est une racine de $P$ de multiplicité $m$, alors son conjugué $\overline{\alpha}$ est aussi une racine de $P$ de même multiplicité $m$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Si $P(X) = \sum a_k X^k$ avec $a_k \in \mathbb{R}$. Alors $P(\overline{\alpha}) = \sum a_k (\overline{\alpha})^k = \sum \overline{a_k} \overline{\alpha^k} = \overline{\sum a_k \alpha^k} = \overline{P(\alpha)}$. Donc $P(\alpha)=0 \implies P(\overline{\alpha})=0$. La preuve pour la multiplicité utilise les dérivées (qui sont aussi à coefficients réels) et la caractérisation par les dérivées nulles.
+</div>
+
+<div class="theorem">
+    <strong>Polynômes irréductibles de $\mathbb{R}[X]$ :</strong> Les polynômes irréductibles unitaires de $\mathbb{R}[X]$ sont :
+    <ol>
+        <li>Les polynômes de degré 1 : $(X-a)$ avec $a \in \mathbb{R}$.</li>
+        <li>Les polynômes de degré 2 : $(X^2 + bX + c)$ avec $b, c \in \mathbb{R}$ et discriminant $\Delta = b^2 - 4c < 0$. (Ces polynômes ont deux racines complexes conjuguées non réelles).</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Décomposition en facteurs irréductibles dans $\mathbb{R}[X]$ :</strong> Tout polynôme $P \in \mathbb{R}[X]$ non constant, de coefficient dominant $c$, s'écrit de manière unique (à l'ordre près des facteurs) :
+    $$ P(X) = c \prod_{i=1}^r (X - a_i)^{m_i} \prod_{j=1}^s (X^2 + b_j X + c_j)^{n_j} $$
+    où $a_i$ sont les racines réelles distinctes de $P$ avec multiplicités $m_i$, et $X^2+b_j X+c_j$ sont les facteurs irréductibles de degré 2 distincts (avec $b_j^2 - 4c_j < 0$) correspondant aux paires de racines complexes conjuguées non réelles, avec multiplicités $n_j$.
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> $P(X) = X^4 + 1$. Pas de racines réelles.
+    Racines complexes : solutions de $z^4 = -1 = e^{i\pi}$. Ce sont $e^{i\pi/4}, e^{i3\pi/4}, e^{i5\pi/4}, e^{i7\pi/4}$.
+    $\alpha_1 = e^{i\pi/4} = \frac{\sqrt{2}}{2} + i \frac{\sqrt{2}}{2}$. $\overline{\alpha_1} = e^{-i\pi/4} = e^{i7\pi/4}$.
+    $\alpha_2 = e^{i3\pi/4} = -\frac{\sqrt{2}}{2} + i \frac{\sqrt{2}}{2}$. $\overline{\alpha_2} = e^{-i3\pi/4} = e^{i5\pi/4}$.
+    Facteurs irréductibles dans $\mathbb{R}[X]$ :
+    $(X-\alpha_1)(X-\overline{\alpha_1}) = X^2 - (\alpha_1+\overline{\alpha_1})X + \alpha_1\overline{\alpha_1} = X^2 - 2\text{Re}(\alpha_1)X + |\alpha_1|^2 = X^2 - \sqrt{2}X + 1$.
+    $(X-\alpha_2)(X-\overline{\alpha_2}) = X^2 - 2\text{Re}(\alpha_2)X + |\alpha_2|^2 = X^2 + \sqrt{2}X + 1$.
+    Décomposition dans $\mathbb{R}[X]$ : $X^4 + 1 = (X^2 - \sqrt{2}X + 1)(X^2 + \sqrt{2}X + 1)$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice F.1 :</strong>
+    <ol>
+        <li>Factoriser $P(X) = X^3 + 1$ dans $\mathbb{C}[X]$ et dans $\mathbb{R}[X]$.</li>
+        <li>Le polynôme $Q(X) = X^4 + X^2 + 1$ est-il irréductible dans $\mathbb{R}[X]$ ? (Indication: poser $Y=X^2$). Factoriser $Q$ dans $\mathbb{R}[X]$.</li>
+        <li>Soit $P \in \mathbb{R}[X]$. Montrer que si $\deg(P)$ est impair, alors $P$ a au moins une racine réelle.</li>
+    </ol>
+</div>
+
+
+    <h4 id="polynomes-interpolation">g) Formule d'interpolation de Lagrange</h4>
+
+<div class="theorem">
+    <strong>Interpolation de Lagrange :</strong> Soient $x_0, x_1, \dots, x_n$ des éléments distincts de $\mathbb{K}$ ($n+1$ points), et $y_0, y_1, \dots, y_n$ des éléments (non nécessairement distincts) de $\mathbb{K}$.
+    Il existe un unique polynôme $P \in \mathbb{K}_n[X]$ (de degré au plus $n$) tel que $P(x_i) = y_i$ for all $i = 0, \dots, n$.
+</div>
+
+<div class="method">
+    <strong>Polynômes de base de Lagrange :</strong> Pour $j = 0, \dots, n$, on définit le polynôme $L_j(X)$ par :
+    $$ L_j(X) = \prod_{\substack{k=0 \\ k \neq j}}^n \frac{X - x_k}{x_j - x_k} $$
+    Propriétés : $\deg(L_j) = n$ et $L_j(x_i) = \delta_{i,j}$.
+    <br><strong>Expression du polynôme interpolateur :</strong> L'unique polynôme $P \in \mathbb{K}_n[X]$ vérifiant $P(x_i) = y_i$ est donné par :
+    $$ P(X) = \sum_{j=0}^n y_j L_j(X) $$
+</div>
+
+<div class="proof">
+    <strong>Preuve (Unicité) :</strong> Supposons $P_1, P_2 \in \mathbb{K}_n[X]$ tels que $P_1(x_i) = y_i$ and $P_2(x_i) = y_i$ for all $i$. Soit $D = P_1 - P_2$. Alors $D \in \mathbb{K}_n[X]$ et $D(x_i) = y_i - y_i = 0$ pour $i=0, \dots, n$. $D$ a donc (au moins) $n+1$ racines distinctes. Puisque $\deg(D) \le n$, la seule possibilité est $D=0$, donc $P_1 = P_2$.
+    <strong>Preuve (Existence) :</strong> Le polynôme $P(X) = \sum y_j L_j(X)$ est une combinaison linéaire de polynômes de degré $n$, donc $\deg(P) \le n$. Vérifions les conditions :
+    $P(x_i) = \sum_{j=0}^n y_j L_j(x_i) = \sum_{j=0}^n y_j \delta_{i,j} = y_i \times 1 = y_i$. Donc $P$ convient.
+</div>
+
+<div class="theorem">
+    <strong>Description de tous les polynômes interpolateurs :</strong> L'ensemble de tous les polynômes $Q \in \mathbb{K}[X]$ (sans restriction de degré) tels que $Q(x_i) = y_i$ pour $i=0, \dots, n$ est donné par :
+    $$ \{ P(X) + M(X) \prod_{i=0}^n (X-x_i) \mid M \in \mathbb{K}[X] \} $$
+    où $P$ est l'unique polynôme interpolateur de Lagrange de degré au plus $n$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice G.1 :</strong>
+    <ol>
+        <li>Trouver le polynôme $P \in \mathbb{R}_2[X]$ tel que $P(0)=1$, $P(1)=2$, $P(2)=7$.</li>
+        <li>Soit $n \ge 1$. Montrer que $\sum_{j=0}^n L_j(X) = 1$ (où les $L_j$ sont les polynômes de base de Lagrange associés aux points $x_0, \dots, x_n$).</li>
+    </ol>
+</div>
+
+
+     <h4 id="fractions-rationnelles">h) Fractions rationnelles</h4>
+
+<div class="definition">
+    <strong>Fraction rationnelle :</strong> Une <strong>fraction rationnelle</strong> à une indéterminée $X$ et à coefficients dans $\mathbb{K}$ est une expression formelle $F(X) = \frac{P(X)}{Q(X)}$, où $P, Q \in \mathbb{K}[X]$ et $Q \neq 0$.
+    <br>Deux fractions $\frac{P_1}{Q_1}$ et $\frac{P_2}{Q_2}$ sont considérées égales si $P_1 Q_2 = P_2 Q_1$.
+    <br>L'ensemble des fractions rationnelles est noté $\mathbb{K}(X)$.
+    <br>$(\mathbb{K}(X), +, \times)$ est un corps commutatif (le corps des fractions de l'anneau $\mathbb{K}[X]$).
+</div>
+
+<div class="comment">
+    La construction formelle de $\mathbb{K}(X)$ comme corps des fractions de $\mathbb{K}[X]$ est hors programme.
+</div>
+
+<div class="definition">
+    <strong>Forme irréductible :</strong> Toute fraction rationnelle $F = P/Q$ peut s'écrire sous <strong>forme irréductible</strong> $F = A/B$ où $A, B \in \mathbb{K}[X]$, $B \ne 0$, et $A \wedge B = 1$. Cette forme est unique à multiplication de $A$ et $B$ par une même constante non nulle près (on choisit souvent $B$ unitaire).
+    <br><em>Obtention :</em> $A = P / (P \wedge Q)$ et $B = Q / (P \wedge Q)$.
+</div>
+
+<div class="definition">
+    <strong>Fonction rationnelle :</strong> À une fraction rationnelle $F=P/Q$, on associe la <strong>fonction rationnelle</strong> $\tilde{F}: \mathbb{K} \setminus \{\text{racines de } Q\} \to \mathbb{K}$ définie par $\tilde{F}(x) = P(x)/Q(x)$.
+</div>
+
+<div class="definition">
+    <strong>Degré, partie entière, pôles, zéros :</strong> Soit $F = A/B$ une fraction rationnelle sous forme irréductible.
+    <ul>
+        <li><strong>Degré :</strong> $\deg(F) = \deg(A) - \deg(B)$.</li>
+        <li><strong>Zéros :</strong> Les racines de $A$ sont les zéros de $F$. La multiplicité d'un zéro $\alpha$ est la multiplicité de $\alpha$ comme racine de $A$.</li>
+        <li><strong>Pôles :</strong> Les racines de $B$ sont les pôles de $F$. La multiplicité (ou ordre) d'un pôle $\beta$ est la multiplicité de $\beta$ comme racine de $B$.</li>
+        <li><strong>Partie entière (ou polynomiale) :</strong> C'est le quotient $E$ de la division euclidienne de $A$ par $B$. $F = A/B = E + R/B$, avec $\deg(R) < \deg(B)$. La partie entière $E$ est nulle si et seulement si $\deg(F) < 0$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice H.1 :</strong>
+    <ol>
+        <li>Mettre $F(X) = \frac{X^3 - 1}{X^2 - 3X + 2}$ sous forme irréductible.</li>
+        <li>Déterminer le degré, les zéros, les pôles (avec multiplicités) et la partie entière de $F(X) = \frac{(X-1)^2(X+2)}{X^3(X-2)}$.</li>
+    </ol>
+</div>
+
+
+     <h4 id="decomposition-elements-simples">i) Décomposition en éléments simples sur $\mathbb{C}$ et sur $\mathbb{R}$</h4>
+
+<div class="theorem">
+    <strong>Théorème de Décomposition en Éléments Simples (DES) :</strong> Soit $F = P/Q$ une fraction rationnelle dans $\mathbb{K}(X)$, avec $\mathbb{K}=\mathbb{C}$ ou $\mathbb{R}$.
+    Il existe une unique décomposition de $F$ sous la forme :
+    $$ F(X) = E(X) + \sum_{i} \sum_{k=1}^{m_i} \frac{c_{i,k}}{(X-a_i)^k} \quad (\text{sur } \mathbb{C}) $$
+    ou
+    $$ F(X) = E(X) + \sum_{i} \sum_{k=1}^{m_i} \frac{c_{i,k}}{(X-a_i)^k} + \sum_{j} \sum_{l=1}^{n_j} \frac{d_{j,l}X + e_{j,l}}{(X^2+b_j X+c_j)^l} \quad (\text{sur } \mathbb{R}) $$
+    où :
+    <ul>
+        <li>$E(X)$ est la partie entière de $F$.</li>
+        <li>Les $a_i$ sont les pôles distincts de $F$.</li>
+        <li>Dans la DES sur $\mathbb{C}$, les $a_i$ sont les racines distinctes du dénominateur $Q$ (après mise sous forme irréductible $F=A/B$), et $m_i$ est la multiplicité de $a_i$ comme racine de $B$. Les $c_{i,k}$ sont des constantes complexes.</li>
+        <li>Dans la DES sur $\mathbb{R}$, les $a_i$ sont les racines réelles distinctes de $B$ de multiplicités $m_i$, et les $X^2+b_j X+c_j$ sont les facteurs irréductibles de degré 2 distincts de $B$ (avec $b_j^2-4c_j<0$) de multiplicités $n_j$. Les $c_{i,k}, d_{j,l}, e_{j,l}$ sont des constantes réelles.</li>
+        <li>La somme des termes correspondant à un pôle $p$ est appelée la <strong>partie polaire</strong> de $F$ relative au pôle $p$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    La démonstration (existence et unicité) est hors programme. L'unicité garantit que les méthodes pratiques de calcul des coefficients sont valides. Toute technicité excessive dans les calculs est exclue (on se limite souvent à des pôles simples ou doubles, ou de faible multiplicité).
+</div>
+
+<div class="method">
+    <strong>Techniques de calcul des coefficients :</strong> Soit $F = P/Q$.
+    <ul>
+        <li><strong>Partie entière $E$ :</strong> Division euclidienne de $P$ par $Q$. On travaille ensuite sur $F-E = R/Q$ avec $\deg(R) < \deg(Q)$.</li>
+        <li><strong>Coefficient pour un pôle simple $a$ (sur $\mathbb{R}$ ou $\mathbb{C}$) :</strong> La partie polaire est $\frac{c}{X-a}$. Pour trouver $c$, on calcule $\lim_{x \to a} (X-a)F(X) = c$. Souvent $(X-a)F(X) = \frac{P(X)}{Q(X)/(X-a)}$. Si $Q(X)=(X-a)Q_1(X)$ avec $Q_1(a) \ne 0$, alors $c = \frac{P(a)}{Q_1(a)}$. Si on sait que $Q'(a) \ne 0$ (cas d'un pôle simple), $Q_1(a) = Q'(a)$, donc $c = \frac{P(a)}{Q'(a)}$.</li>
+        <li><strong>Coefficient pour un pôle multiple $a$ d'ordre $m$ (sur $\mathbb{R}$ ou $\mathbb{C}$) :</strong> La partie polaire est $\sum_{k=1}^m \frac{c_k}{(X-a)^k}$. On peut calculer $c_m$ par $\lim_{x \to a} (X-a)^m F(X) = c_m$. Pour les autres $c_k$, on peut poser $Y=X-a$, faire un développement limité de $(Y^m F(a+Y))$ au voisinage de $Y=0$, ou utiliser des techniques de soustraction de la partie polaire déjà trouvée, ou évaluer la fraction en des points spécifiques.</li>
+        <li><strong>Coefficients pour un facteur irréductible $X^2+bX+c$ d'ordre 1 (sur $\mathbb{R}$) :</strong> La partie polaire est $\frac{dX+e}{X^2+bX+c}$. On peut utiliser les racines complexes conjuguées $\alpha, \overline{\alpha}$ de $X^2+bX+c$. On calcule le coefficient $c_\alpha$ de $\frac{1}{X-\alpha}$ dans la DES sur $\mathbb{C}$ (méthode pôle simple). Alors $c_\alpha = \lim (X-\alpha)F(X)$. La partie polaire sur $\mathbb{R}$ est $\frac{c_\alpha}{X-\alpha} + \frac{\overline{c_\alpha}}{X-\overline{\alpha}} = \frac{(c_\alpha + \overline{c_\alpha})X - (\alpha \overline{c_\alpha} + \overline{\alpha} c_\alpha)}{X^2+bX+c}$. Donc $d=2\text{Re}(c_\alpha)$ et $e = -2\text{Re}(\overline{\alpha} c_\alpha)$. Alternativement : multiplier par $X^2+bX+c$ et évaluer en $\alpha$. Ou utiliser des valeurs particulières (e.g., évaluer en 0, limite en $+\infty$ multipliée par $X$).</li>
+        <li><strong>Parité :</strong> Si $F$ est paire ou impaire, sa DES a des symétries.</li>
+        <li><strong>Limites :</strong> Multiplier par $X$ et faire $X \to +\infty$ donne une relation sur certains coefficients.</li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Exemple 1 :</strong> $F(X) = \frac{1}{X(X-1)^2}$ (sur $\mathbb{R}$).
+    Partie entière $E=0$. Pôles : 0 (simple), 1 (double).
+    Forme de la DES : $\frac{a}{X} + \frac{b}{X-1} + \frac{c}{(X-1)^2}$.
+    *   Coefficient de $1/X$: $a = \lim_{X \to 0} X F(X) = \lim_{X \to 0} \frac{1}{(X-1)^2} = 1$.
+    *   Coefficient de $1/(X-1)^2$: $c = \lim_{X \to 1} (X-1)^2 F(X) = \lim_{X \to 1} \frac{1}{X} = 1$.
+    *   Coefficient de $1/(X-1)$: On peut utiliser $\lim_{X \to \infty} X F(X)$. $XF(X) = \frac{X}{X(X-1)^2} = \frac{1}{(X-1)^2} \to 0$. D'autre part, $X(\frac{a}{X} + \frac{b}{X-1} + \frac{c}{(X-1)^2}) = a + \frac{bX}{X-1} + \frac{cX}{(X-1)^2} \to a + b + 0$. Donc $a+b=0$. Comme $a=1$, $b=-1$.
+    DES: $\frac{1}{X} - \frac{1}{X-1} + \frac{1}{(X-1)^2}$.
+
+    <strong>Exemple 2 :</strong> $F(X) = \frac{X}{X^2+1}$ (sur $\mathbb{R}$). Irréductible. Pôles complexes $i, -i$ (simples). Facteur $X^2+1$ irréductible sur $\mathbb{R}$. Degré < 0, partie entière nulle. La DES est $F(X)$ elle-même.
+    Sur $\mathbb{C}$: $\frac{X}{(X-i)(X+i)} = \frac{a}{X-i} + \frac{b}{X+i}$.
+    $a = \lim_{X \to i} (X-i)F(X) = \lim_{X \to i} \frac{X}{X+i} = \frac{i}{2i} = 1/2$.
+    $b = \lim_{X \to -i} (X+i)F(X) = \lim_{X \to -i} \frac{X}{X-i} = \frac{-i}{-2i} = 1/2$.
+    DES sur $\mathbb{C}$: $\frac{1/2}{X-i} + \frac{1/2}{X+i}$. (En réduisant au même dénominateur, on retrouve $F(X)$).
+</div>
+
+<div class="theorem">
+    <strong>Décomposition de $P'/P$ :</strong> Si $P(X) = c \prod_{i=1}^k (X - \alpha_i)^{m_i}$ est la décomposition de $P$ dans $\mathbb{C}[X]$ (avec $\alpha_i$ distincts), alors la décomposition en éléments simples de $\frac{P'(X)}{P(X)}$ sur $\mathbb{C}$ est :
+    $$ \frac{P'(X)}{P(X)} = \sum_{i=1}^k \frac{m_i}{X - \alpha_i} $$
+    (La partie entière est nulle car $\deg(P') = \deg(P)-1$).
+</div>
+
+<div class="comment">
+    <strong>Application :</strong> La DES est fondamentale pour le calcul d'intégrales de fractions rationnelles et pour résoudre certaines équations différentielles linéaires. Elle est aussi utile en transformée de Laplace ou en Z.
+</div>
+
+<div class="exercise">
+    <strong>Exercice I.1 :</strong>
+    <ol>
+        <li>Décomposer en éléments simples sur $\mathbb{R}$ :
+            a) $F(X) = \frac{1}{X^2 - 1}$
+            b) $G(X) = \frac{X^3}{X^2+4}$
+            c) $H(X) = \frac{1}{(X+1)(X^2+X+1)}$
+        </li>
+        <li>Soit $P(X) = X(X-1)(X-2)$. Calculer $\frac{P'(X)}{P(X)}$.</li>
+    </ol>
+</div>
+
+<!-- Ignoré car hors sujet pour cette section
+    <h2 id="deuxieme-semestre">Deuxième semestre</h2>
+     <p class="intro-text">
+        Le deuxième semestre s'organise autour de trois objectifs majeurs. [...]
+    </p>
+-->
+
+</body>
+</html>
