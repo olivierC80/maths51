@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Procédés Sommatoires Discrets</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Procédés Sommatoires Discrets</h1>
+
+<h3 id="procedes-sommatoires">Procédés sommatoires discrets</h3>
+    <p class="intro-text">
+        Cette partie étend la notion de somme finie et de série convergente à des familles quelconques (potentiellement non dénombrables) d'indices. L'accent est mis sur les familles de termes positifs, qui permettent des manipulations plus souples, puis sur les familles de termes complexes via la sommabilité (convergence absolue).
+    </p>
+
+     <h4 id="familles-sommables-positifs">e) Familles sommables de nombres réels positifs</h4>
+    <table class="content-table">
+         <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+        <tbody>
+            <tr>
+                <td>Convention de calcul et relation d'ordre dans $[0, +\infty]$. Borne supérieure dans $[0, +\infty]$.</td>
+                <td>$[0, +\infty] = \mathbb{R}^+ \cup \{+\infty\}$. On étend l'addition et la multiplication par $x+\infty = \infty$ ($x \in \mathbb{R}$), $x \times \infty = \infty$ ($x>0$), $0 \times \infty = 0$. Toute partie non vide de $[0, +\infty]$ admet une borne supérieure dans $[0, +\infty]$.</td>
+            </tr>
+            <tr>
+                <td>Somme d'une famille $(u_i)_{i \in I}$ d'éléments de $[0, +\infty]$, définie comme borne supérieure dans $[0, +\infty]$ de l'ensemble des sommes finies $\sum_{i \in F} u_i$ quand $F$ décrit l'ensemble des parties finies de $I$.</td>
+                <td>La somme est notée $\sum_{i \in I} u_i$. Cas où $I$ est fini, la somme coïncide. Cas où $I = \mathbb{N}$, $\sum_{n \in \mathbb{N}} u_n$ est la somme de la série $\sum u_n$ si elle converge, et $+\infty$ sinon. Invariance de la somme par permutation de $I$.</td>
+            </tr>
+             <tr>
+                <td>La famille $(u_i)_{i \in I}$ d'éléments de $\mathbb{R}^+$ est dite sommable si $\sum_{i \in I} u_i < +\infty$.</td>
+                 <td>Pour les familles à termes positifs, les calculs (interversions, regroupements) sont toujours justifiés. Le résultat est soit un réel positif (famille sommable), soit $+\infty$.</td>
+            </tr>
+            <tr>
+                <td>Opérations : somme, multiplication par un réel positif.</td>
+                <td>$\sum_{i \in I} (\lambda u_i + \mu v_i) = \lambda \sum_{i \in I} u_i + \mu \sum_{i \in I} v_i$ pour $\lambda, \mu \ge 0$, avec les conventions sur $+\infty$.</td>
+            </tr>
+             <tr>
+                <td>Théorème de sommation par paquets : si $I$ est réunion disjointe des $I_j$ pour $j \in J$ et si $(u_i)_{i \in I}$ est à valeurs dans $\mathbb{R}^+$, alors $\sum_{j \in J} (\sum_{i \in I_j} u_i) = \sum_{i \in I} u_i$.</td>
+                <td>La démonstration est hors programme. Permet de regrouper les termes.</td>
+            </tr>
+             <tr>
+                <td>Cas où $I$ est un produit : théorème de Fubini positif.</td>
+                <td>Si $I=J \times K$, $\sum_{(j,k) \in I} u_{j,k} = \sum_{j \in J} (\sum_{k \in K} u_{j,k}) = \sum_{k \in K} (\sum_{j \in J} u_{j,k})$. Les trois quantités sont égales (finies ou $+\infty$).</td>
+            </tr>
+        </tbody>
+    </table>
+
+<div class="comment">
+    <strong>Cadre $[0, +\infty]$ :</strong> On travaille dans la droite achevée positive $[0, +\infty] = \mathbb{R}^+ \cup \{+\infty\}$.
+    On étend l'addition et la multiplication par :
+    <ul>
+        <li>$x + (+\infty) = +\infty + x = +\infty$ pour tout $x \in [0, +\infty]$.</li>
+        <li>$x \times (+\infty) = +\infty \times x = +\infty$ pour tout $x \in ]0, +\infty]$.</li>
+        <li>$0 \times (+\infty) = +\infty \times 0 = 0$.</li>
+    </ul>
+    Toute partie non vide $A$ de $[0, +\infty]$ admet une borne supérieure $\sup A \in [0, +\infty]$. Si $A$ n'est pas majorée dans $\mathbb{R}$, $\sup A = +\infty$.
+</div>
+
+<div class="definition">
+    <strong>Somme d'une famille à termes positifs :</strong> Soit $I$ un ensemble d'indices (quelconque, fini ou infini) et $(u_i)_{i \in I}$ une famille de nombres réels positifs ou nuls ($u_i \in [0, +\infty[$).
+    On note $\mathcal{F}(I)$ l'ensemble des parties finies de $I$.
+    La <strong>somme</strong> de la famille $(u_i)_{i \in I}$ est définie comme la borne supérieure (dans $[0, +\infty]$) de l'ensemble des sommes finies :
+    $$ \sum_{i \in I} u_i = \sup \left\{ \sum_{i \in F} u_i \mid F \in \mathcal{F}(I) \right\} \in [0, +\infty] $$
+</div>
+
+<div class="comment">
+    <strong>Liens avec sommes usuelles :</strong>
+    <ul>
+        <li>Si $I$ est fini, $I = \{i_1, \dots, i_n\}$, alors $\sum_{i \in I} u_i = u_{i_1} + \dots + u_{i_n}$ (la somme usuelle).</li>
+        <li>Si $I = \mathbb{N}$, soit $S_N = \sum_{n=0}^N u_n$ la $N$-ième somme partielle de la série $\sum u_n$. L'ensemble des sommes finies est $\{ \sum_{i \in F} u_i \mid F \subset \mathbb{N} \text{ fini} \}$. Comme les $u_i \ge 0$, la suite $(S_N)$ est croissante. Le supremum des sommes finies est égal à la limite de la suite $(S_N)$. Donc $\sum_{n \in \mathbb{N}} u_n = \lim_{N \to \infty} S_N = \sum_{n=0}^\infty u_n$ (somme de la série, qui vaut soit un réel positif si elle converge, soit $+\infty$ si elle diverge).</li>
+    </ul>
+    <strong>Propriété fondamentale (Familles positives) :</strong> La somme $\sum_{i \in I} u_i$ ne dépend pas de l'ordre des termes. On peut permuter, regrouper, intervertir les indices sans changer la valeur de la somme (qui peut être $+\infty$).
+</div>
+
+<div class="definition">
+    <strong>Famille sommable (cas positif) :</strong> Une famille $(u_i)_{i \in I}$ de réels positifs ou nuls est dite <strong>sommable</strong> si sa somme est finie :
+    $$ \sum_{i \in I} u_i < +\infty $$
+</div>
+
+<div class="comment">
+    Pour les familles à termes positifs, la sommabilité équivaut à la majoration de l'ensemble des sommes finies. Si une famille est sommable, alors l'ensemble $\{ i \in I \mid u_i > 0 \}$ est au plus dénombrable.
+</div>
+
+<div class="theorem">
+    <strong>Opérations sur les sommes (cas positif) :</strong> Soient $(u_i)_{i \in I}$ et $(v_i)_{i \in I}$ deux familles à termes dans $[0, +\infty]$. Pour tous $\lambda, \mu \in [0, +\infty]$ :
+    <ul>
+        <li><strong>Linéarité positive :</strong> $\sum_{i \in I} (\lambda u_i + \mu v_i) = \lambda \sum_{i \in I} u_i + \mu \sum_{i \in I} v_i$ (avec les conventions sur $+\infty$).</li>
+        <li><strong>Comparaison :</strong> Si $u_i \le v_i$ pour tout $i \in I$, alors $\sum_{i \in I} u_i \le \sum_{i \in I} v_i$.</li>
+        <li>(Conséquence) Si $(v_i)$ est sommable et $0 \le u_i \le v_i$, alors $(u_i)$ est sommable.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème de sommation par paquets (cas positif) :</strong> Soit $(u_i)_{i \in I}$ une famille de $\mathbb{R}^+$. Soit $(I_j)_{j \in J}$ une partition de $I$ ($I = \cup_{j \in J} I_j$ et $I_j \cap I_{j'} = \emptyset$ si $j \ne j'$). Alors :
+    $$ \sum_{i \in I} u_i = \sum_{j \in J} \left( \sum_{i \in I_j} u_i \right) $$
+    Les deux membres sont égaux, soit à un réel positif, soit à $+\infty$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Fubini (cas positif) :</strong> Soit $(u_{j,k})_{(j,k) \in J \times K}$ une famille de $\mathbb{R}^+$ indexée par un produit d'ensembles d'indices $J \times K$. Alors :
+    $$ \sum_{(j,k) \in J \times K} u_{j,k} = \sum_{j \in J} \left( \sum_{k \in K} u_{j,k} \right) = \sum_{k \in K} \left( \sum_{j \in J} u_{j,k} \right) $$
+    Les trois sommes sont égales (finies ou infinies). On peut intervertir l'ordre de sommation.
+</div>
+
+<div class="example">
+    <strong>Exemple (Série géométrique double) :</strong> Calculer $S = \sum_{(n,p) \in \mathbb{N}^* \times \mathbb{N}^*} \frac{1}{2^n 3^p}$.
+    Les termes sont positifs. On peut utiliser Fubini :
+    $S = \sum_{n=1}^\infty \left( \sum_{p=1}^\infty \frac{1}{2^n 3^p} \right) = \sum_{n=1}^\infty \frac{1}{2^n} \left( \sum_{p=1}^\infty (\frac{1}{3})^p \right)$.
+    La série géométrique $\sum_{p=1}^\infty (1/3)^p = \frac{1/3}{1 - 1/3} = \frac{1/3}{2/3} = 1/2$.
+    Donc $S = \sum_{n=1}^\infty \frac{1}{2^n} (\frac{1}{2}) = \frac{1}{2} \sum_{n=1}^\infty (\frac{1}{2})^n$.
+    La série $\sum_{n=1}^\infty (1/2)^n = \frac{1/2}{1 - 1/2} = 1$.
+    Finalement, $S = (1/2) \times 1 = 1/2$. La famille est sommable.
+    On aurait pu sommer sur $n$ d'abord : $\sum_{p=1}^\infty \frac{1}{3^p} (\sum_{n=1}^\infty \frac{1}{2^n}) = \sum_{p=1}^\infty \frac{1}{3^p} (1) = 1/2$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice E.1 :</strong>
+    <ol>
+        <li>La famille $(1/n)_{n \in \mathbb{N}^*}$ est-elle sommable ?</li>
+        <li>La famille $(1/k^2)_{k \in \mathbb{Z}^*}$ est-elle sommable ? Si oui, quelle est sa somme (utiliser $\sum_{n=1}^\infty 1/n^2 = \pi^2/6$) ?</li>
+        <li>Calculer $\sum_{(n,k) \in \mathbb{N}^2, n \ge k} \frac{1}{2^{n+1}}$. (Sommation par paquets : fixer $k$, sommer sur $n \ge k$, puis sommer sur $k$).</li>
+    </ol>
+</div>
+
+
+     <h4 id="familles-sommables-complexes">f) Familles sommables de nombres complexes</h4>
+    <table class="content-table">
+         <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+        <tbody>
+            <tr>
+                <td>La famille $(u_i)_{i \in I}$ de $\mathbb{C}^I$ est dite sommable si $\sum_{i \in I} |u_i| < +\infty$.</td>
+                <td>C'est la convergence absolue. Notation $\ell^1(I)$ pour l'espace des familles sommables. Pour $I = \mathbb{N}$, $(u_n)$ est sommable $\iff$ la série $\sum u_n$ est absolument convergente. Sommabilité d'une sous-famille : si $(u_i)_{i \in I}$ est sommable et $J \subseteq I$, alors $(u_j)_{j \in J}$ est sommable.</td>
+            </tr>
+            <tr>
+                 <td>Somme d'une famille sommable de nombres complexes.</td>
+                 <td>Si $(u_i)$ est sommable, sa somme $\sum_{i \in I} u_i$ est un nombre complexe bien défini. Propriété de Cauchy : Pour tout $\varepsilon > 0$, il existe une partie finie $F_0 \subset I$ telle que pour toute partie finie $F \supseteq F_0$, $|\sum_{i \in F} u_i - \sum_{i \in I} u_i| \le \varepsilon$ (souvent écrit: $|\sum_{i \in I \setminus F} u_i| \le \varepsilon$). Invariance de la somme par permutation (Commutativité).</td>
+            </tr>
+             <tr>
+                 <td>Soit $(u_i)_{i \in I}$ une famille de nombres complexes et soit $(v_i)_{i \in I}$ une famille sommable de réels positifs vérifiant, pour tout $i \in I$, $|u_i| \le v_i$. Alors $(u_i)_{i \in I}$ est sommable.</td>
+                <td>Théorème de comparaison par domination. Conséquence : $|\sum_{i \in I} u_i| \le \sum_{i \in I} |u_i| \le \sum_{i \in I} v_i$.</td>
+            </tr>
+             <tr>
+                 <td>Linéarité de la somme.</td>
+                <td>L'ensemble $\ell^1(I)$ est un $\mathbb{C}$-espace vectoriel, et l'application $u \mapsto \sum_{i \in I} u_i$ est une forme linéaire sur $\ell^1(I)$.</td>
+            </tr>
+            <tr>
+                <td>Théorème de sommation par paquets : si $I$ est réunion disjointe des $I_j$ pour $j \in J$, si $(u_i)_{i \in I}$ est sommable, alors pour tout $j$, $(u_i)_{i \in I_j}$ est sommable, la famille $(\sum_{i \in I_j} u_i)_{j \in J}$ est sommable, et $\sum_{j \in J} (\sum_{i \in I_j} u_i) = \sum_{i \in I} u_i$.</td>
+                <td>La démonstration est hors programme. Essentiel: l'hypothèse est la sommabilité de la famille initiale.</td>
+            </tr>
+             <tr>
+                <td>Cas où $I$ est un produit : théorème de Fubini. Si $(a_j)_{j \in J}$ et $(b_{k})_{k \in K}$ sont sommables, alors la famille produit $(a_j b_{k})_{(j,k) \in J \times K}$ est sommable et $\sum_{(j,k) \in J \times K} a_j b_{k} = (\sum_{j \in J} a_j) \times (\sum_{k \in K} b_{k})$.</td>
+                 <td>Extension, sans rédaction de la démonstration, au produit d'un nombre fini de familles sommables.</td>
+            </tr>
+              <tr>
+                <td>Produit de Cauchy de deux séries absolument convergentes.</td>
+                 <td>Application du théorème de Fubini à $I=\mathbb{N} \times \mathbb{N}$. Si $\sum a_n$ et $\sum b_n$ convergent absolument, leur produit de Cauchy $\sum c_n$ (avec $c_n = \sum_{k=0}^n a_k b_{n-k}$) converge absolument et $(\sum a_n)(\sum b_n) = (\sum c_n)$. Application : exponentielle complexe $e^{z+w}=e^z e^w$.</td>
+            </tr>
+        </tbody>
+    </table>
+
+<div class="definition">
+    <strong>Famille sommable (cas complexe ou réel) :</strong> Une famille $(u_i)_{i \in I}$ d'éléments de $\mathbb{K}$ ($\mathbb{R}$ ou $\mathbb{C}$) est dite <strong>sommable</strong> si la famille des modules (ou valeurs absolues) $(|u_i|)_{i \in I}$ est sommable (au sens des familles positives), c'est-à-dire si :
+    $$ \sum_{i \in I} |u_i| < +\infty $$
+    L'ensemble des familles sommables indexées par $I$ à valeurs dans $\mathbb{K}$ est noté $\ell^1(I, \mathbb{K})$ ou $\ell^1(I)$.
+</div>
+
+<div class="comment">
+    <strong>Lien avec séries :</strong> Pour $I=\mathbb{N}$, la famille $(u_n)_{n \in \mathbb{N}}$ est sommable si et seulement si la série $\sum u_n$ est <strong>absolument convergente</strong>.
+</div>
+
+<div class="theorem">
+    <strong>Somme d'une famille sommable :</strong> Si la famille $(u_i)_{i \in I}$ est sommable, alors :
+    <ol>
+        <li>La somme $\sum_{i \in I} u_i$ est bien définie comme un élément de $\mathbb{K}$.</li>
+        <li><strong>Commutativité :</strong> La somme ne dépend pas de l'ordre de sommation (elle est invariante par toute permutation $\sigma$ de $I$: $\sum_{i \in I} u_i = \sum_{i \in I} u_{\sigma(i)}$).</li>
+        <li><strong>Approximation :</strong> Pour tout $\epsilon > 0$, il existe une partie finie $F_0 \subseteq I$ telle que pour toute partie finie $F$ contenant $F_0$ ($F_0 \subseteq F \in \mathcal{F}(I)$), on a $|\sum_{i \in I} u_i - \sum_{i \in F} u_i| \le \epsilon$.</li>
+    </ol>
+</div>
+
+<div class="comment">
+    La définition formelle de la somme $\sum_{i \in I} u_i$ est plus délicate que pour les termes positifs. On peut la définir via les parties réelle et imaginaire, ou par des arguments de complétude. L'essentiel est d'admettre son existence et ses propriétés lorsque la famille est sommable.
+    <br>Attention : Pour une série $\sum u_n$ qui converge mais pas absolument (semi-convergente), la somme $\sum_{n=0}^\infty u_n$ existe, mais la famille $(u_n)_{n \in \mathbb{N}}$ n'est pas sommable, et on ne peut pas changer l'ordre des termes sans potentiellement changer la somme (Théorème de réarrangement de Riemann).
+</div>
+
+<div class="theorem">
+    <strong>Critère de sommabilité par domination :</strong> Soit $(u_i)_{i \in I}$ une famille de $\mathbb{K}$ et $(v_i)_{i \in I}$ une famille de $\mathbb{R}^+$. Si :
+    <ol>
+        <li>$|u_i| \le v_i$ pour tout $i \in I$.</li>
+        <li>La famille $(v_i)_{i \in I}$ est sommable ($\sum v_i < +\infty$).</li>
+    </ol>
+    Alors la famille $(u_i)_{i \in I}$ est sommable. De plus, $|\sum_{i \in I} u_i| \le \sum_{i \in I} |u_i| \le \sum_{i \in I} v_i$.
+</div>
+
+<div class="theorem">
+    <strong>Espace des familles sommables :</strong> L'ensemble $\ell^1(I, \mathbb{K})$ est un $\mathbb{K}$-espace vectoriel. L'application "somme" $S: \ell^1(I) \to \mathbb{K}$ définie par $S((u_i)) = \sum_{i \in I} u_i$ est une forme linéaire.
+    $$ \sum_{i \in I} (\lambda u_i + \mu v_i) = \lambda \sum_{i \in I} u_i + \mu \sum_{i \in I} v_i $$
+    (pour $(u_i), (v_i)$ sommables et $\lambda, \mu \in \mathbb{K}$).
+</div>
+
+<div class="theorem">
+    <strong>Théorème de sommation par paquets :</strong> Soit $(u_i)_{i \in I}$ une famille <strong>sommable</strong>. Soit $(I_j)_{j \in J}$ une partition de $I$. Alors :
+    <ol>
+        <li>Pour tout $j \in J$, la sous-famille $(u_i)_{i \in I_j}$ est sommable.</li>
+        <li>La famille des sommes partielles $(\sum_{i \in I_j} u_i)_{j \in J}$ est sommable.</li>
+        <li>On a l'égalité : $$ \sum_{i \in I} u_i = \sum_{j \in J} \left( \sum_{i \in I_j} u_i \right) $$</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Fubini :</strong> Soient $(a_j)_{j \in J}$ et $(b_k)_{k \in K}$ deux familles <strong>sommables</strong>. Alors la famille produit $(a_j b_k)_{(j,k) \in J \times K}$ est sommable, et on a :
+    $$ \sum_{(j,k) \in J \times K} a_j b_k = \left( \sum_{j \in J} a_j \right) \left( \sum_{k \in K} b_k \right) $$
+    De plus, on peut intervertir les sommations :
+    $$ \sum_{(j,k) \in J \times K} a_j b_k = \sum_{j \in J} \left( \sum_{k \in K} a_j b_k \right) = \sum_{k \in K} \left( \sum_{j \in J} a_j b_k \right) $$
+</div>
+
+<div class="theorem">
+    <strong>Produit de Cauchy de séries :</strong> Soient $\sum a_n$ et $\sum b_n$ deux séries à termes dans $\mathbb{K}$ qui convergent <strong>absolument</strong>.
+    On définit la série produit de Cauchy $\sum c_n$ par $c_n = \sum_{k=0}^n a_k b_{n-k}$.
+    Alors la série $\sum c_n$ converge absolument, et sa somme est le produit des sommes des deux séries :
+    $$ \sum_{n=0}^\infty c_n = \left( \sum_{n=0}^\infty a_n \right) \left( \sum_{n=0}^\infty b_n \right) $$
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (Produit de Cauchy) :</strong> Appliquer Fubini à la famille $(a_j b_k)_{(j,k) \in \mathbb{N} \times \mathbb{N}}$.
+    La sommabilité de $(a_j)$ et $(b_k)$ signifie $\sum |a_j| < \infty$ et $\sum |b_k| < \infty$.
+    Par Fubini positif, $\sum_{(j,k)} |a_j b_k| = \sum_j (\sum_k |a_j||b_k|) = \sum_j |a_j|(\sum_k |b_k|) = (\sum |a_j|)(\sum |b_k|) < \infty$.
+    Donc la famille $(a_j b_k)$ est sommable.
+    Par Fubini complexe, $\sum_{(j,k)} a_j b_k = (\sum a_j)(\sum b_k)$.
+    On peut regrouper par paquets selon la somme des indices $n = j+k$. Le paquet $I_n = \{ (j, k) \in \mathbb{N}^2 \mid j+k=n \} = \{ (0,n), (1,n-1), \dots, (n,0) \}$.
+    La somme du paquet $I_n$ est $\sum_{(j,k) \in I_n} a_j b_k = \sum_{k=0}^n a_k b_{n-k} = c_n$.
+    Par le théorème de sommation par paquets, $\sum_{(j,k)} a_j b_k = \sum_{n=0}^\infty (\sum_{(j,k) \in I_n} a_j b_k) = \sum_{n=0}^\infty c_n$.
+    Donc $(\sum a_n)(\sum b_n) = \sum c_n$. La convergence absolue de $\sum c_n$ vient de $\sum |c_n| = \sum |\sum_{k=0}^n a_k b_{n-k}| \le \sum_n \sum_{k=0}^n |a_k| |b_{n-k}|$, qui est la somme des termes positifs $|a_j||b_k|$ regroupés par paquets, donc elle est finie et égale à $(\sum |a_n|)(\sum |b_n|)$.
+</div>
+
+<div class="example">
+    <strong>Application : $e^{z+w} = e^z e^w$</strong>
+    On sait que $e^z = \sum_{n=0}^\infty \frac{z^n}{n!}$ converge absolument pour tout $z \in \mathbb{C}$.
+    Le produit de Cauchy de $\sum \frac{z^n}{n!}$ et $\sum \frac{w^n}{n!}$ est $\sum c_n$ avec :
+    $c_n = \sum_{k=0}^n \frac{z^k}{k!} \frac{w^{n-k}}{(n-k)!} = \frac{1}{n!} \sum_{k=0}^n \frac{n!}{k!(n-k)!} z^k w^{n-k} = \frac{1}{n!} \sum_{k=0}^n \binom{n}{k} z^k w^{n-k} = \frac{(z+w)^n}{n!}$.
+    Comme les séries pour $e^z$ et $e^w$ convergent absolument, le théorème s'applique :
+    $e^z e^w = (\sum \frac{z^n}{n!})(\sum \frac{w^n}{n!}) = \sum c_n = \sum_{n=0}^\infty \frac{(z+w)^n}{n!} = e^{z+w}$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice F.1 :</strong>
+    <ol>
+        <li>La famille $(\frac{(-1)^n}{n})_{n \in \mathbb{N}^*}$ est-elle sommable ?</li>
+        <li>La famille $(\frac{z^n}{n!})_{n \in \mathbb{N}}$ est-elle sommable pour $z \in \mathbb{C}$ ?</li>
+        <li>Soit $q \in ]-1, 1[$. Calculer $\sum_{n=0}^\infty (n+1)q^n$ en utilisant un produit de Cauchy (série géométrique par elle-même).</li>
+        <li>Montrer que si $(u_{n,p})_{(n,p) \in \mathbb{N}^2}$ est sommable, alors $\lim_{n \to \infty} u_{n,p} = 0$ pour tout $p$ fixé, et $\lim_{p \to \infty} u_{n,p} = 0$ pour tout $n$ fixé. La réciproque est-elle vraie ?</li>
+    </ol>
+</div>
+
+</body>
+</html>
