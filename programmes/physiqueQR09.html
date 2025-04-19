@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Physique - Mouvements et Interactions (2)</title>
+    <!-- Vue.js 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --color-facile: #4CAF50; /* Vert */
+            --color-moyen: #FF9800; /* Orange */
+            --color-difficile: #F44336; /* Rouge */
+            --color-pas-compris: #616161; /* Gris sombre */
+            --color-default: #e0e0e0; /* Gris clair */
+            --border-color: #ccc;
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        #app {
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        .qa-item {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden; /* Pour contenir l'indicateur */
+            transition: box-shadow 0.3s ease;
+            background-color: #fff;
+        }
+        .qa-item:hover {
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        .comprehension-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 10px;
+            background-color: var(--color-default);
+            transition: background-color 0.3s ease;
+        }
+        .comprehension-indicator.facile { background-color: var(--color-facile); }
+        .comprehension-indicator.moyen { background-color: var(--color-moyen); }
+        .comprehension-indicator.difficile { background-color: var(--color-difficile); }
+        .comprehension-indicator.pas_compris { background-color: var(--color-pas-compris); }
+
+        .qa-content {
+            margin-left: 20px; /* Espace pour l'indicateur */
+        }
+
+        .section-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .answer {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 3px solid var(--border-color);
+        }
+        .answer-hidden {
+             /* Style pour quand la réponse est cachée, si nécessaire */
+        }
+
+        /* Style KaTeX */
+        .katex { font-size: 1.1em; }
+
+        /* Boutons */
+        button {
+            padding: 8px 12px;
+            margin-right: 5px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-size: 0.9em;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        button:active {
+             transform: scale(0.98);
+        }
+        .btn-toggle-answer {
+            background-color: #007bff;
+            color: white;
+        }
+         .btn-toggle-answer:hover {
+            background-color: #0056b3;
+        }
+
+        .comprehension-buttons {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        .comprehension-buttons button {
+            color: white;
+            min-width: 100px;
+        }
+        .btn-facile { background-color: var(--color-facile); }
+        .btn-moyen { background-color: var(--color-moyen); }
+        .btn-difficile { background-color: var(--color-difficile); }
+        .btn-pas-compris { background-color: var(--color-pas-compris); }
+
+        .comprehension-buttons button.active {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+
+        /* Capacités style from original HTML */
+        .capacite {
+            font-weight: bold;
+            color: #800080; /* Pourpre */
+        }
+        .definition, .resultat, .methode {
+            margin-bottom: 1em;
+            padding: 0.5em;
+            border-left: 3px solid #ddd;
+        }
+         .definition { border-left-color: #4CAF50; }
+         .resultat { border-left-color: #2196F3; }
+         .methode { border-left-color: #FFC107; }
+
+         /* Hide original content if needed */
+         #original-content {
+             /* display: none; */
+             margin-top: 30px;
+             border-top: 2px solid #333;
+             padding-top: 20px;
+             font-size: 0.9em;
+             color: #666;
+         }
+         #original-content h2, #original-content h3 {
+             font-size: 1.2em;
+             color: #444;
+         }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h1>Physique : Mouvements et Interactions (2) - Q&A</h1>
+        <p>Cliquez sur "Afficher la réponse" pour voir la correction. Indiquez votre niveau de compréhension pour chaque question.</p>
+        <hr>
+
+        <div v-for="item in questions" :key="item.id" class="qa-item">
+            <div class="comprehension-indicator" :class="item.comprehension"></div>
+            <div class="qa-content">
+                <div class="section-title">{{ item.section }}</div>
+                <div class="question" v-html="renderContent(item.question)"></div>
+
+                <button @click="toggleAnswer(item)" class="btn-toggle-answer">
+                    {{ item.showAnswer ? 'Cacher la réponse' : 'Afficher la réponse' }}
+                </button>
+
+                <div v-if="item.showAnswer" class="answer" v-html="renderContent(item.answer)"></div>
+
+                <div class="comprehension-buttons">
+                    <button @click="setComprehension(item, 'facile')" class="btn-facile" :class="{ active: item.comprehension === 'facile' }">Facile</button>
+                    <button @click="setComprehension(item, 'moyen')" class="btn-moyen" :class="{ active: item.comprehension === 'moyen' }">Moyen</button>
+                    <button @click="setComprehension(item, 'difficile')" class="btn-difficile" :class="{ active: item.comprehension === 'difficile' }">Difficile</button>
+                    <button @click="setComprehension(item, 'pas_compris')" class="btn-pas-compris" :class="{ active: item.comprehension === 'pas_compris' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="original-content" style="display:none;">
+            <!-- Contenu original HTML fourni par l'utilisateur ici -->
+            <!-- Il n'est pas affiché par défaut mais peut être utilisé pour référence -->
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, reactive, onMounted, nextTick } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    questions: [
+                        // === 2.5 Moment cinétique ===
+                        {
+                            id: 'q2_5_1',
+                            section: '2.5 Moment cinétique',
+                            question: 'Définir le moment cinétique $\\vec{L}_O(M)$ d\'un point matériel M par rapport à un point O.',
+                            answer: `<div class="definition"><p><strong>Moment Cinétique d'un point matériel M par rapport à un point O ($\\vec{L}_O(M)$) :</strong>
+                                <br>$\\vec{L}_O(M) = \\vec{OM} \\times \\vec{p} = \\vec{OM} \\times (m\\vec{v})$.
+                                <br>C'est un vecteur pseudo-vectoriel, orthogonal au plan défini par O, M et $\\vec{p}$. Son sens est donné par la règle de la main droite appliquée à $\\vec{OM}$ et $\\vec{p}$. <strong class="capacite">Relier direction/sens de $\\vec{L}_O$ au mouvement.</strong>
+                                <br>Unité : kg.m².s⁻¹.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q2_5_2',
+                            section: '2.5 Moment cinétique',
+                            question: 'Définir le moment d\'une force $\\vec{F}$ appliquée en M, par rapport à un point O ($\\vec{\\mathcal{M}}_O(\\vec{F})$).',
+                            answer: `<div class="definition"><p><strong>Moment d'une force $\\vec{F}$ appliquée en M, par rapport à un point O ($\\vec{\\mathcal{M}}_O(\\vec{F})$) :</strong>
+                                <br>$\\vec{\\mathcal{M}}_O(\\vec{F}) = \\vec{OM} \\times \\vec{F}$.
+                                <br>Caractérise la capacité de la force à faire tourner le système autour de O.
+                                <br>Unité : N.m.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q2_5_3',
+                            section: '2.5 Moment cinétique',
+                            question: 'Définir le moment cinétique scalaire $L_\\Delta$ par rapport à un axe $\\Delta$.',
+                            answer: `<div class="definition"><p><strong>Moment Cinétique Scalaire ($L_\\Delta$) :</strong> $L_\\Delta = \\vec{L}_O(M) \\cdot \\vec{u}_\\Delta$. C'est la projection du moment cinétique $\\vec{L}_O(M)$ (calculé par rapport à un point O sur l'axe) sur le vecteur unitaire $\\vec{u}_\\Delta$ de l'axe. C'est une grandeur algébrique. <strong class="capacite">Utiliser ce caractère algébrique.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q2_5_4',
+                            section: '2.5 Moment cinétique',
+                            question: 'Comment calculer le moment scalaire $\\mathcal{M}_\\Delta(\\vec{F})$ en utilisant le bras de levier $d$ ?',
+                            answer: `<div class="definition"><p>Le moment scalaire peut être calculé par $\\mathcal{M}_\\Delta = \\pm F \\times d$, où $d$ est le bras de levier (distance orthogonale entre l'axe $\\Delta$ et la droite d'action de la force $\\vec{F}$), et $F$ est la norme de la composante de $\\vec{F}$ orthogonale à $\\Delta$ et au bras de levier. Le signe dépend de l'orientation de la rotation induite par $\\vec{F}$ par rapport à $\\vec{u}_\\Delta$ (règle de la main droite). <strong class="capacite">Calculer $\\mathcal{M}_\\Delta$ via le bras de levier.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q2_5_5',
+                            section: '2.5 Moment cinétique',
+                            question: 'Énoncer le Théorème du Moment Cinétique (TMC) pour un point matériel M par rapport à un point fixe O et par rapport à un axe fixe $\\Delta$.',
+                            answer: `<div class="resultat"><p><strong>Théorème du Moment Cinétique (TMC) :</strong> Dans un référentiel galiléen $\\mathcal{R}$ :
+                                <br>Par rapport à un <strong>point fixe O</strong> : $\\frac{d\\vec{L}_O(M)}{dt} = \\sum \\vec{\\mathcal{M}}_O(\\vec{F}_{ext})$.
+                                <br>Par projection sur un <strong>axe fixe $\\Delta$</strong> passant par O : $\\frac{dL_\\Delta(M)}{dt} = \\sum \\mathcal{M}_\\Delta(\\vec{F}_{ext})$.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q2_5_6',
+                            section: '2.5 Moment cinétique',
+                            question: 'Dans quelles conditions le moment cinétique $\\vec{L}_O(M)$ est-il conservé ? Et le moment cinétique scalaire $L_\\Delta(M)$ ?',
+                            answer: `<div class="resultat"><p><strong>Conservation du Moment Cinétique :</strong>
+                                <ul>
+                                    <li>$\\vec{L}_O(M)$ est conservé si la somme des moments des forces extérieures par rapport à O est nulle ($\\sum \\vec{\\mathcal{M}}_O(\\vec{F}_{ext}) = \\vec{0}$).</li>
+                                    <li>$L_\\Delta(M)$ est conservé si la somme des moments des forces extérieures par rapport à l'axe $\\Delta$ est nulle ($\\sum \\mathcal{M}_\\Delta(\\vec{F}_{ext}) = 0$).</li>
+                                </ul>
+                                <strong class="capacite">Identifier les cas de conservation du moment cinétique (vectoriel ou scalaire).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex2_20',
+                            section: '2.5 Moment cinétique - Exercice 2.20',
+                            question: 'Un point M de masse m décrit un cercle de rayon R à vitesse angulaire $\\omega$ constante dans le plan (Oxy). Calculer son moment cinétique $\\vec{L}_O$ et son moment cinétique scalaire $L_z$ par rapport à l\'axe Oz.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 2.20 :</strong> En coordonnées polaires/cylindriques dans le plan (Oxy), $\\vec{OM}=R\\vec{u}_\\rho$, $\\vec{v}=\\vec{v}_M = R\\omega\\vec{u}_\\phi$. La quantité de mouvement est $\\vec{p}=m\\vec{v}=mR\\omega\\vec{u}_\\phi$.
+                                <br>$\\vec{L}_O = \\vec{OM} \\times \\vec{p} = (R\\vec{u}_\\rho) \\times (mR\\omega\\vec{u}_\\phi) = mR^2\\omega (\\vec{u}_\\rho \\times \\vec{u}_\\phi)$.
+                                <br>Sachant que $(\\vec{u}_\\rho, \\vec{u}_\\phi, \\vec{u}_z)$ forme une base orthonormée directe, $\\vec{u}_\\rho \\times \\vec{u}_\\phi = \\vec{u}_z$.
+                                <br>Donc $\\vec{L}_O = mR^2\\omega \\vec{u}_z$.
+                                <br>Moment scalaire $L_z = \\vec{L}_O \\cdot \\vec{u}_z = (mR^2\\omega \\vec{u}_z) \\cdot \\vec{u}_z = mR^2\\omega$.
+                                <br>Comme m, R et $\\omega$ sont constants, $L_z$ est constant.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex2_23',
+                            section: '2.5 Moment cinétique - Exercice 2.23',
+                            question: 'Une masse est attachée à un fil passant par un trou dans une table horizontale sans frottement. Elle tourne sur un cercle de rayon $r_0$ à vitesse $v_0$. On tire lentement sur le fil pour réduire le rayon à $r_1$. Quelle est la nouvelle vitesse $v_1$ ? Quelle grandeur est conservée ?',
+                            answer: `<div class="corrige"><p><strong>Corrigé 2.23 :</strong> Les forces agissant sur la masse sont : son poids $\\vec{P}$ (vertical), la réaction normale de la table $\\vec{N}$ (verticale), et la tension du fil $\\vec{T}$ (dirigée vers le trou O).
+                                <br>Le poids et la réaction normale se compensent ($\vec{P}+\vec{N}=\vec{0}$).
+                                <br>La tension $\\vec{T}$ est une force centrale (passe toujours par O). Son moment par rapport à O est $\\vec{\\mathcal{M}}_O(\\vec{T}) = \\vec{OM} \\times \\vec{T} = \\vec{0}$ car $\\vec{OM}$ et $\\vec{T}$ sont colinéaires.
+                                <br>La somme des moments des forces extérieures par rapport à O est nulle : $\\sum \\vec{\\mathcal{M}}_O(\\vec{F}_{ext}) = \\vec{0}$.
+                                <br>D'après le TMC, le moment cinétique $\\vec{L}_O$ est conservé.
+                                <br>Le mouvement est plan (horizontal). Initialement, $\\vec{L}_O = \\vec{OM}_0 \\times m\\vec{v}_0$. Comme $\\vec{OM}_0 \perp \\vec{v}_0$, $||\vec{L}_O|| = ||\vec{OM}_0|| \cdot ||m\vec{v}_0|| = r_0 m v_0$. Le vecteur $\\vec{L}_O$ est vertical.
+                                <br>Finalement, $\\vec{L}_O$ a la même valeur. $||\vec{L}_O|| = r_1 m v_1$.
+                                <br>Conservation $\\implies m r_0 v_0 = m r_1 v_1$.
+                                <br>Donc, la nouvelle vitesse est $v_1 = v_0 \\frac{r_0}{r_1}$.
+                                <br>Si $r_1 < r_0$, alors $v_1 > v_0$. La vitesse augmente quand on réduit le rayon.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 2.6 Mvt Force Centrale ===
+                         {
+                            id: 'q2_6_1',
+                            section: '2.6 Mouvements dans un champ de force centrale conservatif',
+                            question: 'Qu\'est-ce qu\'une force centrale ? Donner un exemple.',
+                            answer: `<div class="definition"><p><strong>Force Centrale :</strong> Force $\\vec{F}$ s'exerçant sur un point M, dont le support passe constamment par un point fixe O (centre de force). Elle s'écrit $\\vec{F} = F(r) \\vec{u}_r$, où $\\vec{u}_r = \\vec{OM}/r$ et $r=OM$. La force ne dépend que de la distance $r$. <br>Exemples: Force gravitationnelle, force électrostatique coulombienne.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q2_6_2',
+                            section: '2.6 Mouvements dans un champ de force centrale conservatif',
+                            question: 'Quelles sont les deux conséquences majeures de la conservation du moment cinétique $\\vec{L}_O$ pour un mouvement sous l\'effet d\'une force centrale ?',
+                            answer: `<div class="resultat"><p>La conservation de $\\vec{L}_O = \\vec{OM} \\times m\\vec{v}$ (car $\\vec{\\mathcal{M}}_O(\\vec{F}) = \\vec{0}$) implique :
+                                <ol>
+                                    <li><strong>Mouvement Plan :</strong> $\\vec{OM}$ est toujours orthogonal au vecteur constant $\\vec{L}_O$. Le mouvement s'effectue donc dans le plan passant par O et orthogonal à $\\vec{L}_O$.</li>
+                                    <li><strong>Loi des Aires :</strong> La vitesse aréolaire $dA/dt$ (aire balayée par $\\vec{OM}$ par unité de temps) est constante : $\\frac{dA}{dt} = \\frac{||\vec{L}_O||}{2m} = \\frac{C}{2} = \\text{cste}$. ($C = r^2 \\dot{\\theta}$ est la constante des aires).</li>
+                                </ol>
+                                <strong class="capacite">Établir ces deux conséquences.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q2_6_3',
+                            section: '2.6 Mouvements dans un champ de force centrale conservatif',
+                            question: 'Définir l\'énergie potentielle effective $E_{p,eff}(r)$ et expliquer son utilité.',
+                            answer: `<div class="definition"><p><strong>Énergie Potentielle Effective ($E_{p,eff}(r)$) :</strong> Dans un mouvement plan décrit en coordonnées polaires ($r, \\theta$), l'énergie mécanique $E_m = E_c + E_p(r)$ est conservée si la force est conservative.
+                                <br>$E_c = \\frac{1}{2}m(\\dot{r}^2 + r^2\\dot{\\theta}^2)$. En utilisant la constante des aires $C = r^2\\dot{\\theta}$ (ou $L_z = mC$), on a $\\dot{\\theta}=C/r^2$.
+                                <br>$E_m = \\frac{1}{2}m\\dot{r}^2 + \\frac{1}{2}m r^2 (\\frac{C}{r^2})^2 + E_p(r) = \\frac{1}{2}m\\dot{r}^2 + \\underbrace{\\frac{mC^2}{2r^2} + E_p(r)}_{E_{p,eff}(r)}$.
+                                <br>$E_{p,eff}(r) = E_p(r) + \\frac{L_z^2}{2mr^2}$.
+                                <br>Utilité : L'énergie mécanique s'écrit $E_m = \\frac{1}{2}m\\dot{r}^2 + E_{p,eff}(r)$. Le mouvement radial se comporte comme un mouvement à 1D d'une particule fictive dans le potentiel $E_{p,eff}(r)$. Cela permet d'analyser qualitativement le mouvement radial (zones permises où $E_m \\ge E_{p,eff}(r)$, points tournants où $E_m = E_{p,eff}(r)$).
+                                <strong class="capacite">Construire $E_{p,eff}(r)$.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q2_6_4',
+                            section: '2.6 Mouvements dans un champ de force centrale conservatif',
+                            question: 'Comment déterminer si une trajectoire est bornée (état lié) ou non bornée (état de diffusion) à partir de l\'énergie mécanique $E_m$ et du potentiel effectif $E_{p,eff}(r)$ ?',
+                            answer: `<div class="methode"><p>L'analyse du graphe $E_{p,eff}(r)$ en fonction de $r$ est clé. Le mouvement radial est possible seulement si $\\frac{1}{2}m\\dot{r}^2 = E_m - E_{p,eff}(r) \\ge 0$, c'est-à-dire $E_m \\ge E_{p,eff}(r)$.
+                                <ul>
+                                    <li><strong>État Lié :</strong> Si l'énergie mécanique $E_m$ est inférieure à la valeur limite de $E_{p,eff}(r)$ à l'infini (souvent 0 pour les potentiels attractifs s'annulant à l'infini) et qu'elle coupe la courbe $E_{p,eff}(r)$ en deux points $r_{min}$ et $r_{max}$. Le mouvement est alors confiné entre ces deux rayons ($r_{min} \\le r \\le r_{max}$). La trajectoire est bornée (ex: ellipse, cercle pour champ newtonien avec $E_m < 0$).</li>
+                                    <li><strong>État de Diffusion :</strong> Si $E_m$ est supérieure ou égale à la valeur limite de $E_{p,eff}(r)$ à l'infini. Le rayon $r$ peut aller jusqu'à l'infini. La trajectoire est non bornée (ex: parabole ou hyperbole pour champ newtonien avec $E_m \\ge 0$).</li>
+                                </ul>
+                                <strong class="capacite">Décrire qualitativement le mouvement radial. Relier caractère borné et $E_m$.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q2_6_5',
+                            section: '2.6 Mouvements dans un champ de force centrale conservatif',
+                            question: 'Énoncer les trois lois de Kepler sur le mouvement des planètes.',
+                            answer: `<div class="definition"><p><strong>Lois de Kepler (Mouvement des planètes autour du Soleil) :</strong>
+                               <ol>
+                                    <li><strong>Loi des Orbites :</strong> Les planètes décrivent des ellipses dont le Soleil occupe l'un des foyers.</li>
+                                    <li><strong>Loi des Aires :</strong> Le rayon vecteur Soleil-planète balaye des aires égales en des temps égaux ($dA/dt = cste$).</li>
+                                    <li><strong>Loi des Périodes :</strong> Le carré de la période de révolution $T$ est proportionnel au cube du demi-grand axe $a$ de l'ellipse ($T^2/a^3 = \\text{cste} = 4\\pi^2/(GM_{Soleil})$).</li>
+                               </ol>
+                            <strong class="capacite">Énoncer ces lois, les transposer aux satellites.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q2_6_6',
+                            section: '2.6 Mouvements dans un champ de force centrale conservatif',
+                            question: 'Pour un satellite en orbite circulaire de rayon $a$ dans un champ newtonien ($E_p = -GMm/r$), exprimer sa vitesse $v$, sa période $T$, et son énergie mécanique $E_m$.',
+                            answer: `<div class="methode"><p>Pour une orbite circulaire ($r=a=cste$), la force gravitationnelle agit comme force centripète :
+                                <br> $\\frac{GMm}{a^2} = \\frac{mv^2}{a} \\implies v^2 = \\frac{GM}{a} \\implies v = \\sqrt{\\frac{GM}{a}}$.
+                                <br>La période est $T = \\frac{2\\pi a}{v} = \\frac{2\\pi a}{\\sqrt{GM/a}} = 2\\pi \\sqrt{\\frac{a^3}{GM}}$. On retrouve $T^2/a^3 = 4\\pi^2/(GM)$, la 3ème loi de Kepler.
+                                <br>L'énergie cinétique est $E_c = \\frac{1}{2}mv^2 = \\frac{1}{2}m (\\frac{GM}{a}) = \\frac{GMm}{2a}$.
+                                <br>L'énergie potentielle est $E_p = -\\frac{GMm}{a}$.
+                                <br>L'énergie mécanique totale est $E_m = E_c + E_p = \\frac{GMm}{2a} - \\frac{GMm}{a} = -\\frac{GMm}{2a}$.
+                                <strong class="capacite">Établir $v(a)$ et $T(a)$. Exprimer $E_m$.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q2_6_7',
+                            section: '2.6 Mouvements dans un champ de force centrale conservatif',
+                            question: 'Quelles sont les caractéristiques principales des orbites LEO, MEO et GEO ? Pourquoi une orbite géostationnaire doit-elle être dans le plan équatorial ?',
+                            answer: `<div class="definition"><p><strong>Satellites Terrestres :</strong>
+                               <ul>
+                                    <li><strong>Orbite Basse (LEO - Low Earth Orbit) :</strong> Altitude ~qq centaines de km (ex: 200-2000 km). Période ~90-120 min. Utilisée pour l'observation de la Terre, Station Spatiale Internationale. Forte traînée atmosphérique résiduelle.</li>
+                                    <li><strong>Orbite Moyenne (MEO - Medium Earth Orbit) :</strong> Altitude ~2000 - 35000 km. Période typique ~2-12h. Utilisée pour les systèmes de navigation (GPS, Galileo, Glonass) à ~20000 km d'altitude (période ~12h).</li>
+                                    <li><strong>Orbite Géostationnaire (GEO - Geostationary Orbit) :</strong> Altitude ~35786 km (~36000 km). Période = Période de rotation de la Terre sur elle-même (jour sidéral, ~23h 56min 4s). Orbite circulaire et située <strong>dans le plan équatorial</strong> terrestre. Inclinaison nulle. Le satellite apparaît fixe depuis un point au sol. Utilisée pour les télécommunications et la météorologie.</li>
+                               </ul>
+                               <br><strong>Justification équatoriale GEO :</strong> Pour qu'un satellite reste au-dessus du même point de la Terre, il doit tourner avec la même vitesse angulaire que la Terre et autour du même axe (l'axe de rotation de la Terre). La force gravitationnelle terrestre est dirigée vers le centre de la Terre. Pour que l'orbite soit stable sous cette seule force (en négligeant les perturbations), le plan de l'orbite doit contenir le centre de la Terre. Une orbite circulaire avec la période de rotation de la Terre, dont le plan contient le centre de la Terre et qui est parallèle à l'équateur, est nécessairement dans le plan équatorial.
+                                <strong class="capacite">Différencier les orbites. Calculer l'altitude GEO. Justifier localisation équatoriale.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex2_27',
+                            section: '2.6 Mouvements dans un champ de force centrale conservatif - Exercice 2.27',
+                            question: 'Calculer l\'altitude $h$ d\'un satellite géostationnaire. Données : $G=6.67\\times 10^{-11}$ SI, $M_T=5.97\\times 10^{24}$ kg, $R_T=6370$ km, $T_{sid}=86164$ s.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 2.27 :</strong> Un satellite géostationnaire a une période $T = T_{sid} = 86164$ s.
+                                <br>On utilise la 3ème loi de Kepler pour une orbite circulaire de rayon $r$ (distance au centre de la Terre) : $T^2 = \\frac{4\\pi^2 r^3}{GM_T}$.
+                                <br>On isole $r$: $r^3 = \\frac{GM_T T^2}{4\\pi^2}$.
+                                <br>Application numérique :
+                                <br>$r^3 = \\frac{(6.67\\times 10^{-11} \\text{ m}^3\\text{kg}^{-1}\\text{s}^{-2}) \\times (5.97\\times 10^{24} \\text{ kg}) \\times (86164 \\text{ s})^2}{4\\pi^2}$
+                                <br>$r^3 \\approx \\frac{(6.67 \\times 5.97 \\times 10^{13}) \\times (7.424 \\times 10^9)}{4 \\times (3.14159)^2} \\approx \\frac{39.81 \\times 7.424 \\times 10^{22}}{39.48} \\approx 7.49 \\times 10^{22} \\text{ m}^3$.
+                                <br>$r = (7.49 \\times 10^{22})^{1/3} \\text{ m} \\approx 4.215 \\times 10^7 \\text{ m} = 42150 \\text{ km}$.
+                                <br>Ceci est le rayon de l'orbite. L'altitude $h$ est la distance par rapport à la surface :
+                                <br>$h = r - R_T$. $R_T = 6370$ km.
+                                <br>$h = 42150 \\text{ km} - 6370 \\text{ km} = 35780 \\text{ km}$.
+                                <br>L'altitude est d'environ 35800 km ou 36000 km.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                        // === 2.7 Mouvement Solide ===
+                        {
+                            id: 'q2_7_1',
+                            section: '2.7 Mouvement d\'un solide',
+                            question: 'Qu\'est-ce qu\'un solide indéformable (ou rigide) ?',
+                            answer: `<div class="definition"><p><strong>Solide Indéformable (ou Rigide) :</strong> C'est un système matériel (ensemble de points matériels) tel que les distances mutuelles entre tous ses points restent constantes au cours du temps, quel que soit le mouvement ou les forces appliquées. <strong class="capacite">Différencier d'un système déformable (ex: fluide, ressort).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q2_7_2',
+                            section: '2.7 Mouvement d\'un solide',
+                            question: 'Décrire les mouvements de translation et de rotation autour d\'un axe fixe pour un solide.',
+                            answer: `<div class="definition"><p><strong>Mouvements Simples d'un Solide :</strong>
+                               <ul>
+                                    <li><strong>Translation :</strong> Tous les points du solide ont le même vecteur vitesse $\\vec{v}(t)$ à chaque instant. Le solide ne tourne pas sur lui-même. La trajectoire de chaque point est une translatée de la trajectoire du centre de masse G.</li>
+                                    <li><strong>Rotation autour d'un Axe Fixe ($\\Delta$) :</strong> Le solide tourne autour d'un axe $\\Delta$ immobile dans le référentiel. Chaque point M du solide (hors de l'axe) décrit un cercle centré sur l'axe $\\Delta$. Tous les points ont la même <strong>vitesse angulaire</strong> $\\omega(t) = \\dot{\\theta}(t)$. La vitesse d'un point M situé à une distance $r$ de l'axe est $\\vec{v}_M = \\vec{\\omega} \\times \\vec{HM}$ (où H est la projection de M sur $\\Delta$) et sa norme est $v_M = |\\omega| r$. <strong class="capacite">Décrire la trajectoire et exprimer la vitesse $v_M$.</strong></li>
+                               </ul></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q2_7_3',
+                            section: '2.7 Mouvement d\'un solide',
+                            question: 'Qu\'est-ce que le moment d\'inertie $J_\\Delta$ d\'un solide par rapport à un axe $\\Delta$ ? De quoi dépend-il ?',
+                            answer: `<div class="definition"><p><strong>Moment d'Inertie ($J_\\Delta$) :</strong> C'est une grandeur scalaire positive qui caractérise la répartition de la masse du solide autour de l'axe $\\Delta$. Elle mesure l'inertie du solide vis-à-vis de la rotation autour de cet axe (sa résistance à la mise en rotation ou à la modification de sa vitesse de rotation).
+                                <br>Il est défini par $J_\\Delta = \\int_{solide} r^2 dm$, où $r$ est la distance de l'élément de masse $dm$ à l'axe $\\Delta$. Unité : kg.m².
+                                <br>Le moment d'inertie dépend :
+                                <ul><li>De la masse totale du solide.</li><li>De la forme géométrique du solide.</li><li>De la répartition de la masse à l'intérieur du solide (homogène ou non).</li><li>De la position et de l'orientation de l'axe de rotation $\\Delta$ par rapport au solide.</li></ul>
+                                <strong class="capacite">Relier qualitativement $J_\\Delta$ à la répartition des masses (plus la masse est loin de l'axe, plus $J_\\Delta$ est grand).</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'q2_7_4',
+                            section: '2.7 Mouvement d\'un solide',
+                            question: 'Exprimer le moment cinétique scalaire $L_\\Delta$ et l\'énergie cinétique $E_c$ d\'un solide en rotation autour d\'un axe fixe $\\Delta$ en fonction de son moment d\'inertie $J_\\Delta$ et de sa vitesse angulaire $\\omega$.',
+                            answer: `<div class="definition"><p>Pour un solide en rotation autour d'un axe fixe $\\Delta$ avec une vitesse angulaire $\\omega$:
+                                <br><strong>Moment Cinétique Scalaire :</strong> $L_\\Delta = J_\\Delta \\omega$. <strong class="capacite">Exploiter cette relation.</strong>
+                                <br><strong>Énergie Cinétique de Rotation :</strong> $E_c = \\frac{1}{2} J_\\Delta \\omega^2$. <strong class="capacite">Utiliser cette expression.</strong>
+                                <br>(Ces formules sont analogues à $p_x = m v_x$ et $E_c = \\frac{1}{2} m v^2$ pour la translation).</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q2_7_5',
+                            section: '2.7 Mouvement d\'un solide',
+                            question: 'Énoncer le Théorème du Moment Cinétique (scalaire) pour un solide en rotation autour d\'un axe fixe $\\Delta$. Quelle est son analogie avec la 2ème loi de Newton pour la translation ?',
+                            answer: `<div class="resultat"><p><strong>Théorème du Moment Cinétique (Scalaire) pour un Solide en Rotation autour d'un Axe Fixe $\\Delta$ dans un Référentiel Galiléen :</strong>
+                                <br>$\\frac{dL_\\Delta}{dt} = \\sum \\mathcal{M}_{\\Delta}(\\vec{F}_{ext})$, où $\\sum \\mathcal{M}_{\\Delta}(\\vec{F}_{ext})$ est la somme des moments scalaires par rapport à l'axe $\\Delta$ de toutes les forces extérieures appliquées au solide.
+                                <br>Comme $L_\\Delta = J_\\Delta \\omega$ et $J_\\Delta$ est constant (solide rigide, axe fixe), on a :
+                                <br>$J_\\Delta \\frac{d\\omega}{dt} = J_\\Delta \\ddot{\\theta} = \\sum \\mathcal{M}_{\\Delta}(\\vec{F}_{ext})$.
+                                <br><strong>Analogie avec la 2ème loi de Newton :</strong> Cette équation est l'analogue pour la rotation de $m \\frac{dv_x}{dt} = m a_x = \\sum F_{x, ext}$ pour la translation rectiligne.
+                                <ul><li>Le moment d'inertie $J_\\Delta$ joue le rôle de la masse $m$.</li><li>L'accélération angulaire $\\ddot{\\theta} = d\\omega/dt$ joue le rôle de l'accélération linéaire $a_x = dv_x/dt$.</li><li>La somme des moments des forces extérieures $\\sum \\mathcal{M}_{\\Delta}$ joue le rôle de la somme des forces extérieures $\\sum F_{x, ext}$.</li></ul>
+                                <strong class="capacite">Exploiter ce théorème.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q2_7_6',
+                            section: '2.7 Mouvement d\'un solide',
+                            question: 'Pour un pendule pesant (solide oscillant autour d\'un axe horizontal fixe $\\Delta$), établir l\'équation différentielle du mouvement en utilisant le TMC scalaire.',
+                            answer: `<div class="methode"><p><strong>Étude du Pendule Pesant :</strong> Solide de masse $m$, centre de masse G, oscillant autour d'un axe horizontal fixe $\\Delta$ passant par O. Soit $a = OG$ la distance de l'axe au centre de masse. Soit $\\theta$ l'angle entre la verticale descendante et la droite OG. Le moment d'inertie par rapport à $\\Delta$ est $J_\\Delta$.
+                                <br>Forces extérieures : Poids $\\vec{P}$ appliqué en G, actions de l'axe $\\vec{R}$ appliquées en O (ou le long de l'axe).
+                                <br>Appliquer le TMC scalaire par rapport à $\\Delta$ (orienté par $\\vec{u}_z$ par exemple) : $J_\\Delta \\ddot{\\theta} = \\sum \\mathcal{M}_{\\Delta}(\\vec{F}_{ext}) = \\mathcal{M}_{\\Delta}(\\vec{P}) + \\mathcal{M}_{\\Delta}(\\vec{R})$.
+                                <br>Le moment des actions de l'axe $\\vec{R}$ est nul par rapport à l'axe $\\Delta$ (car elles s'appliquent sur l'axe, ou pour une liaison pivot parfaite, elles n'induisent pas de rotation). $\\mathcal{M}_{\\Delta}(\\vec{R}) = 0$.
+                                <br>Le moment du poids $\\vec{P}$ : Le poids est $\\vec{P} = -mg \\vec{u}_y$ (si Oz horizontal, Oy vertical ascendant) ou $mg$ vertical vers le bas. Le bras de levier du poids par rapport à O est $d = a |\\sin\\theta|$. Le poids tend à ramener le pendule vers la position d'équilibre $\\theta=0$. Si $\\theta>0$, le moment est négatif (sens horaire si $\\vec{u}_z$ sortant).
+                                <br>$\\mathcal{M}_{\\Delta}(\\vec{P}) = - (mg) \\times (a \\sin\\theta) = -mga \\sin\\theta$.
+                                <br>L'équation du mouvement est donc : $J_\\Delta \\ddot{\\theta} = -mga \\sin\\theta$.
+                                <br>Soit : $\\ddot{\\theta} + \\frac{mga}{J_\\Delta}\\sin\\theta = 0$.
+                                <strong class="capacite">Établir l'équation du mouvement.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'q2_7_7',
+                            section: '2.7 Mouvement d\'un solide',
+                            question: 'Quelle est l\'expression de l\'énergie mécanique pour un pendule pesant ? Montrer qu\'elle est conservée en l\'absence de frottements.',
+                            answer: `<div class="methode"><p><strong>Énergie Mécanique du Pendule Pesant :</strong>
+                                <br>Énergie cinétique de rotation : $E_c = \\frac{1}{2} J_\\Delta \\omega^2 = \\frac{1}{2} J_\\Delta \\dot{\\theta}^2$.
+                                <br>Énergie potentielle de pesanteur : $E_p = mg z_G$. En choisissant l'origine des altitudes en O, $z_G = -a \\cos\\theta$. Donc $E_p = -mga \\cos\\theta$ (en choisissant la constante nulle pour $\\theta = \\pi/2$).
+                                <br>L'énergie mécanique est $E_m = E_c + E_p = \\frac{1}{2} J_\\Delta \\dot{\\theta}^2 - mga \\cos\\theta$.
+                                <br><strong>Conservation :</strong> Les actions de l'axe $\\vec{R}$ ne travaillent pas car leur point d'application (sur l'axe) est fixe ou ne se déplace pas dans la direction de la force. Le poids $\\vec{P}$ est une force conservative. En l'absence d'autres forces non conservatives (comme les frottements), l'énergie mécanique est conservée : $\\frac{dE_m}{dt} = 0$.
+                                <br>On peut vérifier en dérivant $E_m$ par rapport au temps :
+                                <br>$\\frac{dE_m}{dt} = \\frac{d}{dt} (\\frac{1}{2} J_\\Delta \\dot{\\theta}^2 - mga \\cos\\theta) = J_\\Delta \\dot{\\theta} \\ddot{\\theta} - mga (-\\sin\\theta) \\dot{\\theta}$
+                                <br>$\\frac{dE_m}{dt} = \\dot{\\theta} (J_\\Delta \\ddot{\\theta} + mga \\sin\\theta)$.
+                                <br>D'après l'équation du mouvement $J_\\Delta \\ddot{\\theta} + mga \\sin\\theta = 0$. Donc $\\frac{dE_m}{dt} = 0$. $E_m = \\text{cste}$. C'est une intégrale première du mouvement.
+                                <strong class="capacite">Établir l'intégrale première. Réaliser l'étude énergétique.</strong></p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                        {
+                            id: 'ex2_30',
+                            section: '2.7 Mouvement d\'un solide - Exercice 2.30',
+                            question: 'Un disque plein homogène ($J_\\Delta = \\frac{1}{2}mR^2$) de masse $m=2$ kg, rayon $R=0.5$ m, initialement au repos, est soumis à un couple moteur constant $\\mathcal{M} = 5$ N.m autour de son axe $\\Delta$ pendant 10 s. Calculer sa vitesse angulaire finale $\\omega_f$.',
+                            answer: `<div class="corrige"><p><strong>Corrigé 2.30 :</strong>
+                                <br>1. Calcul du moment d'inertie :
+                                <br>$J_\\Delta = \\frac{1}{2}mR^2 = \\frac{1}{2} \\times (2 \\text{ kg}) \\times (0.5 \\text{ m})^2 = 1 \\times 0.25 = 0.25 \\text{ kg.m}^2$.
+                                <br>2. Application du TMC scalaire :
+                                <br>$J_\\Delta \\frac{d\\omega}{dt} = \\sum \\mathcal{M}_{\\Delta}(\\vec{F}_{ext})$. Ici, seul le couple moteur $\\mathcal{M}$ a un moment non nul (on suppose pas de frottements).
+                                <br>$J_\\Delta \\frac{d\\omega}{dt} = \\mathcal{M}$.
+                                <br>3. Intégration : Comme $\\mathcal{M}$ est constant, l'accélération angulaire $\\alpha = \\frac{d\\omega}{dt}$ est constante : $\\alpha = \\frac{\\mathcal{M}}{J_\\Delta}$.
+                                <br>La vitesse angulaire est $\\omega(t) = \\alpha t + \\omega(0)$.
+                                <br>Initialement au repos, $\\omega(0) = 0$.
+                                <br>$\\omega(t) = \\frac{\\mathcal{M}}{J_\\Delta} t$.
+                                <br>4. Calcul de $\\omega_f$ à $t=10$ s :
+                                <br>$\\omega_f = \\omega(10) = \\frac{5 \\text{ N.m}}{0.25 \\text{ kg.m}^2} \\times 10 \\text{ s} = \\frac{5}{0.25} \\times 10 \\text{ rad/s} = 20 \\times 10 \\text{ rad/s} = 200 \\text{ rad/s}$.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+                         {
+                            id: 'ex2_32',
+                            section: '2.7 Mouvement d\'un solide - Exercice 2.32',
+                            question: 'Pour un pendule pesant constitué d\'une tige homogène de masse m, longueur l, tournant autour d\'une extrémité O ($J_O = \\frac{1}{3}ml^2$), quelle est la pulsation $\\omega_0$ des petites oscillations ?',
+                            answer: `<div class="corrige"><p><strong>Corrigé 2.32 :</strong>
+                                <br>L'équation du mouvement du pendule pesant est $J_\\Delta \\ddot{\\theta} + mga \\sin\\theta = 0$.
+                                <br>Pour une tige homogène de longueur $l$ tournant autour d'une extrémité O:
+                                <ul><li>Le moment d'inertie par rapport à l'axe $\\Delta$ passant par O est $J_O = \\frac{1}{3}ml^2$.</li><li>Le centre de masse G est au milieu de la tige, donc la distance $a = OG = l/2$.</li></ul>
+                                <br>L'équation devient : $(\\frac{1}{3}ml^2) \\ddot{\\theta} + mg(\\frac{l}{2}) \\sin\\theta = 0$.
+                                <br>Pour les petites oscillations, $\\sin\\theta \\approx \\theta$. L'équation devient une équation d'oscillateur harmonique :
+                                <br>$(\\frac{1}{3}ml^2) \\ddot{\\theta} + (\\frac{mgl}{2}) \\theta = 0$.
+                                <br>$\\ddot{\\theta} + \\frac{mgl/2}{ml^2/3} \\theta = 0$.
+                                <br>$\\ddot{\\theta} + \\frac{3g}{2l} \\theta = 0$.
+                                <br>Cette équation est de la forme $\\ddot{\\theta} + \\omega_0^2 \\theta = 0$.
+                                <br>La pulsation des petites oscillations est donc $\\omega_0 = \\sqrt{\\frac{3g}{2l}}$.</p></div>`,
+                            showAnswer: false,
+                            comprehension: null
+                        },
+
+                    ] // Fin du tableau questions
+                }
+            },
+            methods: {
+                toggleAnswer(item) {
+                    item.showAnswer = !item.showAnswer;
+                    if (item.showAnswer) {
+                        this.$nextTick(() => {
+                            this.renderMath();
+                        });
+                    }
+                },
+                setComprehension(item, level) {
+                    item.comprehension = level;
+                    this.saveComprehensionState();
+                     this.$nextTick(() => {
+                        this.renderMath(); // Re-render if needed, e.g., if layout changes subtly
+                    });
+                },
+                getComprehensionClass(level) {
+                    const levelMap = {
+                        facile: 'facile',
+                        moyen: 'moyen',
+                        difficile: 'difficile',
+                        pas_compris: 'pas_compris'
+                    };
+                    return levelMap[level] || '';
+                },
+                 getComprehensionColor(level) {
+                    const colorMap = {
+                        facile: 'var(--color-facile)',
+                        moyen: 'var(--color-moyen)',
+                        difficile: 'var(--color-difficile)',
+                        pas_compris: 'var(--color-pas-compris)'
+                    };
+                    return colorMap[level] || 'var(--color-default)';
+                },
+                saveComprehensionState() {
+                    const stateToSave = this.questions.reduce((acc, q) => {
+                        if (q.comprehension) {
+                            acc[q.id] = q.comprehension;
+                        }
+                        return acc;
+                    }, {});
+                    try {
+                        localStorage.setItem('vueQnAComprehension_Theme2', JSON.stringify(stateToSave));
+                    } catch (e) {
+                        console.error("Erreur lors de l'enregistrement dans localStorage:", e);
+                    }
+                },
+                loadComprehensionState() {
+                    try {
+                        const savedState = localStorage.getItem('vueQnAComprehension_Theme2');
+                        if (savedState) {
+                            const parsedState = JSON.parse(savedState);
+                            this.questions.forEach(q => {
+                                if (parsedState[q.id]) {
+                                    q.comprehension = parsedState[q.id];
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Erreur lors du chargement depuis localStorage:", e);
+                        // Optionally clear corrupted data
+                        // localStorage.removeItem('vueQnAComprehension_Theme2');
+                    }
+                },
+                renderMath() {
+                    if (window.renderMathInElement) {
+                        renderMathInElement(this.$el, {
+                            delimiters: [
+                                {left: '$$', right: '$$', display: true},
+                                {left: '$', right: '$', display: false},
+                                {left: '\\(', right: '\\)', display: false},
+                                {left: '\\[', right: '\\]', display: true}
+                            ],
+                            throwOnError : false
+                        });
+                    } else {
+                        console.warn("KaTeX auto-render not loaded yet.");
+                    }
+                },
+                 // Method to safely render HTML content, KaTeX rendering is handled separately
+                renderContent(htmlContent) {
+                    // Simple pass-through for v-html, rendering is done by renderMath()
+                    return htmlContent;
+                }
+            },
+            mounted() {
+                this.loadComprehensionState();
+                // Initial KaTeX rendering after component is mounted and data loaded
+                this.$nextTick(() => {
+                    this.renderMath();
+                });
+            }
+        }).mount('#app');
+
+        // Ensure KaTeX renders after the initial load and Vue hydration
+        // We already call renderMath in mounted(), but this is an alternative
+        // if the CDN loads slower than Vue.
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     // This might be too early if Vue hasn't finished mounting.
+        //     // Prefer calling from Vue's mounted hook.
+        // });
+
+    </script>
+
+</body>
+</html>
