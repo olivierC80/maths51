@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Fonctions d'une variable réelle</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques à la partie précédente (suites) */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation pour les sous-sections */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Fonctions d'une variable réelle</h1>
+
+<h3 id="fonctions-limites-continuite">Fonctions d'une variable réelle : limites et continuité, dérivabilité, convexité</h3>
+<p class="intro-text">
+    Dans cette section, on démontre les théorèmes de base relatifs aux fonctions réelles de variable réelle et on développe l'étude des fonctions convexes amorcée en terminale. Dans de nombreuses questions de nature qualitative, on visualise une fonction par son graphe. Il convient de souligner cet aspect géométrique en ayant recours à de nombreuses figures.
+    <br>Les fonctions sont définies sur un intervalle $I$ de $\mathbb{R}$ non vide et non réduit à un point et, sauf dans les paragraphes A-d) et B-e), sont à valeurs réelles. On dit qu'une propriété portant sur une fonction $f$ définie sur $I$ est vraie <strong>au voisinage de $a$</strong> si elle est vraie sur l'intersection de $I$ avec un intervalle ouvert contenant $a$ (ou de la forme $]A, +\infty[$ si $a=+\infty$, $]-\infty, A[$ si $a=-\infty$).
+    <br>L'étude des suites récurrentes $u_{n+1} = f(u_n)$ est l'occasion d'introduire la notion de vitesse de convergence. Sur des exemples, on met en évidence divers comportements (convergence lente, géométrique, quadratique) en explicitant le nombre d'itérations nécessaires pour obtenir une précision donnée. On pourra en particulier présenter la méthode de Newton. De même, l'étude de la dérivabilité donne un prétexte pour présenter la notion de discrétisation, à travers la méthode d'Euler.
+</p>
+
+<h4>A - Limites et continuité</h4>
+<p class="intro-text">
+    Le paragraphe a) consiste largement en des adaptations au cas continu de notions déjà étudiées pour les suites. Afin d'éviter des répétitions, le professeur a la liberté d'admettre certains résultats.
+    <br>Pour la pratique du calcul de limites, on se borne à ce stade à des calculs très simples, en attendant de disposer d'outils efficaces (développements limités).
+</p>
+
+<h5 id="limite-fonction-point">a) Limite d'une fonction en un point</h5>
+
+<div class="definition">
+    <strong>Limite finie en un point :</strong> Soit $f: I \to \mathbb{R}$ une fonction, et $a \in \overline{\mathbb{R}}$ un point adhérent à $I$ (i.e., $a \in I$ ou $a$ est une extrémité de $I$). Soit $\ell \in \mathbb{R}$. On dit que $f$ a pour limite $\ell$ en $a$ si :
+    $$ \forall \epsilon > 0, \exists \delta > 0 \text{ (si } a \in \mathbb{R}) \text{ ou } \exists A \in \mathbb{R} \text{ (si } a=\pm\infty), \forall x \in I, $$
+    $$ (|x-a| \le \delta \text{ et } x \neq a \implies |f(x) - \ell| \le \epsilon) \quad \text{ (cas } a \in \mathbb{R}) $$
+    $$ (x \ge A \implies |f(x) - \ell| \le \epsilon) \quad \text{ (cas } a = +\infty) $$
+    $$ (x \le A \implies |f(x) - \ell| \le \epsilon) \quad \text{ (cas } a = -\infty) $$
+    On note $\lim_{x \to a} f(x) = \ell$ ou $f(x) \xrightarrow[x \to a]{} \ell$.
+</div>
+
+<div class="definition">
+    <strong>Limite infinie en un point :</strong> Soit $f: I \to \mathbb{R}$ et $a \in \overline{\mathbb{R}}$ adhérent à $I$. On dit que $f$ a pour limite $+\infty$ en $a$ si :
+    $$ \forall M \in \mathbb{R}, \exists \delta > 0 \text{ ou } \exists A \in \mathbb{R}, \forall x \in I, $$
+    $$ (|x-a| \le \delta \text{ et } x \neq a \implies f(x) \ge M) \quad \text{ (cas } a \in \mathbb{R}) $$
+    $$ (x \ge A \implies f(x) \ge M) \quad \text{ (cas } a = +\infty) $$
+    $$ (x \le A \implies f(x) \ge M) \quad \text{ (cas } a = -\infty) $$
+    On note $\lim_{x \to a} f(x) = +\infty$. Définition analogue pour $-\infty$ en remplaçant $f(x) \ge M$ par $f(x) \le M$.
+</div>
+
+<div class="theorem">
+    <strong>Unicité de la limite :</strong> Si une fonction $f$ admet une limite $L \in \overline{\mathbb{R}}$ en un point $a$, cette limite est unique.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Similaire à la preuve pour l'unicité de la limite d'une suite. Supposer deux limites distinctes $\ell_1, \ell_2$ et choisir $\epsilon = |\ell_1 - \ell_2|/3$ (si finies) pour aboutir à une contradiction. S'adapte aux cas infinis.
+</div>
+
+<div class="theorem">
+    <strong>Lien limite et valeur :</strong> Si $f$ est définie en $a \in I$ et si $f$ possède une limite $\ell$ en $a$, alors $\ell = f(a)$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Supposons $\ell = \lim_{x\to a} f(x)$ et $\ell \neq f(a)$. Posons $\epsilon = |\ell - f(a)|/2 > 0$. Il existe $\delta > 0$ tel que $x \in I, |x-a|\le \delta, x \ne a \implies |f(x)-\ell| \le \epsilon$. Mais pour $x=a$, $|f(a)-\ell| = 2\epsilon > \epsilon$. Si on utilise la définition de la limite *sans* exclure $x=a$ (ce qui est parfois fait pour la continuité), l'énoncé devient $\lim_{x \to a} f(x) = f(a)$. Si on exclut $x=a$ dans la définition de la limite, cet énoncé signifie que si la limite existe, elle doit coïncider avec $f(a)$ si $f$ est définie en $a$. Le point important est qu'on définira la continuité par $\lim_{x \to a} f(x) = f(a)$.
+</div>
+
+<div class="theorem">
+    <strong>Limite finie $\implies$ Bornée localement :</strong> Si $\lim_{x \to a} f(x) = \ell \in \mathbb{R}$, alors $f$ est bornée au voisinage de $a$.
+    (i.e., il existe un voisinage $V$ de $a$ et un réel $M \ge 0$ tels que $\forall x \in I \cap V, |f(x)| \le M$).
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Prenons $\epsilon = 1$. Il existe $\delta > 0$ (ou $A$) tel que pour $x \in I$ dans le voisinage $V = ]a-\delta, a+\delta[$ (ou $]A, +\infty[$, etc.) et $x \neq a$, on a $|f(x) - \ell| \le 1$, donc $\ell-1 \le f(x) \le \ell+1$.
+    Soit $K = \max(|\ell-1|, |\ell+1|)$. Alors $|f(x)| \le K$ pour $x \in V \setminus \{a\}$.
+    Si $a \in I$, on pose $M = \max(K, |f(a)|)$. Alors $|f(x)| \le M$ pour tout $x \in V \cap I$. $f$ est bornée sur $V \cap I$.
+</div>
+
+<div class="definition">
+    <strong>Limite à droite, limite à gauche :</strong> Soit $f: I \to \mathbb{R}$ et $a \in \mathbb{R}$ tel que $I$ contienne un intervalle de la forme $]a, a+\eta[$ (resp. $]a-\eta, a[$) pour $\eta > 0$.
+    <ul>
+        <li>La <strong>limite à droite</strong> de $f$ en $a$, notée $\lim_{x \to a^+} f(x)$ ou $\lim_{x \to a, x>a} f(x)$, est la limite de la restriction de $f$ à $I \cap ]a, +\infty[$.</li>
+        <li>La <strong>limite à gauche</strong> de $f$ en $a$, notée $\lim_{x \to a^-} f(x)$ ou $\lim_{x \to a, x<a} f(x)$, est la limite de la restriction de $f$ à $I \cap ]-\infty, a[$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation de la limite par limites à droite/gauche :</strong> Soit $f: I \to \mathbb{R}$ et $a \in \mathbb{R}$ tel que $I$ contienne un intervalle de la forme $]a-\eta, a+\eta[$ pour $\eta > 0$.
+    Alors $f$ admet une limite $L \in \overline{\mathbb{R}}$ en $a$ si et seulement si $f$ admet une limite à droite $L_d$ et une limite à gauche $L_g$ en $a$, et $L_d = L_g = L$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation séquentielle de la limite :</strong> Soit $f: I \to \mathbb{R}$, $a \in \overline{\mathbb{R}}$ adhérent à $I$, et $L \in \overline{\mathbb{R}}$.
+    Les propositions suivantes sont équivalentes :
+    <ol>
+        <li>$\lim_{x \to a} f(x) = L$.</li>
+        <li>Pour toute suite $(x_n)_{n \in \mathbb{N}}$ d'éléments de $I \setminus \{a\}$ qui converge vers $a$, la suite $(f(x_n))_{n \in \mathbb{N}}$ converge vers $L$.</li>
+    </ol>
+</div>
+
+<div class="comment">
+    <strong>Intérêt :</strong> Permet de transposer les résultats sur les limites de suites (opérations, encadrement...) aux fonctions. Permet aussi de prouver qu'une fonction n'a pas de limite en $a$ en exhibant deux suites $(x_n)$ et $(y_n)$ tendant vers $a$ telles que $(f(x_n))$ et $(f(y_n))$ aient des limites différentes ou divergent.
+</div>
+
+<div class="theorem">
+    <strong>Opérations sur les limites :</strong> Soient $f, g: I \to \mathbb{R}$, $a \in \overline{\mathbb{R}}$ adhérent à $I$, $\lambda \in \mathbb{R}$. Si $\lim_{x \to a} f(x) = L_1$ et $\lim_{x \to a} g(x) = L_2$ ($L_1, L_2 \in \overline{\mathbb{R}}$), alors sous réserve d'existence (pas de forme indéterminée) :
+    <ul>
+        <li>$\lim_{x \to a} (f(x) + g(x)) = L_1 + L_2$ (FI: $\infty - \infty$)</li>
+        <li>$\lim_{x \to a} (\lambda f(x)) = \lambda L_1$</li>
+        <li>$\lim_{x \to a} (f(x) g(x)) = L_1 L_2$ (FI: $0 \times \infty$)</li>
+        <li>Si $L_2 \neq 0$, $\lim_{x \to a} \frac{f(x)}{g(x)} = \frac{L_1}{L_2}$ (FI: $\frac{0}{0}, \frac{\infty}{\infty}$; attention si $L_2 = 0$)</li>
+    </ul>
+    <strong>Composition :</strong> Soit $f: I \to J$ et $g: J \to \mathbb{R}$. Soit $a \in \overline{\mathbb{R}}$ adhérent à $I$. Si $\lim_{x \to a} f(x) = b \in \overline{\mathbb{R}}$ (avec $b$ adhérent à $J$) et $\lim_{y \to b} g(y) = L \in \overline{\mathbb{R}}$.
+    Alors $\lim_{x \to a} g(f(x)) = L$.
+    <br><em>Attention technique :</em> Si $b \in J$ et $f(x)=b$ pour $x$ proche de $a$, il faut aussi que $g(b)=L$. Souvent implicite ou géré par la continuité.
+</div>
+
+<div class="theorem">
+    <strong>Passage à la limite d'une inégalité large :</strong> Si $f(x) \le g(x)$ au voisinage de $a$, et si $f$ et $g$ admettent des limites $L_1, L_2 \in \overline{\mathbb{R}}$ en $a$, alors $L_1 \le L_2$.
+    <br><em>Attention :</em> Ne conserve pas les inégalités strictes.
+</div>
+
+<div class="theorem">
+    <strong>Existence de limites par encadrement/comparaison :</strong>
+    <ul>
+        <li><strong>Théorème des gendarmes :</strong> Si $u(x) \le f(x) \le v(x)$ au voisinage de $a$, et si $\lim_{x \to a} u(x) = \lim_{x \to a} v(x) = \ell \in \mathbb{R}$, alors $\lim_{x \to a} f(x) = \ell$.</li>
+        <li><strong>Comparaison (limite $+\infty$) :</strong> Si $f(x) \ge u(x)$ au voisinage de $a$, et si $\lim_{x \to a} u(x) = +\infty$, alors $\lim_{x \to a} f(x) = +\infty$.</li>
+        <li><strong>Comparaison (limite $-\infty$) :</strong> Si $f(x) \le v(x)$ au voisinage de $a$, et si $\lim_{x \to a} v(x) = -\infty$, alors $\lim_{x \to a} f(x) = -\infty$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Théorème de la limite monotone :</strong> Soit $f: ]a, b[ \to \mathbb{R}$ une fonction monotone.
+    <ul>
+        <li>$f$ admet une limite finie à droite en $a$ et une limite finie à gauche en $b$.</li>
+        <li>Plus précisément, si $f$ est croissante :
+            <ul>
+                <li>$\lim_{x \to a^+} f(x) = \inf_{x \in ]a,b[} f(x)$ (finie si $f$ est minorée, $-\infty$ sinon).</li>
+                <li>$\lim_{x \to b^-} f(x) = \sup_{x \in ]a,b[} f(x)$ (finie si $f$ est majorée, $+\infty$ sinon).</li>
+            </ul>
+        </li>
+        <li>Résultats analogues si $f$ est décroissante (sup en $a^+$, inf en $b^-$).</li>
+    </ul>
+    Le théorème s'adapte si $a=-\infty$ ou $b=+\infty$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong> Calculer les limites suivantes (si elles existent) :
+    <ol>
+        <li>$\lim_{x \to 2} \frac{x^2 - 4}{x - 2}$</li>
+        <li>$\lim_{x \to 0} \frac{\sin(x)}{x}$ (admis ou via DL plus tard, ici on peut utiliser l'encadrement pour $x \neq 0$)</li>
+        <li>$\lim_{x \to +\infty} \frac{3x^2 - 5x + 1}{2x^2 + x \sin(x)}$</li>
+        <li>$\lim_{x \to 0^+} x \ln(x)$ (admis ou via changement variable)</li>
+        <li>$\lim_{x \to 0} \cos(\frac{1}{x})$ (utiliser la caractérisation séquentielle pour montrer la non-existence).</li>
+        <li>$\lim_{x \to +\infty} \sqrt{x^2+x+1} - x$</li>
+    </ol>
+</div>
+
+
+<h5 id="continuite-point">b) Continuité en un point</h5>
+
+<div class="definition">
+    <strong>Continuité en un point :</strong> Soit $f: I \to \mathbb{R}$ et $a \in I$. On dit que $f$ est <strong>continue en $a$</strong> si :
+    $$ \lim_{x \to a} f(x) = f(a) $$
+    En termes de $\epsilon, \delta$ :
+    $$ \forall \epsilon > 0, \exists \delta > 0, \forall x \in I, (|x-a| \le \delta \implies |f(x) - f(a)| \le \epsilon) $$
+</div>
+
+<div class="definition">
+    <strong>Prolongement par continuité :</strong> Soit $f: I \setminus \{a\} \to \mathbb{R}$ (où $a$ est adhérent à $I$). Si $f$ admet une limite finie $\ell = \lim_{x \to a} f(x)$, alors la fonction $\tilde{f}: I \cup \{a\} \to \mathbb{R}$ définie par :
+    $$ \tilde{f}(x) = \begin{cases} f(x) & \text{si } x \in I \setminus \{a\} \\ \ell & \text{si } x = a \end{cases} $$
+    est appelée le <strong>prolongement par continuité</strong> de $f$ en $a$. La fonction $\tilde{f}$ est continue en $a$.
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> $f(x) = \frac{\sin x}{x}$ pour $x \ne 0$. On sait (ou admet) que $\lim_{x \to 0} f(x) = 1$. La fonction $\tilde{f}(x) = \begin{cases} \frac{\sin x}{x} & x \ne 0 \\ 1 & x = 0 \end{cases}$ est le prolongement par continuité de $f$ en 0.
+</div>
+
+<div class="definition">
+    <strong>Continuité à droite, à gauche :</strong> Soit $f: I \to \mathbb{R}$ et $a \in I$.
+    <ul>
+        <li>$f$ est <strong>continue à droite</strong> en $a$ si $\lim_{x \to a^+} f(x) = f(a)$.</li>
+        <li>$f$ est <strong>continue à gauche</strong> en $a$ si $\lim_{x \to a^-} f(x) = f(a)$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation de la continuité :</strong> Soit $f: I \to \mathbb{R}$ et $a \in I$ non isolé à droite et à gauche.
+    $f$ est continue en $a \iff f$ est continue à droite et à gauche en $a$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation séquentielle de la continuité :</strong> Soit $f: I \to \mathbb{R}$ et $a \in I$.
+    Les propositions suivantes sont équivalentes :
+    <ol>
+        <li>$f$ est continue en $a$.</li>
+        <li>Pour toute suite $(x_n)_{n \in \mathbb{N}}$ d'éléments de $I$ qui converge vers $a$, la suite $(f(x_n))_{n \in \mathbb{N}}$ converge vers $f(a)$.</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Opérations sur les fonctions continues en un point :</strong> Si $f$ et $g$ sont continues en $a \in I$, alors :
+    <ul>
+        <li>$f+g$, $\lambda f$ ($\lambda \in \mathbb{R}$), $fg$ sont continues en $a$.</li>
+        <li>Si $g(a) \neq 0$, alors $f/g$ est continue en $a$.</li>
+    </ul>
+    <strong>Composition :</strong> Si $f: I \to J$ est continue en $a \in I$, et $g: J \to \mathbb{R}$ est continue en $b = f(a) \in J$, alors $g \circ f$ est continue en $a$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.2 :</strong>
+    <ol>
+        <li>Étudier la continuité en $0$ des fonctions suivantes :
+            a) $f(x) = \begin{cases} x \sin(1/x) & \text{si } x \ne 0 \\ 0 & \text{si } x = 0 \end{cases}$
+            b) $g(x) = \begin{cases} \frac{e^x - 1}{x} & \text{si } x \ne 0 \\ 1 & \text{si } x = 0 \end{cases}$ (limite usuelle à connaître)
+            c) $h(x) = \lfloor x \rfloor$ (partie entière)
+        </li>
+        <li>Soit $f(x) = \frac{x^3 + 8}{x+2}$ pour $x \ne -2$. Peut-on prolonger $f$ par continuité en $-2$ ? Si oui, quelle est la valeur du prolongement ?</li>
+    </ol>
+</div>
+
+
+<h5 id="continuite-intervalle">c) Continuité sur un intervalle</h5>
+
+<div class="definition">
+    <strong>Continuité sur un intervalle :</strong> Une fonction $f: I \to \mathbb{R}$ est dite <strong>continue sur l'intervalle $I$</strong> si elle est continue en tout point $a \in I$.
+    <br> L'ensemble des fonctions continues sur $I$ est noté $\mathcal{C}(I, \mathbb{R})$ ou $\mathcal{C}^0(I)$.
+</div>
+
+<div class="theorem">
+    <strong>Théorème des Valeurs Intermédiaires (TVI) :</strong> Soit $f: I \to \mathbb{R}$ une fonction continue sur un intervalle $I$. Pour tous $a, b \in I$, pour tout réel $k$ compris entre $f(a)$ et $f(b)$ (i.e., $k \in [\min(f(a), f(b)), \max(f(a), f(b))]$), il existe (au moins) un $c \in [a, b]$ (ou $[b, a]$) tel que $f(c) = k$.
+</div>
+
+<div class="proof">
+    <strong>Principe de démonstration par dichotomie (cas $f(a) < k < f(b)$) :</strong>
+    On veut montrer l'existence de $c \in [a, b]$ tel que $f(c)=k$.
+    Considérons l'ensemble $E = \{ x \in [a, b] \mid f(x) \le k \}$.
+    $E$ est non vide (car $a \in E$) et majoré (par $b$). Il admet donc une borne supérieure $c = \sup E$. On montre que $c \in [a, b]$.
+    On montre ensuite que $f(c)=k$ en utilisant la continuité de $f$ en $c$ et la caractérisation séquentielle (ou par $\epsilon-\delta$) pour exclure $f(c) < k$ et $f(c) > k$.
+    *   Si $f(c) < k$ : Comme $k < f(b)$, on a $c < b$. Par continuité en $c$, pour $\epsilon = k-f(c)>0$, il existe $\eta>0$ tel que $x \in [c, c+\eta] \subset [a,b] \implies f(x) < f(c) + \epsilon = k$. Ceci contredit $c = \sup E$ car on a trouvé des éléments de $E$ strictement plus grands que $c$.
+    *   Si $f(c) > k$ : Par continuité en $c$, pour $\epsilon = f(c)-k>0$, il existe $\eta>0$ tel que $x \in [c-\eta, c] \subset [a,b] \implies f(x) > f(c) - \epsilon = k$. Ceci signifie qu'aucun élément de $]c-\eta, c]$ n'est dans $E$, donc $c$ ne peut pas être $\sup E$ (la borne sup devrait être $\le c-\eta$).
+    La seule possibilité restante est $f(c)=k$.
+</div>
+
+<div class="theorem">
+    <strong>Image d'un intervalle par une fonction continue :</strong> L'image d'un intervalle $I$ par une fonction continue $f$ est un intervalle.
+    <br> $f(I) = \{ f(x) \mid x \in I \}$ est un intervalle.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Soit $J = f(I)$. Pour montrer que $J$ est un intervalle, il suffit de montrer que si $y_1, y_2 \in J$ avec $y_1 \le y_2$, alors $[y_1, y_2] \subset J$.
+    Soient $y_1, y_2 \in J$. Il existe $a, b \in I$ tels que $f(a) = y_1$ et $f(b) = y_2$.
+    Soit $k \in [y_1, y_2]$. $k$ est compris entre $f(a)$ et $f(b)$. D'après le TVI appliqué à $f$ sur l'intervalle $[a, b]$ (ou $[b, a]$) qui est inclus dans $I$, il existe $c$ entre $a$ et $b$ tel que $f(c) = k$. Comme $c \in I$, on a $k = f(c) \in f(I) = J$.
+    Donc $[y_1, y_2] \subset J$. $J$ est bien un intervalle.
+</div>
+
+<div class="theorem">
+    <strong>Corollaire (Cas continu strictement monotone - Bijection) :</strong> Si $f: I \to \mathbb{R}$ est continue et strictement monotone sur l'intervalle $I$, alors :
+    <ol>
+        <li>$f$ réalise une bijection de $I$ sur l'intervalle $J = f(I)$.</li>
+        <li>L'intervalle $J = f(I)$ a pour bornes les limites de $f$ aux bornes de $I$.
+            (Exemple : si $I = ]a, b[$ et $f$ croissante, $J = ]\lim_{a^+} f, \lim_{b^-} f[$).</li>
+    </ol>
+</div>
+
+<div class="theorem">
+    <strong>Théorème des bornes atteintes (ou Théorème de Weierstrass) :</strong> Toute fonction continue sur un segment $[a, b]$ est bornée et atteint ses bornes.
+    <br>C'est-à-dire, il existe $m, M \in \mathbb{R}$ tels que $f([a, b]) = [m, M]$. Plus précisément, il existe $c, d \in [a, b]$ tels que $f(c) = m = \inf_{x \in [a, b]} f(x)$ et $f(d) = M = \sup_{x \in [a, b]} f(x)$.
+</div>
+
+<div class="comment">
+    <strong>Commentaire :</strong> La démonstration n'est pas exigible. Elle utilise souvent la caractérisation séquentielle et le théorème de Bolzano-Weierstrass pour les suites. L'idée est que l'image $f([a,b])$ est un intervalle (TVI) et aussi l'image d'un "compact" (notion hors programme mais $[a,b]$ l'est) par une fonction continue est "compacte", ce qui pour $\mathbb{R}$ signifie fermé et borné, donc un segment $[m, M]$.
+</div>
+
+<div class="theorem">
+    <strong>Injectivité et Monotonie :</strong> Une fonction continue sur un intervalle $I$ et injective est nécessairement strictement monotone sur $I$.
+</div>
+
+<div class="comment">
+    <strong>Commentaire :</strong> La démonstration n'est pas exigible. Elle repose sur le TVI en montrant que si $f$ n'était pas monotone, on pourrait trouver $x_1 < x_2 < x_3$ tels que $f(x_2)$ n'est pas entre $f(x_1)$ et $f(x_3)$, ce qui conduirait à une contradiction avec l'injectivité via le TVI.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de la bijection continue (Fonction réciproque) :</strong> Soit $f: I \to \mathbb{R}$ une fonction continue et strictement monotone sur un intervalle $I$.
+    Alors $f$ réalise une bijection de $I$ sur l'intervalle $J = f(I)$. Sa fonction réciproque $f^{-1}: J \to I$ est continue et strictement monotone sur $J$, de même sens de monotonie que $f$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (Continuité de $f^{-1}$) :</strong> Soit $f$ strictement croissante. Alors $f^{-1}$ est strictement croissante. L'image $J=f(I)$ est un intervalle. L'image $f^{-1}(J)=I$ est un intervalle. Une fonction monotone dont l'image d'un intervalle est un intervalle est continue (admis ou prouvable par l'absurde en utilisant la définition de la limite et la monotonie).
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.3 :</strong>
+    <ol>
+        <li>Montrer que l'équation $x^3 + x - 1 = 0$ admet une unique solution réelle dans $[0, 1]$.</li>
+        <li>Soit $f(x) = x^2$. $f$ est continue sur $\mathbb{R}$. Déterminer $f([-1, 2])$, $f(]0, 3[)$, $f(\mathbb{R})$.</li>
+        <li>La fonction $f(x) = \tan(x)$ est continue et strictement croissante sur $]-\pi/2, \pi/2[$. Quelle est son image $J$ ? Quelle est la monotonie et la continuité de sa réciproque $\arctan: J \to ]-\pi/2, \pi/2[$ ?</li>
+        <li>Donner un exemple de fonction continue sur $]0, 1]$ mais non bornée.</li>
+        <li>Donner un exemple de fonction continue et bornée sur $[0, +\infty[$ qui n'atteint pas sa borne supérieure.</li>
+    </ol>
+</div>
+
+
+<h5 id="fonctions-complexes-continuite">d) Fonctions complexes (Limites et Continuité)</h5>
+
+<div class="comment">
+    <strong>Extension des définitions :</strong> Soit $f: I \to \mathbb{C}$ une fonction définie sur une partie $I$ de $\mathbb{R}$ (souvent un intervalle), et $a \in \overline{\mathbb{R}}$ adhérent à $I$.
+    <ul>
+        <li><strong>Limite :</strong> $\lim_{t \to a} f(t) = L \in \mathbb{C} \iff \lim_{t \to a} |f(t) - L| = 0$.</li>
+        <li><strong>Continuité :</strong> $f$ est continue en $a \in I \iff \lim_{t \to a} f(t) = f(a)$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation par parties réelle et imaginaire :</strong> Soit $f: I \to \mathbb{C}$ avec $f(t) = u(t) + i v(t)$ ($u=\text{Re}(f), v=\text{Im}(f)$ sont des fonctions à valeurs réelles). Soit $a \in \overline{\mathbb{R}}$ adhérent à $I$ et $L = L_u + i L_v \in \mathbb{C}$.
+    <ul>
+        <li>$\lim_{t \to a} f(t) = L \iff \left( \lim_{t \to a} u(t) = L_u \text{ et } \lim_{t \to a} v(t) = L_v \right)$.</li>
+        <li>$f$ est continue en $a \in I \iff u$ et $v$ sont continues en $a$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    <strong>Résultats étendus :</strong> L'unicité de la limite, les opérations (combinaison linéaire, produit, quotient), la composition, la caractérisation séquentielle s'étendent aux fonctions à valeurs complexes. Les théorèmes liés à l'ordre (TVI, bornes atteintes sur segment, limite monotone) n'ont pas d'équivalent direct.
+</div>
+
+<div class="example">
+    <strong>Exemple :</strong> La fonction $f(t) = e^{it} = \cos(t) + i \sin(t)$ est continue sur $\mathbb{R}$ car $\cos$ et $\sin$ sont continues sur $\mathbb{R}$.
+    $\lim_{t \to 0} \frac{e^{it} - 1}{t} = \lim_{t \to 0} \frac{\cos t - 1}{t} + i \lim_{t \to 0} \frac{\sin t}{t} = 0 + i \times 1 = i$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.4 :</strong>
+    <ol>
+        <li>Étudier la limite en $0$ de $f(t) = \frac{1}{t} - \frac{1}{e^{it}-1}$.</li>
+        <li>La fonction $g(t) = \frac{1}{t^2+1} + i \frac{t}{t^2+1}$ est-elle continue sur $\mathbb{R}$ ?</li>
+    </ol>
+</div>
+
+
+<h4>B - Dérivabilité</h4>
+
+<h5 id="nombre-derive-fonction-derivee">a) Nombre dérivé, fonction dérivée</h5>
+
+<div class="definition">
+    <strong>Dérivabilité en un point :</strong> Soit $f: I \to \mathbb{R}$ et $a \in I$. On dit que $f$ est <strong>dérivable</strong> en $a$ si le taux d'accroissement $\tau_a(x) = \frac{f(x) - f(a)}{x - a}$ admet une limite finie lorsque $x \to a$ ($x \in I, x \neq a$).
+    Cette limite est appelée le <strong>nombre dérivé</strong> de $f$ en $a$, noté $f'(a)$ ou $\frac{df}{dx}(a)$.
+    $$ f'(a) = \lim_{x \to a} \frac{f(x) - f(a)}{x - a} = \lim_{h \to 0} \frac{f(a+h) - f(a)}{h} \quad (a+h \in I) $$
+</div>
+
+<div class="theorem">
+    <strong>Dérivabilité implique Continuité :</strong> Si $f$ est dérivable en $a \in I$, alors $f$ est continue en $a$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Pour $x \in I, x \neq a$, on a $f(x) - f(a) = \frac{f(x) - f(a)}{x - a} \times (x - a)$.
+    Quand $x \to a$, $\frac{f(x) - f(a)}{x - a} \to f'(a)$ (car $f$ est dérivable en $a$) et $(x - a) \to 0$.
+    Par produit des limites, $\lim_{x \to a} (f(x) - f(a)) = f'(a) \times 0 = 0$.
+    Donc $\lim_{x \to a} f(x) = f(a)$, ce qui signifie que $f$ est continue en $a$.
+</div>
+
+<div class="comment">
+    <strong>Attention :</strong> La réciproque est fausse (ex: $f(x)=|x|$ en $a=0$).
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation par Développement Limité d'ordre 1 :</strong> $f$ est dérivable en $a$ si et seulement s'il existe un réel $L$ et une fonction $\varepsilon$ définie au voisinage de $0$ tels que $\lim_{h \to 0} \varepsilon(h) = 0$ et :
+    $$ f(a+h) = f(a) + L h + h \varepsilon(h) $$
+    Auquel cas, $L = f'(a)$.
+    <br>On écrit aussi $f(a+h) = f(a) + f'(a)h + o(h)$ quand $h \to 0$.
+</div>
+
+<div class="definition">
+    <strong>Dérivabilité à gauche, à droite :</strong>
+    <ul>
+        <li>$f$ est <strong>dérivable à droite</strong> en $a$ si $\lim_{x \to a^+} \frac{f(x) - f(a)}{x - a}$ existe et est finie. On la note $f'_d(a)$.</li>
+        <li>$f$ est <strong>dérivable à gauche</strong> en $a$ si $\lim_{x \to a^-} \frac{f(x) - f(a)}{x - a}$ existe et est finie. On la note $f'_g(a)$.</li>
+    </ul>
+    $f$ est dérivable en $a \iff f$ est dérivable à droite et à gauche en $a$ et $f'_d(a) = f'_g(a)$.
+</div>
+
+<div class="comment">
+    <strong>Interprétation géométrique :</strong> $f'(a)$ est le coefficient directeur de la tangente au graphe de $f$ au point $(a, f(a))$. L'équation de la tangente est $y = f(a) + f'(a)(x-a)$.
+    Si $f'_d(a) \neq f'_g(a)$, on a un point anguleux (ex: $|x|$ en 0). Si une limite est infinie, on a une tangente verticale (ex: $\sqrt{x}$ en $0^+$).
+    <br><strong>Interprétation cinématique :</strong> Si $f(t)$ est la position d'un mobile au temps $t$, $f'(t)$ est sa vitesse instantanée.
+</div>
+
+<div class="definition">
+    <strong>Dérivabilité sur un intervalle :</strong> $f$ est dérivable sur l'intervalle $I$ si elle est dérivable en tout point $a \in I$. La fonction $x \mapsto f'(x)$ est appelée la <strong>fonction dérivée</strong> de $f$, notée $f'$ ou $\frac{df}{dx}$.
+</div>
+
+<div class="theorem">
+    <strong>Opérations sur les fonctions dérivables :</strong> Si $f, g$ sont dérivables sur $I$, $\lambda \in \mathbb{R}$ :
+    <ul>
+        <li>$f+g$ est dérivable sur $I$ et $(f+g)' = f' + g'$.</li>
+        <li>$\lambda f$ est dérivable sur $I$ et $(\lambda f)' = \lambda f'$.</li>
+        <li>$fg$ est dérivable sur $I$ et $(fg)' = f'g + fg'$.</li>
+        <li>Si $g$ ne s'annule pas sur $I$, $f/g$ est dérivable sur $I$ et $(\frac{f}{g})' = \frac{f'g - fg'}{g^2}$.</li>
+    </ul>
+    <strong>Composition :</strong> Si $f: I \to J$ est dérivable sur $I$ et $g: J \to \mathbb{R}$ est dérivable sur $J$, alors $g \circ f$ est dérivable sur $I$ et $(g \circ f)' = (g' \circ f) \times f'$.
+    <br><strong>Réciproque :</strong> Si $f: I \to J$ est bijective, dérivable sur $I$, et $f'(x) \neq 0$ pour tout $x \in I$, alors sa réciproque $f^{-1}: J \to I$ est dérivable sur $J$ et $(f^{-1})'(y) = \frac{1}{f'(f^{-1}(y))}$.
+</div>
+
+<div class="comment">
+    <strong>Tangente à la courbe de $f^{-1}$ :</strong> La tangente à $y=f^{-1}(x)$ au point $(b, a)$ (où $b=f(a)$) est la symétrique par rapport à $y=x$ de la tangente à $y=f(x)$ au point $(a, b)$. Les pentes sont inverses l'une de l'autre.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Calculer la dérivée de $f(x) = \ln(\cos(x))$ et préciser son domaine de dérivabilité.</li>
+        <li>Soit $f(x) = x^2 \sin(1/x)$ pour $x \ne 0$ et $f(0)=0$. Montrer que $f$ est dérivable en $0$ et calculer $f'(0)$. Calculer $f'(x)$ pour $x \ne 0$. La fonction $f'$ est-elle continue en $0$ ?</li>
+        <li>Soit $f(x) = \arcsin(x)$. Rappeler son domaine de définition et de dérivabilité. Calculer $f'(x)$.</li>
+        <li>Donner l'équation de la tangente à $y = e^{x^2}$ au point d'abscisse $1$.</li>
+    </ol>
+</div>
+
+
+<h5 id="extremum-local-point-critique">b) Extremum local et point critique</h5>
+
+<div class="definition">
+    <strong>Extremum local :</strong> Soit $f: I \to \mathbb{R}$ et $a \in I$.
+    <ul>
+        <li>$f$ admet un <strong>maximum local</strong> en $a$ s'il existe un voisinage $V$ de $a$ tel que $\forall x \in V \cap I, f(x) \le f(a)$.</li>
+        <li>$f$ admet un <strong>minimum local</strong> en $a$ s'il existe un voisinage $V$ de $a$ tel que $\forall x \in V \cap I, f(x) \ge f(a)$.</li>
+        <li>Un <strong>extremum local</strong> est un maximum local ou un minimum local.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Condition nécessaire d'extremum local :</strong> Soit $f: I \to \mathbb{R}$ et $a$ un point <strong>intérieur</strong> à $I$ (i.e., $a$ n'est pas une borne de $I$). Si $f$ admet un extremum local en $a$ et si $f$ est dérivable en $a$, alors $f'(a) = 0$.
+</div>
+
+<div class="proof">
+    <strong>Preuve (cas d'un max local) :</strong> Il existe $\delta > 0$ tel que $]a-\delta, a+\delta[ \subset I$ et $\forall x \in ]a-\delta, a+\delta[, f(x) \le f(a)$.
+    Pour $h \in ]0, \delta[$, $a+h \in I$ et $f(a+h) \le f(a)$, donc $\frac{f(a+h)-f(a)}{h} \le 0$. Par passage à la limite $h \to 0^+$, $f'_d(a) \le 0$.
+    Pour $h \in ]-\delta, 0[$, $a+h \in I$ et $f(a+h) \le f(a)$, donc $\frac{f(a+h)-f(a)}{h} \ge 0$ (car $h<0$). Par passage à la limite $h \to 0^-$, $f'_g(a) \ge 0$.
+    Comme $f$ est dérivable en $a$, $f'(a) = f'_d(a) = f'_g(a)$. La seule possibilité est $f'(a) = 0$.
+</div>
+
+<div class="definition">
+    <strong>Point critique :</strong> Un point $a \in I$ où $f$ est dérivable et $f'(a)=0$ est appelé un <strong>point critique</strong> de $f$.
+</div>
+
+<div class="comment">
+    <strong>Attention :</strong> Un point critique n'est pas nécessairement un extremum local (ex: $f(x)=x^3$ en $a=0$). Un extremum local peut exister en un point où $f$ n'est pas dérivable (ex: $|x|$ en $a=0$) ou à une borne de l'intervalle.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.2 :</strong>
+    <ol>
+        <li>Trouver les points critiques de $f(x) = x^3 - 3x + 1$.</li>
+        <li>Soit $g(x) = x e^{-x^2}$. Trouver les extrema locaux et globaux de $g$ sur $\mathbb{R}$.</li>
+    </ol>
+</div>
+
+
+<h5 id="theoremes-rolle-accroissements-finis">c) Théorèmes de Rolle et des accroissements finis</h5>
+
+<div class="theorem">
+    <strong>Théorème de Rolle :</strong> Soit $f: [a, b] \to \mathbb{R}$ une fonction vérifiant :
+    <ol>
+        <li>$f$ est continue sur le segment $[a, b]$.</li>
+        <li>$f$ est dérivable sur l'intervalle ouvert $]a, b[$.</li>
+        <li>$f(a) = f(b)$.</li>
+    </ol>
+    Alors, il existe (au moins) un $c \in ]a, b[$ tel que $f'(c) = 0$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Si $f$ est constante sur $[a,b]$, alors $f'(c)=0$ pour tout $c \in ]a,b[$.
+    Sinon, $f$ n'est pas constante. Comme $f$ est continue sur le segment $[a,b]$, elle atteint son maximum $M$ et son minimum $m$ (Th. des bornes atteintes).
+    Puisque $f$ n'est pas constante et $f(a)=f(b)$, l'un au moins des extrema (disons $M$) est atteint en un point $c \in ]a, b[$.
+    Comme $c$ est un point intérieur et $f$ y atteint un extremum local, et que $f$ est dérivable en $c$, on a $f'(c)=0$.
+</div>
+
+<div class="comment">
+    <strong>Interprétation géométrique :</strong> Si une courbe "lisse" relie deux points de même ordonnée, il existe au moins un point entre eux où la tangente est horizontale.
+    <br><strong>Interprétation cinématique :</strong> Si un mobile revient à sa position initiale, sa vitesse instantanée a été nulle au moins une fois pendant le trajet.
+</div>
+
+<div class="theorem">
+    <strong>Égalité des Accroissements Finis (TAF) :</strong> Soit $f: [a, b] \to \mathbb{R}$ une fonction vérifiant :
+    <ol>
+        <li>$f$ est continue sur le segment $[a, b]$.</li>
+        <li>$f$ est dérivable sur l'intervalle ouvert $]a, b[$.</li>
+    </ol>
+    Alors, il existe (au moins) un $c \in ]a, b[$ tel que :
+    $$ f(b) - f(a) = f'(c) (b - a) $$
+    ou encore $\frac{f(b) - f(a)}{b - a} = f'(c)$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> On applique le théorème de Rolle à une fonction auxiliaire bien choisie.
+    Soit $g(x) = f(x) - \left( f(a) + \frac{f(b) - f(a)}{b - a} (x - a) \right)$.
+    La fonction $g$ est continue sur $[a, b]$ et dérivable sur $]a, b[$ (comme $f$).
+    $g(a) = f(a) - (f(a) + 0) = 0$.
+    $g(b) = f(b) - \left( f(a) + \frac{f(b) - f(a)}{b - a} (b - a) \right) = f(b) - (f(a) + f(b) - f(a)) = 0$.
+    Donc $g(a) = g(b) = 0$. D'après le théorème de Rolle, il existe $c \in ]a, b[$ tel que $g'(c) = 0$.
+    Or, $g'(x) = f'(x) - \frac{f(b) - f(a)}{b - a}$.
+    Donc $g'(c) = f'(c) - \frac{f(b) - f(a)}{b - a} = 0$, ce qui donne le résultat.
+</div>
+
+<div class="comment">
+    <strong>Interprétation géométrique :</strong> La pente de la sécante reliant $(a, f(a))$ à $(b, f(b))$ est égale à la pente de la tangente en un point $c$ intermédiaire.
+</div>
+
+<div class="definition">
+    <strong>Fonction Lipschitzienne :</strong> Une fonction $f: I \to \mathbb{R}$ est dite <strong>$K$-lipschitzienne</strong> sur $I$ (pour $K \ge 0$) si :
+    $$ \forall x, y \in I, |f(x) - f(y)| \le K |x - y| $$
+    Une fonction lipschitzienne est continue.
+</div>
+
+<div class="theorem">
+    <strong>Inégalité des Accroissements Finis (IAF) :</strong> Soit $f: I \to \mathbb{R}$ une fonction continue sur l'intervalle $I$ et dérivable sur l'intérieur de $I$. S'il existe une constante $K \ge 0$ telle que $|f'(x)| \le K$ pour tout $x$ à l'intérieur de $I$, alors $f$ est $K$-lipschitzienne sur $I$.
+    $$ \forall a, b \in I, |f(b) - f(a)| \le K |b - a| $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Soient $a, b \in I$ avec $a < b$. $f$ est continue sur $[a, b]$ et dérivable sur $]a, b[$.
+    D'après le TAF, il existe $c \in ]a, b[$ tel que $f(b) - f(a) = f'(c) (b - a)$.
+    Alors $|f(b) - f(a)| = |f'(c)| |b - a|$.
+    Comme $c$ est à l'intérieur de $I$, on a $|f'(c)| \le K$.
+    Donc $|f(b) - f(a)| \le K |b - a|$. Le cas $a > b$ est similaire, et le cas $a=b$ est trivial.
+</div>
+
+<div class="comment">
+    <strong>Application :</strong> L'IAF est très utile pour étudier la convergence des suites $u_{n+1} = f(u_n)$. Si $f$ est $K$-lipschitzienne avec $K < 1$ sur un intervalle stable $I$ contenant un point fixe $\ell$, et si $u_0 \in I$, alors $|u_{n+1} - \ell| = |f(u_n) - f(\ell)| \le K |u_n - \ell|$. Par récurrence, $|u_n - \ell| \le K^n |u_0 - \ell|$. Comme $K^n \to 0$, on a $u_n \to \ell$. C'est une convergence géométrique.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation de la monotonie par le signe de la dérivée :</strong> Soit $f: I \to \mathbb{R}$ continue sur $I$ et dérivable sur l'intérieur de $I$.
+    <ul>
+        <li>$f$ est constante sur $I \iff \forall x \in \text{int}(I), f'(x) = 0$.</li>
+        <li>$f$ est croissante sur $I \iff \forall x \in \text{int}(I), f'(x) \ge 0$.</li>
+        <li>$f$ est décroissante sur $I \iff \forall x \in \text{int}(I), f'(x) \le 0$.</li>
+        <li>Si $\forall x \in \text{int}(I), f'(x) > 0$, alors $f$ est strictly croissante sur $I$.</li>
+        <li>Si $\forall x \in \text{int}(I), f'(x) < 0$, alors $f$ est strictly décroissante sur $I$.</li>
+        <li>(Plus fin) Si $f'(x) \ge 0$ sur $\text{int}(I)$ et si l'ensemble $\{ x \in \text{int}(I) \mid f'(x) = 0 \}$ ne contient aucun intervalle non trivial (i.e., les zéros de $f'$ sont isolés ou forment un ensemble discret), alors $f$ est strictement croissante sur $I$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve ($\implies$ pour croissance) :</strong> Si $f$ est croissante, pour $x \in \text{int}(I)$ et $h>0$ petit, $f(x+h) \ge f(x)$, donc $\frac{f(x+h)-f(x)}{h} \ge 0$. A la limite $h \to 0^+$, $f'_d(x) \ge 0$. De même $f'_g(x) \ge 0$. Donc $f'(x) \ge 0$.
+    <strong>Idée de preuve ($\impliedby$ pour croissance) :</strong> Si $f'(x) \ge 0$ pour $x \in \text{int}(I)$. Soient $a, b \in I$ avec $a < b$. $f$ est continue sur $[a, b]$ et dérivable sur $]a, b[$. Par TAF, il existe $c \in ]a, b[$ tel que $f(b) - f(a) = f'(c) (b - a)$. Comme $f'(c) \ge 0$ et $b-a > 0$, on a $f(b) - f(a) \ge 0$, soit $f(b) \ge f(a)$. $f$ est croissante.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de la limite de la dérivée :</strong> Soit $f: I \to \mathbb{R}$ et $a \in I$. On suppose que :
+    <ol>
+        <li>$f$ est continue sur $I$.</li>
+        <li>$f$ est dérivable sur $I \setminus \{a\}$.</li>
+        <li>$\lim_{x \to a, x \neq a} f'(x) = \ell$ (où $\ell \in \overline{\mathbb{R}}$).</li>
+    </ol>
+    Alors :
+    <ul>
+       <li>Si $\ell \in \mathbb{R}$ (limite finie) : $f$ est dérivable en $a$ et $f'(a) = \ell$. (Dans ce cas, $f'$ est continue en $a$).</li>
+       <li>Si $\ell = \pm \infty$ : $f$ n'est pas dérivable en $a$, mais la courbe de $f$ admet une tangente verticale au point $(a, f(a))$. Le taux d'accroissement tend vers $\ell$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve (cas $\ell \in \mathbb{R}$) :</strong> On veut montrer que $\lim_{x \to a} \frac{f(x) - f(a)}{x - a} = \ell$.
+    Soit $x \in I, x \neq a$. $f$ est continue sur l'intervalle $[a, x]$ (ou $[x, a]$) et dérivable sur $]a, x[$ (ou $]x, a[$).
+    Par le TAF, il existe $c_x$ strictement compris entre $a$ et $x$ tel que $f(x) - f(a) = f'(c_x) (x - a)$.
+    Donc $\frac{f(x) - f(a)}{x - a} = f'(c_x)$.
+    Quand $x \to a$, on a $c_x \to a$ (car $c_x$ est entre $a$ et $x$).
+    Comme $\lim_{y \to a} f'(y) = \ell$, par composition des limites (ou car $c_x \to a$ et $c_x \ne a$), on a $\lim_{x \to a} f'(c_x) = \ell$.
+    Donc $\lim_{x \to a} \frac{f(x) - f(a)}{x - a} = \ell$. Comme $\ell$ est finie, $f$ est dérivable en $a$ et $f'(a) = \ell$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.3 :</strong>
+    <ol>
+        <li>Montrer que $|\sin(b) - \sin(a)| \le |b - a|$ pour tous $a, b \in \mathbb{R}$.</li>
+        <li>Soit $f(x) = \frac{3-x}{2}$. Étudier la convergence de la suite $u_{n+1}=f(u_n)$ pour $u_0=0$. Quel est le point fixe ? Utiliser l'IAF.</li>
+        <li>Soit $f(x) = x^3$. Montrer que $f$ est strictement croissante sur $\mathbb{R}$ bien que $f'(0)=0$.</li>
+        <li>Soit $g(x) = \begin{cases} x^2 \ln(x) & \text{si } x > 0 \\ 0 & \text{si } x = 0 \end{cases}$. $g$ est-elle continue en 0 ? Est-elle dérivable en 0 ? (Utiliser la limite de la dérivée).</li>
+    </ol>
+</div>
+
+
+<h5 id="fonctions-classe-Ck">d) Fonctions de classe $\mathcal{C}^k$</h5>
+
+<div class="definition">
+    <strong>Fonctions de classe $\mathcal{C}^k$ :</strong> Soit $I$ un intervalle et $k \in \mathbb{N}^*$.
+    <ul>
+        <li>Une fonction $f: I \to \mathbb{R}$ est de <strong>classe $\mathcal{C}^1$</strong> sur $I$, noté $f \in \mathcal{C}^1(I)$, si $f$ est dérivable sur $I$ et si sa dérivée $f'$ est continue sur $I$.</li>
+        <li>Par récurrence, $f$ est de <strong>classe $\mathcal{C}^k$</strong> sur $I$, noté $f \in \mathcal{C}^k(I)$, si $f$ est $k$ fois dérivable sur $I$ et si sa dérivée $k$-ième, $f^{(k)}$, est continue sur $I$. (Cela revient à dire que $f$ est dérivable et $f' \in \mathcal{C}^{k-1}(I)$).</li>
+        <li>$f$ est de <strong>classe $\mathcal{C}^\infty$</strong> sur $I$, noté $f \in \mathcal{C}^\infty(I)$, si $f$ est de classe $\mathcal{C}^k$ pour tout $k \in \mathbb{N}$.</li>
+    </ul>
+    Par convention, $\mathcal{C}^0(I)$ est l'ensemble des fonctions continues sur $I$. On a les inclusions $\mathcal{C}^\infty(I) \subset \dots \subset \mathcal{C}^k(I) \subset \dots \subset \mathcal{C}^1(I) \subset \mathcal{C}^0(I)$.
+</div>
+
+<div class="theorem">
+    <strong>Opérations sur les fonctions de classe $\mathcal{C}^k$ :</strong> Soient $f, g \in \mathcal{C}^k(I)$ et $\lambda \in \mathbb{R}$.
+    <ul>
+        <li>$f+g \in \mathcal{C}^k(I)$ et $\lambda f \in \mathcal{C}^k(I)$. ($\mathcal{C}^k(I)$ est un espace vectoriel).</li>
+        <li>$fg \in \mathcal{C}^k(I)$.</li>
+        <li>Si $g$ ne s'annule pas sur $I$, $f/g \in \mathcal{C}^k(I)$.</li>
+        <li><strong>Composition :</strong> Si $f: I \to J$ est $\mathcal{C}^k$ et $g: J \to \mathbb{R}$ est $\mathcal{C}^k$, alors $g \circ f \in \mathcal{C}^k(I)$. (Démonstration non exigible).</li>
+        <li><strong>Réciproque :</strong> Si $f: I \to J$ est bijective, $\mathcal{C}^k(I)$, et $f'(x) \neq 0$ pour tout $x \in I$, alors $f^{-1}: J \to I$ est $\mathcal{C}^k(J)$. (Démonstration non exigible).</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Formule de Leibniz (Dérivée $n$-ième d'un produit) :</strong> Si $f, g \in \mathcal{C}^n(I)$, alors $fg \in \mathcal{C}^n(I)$ et pour tout $x \in I$ :
+    $$ (fg)^{(n)}(x) = \sum_{p=0}^n \binom{n}{p} f^{(p)}(x) g^{(n-p)}(x) $$
+    où $f^{(0)} = f$, $g^{(0)} = g$, et $\binom{n}{p} = \frac{n!}{p!(n-p)!}$. (Similaire à la formule du binôme de Newton).
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Par récurrence sur $n$.
+    Base $n=1$: $(fg)' = f'g + fg' = \binom{1}{0} f^{(0)}g^{(1)} + \binom{1}{1} f^{(1)}g^{(0)}$. Vrai.
+    Hérédité : Supposons la formule vraie au rang $n$.
+    $(fg)^{(n+1)} = \left( (fg)^{(n)} \right)' = \left( \sum_{p=0}^n \binom{n}{p} f^{(p)} g^{(n-p)} \right)'$
+    $= \sum_{p=0}^n \binom{n}{p} \left( f^{(p+1)} g^{(n-p)} + f^{(p)} g^{(n-p+1)} \right)$
+    $= \sum_{p=0}^n \binom{n}{p} f^{(p+1)} g^{(n-p)} + \sum_{p=0}^n \binom{n}{p} f^{(p)} g^{(n+1-p)}$
+    Décalage d'indice dans la première somme ($q=p+1$) : $\sum_{q=1}^{n+1} \binom{n}{q-1} f^{(q)} g^{(n+1-q)}$.
+    $= \binom{n}{n} f^{(n+1)} g^{(0)} + \sum_{q=1}^{n} \binom{n}{q-1} f^{(q)} g^{(n+1-q)} + \sum_{p=1}^{n} \binom{n}{p} f^{(p)} g^{(n+1-p)} + \binom{n}{0} f^{(0)} g^{(n+1)}$
+    En regroupant les sommes (avec $q=p$) et utilisant la formule de Pascal $\binom{n}{p-1} + \binom{n}{p} = \binom{n+1}{p}$ :
+    $= \binom{n+1}{n+1} f^{(n+1)} g^{(0)} + \sum_{p=1}^{n} \binom{n+1}{p} f^{(p)} g^{(n+1-p)} + \binom{n+1}{0} f^{(0)} g^{(n+1)}$
+    $= \sum_{p=0}^{n+1} \binom{n+1}{p} f^{(p)} g^{(n+1-p)}$. La formule est vraie au rang $n+1$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.4 :</strong>
+    <ol>
+        <li>Quelle est la classe de $f(x) = |x|^3$ sur $\mathbb{R}$ ?</li>
+        <li>Calculer la dérivée $n$-ième de $g(x) = x e^x$.</li>
+        <li>Montrer que la fonction $h(x) = \arctan(x)$ est de classe $\mathcal{C}^\infty$ sur $\mathbb{R}$.</li>
+    </ol>
+</div>
+
+
+<h5 id="fonctions-complexes-derivable">e) Fonctions complexes (Dérivabilité)</h5>
+
+<div class="definition">
+    <strong>Dérivabilité (fonction complexe de variable réelle) :</strong> Soit $f: I \to \mathbb{C}$ et $t_0 \in I$. $f$ est <strong>dérivable</strong> en $t_0$ si le taux d'accroissement $\frac{f(t) - f(t_0)}{t - t_0}$ admet une limite finie (dans $\mathbb{C}$) quand $t \to t_0$ ($t \in I, t \neq t_0$). La limite est notée $f'(t_0)$.
+    $$ f'(t_0) = \lim_{t \to t_0} \frac{f(t) - f(t_0)}{t - t_0} $$
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation par parties réelle et imaginaire :</strong> Soit $f(t) = u(t) + i v(t)$. $f$ est dérivable en $t_0 \iff u$ et $v$ sont dérivables en $t_0$.
+    Dans ce cas, $f'(t_0) = u'(t_0) + i v'(t_0)$.
+</div>
+
+<div class="comment">
+    <strong>Extension des résultats :</strong> Les règles de dérivation (somme, produit par scalaire, produit, quotient) s'étendent. La dérivabilité implique la continuité.
+    On définit les fonctions de classe $\mathcal{C}^k(I, \mathbb{C})$ de manière analogue.
+</div>
+
+<div class="theorem">
+    <strong>Inégalité des Accroissements Finis (complexe) :</strong> Soit $f: [a, b] \to \mathbb{C}$ une fonction de classe $\mathcal{C}^1$.
+    Alors : $$ |f(b) - f(a)| = \left| \int_a^b f'(t) dt \right| \le \int_a^b |f'(t)| dt $$
+    S'il existe $K \ge 0$ tel que $|f'(t)| \le K$ pour tout $t \in [a, b]$, alors :
+    $$ |f(b) - f(a)| \le K (b - a) $$
+</div>
+
+<div class="comment">
+    <strong>Commentaire :</strong> L'égalité $f(b)-f(a) = \int_a^b f'(t) dt$ est le Théorème Fondamental de l'Analyse, et l'inégalité $|\int g| \le \int |g|$ sera vue dans le chapitre sur l'intégration. L'IAF sous forme $|f(b)-f(a)| \le K(b-a)$ est donc admise à ce stade mais très utile. Il n'y a pas d'égalité des accroissements finis simple ($f(b)-f(a) = f'(c)(b-a)$) pour les fonctions à valeurs complexes.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.5 :</strong>
+    <ol>
+        <li>Calculer la dérivée de $f(t) = e^{(1+2i)t}$.</li>
+        <li>Soit $f(t) = \frac{1}{t-i}$. Calculer $f'(t)$.</li>
+        <li>Utiliser l'IAF complexe pour montrer que $|e^{ib} - e^{ia}| \le |b-a|$ pour $a, b \in \mathbb{R}$.</li>
+    </ol>
+</div>
+
+
+<h4>C - Convexité</h4>
+
+<h5 id="convexite-generalites">a) Généralités</h5>
+
+<div class="definition">
+    <strong>Fonction convexe :</strong> Une fonction $f: I \to \mathbb{R}$ définie sur un intervalle $I$ est dite <strong>convexe</strong> si pour tous $x, y \in I$ et tout $\lambda \in [0, 1]$ :
+    $$ f((1-\lambda)x + \lambda y) \le (1-\lambda)f(x) + \lambda f(y) $$
+    Une fonction $f$ est <strong>concave</strong> si $-f$ est convexe.
+</div>
+
+<div class="comment">
+    <strong>Interprétation géométrique :</strong> La corde reliant deux points $(x, f(x))$ et $(y, f(y))$ du graphe de $f$ est située au-dessus du graphe de $f$ entre $x$ et $y$. Le point $(1-\lambda)x + \lambda y$ est un point du segment $[x, y]$, et le membre de droite est l'ordonnée du point correspondant sur la corde.
+</div>
+
+<div class="theorem">
+    <strong>Inégalité de Jensen :</strong> Si $f: I \to \mathbb{R}$ est convexe, alors pour tous $x_1, \dots, x_n \in I$ et tous $\lambda_1, \dots, \lambda_n \in \mathbb{R}^+$ tels que $\sum_{i=1}^n \lambda_i = 1$ :
+    $$ f\left( \sum_{i=1}^n \lambda_i x_i \right) \le \sum_{i=1}^n \lambda_i f(x_i) $$
+    Le point $\sum \lambda_i x_i$ est le barycentre des points $x_i$ avec les poids $\lambda_i$.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Par récurrence sur $n$.
+    Base $n=1$: Trivial. $n=2$: C'est la définition de la convexité.
+    Hérédité : Supposons l'inégalité vraie au rang $n \ge 2$. Soient $x_1, \dots, x_{n+1} \in I$ et $\lambda_1, \dots, \lambda_{n+1} \ge 0$ avec $\sum_{i=1}^{n+1} \lambda_i = 1$.
+    Si $\lambda_{n+1}=1$, c'est trivial. Supposons $\lambda_{n+1} < 1$. Posons $S = \sum_{i=1}^n \lambda_i = 1 - \lambda_{n+1} > 0$.
+    On a $\sum_{i=1}^{n+1} \lambda_i x_i = (\sum_{i=1}^n \lambda_i x_i) + \lambda_{n+1} x_{n+1} = S \left( \sum_{i=1}^n \frac{\lambda_i}{S} x_i \right) + \lambda_{n+1} x_{n+1}$.
+    Posons $y = \sum_{i=1}^n \frac{\lambda_i}{S} x_i$. C'est un barycentre de $n$ points de $I$ (car $\sum \lambda_i/S = 1$), donc $y \in I$ (car $I$ est un intervalle, donc convexe).
+    On a $\sum_{i=1}^{n+1} \lambda_i x_i = S y + \lambda_{n+1} x_{n+1}$. C'est un barycentre de $y, x_{n+1} \in I$ avec poids $S, \lambda_{n+1}$ (de somme 1).
+    Par définition de la convexité (cas $n=2$) :
+    $f(S y + \lambda_{n+1} x_{n+1}) \le S f(y) + \lambda_{n+1} f(x_{n+1})$.
+    Par hypothèse de récurrence appliquée à $y = \sum_{i=1}^n (\lambda_i/S) x_i$ :
+    $f(y) = f\left( \sum_{i=1}^n \frac{\lambda_i}{S} x_i \right) \le \sum_{i=1}^n \frac{\lambda_i}{S} f(x_i)$.
+    Donc $f(\sum_{i=1}^{n+1} \lambda_i x_i) \le S \left( \sum_{i=1}^n \frac{\lambda_i}{S} f(x_i) \right) + \lambda_{n+1} f(x_{n+1}) = \sum_{i=1}^n \lambda_i f(x_i) + \lambda_{n+1} f(x_{n+1}) = \sum_{i=1}^{n+1} \lambda_i f(x_i)$.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation par la croissance des pentes (Inégalité des trois pentes) :</strong> Soit $f: I \to \mathbb{R}$. $f$ est convexe sur $I$ si et seulement si pour tous $x, y, z \in I$ tels que $x < y < z$ :
+    $$ \frac{f(y) - f(x)}{y - x} \le \frac{f(z) - f(x)}{z - x} \le \frac{f(z) - f(y)}{z - y} $$
+    Autrement dit, la fonction "pente de la corde issue d'un point fixé" $P_x(y) = \frac{f(y)-f(x)}{y-x}$ est croissante sur $I \setminus \{x\}$.
+</div>
+
+<div class="comment">
+    <strong>Position par rapport aux sécantes :</strong> Le théorème des pentes implique que le graphe de $f$ est situé en dessous de ses cordes. Si on prend la corde entre $x$ et $z$, pour $y = (1-\lambda)x + \lambda z \in ]x, z[$, l'inégalité $\frac{f(y)-f(x)}{y-x} \le \frac{f(z)-f(x)}{z-x}$ peut être réécrite pour montrer que le point $(y, f(y))$ est sous la corde.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.1 :</strong>
+    <ol>
+        <li>Montrer que $f(x) = |x|$ est convexe sur $\mathbb{R}$.</li>
+        <li>Utiliser l'inégalité de Jensen pour montrer que pour $x_1, \dots, x_n > 0$, on a $\sqrt[n]{x_1 \dots x_n} \le \frac{x_1 + \dots + x_n}{n}$ (inégalité arithmético-géométrique). (Indication: utiliser la convexité de $x \mapsto -\ln x$).</li>
+        <li>Soient $x < y < z$. Interpréter géométriquement l'inégalité des trois pentes.</li>
+    </ol>
+</div>
+
+
+<h5 id="fonctions-convexes-derivables">b) Fonctions convexes dérivables, deux fois dérivables</h5>
+
+<div class="theorem">
+    <strong>Caractérisation de la convexité pour les fonctions dérivables :</strong> Soit $f: I \to \mathbb{R}$ une fonction dérivable sur l'intervalle $I$. Les propositions suivantes sont équivalentes :
+    <ol>
+        <li>$f$ est convexe sur $I$.</li>
+        <li>La fonction dérivée $f'$ est croissante sur $I$.</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Utilise le lien entre croissance des pentes et signe de la dérivée (via TAF).
+    (1 $\implies$ 2) Si $f$ est convexe, pour $x < y$, la pente de la sécante $P_x(t) = \frac{f(t)-f(x)}{t-x}$ est croissante pour $t>x$. Sa limite à droite en $x$, qui est $f'(x)$, est donc une borne inférieure pour les pentes des sécantes issues de $x$. De même, $f'(y)$ est une borne supérieure pour les pentes des sécantes arrivant en $y$. En utilisant $x < y < z$, on a $P_x(y) \le P_y(z)$. En passant à la limite $y \to x^+$ et $z \to y^+$, on obtient $f'(x) \le f'(y)$. Donc $f'$ est croissante.
+    (2 $\implies$ 1) Si $f'$ est croissante. Soient $x < y < z$. Par TAF, il existe $c_1 \in ]x, y[$ et $c_2 \in ]y, z[$ tels que $\frac{f(y)-f(x)}{y-x} = f'(c_1)$ et $\frac{f(z)-f(y)}{z-y} = f'(c_2)$. Comme $c_1 < y < c_2$, on a $c_1 < c_2$. Puisque $f'$ est croissante, $f'(c_1) \le f'(c_2)$. Donc $\frac{f(y)-f(x)}{y-x} \le \frac{f(z)-f(y)}{z-y}$. Ceci (et l'autre inégalité des 3 pentes) est équivalent à la convexité.
+</div>
+
+<div class="theorem">
+    <strong>Position par rapport aux tangentes :</strong> Si $f: I \to \mathbb{R}$ est dérivable sur $I$. $f$ est convexe si et seulement si son graphe est situé au-dessus de chacune de ses tangentes.
+    $$ f \text{ convexe} \iff \forall a \in I, \forall x \in I, f(x) \ge f(a) + f'(a)(x-a) $$
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Considérer la fonction $g(x) = f(x) - [f(a) + f'(a)(x-a)]$. On veut montrer $g(x) \ge 0$ pour tout $x$. $g(a)=0$. On calcule $g'(x) = f'(x) - f'(a)$.
+    Si $f$ est convexe, $f'$ est croissante. Donc $g'(x) \le 0$ si $x < a$ et $g'(x) \ge 0$ si $x > a$.
+    La fonction $g$ est donc décroissante avant $a$ et croissante après $a$. Son minimum est atteint en $a$, et vaut $g(a)=0$. Donc $g(x) \ge 0$ pour tout $x$. La réciproque se fait en montrant que si le graphe est au-dessus des tangentes, $f'$ est croissante.
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation de la convexité pour les fonctions deux fois dérivables :</strong> Soit $f: I \to \mathbb{R}$ une fonction deux fois dérivable sur l'intervalle $I$. Les propositions suivantes sont équivalentes :
+    <ol>
+        <li>$f$ est convexe sur $I$.</li>
+        <li>La dérivée seconde $f''$ est positive ou nulle sur $I$ ($f''(x) \ge 0$ pour tout $x \in I$).</li>
+    </ol>
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> $f$ est convexe $\iff f'$ est croissante (Théorème précédent).
+    $f'$ est croissante $\iff (f')' \ge 0$ (Caractérisation de la monotonie par le signe de la dérivée).
+    Donc $f$ est convexe $\iff f'' \ge 0$.
+</div>
+
+<div class="comment">
+    <strong>Concavité :</strong> $f$ est concave $\iff f'$ est décroissante $\iff f'' \le 0$.
+    <strong>Point d'inflexion :</strong> Un point où la convexité change (typiquement où $f''$ s'annule en changeant de signe) est un point d'inflexion. La courbe traverse sa tangente en ce point.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.2 :</strong>
+    <ol>
+        <li>Étudier la convexité des fonctions suivantes : $f(x) = e^x$, $g(x) = x^3$, $h(x) = \ln(x)$.</li>
+        <li>Montrer que si $f$ est convexe et dérivable sur $\mathbb{R}$, et si $f$ est bornée, alors $f$ est constante. (Utiliser la position / tangentes).</li>
+        <li>Trouver les points d'inflexion de la fonction $k(x) = x e^{-x^2/2}$.</li>
+    </ol>
+</div>
+
+</body>
+</html>
