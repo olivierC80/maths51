@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Matrices</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Matrices</h1>
+
+<h3 id="matrices">Matrices</h3>
+<p class="intro-text">
+    Les objectifs de cette section sont les suivants :
+    <ul>
+        <li>présenter les liens entre applications linéaires et matrices, de manière à exploiter les changements de registres (géométrique, numérique, formel);</li>
+        <li>étudier l'effet d'un changement de bases sur la représentation matricielle d'une application linéaire et la relation d'équivalence qui s'en déduit sur $\mathcal{M}_{n,p}(\mathbb{K})$;</li>
+        <li>introduire brièvement la relation de similitude sur $\mathcal{M}_n(\mathbb{K})$.</li>
+    </ul>
+    Le corps $\mathbb{K}$ est égal à $\mathbb{R}$ ou $\mathbb{C}$.
+</p>
+
+<h4>A - Matrices et applications linéaires</h4>
+
+<h5 id="matrice-app-lineaire-bases">a) Matrice d'une application linéaire dans des bases</h5>
+
+<div class="definition">
+    <strong>Matrice d'un vecteur dans une base :</strong> Soit $E$ un $\mathbb{K}$-ev de dimension finie $p$ et $\mathcal{B} = (e_1, \dots, e_p)$ une base de $E$. Tout vecteur $x \in E$ s'écrit de manière unique $x = \sum_{j=1}^p x_j e_j$. La <strong>matrice de $x$ dans la base $\mathcal{B}$</strong> est la matrice colonne de ses coordonnées :
+    $$ \operatorname{Mat}_{\mathcal{B}}(x) = [x]_{\mathcal{B}} = X = \begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_p \end{pmatrix} \in \mathcal{M}_{p,1}(\mathbb{K}) $$
+</div>
+
+<div class="definition">
+    <strong>Matrice d'une famille de vecteurs dans une base :</strong> Soit $\mathcal{F} = (v_1, \dots, v_q)$ une famille de vecteurs de $E$ (dimension $p$, base $\mathcal{B}$). La <strong>matrice de la famille $\mathcal{F}$ dans la base $\mathcal{B}$</strong> est la matrice de $\mathcal{M}_{p,q}(\mathbb{K})$ dont les colonnes sont les matrices coordonnées des vecteurs $v_j$ dans la base $\mathcal{B}$.
+    $$ \operatorname{Mat}_{\mathcal{B}}(\mathcal{F}) = \left( [v_1]_{\mathcal{B}} | [v_2]_{\mathcal{B}} | \dots | [v_q]_{\mathcal{B}} \right) $$
+</div>
+
+<div class="definition">
+    <strong>Matrice d'une application linéaire :</strong> Soient $E, F$ deux $\mathbb{K}$-ev de dimensions finies respectives $p$ et $n$. Soit $\mathcal{B}_E = (e_1, \dots, e_p)$ une base de $E$ et $\mathcal{B}_F = (f_1, \dots, f_n)$ une base de $F$. Soit $u \in \mathcal{L}(E, F)$.
+    La <strong>matrice de $u$ relativement aux bases $\mathcal{B}_E$ et $\mathcal{B}_F$</strong> est la matrice $A = (a_{i,j}) \in \mathcal{M}_{n,p}(\mathbb{K})$ dont la $j$-ème colonne est constituée des coordonnées du vecteur $u(e_j)$ dans la base $\mathcal{B}_F$.
+    $$ \forall j \in \{1, \dots, p\}, \quad u(e_j) = \sum_{i=1}^n a_{i,j} f_i $$
+    On la note $\operatorname{Mat}_{\mathcal{B}_E, \mathcal{B}_F}(u)$ ou $M_{\mathcal{B}_F}^{\mathcal{B}_E}(u)$.
+</div>
+
+<div class="definition">
+    <strong>Matrice d'un endomorphisme :</strong> Si $E=F$ et $\mathcal{B}_E=\mathcal{B}_F=\mathcal{B}$, la matrice de l'endomorphisme $u \in \mathcal{L}(E)$ dans la base $\mathcal{B}$ est notée $\operatorname{Mat}_{\mathcal{B}}(u)$. C'est une matrice carrée $A \in \mathcal{M}_n(\mathbb{K})$ ($n=\dim E$).
+</div>
+
+<div class="example">
+    <strong>Exemple : Matrice d'une similitude complexe.</strong>
+    Soit $E = \mathbb{C}$ vu comme $\mathbb{R}$-espace vectoriel. Base canonique $\mathcal{B} = (1, i)$. Dimension 2.
+    Soit $c = a+ib \in \mathbb{C}$. Considérons l'endomorphisme $u: z \mapsto cz$. C'est une similitude directe (si $c \ne 0$). $u$ est $\mathbb{R}$-linéaire.
+    Calculons l'image des vecteurs de base :
+    <ul>
+        <li>$u(1) = c \times 1 = a+ib = a \cdot 1 + b \cdot i$. Coordonnées dans $\mathcal{B}$ : $\begin{pmatrix} a \\ b \end{pmatrix}$.</li>
+        <li>$u(i) = c \times i = (a+ib)i = ai - b = -b \cdot 1 + a \cdot i$. Coordonnées dans $\mathcal{B}$ : $\begin{pmatrix} -b \\ a \end{pmatrix}$.</li>
+    </ul>
+    La matrice de $u$ dans la base $\mathcal{B}=(1,i)$ est donc :
+    $$ \operatorname{Mat}_{\mathcal{B}}(u) = \begin{pmatrix} a & -b \\ b & a \end{pmatrix} $$
+</div>
+
+<div class="theorem">
+    <strong>Isomorphisme $\mathcal{L}(E, F) \leftrightarrow \mathcal{M}_{n,p}(\mathbb{K})$ :</strong> Soient $E$ de dimension $p$ avec base $\mathcal{B}_E$, et $F$ de dimension $n$ avec base $\mathcal{B}_F$. L'application
+    $$ \Phi: \mathcal{L}(E, F) \to \mathcal{M}_{n,p}(\mathbb{K}) \quad \text{définie par} \quad \Phi(u) = \operatorname{Mat}_{\mathcal{B}_E, \mathcal{B}_F}(u) $$
+    est un <strong>isomorphisme d'espaces vectoriels</strong>.
+    <br>En particulier, $\dim(\mathcal{L}(E, F)) = \dim(\mathcal{M}_{n,p}(\mathbb{K})) = np$.
+</div>
+
+<div class="theorem">
+    <strong>Isomorphisme $\mathcal{L}(E) \leftrightarrow \mathcal{M}_n(\mathbb{K})$ :</strong> Soit $E$ de dimension $n$ avec base $\mathcal{B}$. L'application
+    $$ \Phi: \mathcal{L}(E) \to \mathcal{M}_n(\mathbb{K}) \quad \text{définie par} \quad \Phi(u) = \operatorname{Mat}_{\mathcal{B}}(u) $$
+    est un <strong>isomorphisme d'espaces vectoriels</strong> et un <strong>isomorphisme d'anneaux</strong>. Cela signifie qu'il préserve aussi la composition/produit :
+    $$ \Phi(v \circ u) = \Phi(v) \times \Phi(u) \quad \text{et} \quad \Phi(\operatorname{id}_E) = I_n $$
+</div>
+
+<div class="theorem">
+    <strong>Calcul de l'image d'un vecteur :</strong> Soit $u \in \mathcal{L}(E, F)$, $\mathcal{B}_E$ base de $E$, $\mathcal{B}_F$ base de $F$. Soit $M = \operatorname{Mat}_{\mathcal{B}_E, \mathcal{B}_F}(u)$.
+    Si $x \in E$ a pour matrice colonne de coordonnées $X = [x]_{\mathcal{B}_E}$, alors le vecteur $y = u(x) \in F$ a pour matrice colonne de coordonnées $Y = [y]_{\mathcal{B}_F}$ donnée par :
+    $$ Y = M X $$
+    $$ [u(x)]_{\mathcal{B}_F} = \operatorname{Mat}_{\mathcal{B}_E, \mathcal{B}_F}(u) [x]_{\mathcal{B}_E} $$
+</div>
+
+<div class="theorem">
+    <strong>Matrice d'une composée :</strong> Soient $E \xrightarrow{u} F \xrightarrow{v} G$ des applications linéaires, avec bases $\mathcal{B}_E, \mathcal{B}_F, \mathcal{B}_G$. Alors :
+    $$ \operatorname{Mat}_{\mathcal{B}_E, \mathcal{B}_G}(v \circ u) = \operatorname{Mat}_{\mathcal{B}_F, \mathcal{B}_G}(v) \times \operatorname{Mat}_{\mathcal{B}_E, \mathcal{B}_F}(u) $$
+    <strong>Lien Inversibilité :</strong> $u \in \mathcal{L}(E, F)$ est un isomorphisme si et seulement si $E$ et $F$ ont même dimension et sa matrice $M$ (dans n'importe quel couple de bases) est inversible. Dans ce cas, $\operatorname{Mat}_{\mathcal{B}_F, \mathcal{B}_E}(u^{-1}) = (\operatorname{Mat}_{\mathcal{B}_E, \mathcal{B}_F}(u))^{-1} = M^{-1}$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong>
+    <ol>
+        <li>Soit $E=\mathbb{R}_2[X]$ avec base canonique $\mathcal{B}=(1, X, X^2)$. Soit $u: P \mapsto P' - P$. Montrer que $u \in \mathcal{L}(E)$. Écrire la matrice $M$ de $u$ dans $\mathcal{B}$.</li>
+        <li>Soit $P(X) = 1 + 2X - X^2$. Calculer $[P]_{\mathcal{B}}$ et $[u(P)]_{\mathcal{B}}$. Vérifier que $[u(P)]_{\mathcal{B}} = M [P]_{\mathcal{B}}$.</li>
+        <li>Soit $D: \mathbb{R}_n[X] \to \mathbb{R}_n[X]$ la dérivation. Quelle est sa matrice dans la base canonique ?</li>
+    </ol>
+</div>
+
+
+<h5 id="app-lineaire-canonique-matrice">b) Application linéaire canoniquement associée à une matrice</h5>
+
+<div class="definition">
+    <strong>Application linéaire canoniquement associée :</strong> À toute matrice $A \in \mathcal{M}_{n,p}(\mathbb{K})$, on associe l'application linéaire $u_A : \mathbb{K}^p \to \mathbb{K}^n$ définie par $u_A(X) = AX$, où $X \in \mathbb{K}^p$ et $AX \in \mathbb{K}^n$ sont identifiés à des matrices colonnes $\mathcal{M}_{p,1}(\mathbb{K})$ et $\mathcal{M}_{n,1}(\mathbb{K})$.
+    <br>La matrice de $u_A$ relativement aux bases canoniques de $\mathbb{K}^p$ et $\mathbb{K}^n$ est précisément $A$.
+</div>
+
+<div class="definition">
+    <strong>Noyau, Image et Rang d'une matrice :</strong> On définit le noyau, l'image et le rang d'une matrice $A \in \mathcal{M}_{n,p}(\mathbb{K})$ comme étant ceux de l'application linéaire $u_A$ canoniquement associée :
+    <ul>
+        <li>$\operatorname{Ker}(A) = \operatorname{Ker}(u_A) = \{ X \in \mathbb{K}^p \mid AX = 0 \}$. C'est un SEV de $\mathbb{K}^p$.</li>
+        <li>$\operatorname{Im}(A) = \operatorname{Im}(u_A) = \{ AX \mid X \in \mathbb{K}^p \}$. C'est un SEV de $\mathbb{K}^n$.</li>
+        <li>$\operatorname{rg}(A) = \operatorname{rg}(u_A) = \dim(\operatorname{Im}(A))$.</li>
+    </ul>
+</div>
+
+<div class="comment">
+    <strong>Interprétations :</strong>
+    <ul>
+        <li>L'image $\operatorname{Im}(A)$ est le sous-espace vectoriel de $\mathbb{K}^n$ engendré par les colonnes de $A$. Donc $\operatorname{rg}(A)$ est le rang de la famille des vecteurs colonnes de $A$.</li>
+        <li>Le noyau $\operatorname{Ker}(A)$ est l'ensemble des solutions du système linéaire homogène $AX=0$. Les lignes de $A$ fournissent un système d'équations définissant ce noyau.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Caractérisation de l'inversibilité d'une matrice carrée :</strong> Pour une matrice carrée $A \in \mathcal{M}_n(\mathbb{K})$, les propositions suivantes sont équivalentes :
+    <ol>
+        <li>$A$ est inversible ($A \in GL_n(\mathbb{K})$).</li>
+        <li>L'application linéaire associée $u_A$ est un isomorphisme ($\mathbb{K}^n \to \mathbb{K}^n$).</li>
+        <li>$\operatorname{Ker}(A) = \{0\}$. (Colonnes linéairement indépendantes).</li>
+        <li>$\operatorname{Im}(A) = \mathbb{K}^n$. (Colonnes génératrices de $\mathbb{K}^n$).</li>
+        <li>$\operatorname{rg}(A) = n$.</li>
+        <li>Le système $AX=0$ admet uniquement la solution triviale $X=0$.</li>
+        <li>Pour tout $B \in \mathbb{K}^n$, le système $AX=B$ admet une unique solution.</li>
+        <li>$A$ est inversible à gauche ($\exists B, BA=I_n$).</li>
+        <li>$A$ est inversible à droite ($\exists C, AC=I_n$).</li>
+        <li>Le déterminant de $A$ est non nul (vu plus tard).</li>
+    </ol>
+</div>
+
+<div class="comment">
+    <strong>Retour sur l'inversibilité des matrices triangulaires :</strong> Une matrice triangulaire $A$ est inversible si et seulement si ses coefficients diagonaux sont tous non nuls. Cela découle du fait que $\operatorname{rg}(A)=n$ si et seulement si tous les pivots (les coefficients diagonaux) sont non nuls lors de l'échelonnement.
+    <br><strong>Rangs :</strong> Le rang de $A$, le rang de $u_A$, le rang de la famille des colonnes de $A$, et le rang de la famille des lignes de $A$ sont tous égaux.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.2 :</strong>
+    <ol>
+        <li>Soit $A = \begin{pmatrix} 1 & 1 & 0 \\ 1 & 0 & 1 \\ 0 & 1 & -1 \end{pmatrix}$. Déterminer $\operatorname{Ker}(A)$, $\operatorname{Im}(A)$ et $\operatorname{rg}(A)$. A est-elle inversible ?</li>
+        <li>Soit $A \in \mathcal{M}_n(\mathbb{K})$ telle que $A^2 = 0$. Montrer que $\operatorname{Im}(A) \subseteq \operatorname{Ker}(A)$. En déduire que $\operatorname{rg}(A) \le n/2$.</li>
+    </ol>
+</div>
+
+
+<h5 id="systemes-lineaires-matrices">c) Systèmes linéaires (Revisités)</h5>
+
+<div class="comment">
+    L'écriture $AX=B$ permet de reformuler les résultats sur les systèmes linéaires en termes matriciels.
+</div>
+
+<div class="theorem">
+    <strong>Structure des solutions :</strong>
+    <ul>
+        <li>L'ensemble des solutions du système homogène $AX=0$ est le noyau $\operatorname{Ker}(A)$. C'est un SEV de $\mathbb{K}^p$.</li>
+        <li>Le <strong>rang du système</strong> est $\operatorname{rg}(A)$.</li>
+        <li>La dimension de l'espace des solutions du système homogène est $p - \operatorname{rg}(A)$ (par le théorème du rang appliqué à $u_A: \mathbb{K}^p \to \mathbb{K}^n$).</li>
+        <li>Le système $AX=B$ est compatible (admet au moins une solution) si et seulement si $B \in \operatorname{Im}(A)$.</li>
+        <li>Si $AX=B$ est compatible et $X_0$ est une solution particulière, l'ensemble des solutions est le sous-espace affine $X_0 + \operatorname{Ker}(A)$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Système de Cramer :</strong> Si $A \in \mathcal{M}_n(\mathbb{K})$ est une matrice carrée, le système $AX=B$ est dit <strong>de Cramer</strong> si $A$ est inversible (ce qui équivaut à $\operatorname{rg}(A)=n$, ou $\det(A) \ne 0$).
+    Dans ce cas, pour tout $B \in \mathbb{K}^n$, le système admet une unique solution donnée par $X = A^{-1}B$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.3 :</strong>
+    <ol>
+        <li>Considérer le système $\begin{cases} x + y = 2 \\ x - y = 0 \end{cases}$. Écrire la matrice $A$. Est-elle inversible ? Si oui, calculer $A^{-1}$ et trouver la solution.</li>
+        <li>Soit $A = \begin{pmatrix} 1 & 2 \\ 2 & 4 \end{pmatrix}$. Quel est le rang de $A$ ? Quelle est la dimension de l'espace des solutions de $AX=0$ ? Pour quels $B=\begin{pmatrix} b_1 \\ b_2 \end{pmatrix}$ le système $AX=B$ est-il compatible ?</li>
+    </ol>
+</div>
+
+
+<h4>B - Changements de bases, équivalence et similitude</h4>
+
+<h5 id="changement-bases">a) Changements de bases</h5>
+
+<div class="definition">
+    <strong>Matrice de passage :</strong> Soit $E$ un $\mathbb{K}$-ev de dimension $n$. Soient $\mathcal{B}=(e_1, \dots, e_n)$ et $\mathcal{B}'=(e'_1, \dots, e'_n)$ deux bases de $E$.
+    La <strong>matrice de passage</strong> de la base $\mathcal{B}$ (ancienne) à la base $\mathcal{B}'$ (nouvelle) est la matrice $P = P_{\mathcal{B} \to \mathcal{B}'}$ dont les colonnes sont les coordonnées des nouveaux vecteurs de base $e'_j$ exprimés dans l'ancienne base $\mathcal{B}$.
+    $$ P_{\mathcal{B} \to \mathcal{B}'} = \operatorname{Mat}_{\mathcal{B}}(\mathcal{B}') = \left( [e'_1]_{\mathcal{B}} | \dots | [e'_n]_{\mathcal{B}} \right) \in \mathcal{M}_n(\mathbb{K}) $$
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de la matrice de passage :</strong> Une matrice de passage $P = P_{\mathcal{B} \to \mathcal{B}'}$ est toujours inversible, et son inverse est la matrice de passage en sens inverse :
+    $$ (P_{\mathcal{B} \to \mathcal{B}'})^{-1} = P_{\mathcal{B}' \to \mathcal{B}} $$
+</div>
+
+<div class="theorem">
+    <strong>Formule de changement de base pour un vecteur :</strong> Soit $x \in E$. Notons $X = [x]_{\mathcal{B}}$ ses coordonnées dans l'ancienne base $\mathcal{B}$ et $X' = [x]_{\mathcal{B}'}$ ses coordonnées dans la nouvelle base $\mathcal{B}'$. Soit $P = P_{\mathcal{B} \to \mathcal{B}'}$. Alors :
+    $$ X = P X' $$
+    (Anciennes coords = Passage $\times$ Nouvelles coords). Et donc $X' = P^{-1} X$.
+</div>
+
+<div class="theorem">
+    <strong>Formule de changement de base pour une application linéaire :</strong> Soit $u \in \mathcal{L}(E, F)$.
+    Soient $\mathcal{B}_E, \mathcal{B}_E'$ deux bases de $E$, et $\mathcal{B}_F, \mathcal{B}_F'$ deux bases de $F$.
+    Soit $M = \operatorname{Mat}_{\mathcal{B}_E, \mathcal{B}_F}(u)$ et $M' = \operatorname{Mat}_{\mathcal{B}_E', \mathcal{B}_F'}(u)$.
+    Soit $P = P_{\mathcal{B}_E \to \mathcal{B}_E'}$ la matrice de passage dans $E$.
+    Soit $Q = P_{\mathcal{B}_F \to \mathcal{B}_F'}$ la matrice de passage dans $F$.
+    Alors :
+    $$ M' = Q^{-1} M P $$
+</div>
+
+<div class="theorem">
+    <strong>Formule de changement de base pour un endomorphisme :</strong> Soit $u \in \mathcal{L}(E)$.
+    Soient $\mathcal{B}, \mathcal{B}'$ deux bases de $E$.
+    Soit $M = \operatorname{Mat}_{\mathcal{B}}(u)$ et $M' = \operatorname{Mat}_{\mathcal{B}'}(u)$.
+    Soit $P = P_{\mathcal{B} \to \mathcal{B}'}$ la matrice de passage.
+    Alors :
+    $$ M' = P^{-1} M P $$
+</div>
+
+<div class="comment">
+    <strong>Intérêt :</strong> Étant donné un endomorphisme $u$ et sa matrice $M$ dans une base "simple" (e.g., canonique), on cherche une nouvelle base $\mathcal{B}'$ dans laquelle la matrice $M'$ de $u$ est "la plus simple possible" (e.g., diagonale, triangulaire). Trouver $\mathcal{B}'$ revient à trouver la matrice de passage $P$ telle que $M' = P^{-1}MP$ soit simple. C'est l'objectif de la réduction des endomorphismes.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Dans $\mathbb{R}^2$, soit $\mathcal{B}=((1,0),(0,1))$ la base canonique et $\mathcal{B}'=((1,1), (1,-1))$ une autre base. Écrire la matrice de passage $P = P_{\mathcal{B} \to \mathcal{B}'}$. Calculer $P^{-1}$.</li>
+        <li>Soit $x=(2,3)$. Calculer $X = [x]_{\mathcal{B}}$ et $X' = [x]_{\mathcal{B}'}$. Vérifier la formule $X=PX'$.</li>
+        <li>Soit $u(x,y) = (x+y, x-y)$. Calculer $M=\operatorname{Mat}_{\mathcal{B}}(u)$ et $M'=\operatorname{Mat}_{\mathcal{B}'}(u)$. Vérifier la formule $M'=P^{-1}MP$.</li>
+    </ol>
+</div>
+
+
+<h5 id="matrices-equivalentes-rang">b) Matrices équivalentes et rang</h5>
+
+<div class="definition">
+    <strong>Matrice $J_r$ :</strong> Pour $0 \le r \le \min(n,p)$, on note $J_r$ la matrice de $\mathcal{M}_{n,p}(\mathbb{K})$ définie par blocs :
+    $$ J_r = \begin{pmatrix} I_r & 0_{r, p-r} \\ 0_{n-r, r} & 0_{n-r, p-r} \end{pmatrix} $$
+    (Des 1 sur les $r$ premières positions diagonales, des 0 partout ailleurs).
+</div>
+
+<div class="theorem">
+    <strong>Réduction des applications linéaires :</strong> Soit $u \in \mathcal{L}(E, F)$ avec $\dim E=p, \dim F=n$. Si $\operatorname{rg}(u) = r$, alors il existe une base $\mathcal{B}_E'$ de $E$ et une base $\mathcal{B}_F'$ de $F$ telles que :
+    $$ \operatorname{Mat}_{\mathcal{B}_E', \mathcal{B}_F'}(u) = J_r $$
+</div>
+
+<div class="definition">
+    <strong>Matrices équivalentes :</strong> Deux matrices $A, B \in \mathcal{M}_{n,p}(\mathbb{K})$ sont dites <strong>équivalentes</strong> s'il existe $P \in GL_p(\mathbb{K})$ et $Q \in GL_n(\mathbb{K})$ telles que $B = Q A P$ (ou $B = Q^{-1}AP$, la définition peut varier, l'important est $P$ à droite, $Q$ ou $Q^{-1}$ à gauche).
+    <br>Interprétation: $A$ et $B$ représentent la même application linéaire dans des bases différentes.
+</div>
+
+<div class="theorem">
+    <strong>Classification par le rang :</strong> Deux matrices $A, B \in \mathcal{M}_{n,p}(\mathbb{K})$ sont équivalentes si et seulement si elles ont le même rang.
+    <br>En particulier, toute matrice $A$ de rang $r$ est équivalente à la matrice $J_r$.
+</div>
+
+<div class="theorem">
+    <strong>Rang de la transposée :</strong> Pour toute matrice $A \in \mathcal{M}_{n,p}(\mathbb{K})$,
+    $$ \operatorname{rg}(A) = \operatorname{rg}(A^T) $$
+    Le rang d'une matrice est égal au rang de la famille de ses vecteurs lignes et au rang de la famille de ses vecteurs colonnes.
+</div>
+
+<div class="definition">
+    <strong>Matrice extraite (ou sous-matrice) :</strong> Obtenue en supprimant certaines lignes et/ou certaines colonnes d'une matrice.
+    <br><strong>Rang et matrices extraites :</strong> Le rang d'une matrice $A$ est le plus grand entier $r$ tel qu'il existe une sous-matrice carrée d'ordre $r$ inversible (i.e., de déterminant non nul). Cette caractérisation est souvent vue avec les déterminants.
+</div>
+
+<div class="theorem">
+    <strong>Opérations élémentaires et rang :</strong> Les opérations élémentaires sur les lignes (OEL) ou sur les colonnes (OEC) d'une matrice ne modifient pas son rang.
+    (Car elles correspondent à multiplier à gauche ou à droite par une matrice inversible).
+</div>
+
+<div class="method">
+    <strong>Calcul du rang par Pivot de Gauss :</strong> On applique des OEL (ou OEC, ou un mélange) à une matrice $A$ pour la transformer en une matrice échelonnée $A'$. Le rang de $A$ est alors égal au nombre de lignes non nulles (ou nombre de pivots) de $A'$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.2 :</strong>
+    <ol>
+        <li>Calculer le rang de $A = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{pmatrix}$.</li>
+        <li>Montrer que $\operatorname{rg}(A+B) \le \operatorname{rg}(A) + \operatorname{rg}(B)$.</li>
+        <li>Soit $A \in \mathcal{M}_{n,p}(\mathbb{K})$. Montrer que $\operatorname{rg}(A)=0 \iff A=0$. Montrer que $\operatorname{rg}(A)=p \iff \operatorname{Ker}(A)=\{0\}$ (colonnes libres). Montrer que $\operatorname{rg}(A)=n \iff \operatorname{Im}(A)=\mathbb{K}^n$ (colonnes génératrices de $\mathbb{K}^n$).</li>
+    </ol>
+</div>
+
+
+<h5 id="matrices-semblables-trace">c) Matrices semblables et trace</h5>
+
+<div class="definition">
+    <strong>Matrices semblables :</strong> Deux matrices carrées $A, B \in \mathcal{M}_n(\mathbb{K})$ sont dites <strong>semblables</strong> s'il existe une matrice inversible $P \in GL_n(\mathbb{K})$ telle que :
+    $$ B = P^{-1} A P $$
+    La relation de similitude est une relation d'équivalence sur $\mathcal{M}_n(\mathbb{K})$.
+</div>
+
+<div class="comment">
+    <strong>Interprétation géométrique :</strong> Deux matrices sont semblables si et seulement si elles représentent le même endomorphisme dans deux bases différentes.
+    <br><strong>Recherche :</strong> Un problème central en réduction est de trouver, pour une matrice $A$ donnée, une matrice $B$ semblable à $A$ qui soit la plus "simple" possible (diagonale, triangulaire...).
+</div>
+
+<div class="definition">
+    <strong>Trace d'une matrice carrée :</strong> La <strong>trace</strong> d'une matrice carrée $A = (a_{i,j}) \in \mathcal{M}_n(\mathbb{K})$ est la somme de ses éléments diagonaux :
+    $$ \operatorname{tr}(A) = \sum_{i=1}^n a_{i,i} $$
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de la trace :</strong>
+    <ul>
+        <li><strong>Linéarité :</strong> $\operatorname{tr}: \mathcal{M}_n(\mathbb{K}) \to \mathbb{K}$ est une forme linéaire : $\operatorname{tr}(\lambda A + \mu B) = \lambda \operatorname{tr}(A) + \mu \operatorname{tr}(B)$.</li>
+        <li><strong>Cyclicité :</strong> $\forall A \in \mathcal{M}_{n,p}(\mathbb{K}), \forall B \in \mathcal{M}_{p,n}(\mathbb{K}), \operatorname{tr}(AB) = \operatorname{tr}(BA)$.</li>
+        <li><strong>Invariance par similitude :</strong> Si $A$ et $B$ sont semblables ($\in \mathcal{M}_n(\mathbb{K})$), alors $\operatorname{tr}(A) = \operatorname{tr}(B)$.</li>
+    </ul>
+</div>
+
+<div class="proof">
+    <strong>Preuve (Cyclicité) :</strong> $A=(a_{ik}), B=(b_{kj})$.
+    $\operatorname{tr}(AB) = \sum_{i=1}^n (AB)_{ii} = \sum_{i=1}^n \sum_{k=1}^p a_{ik} b_{ki}$.
+    $\operatorname{tr}(BA) = \sum_{k=1}^p (BA)_{kk} = \sum_{k=1}^p \sum_{i=1}^n b_{ki} a_{ik}$. C'est la même somme.
+    <strong>Preuve (Invariance par similitude) :</strong> $\operatorname{tr}(P^{-1}AP) = \operatorname{tr}((P^{-1}A)P) = \operatorname{tr}(P(P^{-1}A)) = \operatorname{tr}((PP^{-1})A) = \operatorname{tr}(I_n A) = \operatorname{tr}(A)$.
+</div>
+
+<div class="definition">
+    <strong>Trace d'un endomorphisme :</strong> Soit $E$ un $\mathbb{K}$-ev de dimension finie et $u \in \mathcal{L}(E)$. La <strong>trace</strong> de $u$, notée $\operatorname{tr}(u)$, est la trace de la matrice de $u$ dans n'importe quelle base $\mathcal{B}$ de $E$.
+    $$ \operatorname{tr}(u) = \operatorname{tr}(\operatorname{Mat}_{\mathcal{B}}(u)) $$
+    (La définition est indépendante du choix de la base grâce à l'invariance par similitude).
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de la trace d'un endomorphisme :</strong>
+    <ul>
+        <li>$\operatorname{tr}: \mathcal{L}(E) \to \mathbb{K}$ est une forme linéaire.</li>
+        <li>$\forall u, v \in \mathcal{L}(E), \operatorname{tr}(u \circ v) = \operatorname{tr}(v \circ u)$.</li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Trace d'un projecteur :</strong> Si $p$ est un projecteur sur un espace $E$ de dimension finie, alors $\operatorname{tr}(p) = \operatorname{rg}(p) = \dim(\operatorname{Im}(p))$.
+    <br><em>Idée de preuve :</em> Choisir une base $\mathcal{B}$ adaptée à la somme directe $E = \operatorname{Im}(p) \oplus \operatorname{Ker}(p)$. Si $\operatorname{rg}(p)=r$, la matrice de $p$ dans cette base est $J_r = \operatorname{diag}(1, \dots, 1, 0, \dots, 0)$ avec $r$ fois 1. Sa trace est $r$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.3 :</strong>
+    <ol>
+        <li>Les matrices $A = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix}$ et $B = \begin{pmatrix} 1 & 1 \\ 0 & 2 \end{pmatrix}$ sont-elles équivalentes ? Sont-elles semblables ?</li>
+        <li>Calculer la trace de $A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$.</li>
+        <li>Montrer qu'il n'existe pas de matrices $A, B \in \mathcal{M}_n(\mathbb{K})$ telles que $AB - BA = I_n$ en utilisant la trace.</li>
+        <li>Soit $u$ un endomorphisme nilpotent ($\exists k, u^k=0$) d'un espace $E$ de dimension finie sur $\mathbb{C}$. Montrer que $\operatorname{tr}(u)=0$. (Admis : on peut trigonaliser $u$ dans $\mathbb{C}$, la matrice $T$ semblable à $M=\operatorname{Mat}(u)$ est triangulaire supérieure avec des 0 sur la diagonale).</li>
+    </ol>
+</div>
+
+</body>
+</html>
