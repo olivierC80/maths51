@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Propagation d'un Signal</title>
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        #app {
+            max-width: 900px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #42b983;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            margin-top: 40px; /* Ajout espace avant les titres de section */
+        }
+        h1:first-of-type {
+             margin-top: 0;
+        }
+
+
+        .qa-item {
+            display: flex;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: box-shadow 0.3s ease;
+        }
+        .qa-item:hover {
+             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .understanding-bar {
+            flex: 0 0 10px; /* Ne grandit pas, ne rétrécit pas, base de 10px */
+            margin-right: 15px;
+            border-radius: 5px;
+            background-color: #ccc; /* Gris par défaut si pas compris ou non évalué */
+            transition: background-color 0.3s ease;
+        }
+
+        .understanding-bar.easy { background-color: #4CAF50; } /* Vert */
+        .understanding-bar.medium { background-color: #ff9800; } /* Orange */
+        .understanding-bar.hard { background-color: #f44336; } /* Rouge */
+        .understanding-bar.not_understood { background-color: #607d8b; } /* Gris sombre */
+
+        .qa-content {
+            flex-grow: 1;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        .answer {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #42b983;
+            border-radius: 0 4px 4px 0;
+            transition: all 0.4s ease-out;
+            overflow: hidden;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 8px 12px;
+            margin: 5px 5px 5px 0;
+            border: none;
+            border-radius: 4px;
+            background-color: #42b983;
+            color: white;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease;
+        }
+        button:hover {
+            background-color: #36a374;
+        }
+
+        .toggle-answer-btn {
+             background-color: #3498db;
+        }
+         .toggle-answer-btn:hover {
+             background-color: #2980b9;
+         }
+
+        .understanding-buttons button {
+            background-color: #eee;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+         .understanding-buttons button:hover {
+             background-color: #ddd;
+         }
+        .understanding-buttons button.active.easy { background-color: #4CAF50; color: white; border-color: #4CAF50;}
+        .understanding-buttons button.active.medium { background-color: #ff9800; color: white; border-color: #ff9800;}
+        .understanding-buttons button.active.hard { background-color: #f44336; color: white; border-color: #f44336;}
+        .understanding-buttons button.active.not_understood { background-color: #607d8b; color: white; border-color: #607d8b;}
+
+        .katex { font-size: 1.1em; } /* Ajuster si nécessaire */
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 5px; }
+
+        /* Classe utilitaire pour masquer via v-show */
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h1>Questions-Réponses</h1>
+
+        <!-- Section 1.6 -->
+        <h2 id="t1-6-propagation-signal">1.6 Propagation d'un signal</h2>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+         <div v-for="item in qaListPropagation" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, nextTick, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                // --- Questions Section 1.6 : Propagation ---
+                const qaListPropagation = ref([
+                     {
+                        id: 'q_prop_1',
+                        question: "Comment décrit-on mathématiquement une onde progressive 1D non dispersive se propageant dans le sens des x positifs et dans le sens des x négatifs ?",
+                        answer: `Une onde 1D non dispersive se propageant sans déformation à la célérité $c$.<br>
+                                 Propagation sens +Ox : $s(x, t) = f(t - x/c)$ ou $s(x, t) = F(x - ct)$.<br>
+                                 Propagation sens -Ox : $s(x, t) = g(t + x/c)$ ou $s(x, t) = G(x + ct)$.<br>
+                                 $f$, $g$, $F$, $G$ représentent la forme de l'onde.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_prop_2',
+                        question: "Donner l'expression générale d'une onde progressive sinusoïdale 1D en fonction de $\\omega$ et $k$. Définir ces termes ainsi que $\\lambda$ et la relation $c = \\lambda f$.",
+                        answer: `$s(x, t) = S_m \\cos(\\omega t - kx + \\phi)$.<ul>
+                                 <li>$S_m$ : amplitude maximale.</li>
+                                 <li>$\\omega = 2\\pi f = 2\\pi/T$ : pulsation temporelle (rad/s).</li>
+                                 <li>$k = 2\\pi/\\lambda$ : nombre d'onde (rad/m), pulsation spatiale.</li>
+                                 <li>$\\phi$ : phase à l'origine ($x=0, t=0$).</li>
+                                 <li>$\\lambda$ : longueur d'onde (m), période spatiale.</li>
+                                 </ul>
+                                 La célérité (vitesse de phase) est $c = \\omega/k$. Comme $\\omega = 2\\pi f$ et $k=2\\pi/\\lambda$, on a $c = (2\\pi f) / (2\\pi/\\lambda) = f \\lambda$. On a aussi $\lambda = c/f = cT$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_prop_3',
+                        question: "Comment le déphasage $\\Delta\\phi$ entre deux points $x_1$ et $x_2$ à un instant $t$ est-il lié à leur distance $\\Delta x$ pour une onde sinusoïdale ? Et comment est-il lié au retard temporel $\\Delta t$ ?",
+                        answer: `Pour une onde $s(x,t) = S_m \\cos(\\omega t - kx + \phi_0)$, la phase en $(x,t)$ est $\\phi(x,t) = \\omega t - kx + \phi_0$.<br>
+                                 À $t$ fixé : $\\Delta\\phi = \\phi(x_2, t) - \\phi(x_1, t) = (\\omega t - kx_2 + \\phi_0) - (\\omega t - kx_1 + \\phi_0) = -k(x_2 - x_1) = -k \\Delta x$.<br>
+                                 Le signal en $x_2$ est en retard sur le signal en $x_1$ (si $\Delta x > 0$) de $\\Delta t = \\Delta x / c$.<br>
+                                 Le déphasage peut aussi s'écrire $\\Delta\\phi = -k \\Delta x = -(\\omega/c) (c \\Delta t) = -\\omega \\Delta t$. Le retard $\\Delta t$ correspond à un déphasage $-\\omega \\Delta t$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_prop_4',
+                        question: "Qu'est-ce qu'un milieu dispersif ? Quelle est la conséquence de la dispersion sur la propagation d'une onde non sinusoïdale ?",
+                        answer: `Un <strong>milieu dispersif</strong> est un milieu où la célérité $c$ de l'onde dépend de sa fréquence $f$ (ou de sa longueur d'onde $\\lambda$).<br>
+                                 Conséquence : Une onde non sinusoïdale (qui est une superposition d'ondes sinusoïdales de fréquences différentes selon l'analyse de Fourier) <strong>se déforme</strong> en se propageant, car ses différentes composantes harmoniques ne voyagent pas à la même vitesse.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_prop_5',
+                        question: "Quelles sont les conditions pour observer des interférences entre deux ondes ? Que signifie 'sources cohérentes' ?",
+                        answer: `Pour observer un phénomène d'interférences stable, les ondes qui se superposent doivent être <strong>cohérentes</strong>.<br>
+                                 Cela signifie qu'elles doivent avoir la <strong>même fréquence</strong> (ou pulsation $\omega$) et un <strong>déphasage constant</strong> l'une par rapport à l'autre au cours du temps. Les ondes sont souvent issues de <strong>sources synchrones</strong> (dérivées d'une même source primaire).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_prop_6',
+                        question: "Deux ondes de même amplitude $S_m$ et même pulsation $\\omega$ interfèrent en un point M avec un déphasage $\\Delta\\phi(M)$. Donner l'amplitude $A(M)$ de l'onde résultante. Quelles sont les conditions sur $\\Delta\\phi$ pour une interférence constructive et destructive ?",
+                        answer: `L'amplitude résultante est $A(M) = |s_1+s_2| = |S_m e^{j(\omega t+\phi_1)} + S_m e^{j(\omega t+\phi_2)}| = |S_m e^{j(\omega t+(\phi_1+\phi_2)/2)} (e^{j(-\Delta\phi/2)} + e^{j(\Delta\phi/2)})|$.<br>
+                                 $A(M) = |S_m e^{j(...)} (2 \cos(\Delta\phi/2))| = 2 S_m |\cos(\Delta\phi(M)/2)|$.<br>
+                                 <ul><li><strong>Interférence constructive :</strong> Amplitude maximale $A_{max} = 2S_m$. Obtenue lorsque $|\cos(\Delta\phi/2)| = 1$, soit $\Delta\phi/2 = p\pi \implies \\Delta\phi = 2p\pi$ ($p \in \mathbb{Z}$). (Ondes en phase).</li><li><strong>Interférence destructive :</strong> Amplitude minimale $A_{min} = 0$. Obtenue lorsque $\cos(\Delta\phi/2) = 0$, soit $\Delta\phi/2 = (p+1/2)\pi \implies \\Delta\phi = (2p+1)\pi$ ($p \in \mathbb{Z}$). (Ondes en opposition de phase).</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_prop_7',
+                        question: "Pour les interférences lumineuses (ex: Trous d'Young), comment le déphasage $\\Delta\\phi$ au point M est-il relié à la différence de chemin optique $\\delta$ ?",
+                        answer: `La différence de chemin optique est $\\delta = (S_2 M) - (S_1 M)$ (en supposant $n=1$).<br> Une différence de chemin égale à une longueur d'onde $\\lambda_0$ correspond à un déphasage de $2\\pi$.<br> Par proportionnalité, le déphasage est $\\Delta\\phi = \\frac{2\\pi}{\\lambda_0} \\delta$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_prop_8',
+                        question: "Donner les conditions sur la différence de chemin optique $\\delta$ pour obtenir des franges brillantes (interf. constructive) et des franges sombres (interf. destructive) en optique.",
+                        answer: `<ul><li><strong>Constructive (frange brillante) :</strong> $\\Delta\\phi = 2p\pi \iff \\frac{2\\pi}{\\lambda_0} \\delta = 2p\pi \iff \\delta = p \\lambda_0$ ($p \in \mathbb{Z}$). La différence de marche est un multiple entier de la longueur d'onde.</li><li><strong>Destructive (frange sombre) :</strong> $\\Delta\\phi = (2p+1)\pi \iff \\frac{2\\pi}{\\lambda_0} \\delta = (2p+1)\pi \iff \\delta = (p + 1/2) \\lambda_0$ ($p \in \mathbb{Z}$). La différence de marche est un multiple demi-entier de la longueur d'onde.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_prop_9',
+                        question: "Quelle est la formule de Fresnel pour l'intensité $I(M)$ résultant de l'interférence de deux ondes d'intensités $I_1$ et $I_2$ avec un déphasage $\\Delta\\phi$ ? Cas particulier $I_1=I_2=I_0$.",
+                        answer: `Formule de Fresnel : $I(M) = I_1 + I_2 + 2\\sqrt{I_1 I_2} \\cos(\\Delta\\phi)$.<br>
+                                 Cas particulier où les intensités initiales sont égales ($I_1=I_2=I_0$) :<br>
+                                 $I(M) = I_0 + I_0 + 2\\sqrt{I_0^2} \\cos(\\Delta\\phi) = 2I_0 (1 + \\cos(\\Delta\\phi))$.<br>
+                                 En utilisant $1 + \\cos(X) = 2\\cos^2(X/2)$, on obtient :<br>
+                                 $I(M) = 2I_0 (2 \\cos^2(\\Delta\\phi/2)) = 4I_0 \\cos^2(\\Delta\\phi/2)$.<br>
+                                 L'intensité varie entre $I_{min}=0$ (pour $\\Delta\\phi = (2p+1)\\pi$) et $I_{max}=4I_0$ (pour $\\Delta\\phi = 2p\\pi$).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_prop_10_ex1.27_28',
+                        question: "Exercice 1.27-28 : Onde sonore $c=340$ m/s, $f=440$ Hz, $S_m=0.1$ Pa, $\\phi=0$. Donner $s(x,t)$, $\\omega$, $\\lambda$ et $k$.",
+                        answer: `Pulsation : $\\omega = 2\\pi f = 2\\pi \\times 440 \\approx 880\\pi \\approx 2765$ rad/s.<br>
+                                 Longueur d'onde : $\\lambda = c/f = 340 / 440 = 34/44 = 17/22 \\approx 0.773$ m.<br>
+                                 Nombre d'onde : $k = 2\\pi/\\lambda = 2\\pi / (17/22) = 44\\pi/17 \\approx 8.13$ rad/m.<br>
+                                 (Vérification : $k = \\omega/c = 2765 / 340 \\approx 8.13$ rad/m).<br>
+                                 Expression : $s(x, t) = S_m \\cos(\\omega t - kx + \\phi) = 0.1 \\cos(2765 t - 8.13 x)$ (en Pa).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_prop_11_ex1.29',
+                        question: "Exercice 1.29 : Pour l'onde précédente, déphasage $\\Delta\\phi$ entre deux points séparés de $\\Delta x = 10$ cm ?",
+                        answer: `Déphasage $\\Delta\\phi = -k \\Delta x$.<br>
+                                 $k \\approx 8.13$ rad/m et $\\Delta x = 10\\,cm = 0.1\\,m$.<br>
+                                 $\\Delta\\phi = - (8.13 \\text{ rad/m}) \\times (0.1 \\text{ m}) = -0.813$ rad.<br>
+                                 (En degrés : $-0.813 \\times 180/\\pi \\approx -46.6^\\circ$).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_prop_12_ex1.30',
+                        question: "Exercice 1.30 : Deux HP en phase, $f=680$ Hz, $c=340$ m/s. En M, différence de marche $\\Delta x = 0.25$ m. Interférence constructive ou destructive ?",
+                        answer: `Calculons la longueur d'onde : $\\lambda = c/f = 340\\,m/s / 680\\,Hz = 0.5\\,m$.<br>
+                                 La différence de marche est $\\Delta x = 0.25\\,m$.<br>
+                                 Comparons $\\Delta x$ à $\\lambda$: $\\Delta x = 0.25\\,m = (1/2) \\times 0.5\\,m = \\lambda / 2$.<br>
+                                 Comme $\\Delta x = (0 + 1/2) \\lambda$, la différence de marche est un multiple demi-entier de la longueur d'onde.<br>
+                                 Cela correspond à une condition d'<strong>interférence destructive</strong>.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_prop_13_ex1.31',
+                        question: "Exercice 1.31 : Trous d'Young, $\\lambda_0=600$ nm, $a=0.5$ mm, $D=2$ m. Calculer l'interfrange $i$.",
+                        answer: `L'interfrange $i$ est la distance entre deux franges brillantes (ou sombres) consécutives. La formule est $i = \\frac{\\lambda_0 D}{a}$.<br>
+                                 Il faut faire attention aux unités :<br>
+                                 $\\lambda_0 = 600 \\text{ nm} = 600 \\times 10^{-9}$ m.<br>
+                                 $D = 2$ m.<br>
+                                 $a = 0.5 \\text{ mm} = 0.5 \\times 10^{-3}$ m.<br>
+                                 $i = \\frac{(600 \\times 10^{-9} \\text{ m}) \\times (2 \\text{ m})}{0.5 \\times 10^{-3} \\text{ m}} = \\frac{1200 \\times 10^{-9}}{0.5 \\times 10^{-3}} = \\frac{1200}{0.5} \\times 10^{-9 - (-3)} = 2400 \\times 10^{-6}$ m.<br>
+                                 $i = 2.4 \\times 10^{-3}$ m = <strong>2.4 mm</strong>.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+
+                // --- Fonctions communes ---
+                const loadUnderstanding = () => {
+                    // Combine all lists to iterate through them
+                    const allItems = [
+                        ...qaListPropagation.value // Only this list in this file
+                        ];
+                    allItems.forEach(item => {
+                        const savedLevel = localStorage.getItem(`qa_understanding_${item.id}`);
+                        if (savedLevel) {
+                            item.understanding = savedLevel;
+                        }
+                    });
+                };
+
+                const saveUnderstanding = (item) => {
+                     if (item.understanding) {
+                        localStorage.setItem(`qa_understanding_${item.id}`, item.understanding);
+                     } else {
+                         localStorage.removeItem(`qa_understanding_${item.id}`);
+                     }
+                };
+
+                const setUnderstanding = (item, level) => {
+                    // Toggle off if clicking the same button
+                    if (item.understanding === level) {
+                        item.understanding = null;
+                    } else {
+                        item.understanding = level;
+                    }
+                    saveUnderstanding(item);
+                };
+
+                const toggleAnswer = async (item) => {
+                    const wasHidden = !item.showAnswer;
+                    item.showAnswer = !item.showAnswer;
+
+                    if (item.showAnswer && wasHidden) {
+                        await nextTick(); // Wait for DOM update
+                        try {
+                            const element = document.getElementById(`answer-${item.id}`);
+                            if (element && typeof renderMathInElement === 'function') {
+                                renderMathInElement(element, {
+                                    delimiters: [
+                                        {left: "$$", right: "$$", display: true},
+                                        {left: "$", right: "$", display: false},
+                                        {left: "\\(", right: "\\)", display: false},
+                                        {left: "\\[", right: "\\]", display: true}
+                                    ],
+                                    throwOnError : false
+                                });
+                            } else if (typeof renderMathInElement !== 'function') {
+                                console.warn("KaTeX auto-render function not found. Math might not render correctly after toggle.");
+                            }
+                        } catch (error) {
+                            console.error("KaTeX rendering error:", error);
+                        }
+                    }
+                };
+
+                // Load initial state on mount
+                onMounted(() => {
+                    loadUnderstanding();
+                    // Initial global render is handled by the `onload` attribute of the auto-render script.
+                });
+
+                return {
+                    qaListPropagation, // Make the list available
+                    toggleAnswer,
+                    setUnderstanding
+                };
+            }
+        }).mount('#app');
+
+         // Optional: Ensure renderMathInElement is called after DOM load if `onload` fails
+         /*
+         document.addEventListener("DOMContentLoaded", function() {
+             if (typeof renderMathInElement === 'function') {
+                 renderMathInElement(document.body, { /* options * / });
+             }
+         });
+         */
+
+    </script>
+
+</body>
+</html>
