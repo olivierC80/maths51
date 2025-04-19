@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Optique, ARQS, 1er & 2ème Ordre</title>
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        #app {
+            max-width: 900px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #42b983;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            margin-top: 40px; /* Ajout espace avant les titres de section */
+        }
+        h1:first-of-type {
+             margin-top: 0;
+        }
+
+
+        .qa-item {
+            display: flex;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: box-shadow 0.3s ease;
+        }
+        .qa-item:hover {
+             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .understanding-bar {
+            flex: 0 0 10px; /* Ne grandit pas, ne rétrécit pas, base de 10px */
+            margin-right: 15px;
+            border-radius: 5px;
+            background-color: #ccc; /* Gris par défaut si pas compris ou non évalué */
+            transition: background-color 0.3s ease;
+        }
+
+        .understanding-bar.easy { background-color: #4CAF50; } /* Vert */
+        .understanding-bar.medium { background-color: #ff9800; } /* Orange */
+        .understanding-bar.hard { background-color: #f44336; } /* Rouge */
+        .understanding-bar.not_understood { background-color: #607d8b; } /* Gris sombre */
+
+        .qa-content {
+            flex-grow: 1;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        .answer {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #42b983;
+            border-radius: 0 4px 4px 0;
+            transition: all 0.4s ease-out;
+            overflow: hidden;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 8px 12px;
+            margin: 5px 5px 5px 0;
+            border: none;
+            border-radius: 4px;
+            background-color: #42b983;
+            color: white;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease;
+        }
+        button:hover {
+            background-color: #36a374;
+        }
+
+        .toggle-answer-btn {
+             background-color: #3498db;
+        }
+         .toggle-answer-btn:hover {
+             background-color: #2980b9;
+         }
+
+        .understanding-buttons button {
+            background-color: #eee;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+         .understanding-buttons button:hover {
+             background-color: #ddd;
+         }
+        .understanding-buttons button.active.easy { background-color: #4CAF50; color: white; border-color: #4CAF50;}
+        .understanding-buttons button.active.medium { background-color: #ff9800; color: white; border-color: #ff9800;}
+        .understanding-buttons button.active.hard { background-color: #f44336; color: white; border-color: #f44336;}
+        .understanding-buttons button.active.not_understood { background-color: #607d8b; color: white; border-color: #607d8b;}
+
+        .katex { font-size: 1.1em; } /* Ajuster si nécessaire */
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 5px; }
+
+        /* Classe utilitaire pour masquer via v-show */
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h1>Questions-Réponses</h1>
+
+        <!-- Section 1.1 -->
+        <h2 id="t1-1-formation-images">1.1 Formation des images</h2>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+        <div v-for="item in qaListOptique" :key="item.id" class="qa-item">
+            <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1.2 -->
+        <h2 id="t1-2-signaux-arqs">1.2 Signaux électriques dans l'ARQS</h2>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+         <div v-for="item in qaListARQS" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1.3 -->
+        <h2 id="t1-3-circuit-1er-ordre">1.3 Circuit linéaire du premier ordre</h2>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+         <div v-for="item in qaListPremierOrdre" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1.4 -->
+        <h2 id="t1-4-oscillateurs">1.4 Oscillateurs libres et forcés</h2>
+        <p>Évaluez votre compréhension pour chaque question. Votre progression est sauvegardée localement.</p>
+         <div v-for="item in qaListOscillateurs" :key="item.id" class="qa-item">
+             <div class="understanding-bar" :class="item.understanding"></div>
+            <div class="qa-content">
+                <div class="question" v-html="item.question"></div>
+                <button @click="toggleAnswer(item)" class="toggle-answer-btn"> {{ item.showAnswer ? 'Cacher' : 'Afficher' }} la réponse </button>
+                <div :class="['answer', { 'hidden': !item.showAnswer }]" v-show="item.showAnswer">
+                    <div :id="'answer-' + item.id" v-html="item.answer"></div>
+                </div>
+                <div class="understanding-buttons">
+                    <p style="margin-bottom: 5px; margin-top: 15px;">Votre compréhension :</p>
+                    <button @click="setUnderstanding(item, 'easy')" :class="{ 'active easy': item.understanding === 'easy' }">Facile</button>
+                    <button @click="setUnderstanding(item, 'medium')" :class="{ 'active medium': item.understanding === 'medium' }">Moyen</button>
+                    <button @click="setUnderstanding(item, 'hard')" :class="{ 'active hard': item.understanding === 'hard' }">Difficile</button>
+                    <button @click="setUnderstanding(item, 'not_understood')" :class="{ 'active not_understood': item.understanding === 'not_understood' }">Pas compris</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, nextTick, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                // --- Questions Section 1.1 : Optique ---
+                const qaListOptique = ref([
+                     {
+                        id: 'q_opt_1',
+                        question: "Qu'est-ce qu'une source ponctuelle monochromatique et qu'est-ce que le spectre d'une source lumineuse ?",
+                        answer: `Une <strong>Source Ponctuelle Monochromatique</strong> est un modèle idéalisé d'une source émettant une seule longueur d'onde $\\lambda$ depuis un point unique.<br>
+                                Le <strong>Spectre</strong> est la répartition de l'intensité lumineuse émise par une source en fonction de la longueur d'onde. Il caractérise la source (continu, de raies).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_opt_2',
+                        question: "Qu'est-ce que l'optique géométrique et quelle est sa condition de validité ?",
+                        answer: `L'<strong>Optique Géométrique</strong> est un modèle où la propagation de la lumière est décrite par des <strong>rayons lumineux</strong>.<br>
+                                Ce modèle est valide lorsque les dimensions des objets et ouvertures sont <strong>grandes devant la longueur d'onde $\\lambda$</strong>.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_3',
+                        question: "Énoncez les deux lois de Snell-Descartes.",
+                        answer: `1. <strong>Réflexion :</strong> Le rayon réfléchi est dans le plan d'incidence. L'angle de réflexion $i_r$ est égal à l'angle d'incidence $i_1$ ($i_r = i_1$).<br>
+                                 2. <strong>Réfraction :</strong> Le rayon réfracté est dans le plan d'incidence. Les angles d'incidence $i_1$ (milieu 1, indice $n_1$) et de réfraction $i_2$ (milieu 2, indice $n_2$) sont liés par : $n_1 \\sin(i_1) = n_2 \\sin(i_2)$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_4',
+                        question: "Quelle est la condition pour observer une réflexion totale ? Donnez la formule de l'angle limite.",
+                        answer: `La réflexion totale se produit lorsque la lumière passe d'un milieu plus réfringent ($n_1$) à un milieu moins réfringent ($n_2 < n_1$).<br>
+                                 <strong>Condition :</strong> L'angle d'incidence $i_1$ doit être supérieur à l'angle limite $i_{lim}$.<br>
+                                 <strong>Angle limite :</strong> $i_{lim} = \\arcsin(\\frac{n_2}{n_1})$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_5',
+                        question: "Qu'est-ce que le stigmatisme rigoureux ? Dans quelles conditions un système optique centré est-il considéré comme stigmatique approché ?",
+                        answer: `Un système est <strong>stigmatique rigoureux</strong> pour A si tous les rayons issus de A convergent en un unique point image A'.<br>
+                                 Il est <strong>stigmatique approché</strong> dans les <strong>conditions de Gauss</strong> (rayons peu inclinés et proches de l'axe optique).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_6',
+                        question: "Comment construit-on l'image d'un point objet par un miroir plan ? Quelle est la nature de cette image ?",
+                        answer: `L'image A' d'un point objet A par un miroir plan est son <strong>symétrique</strong> par rapport au plan du miroir.<br>
+                                 L'image est <strong>virtuelle</strong> (les rayons réfléchis semblent provenir de A').`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_opt_7',
+                        question: "Définir : centre optique, foyers principaux (objet F et image F'), et distance focale f' d'une lentille mince.",
+                        answer: `<ul>
+                                    <li><strong>Centre Optique (O) :</strong> Point de l'axe optique tel qu'un rayon passant par O n'est pas dévié.</li>
+                                    <li><strong>Foyers Principaux :</strong> Foyer image F' (image d'un objet à l'infini), Foyer objet F (objet dont l'image est à l'infini).</li>
+                                    <li><strong>Distance Focale (f') :</strong> Mesure algébrique $f' = \\overline{OF'}$. $f' > 0$ (convergente), $f' < 0$ (divergente). $f = \\overline{FO} = -f'$.</li>
+                                 </ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_8',
+                        question: "Quels sont les 3 rayons particuliers utilisés pour construire l'image d'un objet par une lentille mince ?",
+                        answer: `<ol>
+                                    <li>Rayon passant par le centre optique O : non dévié.</li>
+                                    <li>Rayon parallèle à l'axe optique : émerge en passant par le foyer image F' (ou semblant provenir de F').</li>
+                                    <li>Rayon passant par le foyer objet F (ou se dirigeant vers F) : émerge parallèle à l'axe optique.</li>
+                                 </ol>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_opt_9',
+                        question: "Donnez la relation de conjugaison de Descartes et la formule du grandissement transversal (origine au centre O).",
+                        answer: `<ul>
+                                    <li><strong>Relation de Conjugaison (Descartes) :</strong> $\\frac{1}{\\overline{OA'}} - \\frac{1}{\\overline{OA}} = \\frac{1}{f'} = V$</li>
+                                    <li><strong>Grandissement Transversal ($\\gamma_t$) :</strong> $\\gamma_t = \\frac{\\overline{A'B'}}{\\overline{AB}} = \\frac{\\overline{OA'}}{\\overline{OA}}$</li>
+                                 </ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_opt_10',
+                        question: "Comment modélise-t-on l'œil et comment fonctionne l'accommodation ? Définir Punctum Proximum et Remotum.",
+                        answer: `L'œil est modélisé comme une lentille convergente (cristallin + cornée) de <strong>vergence variable</strong> sur un capteur fixe (rétine). L'accommodation est cette variation de vergence.<br>
+                                 <strong>Punctum Proximum (PP) :</strong> point le plus proche vu net.<br>
+                                 <strong>Punctum Remotum (PR) :</strong> point le plus éloigné vu net (infini pour œil normal).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_opt_11',
+                        question: "Qu'est-ce que la profondeur de champ (PdC) et comment varie-t-elle avec l'ouverture du diaphragme ?",
+                        answer: `La <strong>Profondeur de Champ (PdC)</strong> est la zone de l'espace objet pour laquelle l'image sur le capteur est perçue comme nette.<br>
+                                 La PdC <strong>augmente</strong> quand l'ouverture du diaphragme <strong>diminue</strong> (nombre d'ouverture grand).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_opt_12',
+                        question: "Décrivez une fibre optique à saut d'indice et le principe de guidage de la lumière.",
+                        answer: `C'est un guide d'onde avec un <strong>cœur d'indice $n_1$</strong> entouré d'une <strong>gaine d'indice $n_2 < n_1$</strong>.<br>
+                                 La lumière est guidée par <strong>réflexions totales successives</strong> à l'interface cœur/gaine.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_13',
+                        question: "Qu'est-ce que l'Ouverture Numérique (ON) d'une fibre et à quoi correspond-elle physiquement ?",
+                        answer: `L'Ouverture Numérique est donnée par $ON = \\sqrt{n_1^2 - n_2^2}$.<br>
+                                Elle correspond au sinus de l'angle d'acceptance maximal $\\theta_{max}$ dans l'air ($n_0=1$) : $\\sin \\theta_{max} = ON$. C'est une mesure de la capacité de la fibre à collecter la lumière.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_14',
+                        question: "Qu'est-ce que la dispersion intermodale dans une fibre optique ?",
+                        answer: `C'est le phénomène où, dans une fibre multimode, les rayons lumineux (modes) empruntant des chemins de longueurs différentes à l'intérieur du cœur n'arrivent pas en même temps à la sortie, même s'ils sont émis simultanément. Cela provoque un <strong>élargissement temporel</strong> des impulsions.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_opt_15_ex1.1',
+                        question: "Exercice 1.1 : Air ($n=1$) vers eau ($n=1.33$), $i_1 = 30°$. Calculer $i_2$.",
+                        answer: `Loi de Snell-Descartes : $n_{air} \\sin(i_1) = n_{eau} \\sin(i_2)$. $1 \\times \\sin(30^\\circ) = 1.33 \\times \\sin(i_2)$. $\\sin(i_2) = 0.5 / 1.33 \\approx 0.376$. $i_2 = \\arcsin(0.376) \\approx 22.1^\\circ$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_opt_16_ex1.2',
+                        question: "Exercice 1.2 : Calculer l'angle limite pour verre ($n=1.5$) / air ($n=1$).",
+                        answer: `Lumière du verre ($n_1=1.5$) vers air ($n_2=1$). $\\sin(i_{lim}) = n_2/n_1 = 1/1.5 \\approx 0.667$. $i_{lim} = \\arcsin(0.667) \\approx 41.8^\\circ$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_17_ex1.3',
+                        question: "Exercice 1.3 : Objet à 5 cm devant un miroir plan. Position et nature de l'image ?",
+                        answer: `Image symétrique : <strong>5 cm derrière le miroir</strong>. Nature : <strong>virtuelle</strong>.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_opt_18_ex1.5',
+                        question: "Exercice 1.5 : Objet à 30 cm avant lentille convergente $V=5 \\delta$. Position, grandissement, nature de l'image ?",
+                        answer: `$f' = 1/V = 20\\,cm$. $\\overline{OA} = -30\\,cm$. $1/\\overline{OA'} - 1/(-30) = 1/20 \\implies 1/\\overline{OA'} = 1/60$. $\\overline{OA'} = 60\\,cm$. $\\gamma_t = \\overline{OA'}/\\overline{OA} = 60/(-30) = -2$. Image <strong>réelle</strong> ($\\overline{OA'} > 0$) et <strong>renversée</strong> ($\\gamma_t < 0$).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_19_ex1.6',
+                        question: "Exercice 1.6 : Œil accommode de $\\infty$ à 25 cm. Variation de vergence ?",
+                        answer: `Vision loin ($\overline{OA}=-\infty$): $V_{min} = 1/D$. Vision près ($\overline{OA}=-0.25$m): $V_{max} = 1/D - 1/(-0.25) = 1/D + 4\delta$. Variation : $\Delta V = V_{max} - V_{min} = 4 \\delta$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_opt_20_ex1.7',
+                        question: "Exercice 1.7 : Fibre $n_1=1.48, n_2=1.46$. Calculer ON et $\\theta_{max}$ (air).",
+                        answer: `$ON = \\sqrt{n_1^2 - n_2^2} = \\sqrt{1.48^2 - 1.46^2} \\approx 0.242$. $\\sin \\theta_{max} = ON / n_{air} = ON \\approx 0.242$. $\\theta_{max} = \\arcsin(0.242) \\approx 14.0^\\circ$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                 // --- Questions Section 1.2 : ARQS ---
+                const qaListARQS = ref([
+                     {
+                        id: 'q_arqs_1',
+                        question: "Définir l'intensité du courant $i$ et la tension électrique $u_{AB}$. Donner leurs unités SI.",
+                        answer: `L'<strong>intensité du courant</strong> $i$ est le débit de charge électrique : $i = dq/dt$. Son unité est l'Ampère (A).<br> La <strong>tension électrique</strong> $u_{AB}$ est la différence de potentiel entre les points A et B : $u_{AB} = V_A - V_B$. Son unité est le Volt (V).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_2',
+                        question: "Qu'est-ce que l'Approximation des Régimes Quasi Stationnaires (ARQS) et quelle est sa condition de validité ?",
+                        answer: `L'<strong>ARQS</strong> est un modèle où l'on considère que les lois de l'électrostatique (comme les lois de Kirchhoff) sont valides à chaque instant pour décrire un circuit.<br> Sa <strong>condition de validité</strong> est que le temps de propagation $\\tau_p \\approx L/c$ des signaux dans le circuit (taille $L$) soit négligeable devant la période $T$ (ou temps caractéristique $\\tau$) des signaux : $L \\ll cT$ ou $L \\ll c\\tau$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_3',
+                        question: "Énoncez les deux lois de Kirchhoff dans le cadre de l'ARQS et indiquez quelle loi de conservation chacune traduit.",
+                        answer: `<ul><li><strong>Loi des Nœuds :</strong> La somme algébrique des intensités des courants entrant dans un nœud est nulle : $\\sum i_{entrant} = 0$. Elle traduit la <strong>conservation de la charge électrique</strong>.</li><li><strong>Loi des Mailles :</strong> La somme algébrique des tensions le long d'une maille orientée est nulle : $\\sum u_k = 0$. Elle traduit l'<strong>unicité du potentiel électrique</strong> (le champ électrique dérive d'un potentiel scalaire en ARQS).</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_4',
+                        question: "Quelle est la différence entre la convention récepteur et la convention générateur en termes d'orientation des flèches de tension et de courant, et d'expression de la puissance ?",
+                        answer: `<ul><li><strong>Convention Récepteur :</strong> Courant $i$ et tension $u$ sont fléchés en sens opposés. La puissance <strong>reçue</strong> par le dipôle est $P = u \\times i$.</li><li><strong>Convention Générateur :</strong> Courant $i$ et tension $u$ sont fléchés dans le même sens. La puissance <strong>fournie</strong> par le dipôle est $P = u \\times i$.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_5',
+                        question: "Donner la relation caractéristique (loi d'Ohm) et l'expression de la puissance dissipée par effet Joule pour une résistance R.",
+                        answer: `Loi d'Ohm : $u = R \\times i$.<br> Puissance dissipée par effet Joule : $P_J = u \\times i = R i^2 = \\frac{u^2}{R}$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_6',
+                        question: "Donner la relation caractéristique (liant courant et tension) et l'expression de l'énergie stockée pour un condensateur idéal C et une bobine idéale L.",
+                        answer: `<ul><li><strong>Condensateur (C) :</strong> Relation : $i = C \\frac{du}{dt}$ (ou $q = Cu$). Énergie stockée : $E_C = \\frac{1}{2} C u^2$.</li><li><strong>Bobine idéale (L) :</strong> Relation : $u = L \\frac{di}{dt}$. Énergie stockée : $E_L = \\frac{1}{2} L i^2$.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_7',
+                        question: "Comment modélise-t-on une source de tension réelle non idéale en utilisant le modèle de Thévenin ?",
+                        answer: `Une source de tension réelle est modélisée par une <strong>source de tension idéale $e_{th}(t)$</strong> (appelée force électromotrice ou f.e.m. de Thévenin) en <strong>série</strong> avec une <strong>résistance interne $R_{th}$</strong> (résistance de Thévenin). La tension $u$ aux bornes de la source réelle dépend du courant $i$ débité : $u = e_{th} - R_{th} i$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_8',
+                        question: "Donner la formule de la résistance équivalente pour N résistances en série et pour 2 résistances en parallèle.",
+                        answer: `<ul><li><strong>Série (N résistances) :</strong> $R_{eq} = R_1 + R_2 + ... + R_N = \\sum_{k=1}^{N} R_k$.</li><li><strong>Parallèle (2 résistances $R_1, R_2$) :</strong> $\\frac{1}{R_{eq}} = \\frac{1}{R_1} + \\frac{1}{R_2}$, ce qui donne $R_{eq} = \\frac{R_1 R_2}{R_1 + R_2}$.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_arqs_9',
+                        question: "Établir et donner la formule du diviseur de tension pour la tension $U_2$ aux bornes de $R_2$ dans un circuit série composé d'une source de tension $U$ et de deux résistances $R_1$ et $R_2$.",
+                        answer: `Dans le circuit série, le courant est $I = U / (R_1 + R_2)$. La tension aux bornes de $R_2$ est $U_2 = R_2 \\times I$. En substituant $I$, on obtient la formule du <strong>diviseur de tension</strong> : $U_2 = R_2 \\times \\frac{U}{R_1 + R_2} = U \\frac{R_2}{R_1 + R_2}$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_10',
+                        question: "Qu'est-ce que la résistance d'entrée $R_e$ d'un voltmètre ? Quelle est sa valeur idéale et pourquoi est-ce important ?",
+                        answer: `La <strong>résistance d'entrée $R_e$</strong> d'un voltmètre est la résistance équivalente qu'il présente au circuit sur lequel il est branché (en parallèle).<br> Idéalement, $R_e$ doit être la plus grande possible (<strong>$R_e \\rightarrow \\infty$</strong>).<br> C'est important pour que le voltmètre ne dérive qu'un courant négligeable du circuit mesuré, minimisant ainsi la perturbation (l'<strong>effet de charge</strong>) et assurant une mesure fidèle de la tension qui existait avant son branchement.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_11_ex1.8',
+                        question: "Exercice 1.8 : Pour un circuit de 1m de long, quelle est approximativement la fréquence maximale des signaux pour que l'ARQS soit valide ($c \\approx 3 \\times 10^8$ m/s) ?",
+                        answer: `Condition ARQS : $L \\ll cT \\implies T \\gg L/c$.<br> $T \\gg 1\\,m / (3 \\times 10^8\\,m/s) \\approx 3.3 \\times 10^{-9}\\,s = 3.3\\,ns$.<br> Fréquence $f = 1/T$, donc $f \\ll 1 / (3.3 \\times 10^{-9}\\,s) \\approx 300 \\times 10^6\\,Hz = 300\\,MHz$.<br> L'ARQS est valide pour des fréquences très inférieures à 300 MHz (typiquement quelques MHz ou dizaines de MHz pour être large).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_12_ex1.10',
+                        question: "Exercice 1.10 : Une résistance $R=100 \\Omega$ est traversée par $i=50$ mA. Calculer la tension $u$ à ses bornes et la puissance $P$ dissipée.",
+                        answer: `$i = 50\\,mA = 0.05\\,A$.<br> Loi d'Ohm : $u = R \\times i = 100\\,\\Omega \\times 0.05\\,A = 5\\,V$.<br> Puissance dissipée : $P = u \\times i = 5\\,V \\times 0.05\\,A = 0.25\\,W$. (Ou $P = Ri^2 = 100 \\times (0.05)^2 = 0.25\\,W$).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_13_ex1.11',
+                        question: "Exercice 1.11 : Une pile ($e_{th}=1.5V, R_{th}=0.5\\Omega$) débite dans une résistance $R_{charge}=10\\Omega$. Calculer le courant $i$ et la tension $u$ aux bornes de la pile.",
+                        answer: `Le circuit est une maille simple. Le courant est $i = \\frac{e_{th}}{R_{th} + R_{charge}} = \\frac{1.5\\,V}{0.5\\,\\Omega + 10\\,\\Omega} = \\frac{1.5}{10.5} \\approx 0.143\\,A$.<br> La tension aux bornes de la pile est $u = e_{th} - R_{th} i = 1.5\\,V - (0.5\\,\\Omega \\times 0.143\\,A) \\approx 1.5 - 0.0715 \\approx 1.43\\,V$.<br> (Vérification : $u = R_{charge} i = 10 \\times 0.143 = 1.43\\,V$).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_arqs_14_ex1.12',
+                        question: "Exercice 1.12 : Un GBF ($e_{th}=5V, R_s=50\\Omega$) alimente un voltmètre. Quelle tension $u_{mes}$ mesure-t-il si sa résistance d'entrée $R_e$ est (a) $1M\\Omega$ ? (b) $1k\\Omega$ ? Conclure.",
+                        answer: `Le voltmètre ($R_e$) est en parallèle avec la sortie du GBF, mais forme un diviseur de tension avec la résistance de sortie $R_s$ du GBF. La tension mesurée est la tension aux bornes de $R_e$.<br> $u_{mes} = e_{th} \\frac{R_e}{R_s + R_e}$.<br> (a) Si $R_e = 1\\,M\\Omega = 10^6\\,\\Omega$: $u_{mes} = 5\\,V \\times \\frac{10^6}{50 + 10^6} = 5 \\times \\frac{1000000}{1000050} \\approx 4.99975\\,V \\approx 5.0\\,V$.<br> (b) Si $R_e = 1\\,k\\Omega = 1000\\,\\Omega$: $u_{mes} = 5\\,V \\times \\frac{1000}{50 + 1000} = 5 \\times \\frac{1000}{1050} \\approx 4.76\\,V$.<br> <strong>Conclusion :</strong> Pour une mesure précise, la résistance d'entrée du voltmètre ($R_e$) doit être très grande devant la résistance de sortie ($R_s$) de la source mesurée ($R_e \\gg R_s$). Sinon, l'effet de charge perturbe la mesure (cas b).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                // --- Questions Section 1.3 : Premier Ordre ---
+                const qaListPremierOrdre = ref([
+                    {
+                        id: 'q_p1_1',
+                        question: "Qu'est-ce qu'un circuit linéaire du premier ordre ? Quels sont les deux régimes observés lors de la réponse à un échelon ?",
+                        answer: `Un circuit linéaire du premier ordre contient une seule résistance et un seul élément de stockage d'énergie (condensateur ou bobine). Il est décrit par une équation différentielle linéaire du premier ordre à coefficients constants.<br> Lors d'une réponse à un échelon, on observe :<ul><li>Un <strong>régime transitoire</strong> où les grandeurs varient.</li><li>Un <strong>régime permanent</strong> où les grandeurs deviennent constantes.</li></ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_p1_2',
+                        question: "Quelles sont les grandeurs électriques qui sont nécessairement continues dans le temps pour un condensateur et une bobine ? Pourquoi ?",
+                        answer: `<ul><li>Pour un condensateur, c'est la <strong>tension $u_C$</strong> à ses bornes qui est continue.</li><li>Pour une bobine (idéale), c'est l'<strong>intensité $i_L$</strong> qui la traverse qui est continue.</li></ul>Cela est dû au fait que l'énergie stockée ($E_C = \\frac{1}{2} C u_C^2$ et $E_L = \\frac{1}{2} L i_L^2$) ne peut pas varier de manière discontinue (instantanée), car cela impliquerait une puissance infinie.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_p1_3',
+                        question: "Comment obtient-on l'équation différentielle régissant l'évolution de la tension $u_C(t)$ aux bornes du condensateur dans un circuit RC série soumis à un échelon de tension E à t=0 ?",
+                        answer: `On applique la loi des mailles : $E = u_R(t) + u_C(t)$.<br>On utilise la loi d'Ohm pour la résistance : $u_R(t) = R i(t)$.<br>On utilise la relation caractéristique du condensateur : $i(t) = C \\frac{du_C}{dt}$.<br>En substituant $i(t)$ et $u_R(t)$ dans la loi des mailles, on obtient : $E = R (C \\frac{du_C}{dt}) + u_C(t)$.<br>Soit l'équation différentielle : $RC \\frac{du_C}{dt} + u_C = E$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_p1_4',
+                        question: "Quelle est la forme générale de la solution de l'équation différentielle $\\tau \\frac{dy}{dt} + y = K$ ? Comment détermine-t-on la constante d'intégration ?",
+                        answer: `La solution est la somme d'une solution particulière constante et de la solution générale de l'équation homogène : $y(t) = y_{part} + y_{homog}$.<br><ul><li>Solution particulière (régime permanent) : $y_{part} = K$.</li><li>Solution de l'équation homogène ($\\tau \\frac{dy_h}{dt} + y_h = 0$) : $y_h(t) = A e^{-t/\\tau}$.</li></ul>La solution générale est donc $y(t) = K + A e^{-t/\\tau}$.<br>La constante $A$ est déterminée grâce à la <strong>condition initiale</strong>, c'est-à-dire la valeur de $y(t)$ à l'instant $t=0^+$ (juste après le début de l'échelon), qui est souvent connue grâce aux propriétés de continuité.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_p1_5',
+                        question: "Quelle est l'expression de la constante de temps $\\tau$ pour un circuit RC série et pour un circuit RL série ? Quelle est sa signification physique ?",
+                        answer: `<ul><li>Circuit RC série : $\\tau = RC$.</li><li>Circuit RL série : $\\tau = L/R$.</li></ul>La constante de temps $\\tau$ caractérise la <strong>rapidité de l'évolution</strong> du circuit pendant le régime transitoire. Elle donne un ordre de grandeur de la durée nécessaire pour que le système atteigne son nouveau régime permanent. Typiquement, le régime transitoire est considéré comme terminé après une durée d'environ $5\\tau$. À $t=\\tau$, la grandeur a effectué environ 63% de sa variation totale.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_p1_6',
+                        question: "Pour la charge d'un condensateur C à travers une résistance R par un générateur de tension E (partant de $u_C=0$), quelle est la relation entre l'énergie fournie par le générateur, l'énergie stockée dans C et l'énergie dissipée dans R à la fin de la charge ?",
+                        answer: `À la fin de la charge ($t \\rightarrow \\infty$), la tension aux bornes de C est $E$.<br><ul><li>Énergie fournie par le générateur : $W_G = \\int_0^\\infty E i(t) dt = E \\times Q_{total} = E \\times (C E) = C E^2$.</li><li>Énergie stockée dans le condensateur : $E_C = \\frac{1}{2} C u_C(\\infty)^2 = \\frac{1}{2} C E^2$.</li><li>Énergie dissipée par effet Joule dans la résistance : $W_J = \\int_0^\\infty R i(t)^2 dt$. Par conservation de l'énergie, $W_G = E_C + W_J$, donc $W_J = W_G - E_C = C E^2 - \\frac{1}{2} C E^2 = \\frac{1}{2} C E^2$.</li></ul>Conclusion : La moitié de l'énergie fournie par le générateur est stockée dans le condensateur, l'autre moitié est dissipée par effet Joule dans la résistance.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_p1_7_ex1.13_14',
+                        question: "Exercice 1.13 & 1.14 : Pour un circuit RL série ($R=100 \\Omega$, $L=10$ mH) soumis à un échelon 0V -> 5V, quelle est l'équation différentielle pour $i(t)$, la constante de temps $\\tau$, et l'expression de $i(t)$ si $i(0^+)=0$ ?",
+                        answer: `Loi des mailles : $E = u_R + u_L = Ri + L \\frac{di}{dt}$.<br> Pour $t>0$, $E=5$V. L'équation différentielle est $5 = 100 i + 0.01 \\frac{di}{dt}$, soit $0.01 \\frac{di}{dt} + 100 i = 5$.<br> Forme canonique : $\\frac{L}{R} \\frac{di}{dt} + i = \\frac{E}{R}$. La constante de temps est $\\tau = L/R = 0.01\\,H / 100\\,\\Omega = 10^{-4}\\,s = 0.1\\,ms$.<br> Le régime permanent est $i_{perm} = E/R = 5/100 = 0.05\\,A$.<br> La solution est de la forme $i(t) = i_{perm} + A e^{-t/\\tau} = 0.05 + A e^{-t/0.0001}$.<br> Avec $i(0^+)=0$, on a $0 = 0.05 + A$, donc $A = -0.05$.<br> Finalement, $i(t) = 0.05 (1 - e^{-t/0.0001})$ A (ou $i(t) = 50(1 - e^{-10000 t})$ mA).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_p1_8_ex1.15',
+                        question: "Exercice 1.15 : Circuit RC série ($R=1 k\\Omega$, $C=1 \\mu$F) chargé sous E=10V. Durée approximative du transitoire ? Valeur de $u_C$ à $t=\\tau$ ?",
+                        answer: `Constante de temps : $\\tau = RC = (1 \\times 10^3 \\Omega) \\times (1 \\times 10^{-6} F) = 10^{-3} s = 1\\,ms$.<br> Durée approximative du régime transitoire : $t_{trans} \\approx 5\\tau = 5 \\times 1\\,ms = 5\\,ms$.<br> La tension $u_C(t)$ est donnée par $u_C(t) = E(1 - e^{-t/\\tau})$.<br> À $t=\\tau$, $u_C(\\tau) = E(1 - e^{-1}) = 10\\,V \\times (1 - e^{-1}) \\approx 10 \\times (1 - 0.368) = 10 \\times 0.632 = 6.32\\,V$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_p1_9_ex1.16',
+                        question: "Exercice 1.16 : Bilan énergétique pour la charge complète du condensateur de l'exercice 1.15 ($R=1k\Omega, C=1\mu F, E=10V$).",
+                        answer: `Énergie fournie par le générateur : $W_G = C E^2 = (1 \\times 10^{-6}\\,F) \\times (10\\,V)^2 = 10^{-6} \\times 100 = 10^{-4}\\,J = 0.1\\,mJ$.<br> Énergie stockée finalement dans C : $E_C = \\frac{1}{2} C E^2 = \\frac{1}{2} W_G = 0.05\\,mJ$.<br> Énergie dissipée par effet Joule dans R : $W_J = W_G - E_C = \\frac{1}{2} C E^2 = 0.05\\,mJ$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                // --- Questions Section 1.4 : Oscillateurs ---
+                const qaListOscillateurs = ref([
+                     {
+                        id: 'q_osc_1',
+                        question: "Quelle est l'équation différentielle caractéristique d'un oscillateur harmonique non amorti ? Donnez deux exemples (mécanique et électrique) et la signification de $\\omega_0$.",
+                        answer: `L'équation est $\\ddot{y} + \\omega_0^2 y = 0$, où $y$ est la grandeur oscillante (position, charge...).<br>
+                                 Exemples : Masse-ressort horizontal sans frottement ($y=x$, $\\omega_0 = \\sqrt{k/m}$), circuit LC idéal ($y=q$, $\\omega_0 = 1/\\sqrt{LC}$).<br>
+                                 $\\omega_0$ est la <strong>pulsation propre</strong> de l'oscillateur (en rad/s).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_osc_2',
+                        question: "Quelle est la forme de la solution $y(t)$ pour un oscillateur harmonique non amorti ? Comment détermine-t-on les constantes ? Qu'arrive-t-il à l'énergie totale ?",
+                        answer: `La solution est sinusoïdale : $y(t) = A \\cos(\\omega_0 t + \\phi)$.<br>
+                                 L'amplitude $A$ et la phase à l'origine $\\phi$ sont déterminées par les <strong>conditions initiales</strong> $y(0)$ et $\\dot{y}(0)$.<br>
+                                 L'énergie totale (mécanique ou électromagnétique) de l'oscillateur harmonique <strong>est constante</strong> au cours du temps (elle est conservée).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_osc_3',
+                        question: "Quelle est la forme canonique de l'équation différentielle d'un oscillateur amorti ? Définir le facteur de qualité Q et sa relation avec l'amortissement.",
+                        answer: `Forme canonique : $\\ddot{y} + \\frac{\\omega_0}{Q}\\dot{y} + \\omega_0^2 y = 0$.<br>
+                                 Le <strong>facteur de qualité Q</strong> ($Q = \\omega_0 / (2\\lambda)$, où $\\lambda$ est le coefficient d'amortissement) caractérise l'amortissement.<br>
+                                 Un <strong>Q élevé</strong> signifie un <strong>faible amortissement</strong> (oscillations qui persistent longtemps). Un Q faible signifie un fort amortissement.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_osc_4',
+                        question: "Quels sont les trois régimes libres possibles pour un oscillateur amorti, en fonction de la valeur de Q ? Décrivez brièvement l'allure de la réponse dans chaque cas.",
+                        answer: `La nature du régime dépend de Q :
+                                 <ul>
+                                     <li><strong>Régime pseudo-périodique ($Q > 1/2$) :</strong> Oscillations dont l'amplitude décroît exponentiellement. $y(t) = A e^{-\\lambda t} \\cos(\\omega t + \\phi)$.</li>
+                                     <li><strong>Régime critique ($Q = 1/2$) :</strong> Retour à l'équilibre le plus rapide possible sans oscillation.</li>
+                                     <li><strong>Régime apériodique ($Q < 1/2$) :</strong> Retour à l'équilibre lent, sans oscillation.</li>
+                                 </ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_osc_5',
+                        question: "En régime sinusoïdal forcé, qu'est-ce que l'impédance complexe $\\underline{Z}$ d'un dipôle ? Donnez les expressions pour R, L et C.",
+                        answer: `L'impédance complexe $\\underline{Z}(\\omega)$ relie la tension complexe $\\underline{u}(t)$ au courant complexe $\\underline{i}(t)$ par $\\underline{u}(t) = \\underline{Z}(\\omega) \\times \\underline{i}(t)$. Elle dépend de la pulsation $\\omega$.<br>
+                                 <ul>
+                                     <li>Résistance R : $\\underline{Z}_R = R$.</li>
+                                     <li>Bobine L : $\\underline{Z}_L = jL\\omega$.</li>
+                                     <li>Condensateur C : $\\underline{Z}_C = \\frac{1}{jC\\omega}$.</li>
+                                 </ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_osc_6',
+                        question: "Comment calcule-t-on l'impédance équivalente d'une association série ou parallèle d'impédances complexes ?",
+                        answer: `Les règles sont analogues à celles des résistances :
+                                 <ul>
+                                     <li><strong>Série :</strong> $\\underline{Z}_{eq} = \\underline{Z}_1 + \\underline{Z}_2 + ...$</li>
+                                     <li><strong>Parallèle :</strong> $\\frac{1}{\\underline{Z}_{eq}} = \\frac{1}{\\underline{Z}_1} + \\frac{1}{\\underline{Z}_2} + ...$</li>
+                                 </ul>`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_osc_7',
+                        question: "Qu'est-ce que le phénomène de résonance en régime forcé sinusoïdal ? Comment l'acuité de la résonance dépend-elle du facteur de qualité Q ?",
+                        answer: `La <strong>résonance</strong> est le phénomène pour lequel l'amplitude de la réponse $Y_m(\\omega)$ d'un oscillateur amorti soumis à une excitation sinusoïdale passe par un maximum pour une pulsation d'excitation $\\omega_{res}$ proche de la pulsation propre $\\omega_0$.<br> La résonance est d'autant plus <strong>aiguë</strong> (le pic d'amplitude est étroit et élevé) que le <strong>facteur de qualité Q est grand</strong> (faible amortissement).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_osc_8',
+                        question: "Pour un circuit RLC série soumis à une tension $e(t)=E_m \cos(\omega t)$, à quelle pulsation $\\omega_{res}$ l'amplitude de l'intensité $I(\\omega)$ est-elle maximale ? Que vaut cette amplitude maximale $I_{max}$ ?",
+                        answer: `L'amplitude de l'intensité $I(\\omega) = \\frac{E_m}{|\\underline{Z}(\\omega)|} = \\frac{E_m}{\\sqrt{R^2 + (L\\omega - 1/(C\\omega))^2}}$.<br>
+                                 Elle est maximale lorsque le dénominateur est minimal, ce qui se produit quand la partie imaginaire de $\\underline{Z}$ est nulle : $L\\omega - 1/(C\\omega) = 0$.<br>
+                                 La pulsation de résonance en intensité est donc $\\omega_{res} = \\frac{1}{\\sqrt{LC}} = \\omega_0$.<br>
+                                 À cette pulsation, l'impédance vaut $R$, et l'amplitude maximale du courant est $I_{max} = \\frac{E_m}{R}$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_osc_9_ex1.17',
+                        question: "Exercice 1.17 : Écrire l'équation différentielle pour la charge q(t) d'un circuit RLC série alimenté par e(t).",
+                        answer: `Loi des mailles : $e(t) = u_R + u_L + u_C$.<br>
+                                 En utilisant $u_R = Ri$, $u_L = L di/dt$, $u_C = q/C$ et $i = dq/dt = \\dot{q}$, $di/dt = d^2q/dt^2 = \\ddot{q}$, on obtient :<br>
+                                 $e(t) = R\\dot{q} + L\\ddot{q} + \\frac{1}{C}q$.<br>
+                                 Soit : $L\\ddot{q} + R\\dot{q} + \\frac{1}{C}q = e(t)$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_osc_10_ex1.18',
+                        question: "Exercice 1.18 : Circuit LC (L=10mH, C=1$\mu$F) avec $u_C(0)=5V$ et $i(0)=0$. Expression de $u_C(t)$ ?",
+                        answer: `Oscillateur harmonique $\ddot{q} + \\omega_0^2 q = 0$ avec $\\omega_0 = 1/\\sqrt{LC} = 1/\\sqrt{10^{-2} \\times 10^{-6}} = 10^4$ rad/s.<br>
+                                 Solution générale $u_C(t) = A \cos(\\omega_0 t + \\phi)$.<br>
+                                 Courant $i(t) = C \\dot{u}_C(t) = - C A \\omega_0 \\sin(\\omega_0 t + \\phi)$.<br>
+                                 CI $u_C(0) = 5 \implies A \cos(\\phi) = 5$.<br>
+                                 CI $i(0) = 0 \implies - C A \\omega_0 \\sin(\\phi) = 0 \implies \\sin(\\phi) = 0 \implies \\phi = 0$ (ou $\\pi$).<br>
+                                 Avec $\\phi=0$, $A \cos(0) = A = 5$.<br>
+                                 Donc, $u_C(t) = 5 \cos(10^4 t)$ V.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_osc_11_ex1.19',
+                        question: "Exercice 1.19 : RLC série (R=10$\Omega$, L=10mH, C=10$\mu$F). Calculer $\\omega_0$ et Q. Régime libre ?",
+                        answer: `Pulsation propre : $\\omega_0 = 1/\\sqrt{LC} = 1/\\sqrt{10^{-2} \\times 10 \\times 10^{-6}} = 1/\\sqrt{10^{-7}} = 10^{3.5} \\approx 3162$ rad/s.<br>
+                                 Facteur de qualité : $Q = \\frac{L\\omega_0}{R} = \\frac{10^{-2} \\times 3162}{10} = \\frac{31.62}{10} = 3.162$.<br>
+                                 Comme $Q = 3.162 > 0.5$, le régime libre est <strong>pseudo-périodique</strong> (oscillations amorties).`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                     {
+                        id: 'q_osc_12_ex1.20',
+                        question: "Exercice 1.20 : Calculer l'impédance complexe équivalente $\\underline{Z}_{eq}$ d'une résistance R en parallèle avec un condensateur C.",
+                        answer: `Les impédances sont $\\underline{Z}_R = R$ et $\\underline{Z}_C = 1/(jC\\omega)$.<br>
+                                 En parallèle : $\\frac{1}{\\underline{Z}_{eq}} = \\frac{1}{\\underline{Z}_R} + \\frac{1}{\\underline{Z}_C} = \\frac{1}{R} + \\frac{1}{1/(jC\\omega)} = \\frac{1}{R} + jC\\omega$.<br>
+                                 $\\frac{1}{\\underline{Z}_{eq}} = \\frac{1 + jRC\\omega}{R}$.<br>
+                                 Donc, $\\underline{Z}_{eq} = \\frac{R}{1 + jRC\\omega}$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                    {
+                        id: 'q_osc_13_ex1.21',
+                        question: "Exercice 1.21 : Pour RLC de l'ex 1.19 (R=10$\Omega$, L=10mH, C=10$\mu$F), pulsation de résonance en intensité $\\omega_{res}$ ? $I_{max}$ si $E_m=1$V ?",
+                        answer: `La résonance en intensité pour un RLC série a lieu à la pulsation propre $\\omega_{res} = \\omega_0 \\approx 3162$ rad/s.<br>
+                                 L'amplitude maximale du courant (à la résonance) est $I_{max} = \\frac{E_m}{R} = \\frac{1\\,V}{10\\,\\Omega} = 0.1\\,A = 100\\,mA$.`,
+                        showAnswer: false,
+                        understanding: null
+                    },
+                ]);
+
+                // --- Fonctions communes ---
+                const loadUnderstanding = () => {
+                    // Combine all lists to iterate through them
+                    const allItems = [...qaListOptique.value, ...qaListARQS.value, ...qaListPremierOrdre.value, ...qaListOscillateurs.value];
+                    allItems.forEach(item => {
+                        const savedLevel = localStorage.getItem(`qa_understanding_${item.id}`);
+                        if (savedLevel) {
+                            item.understanding = savedLevel;
+                        }
+                    });
+                };
+
+                const saveUnderstanding = (item) => {
+                     if (item.understanding) {
+                        localStorage.setItem(`qa_understanding_${item.id}`, item.understanding);
+                     } else {
+                         localStorage.removeItem(`qa_understanding_${item.id}`);
+                     }
+                };
+
+                const setUnderstanding = (item, level) => {
+                    // Toggle off if clicking the same button
+                    if (item.understanding === level) {
+                        item.understanding = null;
+                    } else {
+                        item.understanding = level;
+                    }
+                    saveUnderstanding(item);
+                };
+
+                const toggleAnswer = async (item) => {
+                    const wasHidden = !item.showAnswer;
+                    item.showAnswer = !item.showAnswer;
+
+                    if (item.showAnswer && wasHidden) {
+                        await nextTick(); // Wait for DOM update
+                        try {
+                            const element = document.getElementById(`answer-${item.id}`);
+                            if (element && typeof renderMathInElement === 'function') {
+                                renderMathInElement(element, {
+                                    delimiters: [
+                                        {left: "$$", right: "$$", display: true},
+                                        {left: "$", right: "$", display: false},
+                                        {left: "\\(", right: "\\)", display: false},
+                                        {left: "\\[", right: "\\]", display: true}
+                                    ],
+                                    throwOnError : false
+                                });
+                            } else if (typeof renderMathInElement !== 'function') {
+                                console.warn("KaTeX auto-render function not found. Math might not render correctly after toggle.");
+                            }
+                        } catch (error) {
+                            console.error("KaTeX rendering error:", error);
+                        }
+                    }
+                };
+
+                // Load initial state on mount
+                onMounted(() => {
+                    loadUnderstanding();
+                    // Initial global render is handled by the `onload` attribute of the auto-render script.
+                });
+
+                return {
+                    qaListOptique,
+                    qaListARQS,
+                    qaListPremierOrdre,
+                    qaListOscillateurs, // Make the new list available
+                    toggleAnswer,
+                    setUnderstanding
+                };
+            }
+        }).mount('#app');
+
+         // Optional: Ensure renderMathInElement is called after DOM load if `onload` fails
+         /*
+         document.addEventListener("DOMContentLoaded", function() {
+             if (typeof renderMathInElement === 'function') {
+                 renderMathInElement(document.body, { /* options * / });
+             }
+         });
+         */
+
+    </script>
+
+</body>
+</html>
