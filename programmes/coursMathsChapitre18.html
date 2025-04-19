@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Espaces Préhilbertiens Réels</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        });
+    </script>
+    <style>
+        /* Styles identiques aux parties précédentes */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3, h4, h5 { color: #333; margin-top: 1.5em; }
+        h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        h2 { color: #0056b3; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #007bff; border-left: 3px solid #007bff; padding-left: 10px; margin-top: 2em;}
+        h4 { color: #17a2b8; margin-left: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 3px;}
+        h5 { color: #6c757d; margin-left: 30px; }
+        .intro-text { font-style: italic; color: #555; border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 20px; background-color: #fdfdfd;}
+        .definition, .theorem, .proof, .exercise, .example, .comment, .method {
+            margin: 15px 0 15px 30px; /* Indentation */
+            padding: 10px;
+            border-left: 4px solid;
+            background-color: #f9f9f9;
+        }
+        .definition { border-color: #17a2b8; } /* Teal */
+        .theorem { border-color: #007bff; }  /* Blue */
+        .proof { border-color: #ffc107; background-color: #fffaf0; }   /* Amber */
+        .exercise { border-color: #28a745; } /* Green */
+        .example { border-color: #6c757d; }  /* Gray */
+        .comment { border-color: #fd7e14; background-color: #fff5f0; } /* Orange */
+        .method { border-color: #6f42c1; background-color: #f8f0ff; } /* Indigo */
+
+        .definition strong, .theorem strong, .exercise strong, .method strong { color: #333; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 3px;}
+    </style>
+</head>
+<body>
+
+<h1>Espaces Préhilbertiens Réels</h1>
+
+<h3 id="espaces-prehilbertiens">Espaces préhilbertiens réels</h3>
+<p class="intro-text">
+    La notion de produit scalaire a été étudiée d'un point de vue élémentaire dans l'enseignement secondaire. L'objectif de cette section, qu'il est essentiel d'illustrer par de nombreuses figures, est de la généraliser, afin d'exploiter l'intuition acquise en dimension 2 ou 3 pour résoudre des problèmes posés dans un contexte plus abstrait.
+    <br>Les familles de polynômes orthogonaux donnent des illustrations pertinentes des notions abordées dans cette section.
+    <br>Dans cette section, $E$ désigne un <strong>espace vectoriel réel</strong>.
+</p>
+
+<h4 id="produit-scalaire">a) Produit scalaire</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Produit scalaire.</td>
+            <td>Notations $(x, y)$, $\langle x | y \rangle$, $\langle x, y \rangle$, $x \cdot y$. C'est une forme bilinéaire symétrique définie positive.</td>
+        </tr>
+        <tr>
+            <td>Espace préhilbertien, espace euclidien.</td>
+            <td>Préhilbertien = ev réel muni d'un produit scalaire. Euclidien = préhilbertien de dimension finie.</td>
+        </tr>
+        <tr>
+            <td>Produit scalaire canonique sur $\mathbb{R}^n$, sur $\mathcal{M}_{n,p}(\mathbb{R})$.</td>
+            <td>Expressions $X^T Y = \sum x_i y_i$, $\langle A, B \rangle = \operatorname{tr}(A^T B) = \sum_{i,j} a_{ij} b_{ij}$.</td>
+        </tr>
+        <tr>
+            <td>Produit scalaire $\langle f, g \rangle = \int_a^b f(t)g(t) dt$ sur $\mathcal{C}([a, b], \mathbb{R})$.</td>
+            <td>Exemples de produits scalaires intégraux sur $\mathbb{R}[X]$ (attention à la positivité stricte) et $\mathcal{C}([a, b], \mathbb{R})$. Peut nécessiter une fonction poids $\omega(t)>0$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Produit scalaire :</strong> Un <strong>produit scalaire</strong> sur un espace vectoriel réel $E$ est une application $\langle \cdot, \cdot \rangle : E \times E \to \mathbb{R}$ vérifiant les propriétés suivantes pour tous $x, y, z \in E$ et $\lambda \in \mathbb{R}$ :
+    <ol>
+        <li><strong>Bilinéarité :</strong>
+            <ul>
+                <li>Linéarité à gauche : $\langle \lambda x + y, z \rangle = \lambda \langle x, z \rangle + \langle y, z \rangle$.</li>
+                <li>Linéarité à droite : $\langle x, \lambda y + z \rangle = \lambda \langle x, y \rangle + \langle x, z \rangle$.</li>
+            </ul>
+            (En présence de symétrie, une seule linéarité suffit).
+        </li>
+        <li><strong>Symétrie :</strong> $\langle x, y \rangle = \langle y, x \rangle$.</li>
+        <li><strong>Caractère défini :</strong> $\langle x, x \rangle \ge 0$.</li>
+        <li><strong>Caractère positif :</strong> $\langle x, x \rangle = 0 \iff x = 0_E$.</li>
+    </ol>
+    Une forme bilinéaire symétrique définie positive est un produit scalaire.
+    Notations alternatives : $(x, y)$, $x \cdot y$, $\langle x | y \rangle$.
+</div>
+
+<div class="definition">
+    <strong>Espace préhilbertien réel, Espace euclidien :</strong>
+    <ul>
+        <li>Un <strong>espace préhilbertien réel</strong> est un couple $(E, \langle \cdot, \cdot \rangle)$ où $E$ est un $\mathbb{R}$-espace vectoriel et $\langle \cdot, \cdot \rangle$ est un produit scalaire sur $E$.</li>
+        <li>Un <strong>espace euclidien</strong> est un espace préhilbertien réel de <strong>dimension finie</strong>.</li>
+    </ul>
+</div>
+
+<div class="example">
+    <strong>Exemples de produits scalaires :</strong>
+    <ul>
+        <li><strong>Produit scalaire canonique sur $\mathbb{R}^n$ :</strong> Pour $x=(x_1, \dots, x_n)$ et $y=(y_1, \dots, y_n)$,
+        $$ \langle x, y \rangle = \sum_{i=1}^n x_i y_i $$
+        Si $X, Y$ sont les matrices colonnes associées, $\langle x, y \rangle = X^T Y$. $(\mathbb{R}^n, \text{canonique})$ est un espace euclidien.</li>
+        <li><strong>Produit scalaire canonique sur $\mathcal{M}_{n,p}(\mathbb{R})$ :</strong> Pour $A, B \in \mathcal{M}_{n,p}(\mathbb{R})$,
+        $$ \langle A, B \rangle = \operatorname{tr}(A^T B) = \sum_{i=1}^n \sum_{j=1}^p a_{ij} b_{ij} $$
+        $(\mathcal{M}_{n,p}(\mathbb{R}), \text{canonique})$ est un espace euclidien de dimension $np$.</li>
+        <li><strong>Produit scalaire intégral sur $\mathcal{C}([a, b], \mathbb{R})$ :</strong> Pour $f, g \in \mathcal{C}([a, b], \mathbb{R})$ ($a<b$),
+        $$ \langle f, g \rangle = \int_a^b f(t) g(t) dt $$
+        (La propriété "définie positive" utilise la nullité de l'intégrale d'une fonction continue positive). C'est un espace préhilbertien de dimension infinie.</li>
+        <li>On peut définir des produits scalaires sur $\mathbb{R}_n[X]$ via l'intégrale $\int_a^b P(t)Q(t) \omega(t) dt$ où $\omega$ est une fonction poids continue et strictement positive, ou par $\sum_{k=0}^n P(\alpha_k) Q(\alpha_k)$ si les $\alpha_k$ sont $n+1$ points distincts.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice A.1 :</strong>
+    <ol>
+        <li>Vérifier que $\langle P, Q \rangle = P(0)Q(0) + P'(0)Q'(0) + P''(0)Q''(0)$ définit un produit scalaire sur $\mathbb{R}_2[X]$.</li>
+        <li>Montrer que $\langle A, B \rangle = \operatorname{tr}(AB)$ n'est pas en général un produit scalaire sur $\mathcal{M}_n(\mathbb{R})$.</li>
+    </ol>
+</div>
+
+
+<h4 id="norme-associee-ps">b) Norme associée à un produit scalaire</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Norme associée à un produit scalaire, distance.</td>
+            <td>$\|x\| = \sqrt{\langle x, x \rangle}$. $d(x,y) = \|x-y\|$. Vérifie les axiomes d'une norme (séparation, homogénéité, inégalité triangulaire).</td>
+        </tr>
+        <tr>
+            <td>Inégalité de Cauchy-Schwarz, cas d'égalité.</td>
+            <td>$|\langle x, y \rangle| \le \|x\| \|y\|$. Égalité si et seulement si $x$ et $y$ sont colinéaires.</td>
+        </tr>
+        <tr>
+            <td>Inégalité triangulaire, cas d'égalité.</td>
+            <td>$\|x+y\| \le \|x\| + \|y\|$. Égalité si et seulement si $x, y$ sont colinéaires et de même sens ($y=\lambda x$ avec $\lambda \ge 0$ ou $x=0$).</td>
+        </tr>
+        <tr>
+            <td>Identité remarquable $\|x+y\|^2 = \|x\|^2 + \|y\|^2 + 2\langle x, y \rangle$.</td>
+            <td>Autres identités : $\|x-y\|^2 = \|x\|^2 + \|y\|^2 - 2\langle x, y \rangle$. Identité du parallélogramme : $\|x+y\|^2 + \|x-y\|^2 = 2(\|x\|^2 + \|y\|^2)$. Formule de polarisation : $\langle x, y \rangle = \frac{1}{4}(\|x+y\|^2 - \|x-y\|^2)$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Norme euclidienne :</strong> Soit $(E, \langle \cdot, \cdot \rangle)$ un espace préhilbertien réel. La <strong>norme euclidienne</strong> associée au produit scalaire est l'application $\| \cdot \| : E \to \mathbb{R}^+$ définie par :
+    $$ \|x\| = \sqrt{\langle x, x \rangle} $$
+    La <strong>distance euclidienne</strong> entre $x$ et $y$ est $d(x, y) = \|x - y\|$.
+</div>
+
+<div class="theorem">
+    <strong>Inégalité de Cauchy-Schwarz :</strong> Pour tous $x, y \in E$ :
+    $$ |\langle x, y \rangle| \le \|x\| \|y\| $$
+    Il y a égalité si et seulement si la famille $(x, y)$ est liée (i.e., $x$ et $y$ sont colinéaires).
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Pour tout $\lambda \in \mathbb{R}$, $\langle x + \lambda y, x + \lambda y \rangle \ge 0$.
+    En développant par bilinéarité : $\langle x, x \rangle + 2\lambda \langle x, y \rangle + \lambda^2 \langle y, y \rangle \ge 0$.
+    Soit $\|y\|^2 \lambda^2 + 2\langle x, y \rangle \lambda + \|x\|^2 \ge 0$.
+    C'est un trinôme du second degré en $\lambda$ (ou une constante si $\|y\|=0$).
+    Si $\|y\|=0$, alors $y=0$, l'inégalité $|\langle x, 0 \rangle| \le \|x\| \|0\|$ devient $0 \le 0$, et il y a égalité. La famille $(x, 0)$ est liée.
+    Si $\|y\| \neq 0$, le trinôme en $\lambda$ est toujours positif ou nul, son discriminant $\Delta$ doit être négatif ou nul.
+    $\Delta = (2\langle x, y \rangle)^2 - 4 \|y\|^2 \|x\|^2 = 4 ( \langle x, y \rangle^2 - \|x\|^2 \|y\|^2 ) \le 0$.
+    Donc $\langle x, y \rangle^2 \le \|x\|^2 \|y\|^2$. En prenant la racine carrée, $|\langle x, y \rangle| \le \|x\| \|y\|$.
+    Cas d'égalité : $\Delta = 0$. Le trinôme a une racine double $\lambda_0 = - \frac{2\langle x, y \rangle}{2\|y\|^2} = - \frac{\langle x, y \rangle}{\|y\|^2}$. Pour cette valeur, $\langle x + \lambda_0 y, x + \lambda_0 y \rangle = 0$, ce qui implique $x + \lambda_0 y = 0_E$, donc $x = -\lambda_0 y$. La famille $(x, y)$ est liée. Réciproquement, si $x = \mu y$, on vérifie qu'il y a égalité dans Cauchy-Schwarz.
+</div>
+
+<div class="theorem">
+    <strong>Propriétés de la norme euclidienne :</strong> L'application $\| \cdot \|$ est une norme sur $E$, c'est-à-dire :
+    <ol>
+        <li><strong>Séparation :</strong> $\|x\| = 0 \iff x = 0_E$.</li>
+        <li><strong>Homogénéité :</strong> $\forall \lambda \in \mathbb{R}, \forall x \in E, \|\lambda x\| = |\lambda| \|x\|$.</li>
+        <li><strong>Inégalité triangulaire :</strong> $\forall x, y \in E, \|x+y\| \le \|x\| + \|y\|$.</li>
+    </ol>
+    <strong>Cas d'égalité dans l'inégalité triangulaire :</strong> $\|x+y\| = \|x\| + \|y\|$ si et seulement si $x$ et $y$ sont colinéaires et de même sens (i.e., $y = \lambda x$ avec $\lambda \ge 0$, ou $x = \lambda y$ avec $\lambda \ge 0$, ou $x=0$ ou $y=0$).
+</div>
+
+<div class="proof">
+    <strong>Preuve (Inégalité triangulaire) :</strong>
+    $\|x+y\|^2 = \langle x+y, x+y \rangle = \|x\|^2 + \|y\|^2 + 2 \langle x, y \rangle$.
+    Par Cauchy-Schwarz, $\langle x, y \rangle \le |\langle x, y \rangle| \le \|x\| \|y\|$.
+    Donc $\|x+y\|^2 \le \|x\|^2 + \|y\|^2 + 2 \|x\| \|y\| = (\|x\| + \|y\|)^2$.
+    Comme les normes sont positives, $\|x+y\| \le \|x\| + \|y\|$.
+    Le cas d'égalité a lieu ssi $\langle x, y \rangle = \|x\| \|y\|$, ce qui correspond au cas d'égalité dans Cauchy-Schwarz ($y=\lambda x$ ou $x=\lambda y$) avec $\langle x, y \rangle \ge 0$.
+</div>
+
+<div class="theorem">
+    <strong>Identités remarquables / Polarisation :</strong> Pour tous $x, y \in E$ :
+    <ul>
+        <li>$\|x+y\|^2 = \|x\|^2 + \|y\|^2 + 2 \langle x, y \rangle$.</li>
+        <li>$\|x-y\|^2 = \|x\|^2 + \|y\|^2 - 2 \langle x, y \rangle$.</li>
+        <li>Identité du parallélogramme : $\|x+y\|^2 + \|x-y\|^2 = 2(\|x\|^2 + \|y\|^2)$.</li>
+        <li>Identité de polarisation : $\langle x, y \rangle = \frac{1}{4} (\|x+y\|^2 - \|x-y\|^2)$.</li>
+    </ul>
+    La polarisation permet de retrouver le produit scalaire à partir de la norme.
+</div>
+
+<div class="exercise">
+    <strong>Exercice B.1 :</strong>
+    <ol>
+        <li>Appliquer l'inégalité de Cauchy-Schwarz dans $\mathbb{R}^n$ avec le produit scalaire canonique.</li>
+        <li>Appliquer l'inégalité de Cauchy-Schwarz à $f(t)=1$ et $g(t)$ dans $\mathcal{C}([a, b], \mathbb{R})$.</li>
+        <li>Montrer que $d(x,y) = \|x-y\|$ vérifie les axiomes d'une distance.</li>
+        <li>Soit $E=\mathbb{R}_1[X]$ muni de $\langle P, Q \rangle = \int_0^1 P(t)Q(t)dt$. Calculer $\|X\|$ et $\|1\|$.</li>
+    </ol>
+</div>
+
+
+<h4 id="orthogonalite">c) Orthogonalité</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Vecteurs orthogonaux, orthogonal d'une partie.</td>
+            <td>Notation $x \perp y$ si $\langle x, y \rangle = 0$. $A^\perp = \{ y \in E \mid \forall x \in A, \langle x, y \rangle = 0 \}$. L'orthogonal $A^\perp$ d'une partie $A$ est toujours un sous-espace vectoriel. $A^\perp = (\operatorname{Vect} A)^\perp$.</td>
+        </tr>
+        <tr>
+            <td>Famille orthogonale, orthonormée (ou orthonormale).</td>
+            <td>Orthogonale : $\langle x_i, x_j \rangle = 0$ si $i \ne j$. Orthonormée : orthogonale et $\|x_i\|=1$ pour tout $i$.</td>
+        </tr>
+        <tr>
+            <td>Toute famille orthogonale de vecteurs non nuls est libre.</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Théorème de Pythagore.</td>
+            <td>Si $\langle x, y \rangle = 0$, alors $\|x+y\|^2 = \|x\|^2 + \|y\|^2$. Généralisation à une famille orthogonale finie.</td>
+        </tr>
+        <tr>
+            <td>Algorithme d'orthonormalisation de Gram-Schmidt.</td>
+            <td>Permet de transformer une base quelconque $(e_1, \dots, e_n)$ en une base orthonormée $(f_1, \dots, f_n)$ telle que $\operatorname{Vect}(e_1, \dots, e_k) = \operatorname{Vect}(f_1, \dots, f_k)$ pour tout $k$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="definition">
+    <strong>Orthogonalité :</strong> Soit $(E, \langle \cdot, \cdot \rangle)$ un espace préhilbertien réel.
+    <ul>
+        <li>Deux vecteurs $x, y \in E$ sont dits <strong>orthogonaux</strong>, noté $x \perp y$, si $\langle x, y \rangle = 0$.</li>
+        <li>L'<strong>orthogonal</strong> d'une partie $A \subseteq E$ est l'ensemble $A^\perp$ (lire "A perp") défini par :
+        $$ A^\perp = \{ y \in E \mid \forall x \in A, \langle x, y \rangle = 0 \} $$
+        $A^\perp$ est toujours un sous-espace vectoriel de $E$. On a $A^\perp = (\operatorname{Vect} A)^\perp$.</li>
+    </ul>
+</div>
+
+<div class="definition">
+    <strong>Famille orthogonale, orthonormée :</strong> Une famille $(x_i)_{i \in I}$ de vecteurs de $E$ est dite :
+    <ul>
+        <li><strong>orthogonale</strong> si $\forall i \neq j, \langle x_i, x_j \rangle = 0$.</li>
+        <li><strong>orthonormée</strong> (ou orthonormale) si elle est orthogonale et si de plus $\|x_i\| = 1$ pour tout $i \in I$.</li>
+    </ul>
+</div>
+
+<div class="theorem">
+    <strong>Liberté des familles orthogonales :</strong> Toute famille orthogonale $(x_1, \dots, x_n)$ constituée de vecteurs <strong>non nuls</strong> est une famille libre.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Soit $\sum_{i=1}^n \lambda_i x_i = 0_E$. Prenons le produit scalaire de cette égalité avec un vecteur $x_k$ de la famille ($k \in \{1, \dots, n\}$) :
+    $\langle \sum_{i=1}^n \lambda_i x_i, x_k \rangle = \langle 0_E, x_k \rangle = 0$.
+    Par linéarité à gauche : $\sum_{i=1}^n \lambda_i \langle x_i, x_k \rangle = 0$.
+    Comme la famille est orthogonale, $\langle x_i, x_k \rangle = 0$ si $i \neq k$. La somme se réduit à :
+    $\lambda_k \langle x_k, x_k \rangle = \lambda_k \|x_k\|^2 = 0$.
+    Puisque $x_k \neq 0_E$, on a $\|x_k\|^2 > 0$. Donc nécessairement $\lambda_k = 0$.
+    Ceci étant vrai pour tout $k$, la famille est libre.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de Pythagore :</strong>
+    <ul>
+        <li>Si $x \perp y$, alors $\|x+y\|^2 = \|x\|^2 + \|y\|^2$.</li>
+        <li>Plus généralement, si $(x_1, \dots, x_n)$ est une famille orthogonale, alors :
+            $$ \|\sum_{i=1}^n x_i \|^2 = \sum_{i=1}^n \|x_i\|^2 $$</li>
+    </ul>
+</div>
+
+<div class="method">
+    <strong>Algorithme d'orthonormalisation de Gram-Schmidt :</strong>
+    Soit $(e_1, \dots, e_n)$ une base d'un espace euclidien $E$. On construit une base orthonormée $(f_1, \dots, f_n)$ de $E$ telle que pour tout $k \in \{1, \dots, n\}$, $\operatorname{Vect}(f_1, \dots, f_k) = \operatorname{Vect}(e_1, \dots, e_k)$.
+    <ol>
+        <li><strong>Initialisation :</strong> Poser $v_1 = e_1$. Puis $f_1 = \frac{v_1}{\|v_1\|}$.</li>
+        <li><strong>Étape $k$ (pour $k=2$ à $n$) :</strong>
+            <ul>
+                <li>Calculer le vecteur $v_k$ en retirant à $e_k$ ses projections sur les directions déjà orthonormalisées $f_1, \dots, f_{k-1}$ :
+                $$ v_k = e_k - \sum_{j=1}^{k-1} \langle e_k, f_j \rangle f_j $$
+                (Ce vecteur $v_k$ est non nul car $e_k \notin \operatorname{Vect}(e_1, \dots, e_{k-1}) = \operatorname{Vect}(f_1, \dots, f_{k-1})$. Il est orthogonal à $f_1, \dots, f_{k-1}$ par construction).</li>
+                <li>Normaliser $v_k$ :
+                $$ f_k = \frac{v_k}{\|v_k\|} $$</li>
+            </ul>
+        </li>
+    </ol>
+    La famille $(f_1, \dots, f_n)$ est une base orthonormée de $E$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice C.1 :</strong>
+    <ol>
+        <li>Montrer que si $(e_1, \dots, e_n)$ est une base orthonormée, alors $x = \sum_{i=1}^n \langle x, e_i \rangle e_i$.</li>
+        <li>Dans $\mathbb{R}^3$ muni du produit scalaire canonique, appliquer l'algorithme de Gram-Schmidt à la base $e_1=(1,1,0), e_2=(1,0,1), e_3=(0,1,1)$.</li>
+        <li>Soit $E=\mathbb{R}_2[X]$ avec $\langle P, Q \rangle = \int_{-1}^1 P(t)Q(t)dt$. La base $(1, X, X^2)$ est-elle orthogonale ? Orthonormaliser cette base par Gram-Schmidt (Polynômes de Legendre).</li>
+    </ol>
+</div>
+
+
+<h4 id="bases-orthonormees">d) Bases orthonormées</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Existence de bases orthonormées dans un espace euclidien.</td>
+            <td>Conséquence de l'existence de bases et de l'algorithme de Gram-Schmidt.</td>
+        </tr>
+        <tr>
+            <td>Théorème de la base orthonormée incomplète.</td>
+            <td>Toute famille orthonormée d'un espace euclidien peut être complétée en une base orthonormée de cet espace.</td>
+        </tr>
+        <tr>
+            <td>Expression des coordonnées, du produit scalaire et de la norme dans une base orthonormée.</td>
+            <td>Formules simples : $x_i = \langle x, e_i \rangle$, $\langle x, y \rangle = \sum x_i y_i$, $\|x\|^2 = \sum x_i^2$. Identité de Parseval.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="theorem">
+    <strong>Existence de bases orthonormées (BON) :</strong> Tout espace euclidien $E \neq \{0_E\}$ admet (au moins) une base orthonormée.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> $E$ est de dimension finie, il admet une base $\mathcal{B}=(e_1, \dots, e_n)$. En appliquant l'algorithme de Gram-Schmidt à $\mathcal{B}$, on obtient une famille orthonormée $(f_1, \dots, f_n)$. Comme c'est une famille orthogonale de vecteurs non nuls, elle est libre. Étant une famille libre de $n$ vecteurs dans un espace de dimension $n$, c'est une base. C'est donc une base orthonormée.
+</div>
+
+<div class="theorem">
+    <strong>Théorème de la base orthonormée incomplète :</strong> Soit $E$ un espace euclidien de dimension $n$. Toute famille orthonormée $(f_1, \dots, f_k)$ de $E$ (avec $k \le n$) peut être complétée en une base orthonormée $(f_1, \dots, f_k, f_{k+1}, \dots, f_n)$ de $E$.
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> La famille $(f_1, \dots, f_k)$ est libre. On peut la compléter en une base quelconque $(f_1, \dots, f_k, e_{k+1}, \dots, e_n)$ de $E$ par le théorème de la base incomplète usuel. On applique ensuite l'algorithme de Gram-Schmidt à cette base. Les $k$ premiers vecteurs obtenus par l'algorithme seront $f_1, \dots, f_k$ (car ils sont déjà orthonormés). Les vecteurs suivants $f_{k+1}, \dots, f_n$ seront construits orthogonaux aux précédents et de norme 1. La famille finale $(f_1, \dots, f_n)$ est une BON qui complète la famille initiale.
+</div>
+
+<div class="theorem">
+    <strong>Calculs dans une base orthonormée :</strong> Soit $\mathcal{B}=(e_1, \dots, e_n)$ une base <strong>orthonormée</strong> de l'espace euclidien $E$. Soient $x = \sum_{i=1}^n x_i e_i$ et $y = \sum_{j=1}^n y_j e_j$. Alors :
+    <ul>
+        <li><strong>Coordonnées :</strong> $x_i = \langle x, e_i \rangle$.</li>
+        <li><strong>Produit scalaire :</strong> $\langle x, y \rangle = \sum_{i=1}^n x_i y_i$.</li>
+        <li><strong>Norme (Identité de Parseval) :</strong> $\|x\|^2 = \sum_{i=1}^n x_i^2 = \sum_{i=1}^n \langle x, e_i \rangle^2$.</li>
+    </ul>
+    Le produit scalaire dans une BON a la même expression que le produit scalaire canonique de $\mathbb{R}^n$ sur les coordonnées.
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong>
+    $\langle x, e_k \rangle = \langle \sum x_i e_i, e_k \rangle = \sum x_i \langle e_i, e_k \rangle = \sum x_i \delta_{i,k} = x_k$.
+    $\langle x, y \rangle = \langle \sum x_i e_i, \sum y_j e_j \rangle = \sum_i \sum_j x_i y_j \langle e_i, e_j \rangle = \sum_i \sum_j x_i y_j \delta_{i,j} = \sum_i x_i y_i$.
+    $\|x\|^2 = \langle x, x \rangle = \sum_i x_i x_i = \sum_i x_i^2$. En remplaçant $x_i = \langle x, e_i \rangle$, $\|x\|^2 = \sum_i \langle x, e_i \rangle^2$.
+</div>
+
+<div class="exercise">
+    <strong>Exercice D.1 :</strong>
+    <ol>
+        <li>Dans $\mathbb{R}^3$ muni du produit scalaire canonique, soit $\mathcal{B}=((1,0,0), (0,1/\sqrt{2}, 1/\sqrt{2}), (0, -1/\sqrt{2}, 1/\sqrt{2}))$. Vérifier que c'est une BON.</li>
+        <li>Soit $x=(1, 2, 3)$. Calculer les coordonnées de $x$ dans la base $\mathcal{B}$.</li>
+        <li>Soit $y=(1, 0, 0)$. Calculer $\langle x, y \rangle$ en utilisant les coordonnées dans la base canonique, puis dans la base $\mathcal{B}$.</li>
+    </ol>
+</div>
+
+
+<h4 id="projection-orthogonale-sev-fini">e) Projection orthogonale sur un sous-espace de dimension finie</h4>
+<table class="content-table">
+    <thead><tr><th>Contenus</th><th>Capacités & Commentaires</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>Supplémentaire orthogonal d'un sous-espace $F$ de dimension finie.</td>
+             <td>Si $E$ est euclidien (dimension finie), alors $E = F \oplus F^\perp$. En dimension finie : $\dim(F^\perp) = \dim(E) - \dim(F)$. Vecteur normal à un hyperplan $H$: tout vecteur non nul dans $H^\perp$ (qui est une droite vectorielle).</td>
+        </tr>
+        <tr>
+            <td>Projection orthogonale sur $F$.</td>
+            <td>C'est la projection sur $F$ parallèlement à $F^\perp$. C'est un projecteur ($p^2=p$) et $\operatorname{Im}(p)=F$, $\operatorname{Ker}(p)=F^\perp$.</td>
+        </tr>
+        <tr>
+            <td>Expression du projeté orthogonal d'un vecteur $x$ dans une base orthonormée de $F$.</td>
+            <td>Si $(f_1, \dots, f_k)$ est une BON de $F$, le projeté orthogonal de $x$ sur $F$ est $p_F(x) = \sum_{i=1}^k \langle x, f_i \rangle f_i$.</td>
+        </tr>
+        <tr>
+            <td>Distance d'un vecteur à $F$.</td>
+            <td>Notation $d(x, F) = \inf_{y \in F} \|x-y\|$.</td>
+        </tr>
+        <tr>
+            <td>Le projeté orthogonal $p_F(x)$ de $x$ sur $F$ est l'unique élément de $F$ qui réalise la distance de $x$ à $F$.</td>
+            <td>$d(x, F) = \|x - p_F(x)\| = \|p_{F^\perp}(x)\|$. En dimension finie, projeté orthogonal d'un vecteur sur l'hyperplan $H = (\operatorname{Vect}(u))^\perp$; distance de $x$ à $H$. Projeté sur la droite $D = \operatorname{Vect}(u)$ est $\frac{\langle x, u \rangle}{\|u\|^2} u$.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="theorem">
+    <strong>Supplémentaire orthogonal en dimension finie :</strong> Soit $E$ un espace euclidien et $F$ un sous-espace vectoriel de $E$. Alors $F^\perp$ est un supplémentaire de $F$ dans $E$ :
+    $$ E = F \oplus F^\perp $$
+    De plus, $(F^\perp)^\perp = F$ et $\dim(F^\perp) = \dim(E) - \dim(F)$.
+</div>
+
+<div class="comment">
+    Ce résultat est fondamental mais ne s'étend pas aux espaces préhilbertiens de dimension infinie (on peut avoir $F \oplus F^\perp \neq E$).
+    <br><strong>Vecteur normal :</strong> Si $H$ est un hyperplan de l'espace euclidien $E$, alors $H^\perp$ est une droite vectorielle $\operatorname{Vect}(u)$. Tout vecteur $u \ne 0$ de $H^\perp$ est appelé <strong>vecteur normal</strong> à $H$. $H = \{ x \in E \mid \langle x, u \rangle = 0 \}$.
+</div>
+
+<div class="definition">
+    <strong>Projection orthogonale :</strong> Soit $E$ un espace euclidien et $F$ un SEV de $E$. Puisque $E = F \oplus F^\perp$, tout $x \in E$ se décompose de manière unique en $x = x_F + x_{F^\perp}$ avec $x_F \in F$ et $x_{F^\perp} \in F^\perp$.
+    L'application $p_F : E \to E$ définie par $p_F(x) = x_F$ est la <strong>projection orthogonale</strong> sur $F$.
+    C'est un projecteur ($p_F^2 = p_F$) d'image $F$ et de noyau $F^\perp$.
+    De même, $p_{F^\perp}(x) = x_{F^\perp}$ est la projection orthogonale sur $F^\perp$. On a $p_F + p_{F^\perp} = \operatorname{id}_E$.
+</div>
+
+<div class="theorem">
+    <strong>Expression du projeté orthogonal dans une BON :</strong> Soit $F$ un SEV de l'espace euclidien $E$, et soit $(f_1, \dots, f_k)$ une <strong>base orthonormée</strong> de $F$. Pour tout $x \in E$, le projeté orthogonal de $x$ sur $F$ est donné par :
+    $$ p_F(x) = \sum_{i=1}^k \langle x, f_i \rangle f_i $$
+</div>
+
+<div class="proof">
+    <strong>Idée de preuve :</strong> Posons $y = \sum_{i=1}^k \langle x, f_i \rangle f_i$. Clairement $y \in F$. Montrons que $x-y \in F^\perp$. Il suffit de vérifier que $\langle x-y, f_j \rangle = 0$ pour tout $j=1, \dots, k$.
+    $\langle x-y, f_j \rangle = \langle x, f_j \rangle - \langle \sum_i \langle x, f_i \rangle f_i, f_j \rangle$
+    $= \langle x, f_j \rangle - \sum_i \langle x, f_i \rangle \langle f_i, f_j \rangle$
+    $= \langle x, f_j \rangle - \sum_i \langle x, f_i \rangle \delta_{i,j}$
+    $= \langle x, f_j \rangle - \langle x, f_j \rangle = 0$.
+    Donc $x-y \in F^\perp$. L'écriture $x = y + (x-y)$ est la décomposition unique $x=x_F + x_{F^\perp}$, donc $p_F(x)=y$.
+</div>
+
+<div class="definition">
+    <strong>Distance d'un point à un SEV :</strong> La <strong>distance</strong> du vecteur $x \in E$ au sous-espace vectoriel $F$ est :
+    $$ d(x, F) = \inf_{y \in F} \|x - y\| $$
+</div>
+
+<div class="theorem">
+    <strong>Projection orthogonale et meilleure approximation :</strong> Soit $E$ un espace euclidien, $F$ un SEV de $E$, et $x \in E$. Le projeté orthogonal $p_F(x)$ est l'unique élément de $F$ qui minimise la distance à $x$ :
+    $$ \forall y \in F, \|x - y\| \ge \|x - p_F(x)\| $$
+    avec égalité si et seulement si $y = p_F(x)$.
+    De plus, la distance est donnée par :
+    $$ d(x, F) = \|x - p_F(x)\| = \|p_{F^\perp}(x)\| $$
+</div>
+
+<div class="proof">
+    <strong>Preuve :</strong> Soit $y \in F$. On a $x - y = (x - p_F(x)) + (p_F(x) - y)$.
+    Le premier terme $x - p_F(x) = p_{F^\perp}(x)$ est dans $F^\perp$.
+    Le second terme $p_F(x) - y$ est dans $F$ (car $p_F(x) \in F$ et $y \in F$).
+    Ces deux termes sont donc orthogonaux. Par Pythagore :
+    $\|x - y\|^2 = \|x - p_F(x)\|^2 + \|p_F(x) - y\|^2$.
+    Comme $\|p_F(x) - y\|^2 \ge 0$, on a $\|x - y\|^2 \ge \|x - p_F(x)\|^2$.
+    L'égalité a lieu si et seulement si $\|p_F(x) - y\|^2 = 0$, c'est-à-dire $y = p_F(x)$.
+    La distance minimale est donc $\|x - p_F(x)\|$.
+</div>
+
+<div class="example">
+    <strong>Projection sur une droite / un hyperplan :</strong>
+    <ul>
+        <li>Projection sur la droite $D = \operatorname{Vect}(u)$ ($u \ne 0$) : Une base orthonormée de $D$ est $(f_1)$ avec $f_1 = u / \|u\|$. Le projeté est $p_D(x) = \langle x, f_1 \rangle f_1 = \langle x, \frac{u}{\|u\|} \rangle \frac{u}{\|u\|} = \frac{\langle x, u \rangle}{\|u\|^2} u$.</li>
+        <li>Projection sur l'hyperplan $H = (\operatorname{Vect}(u))^\perp$ : $p_H(x) = x - p_D(x) = x - \frac{\langle x, u \rangle}{\|u\|^2} u$.</li>
+        <li>Distance à l'hyperplan $H$: $d(x, H) = \|x - p_H(x)\| = \|p_D(x)\| = \|\frac{\langle x, u \rangle}{\|u\|^2} u\| = \frac{|\langle x, u \rangle|}{\|u\|^2} \|u\| = \frac{|\langle x, u \rangle|}{\|u\|}$.</li>
+    </ul>
+</div>
+
+<div class="exercise">
+    <strong>Exercice E.1 :</strong>
+    <ol>
+        <li>Dans $\mathbb{R}^3$ euclidien canonique, calculer la projection orthogonale du vecteur $x=(1, 2, 3)$ sur le plan $F$ d'équation $x+y+z=0$.</li>
+        <li>Calculer la distance de $x$ à $F$.</li>
+        <li>Soit $E=\mathbb{R}_2[X]$ avec $\langle P, Q \rangle = \int_0^1 P(t)Q(t)dt$. Trouver le projeté orthogonal de $X^2$ sur $\mathbb{R}_1[X]$.</li>
+    </ol>
+</div>
+
+</body>
+</html>
